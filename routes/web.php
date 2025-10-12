@@ -9,6 +9,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\SalaryGradesController;
 use App\Http\Controllers\GazetteLocationsController;
 use App\Http\Controllers\DivisionController;
+use App\Http\Controllers\BanksController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -74,15 +75,7 @@ Route::prefix('company-setup')->group(function () {
         Route::post('divisions', 'store')->name('divisions.store');
         Route::get('divisions/{id}/edit', 'edit')->name('divisions.edit');
         Route::put('divisions/{id}', 'update')->name('divisions.update');
-        Route::delete('divisions/{id}', 'destroy')->name('divisions.delete');
-    });
-    Route::controller(DepartmentController::class)->group(function () {
-        Route::get('departments', 'index')->name('departments.index');
-        Route::get('departments/create', 'create')->name('departments.create');
-        Route::post('departments', 'store')->name('departments.store');
-        Route::get('departments/{id}/edit', 'edit')->name('departments.edit');
-        Route::put('departments/{id}', 'update')->name('departments.update');
-        Route::delete('departments/{id}', 'destroy')->name('departments.delete');
+        Route::delete('divisions/{id}', 'destroy')->name('divisions.destroy');
     });
 });
 
