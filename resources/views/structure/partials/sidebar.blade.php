@@ -68,6 +68,13 @@ Route::is('company_types.*') || Route::is('company_locations.*') || Route::is('b
                                 <a class='tp-link @if(Route::is('divisions.*')) menuitem-active @endif'
                                    href='{{route('divisions.index')}}'>Divisions</a>
                             </li>
+                            <li>
+                                <a class='tp-link @if(Route::is('departments.*')) menuitem-active @endif'
+                                   href='{{route('departments.index')}}'>Departments</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if(Route::is('sections.*')) menuitem-active @endif'
+                                   href='{{route('sections.index')}}'>Sections</a>
 
                             <li>
                                 <a class='tp-link @if(Route::is('tofsils.*')) menuitem-active @endif'
@@ -79,10 +86,10 @@ Route::is('company_types.*') || Route::is('company_locations.*') || Route::is('b
                                    href='{{route('salary_grades.index')}}'>Salary Grades</a>
                             </li>
 
-                            <li>
+                            {{-- <li>
                                 <a class='tp-link @if(Route::is('banks.*')) menuitem-active @endif'
                                    href='{{route('banks.index')}}'>Banks</a>
-                            </li>
+                            </li> --}}
 
                             <li>
                                 <a class='tp-link @if(Route::is('branches.*')) menuitem-active @endif'
