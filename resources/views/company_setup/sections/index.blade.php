@@ -1,0 +1,68 @@
+@extends('structure.master')
+
+@section('content')
+    {{-- List of Company Locations --}}
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                 <div class="card-header">
+                    <a type="button" class="btn btn-warning btn-sm" href="{{route('sections.create')}}">
+                        <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
+                    </a>
+                </div><!-- end card header -->
+                
+
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered mb-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Division Name</th>
+                                    <th scope="col">Department Name</th>
+                                    <th scope="col">Section Name</th>
+                                    <th scope="col">Short Name</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php($i = 1)
+                                @foreach ($sections as $section)
+                                    <tr>
+                                        <th scope="row">{{ $i++ }}</th>
+                                        <td>{{ $section->getDivision->division_name }}</td>
+                                        <td>{{ $section->getDepartment->department_name }}</td>
+                                        <td>{{ $section->section_name }}</td>
+                                        <td>{{ $section->short_name }}</td>
+                                        <td>
+                                            <a href="{{ route('sections.edit', $section->id) }}"
+                                                class="btn btn-primary btn-sm">
+                                                <i style="height: 12px; width: 12px" data-feather="edit"></i>
+                                            </a>
+
+                                            <form action="{{ route('sections.delete', $section->id) }}"
+                                                method="POST" style="display: inline-block">
+                                                @csrf
+                                                @method('DELETE')
+
+                                                <button class="btn btn-sm btn-danger confirmDelete">
+                                                    <i style="height: 12px; width: 12px" data-feather="trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+
+
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        
+                        <div class="mt-3">
+                            {{$sections->links()}}
+                        </div>
+                    </div>
+                </div>
+            </div><!-- end card -->
+        </div>
+    </div><!-- end row -->
+@endsection

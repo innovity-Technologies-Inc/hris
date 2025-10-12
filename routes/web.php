@@ -10,6 +10,7 @@ use App\Http\Controllers\SalaryGradesController;
 use App\Http\Controllers\GazetteLocationsController;
 use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\BanksController;
+use App\Http\Controllers\SectionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -33,7 +34,7 @@ Route::prefix('company-setup')->group(function () {
         Route::delete('companies/delete/{id}', 'companyDelete')->name('companies.delete');
     });
 
-    Route::controller(TofsilsController::class)->group(function (){
+    Route::controller(TofsilsController::class)->group(function () {
         Route::get('tofsils', 'index')->name('tofsils.index');
         Route::get('tofsils/create', 'create')->name('tofsils.create');
         Route::post('tofsils/store', 'store')->name('tofsils.store');
@@ -42,7 +43,7 @@ Route::prefix('company-setup')->group(function () {
         Route::delete('tofsils/delete/{id}', 'delete')->name('tofsils.delete');
     });
 
-    Route::controller(SalaryGradesController::class)->group(function (){
+    Route::controller(SalaryGradesController::class)->group(function () {
         Route::get('salary_grades', 'index')->name('salary_grades.index');
         Route::get('salary_grades/create', 'create')->name('salary_grades.create');
         Route::post('salary_grades/store', 'store')->name('salary_grades.store');
@@ -51,7 +52,7 @@ Route::prefix('company-setup')->group(function () {
         Route::delete('salary_grades/delete/{id}', 'delete')->name('salary_grades.delete');
     });
 
-    Route::controller(GazetteLocationsController::class)->group(function (){
+    Route::controller(GazetteLocationsController::class)->group(function () {
         Route::get('gazette_locations', 'index')->name('gazette_locations.index');
         Route::get('gazette_locations/create', 'create')->name('gazette_locations.create');
         Route::post('gazette_locations/store', 'store')->name('gazette_locations.store');
@@ -76,6 +77,22 @@ Route::prefix('company-setup')->group(function () {
         Route::get('divisions/{id}/edit', 'edit')->name('divisions.edit');
         Route::put('divisions/{id}', 'update')->name('divisions.update');
         Route::delete('divisions/{id}', 'destroy')->name('divisions.destroy');
+    });
+    Route::controller(DepartmentController::class)->group(function () {
+        Route::get('departments', 'index')->name('departments.index');
+        Route::get('departments/create', 'create')->name('departments.create');
+        Route::post('departments', 'store')->name('departments.store');
+        Route::get('departments/{id}/edit', 'edit')->name('departments.edit');
+        Route::put('departments/{id}', 'update')->name('departments.update');
+        Route::delete('departments/{id}', 'destroy')->name('departments.delete');
+    });
+    Route::controller(SectionController::class)->group(function () {
+        Route::get('sections', 'index')->name('sections.index');
+        Route::get('sections/create', 'create')->name('sections.create');
+        Route::post('sections', 'store')->name('sections.store');
+        Route::get('sections/{id}/edit', 'edit')->name('sections.edit');
+        Route::put('sections/{id}', 'update')->name('sections.update');
+        Route::delete('sections/{id}', 'destroy')->name('sections.delete');
     });
 });
 
