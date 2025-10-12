@@ -1,0 +1,87 @@
+@extends('structure.master')
+@section('content')
+    {{--    Form --}}
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+
+                <div class="card-header">
+                    <h5 class="card-title mb-0">{{ isset($company_location) ? 'Edit' : 'Add' }} Company Location</h5>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <form
+                                action="{{ isset($company_location) ? route('company_locations.update', $company_location->id) : route('company_locations.store') }}"
+                                method="post">
+                                @csrf
+                                @if (isset($company_location))
+                                    @method('PUT')
+                                @endif
+
+                                <div class="row">
+
+                                    <div class="col-lg-12 mb-2">
+                                        <label for="company_id" class="form-label">Company <span
+                                                class="text-danger">*</span></label>
+                                        <select class="form-select select2_list" name="company_id" id="company_id" required>
+                                            <option value="">Choose Company</option>
+                                            @foreach ($companies as $item)
+                                                <option value="{{ $item->id }}"
+                                                    @if (isset($company_location) && $company_location->company_id == $item->id) selected @endif>
+                                                    {{ $item->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('company_id')
+                                            <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
+
+                                    <div class="col-lg-12 mb-2">
+                                        <label for="unit_name" class="form-label">Unit Name <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" id="unit_name" class="form-control" name="unit_name"
+                                            placeholder="Enter Unit Name"
+                                            value="{{ isset($company_location) ? $company_location->unit_name : old('unit_name') }}"
+                                            required maxlength="255">
+                                        @error('unit_name')
+                                            <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
+
+                                    <div class="col-lg-12 mb-2">
+                                        <label for="location_address" class="form-label">Location Address <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" id="location_address" class="form-control"
+                                            name="location_address" placeholder="Enter Location Address"
+                                            value="{{ isset($company_location) ? $company_location->location_address : old('location_address') }}"
+                                            required maxlength="255">
+                                        @error('location_address')
+                                            <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
+
+                                     <div class="col-lg-12 mb-2">
+                                        <label for="example-select" class="form-label">Status</label>
+                                        <select class="form-select" name="status">
+                                            <option value="active">Active</option>
+                                            <option value="inactive">Inactive</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">Submit</button>
+
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+@endsection

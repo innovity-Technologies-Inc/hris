@@ -7,7 +7,9 @@
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-title mb-0">Company List</h5>
+                    <a type="button" class="btn btn-warning btn-sm" href="{{route('companies.create')}}">
+                        <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
+                    </a>
                 </div><!-- end card header -->
 
                 <div class="card-body">
@@ -72,6 +74,8 @@
 
                             </tbody>
                         </table>
+
+                        
                     </div>
                 </div>
             </div>
