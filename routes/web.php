@@ -10,8 +10,12 @@ use App\Http\Controllers\SalaryGradesController;
 use App\Http\Controllers\GazetteLocationsController;
 use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\BanksController;
+use App\Http\Controllers\BranchesController;
+use App\Http\Controllers\SectionController;
 
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/', function () {
+    return view('welcome');
+});
 
 Route::prefix('company-setup')->group(function () {
     Route::controller(CompanySetupController::class)->group(function () {
@@ -74,13 +78,39 @@ Route::prefix('company-setup')->group(function () {
         Route::get('divisions/{id}/edit', 'edit')->name('divisions.edit');
         Route::put('divisions/{id}', 'update')->name('divisions.update');
         Route::delete('divisions/{id}', 'destroy')->name('divisions.destroy');
+    });
+    Route::controller(DepartmentController::class)->group(function () {
+        Route::get('departments', 'index')->name('departments.index');
+        Route::get('departments/create', 'create')->name('departments.create');
+        Route::post('departments', 'store')->name('departments.store');
+        Route::get('departments/{id}/edit', 'edit')->name('departments.edit');
+        Route::put('departments/{id}', 'update')->name('departments.update');
+        Route::delete('departments/{id}', 'destroy')->name('departments.delete');
+    });
+    Route::controller(SectionController::class)->group(function () {
+        Route::get('sections', 'index')->name('sections.index');
+        Route::get('sections/create', 'create')->name('sections.create');
+        Route::post('sections', 'store')->name('sections.store');
+        Route::get('sections/{id}/edit', 'edit')->name('sections.edit');
+        Route::put('sections/{id}', 'update')->name('sections.update');
+        Route::delete('sections/{id}', 'destroy')->name('sections.delete');
+    });
     Route::controller(BanksController::class)->group(function () {
-        Route::get('banks', 'index')->name('banks.index');
-        Route::get('banks/create', 'create')->name('banks.create');
-        Route::post('banks', 'store')->name('banks.store');
-        Route::get('banks/{id}/edit', 'edit')->name('banks.edit');
-        Route::put('banks/{id}', 'update')->name('banks.update');
-        Route::delete('banks/{id}', 'delete')->name('banks.delete');
+            Route::get('banks', 'index')->name('banks.index');
+            Route::get('banks/create', 'create')->name('banks.create');
+            Route::post('banks', 'store')->name('banks.store');
+            Route::get('banks/{id}/edit', 'edit')->name('banks.edit');
+            Route::put('banks/{id}', 'update')->name('banks.update');
+            Route::delete('banks/{id}', 'delete')->name('banks.delete');
+        });
+
+    Route::controller(BranchesController::class)->group(function () {
+        Route::get('branches', 'index')->name('branches.index');
+        Route::get('branches/create', 'create')->name('branches.create');
+        Route::post('branches', 'store')->name('branches.store');
+        Route::get('branches/{id}/edit', 'edit')->name('branches.edit');
+        Route::put('branches/{id}', 'update')->name('branches.update');
+        Route::delete('branches/{id}', 'delete')->name('branches.delete');
     });
 });
 
