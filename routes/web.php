@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CompanyLocationController;
 use App\Http\Controllers\SalaryGradesController;
 use App\Http\Controllers\GazetteLocationsController;
+use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\BanksController;
 
 Route::get('/', function () {
@@ -67,6 +68,13 @@ Route::prefix('company-setup')->group(function () {
         Route::delete('company-locations/{id}', 'destroy')->name('company_locations.destroy');
     });
 
+    Route::controller(DivisionController::class)->group(function () {
+        Route::get('divisions', 'index')->name('divisions.index');
+        Route::get('divisions/create', 'create')->name('divisions.create');
+        Route::post('divisions', 'store')->name('divisions.store');
+        Route::get('divisions/{id}/edit', 'edit')->name('divisions.edit');
+        Route::put('divisions/{id}', 'update')->name('divisions.update');
+        Route::delete('divisions/{id}', 'destroy')->name('divisions.destroy');
     Route::controller(BanksController::class)->group(function () {
         Route::get('banks', 'index')->name('banks.index');
         Route::get('banks/create', 'create')->name('banks.create');

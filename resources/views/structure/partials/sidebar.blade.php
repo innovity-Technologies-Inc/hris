@@ -64,6 +64,10 @@ Route::is('company_types.*') || Route::is('company_locations.*') || Route::is('b
                             <li>
                                 <a class='tp-link @if(Route::is('company_locations.*')) menuitem-active @endif' href='{{route('company_locations.index')}}'>Company Locations</a>
                             </li>
+                            <li>
+                                <a class='tp-link @if(Route::is('divisions.*')) menuitem-active @endif'
+                                   href='{{route('divisions.index')}}'>Divisions</a>
+                            </li>
 
                             <li>
                                 <a class='tp-link @if(Route::is('tofsils.*')) menuitem-active @endif'
