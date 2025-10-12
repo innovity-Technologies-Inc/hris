@@ -39,7 +39,7 @@
                 <li>
                     <a href="#sidebarCompany" data-bs-toggle="collapse"
                        class="@if(Route::is('groups.*')  || Route::is('companies.*') ||
-Route::is('company_types.*') || Route::is('company_locations.*') || Route::is('banks.*')
+Route::is('company_types.*') || Route::is('company_locations.*') || Route::is('banks.*') || Route::is('branches.*')
  || Route::is('tofsils.*') || Route::is('salary_grades.*') ||  Route::is('gazette_locations.*')) menuitem-active @endif ">
                         <i data-feather="box"></i>
                         <span> Company Info </span>
@@ -82,6 +82,11 @@ Route::is('company_types.*') || Route::is('company_locations.*') || Route::is('b
                             <li>
                                 <a class='tp-link @if(Route::is('banks.*')) menuitem-active @endif'
                                    href='{{route('banks.index')}}'>Banks</a>
+                            </li>
+
+                            <li>
+                                <a class='tp-link @if(Route::is('branches.*')) menuitem-active @endif'
+                                   href='{{route('branches.index')}}'>Branches</a>
                             </li>
 
                             <li>

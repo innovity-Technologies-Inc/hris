@@ -9,6 +9,7 @@ use App\Http\Controllers\SalaryGradesController;
 use App\Http\Controllers\GazetteLocationsController;
 use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\BanksController;
+use App\Http\Controllers\BranchesController;
 
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -84,6 +85,16 @@ Route::prefix('company-setup')->group(function () {
             Route::put('banks/{id}', 'update')->name('banks.update');
             Route::delete('banks/{id}', 'delete')->name('banks.delete');
         });
+
+    Route::controller(BranchesController::class)->group(function () {
+        Route::get('branches', 'index')->name('branches.index');
+        Route::get('branches/create', 'create')->name('branches.create');
+        Route::post('branches', 'store')->name('branches.store');
+        Route::get('branches/{id}/edit', 'edit')->name('branches.edit');
+        Route::put('branches/{id}', 'update')->name('branches.update');
+        Route::delete('branches/{id}', 'delete')->name('branches.delete');
+    });
+
     });
 
 
