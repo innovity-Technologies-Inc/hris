@@ -1,0 +1,103 @@
+@extends('structure.master')
+@section('content')
+    {{--    Form --}}
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+
+                <div class="card-header">
+                    <h5 class="card-title mb-0">{{ isset($department) ? 'Edit' : 'Add' }} Department</h5>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <form
+                                action="{{ isset($department) ? route('departments.update', $department->id) : route('departments.store') }}"
+                                method="post">
+                                @csrf
+                                @if (isset($department))
+                                    @method('PUT')
+                                @endif
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        <label for="department_name" class="form-label">Department Name <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" id="department_name" class="form-control"
+                                            name="department_name" placeholder="Enter Department Name"
+                                            value="{{ isset($department) ? $department->department_name : old('department_name') }}"
+                                            required maxlength="255">
+                                        @error('department_name')
+                                            <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <label for="short_name" class="form-label">Short Name <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" id="short_name" class="form-control" name="short_name"
+                                            placeholder="Enter Short Name"
+                                            value="{{ isset($department) ? $department->short_name : old('short_name') }}"
+                                            required maxlength="50">
+                                        @error('short_name')
+                                            <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        <label for="division_id" class="form-label">Division <span
+                                                class="text-danger">*</span></label>
+                                        <select id="division_id" class="form-select" name="division_id" required>
+                                            <option value="">Select Division</option>
+                                            @foreach ($divisions as $division)
+                                                <option value="{{ $division->id }}"
+                                                    @if (isset($department) && $department->division_id == $division->id) selected @endif>
+                                                    {{ $division->division_name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('division_id')
+                                            <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
+<div class="col-md-6 mb-2">
+                                        <label for="job_number_code" class="form-label">Job Number Code <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" id="job_number_code" class="form-control"
+                                            name="job_number_code" placeholder="Enter Job Number Code"
+                                            value="{{ isset($department) ? $department->job_number_code : old('job_number_code') }}"
+                                            required maxlength="20">
+                                        @error('job_number_code')
+                                            <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        <label for="status" class="form-label">Status</label>
+                                        <select class="form-select" name="status">
+                                            <option value="active" @if (isset($department) && $department->status == 'active') selected @endif>Active
+                                            </option>
+                                            <option value="inactive" @if (isset($department) && $department->status == 'inactive') selected @endif>
+                                                Inactive</option>
+                                        </select>
+                                    </div>
+
+
+
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                        </div>
+                                    </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+@endsection

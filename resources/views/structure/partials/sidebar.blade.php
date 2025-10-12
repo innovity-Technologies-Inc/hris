@@ -68,6 +68,10 @@ Route::is('company_types.*')
                                 <a class='tp-link @if(Route::is('divisions.*')) menuitem-active @endif'
                                    href='{{route('divisions.index')}}'>Divisions</a>
                             </li>
+                            <li>
+                                <a class='tp-link @if(Route::is('departments.*')) menuitem-active @endif'
+                                   href='{{route('departments.index')}}'>Departments</a>
+                            </li>
 
                             <li>
                                 <a class='tp-link @if(Route::is('tofsils.*')) menuitem-active @endif'
