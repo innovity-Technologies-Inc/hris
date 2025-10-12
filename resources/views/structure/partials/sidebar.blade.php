@@ -75,6 +75,10 @@ Route::is('company_types.*')
                                 <a class='tp-link @if(Route::is('gazette_locations.*')) menuitem-active @endif'
                                    href='{{route('gazette_locations.index')}}'>Gazette Locations</a>
                             </li>
+                            {{-- Add company locations link here --}}
+                            <li>
+                                <a class='tp-link' href='{{route('company_locations.index')}}'>Company Locations</a>
+                            </li> 
 
                         </ul>
                     </div>

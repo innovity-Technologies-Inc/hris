@@ -1,0 +1,100 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\HelperClass;
+use App\Models\CompanyLocation;
+use App\Models\Company;
+use Illuminate\Http\Request;
+
+
+class CompanyLocationController extends Controller
+{
+    public function index()
+    {
+        $title = 'Company';
+        $section = 'Company Setup';
+        $sub_section = 'Company Locations';
+        $locations = CompanyLocation::latest()->paginate(10);
+        return view('company_setup.company_locations.index', compact('title', 'section', 'sub_section', 'locations'));
+    }
+
+
+    public function create()
+    {
+        $companies = Company::all();
+        return view('company_setup.company_locations.form', compact('companies'));
+    }
+
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate(
+            [
+                'company_id' => 'required',
+                'unit_name' => 'required|string|max:255',
+                'location_address' => 'required|string|max:255',
+                'status' => 'required',
+            ],
+            [
+                'company_id.required' => 'Please select a company.',
+                'unit_name.required' => 'Please enter a unit name.',
+                'location_address.required' => 'Please enter a location address.',
+                'status.required' => 'Please select a status.',
+            ]
+        );
+
+
+        CompanyLocation::create($validatedData);
+
+        return redirect()->route('company_locations.index')
+            ->with([
+                'message' => 'Company Location Saved Successfully',
+                'alert-type' => 'success'
+            ]);
+    }
+
+    public function edit($id)
+    {
+        $company_location = CompanyLocation::findOrFail($id);
+        $companies = Company::all();
+
+        return view('company_setup.company_locations.form', compact('company_location', 'companies'));
+    }
+
+    public function update(Request $request, $id)
+    {
+
+        $request->validate(
+            [
+                'company_id' => 'required|exists:companies,id',
+                'unit_name' => 'required|string|max:255',
+                'location_address' => 'required|string|max:255',
+                'status' => 'required|string',
+            ],
+            [
+                'company_id.required' => 'Please select a company.',
+                'unit_name.required' => 'Please enter a unit name.',
+                'location_address.required' => 'Please enter a location address.',
+                'status.required' => 'Please select a status.',
+            ]
+        );
+
+        $company_location = CompanyLocation::findOrFail($id);
+        $company_location->update($request->all());
+
+        return redirect()->route('company_locations.index')
+            ->with([
+                'message' => 'Company Location updated Successfully',
+                'alert-type' => 'success'
+            ]);
+    }
+
+    public function destroy($id)
+    {
+        $company_location = CompanyLocation::findOrFail($id);
+        $company_location->delete();
+
+        return redirect()->route('company_locations.index')
+            ->with('success', 'Company location deleted successfully.');
+    }
+}
