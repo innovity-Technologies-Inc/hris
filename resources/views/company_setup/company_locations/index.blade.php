@@ -9,10 +9,7 @@
                     <a type="button" class="btn btn-warning btn-sm" href="{{route('company_locations.create')}}">
                         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                     </a>
-                </div><!-- end card header -->
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Company Location List</h5>
-                </div><!-- end card header -->
+                </div>
 
                 <div class="card-body">
                     <div class="table-responsive">
@@ -57,7 +54,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        
+
                         <div class="mt-3">
                             {{$locations->links()}}
                         </div>
