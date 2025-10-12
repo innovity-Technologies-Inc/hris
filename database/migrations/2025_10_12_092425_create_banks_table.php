@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('banks', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('short_name');
+            $table->string('bank_code');
+            $table->string('contact_no');
+            $table->string('contact_person');
+            $table->string('contact_person_no');
+            $table->enum('status', ['active', 'inactive']);
             $table->timestamps();
         });
     }
