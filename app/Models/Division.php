@@ -11,6 +11,8 @@ class Division extends Model
         'short_name',
         'remarks',
         'status',
+        'company_id',
+        'location_id',
     ];
     public function getCompany()
     {

@@ -10,9 +10,7 @@
                         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                     </a>
                 </div><!-- end card header -->
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Company Division List</h5>
-                </div><!-- end card header -->
+                
 
                 <div class="card-body">
                     <div class="table-responsive">
@@ -22,6 +20,8 @@
                                     <th scope="col">#</th>
                                     <th scope="col">Division Name</th>
                                     <th scope="col">Short Name</th>
+                                    <th scope="col">Company</th>
+                                    <th scope="col">Location</th>
                                     <th scope="col">Remarks</th>
                                     <th scope="col">Action</th>
                                 </tr>
@@ -33,6 +33,8 @@
                                         <th scope="row">{{ $i++ }}</th>
                                         <td>{{ $division->division_name }}</td>
                                         <td>{{ $division->short_name }}</td>
+                                        <td>{{ $division->getCompany->name }}</td>
+                                        <td>{{ $division->getLocation->unit_name }}</td>
                                         <td>{{ $division->remarks }}</td>
                                         <td>
                                             <a href="{{ route('divisions.edit', $division->id) }}"
@@ -58,9 +60,9 @@
                             </tbody>
                         </table>
                         
-                        {{-- <div class="mt-3">
-                            {{$locations->links()}}
-                        </div> --}}
+                        <div class="mt-3">
+                            {{$divisions->links()}}
+                        </div>
                     </div>
                 </div>
             </div><!-- end card -->

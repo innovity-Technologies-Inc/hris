@@ -15,10 +15,12 @@ class DivisionController extends Controller
         $section = 'Division Setup';
         $sub_section = 'Company Divisions';
         $divisions = Division::latest()->paginate(10);
-        return view('company_setup.divisions.index', compact('title', 'section', 'sub_section', 'divisions'));
+        $companies = Company::all();
+        $locations = CompanyLocation::all();
+        return view('company_setup.divisions.index', compact('title', 'section', 'sub_section', 'divisions', 'companies', 'locations'));
     }
     public function create()
-    {   
+    {
         $companies = Company::all();
         $locations = CompanyLocation::all();
         return view('company_setup.divisions.form', compact('companies', 'locations'));
@@ -27,12 +29,12 @@ class DivisionController extends Controller
     {
         $validatedData = $request->validate(
             [
-            'company_id' => 'required',
-            'location_id' => 'required',
-            'division_name' => 'required|string|max:255',
-            'short_name' => 'required|string|max:50',
-            'remarks' => 'nullable|string',
-            'status' => 'required|in:active,inactive',
+                'company_id' => 'required',
+                'location_id' => 'required',
+                'division_name' => 'required|string|max:255',
+                'short_name' => 'required|string|max:50',
+                'remarks' => 'nullable|string',
+                'status' => 'required|in:active,inactive',
             ],
             [
                 'division_name.required' => 'Please enter a division name.',
@@ -53,7 +55,9 @@ class DivisionController extends Controller
     public function edit($id)
     {
         $division = Division::findOrFail($id);
-        return view('company_setup.divisions.form', compact('division'));
+        $companies = Company::all();
+        $locations = CompanyLocation::all();
+        return view('company_setup.divisions.form', compact('division', 'companies', 'locations'));
     }
 
     public function update(Request $request, $id)
@@ -61,15 +65,20 @@ class DivisionController extends Controller
 
         $request->validate(
             [
+                'company_id' => 'required',
+                'location_id' => 'required',
                 'division_name' => 'required|string|max:255',
                 'short_name' => 'required|string|max:50',
                 'remarks' => 'nullable|string|max:500',
                 'status' => 'required',
+
             ],
             [
                 'division_name.required' => 'Please enter a division name.',
                 'short_name.required' => 'Please enter a short name.',
                 'status.required' => 'Please select a status.',
+                'company_id.required' => 'Please select a company.',
+                'location_id.required' => 'Please select a location.',
             ]
         );
 
@@ -91,8 +100,4 @@ class DivisionController extends Controller
         return redirect()->route('divisions.index')
             ->with('success', 'Division deleted successfully.');
     }
-
-
-
 }
-

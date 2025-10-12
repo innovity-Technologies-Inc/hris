@@ -62,7 +62,11 @@ Route::is('company_types.*')
                             </li>
 
                             <li>
-                                <a class='tp-link @if(Route::is('company_locationsphp.*')) menuitem-active @endif' href='{{route('company_locations.index')}}'>Company Locations</a>
+                                <a class='tp-link @if(Route::is('company_locations.*')) menuitem-active @endif' href='{{route('company_locations.index')}}'>Company Locations</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if(Route::is('divisions.*')) menuitem-active @endif'
+                                   href='{{route('divisions.index')}}'>Divisions</a>
                             </li>
 
                             <li>
