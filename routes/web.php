@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CompanySetupController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SalaryGradesController;
+use App\Http\Controllers\GazetteLocationsController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -44,6 +45,15 @@ Route::prefix('company-setup')->group(function (){
         Route::get('salary_grades/edit/{id}', 'edit')->name('salary_grades.edit');
         Route::put('salary_grades/{id}/update', 'update')->name('salary_grades.update');
         Route::delete('salary_grades/delete/{id}', 'delete')->name('salary_grades.delete');
+    });
+
+    Route::controller(GazetteLocationsController::class)->group(function (){
+        Route::get('gazette_locations', 'index')->name('gazette_locations.index');
+        Route::get('gazette_locations/create', 'create')->name('gazette_locations.create');
+        Route::post('gazette_locations/store', 'store')->name('gazette_locations.store');
+        Route::get('gazette_locations/edit/{id}', 'edit')->name('gazette_locations.edit');
+        Route::put('gazette_locations/{id}/update', 'update')->name('gazette_locations.update');
+        Route::delete('gazette_locations/delete/{id}', 'delete')->name('gazette_locations.delete');
     });
 
 });
