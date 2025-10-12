@@ -119,6 +119,9 @@
 
                             </tbody>
                         </table>
+                        <div class="mt-3">
+                            {{$company_types->links()}}
+                        </div>
                     </div>
                 </div>
             </div>

@@ -14,7 +14,7 @@
     <link rel="shortcut icon" href="{{asset('assets/images/favicon.png')}}">
 
     <!-- App css -->
-    <link href="{{asset('assets/css/app.min.css')}}" rel="stylesheet" type="text/css" id="app-style">
+    <link href="{{asset('assets/css/app.css')}}" rel="stylesheet" type="text/css" id="app-style">
 
     <!-- Icons -->
     <link href="{{asset('assets/css/icons.min.css')}}" rel="stylesheet" type="text/css">
@@ -43,9 +43,9 @@
 
 
     {{--    Summernote Css--}}
-{{--    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">--}}
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
 
-    <link href="{{asset('assets/libs/summernote/summernote-lite.min.css')}}" rel="stylesheet" type="text/css">
+{{--    <link href="{{asset('assets/libs/summernote/summernote-lite.min.css')}}" rel="stylesheet" type="text/css">--}}
 
 
     <style>
