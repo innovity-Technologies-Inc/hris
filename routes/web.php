@@ -9,10 +9,10 @@ use App\Http\Controllers\SalaryGradesController;
 use App\Http\Controllers\GazetteLocationsController;
 use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\BanksController;
+use App\Http\Controllers\BranchesController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::prefix('company-setup')->group(function () {
     Route::controller(CompanySetupController::class)->group(function () {
@@ -32,7 +32,7 @@ Route::prefix('company-setup')->group(function () {
         Route::delete('companies/delete/{id}', 'companyDelete')->name('companies.delete');
     });
 
-    Route::controller(TofsilsController::class)->group(function (){
+    Route::controller(TofsilsController::class)->group(function () {
         Route::get('tofsils', 'index')->name('tofsils.index');
         Route::get('tofsils/create', 'create')->name('tofsils.create');
         Route::post('tofsils/store', 'store')->name('tofsils.store');
@@ -41,7 +41,7 @@ Route::prefix('company-setup')->group(function () {
         Route::delete('tofsils/delete/{id}', 'delete')->name('tofsils.delete');
     });
 
-    Route::controller(SalaryGradesController::class)->group(function (){
+    Route::controller(SalaryGradesController::class)->group(function () {
         Route::get('salary_grades', 'index')->name('salary_grades.index');
         Route::get('salary_grades/create', 'create')->name('salary_grades.create');
         Route::post('salary_grades/store', 'store')->name('salary_grades.store');
@@ -50,7 +50,7 @@ Route::prefix('company-setup')->group(function () {
         Route::delete('salary_grades/delete/{id}', 'delete')->name('salary_grades.delete');
     });
 
-    Route::controller(GazetteLocationsController::class)->group(function (){
+    Route::controller(GazetteLocationsController::class)->group(function () {
         Route::get('gazette_locations', 'index')->name('gazette_locations.index');
         Route::get('gazette_locations/create', 'create')->name('gazette_locations.create');
         Route::post('gazette_locations/store', 'store')->name('gazette_locations.store');
@@ -75,15 +75,27 @@ Route::prefix('company-setup')->group(function () {
         Route::get('divisions/{id}/edit', 'edit')->name('divisions.edit');
         Route::put('divisions/{id}', 'update')->name('divisions.update');
         Route::delete('divisions/{id}', 'destroy')->name('divisions.destroy');
-    Route::controller(BanksController::class)->group(function () {
-        Route::get('banks', 'index')->name('banks.index');
-        Route::get('banks/create', 'create')->name('banks.create');
-        Route::post('banks', 'store')->name('banks.store');
-        Route::get('banks/{id}/edit', 'edit')->name('banks.edit');
-        Route::put('banks/{id}', 'update')->name('banks.update');
-        Route::delete('banks/{id}', 'delete')->name('banks.delete');
     });
-});
+
+        Route::controller(BanksController::class)->group(function () {
+            Route::get('banks', 'index')->name('banks.index');
+            Route::get('banks/create', 'create')->name('banks.create');
+            Route::post('banks', 'store')->name('banks.store');
+            Route::get('banks/{id}/edit', 'edit')->name('banks.edit');
+            Route::put('banks/{id}', 'update')->name('banks.update');
+            Route::delete('banks/{id}', 'delete')->name('banks.delete');
+        });
+
+    Route::controller(BranchesController::class)->group(function () {
+        Route::get('branches', 'index')->name('branches.index');
+        Route::get('branches/create', 'create')->name('branches.create');
+        Route::post('branches', 'store')->name('branches.store');
+        Route::get('branches/{id}/edit', 'edit')->name('branches.edit');
+        Route::put('branches/{id}', 'update')->name('branches.update');
+        Route::delete('branches/{id}', 'delete')->name('branches.delete');
+    });
+
+    });
 
 
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
