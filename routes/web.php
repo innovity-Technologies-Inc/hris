@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CompanyLocationController;
 use App\Http\Controllers\SalaryGradesController;
 use App\Http\Controllers\GazetteLocationsController;
+use App\Http\Controllers\BanksController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -64,6 +65,15 @@ Route::prefix('company-setup')->group(function () {
         Route::get('company-locations/{id}/edit', 'edit')->name('company_locations.edit');
         Route::put('company-locations/{id}', 'update')->name('company_locations.update');
         Route::delete('company-locations/{id}', 'destroy')->name('company_locations.destroy');
+    });
+
+    Route::controller(BanksController::class)->group(function () {
+        Route::get('banks', 'index')->name('banks.index');
+        Route::get('banks/create', 'create')->name('banks.create');
+        Route::post('banks', 'store')->name('banks.store');
+        Route::get('banks/{id}/edit', 'edit')->name('banks.edit');
+        Route::put('banks/{id}', 'update')->name('banks.update');
+        Route::delete('banks/{id}', 'delete')->name('banks.delete');
     });
 });
 

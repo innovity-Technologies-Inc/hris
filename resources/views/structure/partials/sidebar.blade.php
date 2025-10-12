@@ -39,7 +39,7 @@
                 <li>
                     <a href="#sidebarCompany" data-bs-toggle="collapse"
                        class="@if(Route::is('groups.*')  || Route::is('companies.*') ||
-Route::is('company_types.*')
+Route::is('company_types.*') || Route::is('company_locations.*') || Route::is('banks.*')
  || Route::is('tofsils.*') || Route::is('salary_grades.*') ||  Route::is('gazette_locations.*')) menuitem-active @endif ">
                         <i data-feather="box"></i>
                         <span> Company Info </span>
@@ -62,7 +62,7 @@ Route::is('company_types.*')
                             </li>
 
                             <li>
-                                <a class='tp-link @if(Route::is('company_locationsphp.*')) menuitem-active @endif' href='{{route('company_locations.index')}}'>Company Locations</a>
+                                <a class='tp-link @if(Route::is('company_locations.*')) menuitem-active @endif' href='{{route('company_locations.index')}}'>Company Locations</a>
                             </li>
 
                             <li>
@@ -73,6 +73,11 @@ Route::is('company_types.*')
                             <li>
                                 <a class='tp-link @if(Route::is('salary_grades.*')) menuitem-active @endif'
                                    href='{{route('salary_grades.index')}}'>Salary Grades</a>
+                            </li>
+
+                            <li>
+                                <a class='tp-link @if(Route::is('banks.*')) menuitem-active @endif'
+                                   href='{{route('banks.index')}}'>Banks</a>
                             </li>
 
                             <li>
