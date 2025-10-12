@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CompanySetupController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CompanyLocationController;
+use App\Http\Controllers\DivisionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -34,6 +35,15 @@ Route::prefix('company-setup')->group(function () {
         Route::get('company-locations/{id}/edit', 'edit')->name('company_locations.edit');
         Route::put('company-locations/{id}', 'update')->name('company_locations.update');
         Route::delete('company-locations/{id}', 'destroy')->name('company_locations.destroy');
+    });
+
+    Route::controller(DivisionController::class)->group(function () {
+        Route::get('divisions', 'index')->name('divisions.index');
+        Route::get('divisions/create', 'create')->name('divisions.create');
+        Route::post('divisions', 'store')->name('divisions.store');
+        Route::get('divisions/{id}/edit', 'edit')->name('divisions.edit');
+        Route::put('divisions/{id}', 'update')->name('divisions.update');
+        Route::delete('divisions/{id}', 'destroy')->name('divisions.destroy');
     });
 });
 

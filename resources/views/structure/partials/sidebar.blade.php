@@ -60,7 +60,11 @@ Route::currentRouteName() == 'company_types.index') menuitem-active @endif'
                             {{-- Add company locations link here --}}
                             <li>
                                 <a class='tp-link' href='{{route('company_locations.index')}}'>Company Locations</a>
-                            </li> 
+                            </li>
+                            {{-- add company divisions link --}}
+                            <li>
+                                <a class='tp-link' href='{{route('divisions.index')}}'>Divisions</a>
+                            </li>
 
                         </ul>
                     </div>
