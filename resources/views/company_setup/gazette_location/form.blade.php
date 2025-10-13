@@ -26,7 +26,8 @@
                                 <div class="row">
 
                                     <div class="col-lg-12 mb-2">
-                                        <label for="simpleinput" class="form-label">Gazette Location</label>
+                                        <label for="simpleinput" class="form-label">Gazette Location<span
+                                                class="text-danger">*</span></label>
                                         <input type="text" id="simpleinput" class="form-control" name="name"
                                                placeholder="Enter Gazette Location"
                                                value="{{ isset($gazette_location)? $gazette_location->name : old('name')}}">

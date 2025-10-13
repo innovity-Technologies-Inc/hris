@@ -25,7 +25,8 @@
                                 <div class="row">
 
                                     <div class="col-lg-6 mb-2">
-                                        <label for="simpleinput" class="form-label">Account No</label>
+                                        <label for="simpleinput" class="form-label">Account No<span
+                                                class="text-danger">*</span></label>
                                         <input type="text" id="simpleinput" class="form-control" name="account_no"
                                                placeholder="Enter Bank Account No"
                                                value="{{ isset($bank_account)? $bank_account->account_no : old('account_no')}}">
@@ -36,7 +37,8 @@
 
 
                                     <div class="col-lg-6 mb-2">
-                                        <label for="simpleinput" class="form-label">Account Holder Name</label>
+                                        <label for="simpleinput" class="form-label">Account Holder Name<span
+                                                class="text-danger">*</span></label>
                                         <input type="text" id="simpleinput" class="form-control" name="holder_name"
                                                placeholder="Enter Account Holder Name" value="{{isset($bank_account)? $bank_account->holder_name: old('holder_name')}}">
                                         @error('holder_name')
@@ -45,7 +47,8 @@
                                     </div>
 
                                     <div class="col-lg-4 mb-2">
-                                        <label for="simpleinput" class="form-label">Select Bank</label>
+                                        <label for="simpleinput" class="form-label">Select Bank<span
+                                                class="text-danger">*</span></label>
                                         <select class="form-select select2_list" name="bank_id">
                                             <option value="">Choose Bank</option>
                                             @foreach($banks as $item)
@@ -61,7 +64,8 @@
                                     </div>
 
                                     <div class="col-lg-4 mb-2">
-                                        <label for="simpleinput" class="form-label">Select Branch</label>
+                                        <label for="simpleinput" class="form-label">Select Branch<span
+                                                class="text-danger">*</span></label>
                                         <select class="form-select select2_list" name="branch_id">
                                             <option value="">Choose Branch</option>
                                             @foreach($branches as $item)
@@ -79,7 +83,8 @@
 
 
                                     <div class="col-lg-4 mb-2">
-                                        <label for="example-select" class="form-label">Account Type</label>
+                                        <label for="example-select" class="form-label">Account Type<span
+                                                class="text-danger">*</span></label>
                                         <select class="form-select" name="account_type">
                                             <option value="current">Current</option>
                                             <option value="savings">Savings</option>
@@ -88,7 +93,8 @@
                                     </div>
 
                                     <div class="col-lg-6 mb-2">
-                                        <label for="simpleinput" class="form-label">Contact Person</label>
+                                        <label for="simpleinput" class="form-label">Contact Person<span
+                                                class="text-danger">*</span></label>
                                         <input type="text" id="simpleinput" class="form-control" name="contact_person"
                                                placeholder="Enter Contact Person Name" value="{{ isset($bank)? $bank->contact_person : old('contact_person')}}">
                                         @error('contact_person')
@@ -97,7 +103,8 @@
                                     </div>
 
                                     <div class="col-lg-6 mb-2">
-                                        <label for="simpleinput" class="form-label">Contact Person No</label>
+                                        <label for="simpleinput" class="form-label">Contact Person No<span
+                                                class="text-danger">*</span></label>
                                         <input type="text" id="simpleinput" class="form-control" name="contact_person_no"
                                                placeholder="Enter Contact Person No" value="{{ isset($bank)? $bank->contact_person_no : old('contact_person_no')}}">
                                         @error('contact_person_no')
@@ -107,7 +114,8 @@
 
 
                                     <div class="col-lg-6 mb-2">
-                                        <label for="simpleinput" class="form-label">Email Address</label>
+                                        <label for="simpleinput" class="form-label">Email Address<span
+                                                class="text-danger">*</span></label>
                                         <input type="email" id="simpleinput" class="form-control" name="email"
                                                placeholder="Enter Email Address" value="{{ isset($bank_account)? $bank_account->email : old('email')}}">
                                         @error('email')

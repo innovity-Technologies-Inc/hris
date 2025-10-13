@@ -18,7 +18,8 @@
                                 @csrf
                                 <div class="mb-3 row">
                                     <div class="col-lg-8">
-                                        <label for="simpleinput" class="form-label">Group Name</label>
+                                        <label for="simpleinput" class="form-label">Group Name<span
+                                                class="text-danger">*</span></label>
                                         <input type="text" id="simpleinput" class="form-control" name="name"
                                                placeholder="Enter Group Name" value="{{old('name')}}">
                                         @error('name')

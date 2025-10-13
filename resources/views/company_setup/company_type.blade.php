@@ -18,7 +18,8 @@
                                 @csrf
                                 <div class="mb-3 row">
                                     <div class="col-lg-4">
-                                        <label for="simpleinput" class="form-label">Company Type Name</label>
+                                        <label for="simpleinput" class="form-label">Company Type Name<span
+                                                class="text-danger">*</span></label>
                                         <input type="text" id="simpleinput" class="form-control" name="name"
                                                placeholder="Enter Company Type Name" value="{{old('name')}}">
 
@@ -29,7 +30,8 @@
                                     </div>
 
                                     <div class="col-lg-4">
-                                        <label for="simpleinput" class="form-label">Short Name</label>
+                                        <label for="simpleinput" class="form-label">Short Name<span
+                                                class="text-danger">*</span></label>
                                         <input type="text" id="simpleinput" class="form-control" name="short_name"
                                                placeholder="Enter Short Name" value="{{old('short_name')}}">
                                         @error('short_name')

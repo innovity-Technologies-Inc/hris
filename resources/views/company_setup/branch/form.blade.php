@@ -25,7 +25,8 @@
                                 <div class="row">
 
                                     <div class="col-lg-6 mb-2">
-                                        <label for="simpleinput" class="form-label">Branch Name</label>
+                                        <label for="simpleinput" class="form-label">Branch Name<span
+                                                class="text-danger">*</span></label>
                                         <input type="text" id="simpleinput" class="form-control" name="name"
                                                placeholder="Enter Branch Name"
                                                value="{{ isset($branch)? $branch->name : old('name')}}">
@@ -35,7 +36,8 @@
                                     </div>
 
                                     <div class="col-lg-6 mb-2">
-                                        <label for="simpleinput" class="form-label">Select Bank</label>
+                                        <label for="simpleinput" class="form-label">Select Bank<span
+                                                class="text-danger">*</span></label>
                                         <select class="form-select select2_list" name="bank_id">
                                             <option value="">Choose Bank</option>
                                             @foreach($banks as $item)
@@ -51,7 +53,8 @@
                                     </div>
 
                                     <div class="col-lg-6 mb-2">
-                                        <label for="simpleinput" class="form-label">Routing No</label>
+                                        <label for="simpleinput" class="form-label">Routing No<span
+                                                class="text-danger">*</span></label>
                                         <input type="text" id="simpleinput" class="form-control" name="routing_no"
                                                placeholder="Enter Routing No" value="{{isset($branch)? $branch->routing_no: old('routing_no')}}">
                                         @error('routing_no')
@@ -61,7 +64,8 @@
 
 
                                     <div class="col-lg-6 mb-2">
-                                        <label for="simpleinput" class="form-label">Swift Code</label>
+                                        <label for="simpleinput" class="form-label">Swift Code<span
+                                                class="text-danger">*</span></label>
                                         <input type="text" id="simpleinput" class="form-control" name="swift_code"
                                                placeholder="Enter Swift Code" value="{{ isset($branch)? $branch->swift_code : old('swift_code')}}">
                                         @error('swift_code')
@@ -70,7 +74,8 @@
                                     </div>
 
                                     <div class="col-lg-12 mb-2">
-                                        <label for="simpleinput" class="form-label">Address</label>
+                                        <label for="simpleinput" class="form-label">Address<span
+                                                class="text-danger">*</span></label>
                                         <input type="text" id="simpleinput" class="form-control" name="address"
                                                placeholder="Enter Branch Address" value="{{ isset($branch)? $branch->address : old('address')}}">
                                         @error('address')
@@ -79,7 +84,8 @@
                                     </div>
 
                                     <div class="col-lg-12 mb-2">
-                                        <label for="simpleinput" class="form-label">Remarks</label>
+                                        <label for="simpleinput" class="form-label">Remarks<span
+                                                class="text-danger">*</span></label>
                                         <input type="text" id="simpleinput" class="form-control" name="remarks"
                                                placeholder="Enter Remarks" value="{{ isset($branch)? $branch->remarks : old('remarks')}}">
                                         @error('remarks')

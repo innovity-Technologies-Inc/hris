@@ -26,7 +26,8 @@
                                 <div class="row">
 
                                     <div class="col-lg-12 mb-2">
-                                        <label for="simpleinput" class="form-label">Salary Grade</label>
+                                        <label for="simpleinput" class="form-label">Salary Grade<span
+                                                class="text-danger">*</span></label>
                                         <input type="text" id="simpleinput" class="form-control" name="name"
                                                placeholder="Enter Salary Grade"
                                                value="{{ isset($salary_grade)? $salary_grade->name : old('name')}}">
@@ -36,7 +37,8 @@
                                     </div>
 
                                     <div class="col-lg-12 mb-2">
-                                        <label for="example-select" class="form-label">Tofsil Name</label>
+                                        <label for="example-select" class="form-label">Tofsil Name<span
+                                                class="text-danger">*</span></label>
                                         <select class="form-select select2_list" name="tofsil_id">
                                             <option value="">Choose Tofsil Name</option>
                                             @foreach($tofsils as $item)

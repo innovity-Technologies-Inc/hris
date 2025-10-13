@@ -26,7 +26,8 @@
                                 <div class="row">
 
                                     <div class="col-lg-12 mb-2">
-                                        <label for="simpleinput" class="form-label">Tofsil Name</label>
+                                        <label for="simpleinput" class="form-label">Tofsil Name<span
+                                                class="text-danger">*</span></label>
                                         <input type="text" id="simpleinput" class="form-control" name="name"
                                                placeholder="Enter Tofsil Name"
                                                value="{{ isset($tofsil)? $tofsil->name : old('name')}}">
@@ -37,7 +38,8 @@
 
 
                                     <div class="col-lg-12 mb-2">
-                                        <label for="simpleinput" class="form-label">Description</label>
+                                        <label for="simpleinput" class="form-label">Description<span
+                                                class="text-danger">*</span></label>
                                         <textarea class="form-control" name="description" id="editor1"
                                                   cols="30">{{ isset($tofsil)? $tofsil->description : old('description')}}</textarea>
                                         @error('description')
