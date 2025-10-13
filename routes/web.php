@@ -77,7 +77,7 @@ Route::prefix('company-setup')->group(function () {
         Route::post('divisions', 'store')->name('divisions.store');
         Route::get('divisions/{id}/edit', 'edit')->name('divisions.edit');
         Route::put('divisions/{id}', 'update')->name('divisions.update');
-        Route::delete('divisions/{id}', 'destroy')->name('divisions.destroy');
+        Route::delete('divisions/{id}', 'destroy')->name('divisions.delete');
     });
     Route::controller(DepartmentController::class)->group(function () {
         Route::get('departments', 'index')->name('departments.index');
