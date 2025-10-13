@@ -1,0 +1,97 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Department;
+use App\Models\Designation;
+use App\Models\JobCreation;
+use Illuminate\Http\Request;
+
+class JobCreationController extends Controller
+{
+    public function index(){
+        $title = 'Job Creation';
+        $section = 'Company Setup';
+        $sub_section = 'Job Creation';
+        $designations = Designation::all()->sortBy('company_designation');
+        $departments = Department::all()->sortBy('department_name');
+        $job_creations = JobCreation::latest()->paginate(10);
+        return view('company_setup.job_creation.index', compact('title', 'section', 'sub_section', 'designations', 'departments', 'job_creations'));
+    }
+    public function create(){
+        $title = 'Create Job Creation';
+        $section = 'Company Setup';
+        $sub_section = 'Job Creation';
+        $designations = Designation::all()->sortBy('company_designation');
+        $departments = Department::all()->sortBy('department_name');
+        return view('company_setup.job_creation.form', compact('title', 'section', 'sub_section', 'designations', 'departments'));
+    }
+      public function store(Request $request)
+    {
+        $validatedData =  $request->validate([
+            'designation_id' => 'required',
+            'department_id' => 'required',
+            'job_ind' => 'required|string|max:255',
+            'display_designation' => 'required|string|max:255',
+            'display_serial' => 'required|string|max:255',
+            'status' => 'required|in:active,inactive',
+            'remarks' => 'nullable|string',
+        ], [
+            'designation_id.required' => 'Please select a designation.',
+            'department_id.required' => 'Please select a department.',
+            'job_ind.required' => 'Please enter a job ind.',
+            'display_designation.required' => 'Please enter a display designation.',
+            'display_serial.required' => 'Please enter a display serial.',
+            'status.required' => 'Please select a status.',
+        ]);
+        JobCreation::create($validatedData);
+        return redirect()->route('job_creations.index')
+            ->with([
+                'message' => 'Job Creation Saved Successfully',
+                'alert-type' => 'success'
+            ]);
+    }
+    public function edit($id){
+        $title = 'Edit Job Creation';
+        $section = 'Company Setup';
+        $sub_section = 'Job Creation';
+        $designations = Designation::all()->sortBy('company_designation');
+        $departments = Department::all()->sortBy('department_name');
+        $job_creation = JobCreation::findOrFail($id);
+        return view('company_setup.job_creation.form', compact('title', 'section', 'sub_section', 'designations', 'departments', 'job_creation'));
+    }
+    public function update(Request $request, $id){
+        $validatedData =  $request->validate([
+            'designation_id' => 'required',
+            'department_id' => 'required',
+            'job_ind' => 'required|string|max:255',
+            'display_designation' => 'required|string|max:255',
+            'display_serial' => 'required|string|max:255',
+            'status' => 'required|in:active,inactive',
+            'remarks' => 'nullable|string',
+        ], [
+            'designation_id.required' => 'Please select a designation.',
+            'department_id.required' => 'Please select a department.',
+            'job_ind.required' => 'Please enter a job ind.',
+            'display_designation.required' => 'Please enter a display designation.',
+            'display_serial.required' => 'Please enter a display serial.',
+            'status.required' => 'Please select a status.',
+        ]);
+        $job_creation = JobCreation::findOrFail($id);
+        $job_creation->update($validatedData);
+        return redirect()->route('job_creations.index')
+            ->with([
+                'message' => 'Job Creation Updated Successfully',
+                'alert-type' => 'success'
+            ]);
+    }
+    public function destroy($id){
+        $job_creation = JobCreation::findOrFail($id);
+        $job_creation->delete();
+        return redirect()->route('job_creations.index')
+            ->with([
+                'message' => 'Job Creation Deleted Successfully',
+                'alert-type' => 'success'
+            ]);
+    }
+}

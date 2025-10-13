@@ -12,6 +12,7 @@ use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\BanksController;
 use App\Http\Controllers\BranchesController;
 use App\Http\Controllers\DesignationController;
+use App\Http\Controllers\JobCreationController;
 use App\Http\Controllers\SectionController;
 
 Route::get('/', function () {
@@ -103,6 +104,14 @@ Route::prefix('company-setup')->group(function () {
         Route::get('designations/{id}/edit', 'edit')->name('designations.edit');
         Route::put('designations/{id}', 'update')->name('designations.update');
         Route::delete('designations/{id}', 'destroy')->name('designations.delete');
+    });
+    Route::controller(JobCreationController::class)->group(function () {
+        Route::get('job_creations', 'index')->name('job_creations.index');
+        Route::get('job_creations/create', 'create')->name('job_creations.create');
+        Route::post('job_creations', 'store')->name('job_creations.store');
+        Route::get('job_creations/{id}/edit', 'edit')->name('job_creations.edit');
+        Route::put('job_creations/{id}', 'update')->name('job_creations.update');
+        Route::delete('job_creations/{id}', 'destroy')->name('job_creations.delete');
     });
 
     Route::controller(BanksController::class)->group(function () {
