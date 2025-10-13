@@ -11,6 +11,7 @@ use App\Http\Controllers\GazetteLocationsController;
 use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\BanksController;
 use App\Http\Controllers\BranchesController;
+use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\SectionController;
 
 Route::get('/', function () {
@@ -95,6 +96,15 @@ Route::prefix('company-setup')->group(function () {
         Route::put('sections/{id}', 'update')->name('sections.update');
         Route::delete('sections/{id}', 'destroy')->name('sections.delete');
     });
+    Route::controller(DesignationController::class)->group(function () {
+        Route::get('designations', 'index')->name('designations.index');
+        Route::get('designations/create', 'create')->name('designations.create');
+        Route::post('designations', 'store')->name('designations.store');
+        Route::get('designations/{id}/edit', 'edit')->name('designations.edit');
+        Route::put('designations/{id}', 'update')->name('designations.update');
+        Route::delete('designations/{id}', 'destroy')->name('designations.delete');
+    });
+
     Route::controller(BanksController::class)->group(function () {
             Route::get('banks', 'index')->name('banks.index');
             Route::get('banks/create', 'create')->name('banks.create');
