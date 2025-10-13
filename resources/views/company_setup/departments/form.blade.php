@@ -46,7 +46,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-6 mb-2">
+                                    <div class="col-md-4 mb-2">
                                         <label for="division_id" class="form-label">Division <span
                                                 class="text-danger">*</span></label>
                                         <select id="division_id" class="form-select" name="division_id" required>
@@ -61,7 +61,7 @@
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
-<div class="col-md-6 mb-2">
+<div class="col-md-4 mb-2">
                                         <label for="job_number_code" class="form-label">Job Number Code <span
                                                 class="text-danger">*</span></label>
                                         <input type="text" id="job_number_code" class="form-control"
@@ -72,9 +72,7 @@
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 mb-2">
+                                    <div class="col-md-4 mb-2">
                                         <label for="status" class="form-label">Status</label>
                                         <select class="form-select" name="status">
                                             <option value="active" @if (isset($department) && $department->status == 'active') selected @endif>Active
@@ -83,6 +81,8 @@
                                                 Inactive</option>
                                         </select>
                                     </div>
+                                </div>
+
 
 
 

@@ -113,8 +113,13 @@
                             </li>
 
                             <li>
-                                <a class='tp-link @if (Route::is('gazette_locations.*')) menuitem-active @endif'
-                                    href='{{ route('gazette_locations.index') }}'>Gazette Locations</a>
+                                <a class='tp-link @if(Route::is('bank_accounts.*')) menuitem-active @endif'
+                                   href='{{route('bank_accounts.index')}}'>Bank Accounts</a>
+                            </li>
+
+                            <li>
+                                <a class='tp-link @if(Route::is('gazette_locations.*')) menuitem-active @endif'
+                                   href='{{route('gazette_locations.index')}}'>Gazette Locations</a>
                             </li>
 
 
