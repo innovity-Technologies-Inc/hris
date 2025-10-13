@@ -11,6 +11,8 @@ use App\Http\Controllers\GazetteLocationsController;
 use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\BanksController;
 use App\Http\Controllers\BranchesController;
+use App\Http\Controllers\DesignationController;
+use App\Http\Controllers\JobCreationController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\BankAccountsController;
 
@@ -78,7 +80,7 @@ Route::prefix('company-setup')->group(function () {
         Route::post('divisions', 'store')->name('divisions.store');
         Route::get('divisions/{id}/edit', 'edit')->name('divisions.edit');
         Route::put('divisions/{id}', 'update')->name('divisions.update');
-        Route::delete('divisions/{id}', 'destroy')->name('divisions.destroy');
+        Route::delete('divisions/{id}', 'destroy')->name('divisions.delete');
     });
     Route::controller(DepartmentController::class)->group(function () {
         Route::get('departments', 'index')->name('departments.index');
@@ -96,6 +98,23 @@ Route::prefix('company-setup')->group(function () {
         Route::put('sections/{id}', 'update')->name('sections.update');
         Route::delete('sections/{id}', 'destroy')->name('sections.delete');
     });
+    Route::controller(DesignationController::class)->group(function () {
+        Route::get('designations', 'index')->name('designations.index');
+        Route::get('designations/create', 'create')->name('designations.create');
+        Route::post('designations', 'store')->name('designations.store');
+        Route::get('designations/{id}/edit', 'edit')->name('designations.edit');
+        Route::put('designations/{id}', 'update')->name('designations.update');
+        Route::delete('designations/{id}', 'destroy')->name('designations.delete');
+    });
+    Route::controller(JobCreationController::class)->group(function () {
+        Route::get('job_creations', 'index')->name('job_creations.index');
+        Route::get('job_creations/create', 'create')->name('job_creations.create');
+        Route::post('job_creations', 'store')->name('job_creations.store');
+        Route::get('job_creations/{id}/edit', 'edit')->name('job_creations.edit');
+        Route::put('job_creations/{id}', 'update')->name('job_creations.update');
+        Route::delete('job_creations/{id}', 'destroy')->name('job_creations.delete');
+    });
+
     Route::controller(BanksController::class)->group(function () {
             Route::get('banks', 'index')->name('banks.index');
             Route::get('banks/create', 'create')->name('banks.create');
