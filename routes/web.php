@@ -12,6 +12,7 @@ use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\BanksController;
 use App\Http\Controllers\BranchesController;
 use App\Http\Controllers\SectionController;
+use App\Http\Controllers\BankAccountsController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -111,6 +112,15 @@ Route::prefix('company-setup')->group(function () {
         Route::get('branches/{id}/edit', 'edit')->name('branches.edit');
         Route::put('branches/{id}', 'update')->name('branches.update');
         Route::delete('branches/{id}', 'delete')->name('branches.delete');
+    });
+
+    Route::controller(BankAccountsController::class)->group(function () {
+        Route::get('bank-accounts', 'index')->name('bank_accounts.index');
+        Route::get('bank-accounts/create', 'create')->name('bank_accounts.create');
+        Route::post('bank-accounts', 'store')->name('bank_accounts.store');
+        Route::get('bank-accounts/{id}/edit', 'edit')->name('bank_accounts.edit');
+        Route::put('bank-accounts/{id}', 'update')->name('bank_accounts.update');
+        Route::delete('bank-accounts/{id}', 'delete')->name('bank_accounts.delete');
     });
 });
 

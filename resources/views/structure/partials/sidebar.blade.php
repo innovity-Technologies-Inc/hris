@@ -86,14 +86,19 @@ Route::is('company_types.*') || Route::is('company_locations.*') || Route::is('b
                                    href='{{route('salary_grades.index')}}'>Salary Grades</a>
                             </li>
 
-                            {{-- <li>
+                             <li>
                                 <a class='tp-link @if(Route::is('banks.*')) menuitem-active @endif'
                                    href='{{route('banks.index')}}'>Banks</a>
-                            </li> --}}
+                            </li>
 
                             <li>
                                 <a class='tp-link @if(Route::is('branches.*')) menuitem-active @endif'
                                    href='{{route('branches.index')}}'>Branches</a>
+                            </li>
+
+                            <li>
+                                <a class='tp-link @if(Route::is('bank_accounts.*')) menuitem-active @endif'
+                                   href='{{route('bank_accounts.index')}}'>Bank Accounts</a>
                             </li>
 
                             <li>
