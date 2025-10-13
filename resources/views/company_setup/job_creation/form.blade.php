@@ -54,10 +54,8 @@
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
-                                </div>
 
-                                <div class="row">
-                                    <div class="col-md-6 mb-2">
+                                    <div class="col-md-4 mb-2">
                                         <label for="job_ind" class="form-label">Job Ind. <span class="text-danger">*</span></label>
                                         <input type="text" id="job_ind" class="form-control" name="job_ind"
                                             placeholder="Enter Job Indicator"
@@ -67,7 +65,7 @@
                                         @enderror
                                     </div>
 
-                                    <div class="col-md-6 mb-2">
+                                    <div class="col-md-4 mb-2">
                                         <label for="display_designation" class="form-label">Display Designation <span class="text-danger">*</span></label>
                                         <input type="text" id="display_designation" class="form-control" name="display_designation"
                                             placeholder="Enter Display Designation"
@@ -76,10 +74,8 @@
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
-                                </div>
 
-                                <div class="row">
-                                    <div class="col-md-6 mb-2">
+                                    <div class="col-md-4 mb-2">
                                         <label for="display_serial" class="form-label">Display Serial <span class="text-danger">*</span></label>
                                         <input type="text" id="display_serial" class="form-control" name="display_serial"
                                             placeholder="Enter Display Serial"
@@ -88,9 +84,7 @@
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
-                                </div>
 
-                                <div class="row">
                                     <div class="col-md-12 mb-2">
                                         <label for="remarks" class="form-label">Remarks</label>
                                         <textarea id="remarks" class="form-control" name="remarks" maxlength="500">{{ isset($job_creation) ? $job_creation->remarks : old('remarks') }}</textarea>
@@ -98,9 +92,7 @@
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
-                                </div>
 
-                                <div class="row">
                                     <div class="col-md-12 mb-2">
                                         <label for="status" class="form-label">Status</label>
                                         <select class="form-select" name="status">

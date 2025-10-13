@@ -22,24 +22,32 @@
                                 @endif
 
                                 <div class="row">
+
                                     <div class="col-md-6 mb-2">
-                                        <label for="department_id" class="form-label">Department <span
+                                        <label for="section_name" class="form-label">Section Name <span
                                                 class="text-danger">*</span></label>
-                                        <select id="department_id" class="form-select select2_list" name="department_id" required>
-                                            <option value="">Select Department</option>
-                                            @foreach ($departments as $department)
-                                                <option value="{{ $department->id }}"
-                                                    @if (isset($section) && $section->department_id == $department->id) selected @endif>
-                                                    {{ $department->department_name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @error('department_id')
-                                            <small class="text-danger">{{ $message }}</small>
+                                        <input type="text" id="section_name" class="form-control" name="section_name"
+                                               placeholder="Enter Section Name"
+                                               value="{{ isset($section) ? $section->section_name : old('section_name') }}"
+                                               required maxlength="255">
+                                        @error('section_name')
+                                        <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
 
                                     <div class="col-md-6 mb-2">
+                                        <label for="short_name" class="form-label">Short Name <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" id="short_name" class="form-control" name="short_name"
+                                               placeholder="Enter Short Name"
+                                               value="{{ isset($section) ? $section->short_name : old('short_name') }}"
+                                               required maxlength="50">
+                                        @error('short_name')
+                                        <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
+
+                                    <div class="col-md-4 mb-2">
                                         <label for="division_id" class="form-label">Division <span
                                                 class="text-danger">*</span></label>
                                         <select id="division_id" class="form-select select2_list" name="division_id" required>
@@ -55,48 +63,27 @@
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
-                                </div>
 
-                                <div class="row">
-                                    <div class="col-md-6 mb-2">
-                                        <label for="section_name" class="form-label">Section Name <span
+                                    <div class="col-md-4 mb-2">
+                                        <label for="department_id" class="form-label">Department <span
                                                 class="text-danger">*</span></label>
-                                        <input type="text" id="section_name" class="form-control" name="section_name"
-                                            placeholder="Enter Section Name"
-                                            value="{{ isset($section) ? $section->section_name : old('section_name') }}"
-                                            required maxlength="255">
-                                        @error('section_name')
-                                            <small class="text-danger">{{ $message }}</small>
+                                        <select id="department_id" class="form-select select2_list" name="department_id" required>
+                                            <option value="">Select Department</option>
+                                            @foreach ($departments as $department)
+                                                <option value="{{ $department->id }}"
+                                                        @if (isset($section) && $section->department_id == $department->id) selected @endif>
+                                                    {{ $department->department_name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('department_id')
+                                        <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
 
-                                    <div class="col-md-6 mb-2">
-                                        <label for="short_name" class="form-label">Short Name <span
-                                                class="text-danger">*</span></label>
-                                        <input type="text" id="short_name" class="form-control" name="short_name"
-                                            placeholder="Enter Short Name"
-                                            value="{{ isset($section) ? $section->short_name : old('short_name') }}"
-                                            required maxlength="50">
-                                        @error('short_name')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
-                                    </div>
-                                </div>
 
-                                <div class="row">
-                                    <div class="col-md-6 mb-2">
-                                        <label for="job_number_code" class="form-label">Job Number Code <span
-                                                class="text-danger">*</span></label>
-                                        <input type="text" id="job_number_code" class="form-control"
-                                            name="job_number_code" placeholder="Enter Job Number Code"
-                                            value="{{ isset($section) ? $section->job_number_code : old('job_number_code') }}"
-                                            required maxlength="20">
-                                        @error('job_number_code')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
-                                    </div>
 
-                                    <div class="col-md-6 mb-2">
+                                    <div class="col-md-4 mb-2">
                                         <label for="status" class="form-label">Status</label>
                                         <select class="form-select" name="status">
                                             <option value="active" @if (isset($section) && $section->status == 'active') selected @endif>Active

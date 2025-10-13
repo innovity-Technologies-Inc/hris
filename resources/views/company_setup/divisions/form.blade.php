@@ -44,9 +44,7 @@
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
-                                </div>
 
-                                <div class="row">
                                     <div class="col-md-6 mb-2">
                                         <label for="company_id" class="form-label">Company <span
                                                 class="text-danger">*</span></label>
@@ -79,7 +77,7 @@
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
-                                </div>
+
                                 <div class="col-md-12 mb-2">
                                     <label for="remarks" class="form-label">Remarks</label>
                                     <textarea id="remarks" class="form-control" name="remarks" placeholder="Enter Remarks">{{ isset($division) ? $division->remarks : old('remarks') }}</textarea>
@@ -96,6 +94,7 @@
                                         <option value="inactive" @if (isset($division) && $division->status == 'inactive') selected @endif>
                                             Inactive</option>
                                     </select>
+                                </div>
                                 </div>
 
 

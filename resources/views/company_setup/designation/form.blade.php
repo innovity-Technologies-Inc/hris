@@ -55,9 +55,7 @@
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
-                                </div>
 
-                                <div class="row">
                                     <div class="col-md-6 mb-2">
                                         <label for="division_id" class="form-label">Division <span class="text-danger">*</span></label>
                                         <select id="division_id" class="form-select select2_list" name="division_id" required>
@@ -84,9 +82,7 @@
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
-                                </div>
 
-                                <div class="row">
                                     <div class="col-md-6 mb-2">
                                         <label for="company_designation" class="form-label">Company Designation <span class="text-danger">*</span></label>
                                         <input type="text" id="company_designation" class="form-control" name="company_designation"
