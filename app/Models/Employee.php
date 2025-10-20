@@ -1,0 +1,60 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class Employee extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'applicant_id',
+        'system_id',
+        'punch_card_no',
+        'first_name',
+        'last_name',
+        'middle_name',
+        'father_name',
+        'mother_name',
+        'spouse_name',
+        'marital_status',
+        'gender',
+        'religion',
+        'nationality',
+        'height_feet',
+        'height_inches',
+        'children_count',
+        'tin',
+        'passport_no',
+        'passport_expiry',
+        'license_no',
+        'license_expiry',
+        'bgmea_id',
+        'visa_expiry',
+        'work_expiry',
+        'residency_id_number',
+        'date_of_birth',
+        'birth_country',
+        'birth_reg_no',
+        'personal_mobile',
+        'home_phone',
+        'work_mobile',
+        'work_phone',
+        'work_email',
+        'personal_email',
+        'photo_path',
+        'fingerprint_path',
+        'signature_path',
+        'experience_attachment_path',
+    ];
+
+    protected $dates = ['passport_expiry', 'license_expiry', 'visa_expiry', 'work_expiry', 'date_of_birth'];
+
+    public function getAddresses(): HasMany
+    {
+        return $this->hasMany(Address::class);
+    }
+}
