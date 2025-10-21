@@ -160,7 +160,14 @@ class EmployeeServices
     }
 
     public function getEmployeeById($id){
-        $employee = Employee::findorFail($id);
+        try{
+            $employee = Employee::find($id);
+        }catch(\Exception $e){
+            return redirect()->back()->with([
+                'message' => 'Data Not Found',
+                'alert-type' => 'error'
+            ]);
+        }
         return $employee;
     }
 

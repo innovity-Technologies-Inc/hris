@@ -1,37 +1,22 @@
 @extends('structure.master')
 @section('content')
-    <!-- Start Content-->
-    <div class="container-fluid">
-        <!-- Page Title -->
-        <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
-            <div class="flex-grow-1">
-                <h4 class="fs-18 fw-semibold m-0">Employee Profile</h4>
-            </div>
-            <div class="text-end">
-                <ol class="breadcrumb m-0 py-0">
-                    <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboard</a></li>
-                    <li class="breadcrumb-item active">Profile</li>
-                </ol>
-            </div>
-        </div>
-
         <!-- Profile Header -->
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <img src="assets/images/small/user-image.jpg" class="rounded-top-2 img-fluid" alt="cover image">
+                    <img src="{{asset('assets/images/small/user-image.jpg')}}" class="rounded-top-2 img-fluid" alt="cover image">
                     <div class="card-body">
                         <div class="align-items-center">
                             <div class="hando-main-sections">
                                 <div class="hando-profile-main">
-                                    <img src="assets/images/users/user-11.jpg" class="rounded-circle img-fluid avatar-xxl img-thumbnail float-start" alt="profile photo">
-                                    <span class="sil-profile_main-pic-change img-thumbnail">
-                                        <i class="mdi mdi-camera text-white"></i>
-                                    </span>
+                                    <img src="{{asset('storage/'.$employee->photo_path)}}" class="rounded-circle img-fluid avatar-xxl img-thumbnail float-start" alt="profile photo">
+
                                 </div>
                                 <div class="overflow-hidden ms-md-4 ms-0">
-                                    <h4 class="m-0 text-dark fs-20 mt-2 mt-md-0">Mohammad Rahman Khan</h4>
-                                    <p class="my-1 text-muted fs-16">Senior Software Engineer - Employee ID: EMP-2024-001</p>
+                                    <h4 class="m-0 text-dark fs-20 mt-2 mt-md-0">{{$employee->first_name}} {{$employee->middle_name}} {{$employee->last_name}}</h4>
+                                    <p class="my-1 text-muted fs-16">
+{{--                                        Senior Software Engineer ---}}
+                                        Employee ID: {{$employee->applicant_id}}</p>
                                     <span class="fs-15">
                                         <i class="mdi mdi-phone me-2 align-middle"></i>
                                         <span>+880 1712-345678</span>
@@ -548,7 +533,6 @@
             </div>
         </div>
 
-    </div> <!-- container-fluid -->
 @endsection
 
 @push('scripts')

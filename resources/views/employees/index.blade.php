@@ -9,10 +9,10 @@
                 <div
                     class="card-header bg-white border-bottom d-flex justify-content-between align-items-center flex-wrap gap-3 p-4">
 
-                    <a type="button" class="btn btn-warning btn-sm" href="#">
+                    <a type="button" class="btn btn-warning btn-sm" href="{{route('employees.general_informations.create')}}">
                         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                     </a>
-                    
+
                     <h4 class="mb-0 fw-semibold fs-5 text-dark">
                         <i class="mdi mdi-account-multiple me-2"></i>Employee List
                     </h4>

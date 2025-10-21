@@ -1,6 +1,6 @@
 @extends('structure.master')
 @section('content')
-    <form class="" method="POST" enctype="multipart/form-data" action="{{route('employee.general_informations.store')}}">
+    <form class="" method="POST" enctype="multipart/form-data" action="{{route('employees.general_informations.store')}}">
         @csrf
 
         <!-- System Identifiers Section -->

@@ -18,7 +18,7 @@ class EmployeeProfileController extends Controller
         $section = 'Employees';
         $sub_section = 'Index';
         $employees = $this->empServices->getEmployees();
-        return response()->json($employees);
+        return view('employees.index', compact('title', 'section', 'sub_section', 'employees'));
     }
 
     public function generalInfoCreate(){
@@ -29,7 +29,11 @@ class EmployeeProfileController extends Controller
     }
 
     public function profileView($id){
+        $title = 'Employee Profile';
+        $section = 'Employees';
+        $sub_section = 'Profile';
         $employee = $this->empServices->getEmployeeById($id);
+        return view('employees.profile', compact('title', 'section', 'sub_section', 'employee'));
     }
 
     public function generalInfoStore(Request $request){
