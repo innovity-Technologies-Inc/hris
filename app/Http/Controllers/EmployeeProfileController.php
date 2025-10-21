@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Services\EmployeeServices;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Request;
 
 class EmployeeProfileController extends Controller
 {
@@ -32,13 +32,13 @@ class EmployeeProfileController extends Controller
         $employee = $this->empServices->getEmployeeById($id);
     }
 
-    public function store(Request $request){
+    public function generalInfoStore(Request $request){
         try{
             $this->empServices->employeeInfoStore($request);
         }catch(\Exception $e){
             Log::error($e->getMessage());
             return redirect()->back()->with([
-                'message' => 'Something Went Wrong',
+                'message' => $e->getMessage(),
                 'alert-type' => 'error'
             ]);
         }

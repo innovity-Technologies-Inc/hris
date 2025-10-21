@@ -148,6 +148,9 @@ Route::prefix('company-setup')->group(function () {
 Route::prefix('employees')->group(function () {
     Route::controller(EmployeeProfileController::class)->group(function () {
         Route::get('general-informations/create', 'generalInfoCreate')->name('employee.general_informations.create');
+        Route::post('general-informations/store', 'generalInfoStore')->name('employee.general_informations.store');
+        Route::get('/', 'index')->name('employee.index');
+
     });
 });
 

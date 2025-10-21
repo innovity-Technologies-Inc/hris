@@ -4,7 +4,8 @@ namespace App\Services;
 
 use App\HelperClass;
 use App\Models\Employee;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
+
 class EmployeeServices
 {
     public function getEmployees(){
@@ -131,9 +132,10 @@ class EmployeeServices
     }
 
     public function employeeAttachmentValidation($validated, $request, $file, $key_name){
-        if ($request->hasFile($file)) {
+        if ($request->hasFile($key_name)) {
             $file_path = HelperClass::file_upload($file, 'employee_attachments');
             $validated[$key_name] = $file_path;
+            return $validated;
         }
     }
 
@@ -142,16 +144,16 @@ class EmployeeServices
         $validated = $this->employeeInfoValidation($request);
 
         $photo = $request->file('photo_path');
-        $this->employeeAttachmentValidation($validated, $request, $photo, 'photo_path');
+        $validated = $this->employeeAttachmentValidation($validated, $request, $photo, 'photo_path');
 
         $fingerprint= $request->file('fingerprint_path');
-        $this->employeeAttachmentValidation($validated, $request, $fingerprint, 'fingerprint_path');
+        $validated = $this->employeeAttachmentValidation($validated, $request, $fingerprint, 'fingerprint_path');
 
         $signature = $request->file('signature_path');
-        $this->employeeAttachmentValidation($validated, $request, $signature, 'signature_path');
+        $validated = $this->employeeAttachmentValidation($validated, $request, $signature, 'signature_path');
 
         $experience_attachment = $request->file('experience_attachment_path');
-        $this->employeeAttachmentValidation($validated, $request, $experience_attachment, 'experience_attachment_path');
+        $validated = $this->employeeAttachmentValidation($validated, $request, $experience_attachment, 'experience_attachment_path');
 
         $employee_data = Employee::create($validated);
         return $employee_data;
