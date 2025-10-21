@@ -15,10 +15,9 @@ use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\JobCreationController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\BankAccountsController;
-use App\Http\Controllers\EmployeeProfileController;
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('test', function () {
+    return view('employees.general_informations.form');
 });
 
 Route::prefix('company-setup')->group(function () {
@@ -144,11 +143,7 @@ Route::prefix('company-setup')->group(function () {
     });
 });
 
-Route::prefix('employee-profile')->group(function () {
-    Route::controller(EmployeeProfileController::class)->group(function () {
-        Route::get('general-info', 'showGeneralInfoFormShow')->name('employees.general_informations.form');
-    });
-});
+
 
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
