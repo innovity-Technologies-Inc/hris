@@ -18,7 +18,8 @@ use App\Http\Controllers\BankAccountsController;
 use App\Http\Controllers\EmployeeProfileController;
 
 Route::get('test', function () {
-    return view('employees.general_informations.form');
+    // return view('employees.general_informations.profile');
+    return view('employees.general_informations.index');
 });
 
 Route::prefix('company-setup')->group(function () {
@@ -149,8 +150,6 @@ Route::prefix('employees')->group(function () {
         Route::get('general-informations/create', 'generalInfoCreate')->name('employee.general_informations.create');
     });
 });
-
-
 
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');

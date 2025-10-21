@@ -302,12 +302,12 @@
                             <div class="col-lg-6 mb-3">
                                 <label for="present_address_line_1" class="form-label">Address Line 1</label>
                                 <input type="text" class="form-control" id="present_address_line_1"
-                                    name="addresses[0][address_line_1]">
+                                    name="present_address[line_1]">
                             </div>
 
                             <div class="col-lg-6 mb-3">
                                 <label for="present_village" class="form-label">Village</label>
-                                <input type="text" class="form-control" id="present_village" name="addresses[0][village]">
+                                <input type="text" class="form-control" id="present_village" name="present_address[village]">
                             </div>
                         </div>
 
@@ -315,46 +315,33 @@
                             <div class="col-lg-4 mb-3">
                                 <label for="present_post_office" class="form-label">Post Office</label>
                                 <input type="text" class="form-control" id="present_post_office"
-                                    name="address[0]['post_office']">
-                            </div>
-
-                            <div class="col-lg-4 mb-3">
-                                <label for="present_thana" class="form-label">Thana</label>
-                                <input type="text" class="form-control" id="present_thana" name="addresses[0][thana]">
+                                    name="present_address[post_office]">
                             </div>
 
                             <div class="col-lg-4 mb-3">
                                 <label for="present_district" class="form-label">District</label>
-                                <input type="text" class="form-control" id="present_district" name="addresses[0][district]">
+                                <input type="text" class="form-control" id="present_district" name="present_address[district]">
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-lg-4 mb-3">
                                 <label for="present_division" class="form-label">Division</label>
-                                <input type="text" class="form-control" id="present_division" name="addresses[0][division]">
+                                <input type="text" class="form-control" id="present_division" name="present_address[division]">
                             </div>
 
                             <div class="col-lg-4 mb-3">
                                 <label for="present_zip_code" class="form-label">Zip Code</label>
-                                <input type="text" class="form-control" id="present_zip_code" name="addresses[0][zip_code]">
+                                <input type="text" class="form-control" id="present_zip_code" name="present_address[zip_code]">
                             </div>
 
                             <div class="col-lg-4 mb-3">
+                                <label for="present_state" class="form-label">State</label>
+                                <input type="text" class="form-control" id="present_state" name="present_address[state]">
+                            </div>
+                            <div class="col-lg-4 mb-3">
                                 <label for="present_country" class="form-label">Country</label>
-                                <input type="text" class="form-control" id="present_country" name="addresses[0][country]">
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-lg-6 mb-3">
-                                <label for="present_phone" class="form-label">Phone</label>
-                                <input type="tel" class="form-control" id="present_phone" name="addresses[0][phone]">
-                            </div>
-
-                            <div class="col-lg-6 mb-3">
-                                <label for="present_mobile" class="form-label">Mobile</label>
-                                <input type="tel" class="form-control" id="present_mobile" name="addresses[0][mobile]">
+                                <input type="text" class="form-control" id="present_country" name="present_address[country]">
                             </div>
                         </div>
                     </div>
@@ -386,12 +373,12 @@
                             <div class="col-lg-6 mb-3">
                                 <label for="permanent_address_line_1" class="form-label">Address Line 1</label>
                                 <input type="text" class="form-control" id="permanent_address_line_1"
-                                    name="addresses[1][address_line_1]">
+                                    name="permanent_address[address_line_1]">
                             </div>
 
                             <div class="col-lg-6 mb-3">
                                 <label for="permanent_village" class="form-label">Village</label>
-                                <input type="text" class="form-control" id="permanent_village" name="addresses[1][village]">
+                                <input type="text" class="form-control" id="permanent_village" name="permanent_address[village]">
                             </div>
                         </div>
 
@@ -399,46 +386,33 @@
                             <div class="col-lg-4 mb-3">
                                 <label for="permanent_post_office" class="form-label">Post Office</label>
                                 <input type="text" class="form-control" id="permanent_post_office"
-                                    name="addresses[1][post_office]">
-                            </div>
-
-                            <div class="col-lg-4 mb-3">
-                                <label for="permanent_thana" class="form-label">Thana</label>
-                                <input type="text" class="form-control" id="permanent_thana" name="addresses[1][thana]">
+                                    name="permanent_address[post_office]">
                             </div>
 
                             <div class="col-lg-4 mb-3">
                                 <label for="permanent_district" class="form-label">District</label>
-                                <input type="text" class="form-control" id="permanent_district" name="addresses[1][district]">
+                                <input type="text" class="form-control" id="permanent_district" name="permanent_address[district]">
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-lg-4 mb-3">
                                 <label for="permanent_division" class="form-label">Division</label>
-                                <input type="text" class="form-control" id="permanent_division" name="addresses[1][division]">
+                                <input type="text" class="form-control" id="permanent_division" name="permanent_address[division]">
                             </div>
 
                             <div class="col-lg-4 mb-3">
                                 <label for="permanent_zip_code" class="form-label">Zip Code</label>
-                                <input type="text" class="form-control" id="permanent_zip_code" name="addresses[1][zip_code]">
+                                <input type="text" class="form-control" id="permanent_zip_code" name="permanent_address[zip_code]">
+                            </div>
+                            <div class="col-lg-4 mb-3">
+                                <label for="present_state" class="form-label">State</label>
+                                <input type="text" class="form-control" id="present_state" name="permanent_address[state]">
                             </div>
 
                             <div class="col-lg-4 mb-3">
                                 <label for="permanent_country" class="form-label">Country</label>
-                                <input type="text" class="form-control" id="permanent_country" name="addresses[1][country]">
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-lg-6 mb-3">
-                                <label for="permanent_phone" class="form-label">Phone</label>
-                                <input type="tel" class="form-control" id="permanent_phone" name="addresses[1][phone]">
-                            </div>
-
-                            <div class="col-lg-6 mb-3">
-                                <label for="permanent_mobile" class="form-label">Mobile</label>
-                                <input type="tel" class="form-control" id="permanent_mobile" name="addresses[1][mobile]">
+                                <input type="text" class="form-control" id="permanent_country" name="permanent_address[country]">
                             </div>
                         </div>
                     </div>
@@ -457,18 +431,18 @@
                         <div class="row">
                             <div class="col-lg-4 mb-3">
                                 <label for="reference_emp_id" class="form-label">Reference Employee ID</label>
-                                <input type="text" class="form-control" id="reference_emp_id" name="reference_emp_id">
+                                <input type="text" class="form-control" id="reference_emp_id" name="reference_address_emp_id">
                             </div>
 
                             <div class="col-lg-4 mb-3">
                                 <label for="reference_name" class="form-label">Reference Name</label>
-                                <input type="text" class="form-control" id="reference_name" name="reference_name">
+                                <input type="text" class="form-control" id="reference_name" name="reference_address_name">
                             </div>
 
                             <div class="col-lg-4 mb-3">
                                 <label for="reference_designation" class="form-label">Reference Designation</label>
-                                <input type="text" class="form-control" id="reference_designation"
-                                    name="reference_designation">
+                                <input type="text" class="form-control" id="reference_address_designation"
+                                    name="reference_address_designation">
                             </div>
                         </div>
 
@@ -476,12 +450,12 @@
                             <div class="col-lg-6 mb-3">
                                 <label for="reference_address_line_1" class="form-label">Address Line 1</label>
                                 <input type="text" class="form-control" id="reference_address_line_1"
-                                    name="addresses[2][address_line_1]">
+                                    name="reference_address[address_line_1]">
                             </div>
 
                             <div class="col-lg-6 mb-3">
                                 <label for="reference_village" class="form-label">Village</label>
-                                <input type="text" class="form-control" id="reference_village" name="addresses[2][village]">
+                                <input type="text" class="form-control" id="reference_village" name="reference_address[village]">
                             </div>
                         </div>
 
@@ -489,58 +463,58 @@
                             <div class="col-lg-4 mb-3">
                                 <label for="reference_post_office" class="form-label">Post Office</label>
                                 <input type="text" class="form-control" id="reference_post_office"
-                                    name="addresses[2][post_office]">
-                            </div>
-
-                            <div class="col-lg-4 mb-3">
-                                <label for="reference_thana" class="form-label">Thana</label>
-                                <input type="text" class="form-control" id="reference_thana" name="addresses[2][thana]">
+                                    name="reference_address[post_office]">
                             </div>
 
                             <div class="col-lg-4 mb-3">
                                 <label for="reference_district" class="form-label">District</label>
-                                <input type="text" class="form-control" id="reference_district" name="addresses[2][district]">
+                                <input type="text" class="form-control" id="reference_district" name="reference_address[district]">
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-lg-4 mb-3">
                                 <label for="reference_division" class="form-label">Division</label>
-                                <input type="text" class="form-control" id="reference_division" name="addresses[2][division]">
+                                <input type="text" class="form-control" id="reference_division" name="reference_address[division]">
                             </div>
 
                             <div class="col-lg-4 mb-3">
                                 <label for="reference_city" class="form-label">City</label>
-                                <input type="text" class="form-control" id="reference_city" name="addresses[2][city]">
+                                <input type="text" class="form-control" id="reference_city" name="reference_address[city]">
                             </div>
 
                             <div class="col-lg-4 mb-3">
                                 <label for="reference_zip_code" class="form-label">Zip Code</label>
-                                <input type="text" class="form-control" id="reference_zip_code" name="addresses[2][zip_code]">
+                                <input type="text" class="form-control" id="reference_zip_code" name="reference_address[zip_code]">
+                            </div>
+                            <div class="col-lg-4 mb-3">
+                                <label for="present_state" class="form-label">State</label>
+                                <input type="text" class="form-control" id="present_state" name="reference_address[state]">
                             </div>
                         </div>
+
 
                         <div class="row">
                             <div class="col-lg-4 mb-3">
                                 <label for="reference_country" class="form-label">Country</label>
-                                <input type="text" class="form-control" id="reference_country" name="addresses[2][country]">
+                                <input type="text" class="form-control" id="reference_country" name="reference_address[country]">
                             </div>
 
                             <div class="col-lg-4 mb-3">
                                 <label for="reference_phone" class="form-label">Phone</label>
-                                <input type="tel" class="form-control" id="reference_phone" name="addresses[2][phone]">
+                                <input type="tel" class="form-control" id="reference_phone" name="reference_address[phone]">
                             </div>
 
                             <div class="col-lg-4 mb-3">
                                 <label for="reference_mobile" class="form-label">Mobile</label>
-                                <input type="tel" class="form-control" id="reference_mobile" name="addresses[2][mobile]">
+                                <input type="tel" class="form-control" id="reference_mobile" name="reference_address[mobile]">
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-lg-6 mb-3">
                                 <label for="reference_email" class="form-label">Reference Email</label>
-                                <input type="email" class="form-control" id="reference_email" name="reference_email">
+                                <input type="email" class="form-control" id="reference_email" name="reference_address_email">
                             </div>
                         </div>
                     </div>
