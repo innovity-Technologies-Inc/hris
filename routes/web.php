@@ -15,6 +15,7 @@ use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\JobCreationController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\BankAccountsController;
+use App\Http\Controllers\EmployeeProfileController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -140,6 +141,12 @@ Route::prefix('company-setup')->group(function () {
         Route::get('bank-accounts/{id}/edit', 'edit')->name('bank_accounts.edit');
         Route::put('bank-accounts/{id}', 'update')->name('bank_accounts.update');
         Route::delete('bank-accounts/{id}', 'delete')->name('bank_accounts.delete');
+    });
+});
+
+Route::prefix('employee-profile')->group(function () {
+    Route::controller(EmployeeProfileController::class)->group(function () {
+        Route::get('general-info', 'showGeneralInfoFormShow')->name('employees.general_informations.form');
     });
 });
 

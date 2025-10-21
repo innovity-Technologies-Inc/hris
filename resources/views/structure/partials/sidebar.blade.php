@@ -123,7 +123,10 @@
                                 <a class='tp-link @if(Route::is('gazette_locations.*')) menuitem-active @endif'
                                    href='{{route('gazette_locations.index')}}'>Gazette Locations</a>
                             </li>
-
+                            <li>
+                                <a class='tp-link @if(Route::is('gazette_locations.*')) menuitem-active @endif'
+                                   href='{{route('gazette_locations.index')}}'>Gazette Locations</a>
+                            </li>
 
                         </ul>
                     </div>
