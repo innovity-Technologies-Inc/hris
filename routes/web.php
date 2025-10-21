@@ -17,7 +17,8 @@ use App\Http\Controllers\SectionController;
 use App\Http\Controllers\BankAccountsController;
 
 Route::get('test', function () {
-    return view('employees.general_informations.form');
+    // return view('employees.general_informations.profile');
+    return view('employees.general_informations.index');
 });
 
 Route::prefix('company-setup')->group(function () {
@@ -142,8 +143,6 @@ Route::prefix('company-setup')->group(function () {
         Route::delete('bank-accounts/{id}', 'delete')->name('bank_accounts.delete');
     });
 });
-
-
 
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
