@@ -22,9 +22,9 @@
                                     Employee ID: {{ $employee->applicant_id }}</p>
                                 <span class="fs-15">
                                     <i class="mdi mdi-phone me-2 align-middle"></i>
-                                    <span>+880 1712-345678</span>
+                                    <span>{{ $employee->phone }}</span>
                                     <i class="mdi mdi-email ms-3 me-2 align-middle"></i>
-                                    <span>mohammad.khan@company.com</span>
+                                    <span>{{ $employee->email }}</span>
                                 </span>
                             </div>
                         </div>
@@ -45,15 +45,15 @@
                     <div class="row">
                         <div class="col-md-4">
                             <p class="mb-2"><strong>Applicant ID:</strong></p>
-                            <p class="text-muted">APP-2024-12345</p>
+                            <p class="text-muted">{{ $employee->applicant_id }}</p>
                         </div>
                         <div class="col-md-4">
                             <p class="mb-2"><strong>System ID:</strong></p>
-                            <p class="text-muted">SYS-EMP-001-2024</p>
+                            <p class="text-muted">{{ $employee->system_id }}</p>
                         </div>
                         <div class="col-md-4">
                             <p class="mb-2"><strong>Punch Card No:</strong></p>
-                            <p class="text-muted">PC-54321</p>
+                            <p class="text-muted">{{ $employee->punch_card_no }}</p>
                         </div>
                     </div>
                 </div>
@@ -107,39 +107,39 @@
                                             <tbody>
                                                 <tr>
                                                     <td class="fw-semibold" style="width: 40%;">First Name</td>
-                                                    <td>Mohammad Rahman</td>
+                                                    <td>{{ $employee->first_name }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Middle Name</td>
-                                                    <td>Abdul</td>
+                                                    <td>{{ $employee->middle_name }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Last Name</td>
-                                                    <td>Khan</td>
+                                                    <td>{{ $employee->last_name }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Gender</td>
-                                                    <td>Male</td>
+                                                    <td>{{ $employee->gender }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Marital Status</td>
-                                                    <td>Married</td>
+                                                    <td>{{ $employee->marital_status }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Religion</td>
-                                                    <td>Islam</td>
+                                                    <td>{{ $employee->religion }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Nationality</td>
-                                                    <td>Bangladeshi</td>
+                                                    <td>{{ $employee->nationality }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Height</td>
-                                                    <td>5 ft 8 in</td>
+                                                    <td>{{ $employee->height }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Number of Children</td>
-                                                    <td>2</td>
+                                                    <td>{{ $employee->number_of_children }}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -153,15 +153,15 @@
                                             <tbody>
                                                 <tr>
                                                     <td class="fw-semibold" style="width: 40%;">Father's Name</td>
-                                                    <td>Abdul Karim Khan</td>
+                                                    <td>{{ $employee->father_name }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Mother's Name</td>
-                                                    <td>Fatima Begum</td>
+                                                    <td>{{ $employee->mother_name }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Spouse's Name</td>
-                                                    <td>Ayesha Rahman</td>
+                                                    <td>{{ $employee->spouse_name }}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -180,15 +180,15 @@
                                             <tbody>
                                                 <tr>
                                                     <td class="fw-semibold" style="width: 40%;">Date of Birth</td>
-                                                    <td>January 15, 1990</td>
+                                                    <td>{{ $employee->date_of_birth }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Birth Country</td>
-                                                    <td>Bangladesh</td>
+                                                    <td>{{ $employee->birth_country }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Birth Registration No</td>
-                                                    <td>19900115123456789</td>
+                                                    <td>{{ $employee->birth_registration_no }}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -200,15 +200,15 @@
                                             <tbody>
                                                 <tr>
                                                     <td class="fw-semibold" style="width: 40%;">TIN Number</td>
-                                                    <td>123-456-789-012</td>
+                                                    <td>{{ $employee->tin_number }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">BGMEA ID</td>
-                                                    <td>BGMEA-2024-5678</td>
+                                                    <td>{{ $employee->bgmea_id }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Residency ID</td>
-                                                    <td>RID-BD-2024-9876</td>
+                                                    <td>{{ $employee->residency_id }}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -222,19 +222,19 @@
                                             <tbody>
                                                 <tr>
                                                     <td class="fw-semibold" style="width: 40%;">Passport Number</td>
-                                                    <td>BD1234567</td>
+                                                    <td>{{ $employee->passport_number }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Passport Expiry</td>
-                                                    <td>December 31, 2028</td>
+                                                    <td>{{ $employee->passport_expiry }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Visa Expiry</td>
-                                                    <td>June 30, 2026</td>
+                                                    <td>{{ $employee->visa_expiry }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Work Permit Expiry</td>
-                                                    <td>December 31, 2025</td>
+                                                    <td>{{ $employee->work_permit_expiry }}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -246,11 +246,11 @@
                                             <tbody>
                                                 <tr>
                                                     <td class="fw-semibold" style="width: 40%;">License Number</td>
-                                                    <td>DL-DHK-2019-123456</td>
+                                                    <td>{{ $employee->license_number }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">License Expiry</td>
-                                                    <td>March 15, 2029</td>
+                                                    <td>{{ $employee->license_expiry }}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -269,15 +269,15 @@
                                             <tbody>
                                                 <tr>
                                                     <td class="fw-semibold" style="width: 40%;">Personal Mobile</td>
-                                                    <td>+880 1712-345678</td>
+                                                    <td>{{ $employee->personal_mobile }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Home Phone</td>
-                                                    <td>+880 2-9876543</td>
+                                                    <td>{{ $employee->home_phone }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Personal Email</td>
-                                                    <td>mohammad.khan.personal@gmail.com</td>
+                                                    <td>{{ $employee->personal_email }}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -291,15 +291,15 @@
                                             <tbody>
                                                 <tr>
                                                     <td class="fw-semibold" style="width: 40%;">Work Mobile</td>
-                                                    <td>+880 1798-765432</td>
+                                                    <td>{{ $employee->work_mobile }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Work Phone</td>
-                                                    <td>+880 2-5551234 (Ext: 205)</td>
+                                                    <td>{{ $employee->work_phone }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Work Email</td>
-                                                    <td>mohammad.khan@company.com</td>
+                                                    <td>{{ $employee->work_email }}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -320,22 +320,22 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <p><strong>Address Line 1:</strong> House 45, Road 12, Block C</p>
-                                                    <p><strong>Village:</strong> Banani</p>
-                                                    <p><strong>Post Office:</strong> Banani Post Office</p>
-                                                    <p><strong>Thana:</strong> Gulshan</p>
+                                                    <p><strong>Address Line 1:</strong> {{ $employee->present_address_line1 }}</p>
+                                                    <p><strong>Village:</strong> {{ $employee->present_village }}</p>
+                                                    <p><strong>Post Office:</strong> {{ $employee->present_post_office }}</p>
+                                                    <p><strong>Thana:</strong> {{ $employee->present_thana }}</p>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <p><strong>District:</strong> Dhaka</p>
-                                                    <p><strong>Division:</strong> Dhaka</p>
-                                                    <p><strong>Zip Code:</strong> 1213</p>
-                                                    <p><strong>Country:</strong> Bangladesh</p>
+                                                    <p><strong>District:</strong> {{ $employee->present_district }}</p>
+                                                    <p><strong>Division:</strong> {{ $employee->present_division }}</p>
+                                                    <p><strong>Zip Code:</strong> {{ $employee->present_zip_code }}</p>
+                                                    <p><strong>Country:</strong> {{ $employee->present_country }}</p>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <p><strong>Phone:</strong> +880 2-9876543</p>
+                                                    <p><strong>Phone:</strong> {{ $employee->present_phone }}</p>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <p><strong>Mobile:</strong> +880 1712-345678</p>
+                                                    <p><strong>Mobile:</strong> {{ $employee->present_mobile }}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -349,22 +349,22 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <p><strong>Address Line 1:</strong> Village Rampur, Ward No. 3</p>
-                                                    <p><strong>Village:</strong> Rampur</p>
-                                                    <p><strong>Post Office:</strong> Rampur Bazar</p>
-                                                    <p><strong>Thana:</strong> Savar</p>
+                                                    <p><strong>Address Line 1:</strong> {{ $employee->permanent_address_line1 }}</p>
+                                                    <p><strong>Village:</strong> {{ $employee->permanent_village }}</p>
+                                                    <p><strong>Post Office:</strong> {{ $employee->permanent_post_office }}</p>
+                                                    <p><strong>Thana:</strong> {{ $employee->permanent_thana }}</p>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <p><strong>District:</strong> Dhaka</p>
-                                                    <p><strong>Division:</strong> Dhaka</p>
-                                                    <p><strong>Zip Code:</strong> 1340</p>
-                                                    <p><strong>Country:</strong> Bangladesh</p>
+                                                    <p><strong>District:</strong> {{ $employee->permanent_district }}</p>
+                                                    <p><strong>Division:</strong> {{ $employee->permanent_division }}</p>
+                                                    <p><strong>Zip Code:</strong> {{ $employee->permanent_zip_code }}</p>
+                                                    <p><strong>Country:</strong> {{ $employee->permanent_country }}</p>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <p><strong>Phone:</strong> +880 2-7789456</p>
+                                                    <p><strong>Phone:</strong> {{ $employee->permanent_phone }}</p>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <p><strong>Mobile:</strong> +880 1823-456789</p>
+                                                    <p><strong>Mobile:</strong> {{ $employee->permanent_mobile }}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -378,21 +378,21 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                    <p><strong>Reference Employee ID:</strong> EMP-2020-045</p>
-                                                    <p><strong>Reference Name:</strong> Dr. Kamal Ahmed</p>
-                                                    <p><strong>Designation:</strong> Senior Manager, HR</p>
+                                                    <p><strong>Reference Employee ID:</strong> {{ $employee->reference_employee_id }}</p>
+                                                    <p><strong>Reference Name:</strong> {{ $employee->reference_name }}</p>
+                                                    <p><strong>Designation:</strong> {{ $employee->reference_designation }}</p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <p><strong>Address:</strong> House 78, Road 5, Dhanmondi</p>
-                                                    <p><strong>Village:</strong> Dhanmondi</p>
-                                                    <p><strong>Thana:</strong> Dhanmondi</p>
-                                                    <p><strong>District:</strong> Dhaka</p>
+                                                    <p><strong>Address:</strong> {{ $employee->reference_address }}</p>
+                                                    <p><strong>Village:</strong> {{ $employee->reference_village }}</p>
+                                                    <p><strong>Thana:</strong> {{ $employee->reference_thana }}</p>
+                                                    <p><strong>District:</strong> {{ $employee->reference_district }}</p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <p><strong>City:</strong> Dhaka</p>
-                                                    <p><strong>Zip Code:</strong> 1209</p>
-                                                    <p><strong>Phone:</strong> +880 1755-123456</p>
-                                                    <p><strong>Email:</strong> kamal.ahmed@company.com</p>
+                                                    <p><strong>City:</strong> {{ $employee->reference_city }}</p>
+                                                    <p><strong>Zip Code:</strong> {{ $employee->reference_zip_code }}</p>
+                                                    <p><strong>Phone:</strong> {{ $employee->reference_phone }}</p>
+                                                    <p><strong>Email:</strong> {{ $employee->reference_email }}</p>
                                                 </div>
                                             </div>
                                         </div>

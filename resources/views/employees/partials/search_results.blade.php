@@ -1,13 +1,13 @@
 <div class="card-body p-0">
-    <div class="p-3">
-
-        <a type="button" class="btn btn-warning btn-sm me-3 " href="{{ route('employees.general_informations.create') }}">
+        <a type="button" class="btn btn-warning btn-sm me-3 mb-3 " href="{{ route('employees.general_informations.create') }}">
             <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
         </a>
-    </div>
-    @if ($employees->isEmpty())
+
+    {{-- @if ($employees->isEmpty())
         <div class="text-center py-4 text-muted">No employees found.</div>
-    @else
+    @else --}}
+    <div class="card-body">
+                    <div class="table-responsive">
         <table class="table table-bordered mb-0">
             <thead>
                 <tr>
@@ -39,11 +39,11 @@
                         <td>{{ $employee->applicant_id }}</td>
                         <td>{{ $employee->full_name }}</td>
                         <td>
-                            <a href="{{ route('employees.profile', $employee->id) }}" class="btn btn-primary btn-sm me-1"
+                            <a href="{{ route('employees.profile', $employee->id) }}" class="btn btn-secondary btn-sm"
                                 title="View">
                                 <i style="height: 12px; width: 12px" data-feather="eye"></i>
                             </a>
-                            <a href="{{ route('employees.general_informations.edit', $employee->id) }}" class="btn btn-primary btn-sm me-1"
+                            <a href="{{ route('employees.general_informations.edit', $employee->id) }}" class="btn btn-primary btn-sm"
                                 title="Edit">
                                 <i style="height: 12px; width: 12px" data-feather="edit"></i>
                             </a>
@@ -52,11 +52,13 @@
                 @endforeach
             </tbody>
         </table>
+    </div>
+</div>
 
         <div class="mt-3">
             {{ $employees->appends(request()->query())->links() }}
         </div>
-    @endif
+    {{-- @endif --}}
 
     {{-- Reinitialize Feather Icons after AJAX load --}}
     <script>
