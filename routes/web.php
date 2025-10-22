@@ -18,8 +18,9 @@ use App\Http\Controllers\BankAccountsController;
 use App\Http\Controllers\EmployeeProfileController;
 
 Route::get('test', function () {
-    // return view('employees.general_informations.profile');
-    return view('employees.general_informations.index');
+    // return view('employees.index');
+    // return view('employees.partial.form');
+    return view('employees.office_informations.form');
 });
 
 Route::prefix('company-setup')->group(function () {

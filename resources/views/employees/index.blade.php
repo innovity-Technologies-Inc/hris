@@ -4,26 +4,86 @@
     {{-- Employee List --}}
     <div class="row">
         <div class="col-xl-12">
-
             <div class="card border-0 shadow-sm rounded">
-                <div
-                    class="card-header bg-white border-bottom d-flex justify-content-between align-items-center flex-wrap gap-3 p-4">
+                <div class="card-header bg-white border-bottom p-4">
+                    <div class="row align-items-start">
+                        <form action="">
 
-                    <a type="button" class="btn btn-warning btn-sm" href="{{route('employees.general_informations.create')}}">
-                        <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
-                    </a>
+                            {{-- Right side: Search and Filter Section --}}
+                            <div class="col-md-12">
+                                <div class="border rounded shadow-sm p-3 bg-light">
+                                    <form action="#" method="GET">
+                                        {{-- First Row: Keyword Search --}}
+                                        <div class="row mb-2">
+                                            <div class="col-12">
+                                                <label for="keywordSearch"
+                                                    class="form-label text-muted small fw-semibold mb-1">
+                                                    Keyword Search
+                                                </label>
+                                                <div class="input-group input-group-sm">
+                                                    <input type="text" class="form-control border-end-0"
+                                                        id="keywordSearch" name="keyword" placeholder="Search employees..."
+                                                        aria-label="Keyword Search">
+                                                    <span class="input-group-text bg-white border-start-0">
+                                                        <i class="mdi mdi-magnify text-muted"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                    <h4 class="mb-0 fw-semibold fs-5 text-dark">
-                        <i class="mdi mdi-account-multiple me-2"></i>Employee List
-                    </h4>
+                                        {{-- Second Row: Employee Name, Employee ID, and System ID --}}
+                                        <div class="row mb-2">
+                                            <div class="col-md-4">
+                                                <label for="employeeName"
+                                                    class="form-label text-muted small fw-semibold mb-1">
+                                                    Employee Name
+                                                </label>
+                                                <select id="employeeName" name="employee_name"
+                                                    class="form-select form-select-sm select2_list"
+                                                    data-placeholder="Select employee name" aria-label="Employee Name">
+                                                </select>
+                                            </div>
 
-                    <div class="d-flex gap-2 align-items-center flex-wrap">
+                                            <div class="col-md-4">
+                                                <label for="employeeId"
+                                                    class="form-label text-muted small fw-semibold mb-1">
+                                                    Employee ID
+                                                </label>
+                                                <select id="employeeId" name="employee_id"
+                                                    class="form-select form-select-sm select2_list"
+                                                    data-placeholder="Select employee ID" aria-label="Employee ID">
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label for="systemId" class="form-label text-muted small fw-semibold mb-1">
+                                                    System ID
+                                                </label>
+                                                <select id="systemId" name="system_id"
+                                                    class="form-select form-select-sm select2_list"
+                                                    data-placeholder="Select system ID" aria-label="System ID">
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </form>
 
                     </div>
                 </div>
 
                 <div class="card-body p-0">
-                    <div class="table-responsive">
+                    <div class="p-3">
+
+                        <a type="button" class="btn btn-warning btn-sm me-3 " href="#">
+                            <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
+                        </a>
+                    </div>
+
+
+                    <div class="table-responsive mt-3">
                         <table class="table table-hover mb-0 align-middle" id="employeeTable">
                             <thead class="bg-light">
                                 <tr>
@@ -32,231 +92,43 @@
                                     <th class="text-uppercase text-secondary fw-semibold small py-3 px-3"
                                         style="width: 100px;">PROFILE</th>
                                     <th class="text-uppercase text-secondary fw-semibold small py-3 px-3">SYSTEM ID</th>
+                                    <th class="text-uppercase text-secondary fw-semibold small py-3 px-3">EMPLOYEE ID</th>
                                     <th class="text-uppercase text-secondary fw-semibold small py-3 px-3">EMPLOYEE NAME</th>
                                     <th class="text-uppercase text-secondary fw-semibold small py-3 px-3"
                                         style="width: 250px;">ACTIONS</th>
                                 </tr>
                             </thead>
                             <tbody id="employeeTableBody">
-                                <!-- Employee 1 -->
-                                <tr>
-                                    <td class="px-3">1</td>
-                                    <td class="px-3">
-                                        <img src="assets/images/users/user-1.jpg" alt="Employee" class="rounded-circle"
-                                            style="width: 40px; height: 40px; object-fit: cover;">
-                                    </td>
-                                    <td class="px-3"><span class="badge bg-light text-dark">EMP-2024-001</span></td>
-                                    <td class="px-3">Mohammad Rahman Khan</td>
-                                    <td class="px-3">
-                                        <a href="#" class="btn btn-sm btn-outline-primary me-1">
-                                            <i class="mdi mdi-eye"></i> View
-                                        </a>
-                                        <a href="#" class="btn btn-sm btn-outline-success me-1">
-                                            <i class="mdi mdi-pencil"></i> Edit
-                                        </a>
-                                        <button class="btn btn-sm btn-outline-danger confirmDelete">
-                                            <i class="mdi mdi-delete"></i> Delete
-                                        </button>
-                                    </td>
-                                </tr>
-
-                                <!-- Employee 2 -->
-                                <tr>
-                                    <td class="px-3">2</td>
-                                    <td class="px-3">
-                                        <img src="assets/images/users/user-2.jpg" alt="Employee" class="rounded-circle"
-                                            style="width: 40px; height: 40px; object-fit: cover;">
-                                    </td>
-                                    <td class="px-3"><span class="badge bg-light text-dark">EMP-2024-002</span></td>
-                                    <td class="px-3">Ayesha Siddiqua</td>
-                                    <td class="px-3">
-                                        <a href="#" class="btn btn-sm btn-outline-primary me-1">
-                                            <i class="mdi mdi-eye"></i> View
-                                        </a>
-                                        <a href="#" class="btn btn-sm btn-outline-success me-1">
-                                            <i class="mdi mdi-pencil"></i> Edit
-                                        </a>
-                                        <button class="btn btn-sm btn-outline-danger confirmDelete">
-                                            <i class="mdi mdi-delete"></i> Delete
-                                        </button>
-                                    </td>
-                                </tr>
-
-                                <!-- Employee 3 -->
-                                <tr>
-                                    <td class="px-3">3</td>
-                                    <td class="px-3">
-                                        <img src="assets/images/users/user-3.jpg" alt="Employee" class="rounded-circle"
-                                            style="width: 40px; height: 40px; object-fit: cover;">
-                                    </td>
-                                    <td class="px-3"><span class="badge bg-light text-dark">EMP-2024-003</span></td>
-                                    <td class="px-3">Kamal Ahmed</td>
-                                    <td class="px-3">
-                                        <a href="#" class="btn btn-sm btn-outline-primary me-1">
-                                            <i class="mdi mdi-eye"></i> View
-                                        </a>
-                                        <a href="#" class="btn btn-sm btn-outline-success me-1">
-                                            <i class="mdi mdi-pencil"></i> Edit
-                                        </a>
-                                        <button class="btn btn-sm btn-outline-danger confirmDelete">
-                                            <i class="mdi mdi-delete"></i> Delete
-                                        </button>
-                                    </td>
-                                </tr>
-
-                                <!-- Employee 4 -->
-                                <tr>
-                                    <td class="px-3">4</td>
-                                    <td class="px-3">
-                                        <img src="assets/images/users/user-4.jpg" alt="Employee" class="rounded-circle"
-                                            style="width: 40px; height: 40px; object-fit: cover;">
-                                    </td>
-                                    <td class="px-3"><span class="badge bg-light text-dark">EMP-2024-004</span></td>
-                                    <td class="px-3">Fatima Begum</td>
-                                    <td class="px-3">
-                                        <a href="#" class="btn btn-sm btn-outline-primary me-1">
-                                            <i class="mdi mdi-eye"></i> View
-                                        </a>
-                                        <a href="#" class="btn btn-sm btn-outline-success me-1">
-                                            <i class="mdi mdi-pencil"></i> Edit
-                                        </a>
-                                        <button class="btn btn-sm btn-outline-danger confirmDelete">
-                                            <i class="mdi mdi-delete"></i> Delete
-                                        </button>
-                                    </td>
-                                </tr>
-
-                                <!-- Employee 5 -->
-                                <tr>
-                                    <td class="px-3">5</td>
-                                    <td class="px-3">
-                                        <img src="assets/images/users/user-5.jpg" alt="Employee" class="rounded-circle"
-                                            style="width: 40px; height: 40px; object-fit: cover;">
-                                    </td>
-                                    <td class="px-3"><span class="badge bg-light text-dark">EMP-2024-005</span></td>
-                                    <td class="px-3">Rafiqul Islam</td>
-                                    <td class="px-3">
-                                        <a href="#" class="btn btn-sm btn-outline-primary me-1">
-                                            <i class="mdi mdi-eye"></i> View
-                                        </a>
-                                        <a href="#" class="btn btn-sm btn-outline-success me-1">
-                                            <i class="mdi mdi-pencil"></i> Edit
-                                        </a>
-                                        <button class="btn btn-sm btn-outline-danger confirmDelete">
-                                            <i class="mdi mdi-delete"></i> Delete
-                                        </button>
-                                    </td>
-                                </tr>
-
-                                <!-- Employee 6 -->
-                                <tr>
-                                    <td class="px-3">6</td>
-                                    <td class="px-3">
-                                        <img src="assets/images/users/user-6.jpg" alt="Employee" class="rounded-circle"
-                                            style="width: 40px; height: 40px; object-fit: cover;">
-                                    </td>
-                                    <td class="px-3"><span class="badge bg-light text-dark">EMP-2024-006</span></td>
-                                    <td class="px-3">Nusrat Jahan</td>
-                                    <td class="px-3">
-                                        <a href="#" class="btn btn-sm btn-outline-primary me-1">
-                                            <i class="mdi mdi-eye"></i> View
-                                        </a>
-                                        <a href="#" class="btn btn-sm btn-outline-success me-1">
-                                            <i class="mdi mdi-pencil"></i> Edit
-                                        </a>
-                                        <button class="btn btn-sm btn-outline-danger confirmDelete">
-                                            <i class="mdi mdi-delete"></i> Delete
-                                        </button>
-                                    </td>
-                                </tr>
-
-                                <!-- Employee 7 -->
-                                <tr>
-                                    <td class="px-3">7</td>
-                                    <td class="px-3">
-                                        <img src="assets/images/users/user-7.jpg" alt="Employee" class="rounded-circle"
-                                            style="width: 40px; height: 40px; object-fit: cover;">
-                                    </td>
-                                    <td class="px-3"><span class="badge bg-light text-dark">EMP-2024-007</span></td>
-                                    <td class="px-3">Abdul Jabbar</td>
-                                    <td class="px-3">
-                                        <a href="#" class="btn btn-sm btn-outline-primary me-1">
-                                            <i class="mdi mdi-eye"></i> View
-                                        </a>
-                                        <a href="#" class="btn btn-sm btn-outline-success me-1">
-                                            <i class="mdi mdi-pencil"></i> Edit
-                                        </a>
-                                        <button class="btn btn-sm btn-outline-danger confirmDelete">
-                                            <i class="mdi mdi-delete"></i> Delete
-                                        </button>
-                                    </td>
-                                </tr>
-
-                                <!-- Employee 8 -->
-                                <tr>
-                                    <td class="px-3">8</td>
-                                    <td class="px-3">
-                                        <img src="assets/images/users/user-8.jpg" alt="Employee" class="rounded-circle"
-                                            style="width: 40px; height: 40px; object-fit: cover;">
-                                    </td>
-                                    <td class="px-3"><span class="badge bg-light text-dark">EMP-2024-008</span></td>
-                                    <td class="px-3">Sadia Afroz</td>
-                                    <td class="px-3">
-                                        <a href="#" class="btn btn-sm btn-outline-primary me-1">
-                                            <i class="mdi mdi-eye"></i> View
-                                        </a>
-                                        <a href="#" class="btn btn-sm btn-outline-success me-1">
-                                            <i class="mdi mdi-pencil"></i> Edit
-                                        </a>
-                                        <button class="btn btn-sm btn-outline-danger confirmDelete">
-                                            <i class="mdi mdi-delete"></i> Delete
-                                        </button>
-                                    </td>
-                                </tr>
-
-                                <!-- Employee 9 -->
-                                <tr>
-                                    <td class="px-3">9</td>
-                                    <td class="px-3">
-                                        <img src="assets/images/users/user-9.jpg" alt="Employee" class="rounded-circle"
-                                            style="width: 40px; height: 40px; object-fit: cover;">
-                                    </td>
-                                    <td class="px-3"><span class="badge bg-light text-dark">EMP-2024-009</span></td>
-                                    <td class="px-3">Tariqul Hasan</td>
-                                    <td class="px-3">
-                                        <a href="#" class="btn btn-sm btn-outline-primary me-1">
-                                            <i class="mdi mdi-eye"></i> View
-                                        </a>
-                                        <a href="#" class="btn btn-sm btn-outline-success me-1">
-                                            <i class="mdi mdi-pencil"></i> Edit
-                                        </a>
-                                        <button class="btn btn-sm btn-outline-danger confirmDelete">
-                                            <i class="mdi mdi-delete"></i> Delete
-                                        </button>
-                                    </td>
-                                </tr>
-
-                                <!-- Employee 10 -->
-                                <tr>
-                                    <td class="px-3">10</td>
-                                    <td class="px-3">
-                                        <img src="assets/images/users/user-10.jpg" alt="Employee" class="rounded-circle"
-                                            style="width: 40px; height: 40px; object-fit: cover;">
-                                    </td>
-                                    <td class="px-3"><span class="badge bg-light text-dark">EMP-2024-010</span></td>
-                                    <td class="px-3">Rubaiya Sultana</td>
-                                    <td class="px-3">
-                                        <a href="#" class="btn btn-sm btn-outline-primary me-1">
-                                            <i class="mdi mdi-eye"></i> View
-                                        </a>
-                                        <a href="#" class="btn btn-sm btn-outline-success me-1">
-                                            <i class="mdi mdi-pencil"></i> Edit
-                                        </a>
-                                        <button class="btn btn-sm btn-outline-danger confirmDelete">
-                                            <i class="mdi mdi-delete"></i> Delete
-                                        </button>
-                                    </td>
-                                </tr>
+                                @php($i = 1)
+                                @foreach ($employees as $employee)
+                                    <!-- Employee 1 -->
+                                    <tr>
+                                        <td class="px-3">{{ $i++ }}</td>
+                                        <td class="px-3">
+                                            <img src="{{ assets('storage/' . $employee->photo_path) }}" alt="Employee"
+                                                class="rounded-circle"
+                                                style="width: 40px; height: 40px; object-fit: cover;">
+                                        </td>
+                                        <td class="px-3"><span
+                                                class="badge bg-light text-dark">{{ $employee->system_id }}</span></td>
+                                        <td class="px-3"><span
+                                                class="badge bg-light text-dark">{{ $employee->employee_id }}</span></td>
+                                        <td class="px-3"><span
+                                                class="badge bg-light text-dark">{{ $employee->first_name }}
+                                                {{ $employee->middle_name }} {{ $employee->last_name }}</span></td>
+                                        <td class="px-3">
+                                            <a href="#" class="btn btn-sm btn-outline-primary me-1">
+                                                <i class="mdi mdi-eye"></i> View
+                                            </a>
+                                            <a href="#" class="btn btn-sm btn-outline-success me-1">
+                                                <i class="mdi mdi-pencil"></i> Edit
+                                            </a>
+                                            <button class="btn btn-sm btn-outline-danger confirmDelete">
+                                                <i class="mdi mdi-delete"></i> Delete
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
 
@@ -270,6 +142,4 @@
             </div>
         </div>
     </div>
-
-
 @endsection
