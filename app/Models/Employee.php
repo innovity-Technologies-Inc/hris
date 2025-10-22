@@ -17,6 +17,7 @@ class Employee extends Model
         'first_name',
         'last_name',
         'middle_name',
+        'full_name',
         'father_name',
         'mother_name',
         'spouse_name',

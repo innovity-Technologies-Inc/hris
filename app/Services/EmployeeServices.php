@@ -8,12 +8,14 @@ use Illuminate\Http\Request;
 
 class EmployeeServices
 {
-    public function getEmployees(){
+    public function getEmployees()
+    {
         $employees = Employee::latest()->paginate(10);
         return $employees;
     }
 
-    public function employeeInfoValidation($request){
+    public function employeeInfoValidation($request)
+    {
         $validated = $request->validate(
             [
                 // System Identifiers
@@ -131,7 +133,8 @@ class EmployeeServices
         return $validated;
     }
 
-    public function employeeAttachmentValidation($validated, $request, $file, $key_name){
+    public function employeeAttachmentValidation($validated, $request, $file, $key_name)
+    {
         if ($request->hasFile($key_name)) {
             $file_path = HelperClass::file_upload($file, 'employee_attachments');
             $validated[$key_name] = $file_path;
@@ -140,13 +143,14 @@ class EmployeeServices
     }
 
 
-    public function employeeInfoStore(Request $request){
+    public function employeeInfoStore(Request $request)
+    {
         $validated = $this->employeeInfoValidation($request);
 
         $photo = $request->file('photo_path');
         $validated = $this->employeeAttachmentValidation($validated, $request, $photo, 'photo_path');
 
-        $fingerprint= $request->file('fingerprint_path');
+        $fingerprint = $request->file('fingerprint_path');
         $validated = $this->employeeAttachmentValidation($validated, $request, $fingerprint, 'fingerprint_path');
 
         $signature = $request->file('signature_path');
@@ -155,20 +159,65 @@ class EmployeeServices
         $experience_attachment = $request->file('experience_attachment_path');
         $validated = $this->employeeAttachmentValidation($validated, $request, $experience_attachment, 'experience_attachment_path');
 
+        $validated['full_name'] = $validated['first_name'] . ' ' . $validated['middle_name'] . ' ' . $validated['last_name'];
         $employee_data = Employee::create($validated);
         return $employee_data;
     }
 
-    public function getEmployeeById($id){
-        try{
+    public function getEmployeeById($id)
+    {
+        try {
             $employee = Employee::find($id);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return redirect()->back()->with([
                 'message' => 'Data Not Found',
                 'alert-type' => 'error'
             ]);
         }
         return $employee;
+    }
+
+    public function employeeSearchResult(Request $request)
+    {
+
+        $employees = Employee::query();
+
+        $searchTerm = $request->get('keyword');
+        $employee_id = $request->get('employee_id');
+        $employee_name = $request->get('employee_name');
+        $system_id = $request->get('system_id');
+
+        if (!empty($employee_name)) {
+            $employees->where('full_name', $employee_name);
+        }
+
+        if (!empty($employee_id)) {
+            $employees->where('applicant_id', $employee_id);
+        }
+
+        if (!empty($employee_id)) {
+            $employees->where('system_id', $system_id);
+        }
+
+//        Term based Serch
+        if (!empty($searchTerm)) {
+            $searchTerms = explode(' ', $searchTerm);
+            $employees = $employees->where(function ($query) use ($searchTerms) {
+                foreach ($searchTerms as $term) {
+                    $query->where(function ($q) use ($term) {
+                        $q->where('full_name', 'like', "%{$term}%")
+                            ->orWhere('system_id', 'like', "%{$term}%")
+                            ->orWhere('applicant_id', 'like', "%{$term}%");
+                    });
+                }
+            });
+        }
+
+
+        $employees = $employees->orderBy('first_name', 'asc')->paginate(10);
+
+        return $employees;
+
     }
 
 }

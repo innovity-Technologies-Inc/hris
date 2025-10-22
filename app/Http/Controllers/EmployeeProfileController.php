@@ -13,12 +13,18 @@ class EmployeeProfileController extends Controller
         $this->empServices = $empServices;
     }
 
-    public function index(){
+    public function index(Request $request){
         $title = 'Employees';
         $section = 'Employees';
         $sub_section = 'Index';
-        $employees = $this->empServices->getEmployees();
-        return view('employees.index', compact('title', 'section', 'sub_section', 'employees'));
+
+        $employees = $this->empServices->employeeSearchResult($request);
+
+        if ($request->ajax()) {
+            return view('employees.partials.search_results', compact('employees'))->render();
+        }
+        return view('employees.index', compact('employees', 'title', 'section', 'sub_section'));
+
     }
 
     public function generalInfoCreate(){

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('last_name')->nullable();
             $table->string('middle_name')->nullable();
+            $table->string('full_name');
             $table->string('father_name');
             $table->string('mother_name');
             $table->string('spouse_name')->nullable();
