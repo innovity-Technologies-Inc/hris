@@ -13,6 +13,7 @@
             action="{{ route('employees.general_informations.store') }}">
             @csrf
 
+
             <!-- System Identifiers Section -->
             <div class="row">
                 <div class="col-12">

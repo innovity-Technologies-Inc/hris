@@ -14,6 +14,50 @@ class EmployeeServices
         return $employees;
     }
 
+    public function employeeSearchResult(Request $request)
+    {
+
+        $employees = Employee::query();
+
+        $searchTerm = $request->get('keyword');
+        $employee_id = $request->get('employee_id');
+        $employee_name = $request->get('employee_name');
+        $system_id = $request->get('system_id');
+
+        if (!empty($employee_name)) {
+            $employees->where('full_name', $employee_name);
+        }
+
+        if (!empty($employee_id)) {
+            $employees->where('applicant_id', $employee_id);
+        }
+
+        if (!empty($employee_id)) {
+            $employees->where('system_id', $system_id);
+        }
+
+//        Term based Serch
+        if (!empty($searchTerm)) {
+            $searchTerms = explode(' ', $searchTerm);
+            $employees = $employees->where(function ($query) use ($searchTerms) {
+                foreach ($searchTerms as $term) {
+                    $query->where(function ($q) use ($term) {
+                        $q->where('full_name', 'like', "%{$term}%")
+                            ->orWhere('system_id', 'like', "%{$term}%")
+                            ->orWhere('applicant_id', 'like', "%{$term}%");
+                    });
+                }
+            });
+        }
+
+
+        $employees = $employees->orderBy('first_name', 'asc')->paginate(10);
+
+        return $employees;
+
+    }
+
+
     public function employeeInfoValidation($request)
     {
         $validated = $request->validate(
@@ -142,8 +186,13 @@ class EmployeeServices
         }
     }
 
+    public function employeeAttachmentDelete($file_path){
+        if($file_path != null){
+            HelperClass::file_delete($file_path);
+        }
+    }
 
-    public function employeeInfoStore(Request $request)
+    public function employeeInfoSave(Request $request, $id = null)
     {
         $validated = $this->employeeInfoValidation($request);
 
@@ -160,7 +209,17 @@ class EmployeeServices
         $validated = $this->employeeAttachmentValidation($validated, $request, $experience_attachment, 'experience_attachment_path');
 
         $validated['full_name'] = $validated['first_name'] . ' ' . $validated['middle_name'] . ' ' . $validated['last_name'];
-        $employee_data = Employee::create($validated);
+
+        if(empty($id)){
+            $employee_data = Employee::create($validated);
+        }else{
+            $employee = $this->getEmployeeById($id);
+            $this->employeeAttachmentDelete($employee->photo_path);
+            $this->employeeAttachmentDelete($employee->fingerprint_path);
+            $this->employeeAttachmentDelete($employee->signature_path);
+            $this->employeeAttachmentDelete($employee->experience_attachment_path);
+            $employee->update($validated);;
+        }
         return $employee_data;
     }
 
@@ -177,47 +236,5 @@ class EmployeeServices
         return $employee;
     }
 
-    public function employeeSearchResult(Request $request)
-    {
-
-        $employees = Employee::query();
-
-        $searchTerm = $request->get('keyword');
-        $employee_id = $request->get('employee_id');
-        $employee_name = $request->get('employee_name');
-        $system_id = $request->get('system_id');
-
-        if (!empty($employee_name)) {
-            $employees->where('full_name', $employee_name);
-        }
-
-        if (!empty($employee_id)) {
-            $employees->where('applicant_id', $employee_id);
-        }
-
-        if (!empty($employee_id)) {
-            $employees->where('system_id', $system_id);
-        }
-
-//        Term based Serch
-        if (!empty($searchTerm)) {
-            $searchTerms = explode(' ', $searchTerm);
-            $employees = $employees->where(function ($query) use ($searchTerms) {
-                foreach ($searchTerms as $term) {
-                    $query->where(function ($q) use ($term) {
-                        $q->where('full_name', 'like', "%{$term}%")
-                            ->orWhere('system_id', 'like', "%{$term}%")
-                            ->orWhere('applicant_id', 'like', "%{$term}%");
-                    });
-                }
-            });
-        }
-
-
-        $employees = $employees->orderBy('first_name', 'asc')->paginate(10);
-
-        return $employees;
-
-    }
 
 }

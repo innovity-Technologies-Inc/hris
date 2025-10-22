@@ -152,6 +152,8 @@ Route::prefix('employees')->group(function () {
         Route::get('{id}/profile', 'profileView')->name('employees.profile');
         Route::get('general-informations/create', 'generalInfoCreate')->name('employees.general_informations.create');
         Route::post('general-informations/store', 'generalInfoStore')->name('employees.general_informations.store');
+        Route::get('general-informations/edit/{id}', 'generalInfoEdit')->name('employees.general_informations.edit');
+        Route::put('general-informations/{id}/update', 'generalInfoUpdate')->name('employees.general_informations.update');
 
 
     });

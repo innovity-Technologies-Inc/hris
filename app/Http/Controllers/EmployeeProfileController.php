@@ -28,11 +28,13 @@ class EmployeeProfileController extends Controller
     }
 
     public function generalInfoCreate(){
-        $title = 'Create Employees';
+        $title = 'Add Employee Information';
         $section = 'Employees';
         $sub_section = 'Create';
-        return view('employees.general_informations.form', compact('title', 'section', 'sub_section'));;
+        return view('employees.general_informations.form', compact('title', 'section', 'sub_section'));
     }
+
+
 
     public function profileView($id){
         $title = 'Employee Profile';
@@ -44,7 +46,31 @@ class EmployeeProfileController extends Controller
 
     public function generalInfoStore(Request $request){
         try{
-            $this->empServices->employeeInfoStore($request);
+            $this->empServices->employeeInfoSave($request);
+        }catch(\Exception $e){
+            Log::error($e->getMessage());
+            return redirect()->back()->with([
+                'message' => $e->getMessage(),
+                'alert-type' => 'error'
+            ]);
+        }
+        return redirect()->back()->with([
+            'message' => 'Info Added Successfully',
+            'alert-type' => 'success'
+        ]);
+    }
+
+    public function generalInfoEdit($id){
+        $title = 'Edit Employee Information';
+        $section = 'Employees';
+        $sub_section = 'Edit';
+        $employee = $this->empServices->getEmployeeById($id);
+        return view('employees.general_informations.form', compact('title', 'section', 'sub_section', 'employee'));
+    }
+
+    public function generalInfoUpdate(Request $request, $id){
+        try{
+            $this->empServices->employeeInfoSave($request, $id);
         }catch(\Exception $e){
             Log::error($e->getMessage());
             return redirect()->back()->with([
@@ -57,5 +83,6 @@ class EmployeeProfileController extends Controller
             'alert-type' => 'success'
         ]);
     }
+
 
 }
