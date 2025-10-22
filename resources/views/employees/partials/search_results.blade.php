@@ -3,9 +3,9 @@
             <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
         </a>
 
-    {{-- @if ($employees->isEmpty())
+    @if ($employees->isEmpty())
         <div class="text-center py-4 text-muted">No employees found.</div>
-    @else --}}
+    @else
     <div class="card-body">
                     <div class="table-responsive">
         <table class="table table-bordered mb-0">
@@ -58,7 +58,7 @@
         <div class="mt-3">
             {{ $employees->appends(request()->query())->links() }}
         </div>
-    {{-- @endif --}}
+    @endif
 
     {{-- Reinitialize Feather Icons after AJAX load --}}
     <script>
