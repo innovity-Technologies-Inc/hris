@@ -8,10 +8,10 @@
     @if ($employees->isEmpty())
         <div class="text-center py-4 text-muted">No employees found.</div>
     @else
-        <table class="table table-bordered mb-0 ">
+        <table class="table table-bordered mb-0">
             <thead>
                 <tr>
-                    <th scope="col" style="width: 50px;">#</th>
+                    <th scope="col" >#</th>
                     <th scope="col">Profile</th>
                     <th scope="col">System ID</th>
                     <th scope="col">Employee ID</th>
@@ -39,23 +39,14 @@
                         <td>{{ $employee->applicant_id }}</td>
                         <td>{{ $employee->full_name }}</td>
                         <td>
-                            <a href="{{ route('employees.show', $employee->id) }}" class="btn btn-primary btn-sm me-1"
+                            <a href="{{ route('employees.profile', $employee->id) }}" class="btn btn-primary btn-sm me-1"
                                 title="View">
                                 <i style="height: 12px; width: 12px" data-feather="eye"></i>
                             </a>
-                            <a href="{{ route('employees.edit', $employee->id) }}" class="btn btn-primary btn-sm me-1"
+                            <a href="{{ route('employees.general_informations.edit', $employee->id) }}" class="btn btn-primary btn-sm me-1"
                                 title="Edit">
                                 <i style="height: 12px; width: 12px" data-feather="edit"></i>
                             </a>
-
-                            <form action="{{ route('employees.destroy', $employee->id) }}" method="POST"
-                                style="display: inline-block;" class="confirmDelete">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" title="Delete">
-                                    <i style="height: 12px; width: 12px" data-feather="trash"></i>
-                                </button>
-                            </form>
                         </td>
                     </tr>
                 @endforeach

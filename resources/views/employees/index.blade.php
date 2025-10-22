@@ -3,7 +3,7 @@
 @section('content')
     {{-- Employee List --}}
     <div class="row">
-        <div class="col-xl-12">
+        <div class="col-lg-12">
             <div class="card border-0 shadow-sm rounded">
                 <div class="card-header bg-white border-bottom p-4">
                     <div class="row align-items-start">
@@ -100,9 +100,10 @@
                     </div>
                 </div>
 
-                <section id="search-result">
+
+                <div id="search-result" class="card-body p-0">
                     @include('employees.partials.search_results')
-                </section>
+                </div>
             </div>
         </div>
     </div>
