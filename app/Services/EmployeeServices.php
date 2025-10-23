@@ -5,6 +5,7 @@ namespace App\Services;
 use App\HelperClass;
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class EmployeeServices
 {
@@ -63,9 +64,9 @@ class EmployeeServices
         $validated = $request->validate(
             [
                 // System Identifiers
-                'applicant_id' => 'required|string|unique:employees,applicant_id',
-                'system_id' => 'required|string|unique:employees,system_id',
-                'punch_card_no' => 'required|string|unique:employees,punch_card_no',
+                'applicant_id' => 'required|string',
+                'system_id' => 'required|string',
+                'punch_card_no' => 'required|string',
 
                 // Personal Information
                 'first_name' => 'required|string|max:255',
@@ -179,11 +180,9 @@ class EmployeeServices
 
     public function employeeAttachmentValidation($validated, $request, $file, $key_name)
     {
-        if ($request->hasFile($key_name)) {
             $file_path = HelperClass::file_upload($file, 'employee_attachments');
             $validated[$key_name] = $file_path;
             return $validated;
-        }
     }
 
     public function employeeAttachmentDelete($file_path){
@@ -195,30 +194,51 @@ class EmployeeServices
     public function employeeInfoSave(Request $request, $id = null)
     {
         $validated = $this->employeeInfoValidation($request);
+        $validated['full_name'] = trim(($validated['first_name'] ?? '') . ' ' .
+            ($validated['middle_name'] ?? '') . ' ' .
+            ($validated['last_name'] ?? ''));
+        Log::info($validated);
 
-        $photo = $request->file('photo_path');
-        $validated = $this->employeeAttachmentValidation($validated, $request, $photo, 'photo_path');
+        if($request->hasFile('photo_path')) {
+            $photo = $request->file('photo_path');
+            $validated = $this->employeeAttachmentValidation($validated, $request, $photo, 'photo_path');
+            Log::info('Photo Uploaded');
+        }
+        if($request->hasFile('fingerprint_path')) {
+            $fingerprint = $request->file('fingerprint_path');
+            $validated = $this->employeeAttachmentValidation($validated, $request, $fingerprint, 'fingerprint_path');
+            Log::info('Fingerprint Uploaded');
+        }
 
-        $fingerprint = $request->file('fingerprint_path');
-        $validated = $this->employeeAttachmentValidation($validated, $request, $fingerprint, 'fingerprint_path');
+        if($request->hasFile('signature_path')) {
+            $signature = $request->file('signature_path');
+            $validated = $this->employeeAttachmentValidation($validated, $request, $signature, 'signature_path');
+            Log::info('Signature Uploaded');
+        }
 
-        $signature = $request->file('signature_path');
-        $validated = $this->employeeAttachmentValidation($validated, $request, $signature, 'signature_path');
-
-        $experience_attachment = $request->file('experience_attachment_path');
-        $validated = $this->employeeAttachmentValidation($validated, $request, $experience_attachment, 'experience_attachment_path');
-
-        $validated['full_name'] = $validated['first_name'] . ' ' . $validated['middle_name'] . ' ' . $validated['last_name'];
-
+        if($request->hasFile('experience_attachment_path')) {
+            $experience_attachment = $request->file('experience_attachment_path');
+            $validated = $this->employeeAttachmentValidation($validated, $request, $experience_attachment, 'experience_attachment_path');
+        }
         if(empty($id)){
             $employee_data = Employee::create($validated);
         }else{
             $employee = $this->getEmployeeById($id);
-            $this->employeeAttachmentDelete($employee->photo_path);
-            $this->employeeAttachmentDelete($employee->fingerprint_path);
-            $this->employeeAttachmentDelete($employee->signature_path);
-            $this->employeeAttachmentDelete($employee->experience_attachment_path);
-            $employee->update($validated);;
+
+            if($request->hasFile('photo_path')) {
+                $this->employeeAttachmentDelete($employee->photo_path);
+            }
+            if($request->hasFile('fingerprint_path')) {
+                $this->employeeAttachmentDelete($employee->fingerprint_path);
+            }
+            if($request->hasFile('signature_path')) {
+                $this->employeeAttachmentDelete($employee->signature_path);
+            }
+            if($request->hasFile('experience_attachment_path')) {
+                $this->employeeAttachmentDelete($employee->experience_attachment_path);
+            }
+            $employee->update($validated);
+            $employee_data = $employee;
         }
         return $employee_data;
     }
