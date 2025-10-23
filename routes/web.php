@@ -20,8 +20,8 @@ use App\Http\Controllers\EmployeeProfileController;
 Route::get('test', function () {
     // return view('employees.index');
     // return view('employees.partial.form');
-    // return view('employees.office_informations.form');
-    return view('employees.office_informations.office_info');
+    return view('employees.office_informations.form');
+    // return view('employees.office_informations.office_info');
 });
 
 Route::prefix('company-setup')->group(function () {

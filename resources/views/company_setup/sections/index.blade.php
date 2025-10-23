@@ -10,7 +10,7 @@
                         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                     </a>
                 </div><!-- end card header -->
-                
+
 
                 <div class="card-body">
                     <div class="table-responsive">
@@ -18,7 +18,6 @@
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Division Name</th>
                                     <th scope="col">Department Name</th>
                                     <th scope="col">Section Name</th>
                                     <th scope="col">Short Name</th>
@@ -30,7 +29,6 @@
                                 @foreach ($sections as $section)
                                     <tr>
                                         <th scope="row">{{ $i++ }}</th>
-                                        <td>{{ $section->getDivision->division_name }}</td>
                                         <td>{{ $section->getDepartment->department_name }}</td>
                                         <td>{{ $section->section_name }}</td>
                                         <td>{{ $section->short_name }}</td>
@@ -56,7 +54,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        
+
                         <div class="mt-3">
                             {{$sections->links()}}
                         </div>

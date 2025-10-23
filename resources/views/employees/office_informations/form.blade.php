@@ -5,7 +5,7 @@
         <!-- Trigger Button -->
         <div class="mb-3">
             <button type="button" class="btn btn-secondary shadow-sm" data-bs-toggle="modal" data-bs-target="#bulkUploadModal">
-                <i class="mdi mdi-upload me-1"></i> Bulk Upload Payroll Informations
+                <i class="mdi mdi-upload me-1"></i> Bulk Upload Office Informations
             </button>
         </div>
         @include('employees.partials.modal')
@@ -116,29 +116,38 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-lg-4 mb-3">
-                                    <label for="joining_company_id" class="form-label">Joining Company</label>
-                                    <select class="form-select @error('joining_company_id') is-invalid @enderror"
-                                        id="joining_company_id" name="joining_company_id">
-                                        <option value="">Select Company</option>
-                                        <!-- Add company options dynamically -->
-                                    </select>
-                                    @error('joining_company_id')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
+                                        <label for="company_id" class="form-label">Company <span
+                                                class="text-danger">*</span></label>
+                                        <select class="form-select select2_list" name="company_id" id="company_id" required>
+                                            <option value="">Choose Company</option>
+                                            {{-- @foreach ($companies as $item)
+                                                <option value="{{ $item->id }}"
+                                                    @if (isset($office_info) && $office_info->company_id == $item->id) selected @endif>
+                                                    {{ $item->name }}
+                                                </option>
+                                            @endforeach --}}
+                                        </select>
+                                        @error('company_id')
+                                            <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
 
                                 <div class="col-lg-4 mb-3">
-                                    <label for="joining_business_unit_id" class="form-label">Joining Business Unit</label>
-                                    <select class="form-select @error('joining_business_unit_id') is-invalid @enderror"
-                                        id="joining_business_unit_id" name="joining_business_unit_id">
-                                        <option value="">Select Business Unit</option>
-                                        <!-- Add business unit options dynamically -->
-                                    </select>
-                                    @error('joining_business_unit_id')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-
+                                        <label for="location_id" class="form-label">Company Location <span
+                                                class="text-danger">*</span></label>
+                                        <select id="location_id" class="form-select select2_list" name="location_id"
+                                            required>
+                                            <option value="">Select Location</option>
+                                            {{-- @foreach ($locations as $location)
+                                                <option value="{{ $location->id }}"
+                                                    {{ isset($office_info) && $office_info->location_id == $location->id ? 'selected' : '' }}>
+                                                    {{ $location->unit_name }}</option>
+                                            @endforeach --}}
+                                        </select>
+                                        @error('location_id')
+                                            <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
                                 <div class="col-lg-4 mb-3">
                                     <label for="joining_division_id" class="form-label">Joining Division</label>
                                     <select class="form-select @error('joining_division_id') is-invalid @enderror"

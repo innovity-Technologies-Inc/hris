@@ -1,5 +1,6 @@
 @extends('structure.master')
 @section('content')
+
     <!-- Profile Header -->
     <div class="row">
         <div class="col-12">
@@ -22,9 +23,9 @@
                                     Employee ID: {{ $employee->applicant_id }}</p>
                                 <span class="fs-15">
                                     <i class="mdi mdi-phone me-2 align-middle"></i>
-                                    <span>{{ $employee->phone }}</span>
+                                    <span>{{ $employee->personal_mobile }}</span>
                                     <i class="mdi mdi-email ms-3 me-2 align-middle"></i>
-                                    <span>{{ $employee->email }}</span>
+                                    <span>{{ $employee->personal_email }}</span>
                                 </span>
                             </div>
                         </div>
@@ -135,11 +136,11 @@
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Height</td>
-                                                    <td>{{ $employee->height }}</td>
+                                                    <td>{{ $employee->height_feet }} Feet {{ $employee->height_inches }} Inches</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Number of Children</td>
-                                                    <td>{{ $employee->number_of_children }}</td>
+                                                    <td>{{ $employee->children_count }}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -188,7 +189,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Birth Registration No</td>
-                                                    <td>{{ $employee->birth_registration_no }}</td>
+                                                    <td>{{ $employee->birth_reg_no }}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -200,7 +201,7 @@
                                             <tbody>
                                                 <tr>
                                                     <td class="fw-semibold" style="width: 40%;">TIN Number</td>
-                                                    <td>{{ $employee->tin_number }}</td>
+                                                    <td>{{ $employee->tin }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">BGMEA ID</td>
@@ -208,7 +209,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Residency ID</td>
-                                                    <td>{{ $employee->residency_id }}</td>
+                                                    <td>{{ $employee->residency_id_number }}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -222,7 +223,7 @@
                                             <tbody>
                                                 <tr>
                                                     <td class="fw-semibold" style="width: 40%;">Passport Number</td>
-                                                    <td>{{ $employee->passport_number }}</td>
+                                                    <td>{{ $employee->passport_no }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Passport Expiry</td>
@@ -234,7 +235,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Work Permit Expiry</td>
-                                                    <td>{{ $employee->work_permit_expiry }}</td>
+                                                    <td>{{ $employee->work_expiry }}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -246,7 +247,7 @@
                                             <tbody>
                                                 <tr>
                                                     <td class="fw-semibold" style="width: 40%;">License Number</td>
-                                                    <td>{{ $employee->license_number }}</td>
+                                                    <td>{{ $employee->license_no }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">License Expiry</td>
@@ -320,22 +321,24 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <p><strong>Address Line 1:</strong> {{ $employee->present_address_line1 }}</p>
-                                                    <p><strong>Village:</strong> {{ $employee->present_village }}</p>
-                                                    <p><strong>Post Office:</strong> {{ $employee->present_post_office }}</p>
-                                                    <p><strong>Thana:</strong> {{ $employee->present_thana }}</p>
+                                                    <p><strong>Address Line 1:</strong>
+                                                        {{ $employee->present_address['line_1'] }}</p>
+                                                    <p><strong>Village:</strong>
+                                                        {{ $employee->present_address['village'] }}</p>
+                                                    <p><strong>Post Office:</strong>
+                                                        {{ $employee->present_address['post_office'] }}</p>
+                                                    <p><strong>State:</strong> {{ $employee->present_address['state'] }}
+                                                    </p>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <p><strong>District:</strong> {{ $employee->present_district }}</p>
-                                                    <p><strong>Division:</strong> {{ $employee->present_division }}</p>
-                                                    <p><strong>Zip Code:</strong> {{ $employee->present_zip_code }}</p>
-                                                    <p><strong>Country:</strong> {{ $employee->present_country }}</p>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <p><strong>Phone:</strong> {{ $employee->present_phone }}</p>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <p><strong>Mobile:</strong> {{ $employee->present_mobile }}</p>
+                                                    <p><strong>District:</strong>
+                                                        {{ $employee->present_address['district'] }}</p>
+                                                    <p><strong>Division:</strong>
+                                                        {{ $employee->present_address['division'] }}</p>
+                                                    <p><strong>Zip Code:</strong>
+                                                        {{ $employee->present_address['zip_code'] }}</p>
+                                                    <p><strong>Country:</strong>
+                                                        {{ $employee->present_address['country'] }}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -349,23 +352,26 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <p><strong>Address Line 1:</strong> {{ $employee->permanent_address_line1 }}</p>
-                                                    <p><strong>Village:</strong> {{ $employee->permanent_village }}</p>
-                                                    <p><strong>Post Office:</strong> {{ $employee->permanent_post_office }}</p>
-                                                    <p><strong>Thana:</strong> {{ $employee->permanent_thana }}</p>
+                                                    <p><strong>Address Line 1:</strong>
+                                                        {{ $employee->permanent_address['line_1'] }}</p>
+                                                    <p><strong>Village:</strong>
+                                                        {{ $employee->permanent_address['village'] }}</p>
+                                                    <p><strong>Post Office:</strong>
+                                                        {{ $employee->permanent_address['post_office'] }}</p>
+                                                    <p><strong>State:</strong> {{ $employee->permanent_address['state'] }}
+                                                    </p>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <p><strong>District:</strong> {{ $employee->permanent_district }}</p>
-                                                    <p><strong>Division:</strong> {{ $employee->permanent_division }}</p>
-                                                    <p><strong>Zip Code:</strong> {{ $employee->permanent_zip_code }}</p>
-                                                    <p><strong>Country:</strong> {{ $employee->permanent_country }}</p>
+                                                    <p><strong>District:</strong>
+                                                        {{ $employee->permanent_address['district'] }}</p>
+                                                    <p><strong>Division:</strong>
+                                                        {{ $employee->permanent_address['division'] }}</p>
+                                                    <p><strong>Zip Code:</strong>
+                                                        {{ $employee->permanent_address['zip_code'] }}</p>
+                                                    <p><strong>Country:</strong>
+                                                        {{ $employee->permanent_address['country'] }}</p>
                                                 </div>
-                                                <div class="col-md-6">
-                                                    <p><strong>Phone:</strong> {{ $employee->permanent_phone }}</p>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <p><strong>Mobile:</strong> {{ $employee->permanent_mobile }}</p>
-                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
@@ -378,21 +384,30 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                    <p><strong>Reference Employee ID:</strong> {{ $employee->reference_employee_id }}</p>
-                                                    <p><strong>Reference Name:</strong> {{ $employee->reference_name }}</p>
-                                                    <p><strong>Designation:</strong> {{ $employee->reference_designation }}</p>
+                                                    <p><strong>Reference Employee ID:</strong>
+                                                        {{ $employee->reference_address['emp_id'] }}</p>
+                                                    <p><strong>Reference Name:</strong>
+                                                        {{ $employee->reference_address['reference_name'] }}</p>
+                                                    <p><strong>Designation:</strong>
+                                                        {{ $employee->reference_address['reference_designation'] }}</p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <p><strong>Address:</strong> {{ $employee->reference_address }}</p>
-                                                    <p><strong>Village:</strong> {{ $employee->reference_village }}</p>
-                                                    <p><strong>Thana:</strong> {{ $employee->reference_thana }}</p>
-                                                    <p><strong>District:</strong> {{ $employee->reference_district }}</p>
+                                                    <p><strong>Address:</strong>
+                                                        {{ $employee->reference_address['line_1'] }}</p>
+                                                    <p><strong>Village:</strong>
+                                                        {{ $employee->reference_address['village'] }}</p>
+                                                    <p><strong>State:</strong> {{ $employee->reference_address['state'] }}
+                                                    </p>
+                                                    <p><strong>District:</strong>
+                                                        {{ $employee->reference_address['district'] }}</p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <p><strong>City:</strong> {{ $employee->reference_city }}</p>
-                                                    <p><strong>Zip Code:</strong> {{ $employee->reference_zip_code }}</p>
-                                                    <p><strong>Phone:</strong> {{ $employee->reference_phone }}</p>
-                                                    <p><strong>Email:</strong> {{ $employee->reference_email }}</p>
+                                                    <p><strong>Zip Code:</strong>
+                                                        {{ $employee->reference_address['zip_code'] }}</p>
+                                                    <p><strong>Phone:</strong> {{ $employee->reference_address['phone'] }}
+                                                    </p>
+                                                    <p><strong>Email:</strong> {{ $employee->reference_address['email'] }}
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
@@ -409,11 +424,23 @@
                                         <div class="card-body text-center">
                                             <i class="mdi mdi-account-box fs-48 text-primary mb-2"></i>
                                             <h6 class="fw-semibold">Employee Photo</h6>
-                                            <p class="text-muted small mb-2">photo_employee_001.jpg</p>
-                                            <a href="#" class="btn btn-sm btn-primary">View</a>
-                                            <a href="#" class="btn btn-sm btn-outline-primary">Download</a>
+                                            @if (isset($employee->photo_path))
+                                                @if (file_exists(public_path('storage/' . $employee->photo_path)))
+                                                    <a href="#" class="btn btn-sm btn-primary view-link"
+                                                        data-img="{{ asset('storage/' . $employee->photo_path) }}">View</a>
+                                                    <a href="{{ asset('storage/' . $employee->photo_path) }}"
+                                                        class="btn btn-sm btn-outline-primary" download>Download</a>
+                                                @else
+                                                    <p class="text-muted">Photo deleted or moved</p>
+                                                    <!-- Show this message if the file doesn't exist -->
+                                                @endif
+                                            @else
+                                                <p class="text-muted">No photo available</p>
+                                                <!-- Show this if the photo path is not set -->
+                                            @endif
                                         </div>
                                     </div>
+
                                 </div>
 
                                 <div class="col-md-3 col-sm-6 mb-3">
@@ -421,21 +448,32 @@
                                         <div class="card-body text-center">
                                             <i class="mdi mdi-fingerprint fs-48 text-success mb-2"></i>
                                             <h6 class="fw-semibold">Fingerprint</h6>
-                                            <p class="text-muted small mb-2">fingerprint_001.png</p>
-                                            <a href="#" class="btn btn-sm btn-success">View</a>
-                                            <a href="#" class="btn btn-sm btn-outline-success">Download</a>
+                                            <a href="#" class="btn btn-sm btn-success view-link"
+                                                data-img="{{ asset('storage/' . $employee->fingerprint_path) }}">View</a>
+                                            <a href="{{ asset('storage/' . $employee->fingerprint_path) }}"
+                                                class="btn btn-sm btn-outline-success" download>Download</a>
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="col-md-3 col-sm-6 mb-3">
                                     <div class="card border">
                                         <div class="card-body text-center">
                                             <i class="mdi mdi-draw fs-48 text-warning mb-2"></i>
                                             <h6 class="fw-semibold">Signature</h6>
-                                            <p class="text-muted small mb-2">signature_001.jpg</p>
-                                            <a href="#" class="btn btn-sm btn-warning">View</a>
-                                            <a href="#" class="btn btn-sm btn-outline-warning">Download</a>
+                                            @if (isset($employee->signature_path))
+                                                @if (file_exists(public_path('storage/' . $employee->signature_path)))
+                                                    <a href="#" class="btn btn-sm btn-warning view-link"
+                                                        data-img="{{ asset('storage/' . $employee->signature_path) }}">View</a>
+                                                    <a href="{{ asset('storage/' . $employee->signature_path) }}"
+                                                        class="btn btn-sm btn-outline-warning" download>Download</a>
+                                                @else
+                                                    <p class="text-muted">Signature file deleted or moved</p>
+                                                    <!-- Show this message if file doesn't exist -->
+                                                @endif
+                                            @else
+                                                <p class="text-muted">No signature available</p>
+                                                <!-- Show this message if no signature path is set -->
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -445,15 +483,27 @@
                                         <div class="card-body text-center">
                                             <i class="mdi mdi-file-document fs-48 text-info mb-2"></i>
                                             <h6 class="fw-semibold">Experience Documents</h6>
-                                            <p class="text-muted small mb-2">experience_certificate.pdf</p>
-                                            <a href="#" class="btn btn-sm btn-info">View</a>
-                                            <a href="#" class="btn btn-sm btn-outline-info">Download</a>
+                                            @if (isset($employee->experience_path))
+                                                @if (file_exists(public_path('storage/' . $employee->experience_path)))
+                                                    <a href="#" class="btn btn-sm btn-info view-link"
+                                                        data-img="{{ asset('storage/' . $employee->experience_path) }}">View</a>
+                                                    <a href="{{ asset('storage/' . $employee->experience_path) }}"
+                                                        class="btn btn-sm btn-outline-info" download>Download</a>
+                                                @else
+                                                    <p class="text-muted">Experience document deleted or moved</p>
+                                                    <!-- Show this message if file doesn't exist -->
+                                                @endif
+                                            @else
+                                                <p class="text-muted">No experience document available</p>
+                                                <!-- Show this message if no experience document path is set -->
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
 
-                            <div class="row mt-3">
+                            {{-- <div class="row mt-3">
                                 <div class="col-12">
                                     <div class="card border">
                                         <div class="card-header bg-light">
@@ -511,7 +561,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
 
                     </div>
@@ -526,10 +576,8 @@
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-end gap-2">
-                        <a href="#" class="btn btn-secondary">
-                            <i class="mdi mdi-printer me-1"></i> Print Profile
-                        </a>
-                        <a href="#" class="btn btn-primary">
+                        <a href="{{ route('employees.general_informations.edit', $employee->id) }}"
+                            class="btn btn-primary">
                             <i class="mdi mdi-pencil me-1"></i> Edit Profile
                         </a>
                     </div>
@@ -537,6 +585,7 @@
             </div>
         </div>
     </div>
+    @include('employees.partials.image_modal')
 @endsection
 
 @push('scripts')
