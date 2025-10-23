@@ -135,7 +135,7 @@
                     <a href="#sidebarEmployees" data-bs-toggle="collapse"
                         class="@if (Route::is('employees.*')) menuitem-active @endif">
                         <i data-feather="users"></i>
-                        <span> Employees Information </span>
+                        <span> Employees </span>
                         <span class="menu-arrow"></span>
                     </a>
                     <div class="collapse" id="sidebarEmployees">
