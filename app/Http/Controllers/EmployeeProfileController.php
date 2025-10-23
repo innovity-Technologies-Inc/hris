@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\EmployeeGeneralInformationImport;
 use App\Services\EmployeeServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EmployeeProfileController extends Controller
 {
@@ -54,7 +56,7 @@ class EmployeeProfileController extends Controller
                 'alert-type' => 'error'
             ]);
         }
-        return redirect()->back()->with([
+        return redirect()->route('employees.index')->with([
             'message' => 'Info Added Successfully',
             'alert-type' => 'success'
         ]);
@@ -78,10 +80,31 @@ class EmployeeProfileController extends Controller
                 'alert-type' => 'error'
             ]);
         }
-        return redirect()->back()->with([
+        return redirect()->route('employees.index')->with([
             'message' => 'Info Updated Successfully',
             'alert-type' => 'success'
         ]);
+    }
+
+    public function generalInfoImport(request $request){
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls'
+        ]);
+
+        try{
+            Excel::import(new EmployeeGeneralInformationImport, $request->file('file'));
+            return redirect()->route('employees.index')->with([
+                'message' => 'Employee Info Imported Successfully',
+                'alert-type' => 'success'
+            ]);
+        }catch (\Exception $e){
+            Log::error($e->getMessage());
+            return redirect()->back()->with([
+                'message' => 'Something Went Wrong',
+                'alert-type' => 'error'
+            ]);
+        }
+
     }
 
 

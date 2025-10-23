@@ -47,7 +47,6 @@ return new class extends Migration
             $table->date('passport_expiry')->nullable();
             $table->string('license_no')->nullable();
             $table->date('license_expiry')->nullable();
-            $table->string('bgmea_id')->nullable();
             $table->date('visa_expiry')->nullable();
             $table->date('work_expiry')->nullable();
             $table->string('residency_id_number')->nullable();
