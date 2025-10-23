@@ -10,9 +10,11 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-
+            <form action="{{route('employees.general_informations.import')}}" enctype="multipart/form-data" method="POST">
+                @csrf
             <!-- Modal Body -->
             <div class="modal-body p-4">
+
                 <!-- Danger Alert -->
                 <div class="alert alert-danger border-0 shadow-sm d-flex align-items-start" role="alert">
                     <i class="mdi mdi-alert-circle-outline fs-4 me-3 mt-1"></i>
@@ -53,20 +55,22 @@
                 </div>
 
 
-                <!-- File Upload Section -->
-                <div class="mb-3">
-                    <label for="fileUpload" class="form-label fw-semibold">
-                        <i class="mdi mdi-file-upload me-2"></i>Upload File
-                    </label>
-                    <div class="border border-2 border-dashed rounded-3 p-4 text-center bg-light">
-                        <i class="mdi mdi-cloud-upload-outline text-primary mb-3" style="font-size: 3rem;"></i>
-                        <h6 class="fw-semibold mb-2">Drag and drop your file here</h6>
-                        <p class="text-muted small mb-3">or click to browse</p>
-                        <input type="file" class="form-control w-auto mx-auto" id="fileUpload"
-                            accept=".xlsx,.xls,.csv">
-                        <p class="text-muted small mt-3 mb-0">Supported formats: Excel (.xlsx, .xls) and CSV (.csv)</p>
+                    <!-- File Upload Section -->
+                    <div class="mb-3">
+                        <label for="fileUpload" class="form-label fw-semibold">
+                            <i class="mdi mdi-file-upload me-2"></i>Upload File
+                        </label>
+                        <div class="border border-2 border-dashed rounded-3 p-4 text-center bg-light">
+                            <i class="mdi mdi-cloud-upload-outline text-primary mb-3" style="font-size: 3rem;"></i>
+                            <h6 class="fw-semibold mb-2">Drag and drop your file here</h6>
+                            <p class="text-muted small mb-3">or click to browse</p>
+                            <input type="file" class="form-control w-auto mx-auto" id="fileUpload"
+                                   accept=".xlsx,.xls,.csv" name="file" required>
+                            <p class="text-muted small mt-3 mb-0">Supported formats: Excel (.xlsx, .xls) and CSV (.csv)</p>
+                        </div>
                     </div>
-                </div>
+
+
 
                 <!-- File Info Display (Hidden by default, shown when file is selected) -->
                 <div class="card border-success d-none" id="fileInfo">
@@ -92,10 +96,11 @@
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                     <i class="mdi mdi-close-circle-outline me-1"></i>Cancel
                 </button>
-                <button type="button" class="btn btn-primary shadow-sm">
+                <button type="submit" class="btn btn-primary shadow-sm">
                     <i class="mdi mdi-upload me-1"></i>Upload & Process
                 </button>
             </div>
+                </form>
         </div>
     </div>
 </div>

@@ -8,7 +8,7 @@
                 <i class="mdi mdi-upload me-1"></i> Bulk Upload General Informations
             </button>
         </div>
-        @include('employees.partials.modal')
+        @include('employees.partials.modal.import')
         <form class="" method="POST" enctype="multipart/form-data"
             action={{isset($employee) ? route(
         'employees.general_informations.update', $employee->id) : route('employees.general_informations.store') }}>

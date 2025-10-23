@@ -2,6 +2,7 @@
 
 namespace App;
 
+
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -17,7 +18,7 @@ class HelperClass
 
     public static function file_upload($file, $folder_name)
     {
-        $file_name = time() . Str::random(10) . '_' . $file->getClientOriginalExtension();
+        $file_name = time() . Str::random(10) . '.' . $file->getClientOriginalExtension();
         $file_path = $file->storeAs('upload/' . $folder_name, $file_name, 'public');
         return $file_path;
     }
@@ -26,4 +27,6 @@ class HelperClass
     {
         Storage::disk('public')->delete($file_path);
     }
+
+
 }

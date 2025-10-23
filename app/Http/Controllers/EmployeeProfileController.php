@@ -86,11 +86,11 @@ class EmployeeProfileController extends Controller
         ]);
     }
 
-    public function generalInfoImport(request $request){
+    public function generalInfoImport(Request $request){
         $request->validate([
-            'file' => 'required|mimes:xlsx,xls'
+            'file' => 'required|mimes:xlsx,xls,csv'
         ]);
-
+//    dd($request->all());
         try{
             Excel::import(new EmployeeGeneralInformationImport, $request->file('file'));
             return redirect()->route('employees.index')->with([
