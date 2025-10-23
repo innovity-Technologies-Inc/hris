@@ -47,24 +47,8 @@
                                         @enderror
                                     </div>
 
-                                    <div class="col-md-4 mb-2">
-                                        <label for="division_id" class="form-label">Division <span
-                                                class="text-danger">*</span></label>
-                                        <select id="division_id" class="form-select select2_list" name="division_id" required>
-                                            <option value="">Select Division</option>
-                                            @foreach ($divisions as $division)
-                                                <option value="{{ $division->id }}"
-                                                    @if (isset($section) && $section->division_id == $division->id) selected @endif>
-                                                    {{ $division->division_name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @error('division_id')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
-                                    </div>
 
-                                    <div class="col-md-4 mb-2">
+                                    <div class="col-md-6 mb-2">
                                         <label for="department_id" class="form-label">Department <span
                                                 class="text-danger">*</span></label>
                                         <select id="department_id" class="form-select select2_list" name="department_id" required>
@@ -83,7 +67,7 @@
 
 
 
-                                    <div class="col-md-4 mb-2">
+                                    <div class="col-md-6 mb-2">
                                         <label for="status" class="form-label">Status</label>
                                         <select class="form-select" name="status">
                                             <option value="active" @if (isset($section) && $section->status == 'active') selected @endif>Active

@@ -25,17 +25,15 @@
             </div>
 
             <ul id="side-menu">
-
                 <li class="menu-title">Menu</li>
 
                 <li>
-                    <a href="{{ route('dashboard') }}"
-                        class="@if (Route::is() == 'dashboard') menuitem-active @endif ">
+                    <a href="{{ route('dashboard') }}" class="@if (Route::is('dashboard')) menuitem-active @endif">
                         <i data-feather="home"></i>
                         <span> Dashboard </span>
                     </a>
                 </li>
-
+                <!-- Company Info Menu -->
                 <li>
                     <a href="#sidebarCompany" data-bs-toggle="collapse"
                         class="@if (Route::is('groups.*') ||
@@ -110,27 +108,46 @@
                             </li>
 
                             <li>
-                                <a class='tp-link @if(Route::is('bank_accounts.*')) menuitem-active @endif'
-                                   href='{{route('bank_accounts.index')}}'>Bank Accounts</a>
+                                <a class='tp-link @if (Route::is('bank_accounts.*')) menuitem-active @endif'
+                                    href='{{ route('bank_accounts.index') }}'>Bank Accounts</a>
                             </li>
 
                             <li>
                                 <a class='tp-link @if (Route::is('job_creations.*')) menuitem-active @endif'
-                                   href='{{ route('job_creations.index') }}'>Job Creations</a>
+                                    href='{{ route('job_creations.index') }}'>Job Creations</a>
                             </li>
 
                             <li>
-                                <a class='tp-link @if(Route::is('gazette_locations.*')) menuitem-active @endif'
-                                   href='{{route('gazette_locations.index')}}'>Gazette Locations</a>
+                                <a class='tp-link @if (Route::is('gazette_locations.*')) menuitem-active @endif'
+                                    href='{{ route('gazette_locations.index') }}'>Gazette Locations</a>
                             </li>
                             <li>
-                                <a class='tp-link @if(Route::is('gazette_locations.*')) menuitem-active @endif'
-                                   href='{{route('gazette_locations.index')}}'>Gazette Locations</a>
+                                <a class='tp-link @if (Route::is('gazette_locations.*')) menuitem-active @endif'
+                                    href='{{ route('gazette_locations.index') }}'>Gazette Locations</a>
                             </li>
 
                         </ul>
                     </div>
                 </li>
+
+                <!-- Add Employees Information Menu -->
+                <li>
+                    <a href="#sidebarEmployees" data-bs-toggle="collapse"
+                        class="@if (Route::is('employees.*')) menuitem-active @endif">
+                        <i data-feather="users"></i>
+                        <span> Employees </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="sidebarEmployees">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link @if (Route::is('employees.*')) menuitem-active @endif'
+                                    href='{{ route('employees.index') }}'>Employee Information</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
 
 
             </ul>

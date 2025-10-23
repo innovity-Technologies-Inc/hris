@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('sections', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('division_id'); 
             $table->unsignedBigInteger('department_id');
             $table->string('section_name');
             $table->string('short_name');

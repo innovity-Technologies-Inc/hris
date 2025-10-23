@@ -23,9 +23,9 @@
                                     Employee ID: {{ $employee->applicant_id }}</p>
                                 <span class="fs-15">
                                     <i class="mdi mdi-phone me-2 align-middle"></i>
-                                    <span>{{ $employee->phone }}</span>
+                                    <span>{{ $employee->personal_mobile }}</span>
                                     <i class="mdi mdi-email ms-3 me-2 align-middle"></i>
-                                    <span>{{ $employee->email }}</span>
+                                    <span>{{ $employee->personal_email }}</span>
                                 </span>
                             </div>
                         </div>
@@ -403,6 +403,7 @@
                                             <a href="#" class="btn btn-sm btn-outline-primary">Download</a>
                                         </div>
                                     </div>
+
                                 </div>
 
                                 <div class="col-md-3 col-sm-6 mb-3">
@@ -410,21 +411,32 @@
                                         <div class="card-body text-center">
                                             <i class="mdi mdi-fingerprint fs-48 text-success mb-2"></i>
                                             <h6 class="fw-semibold">Fingerprint</h6>
-                                            <p class="text-muted small mb-2">fingerprint_001.png</p>
-                                            <a href="#" class="btn btn-sm btn-success">View</a>
-                                            <a href="#" class="btn btn-sm btn-outline-success">Download</a>
+                                            <a href="#" class="btn btn-sm btn-success view-link"
+                                                data-img="{{ asset('storage/' . $employee->fingerprint_path) }}">View</a>
+                                            <a href="{{ asset('storage/' . $employee->fingerprint_path) }}"
+                                                class="btn btn-sm btn-outline-success" download>Download</a>
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="col-md-3 col-sm-6 mb-3">
                                     <div class="card border">
                                         <div class="card-body text-center">
                                             <i class="mdi mdi-draw fs-48 text-warning mb-2"></i>
                                             <h6 class="fw-semibold">Signature</h6>
-                                            <p class="text-muted small mb-2">signature_001.jpg</p>
-                                            <a href="#" class="btn btn-sm btn-warning">View</a>
-                                            <a href="#" class="btn btn-sm btn-outline-warning">Download</a>
+                                            @if (isset($employee->signature_path))
+                                                @if (file_exists(public_path('storage/' . $employee->signature_path)))
+                                                    <a href="#" class="btn btn-sm btn-warning view-link"
+                                                        data-img="{{ asset('storage/' . $employee->signature_path) }}">View</a>
+                                                    <a href="{{ asset('storage/' . $employee->signature_path) }}"
+                                                        class="btn btn-sm btn-outline-warning" download>Download</a>
+                                                @else
+                                                    <p class="text-muted">Signature file deleted or moved</p>
+                                                    <!-- Show this message if file doesn't exist -->
+                                                @endif
+                                            @else
+                                                <p class="text-muted">No signature available</p>
+                                                <!-- Show this message if no signature path is set -->
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -434,15 +446,27 @@
                                         <div class="card-body text-center">
                                             <i class="mdi mdi-file-document fs-48 text-info mb-2"></i>
                                             <h6 class="fw-semibold">Experience Documents</h6>
-                                            <p class="text-muted small mb-2">experience_certificate.pdf</p>
-                                            <a href="#" class="btn btn-sm btn-info">View</a>
-                                            <a href="#" class="btn btn-sm btn-outline-info">Download</a>
+                                            @if (isset($employee->experience_path))
+                                                @if (file_exists(public_path('storage/' . $employee->experience_path)))
+                                                    <a href="#" class="btn btn-sm btn-info view-link"
+                                                        data-img="{{ asset('storage/' . $employee->experience_path) }}">View</a>
+                                                    <a href="{{ asset('storage/' . $employee->experience_path) }}"
+                                                        class="btn btn-sm btn-outline-info" download>Download</a>
+                                                @else
+                                                    <p class="text-muted">Experience document deleted or moved</p>
+                                                    <!-- Show this message if file doesn't exist -->
+                                                @endif
+                                            @else
+                                                <p class="text-muted">No experience document available</p>
+                                                <!-- Show this message if no experience document path is set -->
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
 
-                            <div class="row mt-3">
+                            {{-- <div class="row mt-3">
                                 <div class="col-12">
                                     <div class="card border">
                                         <div class="card-header bg-light">
@@ -500,7 +524,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
 
                     </div>
@@ -515,10 +539,8 @@
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-end gap-2">
-                        <a href="#" class="btn btn-secondary">
-                            <i class="mdi mdi-printer me-1"></i> Print Profile
-                        </a>
-                        <a href="#" class="btn btn-primary">
+                        <a href="{{ route('employees.general_informations.edit', $employee->id) }}"
+                            class="btn btn-primary">
                             <i class="mdi mdi-pencil me-1"></i> Edit Profile
                         </a>
                     </div>
@@ -526,6 +548,7 @@
             </div>
         </div>
     </div>
+    @include('employees.partials.image_modal')
 @endsection
 
 @push('scripts')
