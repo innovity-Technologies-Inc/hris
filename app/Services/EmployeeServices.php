@@ -123,7 +123,6 @@ class EmployeeServices
                 'passport_expiry' => 'nullable|date|after:today',
                 'license_no' => 'nullable|string|max:255',
                 'license_expiry' => 'nullable|date|after:today',
-                'bgmea_id' => 'nullable|string|max:255',
                 'visa_expiry' => 'nullable|date|after:today',
                 'work_expiry' => 'nullable|date|after:today',
                 'residency_id_number' => 'nullable|string|max:255',

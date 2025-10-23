@@ -33,7 +33,6 @@ class Employee extends Model
         'passport_expiry',
         'license_no',
         'license_expiry',
-        'bgmea_id',
         'visa_expiry',
         'work_expiry',
         'residency_id_number',

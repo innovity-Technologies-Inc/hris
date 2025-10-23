@@ -154,8 +154,7 @@ Route::prefix('employees')->group(function () {
         Route::post('general-informations/store', 'generalInfoStore')->name('employees.general_informations.store');
         Route::get('general-informations/edit/{id}', 'generalInfoEdit')->name('employees.general_informations.edit');
         Route::put('general-informations/{id}/update', 'generalInfoUpdate')->name('employees.general_informations.update');
-
-
+        Route::post('general-informations/import', 'generalInfoImport')->name('employees.general_informations.import');
     });
 });
 
