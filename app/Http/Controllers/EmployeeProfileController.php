@@ -137,11 +137,6 @@ class EmployeeProfileController extends Controller
         return response()->json($sections);
     }
 
-    public function getActs(){
-        $acts = $this->empServices->getActs();
-        return response()->json($acts);
-    }
-
     public function getGradeByAct($act_id){
         $grades = $this->empServices->getGradeByAct($act_id);
         return response()->json($grades);
