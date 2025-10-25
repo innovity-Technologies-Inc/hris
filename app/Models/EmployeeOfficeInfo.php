@@ -4,9 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class OfficeInfoEmployee extends Model
+class EmployeeOfficeInfo extends Model
 {
     use HasFactory;
 
@@ -24,6 +23,7 @@ class OfficeInfoEmployee extends Model
 
     protected $casts = [
         'weekends' => 'array',
+        'alternate_off_day' => 'array',
     ];
 
     public function getJoiningDesignation()

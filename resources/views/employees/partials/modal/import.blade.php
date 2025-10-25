@@ -65,9 +65,12 @@
                             <h6 class="fw-semibold mb-2">Drag and drop your file here</h6>
                             <p class="text-muted small mb-3">or click to browse</p>
                             <input type="file" class="form-control w-auto mx-auto" id="fileUpload"
-                                   accept=".xlsx,.xls,.csv" name="file" required>
+                                   accept=".csv,.xlsx,.xls" name="file" required>
                             <p class="text-muted small mt-3 mb-0">Supported formats: Excel (.xlsx, .xls) and CSV (.csv)</p>
                         </div>
+                        @error('file')
+                        <span class="text-danger small">{{ $message }}</span>
+                        @enderror
                     </div>
 
 
@@ -104,3 +107,9 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById('fileUpload').addEventListener('change', function(e) {
+        console.log('File selected:', e.target.files[0]);
+    });
+</script>

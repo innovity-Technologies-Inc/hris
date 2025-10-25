@@ -88,7 +88,7 @@ class EmployeeProfileController extends Controller
 
     public function generalInfoImport(Request $request){
         $request->validate([
-            'file' => 'required|mimes:xlsx,xls,csv'
+            'file' => 'required|mimes:xlsx,xls,text/plain,text/csv'
         ]);
 //    dd($request->all());
         try{

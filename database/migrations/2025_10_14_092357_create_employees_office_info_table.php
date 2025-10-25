@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('office_info_employees', function (Blueprint $table) {
+        Schema::create('employees_office_info', function (Blueprint $table) {
             $table->id();
             // Basic Identifiers
             $table->unsignedBigInteger('employee_id')->index()->nullable();

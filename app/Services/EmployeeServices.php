@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\HelperClass;
+use App\Models\Company;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -253,6 +254,14 @@ class EmployeeServices
             ]);
         }
         return $employee;
+    }
+
+    public function getCompanies(){
+        $companies = Company::all();
+    }
+
+    public function getDivisionByID($company_id){
+
     }
 
 
