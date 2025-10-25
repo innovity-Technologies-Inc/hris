@@ -16,12 +16,15 @@ use App\Http\Controllers\JobCreationController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\BankAccountsController;
 use App\Http\Controllers\EmployeeProfileController;
+use App\Http\Controllers\EmployeeEligibleController;
 
 Route::get('test', function () {
     // return view('employees.index');
     // return view('employees.partial.form');
     // return view('employees.office_informations.form');
-    return view('employees.office_informations.office_info');
+    // return view('employees.office_informations.office_info');
+    return view('employees.eligible_plans.form');
+    // return view('employees.eligiable_plan.info');
 });
 
 Route::prefix('company-setup')->group(function () {
@@ -156,6 +159,14 @@ Route::prefix('employees')->group(function () {
         Route::get('general-informations/edit/{id}', 'generalInfoEdit')->name('employees.general_informations.edit');
         Route::put('general-informations/{id}/update', 'generalInfoUpdate')->name('employees.general_informations.update');
         Route::post('general-informations/import', 'generalInfoImport')->name('employees.general_informations.import');
+    });
+    Route::controller(EmployeeEligibleController::class)->group(function(){
+        Route::get('eligible-plans/{id}', 'show')->name('employees.eligible_plans.show');
+        Route::get('eligible-plans/create', 'create')->name('employees.eligible_plans.create');
+        Route::post('eligible-plans/store', 'store')->name('employees.eligible_plans.store');
+        Route::get('eligible-plans/{id}/edit', 'edit')->name('employees.eligible_plans.edit');
+        Route::put('eligible-plans/{id}', 'update')->name('employees.eligible_plans.update');
+        Route::delete('eligible-plans/{id}', 'destroy')->name('employees.eligible_plans.delete');
     });
 });
 
