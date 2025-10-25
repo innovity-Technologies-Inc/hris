@@ -32,8 +32,9 @@ class EmployeeProfileController extends Controller
     public function generalInfoCreate(){
         $title = 'Add Employee Information';
         $section = 'Employees';
+        $section_url = route('employees.index');
         $sub_section = 'Create';
-        return view('employees.general_informations.form', compact('title', 'section', 'sub_section'));
+        return view('employees.general_informations.form', compact('title', 'section', 'sub_section', 'section_url'));
     }
 
 
@@ -106,6 +107,46 @@ class EmployeeProfileController extends Controller
         }
 
     }
+
+    public function companyInfoCreate(){
+        $title = 'Add Employee Information';
+        $section = 'Employees';
+        $section_url = route('employees.index');
+        $sub_section = 'Create';
+        return view('employees.office_informations.form', compact('title', 'section', 'sub_section', 'section_url'));;
+    }
+
+    public function getUnitByCompany($company_id){
+        $units = $this->empServices->getUnitByCompany($company_id);
+        return response()->json($units);
+
+    }
+
+    public function getDivisionByUnit($location_id){
+        $divisions = $this->empServices->getDivisionByUnit($location_id);
+        return response()->json($divisions);
+    }
+
+    public function getDepartmentByDivision($division_id){
+        $departments = $this->empServices->getDepartmentByDivision($division_id);
+        return response()->json($departments);
+    }
+
+    public function getSectionByDepartment($department_id){
+        $sections = $this->empServices->getSectionByDepartment($department_id);
+        return response()->json($sections);
+    }
+
+    public function getActs(){
+        $acts = $this->empServices->getActs();
+        return response()->json($acts);
+    }
+
+    public function getGradeByAct($act_id){
+        $grades = $this->empServices->getGradeByAct($act_id);
+        return response()->json($grades);
+    }
+
 
 
 }

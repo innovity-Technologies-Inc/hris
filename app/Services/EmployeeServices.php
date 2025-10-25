@@ -4,7 +4,13 @@ namespace App\Services;
 
 use App\HelperClass;
 use App\Models\Company;
+use App\Models\CompanyLocation;
+use App\Models\Department;
+use App\Models\Division;
 use App\Models\Employee;
+use App\Models\SalaryGrade;
+use App\Models\Section;
+use App\Models\Tofsil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -258,11 +264,39 @@ class EmployeeServices
 
     public function getCompanies(){
         $companies = Company::all();
+        return $companies;
     }
 
-    public function getDivisionByID($company_id){
-
+    public function getUnitByCompany($company_id){
+        $units = CompanyLocation::where('company_id', $company_id)->get();
+        return $units;
     }
+
+    public function getDivisionByUnit($location_id){
+        $divisions = Division::where('location_id', $location_id)->get();
+        return $divisions;
+    }
+
+    public function getDepartmentByDivision($division_id){
+        $departments = Department::where('division_id', $division_id)->get();
+        return $departments;
+    }
+
+    public function getSectionByDepartment($department_id){
+        $sections = Section::where('department_id', $department_id)->get();
+        return $sections;
+    }
+
+    public function getActs(){
+        $acts = Tofsil::all();
+        return $acts;
+    }
+
+    public function getGradeByAct($act_id){
+        $grades = SalaryGrade::where('act_id', $act_id)->get();
+        return $grades;
+    }
+
 
 
 }
