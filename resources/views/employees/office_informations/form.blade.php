@@ -8,7 +8,7 @@
                 <i class="mdi mdi-upload me-1"></i> Bulk Upload Office Informations
             </button>
         </div>
-        @include('employees.partials.modal')
+        @include('employees.partials.modal.import')
 
         <form class="" method="POST" action="#">
             @csrf
@@ -25,7 +25,7 @@
                                 <div class="col-lg-4 mb-3">
                                     <label for="employee_id" class="form-label">Employee ID <span
                                             class="text-danger">*</span></label>
-                                    <select id="employeeName" name="employee_name"
+                                    <select id="employee_id" name="employee_id"
                                         class="form-select form-select-sm select2_list"
                                         data-placeholder="Select employee name" aria-label="Employee Name">
                                     </select>
@@ -37,8 +37,8 @@
                                 <div class="col-lg-4 mb-3">
                                     <label for="emp_type" class="form-label">Employee Type <span
                                             class="text-danger">*</span></label>
-                                    <select class="form-select @error('emp_type') is-invalid @enderror" id="emp_type"
-                                        name="emp_type">
+                                    <select class="form-select select2_list @error('emp_type') is-invalid @enderror" id="emp_type"
+                                        name="emp_type" data-placeholder="Select Type">
                                         <option value="">Select Type</option>
                                         <option value="Permanent" {{ old('emp_type') == 'Permanent' ? 'selected' : '' }}>
                                             Permanent</option>
@@ -53,26 +53,19 @@
                                 </div>
 
                                 <div class="col-lg-4 mb-3">
-                                    <label for="paygrade" class="form-label">Pay Grade</label>
-                                    <input type="text" class="form-control @error('paygrade') is-invalid @enderror"
-                                        id="paygrade" name="paygrade" value="{{ old('paygrade') }}">
-                                    @error('paygrade')
+                                    <label for="grade_id" class="form-label">Pay Grade</label>
+                                    <select class="form-select select2_list @error('grade_id') is-invalid @enderror" id="grade_id"
+                                        name="grade_id" data-placeholder="Select Grade">
+                                        <option value="">Select Grade</option>
+                                        <!-- Add grade options dynamically -->
+                                    </select>
+                                    @error('grade_id')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
                             </div>
 
                             <div class="row">
-                                <div class="col-lg-4 mb-3">
-                                    <label for="category" class="form-label">Category <span
-                                            class="text-danger">*</span></label>
-                                    <input type="text" class="form-control @error('category') is-invalid @enderror"
-                                        id="category" name="category" value="{{ old('category') }}">
-                                    @error('category')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-
                                 <div class="col-lg-4 mb-3">
                                     <label for="hr_file_no" class="form-label">HR File Number</label>
                                     <input type="text" class="form-control @error('hr_file_no') is-invalid @enderror"
@@ -83,10 +76,13 @@
                                 </div>
 
                                 <div class="col-lg-4 mb-3">
-                                    <label for="totali" class="form-label">Totali</label>
-                                    <input type="text" class="form-control @error('totali') is-invalid @enderror"
-                                        id="totali" name="totali" value="{{ old('totali') }}">
-                                    @error('totali')
+                                    <label for="tofsil_id" class="form-label">Act</label>
+                                    <select class="form-select select2_list @error('tofsil_id') is-invalid @enderror" id="tofsil_id"
+                                        name="tofsil_id" data-placeholder="Select Tofsil">
+                                        <option value="">Select Act</option>
+                                        <!-- Add tofsil options dynamically -->
+                                    </select>
+                                    @error('tofsil_id')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
@@ -116,42 +112,43 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-lg-4 mb-3">
-                                        <label for="company_id" class="form-label">Company <span
-                                                class="text-danger">*</span></label>
-                                        <select class="form-select select2_list" name="company_id" id="company_id" required>
-                                            <option value="">Choose Company</option>
-                                            {{-- @foreach ($companies as $item)
-                                                <option value="{{ $item->id }}"
-                                                    @if (isset($office_info) && $office_info->company_id == $item->id) selected @endif>
-                                                    {{ $item->name }}
-                                                </option>
-                                            @endforeach --}}
-                                        </select>
-                                        @error('company_id')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
-                                    </div>
+                                    <label for="joining_company_id" class="form-label">Company <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select select2_list @error('joining_company_id') is-invalid @enderror"
+                                        name="joining_company_id" id="joining_company_id"
+                                        data-placeholder="Choose Company" required>
+                                        <option value="">Choose Company</option>
+                                        {{-- @foreach ($companies as $item)
+                                            <option value="{{ $item->id }}"
+                                                @if (isset($office_info) && $office_info->joining_company_id == $item->id) selected @endif>
+                                                {{ $item->name }}
+                                            </option>
+                                        @endforeach --}}
+                                    </select>
+                                    @error('joining_company_id')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
 
                                 <div class="col-lg-4 mb-3">
-                                        <label for="location_id" class="form-label">Company Location <span
-                                                class="text-danger">*</span></label>
-                                        <select id="location_id" class="form-select select2_list" name="location_id"
-                                            required>
-                                            <option value="">Select Location</option>
-                                            {{-- @foreach ($locations as $location)
-                                                <option value="{{ $location->id }}"
-                                                    {{ isset($office_info) && $office_info->location_id == $location->id ? 'selected' : '' }}>
-                                                    {{ $location->unit_name }}</option>
-                                            @endforeach --}}
-                                        </select>
-                                        @error('location_id')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
-                                    </div>
+                                    <label for="joining_business_unit_id" class="form-label">Business Unit <span
+                                            class="text-danger">*</span></label>
+                                    <select id="joining_business_unit_id"
+                                        class="form-select select2_list @error('joining_business_unit_id') is-invalid @enderror"
+                                        name="joining_business_unit_id"
+                                        data-placeholder="Select Business Unit" required>
+                                        <option value="">Select Business Unit</option>
+                                    </select>
+                                    @error('joining_business_unit_id')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+
                                 <div class="col-lg-4 mb-3">
                                     <label for="joining_division_id" class="form-label">Joining Division</label>
-                                    <select class="form-select @error('joining_division_id') is-invalid @enderror"
-                                        id="joining_division_id" name="joining_division_id">
+                                    <select class="form-select select2_list @error('joining_division_id') is-invalid @enderror"
+                                        id="joining_division_id" name="joining_division_id"
+                                        data-placeholder="Select Division">
                                         <option value="">Select Division</option>
                                         <!-- Add division options dynamically -->
                                     </select>
@@ -164,8 +161,9 @@
                             <div class="row">
                                 <div class="col-lg-4 mb-3">
                                     <label for="joining_department_id" class="form-label">Joining Department</label>
-                                    <select class="form-select @error('joining_department_id') is-invalid @enderror"
-                                        id="joining_department_id" name="joining_department_id">
+                                    <select class="form-select select2_list @error('joining_department_id') is-invalid @enderror"
+                                        id="joining_department_id" name="joining_department_id"
+                                        data-placeholder="Select Department">
                                         <option value="">Select Department</option>
                                         <!-- Add department options dynamically -->
                                     </select>
@@ -175,21 +173,10 @@
                                 </div>
 
                                 <div class="col-lg-4 mb-3">
-                                    <label for="joining_designation_id" class="form-label">Joining Designation</label>
-                                    <select class="form-select @error('joining_designation_id') is-invalid @enderror"
-                                        id="joining_designation_id" name="joining_designation_id">
-                                        <option value="">Select Designation</option>
-                                        <!-- Add designation options dynamically -->
-                                    </select>
-                                    @error('joining_designation_id')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-
-                                <div class="col-lg-4 mb-3">
                                     <label for="joining_section_id" class="form-label">Joining Section</label>
-                                    <select class="form-select @error('joining_section_id') is-invalid @enderror"
-                                        id="joining_section_id" name="joining_section_id">
+                                    <select class="form-select select2_list @error('joining_section_id') is-invalid @enderror"
+                                        id="joining_section_id" name="joining_section_id"
+                                        data-placeholder="Select Section">
                                         <option value="">Select Section</option>
                                         <!-- Add section options dynamically -->
                                     </select>
@@ -197,30 +184,22 @@
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
+
+                                <div class="col-lg-4 mb-3">
+                                    <label for="joining_designation_id" class="form-label">Joining Designation</label>
+                                    <select class="form-select select2_list @error('joining_designation_id') is-invalid @enderror"
+                                        id="joining_designation_id" name="joining_designation_id"
+                                        data-placeholder="Select Designation">
+                                        <option value="">Select Designation</option>
+                                        <!-- Add designation options dynamically -->
+                                    </select>
+                                    @error('joining_designation_id')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
                             </div>
 
                             <div class="row">
-                                <div class="col-lg-4 mb-3">
-                                    <label for="joining_subsection" class="form-label">Joining Subsection</label>
-                                    <input type="text"
-                                        class="form-control @error('joining_subsection') is-invalid @enderror"
-                                        id="joining_subsection" name="joining_subsection"
-                                        value="{{ old('joining_subsection') }}">
-                                    @error('joining_subsection')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-
-                                <div class="col-lg-4 mb-3">
-                                    <label for="joining_floor" class="form-label">Joining Floor</label>
-                                    <input type="text"
-                                        class="form-control @error('joining_floor') is-invalid @enderror"
-                                        id="joining_floor" name="joining_floor" value="{{ old('joining_floor') }}">
-                                    @error('joining_floor')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-
                                 <div class="col-lg-4 mb-3">
                                     <label for="date_of_join" class="form-label">Date of Join <span
                                             class="text-danger">*</span></label>
@@ -260,8 +239,9 @@
                             <div class="row">
                                 <div class="col-lg-4 mb-3">
                                     <label for="current_company_id" class="form-label">Current Company</label>
-                                    <select class="form-select @error('current_company_id') is-invalid @enderror"
-                                        id="current_company_id" name="current_company_id">
+                                    <select class="form-select select2_list @error('current_company_id') is-invalid @enderror"
+                                        id="current_company_id" name="current_company_id"
+                                        data-placeholder="Select Company">
                                         <option value="">Select Company</option>
                                         <!-- Add company options dynamically -->
                                     </select>
@@ -272,8 +252,9 @@
 
                                 <div class="col-lg-4 mb-3">
                                     <label for="current_business_unit_id" class="form-label">Current Business Unit</label>
-                                    <select class="form-select @error('current_business_unit_id') is-invalid @enderror"
-                                        id="current_business_unit_id" name="current_business_unit_id">
+                                    <select class="form-select select2_list @error('current_business_unit_id') is-invalid @enderror"
+                                        id="current_business_unit_id" name="current_business_unit_id"
+                                        data-placeholder="Select Business Unit">
                                         <option value="">Select Business Unit</option>
                                         <!-- Add business unit options dynamically -->
                                     </select>
@@ -284,8 +265,9 @@
 
                                 <div class="col-lg-4 mb-3">
                                     <label for="current_division_id" class="form-label">Current Division</label>
-                                    <select class="form-select @error('current_division_id') is-invalid @enderror"
-                                        id="current_division_id" name="current_division_id">
+                                    <select class="form-select select2_list @error('current_division_id') is-invalid @enderror"
+                                        id="current_division_id" name="current_division_id"
+                                        data-placeholder="Select Division">
                                         <option value="">Select Division</option>
                                         <!-- Add division options dynamically -->
                                     </select>
@@ -298,8 +280,9 @@
                             <div class="row">
                                 <div class="col-lg-4 mb-3">
                                     <label for="current_department_id" class="form-label">Current Department</label>
-                                    <select class="form-select @error('current_department_id') is-invalid @enderror"
-                                        id="current_department_id" name="current_department_id">
+                                    <select class="form-select select2_list @error('current_department_id') is-invalid @enderror"
+                                        id="current_department_id" name="current_department_id"
+                                        data-placeholder="Select Department">
                                         <option value="">Select Department</option>
                                         <!-- Add department options dynamically -->
                                     </select>
@@ -309,21 +292,10 @@
                                 </div>
 
                                 <div class="col-lg-4 mb-3">
-                                    <label for="current_designation_id" class="form-label">Current Designation</label>
-                                    <select class="form-select @error('current_designation_id') is-invalid @enderror"
-                                        id="current_designation_id" name="current_designation_id">
-                                        <option value="">Select Designation</option>
-                                        <!-- Add designation options dynamically -->
-                                    </select>
-                                    @error('current_designation_id')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-
-                                <div class="col-lg-4 mb-3">
                                     <label for="current_section_id" class="form-label">Current Section</label>
-                                    <select class="form-select @error('current_section_id') is-invalid @enderror"
-                                        id="current_section_id" name="current_section_id">
+                                    <select class="form-select select2_list @error('current_section_id') is-invalid @enderror"
+                                        id="current_section_id" name="current_section_id"
+                                        data-placeholder="Select Section">
                                         <option value="">Select Section</option>
                                         <!-- Add section options dynamically -->
                                     </select>
@@ -331,37 +303,16 @@
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-lg-4 mb-3">
-                                    <label for="current_subsection" class="form-label">Current Subsection</label>
-                                    <input type="text"
-                                        class="form-control @error('current_subsection') is-invalid @enderror"
-                                        id="current_subsection" name="current_subsection"
-                                        value="{{ old('current_subsection') }}">
-                                    @error('current_subsection')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
 
                                 <div class="col-lg-4 mb-3">
-                                    <label for="current_floor" class="form-label">Current Floor</label>
-                                    <input type="text"
-                                        class="form-control @error('current_floor') is-invalid @enderror"
-                                        id="current_floor" name="current_floor" value="{{ old('current_floor') }}">
-                                    @error('current_floor')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-
-                                <div class="col-lg-4 mb-3">
-                                    <label for="current_info_effective_date" class="form-label">Effective Date</label>
-                                    <input type="date"
-                                        class="form-control @error('current_info_effective_date') is-invalid @enderror"
-                                        id="current_info_effective_date" name="current_info_effective_date"
-                                        value="{{ old('current_info_effective_date') }}">
-                                    @error('current_info_effective_date')
+                                    <label for="current_designation_id" class="form-label">Current Designation</label>
+                                    <select class="form-select select2_list @error('current_designation_id') is-invalid @enderror"
+                                        id="current_designation_id" name="current_designation_id"
+                                        data-placeholder="Select Designation">
+                                        <option value="">Select Designation</option>
+                                        <!-- Add designation options dynamically -->
+                                    </select>
+                                    @error('current_designation_id')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
@@ -381,23 +332,16 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-lg-3 mb-3">
-                                    <label class="form-label d-block">Orientation Required</label>
-                                    <div class="form-check form-check-inline">
-                                        <input
-                                            class="form-check-input @error('orientation_required') is-invalid @enderror"
-                                            type="radio" name="orientation_required" id="orientation_yes"
-                                            value="1" {{ old('orientation_required') == '1' ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="orientation_yes">Yes</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input
-                                            class="form-check-input @error('orientation_required') is-invalid @enderror"
-                                            type="radio" name="orientation_required" id="orientation_no"
-                                            value="0" {{ old('orientation_required') == '0' ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="orientation_no">No</label>
-                                    </div>
+                                    <label for="orientation_required" class="form-label">Orientation Required</label>
+                                    <select class="form-select  @error('orientation_required') is-invalid @enderror"
+                                        id="orientation_required" name="orientation_required"
+                                        data-placeholder="Select Option">
+                                        <option value="">Select Option</option>
+                                        <option value="1" {{ old('orientation_required') == '1' ? 'selected' : '' }}>Yes</option>
+                                        <option value="0" {{ old('orientation_required') == '0' ? 'selected' : '' }}>No</option>
+                                    </select>
                                     @error('orientation_required')
-                                        <small class="text-danger d-block">{{ $message }}</small>
+                                        <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
 
@@ -558,8 +502,9 @@
 
                                 <div class="col-lg-6 mb-3">
                                     <label for="alternate_off_day" class="form-label">Alternate Off Day</label>
-                                    <select class="form-select @error('alternate_off_day') is-invalid @enderror"
-                                        id="alternate_off_day" name="alternate_off_day">
+                                    <select class="form-select select2_list @error('alternate_off_day') is-invalid @enderror"
+                                        id="alternate_off_day" name="alternate_off_day"
+                                        data-placeholder="Select Day">
                                         <option value="">Select Day</option>
                                         <option value="Monday"
                                             {{ old('alternate_off_day') == 'Monday' ? 'selected' : '' }}>Monday</option>
@@ -601,8 +546,9 @@
                                 <div class="col-lg-4 mb-3">
                                     <label for="salary_type" class="form-label">Salary Type <span
                                             class="text-danger">*</span></label>
-                                    <select class="form-select @error('salary_type') is-invalid @enderror"
-                                        id="salary_type" name="salary_type">
+                                    <select class="form-select  @error('salary_type') is-invalid @enderror"
+                                        id="salary_type" name="salary_type"
+                                        data-placeholder="Select Type">
                                         <option value="">Select Type</option>
                                         <option value="Monthly" {{ old('salary_type') == 'Monthly' ? 'selected' : '' }}>
                                             Monthly</option>
@@ -612,32 +558,6 @@
                                         </option>
                                     </select>
                                     @error('salary_type')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-
-                                <div class="col-lg-4 mb-3">
-                                    <label for="imprest_fund" class="form-label">Imprest Fund</label>
-                                    <input type="number" step="0.01"
-                                        class="form-control @error('imprest_fund') is-invalid @enderror"
-                                        id="imprest_fund" name="imprest_fund" value="{{ old('imprest_fund') }}">
-                                    @error('imprest_fund')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-
-                                <div class="col-lg-4 mb-3">
-                                    <label for="status" class="form-label">Status</label>
-                                    <select class="form-select @error('status') is-invalid @enderror" id="status"
-                                        name="status">
-                                        <option value="Active"
-                                            {{ old('status', 'Active') == 'Active' ? 'selected' : '' }}>Active</option>
-                                        <option value="Inactive" {{ old('status') == 'Inactive' ? 'selected' : '' }}>
-                                            Inactive</option>
-                                        <option value="Suspended" {{ old('status') == 'Suspended' ? 'selected' : '' }}>
-                                            Suspended</option>
-                                    </select>
-                                    @error('status')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
@@ -738,38 +658,6 @@
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
-
-                                <div class="col-lg-3 mb-3">
-                                    <label for="cash_collector" class="form-label">Cash Collector</label>
-                                    <input type="text"
-                                        class="form-control @error('cash_collector') is-invalid @enderror"
-                                        id="cash_collector" name="cash_collector" value="{{ old('cash_collector') }}">
-                                    @error('cash_collector')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-lg-4 mb-3">
-                                    <label for="separation_type" class="form-label">Separation Type</label>
-                                    <select class="form-select @error('separation_type') is-invalid @enderror"
-                                        id="separation_type" name="separation_type">
-                                        <option value="">Select Type</option>
-                                        <option value="Resignation"
-                                            {{ old('separation_type') == 'Resignation' ? 'selected' : '' }}>Resignation
-                                        </option>
-                                        <option value="Termination"
-                                            {{ old('separation_type') == 'Termination' ? 'selected' : '' }}>Termination
-                                        </option>
-                                        <option value="Retirement"
-                                            {{ old('separation_type') == 'Retirement' ? 'selected' : '' }}>Retirement
-                                        </option>
-                                    </select>
-                                    @error('separation_type')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -797,26 +685,29 @@
                 const checkbox = document.getElementById('same_as_joining');
 
                 if (checkbox.checked) {
-                    document.getElementById('current_company_id').value = document.getElementById('joining_company_id').value;
-                    document.getElementById('current_business_unit_id').value = document.getElementById(
-                        'joining_business_unit_id').value;
-                    document.getElementById('current_division_id').value = document.getElementById('joining_division_id').value;
-                    document.getElementById('current_department_id').value = document.getElementById('joining_department_id')
-                        .value;
-                    document.getElementById('current_designation_id').value = document.getElementById('joining_designation_id')
-                        .value;
-                    document.getElementById('current_section_id').value = document.getElementById('joining_section_id').value;
-                    document.getElementById('current_subsection').value = document.getElementById('joining_subsection').value;
-                    document.getElementById('current_floor').value = document.getElementById('joining_floor').value;
+                    // Get the Select2 selected values
+                    const joiningCompany = $('#joining_company_id').val();
+                    const joiningBusinessUnit = $('#joining_business_unit_id').val();
+                    const joiningDivision = $('#joining_division_id').val();
+                    const joiningDepartment = $('#joining_department_id').val();
+                    const joiningDesignation = $('#joining_designation_id').val();
+                    const joiningSection = $('#joining_section_id').val();
+
+                    // Set the values to current fields using Select2 trigger
+                    $('#current_company_id').val(joiningCompany).trigger('change');
+                    $('#current_business_unit_id').val(joiningBusinessUnit).trigger('change');
+                    $('#current_division_id').val(joiningDivision).trigger('change');
+                    $('#current_department_id').val(joiningDepartment).trigger('change');
+                    $('#current_designation_id').val(joiningDesignation).trigger('change');
+                    $('#current_section_id').val(joiningSection).trigger('change');
                 } else {
-                    document.getElementById('current_company_id').value = '';
-                    document.getElementById('current_business_unit_id').value = '';
-                    document.getElementById('current_division_id').value = '';
-                    document.getElementById('current_department_id').value = '';
-                    document.getElementById('current_designation_id').value = '';
-                    document.getElementById('current_section_id').value = '';
-                    document.getElementById('current_subsection').value = '';
-                    document.getElementById('current_floor').value = '';
+                    // Clear all current fields
+                    $('#current_company_id').val(null).trigger('change');
+                    $('#current_business_unit_id').val(null).trigger('change');
+                    $('#current_division_id').val(null).trigger('change');
+                    $('#current_department_id').val(null).trigger('change');
+                    $('#current_designation_id').val(null).trigger('change');
+                    $('#current_section_id').val(null).trigger('change');
                 }
             }
         </script>
