@@ -199,7 +199,10 @@ class EmployeeEligibleController extends Controller
 
             return redirect()
                 ->route('employees.index')
-                ->with('success', 'Employee eligible plans created successfully.');
+                ->with([
+                    'message' => 'Employee Info Imported Successfully',
+                    'alert-type' => 'success'
+                ]);
         } catch (\Exception $e) {
             return redirect()
                 ->back()
@@ -402,7 +405,7 @@ class EmployeeEligibleController extends Controller
             $employeeEligiblePlan->update($validated);
 
             return redirect()
-                ->route('employees.eligible_plans.show', $employeeEligiblePlan)
+                ->route('employees.eligible_plans.info', $employeeEligiblePlan)
                 ->with('success', 'Employee eligible plans updated successfully.');
         } catch (\Exception $e) {
             return redirect()
@@ -421,7 +424,7 @@ class EmployeeEligibleController extends Controller
             $employeeEligiblePlan->delete();
 
             return redirect()
-                ->route('employees.eligible_plans.index')
+                ->route('employees.index')
                 ->with('success', 'Employee eligible plans deleted successfully.');
         } catch (\Exception $e) {
             return redirect()
