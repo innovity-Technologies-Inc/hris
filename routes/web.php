@@ -156,7 +156,21 @@ Route::prefix('employees')->group(function () {
         Route::get('general-informations/edit/{id}', 'generalInfoEdit')->name('employees.general_informations.edit');
         Route::put('general-informations/{id}/update', 'generalInfoUpdate')->name('employees.general_informations.update');
         Route::post('general-informations/import', 'generalInfoImport')->name('employees.general_informations.import');
+        Route::get('office-informations/create/{id?}', 'officeInfoCreate')->name('employees.office_informations.create');
+        Route::post('office-informations/store', 'officeInfoStore')->name('employees.office_informations.store');
+        Route::get('office-informations/edit/{id}', 'officeInfoEdit')->name('employees.office_informations.edit');
+        Route::put('office-informations/{id}/update', 'officeInfoUpdate')->name('employees.office_informations.update');
+
     });
+});
+
+Route::controller(EmployeeProfileController::class)->group(function () {
+    Route::get('get-grades/{tofsil_id}', 'getGradeByAct');
+    Route::get('get-units/{company_id}', 'getUnitByCompany');
+    Route::get('get-divisions/{unit_id}', 'getDivisionByUnit');
+    Route::get('get-departments/{division_id}', 'getDepartmentByDivision');
+    Route::get('get-sections/{department_id}', 'getSectionByDepartment');
+    Route::get('get-designations/{division_id}', 'getDesignationsByDivision');
 });
 
 

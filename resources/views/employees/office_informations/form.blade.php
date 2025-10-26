@@ -2,17 +2,24 @@
 @section('content')
     @include('employees.partials.creation_button')
     <div class="mt-4">
-        <!-- Trigger Button -->
-        <div class="mb-3">
-            <button type="button" class="btn btn-secondary shadow-sm" data-bs-toggle="modal" data-bs-target="#bulkUploadModal">
-                <i class="mdi mdi-upload me-1"></i> Bulk Upload Office Informations
-            </button>
-        </div>
-        @include('employees.partials.modal.import')
+        @php($id = request()->route('id'))
+        @if(!isset($employee_id))
+            <!-- Trigger Button -->
+            <div class="mb-3">
+                <button type="button" class="btn btn-secondary shadow-sm" data-bs-toggle="modal" data-bs-target="#bulkUploadModal">
+                    <i class="mdi mdi-upload me-1"></i> Bulk Upload Office Informations
+                </button>
+            </div>
+            @include('employees.partials.modal.import')
+        @endif
 
-        <form class="" method="POST" action="#">
+
+        <form class="" method="POST" enctype="multipart/form-data" action="{{isset($employee_office_info) ? route('employees.office_informations.update', $employee_office_info->id) : route('employees.office_informations.store') }}">
+            @if(isset($employee_office_info))
+                @method('PUT')
+            @endif
+
             @csrf
-
             <!-- Payroll Information Section -->
             <div class="row">
                 <div class="col-12">
@@ -22,81 +29,92 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-lg-4 mb-3">
-                                    <label for="employee_id" class="form-label">Employee ID <span
+                                <div class="col-lg-6 mb-3">
+                                    <label for="employee_id" class="form-label">Employee Name <span
                                             class="text-danger">*</span></label>
                                     <select id="employee_id" name="employee_id"
                                         class="form-select form-select-sm select2_list"
-                                        data-placeholder="Select employee name" aria-label="Employee Name">
+                                        data-placeholder="Select Employee Name" aria-label="Employee Name">
+                                        <option value="">Select Employee</option>
+                                        @foreach($employees as $employee)
+                                            <option value="{{ $employee->id }}"
+                                                {{old('employee_id') == $employee->id || isset($employee_office_info) && $employee->id == $employee_office_info->employee_id || isset($id) && $id == $employee->id ? 'selected' : ''}}>
+                                                {{$employee->full_name}}</option>
+                                        @endforeach
                                     </select>
                                     @error('employee_id')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
 
-                                <div class="col-lg-4 mb-3">
+                                <div class="col-lg-6 mb-3">
                                     <label for="emp_type" class="form-label">Employee Type <span
                                             class="text-danger">*</span></label>
                                     <select class="form-select select2_list @error('emp_type') is-invalid @enderror" id="emp_type"
                                         name="emp_type" data-placeholder="Select Type">
                                         <option value="">Select Type</option>
-                                        <option value="Permanent" {{ old('emp_type') == 'Permanent' ? 'selected' : '' }}>
+                                        <option value="permanent" {{ old('emp_type') == 'permanent' || isset($employee_office_info) && ($employee_office_info->emp_type == 'permanent') ? 'selected' : '' }}>
                                             Permanent</option>
-                                        <option value="Contractual"
-                                            {{ old('emp_type') == 'Contractual' ? 'selected' : '' }}>Contractual</option>
-                                        <option value="Temporary" {{ old('emp_type') == 'Temporary' ? 'selected' : '' }}>
-                                            Temporary</option>
+                                        <option value="contractual"
+                                            {{ old('emp_type') == 'contractual' || isset($employee_office_info) && ($employee_office_info->emp_type == 'contractual') ? 'selected' : '' }}>Contractual</option>
                                     </select>
                                     @error('emp_type')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
 
-                                <div class="col-lg-4 mb-3">
+                                <div class="col-lg-6 mb-3">
+                                    <label for="tofsil_id" class="form-label">Act</label>
+                                    <select class="form-select select2_list" id="tofsil_id"
+                                            name="tofsil_id" data-placeholder="Select Salary Act">
+                                        <option value="">Select Salary Act</option>
+                                        @foreach($acts as $act)
+                                            <option
+                                                value="{{ $act->id }}"
+                                                {{ old('tofsil_id', $employee_office_info->tofsil_id ?? '') == $act->id ? 'selected' : '' }}>
+                                                {{ $act->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('tofsil_id')
+                                    <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+
+
+
+                                <div class="col-lg-6 mb-3">
                                     <label for="grade_id" class="form-label">Pay Grade</label>
-                                    <select class="form-select select2_list @error('grade_id') is-invalid @enderror" id="grade_id"
+                                    <select class="form-select" id="grade_id"
                                         name="grade_id" data-placeholder="Select Grade">
-                                        <option value="">Select Grade</option>
                                         <!-- Add grade options dynamically -->
                                     </select>
                                     @error('grade_id')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
-                            </div>
 
-                            <div class="row">
-                                <div class="col-lg-4 mb-3">
+                                <div class="col-lg-6 mb-3">
                                     <label for="hr_file_no" class="form-label">HR File Number</label>
                                     <input type="text" class="form-control @error('hr_file_no') is-invalid @enderror"
-                                        id="hr_file_no" name="hr_file_no" value="{{ old('hr_file_no') }}">
+                                        id="hr_file_no" name="hr_file_no" value="{{ isset($employee_office_info) ? $employee_office_info->hr_file_no : old('hr_file_no') }}">
                                     @error('hr_file_no')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
 
-                                <div class="col-lg-4 mb-3">
-                                    <label for="tofsil_id" class="form-label">Act</label>
-                                    <select class="form-select select2_list @error('tofsil_id') is-invalid @enderror" id="tofsil_id"
-                                        name="tofsil_id" data-placeholder="Select Tofsil">
-                                        <option value="">Select Act</option>
-                                        <!-- Add tofsil options dynamically -->
-                                    </select>
-                                    @error('tofsil_id')
-                                        <small class="text-danger">{{ $message }}</small>
+                                <div class="col-lg-6 mb-3">
+                                    <label for="file_note" class="form-label">HR File Note</label>
+                                    <input type="text" class="form-control @error('file_note') is-invalid @enderror"
+                                           id="file_note" name="file_note" value="{{isset($employee_office_info) ? $employee_office_info->file_note : old('file_note') }}">
+                                    @error('file_note')
+                                    <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
+
+
                             </div>
 
-                            <div class="row">
-                                <div class="col-lg-12 mb-3">
-                                    <label for="file_note" class="form-label">File Note</label>
-                                    <textarea class="form-control @error('file_note') is-invalid @enderror" id="file_note" name="file_note" rows="3">{{ old('file_note') }}</textarea>
-                                    @error('file_note')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -114,16 +132,16 @@
                                 <div class="col-lg-4 mb-3">
                                     <label for="joining_company_id" class="form-label">Company <span
                                             class="text-danger">*</span></label>
-                                    <select class="form-select select2_list @error('joining_company_id') is-invalid @enderror"
-                                        name="joining_company_id" id="joining_company_id"
-                                        data-placeholder="Choose Company" required>
+                                    <select class="form-select select2_list" id="joining_company_id"
+                                            name="joining_company_id" data-placeholder="Select Company">
                                         <option value="">Choose Company</option>
-                                        {{-- @foreach ($companies as $item)
-                                            <option value="{{ $item->id }}"
-                                                @if (isset($office_info) && $office_info->joining_company_id == $item->id) selected @endif>
-                                                {{ $item->name }}
+                                        @foreach ($companies as $company)
+                                            <option
+                                                value="{{ $company->id }}"
+                                                {{ old('joining_company_id', $employee_office_info->joining_company_id ?? '') == $company->id ? 'selected' : '' }}>
+                                                {{ $company->name }}
                                             </option>
-                                        @endforeach --}}
+                                        @endforeach
                                     </select>
                                     @error('joining_company_id')
                                         <small class="text-danger">{{ $message }}</small>
@@ -191,7 +209,7 @@
                                         id="joining_designation_id" name="joining_designation_id"
                                         data-placeholder="Select Designation">
                                         <option value="">Select Designation</option>
-                                        <!-- Add designation options dynamically -->
+
                                     </select>
                                     @error('joining_designation_id')
                                         <small class="text-danger">{{ $message }}</small>
@@ -205,7 +223,7 @@
                                             class="text-danger">*</span></label>
                                     <input type="date"
                                         class="form-control @error('date_of_join') is-invalid @enderror"
-                                        id="date_of_join" name="date_of_join" value="{{ old('date_of_join') }}">
+                                        id="date_of_join" name="date_of_join" value="{{ isset($employee_office_info) ? $employee_office_info->date_of_join : old('date_of_join') }}">
                                     @error('date_of_join')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -224,7 +242,7 @@
                             <h5 class="card-title mb-0">Current Information</h5>
                         </div>
                         <div class="card-body">
-                            <div class="row">
+                            {{--<div class="row">
                                 <div class="col-12 mb-3">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" id="same_as_joining"
@@ -234,16 +252,21 @@
                                         </label>
                                     </div>
                                 </div>
-                            </div>
+                            </div>--}}
 
                             <div class="row">
                                 <div class="col-lg-4 mb-3">
                                     <label for="current_company_id" class="form-label">Current Company</label>
-                                    <select class="form-select select2_list @error('current_company_id') is-invalid @enderror"
+                                    <select class="form-select select2_list"
                                         id="current_company_id" name="current_company_id"
                                         data-placeholder="Select Company">
                                         <option value="">Select Company</option>
-                                        <!-- Add company options dynamically -->
+                                        @foreach ($companies as $company)
+                                            <option
+                                                value="{{ $company->id }}"
+                                                {{ old('joining_company_id', $employee_office_info->joining_company_id ?? '') == $company->id ? 'selected' : '' }}>
+                                                {{ $company->name }}
+                                            </option>                                        @endforeach
                                     </select>
                                     @error('current_company_id')
                                         <small class="text-danger">{{ $message }}</small>
@@ -331,60 +354,59 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-lg-3 mb-3">
+                                <div class="col-lg-4 mb-3">
                                     <label for="orientation_required" class="form-label">Orientation Required</label>
                                     <select class="form-select  @error('orientation_required') is-invalid @enderror"
                                         id="orientation_required" name="orientation_required"
                                         data-placeholder="Select Option">
                                         <option value="">Select Option</option>
-                                        <option value="1" {{ old('orientation_required') == '1' ? 'selected' : '' }}>Yes</option>
-                                        <option value="0" {{ old('orientation_required') == '0' ? 'selected' : '' }}>No</option>
+                                        <option value="yes" {{  old('orientation_required') == 'yes' || isset($employee_office_info) && ($employee_office_info->orientation_required == 'yes') ? 'selected' : '' }}>Yes</option>
+                                        <option value="no" {{ old('orientation_required') == 'no' || isset($employee_office_info) && ($employee_office_info->orientation_required == 'no') ? 'selected' : '' }}>No</option>
                                     </select>
                                     @error('orientation_required')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
 
-                                <div class="col-lg-3 mb-3">
+                                <div class="col-lg-4 mb-3">
                                     <label for="orientation_from" class="form-label">Orientation From</label>
                                     <input type="date"
                                         class="form-control @error('orientation_from') is-invalid @enderror"
                                         id="orientation_from" name="orientation_from"
-                                        value="{{ old('orientation_from') }}">
+                                        value="{{ isset($employee_office_info) ? $employee_office_info->orientation_from : old('orientation_from') }}">
                                     @error('orientation_from')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
 
-                                <div class="col-lg-3 mb-3">
+                                <div class="col-lg-4 mb-3">
                                     <label for="orientation_to" class="form-label">Orientation To</label>
                                     <input type="date"
                                         class="form-control @error('orientation_to') is-invalid @enderror"
-                                        id="orientation_to" name="orientation_to" value="{{ old('orientation_to') }}">
+                                        id="orientation_to" name="orientation_to" value="{{isset($employee_office_info) ? $employee_office_info->orientation_to : old('orientation_to') }}">
                                     @error('orientation_to')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
 
-                                <div class="col-lg-3 mb-3">
+                                <div class="col-lg-6 mb-3">
                                     <label for="orientation_type" class="form-label">Orientation Type</label>
                                     <input type="text"
                                         class="form-control @error('orientation_type') is-invalid @enderror"
                                         id="orientation_type" name="orientation_type"
-                                        value="{{ old('orientation_type') }}">
+                                        value="{{ isset($employee_office_info) ? $employee_office_info->orientation_type : old('orientation_type') }}">
                                     @error('orientation_type')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
-                            </div>
 
-                            <div class="row">
-                                <div class="col-lg-4 mb-3">
+
+                                <div class="col-lg-6 mb-3">
                                     <label for="orientation_days" class="form-label">Orientation Days</label>
                                     <input type="number"
                                         class="form-control @error('orientation_days') is-invalid @enderror"
                                         id="orientation_days" name="orientation_days"
-                                        value="{{ old('orientation_days') }}" min="0">
+                                        value="{{isset($employee_office_info) ? $employee_office_info->orientation_days : old('orientation_days') }}" min="0">
                                     @error('orientation_days')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -409,18 +431,18 @@
                                     <input type="date"
                                         class="form-control @error('confirmation_date') is-invalid @enderror"
                                         id="confirmation_date" name="confirmation_date"
-                                        value="{{ old('confirmation_date') }}">
+                                        value="{{ isset($employee_office_info) ? $employee_office_info->confirmation_date : old('confirmation_date') }}">
                                     @error('confirmation_date')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
 
                                 <div class="col-lg-4 mb-3">
-                                    <label for="probation_duration" class="form-label">Probation Duration</label>
-                                    <input type="text"
+                                    <label for="probation_duration" class="form-label">Probation Duration (In Days)</label>
+                                    <input type="number" min="0"
                                         class="form-control @error('probation_duration') is-invalid @enderror"
                                         id="probation_duration" name="probation_duration"
-                                        value="{{ old('probation_duration') }}" placeholder="e.g., 6 months">
+                                        value="{{ isset($employee_office_info) ? $employee_office_info->probation_duration : old('probation_duration') }}" placeholder="e.g., 6 months">
                                     @error('probation_duration')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -431,7 +453,7 @@
                                     <input type="date"
                                         class="form-control @error('next_promotion_date') is-invalid @enderror"
                                         id="next_promotion_date" name="next_promotion_date"
-                                        value="{{ old('next_promotion_date') }}">
+                                        value="{{ isset($employee_office_info) ? $employee_office_info->next_promotion_date : old('next_promotion_date') }}">
                                     @error('next_promotion_date')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -439,22 +461,22 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-lg-4 mb-3">
+                                <div class="col-lg-6 mb-3">
                                     <label for="promotion_cycle" class="form-label">Promotion Cycle</label>
                                     <input type="text"
                                         class="form-control @error('promotion_cycle') is-invalid @enderror"
-                                        id="promotion_cycle" name="promotion_cycle" value="{{ old('promotion_cycle') }}"
+                                        id="promotion_cycle" name="promotion_cycle" value=" {{isset($employee_office_info) ? $employee_office_info->promotion_cycle :  old('promotion_cycle') }}"
                                         placeholder="e.g., Annual">
                                     @error('promotion_cycle')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
 
-                                <div class="col-lg-4 mb-3">
+                                <div class="col-lg-6 mb-3">
                                     <label for="increment_cycle" class="form-label">Increment Cycle</label>
                                     <input type="text"
                                         class="form-control @error('increment_cycle') is-invalid @enderror"
-                                        id="increment_cycle" name="increment_cycle" value="{{ old('increment_cycle') }}"
+                                        id="increment_cycle" name="increment_cycle" value="{{ isset($employee_office_info) ? $employee_office_info->increment_cycle :  old('increment_cycle') }}"
                                         placeholder="e.g., Annual">
                                     @error('increment_cycle')
                                         <small class="text-danger">{{ $message }}</small>
@@ -475,60 +497,105 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-lg-6 mb-3">
+                                <div class="col-lg-12 mb-3">
                                     <label class="form-label d-block">Weekends</label>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="weekends[]"
                                             id="weekend_friday" value="Friday"
-                                            {{ in_array('Friday', old('weekends', [])) ? 'checked' : '' }}>
+                                            {{ in_array('Friday', old('weekends', [])) || isset($employee_office_info) && in_array('Friday',  $employee_office_info->weekends) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="weekend_friday">Friday</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="weekends[]"
                                             id="weekend_saturday" value="Saturday"
-                                            {{ in_array('Saturday', old('weekends', [])) ? 'checked' : '' }}>
+                                            {{ in_array('Saturday', old('weekends', [])) || isset($employee_office_info) && in_array('Saturday', $employee_office_info->weekends)  ? 'checked' : '' }}>
                                         <label class="form-check-label" for="weekend_saturday">Saturday</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="weekends[]"
                                             id="weekend_sunday" value="Sunday"
-                                            {{ in_array('Sunday', old('weekends', [])) ? 'checked' : '' }}>
+                                            {{ in_array('Sunday', old('weekends', [])) || isset($employee_office_info) && in_array('Sunday', $employee_office_info->weekends) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="weekend_sunday">Sunday</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="weekends[]"
+                                               id="" value="Monday"
+                                            {{ in_array('Monday', old('weekends', [])) || isset($employee_office_info) && in_array('Monday', $employee_office_info->weekends) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="">Monday</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="weekends[]"
+                                               id="" value="Tuesday"
+                                            {{ in_array('Tuesday', old('weekends', [])) || isset($employee_office_info) && in_array('Tuesday', $employee_office_info->weekends) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="">Tuesday</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="weekends[]"
+                                               id="" value="Wednesday"
+                                            {{ in_array('Wednesday', old('weekends', [])) || isset($employee_office_info) && in_array('Wednesday', $employee_office_info->weekends) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="">Wednesday</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="weekends[]"
+                                               id="" value="Thursday"
+                                            {{ in_array('Thursday', old('weekends', [])) || isset($employee_office_info) && in_array('Thursday', $employee_office_info->weekends) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="">Thursday</label>
                                     </div>
                                     @error('weekends')
                                         <small class="text-danger d-block">{{ $message }}</small>
                                     @enderror
                                 </div>
 
-                                <div class="col-lg-6 mb-3">
-                                    <label for="alternate_off_day" class="form-label">Alternate Off Day</label>
-                                    <select class="form-select select2_list @error('alternate_off_day') is-invalid @enderror"
-                                        id="alternate_off_day" name="alternate_off_day"
-                                        data-placeholder="Select Day">
-                                        <option value="">Select Day</option>
-                                        <option value="Monday"
-                                            {{ old('alternate_off_day') == 'Monday' ? 'selected' : '' }}>Monday</option>
-                                        <option value="Tuesday"
-                                            {{ old('alternate_off_day') == 'Tuesday' ? 'selected' : '' }}>Tuesday</option>
-                                        <option value="Wednesday"
-                                            {{ old('alternate_off_day') == 'Wednesday' ? 'selected' : '' }}>Wednesday
-                                        </option>
-                                        <option value="Thursday"
-                                            {{ old('alternate_off_day') == 'Thursday' ? 'selected' : '' }}>Thursday
-                                        </option>
-                                        <option value="Friday"
-                                            {{ old('alternate_off_day') == 'Friday' ? 'selected' : '' }}>Friday</option>
-                                        <option value="Saturday"
-                                            {{ old('alternate_off_day') == 'Saturday' ? 'selected' : '' }}>Saturday
-                                        </option>
-                                        <option value="Sunday"
-                                            {{ old('alternate_off_day') == 'Sunday' ? 'selected' : '' }}>Sunday</option>
-                                    </select>
+                                <div class="col-lg-12 mb-3">
+                                    <label class="form-label d-block">Alternate Off Day</label>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="alternate_off_day[]"
+                                               id="weekend_friday" value="Friday"
+                                            {{ in_array('Friday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Friday', $employee_office_info->alternate_off_day) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="weekend_friday">Friday</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="alternate_off_day[]"
+                                               id="weekend_saturday" value="Saturday"
+                                            {{ in_array('Saturday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Saturday', $employee_office_info->alternate_off_day)  ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="weekend_saturday">Saturday</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="alternate_off_day[]"
+                                               id="weekend_sunday" value="Sunday"
+                                            {{ in_array('Sunday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Sunday', $employee_office_info->alternate_off_day) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="weekend_sunday">Sunday</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="alternate_off_day[]"
+                                               id="" value="Monday"
+                                            {{ in_array('Monday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Monday', $employee_office_info->alternate_off_day) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="">Monday</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="alternate_off_day[]"
+                                               id="" value="Tuesday"
+                                            {{ in_array('Tuesday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Tuesday', $employee_office_info->alternate_off_day) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="">Tuesday</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="alternate_off_day[]"
+                                               id="" value="Wednesday"
+                                            {{ in_array('Wednesday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Wednesday', $employee_office_info->alternate_off_day) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="">Wednesday</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="alternate_off_day[]"
+                                               id="" value="Thursday"
+                                            {{ in_array('Thursday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Thursday', $employee_office_info->alternate_off_day) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="">Thursday</label>
+                                    </div>
                                     @error('alternate_off_day')
-                                        <small class="text-danger">{{ $message }}</small>
+                                    <small class="text-danger d-block">{{ $message }}</small>
                                     @enderror
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -542,123 +609,112 @@
                             <h5 class="card-title mb-0">Eligibility & Benefits</h5>
                         </div>
                         <div class="card-body">
+
+
                             <div class="row">
-                                <div class="col-lg-4 mb-3">
+                                <div class="col-lg-2 mb-3">
+                                    <div class="form-check">
+                                        <input type="hidden" name="ot_allowed" value="no">
+                                        <input class="form-check-input" type="checkbox" name="ot_allowed"
+                                               id="ot_allowed" value="yes"
+                                            {{ old('ot_allowed') == 'yes' || isset($employee_office_info) && ($employee_office_info->ot_allowed == 'yes') ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="ot_allowed">OT Allowed</label>
+                                    </div>
+                                    @error('ot_allowed')
+                                    <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+
+                                <div class="col-lg-2 mb-3">
+                                    <div class="form-check">
+                                        <input type="hidden" name="pf_eligible" value="no">
+                                        <input class="form-check-input" type="checkbox" name="pf_eligible"
+                                               id="pf_eligible" value="yes"
+                                            {{ old('pf_eligible') == 'yes' || isset($employee_office_info) && ($employee_office_info->pf_eligible == 'yes') ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="pf_eligible">PF Eligible</label>
+                                    </div>
+                                    @error('pf_eligible')
+                                    <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+
+                                <div class="col-lg-2 mb-3">
+                                    <div class="form-check">
+                                        <input type="hidden" name="transport_eligible" value="no">
+                                        <input class="form-check-input" type="checkbox" name="transport_eligible"
+                                               id="transport_eligible" value="yes"
+                                            {{ old('transport_eligible') == 'yes' || isset($employee_office_info) && ($employee_office_info->transport_eligible == 'yes')? 'checked' : '' }}>
+                                        <label class="form-check-label" for="transport_eligible">Transport Eligible</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-2 mb-3">
+                                    <div class="form-check">
+                                        <input type="hidden" name="gratuity_eligible" value="no">
+                                        <input class="form-check-input" type="checkbox" name="gratuity_eligible"
+                                               id="gratuity_eligible" value="yes"
+                                            {{ old('gratuity_eligible') == 'yes' || isset($employee_office_info) && ($employee_office_info->gratuity_eligible == 'yes') ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="gratuity_eligible">Gratuity Eligible</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-2 mb-3">
+                                    <div class="form-check">
+                                        <input type="hidden" name="can_apply_loan" value="no">
+                                        <input class="form-check-input" type="checkbox" name="can_apply_loan"
+                                               id="can_apply_loan" value="yes"
+                                            {{ old('can_apply_loan') == 'yes' || isset($employee_office_info) && ($employee_office_info->can_apply_loan == 'yes') ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="can_apply_loan">Can Apply Loan</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-2 mb-3">
+                                    <div class="form-check">
+                                        <input type="hidden" name="can_apply_advance" value="no">
+                                        <input class="form-check-input" type="checkbox" name="can_apply_advance"
+                                               id="can_apply_advance" value="yes"
+                                            {{ old('can_apply_advance') == 'yes' || isset($employee_office_info) && ($employee_office_info->can_apply_advance == 'yes') ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="can_apply_advance">Can Apply Advance</label>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-6 mb-3">
+                                    <label for="pf_effective_date" class="form-label">PF Effective Date</label>
+                                    <input type="date"
+                                           class="form-control @error('pf_effective_date') is-invalid @enderror"
+                                           id="pf_effective_date" name="pf_effective_date"
+                                           value="{{ isset($employee_office_info) ? $employee_office_info->pf_effective_date : old('pf_effective_date') }}">
+                                    @error('pf_effective_date')
+                                    <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                                <div class="col-lg-6 mb-3">
                                     <label for="salary_type" class="form-label">Salary Type <span
                                             class="text-danger">*</span></label>
                                     <select class="form-select  @error('salary_type') is-invalid @enderror"
-                                        id="salary_type" name="salary_type"
-                                        data-placeholder="Select Type">
+                                            id="salary_type" name="salary_type"
+                                            data-placeholder="Select Type">
                                         <option value="">Select Type</option>
-                                        <option value="Monthly" {{ old('salary_type') == 'Monthly' ? 'selected' : '' }}>
-                                            Monthly</option>
-                                        <option value="Hourly" {{ old('salary_type') == 'Hourly' ? 'selected' : '' }}>
+                                        <option value="hourly" {{ old('salary_type') == 'hourly' || isset($employee_office_info) && ($employee_office_info->salary_type == 'hourly') ? 'selected' : '' }}>
                                             Hourly</option>
-                                        <option value="Daily" {{ old('salary_type') == 'Daily' ? 'selected' : '' }}>Daily
+                                        <option value="daily" {{ old('salary_type') == 'daily' || isset($employee_office_info) && ($employee_office_info->salary_type == 'daily') ? 'selected' : '' }}>
+                                            Daily</option>
+                                        <option value="monthly" {{ old('salary_type') == 'monthly' || isset($employee_office_info) && ($employee_office_info->salary_type == 'monthly') ? 'selected' : '' }}>
+                                            Monthly</option>
+                                        <option value="weekly" {{ old('salary_type') == 'weekly' || isset($employee_office_info) && ($employee_office_info->salary_type == 'weekly') ?  'selected' : '' }}>
+                                            Weekly</option>
+                                        <option value="yearly" {{ old('salary_type') == 'yearly' || isset($employee_office_info) && ($employee_office_info->salary_type == 'yearly') ? 'selected' : '' }}>Yearly
                                         </option>
                                     </select>
                                     @error('salary_type')
-                                        <small class="text-danger">{{ $message }}</small>
+                                    <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col-lg-3 mb-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="ot_allowed"
-                                            id="ot_allowed" value="1" {{ old('ot_allowed') ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="ot_allowed">
-                                            OT Allowed
-                                        </label>
-                                    </div>
-                                    @error('ot_allowed')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-
-                                <div class="col-lg-3 mb-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="pf_eligible"
-                                            id="pf_eligible" value="1" {{ old('pf_eligible') ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="pf_eligible">
-                                            PF Eligible
-                                        </label>
-                                    </div>
-                                    @error('pf_eligible')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-
-                                <div class="col-lg-3 mb-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="transport_eligible"
-                                            id="transport_eligible" value="1"
-                                            {{ old('transport_eligible') ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="transport_eligible">
-                                            Transport Eligible
-                                        </label>
-                                    </div>
-                                    @error('transport_eligible')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-
-                                <div class="col-lg-3 mb-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="gratuity_eligible"
-                                            id="gratuity_eligible" value="1"
-                                            {{ old('gratuity_eligible') ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="gratuity_eligible">
-                                            Gratuity Eligible
-                                        </label>
-                                    </div>
-                                    @error('gratuity_eligible')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-lg-3 mb-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="can_apply_loan"
-                                            id="can_apply_loan" value="1"
-                                            {{ old('can_apply_loan') ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="can_apply_loan">
-                                            Can Apply Loan
-                                        </label>
-                                    </div>
-                                    @error('can_apply_loan')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-
-                                <div class="col-lg-3 mb-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="can_apply_advance"
-                                            id="can_apply_advance" value="1"
-                                            {{ old('can_apply_advance') ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="can_apply_advance">
-                                            Can Apply Advance
-                                        </label>
-                                    </div>
-                                    @error('can_apply_advance')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-
-                                <div class="col-lg-3 mb-3">
-                                    <label for="pf_effective_date" class="form-label">PF Effective Date</label>
-                                    <input type="date"
-                                        class="form-control @error('pf_effective_date') is-invalid @enderror"
-                                        id="pf_effective_date" name="pf_effective_date"
-                                        value="{{ old('pf_effective_date') }}">
-                                    @error('pf_effective_date')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -677,39 +733,285 @@
                     </div>
                 </div>
             </div>
-
         </form>
+    </div>
 
-        <script>
-            function copyJoiningInfo() {
-                const checkbox = document.getElementById('same_as_joining');
+    <script src="{{asset('assets/libs/jquery/jquery.min.js')}}"></script>
 
-                if (checkbox.checked) {
-                    // Get the Select2 selected values
-                    const joiningCompany = $('#joining_company_id').val();
-                    const joiningBusinessUnit = $('#joining_business_unit_id').val();
-                    const joiningDivision = $('#joining_division_id').val();
-                    const joiningDepartment = $('#joining_department_id').val();
-                    const joiningDesignation = $('#joining_designation_id').val();
-                    const joiningSection = $('#joining_section_id').val();
 
-                    // Set the values to current fields using Select2 trigger
-                    $('#current_company_id').val(joiningCompany).trigger('change');
-                    $('#current_business_unit_id').val(joiningBusinessUnit).trigger('change');
-                    $('#current_division_id').val(joiningDivision).trigger('change');
-                    $('#current_department_id').val(joiningDepartment).trigger('change');
-                    $('#current_designation_id').val(joiningDesignation).trigger('change');
-                    $('#current_section_id').val(joiningSection).trigger('change');
-                } else {
-                    // Clear all current fields
-                    $('#current_company_id').val(null).trigger('change');
-                    $('#current_business_unit_id').val(null).trigger('change');
-                    $('#current_division_id').val(null).trigger('change');
-                    $('#current_department_id').val(null).trigger('change');
-                    $('#current_designation_id').val(null).trigger('change');
-                    $('#current_section_id').val(null).trigger('change');
+
+    <script>
+        $(function() {
+
+            function loadGrades(tofsilId, selectedGrade = null) {
+                if (tofsilId) {
+                    $.get('/get-grades/' + tofsilId, function(data) {
+                        let $gradeSelect = $('#grade_id');
+                        $gradeSelect.html('<option value="">-- Select --</option>');
+                        $.each(data, function(key, value) {
+                            let selected = (selectedGrade == value.id) ? 'selected' : '';
+                            $gradeSelect.append('<option value="'+ value.id +'" '+selected+'>'+ value.name +'</option>');
+                        });
+                    });
                 }
             }
-        </script>
-    </div>
+
+            // --- Change Event ---
+            $('#tofsil_id').on('change', function() {
+                loadGrades($(this).val());
+            });
+
+            // --- Auto-load existing values from DB when editing ---
+            @if(isset($employee_office_info))
+            let tofsilId = "{{ old('tofsil_id', $employee_office_info->tofsil_id ?? '') }}";
+            let gradeId  = "{{ old('grade_id', $employee_office_info->grade_id ?? '') }}";
+
+            if (tofsilId) {
+                loadGrades(tofsilId, gradeId);
+            }
+            @endif
+
+        });
+    </script>
+
+
+    <script>
+        $(function() {
+
+            // ----------- JOINING INFORMATION -----------
+            function loadUnits(companyId, selectedUnit = null) {
+                if (companyId) {
+                    $.get('/get-units/' + companyId, function(data) {
+                        let $unitSelect = $('#joining_business_unit_id');
+                        $unitSelect.html('<option value="">-- Select --</option>');
+                        $.each(data, function(key, value) {
+                            let selected = (selectedUnit == value.id) ? 'selected' : '';
+                            $unitSelect.append('<option value="'+ value.id +'" '+selected+'>'+ value.unit_name +'</option>');
+                        });
+                    });
+                }
+            }
+
+            function loadDivisions(unitId, selectedDivision = null) {
+                if (unitId) {
+                    $.get('/get-divisions/' + unitId, function(data) {
+                        let $divSelect = $('#joining_division_id');
+                        $divSelect.html('<option value="">-- Select --</option>');
+                        $.each(data, function(key, value) {
+                            let selected = (selectedDivision == value.id) ? 'selected' : '';
+                            $divSelect.append('<option value="'+ value.id +'" '+selected+'>'+ value.division_name +'</option>');
+                        });
+                    });
+                }
+            }
+
+            function loadDepartments(divisionId, selectedDepartment = null) {
+                if (divisionId) {
+                    $.get('/get-departments/' + divisionId, function(data) {
+                        let $deptSelect = $('#joining_department_id');
+                        $deptSelect.html('<option value="">-- Select --</option>');
+                        $.each(data, function(key, value) {
+                            let selected = (selectedDepartment == value.id) ? 'selected' : '';
+                            $deptSelect.append('<option value="'+ value.id +'" '+selected+'>'+ value.department_name +'</option>');
+                        });
+                    });
+                }
+            }
+
+            function loadSections(deptId, selectedSection = null) {
+                if (deptId) {
+                    $.get('/get-sections/' + deptId, function(data) {
+                        let $sectionSelect = $('#joining_section_id');
+                        $sectionSelect.html('<option value="">-- Select --</option>');
+                        $.each(data, function(key, value) {
+                            let selected = (selectedSection == value.id) ? 'selected' : '';
+                            $sectionSelect.append('<option value="'+ value.id +'" '+selected+'>'+ value.section_name +'</option>');
+                        });
+                    });
+                }
+            }
+
+            function loadDesignations(divisionId, selectedDesignation = null) {
+                if (divisionId) {
+                    $.get('/get-designations/' + divisionId, function(data) {
+                        let $designationSelect = $('#joining_designation_id');
+                        $designationSelect.html('<option value="">-- Select --</option>');
+                        $.each(data, function(key, value) {
+                            let selected = (selectedDesignation == value.id) ? 'selected' : '';
+                            $designationSelect.append('<option value="'+ value.id +'" '+selected+'>'+ value.company_designation +'</option>');
+                        });
+                    });
+                }
+            }
+
+            // --- Change Events ---
+            $('#joining_company_id').on('change', function() {
+                loadUnits($(this).val());
+            });
+
+            $('#joining_business_unit_id').on('change', function() {
+                loadDivisions($(this).val());
+            });
+
+            $('#joining_division_id').on('change', function() {
+                loadDepartments($(this).val());
+            });
+
+            $('#joining_department_id').on('change', function() {
+                loadSections($(this).val());
+            });
+
+            $('#joining_division_id').on('change', function() {
+                loadDesignations($(this).val());
+            });
+
+            // --- Auto-load existing values from DB when editing ---
+            @if(isset($employee_office_info))
+            let companyId   = "{{ old('joining_company_id', $employee_office_info->joining_company_id ?? '') }}";
+            let unitId      = "{{ old('joining_business_unit_id', $employee_office_info->joining_business_unit_id ?? '') }}";
+            let divisionId  = "{{ old('joining_division_id', $employee_office_info->joining_division_id ?? '') }}";
+            let deptId      = "{{ old('joining_department_id', $employee_office_info->joining_department_id ?? '') }}";
+            let sectionId   = "{{ old('joining_section_id', $employee_office_info->joining_section_id ?? '') }}";
+            let designationId   = "{{ old('joining_designation_id', $employee_office_info->joining_designation_id ?? '') }}";
+
+            if (companyId) {
+                loadUnits(companyId, unitId);
+                if (unitId) {
+                    loadDivisions(unitId, divisionId);
+                    if (divisionId) {
+                        loadDepartments(divisionId, deptId);
+                        loadDesignations(divisionId, designationId);
+                        if (deptId) {
+                            loadSections(deptId, sectionId);
+                        }
+                    }
+                }
+            }
+            @endif
+
+        });
+    </script>
+
+    <script>
+        $(function() {
+
+            // ----------- JOINING INFORMATION -----------
+            function loadUnits(companyId, selectedUnit = null) {
+                if (companyId) {
+                    $.get('/get-units/' + companyId, function(data) {
+                        let $unitSelect = $('#current_business_unit_id');
+                        $unitSelect.html('<option value="">-- Select --</option>');
+                        $.each(data, function(key, value) {
+                            let selected = (selectedUnit == value.id) ? 'selected' : '';
+                            $unitSelect.append('<option value="'+ value.id +'" '+selected+'>'+ value.unit_name +'</option>');
+                        });
+                    });
+                }
+            }
+
+            function loadDivisions(unitId, selectedDivision = null) {
+                if (unitId) {
+                    $.get('/get-divisions/' + unitId, function(data) {
+                        let $divSelect = $('#current_division_id');
+                        $divSelect.html('<option value="">-- Select --</option>');
+                        $.each(data, function(key, value) {
+                            let selected = (selectedDivision == value.id) ? 'selected' : '';
+                            $divSelect.append('<option value="'+ value.id +'" '+selected+'>'+ value.division_name +'</option>');
+                        });
+                    });
+                }
+            }
+
+            function loadDepartments(divisionId, selectedDepartment = null) {
+                if (divisionId) {
+                    $.get('/get-departments/' + divisionId, function(data) {
+                        let $deptSelect = $('#current_department_id');
+                        $deptSelect.html('<option value="">-- Select --</option>');
+                        $.each(data, function(key, value) {
+                            let selected = (selectedDepartment == value.id) ? 'selected' : '';
+                            $deptSelect.append('<option value="'+ value.id +'" '+selected+'>'+ value.department_name +'</option>');
+                        });
+                    });
+                }
+            }
+
+            function loadSections(deptId, selectedSection = null) {
+                if (deptId) {
+                    $.get('/get-sections/' + deptId, function(data) {
+                        let $sectionSelect = $('#current_section_id');
+                        $sectionSelect.html('<option value="">-- Select --</option>');
+                        $.each(data, function(key, value) {
+                            let selected = (selectedSection == value.id) ? 'selected' : '';
+                            $sectionSelect.append('<option value="'+ value.id +'" '+selected+'>'+ value.section_name +'</option>');
+                        });
+                    });
+                }
+            }
+
+            function loadDesignations(divisionId, selectedDesignation = null) {
+                if (divisionId) {
+                    $.get('/get-designations/' + divisionId, function(data) {
+                        let $designationSelect = $('#current_designation_id');
+                        $designationSelect.html('<option value="">-- Select --</option>');
+                        $.each(data, function(key, value) {
+                            let selected = (selectedDesignation == value.id) ? 'selected' : '';
+                            $designationSelect.append('<option value="'+ value.id +'" '+selected+'>'+ value.company_designation +'</option>');
+                        });
+                    });
+                }
+            }
+
+            // --- Change Events ---
+            $('#current_company_id').on('change', function() {
+                loadUnits($(this).val());
+            });
+
+            $('#current_business_unit_id').on('change', function() {
+                loadDivisions($(this).val());
+            });
+
+            $('#current_division_id').on('change', function() {
+                loadDepartments($(this).val());
+            });
+
+            $('#current_department_id').on('change', function() {
+                loadSections($(this).val());
+            });
+
+            $('#current_division_id').on('change', function() {
+                loadDesignations($(this).val());
+            });
+
+            // --- Auto-load existing values from DB when editing ---
+            @if(isset($employee_office_info))
+            let companyId   = "{{ old('current_company_id', $employee_office_info->current_company_id ?? '') }}";
+            let unitId      = "{{ old('current_business_unit_id', $employee_office_info->current_business_unit_id ?? '') }}";
+            let divisionId  = "{{ old('current_division_id', $employee_office_info->current_division_id ?? '') }}";
+            let deptId      = "{{ old('current_department_id', $employee_office_info->current_department_id ?? '') }}";
+            let sectionId   = "{{ old('current_section_id', $employee_office_info->current_section_id ?? '') }}";
+            let designationId   = "{{ old('current_designation_id', $employee_office_info->current_designation_id ?? '') }}";
+
+            if (companyId) {
+                loadUnits(companyId, unitId);
+                if (unitId) {
+                    loadDivisions(unitId, divisionId);
+                    if (divisionId) {
+                        loadDepartments(divisionId, deptId);
+                        loadDesignations(divisionId, designationId);
+                        if (deptId) {
+                            loadSections(deptId, sectionId);
+                        }
+                    }
+                }
+            }
+            @endif
+
+        });
+    </script>
+
+
+
+
+
+
 @endsection

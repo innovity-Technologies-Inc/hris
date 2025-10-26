@@ -2,6 +2,8 @@
 @section('content')
     @include('employees.partials.creation_button')
     <div class="mt-4">
+
+        @if(!isset($employee_id))
         <!-- Trigger Button -->
         <div class="mb-3">
             <button type="button" class="btn btn-secondary shadow-sm" data-bs-toggle="modal" data-bs-target="#bulkUploadModal">
@@ -9,6 +11,8 @@
             </button>
         </div>
         @include('employees.partials.modal.import')
+        @endif
+
         <form class="" method="POST" enctype="multipart/form-data"
             action={{isset($employee) ? route(
         'employees.general_informations.update', $employee->id) : route('employees.general_informations.store') }}>

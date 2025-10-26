@@ -6,8 +6,10 @@ use App\HelperClass;
 use App\Models\Company;
 use App\Models\CompanyLocation;
 use App\Models\Department;
+use App\Models\Designation;
 use App\Models\Division;
 use App\Models\Employee;
+use App\Models\EmployeeOfficeInfo;
 use App\Models\SalaryGrade;
 use App\Models\Section;
 use App\Models\Tofsil;
@@ -197,9 +199,9 @@ class EmployeeServices
         }
     }
 
-    public function employeeInfoSave(Request $request, $id = null)
+    public function employeeInfoSave(Request $request,$validated, $id = null)
     {
-        $validated = $this->employeeInfoValidation($request);
+
         $validated['full_name'] = trim(($validated['first_name'] ?? '') . ' ' .
             ($validated['middle_name'] ?? '') . ' ' .
             ($validated['last_name'] ?? ''));
@@ -292,11 +294,95 @@ class EmployeeServices
         return $acts;
     }
 
-    public function getGradeByAct($act_id){
-        $grades = SalaryGrade::where('act_id', $act_id)->get();
+    public function getGradeByAct($tofsil_id){
+        $grades = SalaryGrade::where('tofsil_id', $tofsil_id)->get();
         return $grades;
     }
 
+    public function getDesignationsByDivision($division_id){
+        $designations= Designation::where('division_id', $division_id)->get();
+        return $designations;
+    }
+
+    public function employeeOfficeInfoValidation($request)
+    {
+        $validated = $request->validate([
+            // Basic Identifiers
+            'employee_id'              => 'required|integer',
+            'emp_type'                 => 'nullable|in:permanent,contractual',
+            'grade_id'                 => 'nullable|integer',
+            'hr_file_no'               => 'nullable|string|max:255',
+            'tofsil_id'                => 'nullable|integer',
+            'file_note'                => 'nullable|string',
+
+            // Joining Information
+            'joining_company_id'       => 'nullable|integer',
+            'joining_business_unit_id' => 'nullable|integer',
+            'joining_division_id'      => 'nullable|integer',
+            'joining_department_id'    => 'nullable|integer',
+            'joining_section_id'       => 'nullable|integer',
+            'joining_designation_id'   => 'nullable|integer',
+            'date_of_join'             => 'nullable|date',
+
+            // Current Posting Information
+            'current_company_id'       => 'nullable|integer',
+            'current_business_unit_id' => 'nullable|integer',
+            'current_division_id'      => 'nullable|integer',
+            'current_department_id'    => 'nullable|integer',
+            'current_section_id'       => 'nullable|integer',
+            'current_designation_id'   => 'nullable|integer',
+
+            // Orientation
+            'orientation_required'     => 'required|in:yes,no',
+            'orientation_from'         => 'nullable|date',
+            'orientation_to'           => 'nullable|date|after_or_equal:orientation_from',
+            'orientation_type'         => 'nullable|string|max:100',
+            'orientation_days'         => 'nullable|integer|min:1',
+
+            // Employment & Performance
+            'confirmation_date'        => 'nullable|date',
+            'probation_duration'       => 'nullable|integer|min:0',
+            'next_promotion_date'      => 'nullable|date',
+            'promotion_cycle'          => 'nullable|string|max:100',
+            'increment_cycle'          => 'nullable|string|max:100',
+
+            // Attendance & Benefits
+            'weekends'                 => 'nullable|array',
+            'weekends.*'               => 'string',
+            'alternate_off_day'        => 'nullable|array',
+            'alternate_off_day.*'      => 'string',
+            'ot_allowed'               => 'nullable|in:yes,no',
+            'pf_eligible'              => 'nullable|in:yes,no',
+            'salary_type'              => 'nullable|in:hourly,daily,weekly,monthly,yearly',
+            'transport_eligible'       => 'nullable|in:yes,no',
+
+            // Loan & Benefits
+            'can_apply_loan'           => 'nullable|in:yes,no',
+            'pf_effective_date'        => 'nullable|date',
+            'can_apply_advance'        => 'nullable|in:yes,no',
+            'gratuity_eligible'        => 'nullable|in:yes,no',
+        ], [
+            // 🧾 Custom Messages
+            'emp_type.in'                     => 'Employment type must be either Permanent or Contractual.',
+            'orientation_to.after_or_equal'   => 'Orientation end date must be after or equal to the start date.',
+            'orientation_days.min'            => 'Orientation days must be at least 1 day.',
+            'probation_duration.min'          => 'Probation duration cannot be negative.',
+        ]);
+
+        return $validated;
+
+    }
+
+    public function employeeOfficeInfoSave(Request $request, $validated, $employee_office_info = null)
+    {
+        if(empty($employee_office_info)){
+            $employee_office_data = EmployeeOfficeInfo::create($validated);
+        }else{
+            $employee_office_data = $employee_office_info->update($validated);
+
+        }
+        return $employee_office_data;
+    }
 
 
 }

@@ -147,7 +147,6 @@
 
 
 </div>
-<!-- END wrapper -->
 
 <!-- Vendor -->
 <script src="{{asset('assets/libs/jquery/jquery.min.js')}}"></script>
@@ -157,6 +156,31 @@
 <script src="{{asset('assets/libs/waypoints/lib/jquery.waypoints.min.js')}}"></script>
 <script src="{{asset('assets/libs/jquery.counterup/jquery.counterup.min.js')}}"></script>
 <script src="{{asset('assets/libs/feather-icons/feather.min.js')}}"></script>
+
+{{-- Select 2 Js --}}
+{{--<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>--}}
+<script src="{{asset('assets/libs/select2/select2.min.js')}}"></script>
+
+
+<script>
+    $(document).ready(function() {
+        // basic select2
+        $('.select2_list').select2({
+            width: '100%',
+            theme: 'bootstrap-5',
+        });
+
+
+        // can add tags, select the typed word and press enter to add it to the list
+        $('.list').select2({
+            width: '100%',
+            tags: true, // Allow new entries as tags
+            tokenSeparators: [','],
+            placeholder: "Choose One",
+            theme: 'bootstrap-5',
+        });
+    });
+</script>
 
 <!-- Apexcharts JS -->
 <script src="{{asset('assets/libs/apexcharts/apexcharts.min.js')}}"></script>
