@@ -18,7 +18,7 @@ class EmployeeEligibleController extends Controller
      * Show the form for creating a new resource.
      */
 
-    public function create()
+    public function showForm()
     {
         $title = 'Employees';
         $section = 'Employees';
@@ -229,10 +229,13 @@ class EmployeeEligibleController extends Controller
      */
     public function edit($id)
     {
-        $employeePlans = $this->empServices->getEmployeeById($id);
-        $employees = Employee::orderBy('name')->get();
+        $employeePlan = EmployeeEligiblePlan::findOrFail($id);
+        $employees = Employee::orderBy('full_name')->get();
+        $title = 'Employees';
+        $section = 'Employees';
+        $sub_section = 'Index';
 
-        return view('employees.eligible_plans.form', compact('employeePlans', 'employees'));
+        return view('employees.eligible_plans.form', compact('employeePlan', 'employees', 'title', 'section', 'sub_section'));
     }
 
     /**
