@@ -1,18 +1,9 @@
 @extends('structure.master')
 @section('content')
+    @if(!isset($employee_office_info))
     @include('employees.partials.creation_button')
+    @endif
     <div class="mt-4">
-        @php($id = request()->route('id'))
-        @if(!isset($employee_id))
-            <!-- Trigger Button -->
-            <div class="mb-3">
-                <button type="button" class="btn btn-secondary shadow-sm" data-bs-toggle="modal" data-bs-target="#bulkUploadModal">
-                    <i class="mdi mdi-upload me-1"></i> Bulk Upload Office Informations
-                </button>
-            </div>
-            @include('employees.partials.modal.import')
-        @endif
-
 
         <form class="" method="POST" enctype="multipart/form-data" action="{{isset($employee_office_info) ? route('employees.office_informations.update', $employee_office_info->id) : route('employees.office_informations.store') }}">
             @if(isset($employee_office_info))
@@ -32,19 +23,11 @@
                                 <div class="col-lg-6 mb-3">
                                     <label for="employee_id" class="form-label">Employee Name <span
                                             class="text-danger">*</span></label>
-                                    <select id="employee_id" name="employee_id"
-                                        class="form-select form-select-sm select2_list"
-                                        data-placeholder="Select Employee Name" aria-label="Employee Name">
-                                        <option value="">Select Employee</option>
-                                        @foreach($employees as $employee)
-                                            <option value="{{ $employee->id }}"
-                                                {{old('employee_id') == $employee->id || isset($employee_office_info) && $employee->id == $employee_office_info->employee_id || isset($id) && $id == $employee->id ? 'selected' : ''}}>
-                                                {{$employee->full_name}}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('employee_id')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
+                                    <input type="text" class="form-control" readonly
+                                           value="{{ $employee->full_name }}">
+
+                                    <input type="hidden" name="employee_id" value="{{ $employee->id }}">
+
                                 </div>
 
                                 <div class="col-lg-6 mb-3">

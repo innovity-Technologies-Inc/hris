@@ -1,6 +1,9 @@
 @extends('structure.master')
 @section('content')
-    @include('employees.partials.creation_button')
+    @if(!isset($employee))
+        @include('employees.partials.creation_button')
+    @endif
+
     <div class="mt-4">
 
         @if(!isset($employee_id))

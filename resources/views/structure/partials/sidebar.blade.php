@@ -140,10 +140,10 @@
                     </a>
                     <div class="collapse" id="sidebarEmployees">
                         <ul class="nav-second-level">
-                            {{-- <li>
+                             <li>
                                 <a class='tp-link @if (Route::is('employees.*')) menuitem-active @endif'
                                     href='{{ route('employees.index') }}'>Employee Information</a>
-                            </li> --}}
+                            </li>
                         </ul>
                     </div>
                 </li>

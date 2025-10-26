@@ -45,8 +45,9 @@ class EmployeeProfileController extends Controller
         $title = 'Employee Profile';
         $section = 'Employees';
         $sub_section = 'Profile';
+        $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
-        return view('employees.profile', compact('title', 'section', 'sub_section', 'employee'));
+        return view('employees.profile', compact('title', 'section', 'sub_section', 'employee', 'section_url'));
     }
 
     public function generalInfoStore(Request $request){
@@ -70,9 +71,10 @@ class EmployeeProfileController extends Controller
         $title = 'Edit Employee Information';
         $section = 'Employees';
         $sub_section = 'Edit';
+        $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
         $employee_id = $employee->id;
-        return view('employees.general_informations.form', compact('title', 'section', 'sub_section', 'employee', 'employee_id'));
+        return view('employees.general_informations.form', compact('title', 'section', 'sub_section', 'employee', 'employee_id', 'section_url'));
     }
 
     public function generalInfoUpdate(Request $request, $id){
@@ -113,19 +115,16 @@ class EmployeeProfileController extends Controller
 
     }
 
-    public function officeInfoCreate(){
+    public function officeInfoCreate($id){
         $title = 'Add Employee Information';
         $section = 'Employees';
         $section_url = route('employees.index');
         $sub_section = 'Create';
-        //remove employee who already have office info
-        $employees = Employee::whereNotIn('id', function ($query) {
-            $query->select('employee_id')->from('employee_office_infos');
-        })->get();
+        $employee = Employee::select('id', 'full_name')->where('id', $id)->first();
         $companies = $this->empServices->getCompanies();
         $acts = $this->empServices->getActs();
         return view('employees.office_informations.form', compact('title', 'section',
-            'sub_section', 'section_url', 'employees', 'companies', 'acts'));
+            'sub_section', 'section_url', 'employee', 'companies', 'acts'));
     }
 
     public function officeInfoStore(Request $request){
@@ -151,13 +150,20 @@ class EmployeeProfileController extends Controller
         $section = 'Employees';
         $section_url = route('employees.index');
         $sub_section = 'Edit';
-        $employees = $this->empServices->getEmployees();
-        $companies = $this->empServices->getCompanies();
-        $acts = $this->empServices->getActs();
-        $employee_id = $id;
-        $employee_office_info = EmployeeOfficeInfo::where('employee_id', $employee_id)->first();
-        return view('employees.office_informations.form', compact('title', 'section',
-            'sub_section', 'section_url', 'employees', 'companies', 'acts', 'employee_office_info', 'employee_id'));
+        $employee_office_info = EmployeeOfficeInfo::where('employee_id', $id)->first();
+        if($employee_office_info){
+            $employee = Employee::select('id', 'full_name')->where('id', $id)->first();
+            $companies = $this->empServices->getCompanies();
+            $acts = $this->empServices->getActs();
+            return view('employees.office_informations.form', compact('title', 'section',
+                'sub_section', 'section_url', 'employee', 'companies', 'acts', 'employee_office_info'));
+        }else{
+            return redirect()->route('employees.index')->with([
+                'message' => 'Employee Not Found',
+                'alert-type' => 'error'
+            ]);
+        }
+
     }
 
     public function officeInfoUpdate(Request $request, $id){
@@ -178,6 +184,16 @@ class EmployeeProfileController extends Controller
                 'alert-type' => 'success'
             ]
         );
+    }
+
+    public function showOfficeInfo($id){
+        $title = 'Employee Profile';
+        $section = 'Employees';
+        $sub_section = 'Profile';
+        $section_url = route('employees.index');
+        $employee = $this->empServices->getEmployeeById($id);
+        $employee_office_info = EmployeeOfficeInfo::where('employee_id', $id)->first();
+        return view('employees.profile', compact('title', 'section', 'sub_section', 'employee', 'employee_office_info', 'section_url'));
     }
 
 
