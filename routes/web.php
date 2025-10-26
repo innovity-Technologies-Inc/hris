@@ -17,15 +17,13 @@ use App\Http\Controllers\SectionController;
 use App\Http\Controllers\BankAccountsController;
 use App\Http\Controllers\EmployeeProfileController;
 use App\Http\Controllers\EmployeeEligibleController;
+use App\Http\Controllers\EmployeeEducationExperienceTrainingController;
 
 Route::get('test', function () {
-    // return view('employees.index');
-    // return view('employees.partial.form');
-    // return view('employees.office_informations.form');
-    // return view('employees.office_informations.office_info');
-    return view('employees.eligible_plans.form');
-    // return view('employees.eligiable_plan.info');
+   return view('employees.education_experience_trainings.info');
 });
+
+
 
 Route::prefix('company-setup')->group(function () {
     Route::controller(CompanySetupController::class)->group(function () {
@@ -169,7 +167,14 @@ Route::prefix('employees')->group(function () {
         Route::delete('eligible-plans/{id}', 'destroy')->name('employees.eligible_plans.delete');
         Route::get('eligible-plans/{id}', 'show')->name('employees.eligible_plans.show');
     });
+    Route::controller(EmployeeEducationExperienceTrainingController::class)->group(function(){
+        Route::get('education-experience-training/create', 'create')->name('employee.education-experience-training.create');
+        Route::post('education-experience-training', 'store')->name('employee.education-experience-training.store');
+        Route::get('education-experience-training/{id}', 'show')->name('employee.education-experience-training.show');
+        Route::get('education-experience-training/{id}/edit', 'edit')->name('employee.education-experience-training.edit');
+        Route::put('education-experience-training/{id}', 'update')->name('employee.education-experience-training.update');
 });
 
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+});
