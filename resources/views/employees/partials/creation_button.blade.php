@@ -11,14 +11,16 @@
    <div class="card-body p-4">
     <div class="row g-3 row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-5">
         <div class="col">
-            <a href="#general-information" class="btn btn-outline-secondary w-100 py-3 text-decoration-none">
+            <a href="{{isset($employee_id) ? route('employees.general_informations.edit', $employee_id) : route('employees.general_informations.create')}}" class="btn btn-outline-secondary w-100 py-3 text-decoration-none
+            @if(request()->routeIs('employees.general_informations.create') || request()->routeIs('employees.general_informations.edit')) active @endif">
                 <span class="badge bg-secondary rounded-circle me-2">1</span>
                 General Information
             </a>
         </div>
 
         <div class="col">
-            <a href="#office-information" class="btn btn-outline-secondary w-100 py-3 text-decoration-none">
+            <a href="{{isset($employee_id) ? route('employees.office_informations.edit', $employee_id) : route('employees.office_informations.create')}}"
+               class="btn btn-outline-secondary w-100 py-3 text-decoration-none @if(request()->routeIs('employees.office_informations.create') || request()->routeIs('employees.office_informations.edit')) active @endif">
                 <span class="badge bg-secondary rounded-circle me-2">2</span>
                 Office Information
             </a>
@@ -27,7 +29,7 @@
         <div class="col">
             <a href="#eligible-plans-information" class="btn btn-outline-secondary w-100 py-3 text-decoration-none">
                 <span class="badge bg-secondary rounded-circle me-2">3</span>
-                Eligible Plans Information
+                Eligible Plans
             </a>
         </div>
 

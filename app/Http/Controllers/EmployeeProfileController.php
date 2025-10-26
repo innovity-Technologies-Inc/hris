@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Imports\EmployeeGeneralInformationImport;
+use App\Models\Employee;
+use App\Models\EmployeeOfficeInfo;
 use App\Services\EmployeeServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -48,8 +50,9 @@ class EmployeeProfileController extends Controller
     }
 
     public function generalInfoStore(Request $request){
+        $validated = $this->empServices->employeeInfoValidation($request);
         try{
-            $this->empServices->employeeInfoSave($request);
+            $employee = $this->empServices->employeeInfoSave($request, $validated);
         }catch(\Exception $e){
             Log::error($e->getMessage());
             return redirect()->back()->with([
@@ -57,9 +60,9 @@ class EmployeeProfileController extends Controller
                 'alert-type' => 'error'
             ]);
         }
-        return redirect()->route('employees.index')->with([
+        return redirect()->route('employees.office_informations.create', $employee->id)->with([
             'message' => 'Info Added Successfully',
-            'alert-type' => 'success'
+            'alert-type' => 'success',
         ]);
     }
 
@@ -68,12 +71,14 @@ class EmployeeProfileController extends Controller
         $section = 'Employees';
         $sub_section = 'Edit';
         $employee = $this->empServices->getEmployeeById($id);
-        return view('employees.general_informations.form', compact('title', 'section', 'sub_section', 'employee'));
+        $employee_id = $employee->id;
+        return view('employees.general_informations.form', compact('title', 'section', 'sub_section', 'employee', 'employee_id'));
     }
 
     public function generalInfoUpdate(Request $request, $id){
+        $validated = $this->empServices->employeeInfoValidation($request);
         try{
-            $this->empServices->employeeInfoSave($request, $id);
+            $this->empServices->employeeInfoSave($request,$validated, $id);
         }catch(\Exception $e){
             Log::error($e->getMessage());
             return redirect()->back()->with([
@@ -108,13 +113,74 @@ class EmployeeProfileController extends Controller
 
     }
 
-    public function companyInfoCreate(){
+    public function officeInfoCreate(){
         $title = 'Add Employee Information';
         $section = 'Employees';
         $section_url = route('employees.index');
         $sub_section = 'Create';
-        return view('employees.office_informations.form', compact('title', 'section', 'sub_section', 'section_url'));;
+        //remove employee who already have office info
+        $employees = Employee::whereNotIn('id', function ($query) {
+            $query->select('employee_id')->from('employee_office_infos');
+        })->get();
+        $companies = $this->empServices->getCompanies();
+        $acts = $this->empServices->getActs();
+        return view('employees.office_informations.form', compact('title', 'section',
+            'sub_section', 'section_url', 'employees', 'companies', 'acts'));
     }
+
+    public function officeInfoStore(Request $request){
+        $validated = $this->empServices->employeeOfficeInfoValidation($request);
+        try{
+            $this->empServices->employeeOfficeInfoSave($request, $validated);
+        }catch(\Exception $e){
+            Log::error($e->getMessage());
+            return redirect()->back()->with([
+                'message' => $e->getMessage(),
+                'alert-type' => 'error'
+            ]);
+        }
+        return redirect()->back()->with([
+            'message' => 'Office Info Added Successfully',
+                'alert-type' => 'success'
+            ]
+        );
+    }
+
+    public function officeInfoEdit($id){
+        $title = 'Edit Employee Information';
+        $section = 'Employees';
+        $section_url = route('employees.index');
+        $sub_section = 'Edit';
+        $employees = $this->empServices->getEmployees();
+        $companies = $this->empServices->getCompanies();
+        $acts = $this->empServices->getActs();
+        $employee_id = $id;
+        $employee_office_info = EmployeeOfficeInfo::where('employee_id', $employee_id)->first();
+        return view('employees.office_informations.form', compact('title', 'section',
+            'sub_section', 'section_url', 'employees', 'companies', 'acts', 'employee_office_info', 'employee_id'));
+    }
+
+    public function officeInfoUpdate(Request $request, $id){
+        $validated = $this->empServices->employeeOfficeInfoValidation($request);
+        $employee_office_info = EmployeeOfficeInfo::where('employee_id', $id)->first();
+
+        try{
+            $this->empServices->employeeOfficeInfoSave($request, $validated, $employee_office_info);
+        }catch(\Exception $e){
+            Log::error($e->getMessage());
+            return redirect()->back()->with([
+                'message' => $e->getMessage(),
+                'alert-type' => 'error'
+            ]);
+        }
+        return redirect()->back()->with([
+                'message' => 'Office Info Updated Successfully',
+                'alert-type' => 'success'
+            ]
+        );
+    }
+
+
 
     public function getUnitByCompany($company_id){
         $units = $this->empServices->getUnitByCompany($company_id);
@@ -137,10 +203,14 @@ class EmployeeProfileController extends Controller
         return response()->json($sections);
     }
 
-    public function getGradeByAct($act_id){
-        $grades = $this->empServices->getGradeByAct($act_id);
+    public function getGradeByAct($tofsil_id){
+        $grades = $this->empServices->getGradeByAct($tofsil_id);
         return response()->json($grades);
     }
 
+    public function getDesignationsByDivision($division_id){
+        $designations= $this->empServices->getDesignationsByDivision($division_id);
+        return response()->json($designations);
+    }
 
 }
