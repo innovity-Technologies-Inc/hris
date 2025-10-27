@@ -20,7 +20,7 @@ use App\Http\Controllers\EmployeeEligibleController;
 use App\Http\Controllers\EmployeeEducationExperienceTrainingController;
 
 Route::get('test', function () {
-   return view('employees.education_experience_trainings.info');
+   return view('employees.bulk_uploads.form');
 });
 
 
