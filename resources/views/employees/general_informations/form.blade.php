@@ -1,14 +1,11 @@
 @extends('structure.master')
 @section('content')
-    @include('employees.partials.creation_button')
+    @if(!isset($employee))
+        @include('employees.partials.creation_button')
+    @endif
+
     <div class="mt-4">
-        <!-- Trigger Button -->
-        <div class="mb-3">
-            <button type="button" class="btn btn-secondary shadow-sm" data-bs-toggle="modal" data-bs-target="#bulkUploadModal">
-                <i class="mdi mdi-upload me-1"></i> Bulk Upload General Informations
-            </button>
-        </div>
-        @include('employees.partials.modal.import')
+
         <form class="" method="POST" enctype="multipart/form-data"
             action={{isset($employee) ? route(
         'employees.general_informations.update', $employee->id) : route('employees.general_informations.store') }}>

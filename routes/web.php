@@ -23,6 +23,9 @@ Route::get('test', function () {
    return view('employees.bulk_uploads.form');
 });
 
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+
 
 
 Route::prefix('company-setup')->group(function () {
@@ -149,15 +152,23 @@ Route::prefix('company-setup')->group(function () {
 });
 
 Route::prefix('employees')->group(function () {
+
     Route::controller(EmployeeProfileController::class)->group(function () {
         Route::get('/', 'index')->name('employees.index');
-        Route::get('{id}/profile', 'profileView')->name('employees.profile');
+        Route::get('profile/{id}/general-informations', 'profileView')->name('employees.profile.general_informations');
         Route::get('general-informations/create', 'generalInfoCreate')->name('employees.general_informations.create');
         Route::post('general-informations/store', 'generalInfoStore')->name('employees.general_informations.store');
         Route::get('general-informations/edit/{id}', 'generalInfoEdit')->name('employees.general_informations.edit');
         Route::put('general-informations/{id}/update', 'generalInfoUpdate')->name('employees.general_informations.update');
         Route::post('general-informations/import', 'generalInfoImport')->name('employees.general_informations.import');
+        Route::get('office-informations/create/{id}', 'officeInfoCreate')->name('employees.office_informations.create');
+        Route::post('office-informations/store', 'officeInfoStore')->name('employees.office_informations.store');
+        Route::get('office-informations/edit/{id}', 'officeInfoEdit')->name('employees.office_informations.edit');
+        Route::put('office-informations/{id}/update', 'officeInfoUpdate')->name('employees.office_informations.update');
+        Route::get('profile/{id}/office-informations', 'showOfficeInfo')->name('employees.profile.office_informations');
+
     });
+
         Route::controller(EmployeeEligibleController::class)->group(function(){
         // Put the specific routes before the parameterized routes
         Route::get('eligible-plans/showForm', 'showForm')->name('employees.eligible_plans.create');
@@ -167,6 +178,7 @@ Route::prefix('employees')->group(function () {
         Route::delete('eligible-plans/{id}', 'destroy')->name('employees.eligible_plans.delete');
         Route::get('eligible-plans/{id}', 'show')->name('employees.eligible_plans.show');
     });
+
     Route::controller(EmployeeEducationExperienceTrainingController::class)->group(function(){
         Route::get('education-experience-training/create', 'create')->name('employee.education-experience-training.create');
         Route::post('education-experience-training', 'store')->name('employee.education-experience-training.store');
@@ -176,4 +188,14 @@ Route::prefix('employees')->group(function () {
     });
 });
 
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+Route::controller(EmployeeProfileController::class)->group(function () {
+    Route::get('get-grades/{tofsil_id}', 'getGradeByAct');
+    Route::get('get-units/{company_id}', 'getUnitByCompany');
+    Route::get('get-divisions/{unit_id}', 'getDivisionByUnit');
+    Route::get('get-departments/{division_id}', 'getDepartmentByDivision');
+    Route::get('get-sections/{department_id}', 'getSectionByDepartment');
+    Route::get('get-designations/{division_id}', 'getDesignationsByDivision');
+});
+
+
+});
