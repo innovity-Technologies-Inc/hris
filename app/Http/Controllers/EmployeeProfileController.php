@@ -196,6 +196,14 @@ class EmployeeProfileController extends Controller
         return view('employees.profile', compact('title', 'section', 'sub_section', 'employee', 'employee_office_info', 'section_url'));
     }
 
+    public function bulkEmployeeImportSections(){
+        $title = 'Import Employee Information';
+        $section = 'Employees';
+        $sub_section = 'Import';
+        $section_url = route('employees.index');
+        return view('employees.bulk_uploads.form', compact('title', 'section', 'sub_section', 'section_url'));
+    }
+
 
 
     public function getUnitByCompany($company_id){

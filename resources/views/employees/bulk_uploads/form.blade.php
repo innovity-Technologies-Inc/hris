@@ -1,9 +1,8 @@
 @extends('structure.master')
 @section('content')
 
-<div class="container-fluid py-4">
     <div class="row justify-content-center">
-        <div class="col-12 col-xl-10">
+        <div class="col-12 col-xl-12">
             <!-- Main Card -->
             <div class="card shadow-sm border">
                 <!-- Header -->
@@ -13,7 +12,7 @@
                             <i class="bi bi-file-earmark-arrow-up fs-3 text-dark"></i>
                         </div>
                         <div>
-                            <h4 class="mb-1 fw-bold text-dark">Employee Bulk Information Upload</h4>
+                            <h4 class="mb-1 fw-bold text-dark">Employee Information Import</h4>
                             <p class="mb-0 text-muted small">Complete all sections to create comprehensive employee profiles</p>
                         </div>
                     </div>
@@ -25,9 +24,9 @@
                     <div class="mb-4 pb-3 border-bottom">
                         <div class="d-flex justify-content-between align-items-center">
                             <h6 class="text-uppercase text-secondary fw-semibold mb-0 small letter-spacing">
-                                Upload Categories
+                                Import Employee Information
                             </h6>
-                            <span class="badge bg-secondary">6 Sections</span>
+                            <span class="badge bg-secondary">5 Sections</span>
                         </div>
                     </div>
 
@@ -82,7 +81,7 @@
                                             data-section-number="2"
                                             {{-- data-form-action="{{ route('employees.office_informations.import') }}"
                                             data-excel-link="/download/office-information/excel"
-                                            data-csv-link="/download/office-information/csv"> --}}
+                                            data-csv-link="/download/office-information/csv"> --}} >
                                         <i class="bi bi-upload me-2"></i>Upload
                                     </button>
                                 </div>
@@ -110,7 +109,7 @@
                                             data-section-number="3"
                                             {{-- data-form-action="{{ route('employees.eligible_plans.import') }}"
                                             data-excel-link="/download/eligible-plans/excel"
-                                            data-csv-link="/download/eligible-plans/csv"> --}}
+                                            data-csv-link="/download/eligible-plans/csv" --}}>
                                         <i class="bi bi-upload me-2"></i>Upload
                                     </button>
                                 </div>
@@ -141,42 +140,15 @@
                                             data-section-number="4"
                                             {{-- data-form-action="{{ route('employees.education_experience.import') }}"
                                             data-excel-link="/download/education-experience/excel"
-                                            data-csv-link="/download/education-experience/csv"> --}}
+                                            data-csv-link="/download/education-experience/csv" --}}>
                                         <i class="bi bi-upload me-2"></i>Upload
                                     </button>
                                 </div>
                             </div>
                         </div>
+
 
                         <!-- Section 5 -->
-                        <div class="col-md-4">
-                            <div class="card h-100 border shadow-sm professional-card">
-                                <div class="card-body p-4">
-                                    <div class="d-flex align-items-start mb-3">
-                                        <span class="badge bg-dark text-white rounded-circle me-3 d-flex align-items-center justify-content-center fw-bold" style="width: 36px; height: 36px; font-size: 14px;">5</span>
-                                        <div class="flex-grow-1">
-                                            <h6 class="mb-1 fw-semibold text-dark">Network Information</h6>
-                                            <p class="text-muted small mb-0" style="font-size: 0.813rem;">IT assets and network access</p>
-                                        </div>
-                                    </div>
-                                    <button type="button"
-                                            class="btn btn-outline-dark btn-sm w-100 text-uppercase fw-semibold"
-                                            style="font-size: 0.75rem; letter-spacing: 0.5px;"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#bulkUploadModal"
-                                            data-section="network-information"
-                                            data-section-name="Network Information"
-                                            data-section-number="5"
-                                            {{-- data-form-action="{{ route('employees.network_informations.import') }}"
-                                            data-excel-link="/download/network-information/excel"
-                                            data-csv-link="/download/network-information/csv"> --}}
-                                        <i class="bi bi-upload me-2"></i>Upload
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Section 6 -->
                         <div class="col-md-4">
                             <div class="card h-100 border shadow-sm professional-card">
                                 <div class="card-body p-4">
@@ -197,7 +169,7 @@
                                             data-section-number="6"
                                             {{-- data-form-action="{{ route('employees.nominee_informations.import') }}"
                                             data-excel-link="/download/nominee-information/excel"
-                                            data-csv-link="/download/nominee-information/csv"> --}}
+                                            data-csv-link="/download/nominee-information/csv" --}} >
                                         <i class="bi bi-upload me-2"></i>Upload
                                     </button>
                                 </div>
@@ -222,7 +194,6 @@
             </div>
         </div>
     </div>
-</div>
 
 <!-- Include the modal -->
 @include('employees.bulk_uploads.import')

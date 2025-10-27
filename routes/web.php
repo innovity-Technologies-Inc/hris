@@ -155,6 +155,7 @@ Route::prefix('employees')->group(function () {
 
     Route::controller(EmployeeProfileController::class)->group(function () {
         Route::get('/', 'index')->name('employees.index');
+        Route::get('import', 'bulkEmployeeImportSections')->name('employees.import');
         Route::get('profile/{id}/general-informations', 'profileView')->name('employees.profile.general_informations');
         Route::get('general-informations/create', 'generalInfoCreate')->name('employees.general_informations.create');
         Route::post('general-informations/store', 'generalInfoStore')->name('employees.general_informations.store');
@@ -195,7 +196,4 @@ Route::controller(EmployeeProfileController::class)->group(function () {
     Route::get('get-departments/{division_id}', 'getDepartmentByDivision');
     Route::get('get-sections/{department_id}', 'getSectionByDepartment');
     Route::get('get-designations/{division_id}', 'getDesignationsByDivision');
-});
-
-
 });

@@ -146,7 +146,7 @@
                             </li>
                             <li>
                                 <a class='tp-link @if (Route::is('employees.*')) menuitem-active @endif'
-                                    href='#'>Bulk Upload</a>
+                                    href='{{route('employees.import')}}'>Bulk Upload</a>
                             </li>
                         </ul>
                     </div>
