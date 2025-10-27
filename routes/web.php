@@ -20,7 +20,7 @@ use App\Http\Controllers\EmployeeEligibleController;
 use App\Http\Controllers\EmployeeEducationExperienceTrainingController;
 
 Route::get('test', function () {
-   return view('employees.education_experience_trainings.info');
+   return view('employees.bulk_uploads.form');
 });
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -185,6 +185,7 @@ Route::prefix('employees')->group(function () {
         Route::get('education-experience-training/{id}', 'show')->name('employee.education-experience-training.show');
         Route::get('education-experience-training/{id}/edit', 'edit')->name('employee.education-experience-training.edit');
         Route::put('education-experience-training/{id}', 'update')->name('employee.education-experience-training.update');
+    });
 });
 
 Route::controller(EmployeeProfileController::class)->group(function () {
