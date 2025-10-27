@@ -16,10 +16,28 @@
                             <p class="mb-0 text-muted small">Complete all sections to create comprehensive employee profiles</p>
                         </div>
                     </div>
+                    <!-- Information Alert -->
+                    <div class="alert alert-light border border-secondary mt-4 mb-0">
+                        <div class="d-flex align-items-start">
+                            <i class="bi bi-info-circle text-secondary fs-5 me-3 mt-1"></i>
+                            <div>
+                                <h6 class="fw-semibold mb-2 text-dark">Upload Instructions</h6>
+                                <p class="mb-0 small text-muted">
+                                    Download the template for each section, populate the required fields with accurate data,
+                                    and upload the completed file. Ensure proper formatting and data validation before submission.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+
 
                 <!-- Body -->
                 <div class="card-body p-4 p-md-5">
+
+
+
                     <!-- Section Header -->
                     <div class="mb-4 pb-3 border-bottom">
                         <div class="d-flex justify-content-between align-items-center">
@@ -53,7 +71,7 @@
                                             data-section-number="1"
                                             data-form-action="{{ route('employees.general_informations.import') }}"
                                             {{-- data-excel-link="/download/general-information/excel" --}}
-                                            {{-- data-csv-link="/download/general-information/csv"> --}}
+                                            {{-- data-csv-link="/download/general-information/csv" --}} >
                                         <i class="bi bi-upload me-2"></i>Upload
                                     </button>
                                 </div>
@@ -177,19 +195,7 @@
                         </div>
                     </div>
 
-                    <!-- Information Alert -->
-                    <div class="alert alert-light border border-secondary mt-4 mb-0">
-                        <div class="d-flex align-items-start">
-                            <i class="bi bi-info-circle text-secondary fs-5 me-3 mt-1"></i>
-                            <div>
-                                <h6 class="fw-semibold mb-2 text-dark">Upload Instructions</h6>
-                                <p class="mb-0 small text-muted">
-                                    Download the template for each section, populate the required fields with accurate data,
-                                    and upload the completed file. Ensure proper formatting and data validation before submission.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </div>
