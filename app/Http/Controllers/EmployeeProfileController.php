@@ -7,6 +7,8 @@ use App\Services\EmployeeServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
+use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
+
 
 class EmployeeProfileController extends Controller
 {
@@ -15,12 +17,12 @@ class EmployeeProfileController extends Controller
         $this->empServices = $empServices;
     }
 
-    public function index(Request $request){
+    public function index(Request $request, FlexSearch $flexsearch){
         $title = 'Employees';
         $section = 'Employees';
         $sub_section = 'Index';
 
-        $employees = $this->empServices->employeeSearchResult($request);
+        $employees = $this->empServices->employeeSearchResult($request, $flexsearch);
 
         if ($request->ajax()) {
             return view('employees.partials.search_results', compact('employees'))->render();

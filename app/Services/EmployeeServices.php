@@ -27,13 +27,13 @@ class EmployeeServices
 
         $employees = Employee::query();
 
+
         $searchTerm = $request->get('keyword');
-        $employee_id = $request->get('employee_id');
-        $employee_name = $request->get('employee_name');
-        $system_id = $request->get('system_id');
+
+        $searchableFields = ['employee_id', 'employee_name', 'system_id'];
 
         if (!empty($employee_name)) {
-            $employees->where('full_name', $employee_name);
+            $employees->where('full_name', '<=', $employee_name);
         }
 
         if (!empty($employee_id)) {
