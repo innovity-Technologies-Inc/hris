@@ -28,11 +28,11 @@ class EmployeeOfficeInfo extends Model
 
     public function getJoiningDesignation()
     {
-        return $this->belongsTo(Section::class, 'joining_designation_id', 'id');
+        return $this->belongsTo(Designation::class, 'joining_designation_id', 'id');
     }
     public function getCurrentDesignation()
     {
-        return $this->belongsTo(Section::class, 'current_designation_id', 'id');
+        return $this->belongsTo(Designation::class, 'current_designation_id', 'id');
     }
 
     public function getJoiningSection()

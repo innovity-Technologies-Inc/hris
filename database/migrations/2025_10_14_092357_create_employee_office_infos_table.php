@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('employee_office_infos', function (Blueprint $table) {
             $table->id();
             // Basic Identifiers
-            $table->unsignedBigInteger('employee_id')->index()->nullable();
+            $table->unsignedBigInteger('employee_id')->index()->nullable()->unique();
             $table->enum('emp_type', ['permanent', 'contractual'])->nullable();
             $table->unsignedBigInteger('grade_id')->nullable();
             $table->string('hr_file_no')->nullable();

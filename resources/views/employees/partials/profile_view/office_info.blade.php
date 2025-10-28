@@ -1,6 +1,9 @@
 <!-- Tabbed Content -->
-<div class="row">
+
+
+        <div class="row">
     <div class="col-12">
+        @if(!empty($employee_office_info))
         <div class="card">
             <div class="card-body pt-0">
                 <ul class="nav nav-underline border-bottom pt-2" id="pills-tab" role="tablist">
@@ -55,24 +58,21 @@
                                     <table class="table table-borderless mb-0">
                                         <tbody>
                                         <tr>
-                                            <td class="fw-semibold" style="width: 40%;">Employee Name</td>
-                                            <td>John Doe (EMP-2024-001)</td>
+                                            <td class="fw-semibold">Employee Type</td>
+                                            <td><span class="badge bg-success">{{ucwords($employee_office_info->emp_type)}}</span></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td class="fw-semibold">HR File Number</td>
+                                            <td>{{$employee_office_info->hr_file_no}}</td>
                                         </tr>
                                         <tr>
-                                            <td class="fw-semibold">Employee Type</td>
-                                            <td><span class="badge bg-success">Permanent</span></td>
+                                            <td class="fw-semibold">Act</td>
+                                            <td>{{$employee_office_info->getTofsil->name}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Pay Grade</td>
-                                            <td>Grade-5</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fw-semibold">HR File Number</td>
-                                            <td>HR-2024-1234</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fw-semibold">Act (Tofsil)</td>
-                                            <td>TL-567</td>
+                                            <td>{{$employee_office_info->getGrade->name}}</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -83,9 +83,7 @@
                                 <h5 class="fs-16 text-dark fw-semibold mb-3">File Notes</h5>
                                 <div class="card bg-light border-0">
                                     <div class="card-body">
-                                        <p class="mb-0">Employee has excellent performance record. Eligible for
-                                            promotion in Q2 2025. Special consideration for overseas training
-                                            program.</p>
+                                        <p class="mb-0">{{$employee_office_info->file_note}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -98,7 +96,7 @@
                             <div class="col-12">
                                 <div class="alert alert-info">
                                     <i class="mdi mdi-information-outline me-2"></i>
-                                    <strong>Date of Joining:</strong> January 15, 2020
+                                    <strong>Date of Joining:</strong> {{$employee_office_info->date_of_join}}
                                 </div>
                             </div>
                         </div>
@@ -111,19 +109,19 @@
                                         <tbody>
                                         <tr>
                                             <td class="fw-semibold" style="width: 40%;">Company</td>
-                                            <td>ABC Textiles Ltd.</td>
+                                            <td>{{$employee_office_info->getJoiningCompany->name}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Business Unit</td>
-                                            <td>Manufacturing Division</td>
+                                            <td>{{$employee_office_info->getJoiningBusinessUnit->unit_name}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Division</td>
-                                            <td>Operations</td>
+                                            <td>{{$employee_office_info->getJoiningDivision->division_name}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Department</td>
-                                            <td>Production Management</td>
+                                            <td>{{$employee_office_info->getJoiningDepartment->department_name}}</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -136,13 +134,14 @@
                                     <table class="table table-borderless mb-0">
                                         <tbody>
                                         <tr>
-                                            <td class="fw-semibold" style="width: 40%;">Designation</td>
-                                            <td>Assistant Manager</td>
+                                            <td class="fw-semibold">Section</td>
+                                            <td>{{$employee_office_info->getJoiningSection->section_name}}</td>
                                         </tr>
                                         <tr>
-                                            <td class="fw-semibold">Section</td>
-                                            <td>Quality Control</td>
+                                            <td class="fw-semibold" style="width: 40%;">Designation</td>
+                                            <td>{{$employee_office_info->getJoiningDesignation->company_designation}}</td>
                                         </tr>
+
                                         </tbody>
                                     </table>
                                 </div>
@@ -152,14 +151,6 @@
 
                     <!-- Current Information Tab -->
                     <div class="tab-pane pt-4" id="current_info" role="tabpanel">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="alert alert-success">
-                                    <i class="mdi mdi-calendar-check me-2"></i>
-                                    <strong>Current Information Effective Date:</strong> July 1, 2024
-                                </div>
-                            </div>
-                        </div>
 
                         <div class="row">
                             <div class="col-md-6">
@@ -169,19 +160,19 @@
                                         <tbody>
                                         <tr>
                                             <td class="fw-semibold" style="width: 40%;">Company</td>
-                                            <td>ABC Textiles Ltd.</td>
+                                            <td>{{$employee_office_info->getCurrentCompany->name}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Business Unit</td>
-                                            <td>Manufacturing Division</td>
+                                            <td>{{$employee_office_info->getCurrentBusinessUnit->unit_name}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Division</td>
-                                            <td>Operations</td>
+                                            <td>{{$employee_office_info->getCurrentDivision->division_name}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Department</td>
-                                            <td>Quality Assurance</td>
+                                            <td>{{$employee_office_info->getCurrentDepartment->department_name}}</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -193,13 +184,14 @@
                                 <div class="table-responsive">
                                     <table class="table table-borderless mb-0">
                                         <tbody>
-                                        <tr>
-                                            <td class="fw-semibold" style="width: 40%;">Designation</td>
-                                            <td><span class="badge bg-info">Manager</span></td>
-                                        </tr>
+
                                         <tr>
                                             <td class="fw-semibold">Section</td>
-                                            <td>Quality Assurance</td>
+                                            <td>{{$employee_office_info->getCurrentSection->section_name}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-semibold" style="width: 40%;">Designation</td>
+                                            <td><span class="badge bg-info">{{$employee_office_info->getCurrentDesignation->company_designation}}</span></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -218,23 +210,30 @@
                                         <tbody>
                                         <tr>
                                             <td class="fw-semibold" style="width: 40%;">Orientation Required</td>
-                                            <td><span class="badge bg-success">Yes</span></td>
+                                            <td>
+                                                @if($employee_office_info->orientation_required == 'yes')
+                                                <span class="badge bg-success">Yes</span>
+                                                    @else
+                                                        <span class="badge bg-danger">No</span>
+                                                    @endif
+
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Orientation From</td>
-                                            <td>January 15, 2020</td>
+                                            <td>{{$employee_office_info->orientation_from}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Orientation To</td>
-                                            <td>January 29, 2020</td>
+                                            <td>{{$employee_office_info->orientation_to}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Orientation Type</td>
-                                            <td>General & Department Specific</td>
+                                            <td>{{$employee_office_info->orientation_type}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Orientation Days</td>
-                                            <td>15 days</td>
+                                            <td>{{$employee_office_info->orientation_days}} days</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -253,15 +252,15 @@
                                         <tbody>
                                         <tr>
                                             <td class="fw-semibold" style="width: 40%;">Confirmation Date</td>
-                                            <td>July 15, 2020</td>
+                                            <td>{{$employee_office_info->confirmation_date}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Probation Duration</td>
-                                            <td>6 months</td>
+                                            <td>{{$employee_office_info->probation_duration}} Days</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Next Promotion Date</td>
-                                            <td>July 1, 2026</td>
+                                            <td>{{$employee_office_info->next_promotion_date}}</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -275,11 +274,11 @@
                                         <tbody>
                                         <tr>
                                             <td class="fw-semibold" style="width: 40%;">Promotion Cycle</td>
-                                            <td>Every 2 years</td>
+                                            <td>{{$employee_office_info->promotion_cycle}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Increment Cycle</td>
-                                            <td>Annual (Every July)</td>
+                                            <td>{{$employee_office_info->increment_cycle}}</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -299,13 +298,19 @@
                                         <tr>
                                             <td class="fw-semibold" style="width: 40%;">Weekends</td>
                                             <td>
-                                                <span class="badge bg-secondary me-1">Friday</span>
-                                                <span class="badge bg-secondary">Saturday</span>
+                                                @foreach($employee_office_info->weekends as $item)
+                                                <span class="badge bg-secondary">{{$item}}</span>
+                                                @endforeach
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Alternate Off Day</td>
-                                            <td>Sunday (Bi-weekly)</td>
+                                            <td>
+                                                @foreach($employee_office_info->alternate_off_day as $item)
+                                                    <span class="badge bg-secondary">{{$item}}</span>
+                                                @endforeach
+                                            </td>
+
                                         </tr>
                                         </tbody>
                                     </table>
@@ -324,7 +329,7 @@
                                         <tbody>
                                         <tr>
                                             <td class="fw-semibold" style="width: 40%;">Salary Type</td>
-                                            <td>Monthly</td>
+                                            <td>{{ucwords($employee_office_info->orientation_from)}}</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -338,28 +343,42 @@
                                                 <i class="mdi mdi-clock-check text-success fs-20 me-2"></i>
                                                 <span class="fw-semibold">OT Allowed</span>
                                             </div>
-                                            <span class="badge bg-success">Yes</span>
-                                        </div>
+                                            @if($employee_office_info->ot_allowed == 'yes')
+                                                <span class="badge bg-success">Yes</span>
+                                            @else
+                                                <span class="badge bg-danger">No</span>
+                                            @endif                                        </div>
                                         <div class="d-flex justify-content-between align-items-center mb-3">
                                             <div>
                                                 <i class="mdi mdi-piggy-bank text-info fs-20 me-2"></i>
                                                 <span class="fw-semibold">PF Eligible</span>
                                             </div>
-                                            <span class="badge bg-success">Yes</span>
-                                        </div>
+                                            @if($employee_office_info->pf_eligible == 'yes')
+                                                <span class="badge bg-success">Yes</span>
+                                            @else
+                                                <span class="badge bg-danger">No</span>
+                                            @endif                                        </div>
                                         <div class="d-flex justify-content-between align-items-center mb-3">
                                             <div>
                                                 <i class="mdi mdi-bus text-primary fs-20 me-2"></i>
                                                 <span class="fw-semibold">Transport Eligible</span>
                                             </div>
-                                            <span class="badge bg-success">Yes</span>
+                                            @if($employee_office_info->transport_eligible == 'yes')
+                                                <span class="badge bg-success">Yes</span>
+                                            @else
+                                                <span class="badge bg-danger">No</span>
+                                            @endif
                                         </div>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div>
                                                 <i class="mdi mdi-gift text-warning fs-20 me-2"></i>
                                                 <span class="fw-semibold">Gratuity Eligible</span>
                                             </div>
-                                            <span class="badge bg-success">Yes</span>
+                                            @if($employee_office_info->gratuity_eligible == 'yes')
+                                                <span class="badge bg-success">Yes</span>
+                                            @else
+                                                <span class="badge bg-danger">No</span>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -374,15 +393,21 @@
                                                 <i class="mdi mdi-cash-multiple text-success fs-20 me-2"></i>
                                                 <span class="fw-semibold">Can Apply Loan</span>
                                             </div>
-                                            <span class="badge bg-success">Yes</span>
-                                        </div>
+                                            @if($employee_office_info->can_apply_loan == 'yes')
+                                                <span class="badge bg-success">Yes</span>
+                                            @else
+                                                <span class="badge bg-danger">No</span>
+                                            @endif                                        </div>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div>
                                                 <i class="mdi mdi-cash-fast text-primary fs-20 me-2"></i>
                                                 <span class="fw-semibold">Can Apply Advance</span>
                                             </div>
-                                            <span class="badge bg-success">Yes</span>
-                                        </div>
+                                            @if($employee_office_info->can_apply_advance == 'yes')
+                                                <span class="badge bg-success">Yes</span>
+                                            @else
+                                                <span class="badge bg-danger">No</span>
+                                            @endif                                        </div>
                                     </div>
                                 </div>
 
@@ -392,7 +417,7 @@
                                         <tbody>
                                         <tr>
                                             <td class="fw-semibold" style="width: 40%;">PF Effective Date</td>
-                                            <td>July 15, 2020</td>
+                                            <td>{{$employee_office_info->pf_effective_date}}</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -402,22 +427,65 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
 
+        </div>
+        @else
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6 col-md-8 col-sm-10">
+                        <div class="card shadow-sm border-0 mt-5 mb-5">
+                            <div class="card-body text-center p-5">
+
+                                <!-- Empty State Circle -->
+                                <div class="d-flex justify-content-center mb-4">
+                                    <div class="rounded-circle bg-light border border-2 border-secondary d-flex align-items-center justify-content-center" style="width: 120px; height: 120px;">
+                                        <span class="display-1 text-secondary fw-light">?</span>
+                                    </div>
+                                </div>
+
+                                <!-- Heading -->
+                                <h3 class="fw-bold text-dark mb-3">Employee Information Not Found</h3>
+
+                                <!-- Divider -->
+                                <hr class="w-50 mx-auto opacity-25 mb-4">
+
+                                <!-- Message -->
+                                <p class="text-muted mb-4 fs-6 lh-base px-lg-5">
+                                    No employee records are currently available in the system.
+                                    Please add employee information to get started.
+                                </p>
+
+                                <!-- Action Button -->
+                                <a href="{{route('employees.office_informations.create', $employee->id)}}" class="btn btn-primary btn-lg px-5 rounded-pill">
+                                    Add Information
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+    </div>
+        </div>
+
+
+@if(!empty($employee_office_info))
 <!-- Action Buttons -->
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-body">
                 <div class="d-flex justify-content-end gap-2">
-                    <a href="{{ route('employees.general_informations.edit', $employee->id) }}"
+
+                    <a href="{{ route('employees.office_informations.edit', $employee_office_info->id) }}"
                        class="btn btn-primary">
-                        <i class="mdi mdi-pencil me-1"></i> Edit Profile
+                        <i class="mdi mdi-pencil me-1"></i> Edit Company Information
                     </a>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
+@endif

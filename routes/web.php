@@ -166,18 +166,19 @@ Route::prefix('employees')->group(function () {
         Route::post('office-informations/store', 'officeInfoStore')->name('employees.office_informations.store');
         Route::get('office-informations/edit/{id}', 'officeInfoEdit')->name('employees.office_informations.edit');
         Route::put('office-informations/{id}/update', 'officeInfoUpdate')->name('employees.office_informations.update');
+        Route::post('office-informations/import', 'officeInfoImport')->name('employees.office_informations.import');
         Route::get('profile/{id}/office-informations', 'showOfficeInfo')->name('employees.profile.office_informations');
 
     });
 
         Route::controller(EmployeeEligibleController::class)->group(function(){
         // Put the specific routes before the parameterized routes
-        Route::get('eligible-plans/showForm', 'showForm')->name('employees.eligible_plans.create');
+        Route::get('eligible-plans/create/{id}', 'create')->name('employees.eligible_plans.create');
         Route::post('eligible-plans/store', 'store')->name('employees.eligible_plans.store');
         Route::get('eligible-plans/{id}/edit', 'edit')->name('employees.eligible_plans.edit');
         Route::put('eligible-plans/{id}', 'update')->name('employees.eligible_plans.update');
         Route::delete('eligible-plans/{id}', 'destroy')->name('employees.eligible_plans.delete');
-        Route::get('eligible-plans/{id}', 'show')->name('employees.eligible_plans.show');
+        Route::get('profile/{id}/eligible-plans', 'show')->name('employees.profile.eligible_plans');
     });
 
     Route::controller(EmployeeEducationExperienceTrainingController::class)->group(function(){

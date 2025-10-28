@@ -14,6 +14,9 @@
     @elseif(Route::currentRouteNamed('employees.profile.office_informations'))
         @include('employees.partials.profile_view.office_info')
 
+    @elseif(Route::currentRouteNamed('employees.profile.eligible_plans'))
+        @include('employees.partials.profile_view.eligible_plans_info')
+
     @endif
 
 

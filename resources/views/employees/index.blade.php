@@ -103,14 +103,14 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-12">
+        </div>
+
+        <div class="col-lg-12">
                 <div class="card-header bg-white border-bottom p-4">
                     <div id="search-result" class="card-body p-0">
                         @include('employees.partials.search_results')
                     </div>
                 </div>
-            </div>
-
         </div>
     </div>
 

@@ -70,8 +70,8 @@
                                             data-section-name="General Information"
                                             data-section-number="1"
                                             data-form-action="{{ route('employees.general_informations.import') }}"
-                                            {{-- data-excel-link="/download/general-information/excel" --}}
-                                            {{-- data-csv-link="/download/general-information/csv" --}} >
+                                             data-excel-link="{{asset('assets/excel/employee_general_info.xlsx')}}"
+                                             data-csv-link="{{asset('assets/csv/employee_general_info.csv')}}">
                                         <i class="bi bi-upload me-2"></i>Upload
                                     </button>
                                 </div>
@@ -97,9 +97,9 @@
                                             data-section="office-information"
                                             data-section-name="Office Information"
                                             data-section-number="2"
-                                            {{-- data-form-action="{{ route('employees.office_informations.import') }}"
+                                             data-form-action="{{ route('employees.office_informations.import') }}"
                                             data-excel-link="/download/office-information/excel"
-                                            data-csv-link="/download/office-information/csv"> --}} >
+                                            data-csv-link="/download/office-information/csv">
                                         <i class="bi bi-upload me-2"></i>Upload
                                     </button>
                                 </div>

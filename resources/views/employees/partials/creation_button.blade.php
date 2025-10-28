@@ -12,8 +12,8 @@
 
         @if(isset($employee->id))
         <div class="col">
-            <a href="{{Route::is('employees.profile.*') ? route('employees.profile.office_informations', $employee->id) : route('employees.office_informations.edit', $employee->id)}}"
-               class="btn btn-outline-secondary w-100 py-3 text-decoration-none @if(request()->routeIs('employees.office_informations.create') || request()->routeIs('employees.office_informations.edit')) active @endif">
+            <a href="{{route('employees.profile.office_informations', $employee->id)}}"
+               class="btn btn-outline-secondary w-100 py-3 text-decoration-none @if(request()->routeIs('employees.office_informations.create') || request()->routeIs('employees.profile.office_informations')) active @endif">
                 <span class="badge bg-secondary rounded-circle me-2">2</span>
                 Office Information
             </a>
@@ -21,25 +21,32 @@
          @else
         <div class="col">
             <button type="submit"
-               class="btn btn-outline-secondary w-100 py-3 text-decoration-none" id="office-information">
+               class="btn btn-outline-secondary w-100 py-3 text-decoration-none information">
                 <span class="badge bg-secondary rounded-circle me-2">2</span>
                 Office Information
             </button>
         </div>
         @endif
-        <div class="col">
-            <a href="#eligible-plans-information" class="btn btn-outline-secondary w-100 py-3 text-decoration-none">
-                <span class="badge bg-secondary rounded-circle me-2">3</span>
-                Eligible Plans
-            </a>
-        </div>
 
-        <div class="col">
-            <a href="#network-information" class="btn btn-outline-secondary w-100 py-3 text-decoration-none">
-                <span class="badge bg-secondary rounded-circle me-2">4</span>
-                Network Information
-            </a>
-        </div>
+        @if(isset($employee->id))
+            <div class="col">
+                <a href="{{route('employees.profile.eligible_plans', $employee->id)}}"
+                   class="btn btn-outline-secondary w-100 py-3 text-decoration-none @if(request()->routeIs('employees.eligible_plans.create') || request()->routeIs('employees.profile.eligible_plans')) active @endif">
+                    <span class="badge bg-secondary rounded-circle me-2">2</span>
+                    Eligible Plans
+                </a>
+            </div>
+        @else
+            <div class="col">
+                <button type="submit"
+                        class="btn btn-outline-secondary w-100 py-3 text-decoration-none information">
+                    <span class="badge bg-secondary rounded-circle me-2">3</span>
+                    Eligible Plans
+                </button>
+            </div>
+        @endif
+
+
 
         <div class="col">
             <a href="#nominee-information" class="btn btn-outline-secondary w-100 py-3 text-decoration-none">
@@ -55,7 +62,7 @@
 
 <script>
     $(document).ready(function() {
-        $('#office-information').on('click', function() {
+        $('.information').on('click', function() {
         Swal.fire({
             title: 'Access Denied',
             text: 'Please complete general sections first',
@@ -66,5 +73,6 @@
         })
     })
     });
+
 </script>
 

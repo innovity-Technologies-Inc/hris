@@ -20,22 +20,14 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-lg-12 mb-3">
-                                    <label for="employee_id" class="form-label">Employee <span
+                                <div class="col-lg-6 mb-3">
+                                    <label for="employee_id" class="form-label">Employee Name <span
                                             class="text-danger">*</span></label>
-                                    <select id="employee_id" name="employee_id" class="form-select select2_list"
-                                        data-placeholder="Select employee" aria-label="Employee Name" required>
-                                        <option value="">Select employee</option>
-                                        @foreach ($employees as $employee)
-                                            <option value="{{ $employee->id }}"
-                                                {{ old('employee_id') == $employee->id || (isset($employeePlan) && $employeePlan->employee_id == $employee->id) ? 'selected' : '' }}>
-                                                {{ $employee->full_name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('employee_id')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
+                                    <input type="text" class="form-control" readonly
+                                           value="{{ $employee->full_name }}">
+
+                                    <input type="hidden" name="employee_id" value="{{ $employee->id }}">
+
                                 </div>
                             </div>
                         </div>

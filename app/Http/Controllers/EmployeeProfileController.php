@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Imports\EmployeeGeneralInformationImport;
+use App\Imports\EmployeeOfficeInformationImport;
 use App\Models\Employee;
 use App\Models\EmployeeOfficeInfo;
 use App\Services\EmployeeServices;
+use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
@@ -17,12 +19,12 @@ class EmployeeProfileController extends Controller
         $this->empServices = $empServices;
     }
 
-    public function index(Request $request){
+    public function index(Request $request, FlexSearch $flexsearch){
         $title = 'Employees';
         $section = 'Employees';
         $sub_section = 'Index';
 
-        $employees = $this->empServices->employeeSearchResult($request);
+        $employees = $this->empServices->employeeSearchResult($request, $flexsearch);
 
         if ($request->ajax()) {
             return view('employees.partials.search_results', compact('employees'))->render();
@@ -96,11 +98,11 @@ class EmployeeProfileController extends Controller
 
     public function generalInfoImport(Request $request){
         $request->validate([
-            'file' => 'required|mimes:xlsx,xls,text/plain,text/csv'
+            'file' => 'required|mimes:text/csv,text/plain,application/csv,text/comma-separated-values,text/anytext,application/octet-stream,application/txt,xlsx,csv,txt',
         ]);
 //    dd($request->all());
         try{
-            Excel::import(new EmployeeGeneralInformationImport, $request->file('file'));
+            Excel::import(new EmployeeGeneralInformationImport(), $request->file('file'));
             return redirect()->route('employees.index')->with([
                 'message' => 'Employee Info Imported Successfully',
                 'alert-type' => 'success'
@@ -130,7 +132,7 @@ class EmployeeProfileController extends Controller
     public function officeInfoStore(Request $request){
         $validated = $this->empServices->employeeOfficeInfoValidation($request);
         try{
-            $this->empServices->employeeOfficeInfoSave($request, $validated);
+            $employee = $this->empServices->employeeOfficeInfoSave($request, $validated);
         }catch(\Exception $e){
             Log::error($e->getMessage());
             return redirect()->back()->with([
@@ -138,7 +140,7 @@ class EmployeeProfileController extends Controller
                 'alert-type' => 'error'
             ]);
         }
-        return redirect()->back()->with([
+        return redirect()->route('employees.profile.office_informations', $employee->employee_id)->with([
             'message' => 'Office Info Added Successfully',
                 'alert-type' => 'success'
             ]
@@ -179,11 +181,10 @@ class EmployeeProfileController extends Controller
                 'alert-type' => 'error'
             ]);
         }
-        return redirect()->back()->with([
+        return redirect()->route('employees.profile.office_informations', $id)->with([
                 'message' => 'Office Info Updated Successfully',
                 'alert-type' => 'success'
-            ]
-        );
+            ]);
     }
 
     public function showOfficeInfo($id){
@@ -193,8 +194,31 @@ class EmployeeProfileController extends Controller
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
         $employee_office_info = EmployeeOfficeInfo::where('employee_id', $id)->first();
+//        dd($employee_office_info);
         return view('employees.profile', compact('title', 'section', 'sub_section', 'employee', 'employee_office_info', 'section_url'));
     }
+
+    public function officeInfoImport(Request $request){
+        $request->validate([
+            'file' => 'required|mimes:text/csv,text/plain,application/csv,text/comma-separated-values,text/anytext,application/octet-stream,application/txt,xlsx,csv,txt',
+        ]);
+//    dd($request->all());
+        try{
+            Excel::import(new EmployeeOfficeInformationImport(), $request->file('file'));
+            return redirect()->route('employees.index')->with([
+                'message' => 'Employee Office Info Imported Successfully',
+                'alert-type' => 'success'
+            ]);
+        }catch (\Exception $e){
+            Log::error($e->getMessage());
+            return redirect()->back()->with([
+                'message' => $e->getMessage(). 'Contact with your administrator',
+                'alert-type' => 'error'
+            ]);
+        }
+
+    }
+
 
     public function bulkEmployeeImportSections(){
         $title = 'Import Employee Information';
