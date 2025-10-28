@@ -32,7 +32,7 @@
             <div class="col">
                 <a href="{{route('employees.profile.eligible_plans', $employee->id)}}"
                    class="btn btn-outline-secondary w-100 py-3 text-decoration-none @if(request()->routeIs('employees.eligible_plans.create') || request()->routeIs('employees.profile.eligible_plans')) active @endif">
-                    <span class="badge bg-secondary rounded-circle me-2">2</span>
+                    <span class="badge bg-secondary rounded-circle me-2">3</span>
                     Eligible Plans
                 </a>
             </div>
@@ -46,6 +46,23 @@
             </div>
         @endif
 
+        @if(isset($employee->id))
+            <div class="col">
+                <a href="{{route('employees.profile.education_information', $employee->id)}}"
+                   class="btn btn-outline-secondary w-100 py-3 text-decoration-none @if(request()->routeIs('employees.education_information.create') || request()->routeIs('employees.profile.education_information')) active @endif">
+                    <span class="badge bg-secondary rounded-circle me-2">4</span>
+                    Education Information
+                </a>
+            </div>
+        @else
+            <div class="col">
+                <button type="submit"
+                        class="btn btn-outline-secondary w-100 py-3 text-decoration-none information">
+                    <span class="badge bg-secondary rounded-circle me-2">3</span>
+                    Education Information
+                </button>
+            </div>
+        @endif
 
 
         <div class="col">

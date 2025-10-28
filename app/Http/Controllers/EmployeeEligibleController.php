@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EmployeeEducationExperienceTraining;
 use App\Models\EmployeeEligiblePlan;
 use App\Models\Employee;
 use App\Services\EmployeeServices;
@@ -15,9 +16,7 @@ class EmployeeEligibleController extends Controller
     public function __construct(EmployeeServices $empServices){
         $this->empServices = $empServices;
     }
-    /**
-     * Show the form for creating a new resource.
-     */
+
 
     public function create($id)
     {
@@ -37,19 +36,28 @@ class EmployeeEligibleController extends Controller
         $validated = $this->empServices->employeeEligiblePlanValidation($request);
 
         try {
-            $this->empServices->employeeEligiblePanInfoSave($validated);
-            return redirect()
-                ->route('employee.education-experience-training.create')
-                ->with([
-                    'message' => 'Eligible Plans Added Successfully',
-                    'alert-type' => 'success'
-                ]);
+            $employee = $this->empServices->employeeEligiblePanInfoSave($validated);
+
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return redirect()->back()->with([
                     'message' => 'Something went wrong. Please try again later.',
                     'alert-type' => 'error'
                     ]);
+        }
+
+        $employeeEducation = EmployeeEducationExperienceTraining::where('employee_id', $employee->employee_id)->first();
+        if(empty($employeeEducation)){
+            return redirect()->route('employees.education_information.create', $employee->employee_id)->with([
+                'message' => 'Employee eligible plans added successfully.',
+                'alert-type' => 'success'
+            ]);
+        }
+        else{
+            return redirect()->route('employees.profile.eligible_plans', $employee->employee_id)->with([
+                'message' => 'Employee eligible plans added successfully.',
+                'alert-type' => 'success'
+            ]);
         }
     }
 

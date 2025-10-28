@@ -9,6 +9,7 @@ use App\Models\Department;
 use App\Models\Designation;
 use App\Models\Division;
 use App\Models\Employee;
+use App\Models\EmployeeEducationExperienceTraining;
 use App\Models\EmployeeEligiblePlan;
 use App\Models\EmployeeOfficeInfo;
 use App\Models\SalaryGrade;
@@ -536,6 +537,47 @@ class EmployeeServices
             return $employeePlan;
         }else{
             $data = EmployeeEligiblePlan::create($validated);
+            return $data;
+        }
+    }
+
+    public function employeeEducationInfoValidation($request){
+        $validated = $request->validate([
+            'employee_id' => 'required',
+            'educations' => 'nullable|array',
+            'educations.*.education_title' => 'required_with:educations|string',
+            'educations.*.institute' => 'required_with:educations|string',
+            'educations.*.passing_year' => 'required_with:educations|string',
+            'experiences' => 'nullable|array',
+            'experiences.*.company' => 'required_with:experiences|string',
+            'experiences.*.designation' => 'required_with:experiences|string',
+            'experiences.*.date_from' => 'required_with:experiences|date',
+            'experiences.*.date_to' => 'required_with:experiences|date',
+            'trainings' => 'nullable|array',
+            'trainings.*.training_title' => 'required_with:trainings|string',
+            'trainings.*.from_date' => 'required_with:trainings|date',
+            'trainings.*.to_date' => 'required_with:trainings|date',
+        ]);
+        return $validated;
+    }
+
+    public function employeeEducationInfoSave($request, $employeeEduData = null){
+        if(isset($employeeEduData)){
+            $employeeEduData->update([
+                'employee_educations' => $request->educations ?? [],
+                'employee_experiences' => $request->experiences ?? [],
+                'employee_trainings' => $request->trainings ?? [],
+            ]);
+            return $employeeEduData;
+        }else{
+            $data = EmployeeEducationExperienceTraining::create(
+                ['employee_id' => $request->employee_id],
+                [
+                    'employee_educations' => $request->educations ?? [],
+                    'employee_experiences' => $request->experiences ?? [],
+                    'employee_trainings' => $request->trainings ?? [],
+                ]
+            );
             return $data;
         }
     }

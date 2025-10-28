@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Imports\EmployeeGeneralInformationImport;
 use App\Imports\EmployeeOfficeInformationImport;
 use App\Models\Employee;
+use App\Models\EmployeeEligiblePlan;
 use App\Models\EmployeeOfficeInfo;
 use App\Services\EmployeeServices;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
@@ -63,7 +64,7 @@ class EmployeeProfileController extends Controller
                 'alert-type' => 'error'
             ]);
         }
-        return redirect()->route('employees.office_informations.create', $employee->id)->with([
+        return redirect()->route('employees.profile', $employee->id)->with([
             'message' => 'Info Added Successfully',
             'alert-type' => 'success',
         ]);
@@ -140,11 +141,23 @@ class EmployeeProfileController extends Controller
                 'alert-type' => 'error'
             ]);
         }
-        return redirect()->route('employees.profile.office_informations', $employee->employee_id)->with([
-            'message' => 'Office Info Added Successfully',
+
+        $employeeEligiblePlan = EmployeeEligiblePlan::where('employee_id', $employee->employee_id)->first();
+
+        if(empty($employeeEligiblePlan)){
+            return redirect()->route('employees.eligible_plans.create', $employee->employee_id)->with([
+                'message' => 'Office Info Added Successfully',
                 'alert-type' => 'success'
-            ]
-        );
+            ]);
+        }
+        else{
+            return redirect()->route('employees.profile.office_informations', $employee->employee_id)->with([
+                    'message' => 'Office Info Added Successfully',
+                    'alert-type' => 'success'
+                ]
+            );
+        }
+
     }
 
     public function officeInfoEdit($id){
