@@ -49,7 +49,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-4">
-                        <p class="mb-2"><strong>Applicant ID:</strong></p>
+                        <p class="mb-2"><strong>Employee ID:</strong></p>
                         <p class="text-muted">{{ $employee->applicant_id }}</p>
                     </div>
                     <div class="col-md-4">

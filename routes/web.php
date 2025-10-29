@@ -188,6 +188,8 @@ Route::prefix('employees')->group(function () {
         Route::get('profile/{id}/education-information', 'show')->name('employees.profile.education_information');
         Route::get('education-information/edit/{id}', 'edit')->name('employees.education_information.edit');
         Route::put('education-information/{id}/update', 'update')->name('employees.education_information.update');
+        Route::post('education-information/import', 'import')->name('employees.education_information.import');
+
     });
 });
 

@@ -89,7 +89,7 @@
 
                             <li>
                                 <a class='tp-link @if (Route::is('tofsils.*')) menuitem-active @endif'
-                                    href='{{ route('tofsils.index') }}'>Tofsils</a>
+                                    href='{{ route('tofsils.index') }}'>Salary Acts</a>
                             </li>
 
                             <li>
@@ -117,14 +117,10 @@
                                     href='{{ route('job_creations.index') }}'>Job Creations</a>
                             </li>
 
-                            <li>
+                            {{--<li>
                                 <a class='tp-link @if (Route::is('gazette_locations.*')) menuitem-active @endif'
                                     href='{{ route('gazette_locations.index') }}'>Gazette Locations</a>
-                            </li>
-                            <li>
-                                <a class='tp-link @if (Route::is('gazette_locations.*')) menuitem-active @endif'
-                                    href='{{ route('gazette_locations.index') }}'>Gazette Locations</a>
-                            </li>
+                            </li>--}}
 
                         </ul>
                     </div>

@@ -9,16 +9,16 @@ use Illuminate\Support\Facades\Log;
 class TofsilsController extends Controller
 {
     public function index(){
-        $title = 'Tofsil';
+        $title = 'Act';
         $section = 'Company Setup';
-        $sub_section = 'Tofsil';
+        $sub_section = 'Act';
         $tofsils = Tofsil::latest()->paginate(10);
         return view('company_setup.tofsil.index', compact('title', 'section', 'sub_section', 'tofsils'));
     }
 
     public function create(){
-        $title = 'Add Tofsil';
-        $section = 'Tofsil';
+        $title = 'Add Act';
+        $section = 'Act';
         $section_url = route('tofsils.index');
         $sub_section = 'Add';
         return view('company_setup.tofsil.form', compact('title', 'section', 'sub_section', 'section_url'));
@@ -48,18 +48,18 @@ class TofsilsController extends Controller
             ]);
         }
 
-        Log::info('Tofsil Created Successfully');;
+        Log::info('Act Created Successfully');;
 
         return redirect()->route('tofsils.index')->with([
-            'message' => 'Tofsil Created Successfully',
+            'message' => 'Act Created Successfully',
             'alert-type' => 'success'
         ]);
 
     }
 
     public function edit($id){
-        $title = 'Edit Tofsil';
-        $section = 'Tofsil';
+        $title = 'Edit Act';
+        $section = 'Act';
         $section_url = route('tofsils.index');
         $sub_section = 'Edit';
         $tofsil = Tofsil::find($id);
@@ -80,7 +80,7 @@ class TofsilsController extends Controller
         try{
             $tofsil = Tofsil::find($id);
 
-            Log::info('Creating Tofsil');
+            Log::info('Updating Act');
             $tofsil->update($request->all());
 
         }catch(\Exception $e){

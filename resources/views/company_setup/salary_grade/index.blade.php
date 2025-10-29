@@ -19,7 +19,7 @@
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Salary Grade</th>
-                                <th scope="col">Tofsil</th>
+                                <th scope="col">Act</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Action</th>
                             </tr>

@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\EmployeeEducationInfoImport;
 use App\Models\EmployeeEducationExperienceTraining;
-use App\Models\Employee;
 use App\Services\EmployeeServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EmployeeEducationExperienceTrainingController extends Controller
 {
@@ -91,6 +92,28 @@ class EmployeeEducationExperienceTrainingController extends Controller
             'alert-type' => 'success'
         ]);
     }
+
+    public function import(Request $request){
+        $request->validate([
+            'file' => 'required|mimes:text/csv,text/plain,application/csv,text/comma-separated-values,text/anytext,application/octet-stream,application/txt,xlsx,csv,txt',
+        ]);
+//    dd($request->all());
+        try{
+            Excel::import(new EmployeeEducationInfoImport(), $request->file('file'));
+            return redirect()->route('employees.index')->with([
+                'message' => 'Imported Successfully',
+                'alert-type' => 'success'
+            ]);
+        }catch (\Exception $e){
+            Log::error($e->getMessage());
+            return redirect()->back()->with([
+                'message' => $e->getMessage(). 'Contact with your administrator',
+                'alert-type' => 'error'
+            ]);
+        }
+
+    }
+
 
 
 }

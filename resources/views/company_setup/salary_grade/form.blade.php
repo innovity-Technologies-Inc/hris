@@ -37,10 +37,10 @@
                                     </div>
 
                                     <div class="col-lg-12 mb-2">
-                                        <label for="example-select" class="form-label">Tofsil Name<span
+                                        <label for="example-select" class="form-label">Act<span
                                                 class="text-danger">*</span></label>
                                         <select class="form-select select2_list" name="tofsil_id">
-                                            <option value="">Choose Tofsil Name</option>
+                                            <option value="">Choose Act</option>
                                             @foreach($tofsils as $item)
                                                 <option value="{{$item->id}}"
                                                         @if(isset($salary_grade) && $salary_grade->tofsil_id == $item->id) selected @endif>

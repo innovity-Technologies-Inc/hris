@@ -97,9 +97,9 @@
                                             data-section="office-information"
                                             data-section-name="Office Information"
                                             data-section-number="2"
-                                             data-form-action="{{ route('employees.office_informations.import') }}"
-                                            data-excel-link="/download/office-information/excel"
-                                            data-csv-link="/download/office-information/csv">
+                                            data-form-action="{{ route('employees.office_informations.import') }}"
+                                            data-excel-link="{{asset('assets/excel/employee_office_infos.xlsx')}}"
+                                            data-csv-link="{{asset('assets/excel/employee_office_infos.csv')}}">
                                         <i class="bi bi-upload me-2"></i>Upload
                                     </button>
                                 </div>
@@ -126,9 +126,8 @@
                                             data-section-name="Eligible Plans Information"
                                             data-section-number="3"
                                             data-form-action="{{ route('employees.eligible_plans.import') }}"
-{{--                                            data-excel-link="/download/eligible-plans/excel"--}}
-{{--                                            data-csv-link="/download/eligible-plans/csv"--}}
-                                    >
+                                            data-excel-link="{{asset('assets/excel/employee_eligible_plans.xlsx')}}"
+                                            data-csv-link="{{asset('assets/excel/employee_eligible_plans.csv')}}">
                                         <i class="bi bi-upload me-2"></i>Upload
                                     </button>
                                 </div>
@@ -157,9 +156,9 @@
                                             data-section="education-experience-training"
                                             data-section-name="Education, Experience and Training Information"
                                             data-section-number="4"
-                                            {{-- data-form-action="{{ route('employees.education_experience.import') }}"
-                                            data-excel-link="/download/education-experience/excel"
-                                            data-csv-link="/download/education-experience/csv" --}}>
+                                            data-form-action="{{ route('employees.education_information.import') }}"
+                                            data-excel-link="{{asset('assets/excel/employee_education_experience_training.xlsx')}}"
+                                            data-csv-link="{{asset('assets/excel/employee_education_experience_training.csv')}}">
                                         <i class="bi bi-upload me-2"></i>Upload
                                     </button>
                                 </div>
