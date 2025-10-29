@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\EmployeeEligiblePlanImport;
 use App\Models\EmployeeEducationExperienceTraining;
 use App\Models\EmployeeEligiblePlan;
 use App\Models\Employee;
@@ -9,6 +10,7 @@ use App\Services\EmployeeServices;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EmployeeEligibleController extends Controller
 {
@@ -112,5 +114,26 @@ class EmployeeEligibleController extends Controller
                 ->with(['message' => 'Something went wrong. Please try again later.',
                     'alert-type' => 'error']);
         }
+    }
+
+    public function import(Request $request){
+        $request->validate([
+            'file' => 'required|mimes:text/csv,text/plain,application/csv,text/comma-separated-values,text/anytext,application/octet-stream,application/txt,xlsx,csv,txt',
+        ]);
+//    dd($request->all());
+        try{
+            Excel::import(new EmployeeEligiblePlanImport(), $request->file('file'));
+            return redirect()->route('employees.index')->with([
+                'message' => 'Imported Successfully',
+                'alert-type' => 'success'
+            ]);
+        }catch (\Exception $e){
+            Log::error($e->getMessage());
+            return redirect()->back()->with([
+                'message' => $e->getMessage(). 'Contact with your administrator',
+                'alert-type' => 'error'
+            ]);
+        }
+
     }
 }

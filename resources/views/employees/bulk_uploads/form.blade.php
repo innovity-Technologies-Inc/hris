@@ -125,9 +125,10 @@
                                             data-section="eligible-plans-information"
                                             data-section-name="Eligible Plans Information"
                                             data-section-number="3"
-                                            {{-- data-form-action="{{ route('employees.eligible_plans.import') }}"
-                                            data-excel-link="/download/eligible-plans/excel"
-                                            data-csv-link="/download/eligible-plans/csv" --}}>
+                                            data-form-action="{{ route('employees.eligible_plans.import') }}"
+{{--                                            data-excel-link="/download/eligible-plans/excel"--}}
+{{--                                            data-csv-link="/download/eligible-plans/csv"--}}
+                                    >
                                         <i class="bi bi-upload me-2"></i>Upload
                                     </button>
                                 </div>

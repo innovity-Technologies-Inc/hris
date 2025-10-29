@@ -17,6 +17,7 @@ use App\Models\Section;
 use App\Models\Tofsil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class EmployeeServices
 {
@@ -547,37 +548,42 @@ class EmployeeServices
             'educations' => 'nullable|array',
             'educations.*.education_title' => 'required_with:educations|string',
             'educations.*.institute' => 'required_with:educations|string',
+            'educations.*.group_major' => 'nullable|string',
+            'educations.*.board_university' => 'nullable|string',
+            'educations.*.result_grade' => 'nullable|string',
             'educations.*.passing_year' => 'required_with:educations|string',
+            'educations.*.gpa_cgpa' => 'nullable|string',
             'experiences' => 'nullable|array',
             'experiences.*.company' => 'required_with:experiences|string',
             'experiences.*.designation' => 'required_with:experiences|string',
+            'experiences.*.department' => 'nullable|string',
             'experiences.*.date_from' => 'required_with:experiences|date',
             'experiences.*.date_to' => 'required_with:experiences|date',
+            'experiences.*.duration' => 'nullable|string',
+            'experiences.*.responsibility' => 'required_with:experiences|string',
             'trainings' => 'nullable|array',
             'trainings.*.training_title' => 'required_with:trainings|string',
+            'trainings.*.course_name' => 'required_with:trainings|string',
+            'trainings.*.training_code' => 'nullable|string',
+            'trainings.*.institute' => 'required_with:trainings|string',
+            'trainings.*.country' => 'required_with:trainings|string',
+            'trainings.*.location' => 'required_with:trainings|string',
+            'trainings.*.duration' => 'required_with:trainings|string',
             'trainings.*.from_date' => 'required_with:trainings|date',
             'trainings.*.to_date' => 'required_with:trainings|date',
         ]);
         return $validated;
     }
 
-    public function employeeEducationInfoSave($request, $employeeEduData = null){
+    public function employeeEducationInfoSave($validated, $employeeEduData = null){
         if(isset($employeeEduData)){
-            $employeeEduData->update([
-                'employee_educations' => $request->educations ?? [],
-                'employee_experiences' => $request->experiences ?? [],
-                'employee_trainings' => $request->trainings ?? [],
-            ]);
+            $employeeEduData->update($validated);
             return $employeeEduData;
         }else{
-            $data = EmployeeEducationExperienceTraining::create(
-                ['employee_id' => $request->employee_id],
-                [
-                    'employee_educations' => $request->educations ?? [],
-                    'employee_experiences' => $request->experiences ?? [],
-                    'employee_trainings' => $request->trainings ?? [],
-                ]
-            );
+//            $data = new EmployeeEducationExperienceTraining($validated);
+//            dd($data->getAttributes());
+
+            $data = EmployeeEducationExperienceTraining::create($validated);
             return $data;
         }
     }

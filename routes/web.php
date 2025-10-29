@@ -178,7 +178,9 @@ Route::prefix('employees')->group(function () {
         Route::get('eligible-plans/edit/{id}', 'edit')->name('employees.eligible_plans.edit');
         Route::put('eligible-plans/{id}/update', 'update')->name('employees.eligible_plans.update');
         Route::get('profile/{id}/eligible-plans', 'show')->name('employees.profile.eligible_plans');
-    });
+        Route::post('eligible-plans/import', 'import')->name('employees.eligible_plans.import');
+
+        });
 
     Route::controller(EmployeeEducationExperienceTrainingController::class)->group(function(){
         Route::get('education-information/create/{id}', 'create')->name('employees.education_information.create');

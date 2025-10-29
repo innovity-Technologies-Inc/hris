@@ -44,7 +44,7 @@
                         <div class="card-body">
                             <div id="educationContainer">
                                 @php
-                                    $educations = old('educations', $employeeData->employee_educations ?? []);
+                                    $educations = old('educations', $employeeData->educations ?? []);
                                 @endphp
 
                                 @if(empty($educations))
@@ -150,7 +150,7 @@
                         <div class="card-body">
                             <div id="experienceContainer">
                                 @php
-                                    $experiences = old('experiences', $employeeData->employee_experiences ?? []);
+                                    $experiences = old('experiences', $employeeData->experiences ?? []);
                                 @endphp
 
                                 @if(empty($experiences))
@@ -255,7 +255,7 @@
                         <div class="card-body">
                             <div id="trainingContainer">
                                 @php
-                                    $trainings = old('trainings', $employeeData->employee_trainings ?? []);
+                                    $trainings = old('trainings', $employeeData->trainings ?? []);
                                 @endphp
 
                                 @if(empty($trainings))

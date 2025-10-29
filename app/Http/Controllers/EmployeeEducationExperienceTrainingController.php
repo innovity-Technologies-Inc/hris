@@ -27,9 +27,8 @@ class EmployeeEducationExperienceTrainingController extends Controller
     public function store(Request $request)
     {
         $validated = $this->empServices->employeeEducationInfoValidation($request);
-
         try{
-            $employeeEduData = $this->empServices->employeeEducationInfoSave($request);
+            $employeeEduData = $this->empServices->employeeEducationInfoSave($validated);
         }catch(\Exception $e){
             Log::error($e->getMessage());
             return redirect()->back()->with([
@@ -55,9 +54,9 @@ class EmployeeEducationExperienceTrainingController extends Controller
 
 
         // Extract arrays from JSON columns (will be empty arrays if null)
-        $educations = $employeeData->employee_educations ?? [];
-        $experiences = $employeeData->employee_experiences ?? [];
-        $trainings = $employeeData->employee_trainings ?? [];
+        $educations = $employeeData->educations ?? [];
+        $experiences = $employeeData->experiences ?? [];
+        $trainings = $employeeData->trainings ?? [];
 
         return view('employees.profile', compact('employee', 'educations', 'experiences', 'trainings', 'title', 'section', 'sub_section', 'section_url', 'employeeData'));
     }
@@ -75,10 +74,10 @@ class EmployeeEducationExperienceTrainingController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $this->empServices->employeeEducationInfoValidation($request);
-        $employeeEduData = EmployeeEducationExperienceTraining::where('employee_id', $id);
+        $employeeEduData = EmployeeEducationExperienceTraining::where('employee_id', $id)->first();
 
         try{
-            $employeeEduData = $this->empServices->employeeEducationInfoSave($request, $validated, $employeeEduData);
+            $employeeEduData = $this->empServices->employeeEducationInfoSave($validated, $employeeEduData);
             $employee = $employeeEduData->employee_id;
         }catch(\Exception $e){
             Log::error($e->getMessage());
@@ -87,7 +86,7 @@ class EmployeeEducationExperienceTrainingController extends Controller
                 'alert-type' => 'error'
             ]);
         }
-        return redirect()->route('employees.profile', $employee)->with([
+        return redirect()->route('employees.profile.education_information', $employee)->with([
             'message' => 'Updated successfully.',
             'alert-type' => 'success'
         ]);
