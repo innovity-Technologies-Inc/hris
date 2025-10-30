@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Imports\EmployeeEducationInfoImport;
 use App\Models\EmployeeEducationExperienceTraining;
+use App\Models\EmployeeOfficeInfo;
 use App\Services\EmployeeServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -37,10 +38,21 @@ class EmployeeEducationExperienceTrainingController extends Controller
                 'alert-type' => 'error'
             ]);
         }
-        return redirect()->route('employees.profile.education_information', $employeeEduData->employee_id)->with([
-            'message' => 'Information saved successfully.',
-            'alert-type' => 'success'
-        ]);
+        $employeeOfficeInfo = EmployeeOfficeInfo::where('employee_id', $employeeEduData->employee_id)->first();
+
+        if(empty($employeeOfficeInfo)){
+            return redirect()->route('employees.office_informations.create', $employeeEduData->employee_id)->with([
+                'message' => 'Education Info Added Successfully',
+                'alert-type' => 'success'
+            ]);
+        }
+        else{
+            return redirect()->route('employees.profile.education_information', $employeeEduData->employee_id)->with([
+                    'message' => 'Education Info Added Successfully',
+                    'alert-type' => 'success'
+                ]
+            );
+        }
     }
     public function show($id)
     {

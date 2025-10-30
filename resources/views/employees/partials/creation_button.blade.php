@@ -3,7 +3,7 @@
    <div class="card-body p-4">
     <div class="row g-3 row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-5">
         <div class="col">
-            <a href="{{Route::is('employees.profile.*') ? route('employees.profile.general_informations', $employee->id) : route('employees.general_informations.create') }}" class="btn btn-outline-secondary w-100 py-3 text-decoration-none
+            <a href="{{Route::is('employees.profile.*') ? route('employees.profile.general_informations', $employee->id) : 'javascript:void(0)'}}" class="btn btn-outline-secondary w-100 py-3 text-decoration-none
             @if(request()->routeIs('employees.general_informations.create') || request()->routeIs('employees.profile.general_informations')) active @endif">
                 <span class="badge bg-secondary rounded-circle me-2">1</span>
                 General Information

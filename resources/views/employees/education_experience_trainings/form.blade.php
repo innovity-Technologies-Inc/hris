@@ -1,5 +1,8 @@
 @extends('structure.master')
 @section('content')
+    @if(Route::currentRouteNamed('employees.education_information.create'))
+        @include('employees.partials.creation_button')
+    @endif
     <div class="mt-4">
         <form id="employeeForm" method="POST" action="{{ isset($employeeData) ? route('employees.education_information.update', $employeeData->employee_id) : route('employees.education_information.store') }}">
             @if(isset($employeeData))

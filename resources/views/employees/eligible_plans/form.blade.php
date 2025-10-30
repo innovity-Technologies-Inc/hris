@@ -1,6 +1,8 @@
 @extends('structure.master')
 @section('content')
+    @if(Route::currentRouteNamed('employees.eligible_plans.create'))
     @include('employees.partials.creation_button')
+    @endif
     <div class="mt-4">
         <form class="" method="POST" enctype="multipart/form-data"
             action="{{ isset($employeePlan) ? route('employees.eligible_plans.update', $employeePlan->id) : route('employees.eligible_plans.store') }}"
