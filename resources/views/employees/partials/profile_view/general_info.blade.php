@@ -391,10 +391,20 @@
                                     <div class="card-body text-center">
                                         <i class="mdi mdi-fingerprint fs-48 text-success mb-2"></i>
                                         <h6 class="fw-semibold">Fingerprint</h6>
+                                        @if (isset($employee->fingerprint_path))
+                                            @if (file_exists(public_path('storage/' . $employee->fingerprint_path)))
                                         <a href="#" class="btn btn-sm btn-success view-link"
                                            data-img="{{ asset('storage/' . $employee->fingerprint_path) }}">View</a>
                                         <a href="{{ asset('storage/' . $employee->fingerprint_path) }}"
                                            class="btn btn-sm btn-outline-success" download>Download</a>
+                                        @else
+                                            <p class="text-muted">Fingerprint may Deleted or moved</p>
+                                            <!-- Show this message if the file doesn't exist -->
+                                        @endif
+                                        @else
+                                            <p class="text-muted">No Fingerprint available</p>
+                                        @endif
+
                                     </div>
                                 </div>
                             </div>
@@ -432,7 +442,6 @@
                                                    class="btn btn-sm btn-outline-info" download>Download</a>
                                             @else
                                                 <p class="text-muted">Experience document deleted or moved</p>
-                                                <!-- Show this message if file doesn't exist -->
                                             @endif
                                         @else
                                             <p class="text-muted">No experience document available</p>

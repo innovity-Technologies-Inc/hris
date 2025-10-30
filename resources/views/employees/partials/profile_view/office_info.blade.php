@@ -68,11 +68,11 @@
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Act</td>
-                                            <td>{{$employee_office_info->getTofsil->name}}</td>
+                                            <td>{{$employee_office_info->getTofsil->name ?? 'N/A'}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Pay Grade</td>
-                                            <td>{{$employee_office_info->getGrade->name}}</td>
+                                            <td>{{$employee_office_info->getGrade->name  ?? 'N/A'}}</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -109,19 +109,19 @@
                                         <tbody>
                                         <tr>
                                             <td class="fw-semibold" style="width: 40%;">Company</td>
-                                            <td>{{$employee_office_info->getJoiningCompany->name}}</td>
+                                            <td>{{$employee_office_info->getJoiningCompany->name ?? 'N/A'}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Business Unit</td>
-                                            <td>{{$employee_office_info->getJoiningBusinessUnit->unit_name}}</td>
+                                            <td>{{$employee_office_info->getJoiningBusinessUnit->unit_name ?? 'N/A'}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Division</td>
-                                            <td>{{$employee_office_info->getJoiningDivision->division_name}}</td>
+                                            <td>{{$employee_office_info->getJoiningDivision->division_name ?? 'N/A'}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Department</td>
-                                            <td>{{$employee_office_info->getJoiningDepartment->department_name}}</td>
+                                            <td>{{$employee_office_info->getJoiningDepartment->department_name ?? 'N/A'}}</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -135,11 +135,11 @@
                                         <tbody>
                                         <tr>
                                             <td class="fw-semibold">Section</td>
-                                            <td>{{$employee_office_info->getJoiningSection->section_name}}</td>
+                                            <td>{{$employee_office_info->getJoiningSection->section_name ?? 'N/A'}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold" style="width: 40%;">Designation</td>
-                                            <td>{{$employee_office_info->getJoiningDesignation->company_designation}}</td>
+                                            <td>{{$employee_office_info->getJoiningDesignation->company_designation ?? 'N/A'}}</td>
                                         </tr>
 
                                         </tbody>
@@ -160,19 +160,19 @@
                                         <tbody>
                                         <tr>
                                             <td class="fw-semibold" style="width: 40%;">Company</td>
-                                            <td>{{$employee_office_info->getCurrentCompany->name}}</td>
+                                            <td>{{$employee_office_info->getCurrentCompany->name ?? 'N/A'}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Business Unit</td>
-                                            <td>{{$employee_office_info->getCurrentBusinessUnit->unit_name}}</td>
+                                            <td>{{$employee_office_info->getCurrentBusinessUnit->unit_name ?? 'N/A'}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Division</td>
-                                            <td>{{$employee_office_info->getCurrentDivision->division_name}}</td>
+                                            <td>{{$employee_office_info->getCurrentDivision->division_name ?? 'N/A'}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Department</td>
-                                            <td>{{$employee_office_info->getCurrentDepartment->department_name}}</td>
+                                            <td>{{$employee_office_info->getCurrentDepartment->department_name ?? 'N/A'}}</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -187,11 +187,11 @@
 
                                         <tr>
                                             <td class="fw-semibold">Section</td>
-                                            <td>{{$employee_office_info->getCurrentSection->section_name}}</td>
+                                            <td>{{$employee_office_info->getCurrentSection->section_name ?? 'N/A'}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold" style="width: 40%;">Designation</td>
-                                            <td><span class="badge bg-info">{{$employee_office_info->getCurrentDesignation->company_designation}}</span></td>
+                                            <td><span class="badge bg-info">{{$employee_office_info->getCurrentDesignation->company_designation ?? 'N/A'}}</span></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -298,17 +298,22 @@
                                         <tr>
                                             <td class="fw-semibold" style="width: 40%;">Weekends</td>
                                             <td>
+                                                @if(!empty($employee_office_info->weekends))
                                                 @foreach($employee_office_info->weekends as $item)
                                                 <span class="badge bg-secondary">{{$item}}</span>
                                                 @endforeach
+                                                @endif
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Alternate Off Day</td>
                                             <td>
+                                                @if(!empty($employee_office_info->alternate_off_day))
+
                                                 @foreach($employee_office_info->alternate_off_day as $item)
                                                     <span class="badge bg-secondary">{{$item}}</span>
                                                 @endforeach
+                                                @endif
                                             </td>
 
                                         </tr>
@@ -478,7 +483,7 @@
             <div class="card-body">
                 <div class="d-flex justify-content-end gap-2">
 
-                    <a href="{{ route('employees.office_informations.edit', $employee_office_info->id) }}"
+                    <a href="{{ route('employees.office_informations.edit', $employee->id) }}"
                        class="btn btn-primary">
                         <i class="mdi mdi-pencil me-1"></i> Edit Company Information
                     </a>

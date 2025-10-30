@@ -64,7 +64,7 @@ class EmployeeProfileController extends Controller
                 'alert-type' => 'error'
             ]);
         }
-        return redirect()->route('employees.profile', $employee->id)->with([
+        return redirect()->route('employees.profile.general_informations', $employee->id)->with([
             'message' => 'Info Added Successfully',
             'alert-type' => 'success',
         ]);

@@ -13,7 +13,8 @@
                         </div>
                         <div>
                             <h4 class="mb-1 fw-bold text-dark">Employee Information Import</h4>
-                            <p class="mb-0 text-muted small">Complete all sections to create comprehensive employee profiles</p>
+                            <p class="mb-0 text-muted small">Complete all sections to create comprehensive employee
+                                profiles</p>
                         </div>
                     </div>
                     <!-- Information Alert -->
@@ -23,8 +24,10 @@
                             <div>
                                 <h6 class="fw-semibold mb-2 text-dark">Upload Instructions</h6>
                                 <p class="mb-0 small text-muted">
-                                    Download the template for each section, populate the required fields with accurate data,
-                                    and upload the completed file. Ensure proper formatting and data validation before submission.
+                                    Download the template for each section, populate the required fields with accurate
+                                    data,
+                                    and upload the completed file. Ensure proper formatting and data validation before
+                                    submission.
                                 </p>
                             </div>
                         </div>
@@ -32,10 +35,8 @@
                 </div>
 
 
-
                 <!-- Body -->
                 <div class="card-body p-4 p-md-5">
-
 
 
                     <!-- Section Header -->
@@ -55,10 +56,13 @@
                             <div class="card h-100 border shadow-sm professional-card">
                                 <div class="card-body p-4">
                                     <div class="d-flex align-items-start mb-3">
-                                        <span class="badge bg-dark text-white rounded-circle me-3 d-flex align-items-center justify-content-center fw-bold" style="width: 36px; height: 36px; font-size: 14px;">1</span>
+                                        <span
+                                            class="badge bg-dark text-white rounded-circle me-3 d-flex align-items-center justify-content-center fw-bold"
+                                            style="width: 36px; height: 36px; font-size: 14px;">1</span>
                                         <div class="flex-grow-1">
                                             <h6 class="mb-1 fw-semibold text-dark">General Information</h6>
-                                            <p class="text-muted small mb-0" style="font-size: 0.813rem;">Employee personal details</p>
+                                            <p class="text-muted small mb-0" style="font-size: 0.813rem;">Employee
+                                                personal details</p>
                                         </div>
                                     </div>
                                     <button type="button"
@@ -70,8 +74,38 @@
                                             data-section-name="General Information"
                                             data-section-number="1"
                                             data-form-action="{{ route('employees.general_informations.import') }}"
-                                             data-excel-link="{{asset('assets/excel/employee_general_info.xlsx')}}"
-                                             data-csv-link="{{asset('assets/csv/employee_general_info.csv')}}">
+                                            data-excel-link="{{asset('assets/excel/employee_general_info.xlsx')}}"
+                                            data-csv-link="{{asset('assets/csv/employee_general_info.csv')}}">
+                                        <i class="bi bi-upload me-2"></i>Upload
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card h-100 border shadow-sm professional-card">
+                                <div class="card-body p-4">
+                                    <div class="d-flex align-items-start mb-3">
+                                        <span
+                                            class="badge bg-dark text-white rounded-circle me-3 d-flex align-items-center justify-content-center fw-bold"
+                                            style="width: 36px; height: 36px; font-size: 14px;">2</span>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1 fw-semibold text-dark">Education & Experience</h6>
+                                            <p class="text-muted small mb-0" style="font-size: 0.813rem;">Academic and
+                                                work history</p>
+                                        </div>
+                                    </div>
+                                    <button type="button"
+                                            class="btn btn-outline-dark btn-sm w-100 text-uppercase fw-semibold"
+                                            style="font-size: 0.75rem; letter-spacing: 0.5px;"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#bulkUploadModal"
+                                            data-section="education-experience-training"
+                                            data-section-name="Education, Experience and Training Information"
+                                            data-section-number="4"
+                                            data-form-action="{{ route('employees.education_information.import') }}"
+                                            data-excel-link="{{asset('assets/excel/employee_education_experience_training.xlsx')}}"
+                                            data-csv-link="{{asset('assets/excel/employee_education_experience_training.csv')}}">
                                         <i class="bi bi-upload me-2"></i>Upload
                                     </button>
                                 </div>
@@ -83,10 +117,13 @@
                             <div class="card h-100 border shadow-sm professional-card">
                                 <div class="card-body p-4">
                                     <div class="d-flex align-items-start mb-3">
-                                        <span class="badge bg-dark text-white rounded-circle me-3 d-flex align-items-center justify-content-center fw-bold" style="width: 36px; height: 36px; font-size: 14px;">2</span>
+                                        <span
+                                            class="badge bg-dark text-white rounded-circle me-3 d-flex align-items-center justify-content-center fw-bold"
+                                            style="width: 36px; height: 36px; font-size: 14px;">3</span>
                                         <div class="flex-grow-1">
                                             <h6 class="mb-1 fw-semibold text-dark">Office Information</h6>
-                                            <p class="text-muted small mb-0" style="font-size: 0.813rem;">Department and office details</p>
+                                            <p class="text-muted small mb-0" style="font-size: 0.813rem;">Department and
+                                                office details</p>
                                         </div>
                                     </div>
                                     <button type="button"
@@ -111,10 +148,13 @@
                             <div class="card h-100 border shadow-sm professional-card">
                                 <div class="card-body p-4">
                                     <div class="d-flex align-items-start mb-3">
-                                        <span class="badge bg-dark text-white rounded-circle me-3 d-flex align-items-center justify-content-center fw-bold" style="width: 36px; height: 36px; font-size: 14px;">3</span>
+                                        <span
+                                            class="badge bg-dark text-white rounded-circle me-3 d-flex align-items-center justify-content-center fw-bold"
+                                            style="width: 36px; height: 36px; font-size: 14px;">4</span>
                                         <div class="flex-grow-1">
-                                            <h6 class="mb-1 fw-semibold text-dark">Eligible Plans Information</h6>
-                                            <p class="text-muted small mb-0" style="font-size: 0.813rem;">Benefits and plan eligibility</p>
+                                            <h6 class="mb-1 fw-semibold text-dark">Policy Tag</h6>
+                                            <p class="text-muted small mb-0" style="font-size: 0.813rem;">Benefits and
+                                                plan eligibility</p>
                                         </div>
                                     </div>
                                     <button type="button"
@@ -133,37 +173,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Second Row -->
-                    <div class="row g-3">
                         <!-- Section 4 -->
-                        <div class="col-md-4">
-                            <div class="card h-100 border shadow-sm professional-card">
-                                <div class="card-body p-4">
-                                    <div class="d-flex align-items-start mb-3">
-                                        <span class="badge bg-dark text-white rounded-circle me-3 d-flex align-items-center justify-content-center fw-bold" style="width: 36px; height: 36px; font-size: 14px;">4</span>
-                                        <div class="flex-grow-1">
-                                            <h6 class="mb-1 fw-semibold text-dark">Education & Experience</h6>
-                                            <p class="text-muted small mb-0" style="font-size: 0.813rem;">Academic and work history</p>
-                                        </div>
-                                    </div>
-                                    <button type="button"
-                                            class="btn btn-outline-dark btn-sm w-100 text-uppercase fw-semibold"
-                                            style="font-size: 0.75rem; letter-spacing: 0.5px;"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#bulkUploadModal"
-                                            data-section="education-experience-training"
-                                            data-section-name="Education, Experience and Training Information"
-                                            data-section-number="4"
-                                            data-form-action="{{ route('employees.education_information.import') }}"
-                                            data-excel-link="{{asset('assets/excel/employee_education_experience_training.xlsx')}}"
-                                            data-csv-link="{{asset('assets/excel/employee_education_experience_training.csv')}}">
-                                        <i class="bi bi-upload me-2"></i>Upload
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
 
 
                         <!-- Section 5 -->
@@ -171,10 +182,13 @@
                             <div class="card h-100 border shadow-sm professional-card">
                                 <div class="card-body p-4">
                                     <div class="d-flex align-items-start mb-3">
-                                        <span class="badge bg-dark text-white rounded-circle me-3 d-flex align-items-center justify-content-center fw-bold" style="width: 36px; height: 36px; font-size: 14px;">6</span>
+                                        <span
+                                            class="badge bg-dark text-white rounded-circle me-3 d-flex align-items-center justify-content-center fw-bold"
+                                            style="width: 36px; height: 36px; font-size: 14px;">5</span>
                                         <div class="flex-grow-1">
                                             <h6 class="mb-1 fw-semibold text-dark">Nominee Information</h6>
-                                            <p class="text-muted small mb-0" style="font-size: 0.813rem;">Emergency contact details</p>
+                                            <p class="text-muted small mb-0" style="font-size: 0.813rem;">Emergency
+                                                contact details</p>
                                         </div>
                                     </div>
                                     <button type="button"
@@ -185,9 +199,9 @@
                                             data-section="nominee-information"
                                             data-section-name="Nominee Information"
                                             data-section-number="6"
-                                            {{-- data-form-action="{{ route('employees.nominee_informations.import') }}"
-                                            data-excel-link="/download/nominee-information/excel"
-                                            data-csv-link="/download/nominee-information/csv" --}} >
+                                        {{-- data-form-action="{{ route('employees.nominee_informations.import') }}"
+                                        data-excel-link="/download/nominee-information/excel"
+                                        data-csv-link="/download/nominee-information/csv" --}} >
                                         <i class="bi bi-upload me-2"></i>Upload
                                     </button>
                                 </div>
@@ -201,29 +215,29 @@
         </div>
     </div>
 
-<!-- Include the modal -->
-@include('employees.bulk_uploads.import')
+    <!-- Include the modal -->
+    @include('employees.bulk_uploads.import')
 
-<style>
-.professional-card {
-    transition: all 0.3s ease;
-    background-color: #ffffff;
-}
+    <style>
+        .professional-card {
+            transition: all 0.3s ease;
+            background-color: #ffffff;
+        }
 
-.professional-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
-    border-color: #495057 !important;
-}
+        .professional-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
+            border-color: #495057 !important;
+        }
 
-.letter-spacing {
-    letter-spacing: 0.5px;
-}
+        .letter-spacing {
+            letter-spacing: 0.5px;
+        }
 
-.btn-outline-dark:hover {
-    background-color: #212529;
-    border-color: #212529;
-}
-</style>
+        .btn-outline-dark:hover {
+            background-color: #212529;
+            border-color: #212529;
+        }
+    </style>
 
 @endsection

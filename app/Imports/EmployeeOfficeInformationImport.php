@@ -156,7 +156,17 @@ private function getDepartmentId($model, $department_name)
     private function parseArray($value)
     {
         if (empty($value)) return [];
-        // Example: if Excel cell = "Friday,Saturday"
+
+        // Try to decode JSON
+        $decoded = json_decode($value, true);
+
+        // If valid JSON, return as array
+        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+            return $decoded;
+        }
+
+        // Fallback: split by comma if it's just a plain CSV string
         return array_map('trim', explode(',', $value));
     }
+
 }

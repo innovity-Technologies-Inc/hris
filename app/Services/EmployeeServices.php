@@ -31,7 +31,7 @@ class EmployeeServices
         $query = Employee::query();
 
         $filters = [
-            'employee_id' => $request->get('employee_id'),
+            'applicant_id' => $request->get('employee_id'),
             'full_name' => $request->get('employee_name'),
             'system_id' => $request->get('system_id'),
         ];
@@ -43,7 +43,7 @@ class EmployeeServices
         $employees = $flexsearch->apply( $query,
             $filters,
             $searchTerm,
-            $searchableFields)->orderBy('first_name', 'asc')->paginate(10);
+            $searchableFields)->orderBy('first_name', 'asc')->paginate(50);
 
         return $employees;
     }
