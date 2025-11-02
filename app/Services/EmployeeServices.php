@@ -36,7 +36,14 @@ class EmployeeServices
             'system_id' => $request->get('system_id'),
         ];
 
+
         $searchTerm = $request->get('keyword');
+
+        $searchableFields = ['employee_id', 'employee_name', 'system_id'];
+
+        if (!empty($employee_name)) {
+            $employees->where('full_name', '<=', $employee_name);
+        }
 
         $searchableFields = ['full_name'];
 
