@@ -19,6 +19,7 @@ use App\Http\Controllers\EmployeeProfileController;
 use App\Http\Controllers\EmployeeEligibleController;
 use App\Http\Controllers\EmployeeEducationExperienceTrainingController;
 use App\Http\Controllers\EmployeeSalaryBreakdownController;
+use App\Http\Controllers\EmployeeNomineeController;
 
 Route::get('test', function () {
    return view('employees.salary_breakdown.view');
@@ -201,6 +202,17 @@ Route::prefix('employees')->group(function () {
         Route::put('salary-breakdown/{id}/update', 'update')->name('employees.salary_breakdown.update');
         Route::post('salary-breakdown/import', 'import')->name('employees.salary_breakdown.import');
     });
+
+    Route::controller(EmployeeNomineeController::class)->group(function(){
+        Route::get('nominee-information/create/{id}', 'create')->name('employees.nominee_information.create');
+        Route::post('nominee-information/store', 'store')->name('employees.nominee_information.store');
+        Route::get('profile/{id}/nominee-information', 'show')->name('employees.profile.nominee_information');
+        Route::get('nominee-information/edit/{id}', 'edit')->name('employees.nominee_information.edit');
+        Route::put('nominee-information/{id}/update', 'update')->name('employees.nominee_information.update');
+        Route::post('nominee-information/import', 'import')->name('employees.nominee_information.import');
+
+    });
+
 });
 
 Route::controller(EmployeeProfileController::class)->group(function () {

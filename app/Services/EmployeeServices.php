@@ -11,6 +11,7 @@ use App\Models\Division;
 use App\Models\Employee;
 use App\Models\EmployeeEducationExperienceTraining;
 use App\Models\EmployeeEligiblePlan;
+use App\Models\EmployeeNominee;
 use App\Models\EmployeeOfficeInfo;
 use App\Models\SalaryGrade;
 use App\Models\Section;
@@ -39,13 +40,7 @@ class EmployeeServices
 
         $searchTerm = $request->get('keyword');
 
-        $searchableFields = ['employee_id', 'employee_name', 'system_id'];
-
-        if (!empty($employee_name)) {
-            $employees->where('full_name', '<=', $employee_name);
-        }
-
-        $searchableFields = ['full_name'];
+        $searchableFields = ['applicant_id', 'full_name', 'system_id'];
 
         $employees = $flexsearch->apply( $query,
             $filters,
@@ -595,7 +590,7 @@ class EmployeeServices
         }
     }
 
-    public function employeeNomineeInformationValidation($request)
+    public function employeeNomineeInfoValidation($request)
     {
         $validated = $request->validate([
             'employee_id' => 'required|integer|exists:employees,id',
@@ -647,6 +642,27 @@ class EmployeeServices
         ]);
 
         return $validated;
+    }
+
+    public function employeeNomineeInfoSave($request, $validated, $employeeNomineeData = null){
+        if(isset($employeeNomineeData)){
+            if($request->hasFile('photo_path')) {
+                $this->employeeAttachmentDelete($employeeNomineeData->photo_path);
+                $photo = $request->file('photo_path');
+                $validated = $this->employeeAttachmentValidation($validated, $request, $photo, 'photo_path');
+                Log::info('Photo Uploaded');
+            }
+            $employeeNomineeData->update($validated);
+            return $employeeNomineeData;
+        }else{
+            if($request->hasFile('photo_path')) {
+                $photo = $request->file('photo_path');
+                $validated = $this->employeeAttachmentValidation($validated, $request, $photo, 'photo_path');
+                Log::info('Photo Uploaded');
+            }
+            $data = EmployeeNominee::create($validated);
+            return $data;
+        }
     }
 
 
