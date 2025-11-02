@@ -20,7 +20,7 @@ use App\Http\Controllers\EmployeeEligibleController;
 use App\Http\Controllers\EmployeeEducationExperienceTrainingController;
 
 Route::get('test', function () {
-   return view('employees.nominees.view');
+   return view('plans.meal_plans.index');
 });
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');

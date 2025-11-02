@@ -12,7 +12,6 @@ use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
-use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 
 
 class EmployeeProfileController extends Controller
