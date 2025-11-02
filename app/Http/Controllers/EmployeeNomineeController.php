@@ -67,6 +67,7 @@ class EmployeeNomineeController extends Controller
         $section_url = route('employees.index');
         $sub_section = 'Nominee Edit';
         $employee_nominee_info = EmployeeNominee::where('employee_id', $id)->first();
+//        dd($employee_nominee_info);
         if($employee_nominee_info){
             $employee = Employee::select('id', 'full_name')->where('id', $id)->first();
             return view('employees.nominee_information.form', compact('title', 'section',
@@ -78,6 +79,25 @@ class EmployeeNomineeController extends Controller
             ]);
         }
 
+    }
+
+    public function update(Request $request, $id){
+        $validated = $this->empServices->employeeNomineeInfoValidation($request);
+        $employeeNomineeData = EmployeeNominee::findOrFail($id);
+        try {
+            $employeeNomineeData = $this->empServices->employeeNomineeInfoSave($request, $validated, $employeeNomineeData);
+            $employee = $employeeNomineeData->employee_id;
+            return redirect()
+                ->route('employees.profile.nominee_information', $employee)
+                ->with(['message' => 'Employee nominee information updated successfully.',
+                    'alert-type' => 'success']);
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(['message' => 'Something went wrong. Please try again later.',
+                    'alert-type' => 'error']);
+        }
     }
 
 

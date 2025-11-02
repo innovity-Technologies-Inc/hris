@@ -41,10 +41,10 @@ class EmployeeNominee extends Model
         'country',
     ];
 
-    protected $casts = [
-        'date_of_birth' => 'date',
-        'ratio' => 'decimal:2',
-    ];
+//    protected $casts = [
+//        'date_of_birth' => 'date',
+//        'ratio' => 'decimal:2',
+//    ];
 
     public function getEmployee()
     {

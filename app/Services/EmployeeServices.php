@@ -598,7 +598,7 @@ class EmployeeServices
             'father_name' => 'nullable|string|max:255',
             'mother_name' => 'nullable|string|max:255',
             'spouse_name' => 'nullable|string|max:255',
-            'gender' => 'required|in:male,female,other',
+            'gender' => 'required|in:Male,Female,Other',
             'date_of_birth' => 'required|date|before:today',
             'religion' => 'nullable|string|max:100',
             'marital_status' => 'required|in:single,married,divorced,widowed',

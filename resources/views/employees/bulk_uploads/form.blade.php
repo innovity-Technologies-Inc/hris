@@ -187,8 +187,7 @@
                                             style="width: 36px; height: 36px; font-size: 14px;">5</span>
                                         <div class="flex-grow-1">
                                             <h6 class="mb-1 fw-semibold text-dark">Nominee Information</h6>
-                                            <p class="text-muted small mb-0" style="font-size: 0.813rem;">Emergency
-                                                contact details</p>
+                                            <p class="text-muted small mb-0" style="font-size: 0.813rem;">Nominee details of an Employee</p>
                                         </div>
                                     </div>
                                     <button type="button"
@@ -199,9 +198,9 @@
                                             data-section="nominee-information"
                                             data-section-name="Nominee Information"
                                             data-section-number="6"
-                                        {{-- data-form-action="{{ route('employees.nominee_informations.import') }}"
-                                        data-excel-link="/download/nominee-information/excel"
-                                        data-csv-link="/download/nominee-information/csv" --}} >
+                                            data-form-action="{{ route('employees.nominee_information.import') }}"
+                                            data-excel-link="{{asset('assets/excel/employee_nominee_information.xlsx')}}"
+                                            data-csv-link="{{asset('assets/excel/employee_nominee_information.csv')}}">
                                         <i class="bi bi-upload me-2"></i>Upload
                                     </button>
                                 </div>
