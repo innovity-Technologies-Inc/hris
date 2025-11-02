@@ -73,6 +73,24 @@
                 Nominee Information
             </a>
         </div>
+
+         @if(isset($employee->id))
+            <div class="col">
+                <a href="{{route('employees.profile.salary_breakdown', $employee->id)}}"
+                   class="btn btn-outline-secondary w-100 py-3 text-decoration-none @if(request()->routeIs('employees.salary_breakdown.create') || request()->routeIs('employees.profile.salary_breakdown')) active @endif">
+                    <span class="badge bg-secondary rounded-circle me-2">6</span>
+                    Salary Breakdown
+                </a>
+            </div>
+        @else
+            <div class="col">
+                <button type="submit"
+                        class="btn btn-outline-secondary w-100 py-3 text-decoration-none information">
+                    <span class="badge bg-secondary rounded-circle me-2">6</span>
+                    Salary Breakdown
+                </button>
+            </div>
+        @endif
     </div>
 </div>
 
