@@ -316,6 +316,7 @@
                                     </div>
                                 </div>
 
+                                @if(!empty($employee->reference_address))
                                 <!-- Reference Address -->
                                 <div class="card border">
                                     <div class="card-header bg-light">
@@ -325,36 +326,37 @@
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <p><strong>Reference Employee ID:</strong>
-                                                    {{ $employee->reference_address['emp_id'] }}</p>
+                                                    {{ $employee->reference_address['emp_id'] ?? 'N/A' }}</p>
                                                 <p><strong>Reference Name:</strong>
-                                                    {{ $employee->reference_address['reference_name'] }}</p>
+                                                    {{ $employee->reference_address['reference_name'] ?? 'N/A' }}</p>
                                                 <p><strong>Designation:</strong>
-                                                    {{ $employee->reference_address['reference_designation'] }}</p>
+                                                    {{ $employee->reference_address['reference_designation'] ?? 'N/A' }}</p>
                                             </div>
                                             <div class="col-md-4">
                                                 <p><strong>Address:</strong>
-                                                    {{ $employee->reference_address['line_1'] }}</p>
+                                                    {{ $employee->reference_address['line_1'] ?? 'N/A' }}</p>
                                                 <p><strong>Village:</strong>
-                                                    {{ $employee->reference_address['village'] }}</p>
+                                                    {{ $employee->reference_address['village'] ?? 'N/A' }}</p>
                                                 <p>
-                                                    <strong>State:</strong> {{ $employee->reference_address['state'] }}
+                                                    <strong>State:</strong> {{ $employee->reference_address['state'] ?? 'N/A' }}
                                                 </p>
                                                 <p><strong>District:</strong>
-                                                    {{ $employee->reference_address['district'] }}</p>
+                                                    {{ $employee->reference_address['district'] ?? 'N/A'}}</p>
                                             </div>
                                             <div class="col-md-4">
                                                 <p><strong>Zip Code:</strong>
-                                                    {{ $employee->reference_address['zip_code'] }}</p>
+                                                    {{ $employee->reference_address['zip_code'] ?? 'N/A'}}</p>
                                                 <p>
-                                                    <strong>Phone:</strong> {{ $employee->reference_address['phone'] }}
+                                                    <strong>Phone:</strong> {{ $employee->reference_address['phone'] ?? 'N/A'}}
                                                 </p>
                                                 <p>
-                                                    <strong>Email:</strong> {{ $employee->reference_address['email'] }}
+                                                    <strong>Email:</strong> {{ $employee->reference_address['email'] ?? 'N/A'}}
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                @endif
                             </div>
                         </div>
                     </div>
