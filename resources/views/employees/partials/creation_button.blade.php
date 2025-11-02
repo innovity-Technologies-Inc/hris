@@ -64,15 +64,27 @@
             </div>
         @endif
 
+        @if(isset($employee->id))
+            <div class="col">
+                <a href="{{route('employees.profile.nominee_information', $employee->id)}}"
+                   class="btn btn-outline-secondary w-100 py-3 text-decoration-none @if(request()->routeIs('employees.nominee_information.create') || request()->routeIs('employees.profile.nominee_information')) active @endif">
+                    <span class="badge bg-secondary rounded-circle me-2">5</span>
+                    Nominee Information
+                </a>
+            </div>
+        @else
+            <div class="col">
+                <button type="submit"
+                        class="btn btn-outline-secondary w-100 py-3 text-decoration-none information">
+                    <span class="badge bg-secondary rounded-circle me-2">5</span>
+                    Nominee Information
+                </button>
+            </div>
+        @endif
 
 
 
-        <div class="col">
-            <a href="#nominee-information" class="btn btn-outline-secondary w-100 py-3 text-decoration-none">
-                <span class="badge bg-secondary rounded-circle me-2">5</span>
-                Nominee Information
-            </a>
-        </div>
+
     </div>
 </div>
 

@@ -20,6 +20,9 @@
     @elseif(Route::currentRouteNamed('employees.profile.education_information'))
         @include('employees.partials.profile_view.education_info')
 
+    @elseif(Route::currentRouteNamed('employees.profile.nominee_information'))
+        @include('employees.partials.profile_view.nominee_information')
+
     @endif
 
 

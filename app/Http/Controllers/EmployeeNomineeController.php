@@ -20,7 +20,18 @@ class EmployeeNomineeController extends Controller
         $this->empServices = $empServices;
     }
 
-    public function nomineeInfoStore(Request $request){
+    public function create($id)
+    {
+        $title = 'Add Nominee Information';
+        $section = 'Employees Nominee Information';
+        $sub_section = 'Add';
+        $section_url = route('employees.index');
+        $employee = $this->empServices->getEmployeeById($id);
+        return view('employees.nominee_information.form', compact('employee', 'title', 'section', 'sub_section', 'section_url'));
+    }
+
+
+    public function store(Request $request){
         $validated = $this->empServices->employeeNomineeInfoValidation($request);
         try{
             $employee = $this->empServices->employeeNomineeInfoSave($request, $validated);
@@ -32,7 +43,7 @@ class EmployeeNomineeController extends Controller
             ]);
         }
 
-        $employeeEligiblePlan = EmployeeEligiblePlan::where('employee_id', $employee->employee_id)->first();
+        /*$employeeEligiblePlan = EmployeeEligiblePlan::where('employee_id', $employee->employee_id)->first();
 
         if(empty($employeeEligiblePlan)){
             return redirect()->route('employees.eligible_plans.create', $employee->employee_id)->with([
@@ -40,17 +51,17 @@ class EmployeeNomineeController extends Controller
                 'alert-type' => 'success'
             ]);
         }
-        else{
-            return redirect()->route('employees.profile.nominee_informations', $employee->employee_id)->with([
+        else{*/
+            return redirect()->route('employees.profile.nominee_information', $employee->employee_id)->with([
                     'message' => 'Nominee Info Added Successfully',
                     'alert-type' => 'success'
                 ]
             );
-        }
+//        }
 
     }
 
-    public function nomineeInfoEdit($id){
+    public function edit($id){
         $title = 'Edit Employee Nominee Information';
         $section = 'Employees';
         $section_url = route('employees.index');
@@ -58,7 +69,7 @@ class EmployeeNomineeController extends Controller
         $employee_nominee_info = EmployeeNominee::where('employee_id', $id)->first();
         if($employee_nominee_info){
             $employee = Employee::select('id', 'full_name')->where('id', $id)->first();
-            return view('employees.nominee_informations.form', compact('title', 'section',
+            return view('employees.nominee_information.form', compact('title', 'section',
                 'sub_section', 'section_url', 'employee', 'employee_nominee_info'));
         }else{
             return redirect()->route('employees.index')->with([
@@ -71,7 +82,7 @@ class EmployeeNomineeController extends Controller
 
 
 
-    public function showNomineeInfo($id){
+    public function show($id){
         $title = 'Employee Profile';
         $section = 'Employees';
         $sub_section = 'Profile';
@@ -82,7 +93,7 @@ class EmployeeNomineeController extends Controller
         return view('employees.profile', compact('title', 'section', 'sub_section', 'employee', 'employee_nominee_info', 'section_url'));
     }
 
-    public function nomineeInfoImport(Request $request){
+    public function import(Request $request){
         $request->validate([
             'file' => 'required|mimes:text/csv,text/plain,application/csv,text/comma-separated-values,text/anytext,application/octet-stream,application/txt,xlsx,csv,txt',
         ]);
