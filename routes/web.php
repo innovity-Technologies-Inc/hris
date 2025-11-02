@@ -23,6 +23,9 @@ Route::get('test', function () {
    return view('employees.nominees.view');
 });
 
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+
 
 
 Route::prefix('company-setup')->group(function () {
@@ -149,31 +152,52 @@ Route::prefix('company-setup')->group(function () {
 });
 
 Route::prefix('employees')->group(function () {
+
     Route::controller(EmployeeProfileController::class)->group(function () {
         Route::get('/', 'index')->name('employees.index');
-        Route::get('{id}/profile', 'profileView')->name('employees.profile');
+        Route::get('import', 'bulkEmployeeImportSections')->name('employees.import');
+        Route::get('profile/{id}/general-informations', 'profileView')->name('employees.profile.general_informations');
         Route::get('general-informations/create', 'generalInfoCreate')->name('employees.general_informations.create');
         Route::post('general-informations/store', 'generalInfoStore')->name('employees.general_informations.store');
         Route::get('general-informations/edit/{id}', 'generalInfoEdit')->name('employees.general_informations.edit');
         Route::put('general-informations/{id}/update', 'generalInfoUpdate')->name('employees.general_informations.update');
         Route::post('general-informations/import', 'generalInfoImport')->name('employees.general_informations.import');
+        Route::get('office-informations/create/{id}', 'officeInfoCreate')->name('employees.office_informations.create');
+        Route::post('office-informations/store', 'officeInfoStore')->name('employees.office_informations.store');
+        Route::get('office-informations/edit/{id}', 'officeInfoEdit')->name('employees.office_informations.edit');
+        Route::put('office-informations/{id}/update', 'officeInfoUpdate')->name('employees.office_informations.update');
+        Route::post('office-informations/import', 'officeInfoImport')->name('employees.office_informations.import');
+        Route::get('profile/{id}/office-informations', 'showOfficeInfo')->name('employees.profile.office_informations');
+
     });
+
         Route::controller(EmployeeEligibleController::class)->group(function(){
         // Put the specific routes before the parameterized routes
-        Route::get('eligible-plans/showForm', 'showForm')->name('employees.eligible_plans.create');
+        Route::get('eligible-plans/create/{id}', 'create')->name('employees.eligible_plans.create');
         Route::post('eligible-plans/store', 'store')->name('employees.eligible_plans.store');
-        Route::get('eligible-plans/{id}/edit', 'edit')->name('employees.eligible_plans.edit');
-        Route::put('eligible-plans/{id}', 'update')->name('employees.eligible_plans.update');
-        Route::delete('eligible-plans/{id}', 'destroy')->name('employees.eligible_plans.delete');
-        Route::get('eligible-plans/{id}', 'show')->name('employees.eligible_plans.show');
-    });
+        Route::get('eligible-plans/edit/{id}', 'edit')->name('employees.eligible_plans.edit');
+        Route::put('eligible-plans/{id}/update', 'update')->name('employees.eligible_plans.update');
+        Route::get('profile/{id}/eligible-plans', 'show')->name('employees.profile.eligible_plans');
+        Route::post('eligible-plans/import', 'import')->name('employees.eligible_plans.import');
+
+        });
+
     Route::controller(EmployeeEducationExperienceTrainingController::class)->group(function(){
-        Route::get('education-experience-training/create', 'create')->name('employee.education-experience-training.create');
-        Route::post('education-experience-training', 'store')->name('employee.education-experience-training.store');
-        Route::get('education-experience-training/{id}', 'show')->name('employee.education-experience-training.show');
-        Route::get('education-experience-training/{id}/edit', 'edit')->name('employee.education-experience-training.edit');
-        Route::put('education-experience-training/{id}', 'update')->name('employee.education-experience-training.update');
+        Route::get('education-information/create/{id}', 'create')->name('employees.education_information.create');
+        Route::post('education-information/store', 'store')->name('employees.education_information.store');
+        Route::get('profile/{id}/education-information', 'show')->name('employees.profile.education_information');
+        Route::get('education-information/edit/{id}', 'edit')->name('employees.education_information.edit');
+        Route::put('education-information/{id}/update', 'update')->name('employees.education_information.update');
+        Route::post('education-information/import', 'import')->name('employees.education_information.import');
+
     });
 });
 
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+Route::controller(EmployeeProfileController::class)->group(function () {
+    Route::get('get-grades/{tofsil_id}', 'getGradeByAct');
+    Route::get('get-units/{company_id}', 'getUnitByCompany');
+    Route::get('get-divisions/{unit_id}', 'getDivisionByUnit');
+    Route::get('get-departments/{division_id}', 'getDepartmentByDivision');
+    Route::get('get-sections/{department_id}', 'getSectionByDepartment');
+    Route::get('get-designations/{division_id}', 'getDesignationsByDivision');
+});

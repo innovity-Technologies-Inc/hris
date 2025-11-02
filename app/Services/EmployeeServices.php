@@ -6,13 +6,18 @@ use App\HelperClass;
 use App\Models\Company;
 use App\Models\CompanyLocation;
 use App\Models\Department;
+use App\Models\Designation;
 use App\Models\Division;
 use App\Models\Employee;
+use App\Models\EmployeeEducationExperienceTraining;
+use App\Models\EmployeeEligiblePlan;
+use App\Models\EmployeeOfficeInfo;
 use App\Models\SalaryGrade;
 use App\Models\Section;
 use App\Models\Tofsil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class EmployeeServices
 {
@@ -22,10 +27,14 @@ class EmployeeServices
         return $employees;
     }
 
-    public function employeeSearchResult(Request $request)
-    {
+    public function employeeSearchResult(Request $request, $flexsearch){
+        $query = Employee::query();
 
-        $employees = Employee::query();
+        $filters = [
+            'applicant_id' => $request->get('employee_id'),
+            'full_name' => $request->get('employee_name'),
+            'system_id' => $request->get('system_id'),
+        ];
 
 
         $searchTerm = $request->get('keyword');
@@ -36,33 +45,14 @@ class EmployeeServices
             $employees->where('full_name', '<=', $employee_name);
         }
 
-        if (!empty($employee_id)) {
-            $employees->where('applicant_id', $employee_id);
-        }
+        $searchableFields = ['full_name'];
 
-        if (!empty($employee_id)) {
-            $employees->where('system_id', $system_id);
-        }
-
-//        Term based Serch
-        if (!empty($searchTerm)) {
-            $searchTerms = explode(' ', $searchTerm);
-            $employees = $employees->where(function ($query) use ($searchTerms) {
-                foreach ($searchTerms as $term) {
-                    $query->where(function ($q) use ($term) {
-                        $q->where('full_name', 'like', "%{$term}%")
-                            ->orWhere('system_id', 'like', "%{$term}%")
-                            ->orWhere('applicant_id', 'like', "%{$term}%");
-                    });
-                }
-            });
-        }
-
-
-        $employees = $employees->orderBy('first_name', 'asc')->paginate(10);
+        $employees = $flexsearch->apply( $query,
+            $filters,
+            $searchTerm,
+            $searchableFields)->orderBy('first_name', 'asc')->paginate(50);
 
         return $employees;
-
     }
 
 
@@ -184,6 +174,7 @@ class EmployeeServices
         return $validated;
     }
 
+
     public function employeeAttachmentValidation($validated, $request, $file, $key_name)
     {
             $file_path = HelperClass::file_upload($file, 'employee_attachments');
@@ -197,9 +188,9 @@ class EmployeeServices
         }
     }
 
-    public function employeeInfoSave(Request $request, $id = null)
+    public function employeeInfoSave(Request $request,$validated, $id = null)
     {
-        $validated = $this->employeeInfoValidation($request);
+
         $validated['full_name'] = trim(($validated['first_name'] ?? '') . ' ' .
             ($validated['middle_name'] ?? '') . ' ' .
             ($validated['last_name'] ?? ''));
@@ -292,9 +283,370 @@ class EmployeeServices
         return $acts;
     }
 
-    public function getGradeByAct($act_id){
-        $grades = SalaryGrade::where('act_id', $act_id)->get();
+    public function getGradeByAct($tofsil_id){
+        $grades = SalaryGrade::where('tofsil_id', $tofsil_id)->get();
         return $grades;
+    }
+
+    public function getDesignationsByDivision($division_id){
+        $designations= Designation::where('division_id', $division_id)->get();
+        return $designations;
+    }
+
+    public function employeeOfficeInfoValidation($request)
+    {
+        $validated = $request->validate([
+            // Basic Identifiers
+            'employee_id'              => 'required|integer',
+            'emp_type'                 => 'nullable|in:permanent,contractual',
+            'grade_id'                 => 'nullable|integer',
+            'hr_file_no'               => 'nullable|string|max:255',
+            'tofsil_id'                => 'nullable|integer',
+            'file_note'                => 'nullable|string',
+
+            // Joining Information
+            'joining_company_id'       => 'nullable|integer',
+            'joining_business_unit_id' => 'nullable|integer',
+            'joining_division_id'      => 'nullable|integer',
+            'joining_department_id'    => 'nullable|integer',
+            'joining_section_id'       => 'nullable|integer',
+            'joining_designation_id'   => 'nullable|integer',
+            'date_of_join'             => 'nullable|date',
+
+            // Current Posting Information
+            'current_company_id'       => 'nullable|integer',
+            'current_business_unit_id' => 'nullable|integer',
+            'current_division_id'      => 'nullable|integer',
+            'current_department_id'    => 'nullable|integer',
+            'current_section_id'       => 'nullable|integer',
+            'current_designation_id'   => 'nullable|integer',
+
+            // Orientation
+            'orientation_required'     => 'required|in:yes,no',
+            'orientation_from'         => 'nullable|date',
+            'orientation_to'           => 'nullable|date|after_or_equal:orientation_from',
+            'orientation_type'         => 'nullable|string|max:100',
+            'orientation_days'         => 'nullable|integer|min:1',
+
+            // Employment & Performance
+            'confirmation_date'        => 'nullable|date',
+            'probation_duration'       => 'nullable|integer|min:0',
+            'next_promotion_date'      => 'nullable|date',
+            'promotion_cycle'          => 'nullable|string|max:100',
+            'increment_cycle'          => 'nullable|string|max:100',
+
+            // Attendance & Benefits
+            'weekends'                 => 'nullable|array',
+            'weekends.*'               => 'string',
+            'alternate_off_day'        => 'nullable|array',
+            'alternate_off_day.*'      => 'string',
+            'ot_allowed'               => 'nullable|in:yes,no',
+            'pf_eligible'              => 'nullable|in:yes,no',
+            'salary_type'              => 'nullable|in:hourly,daily,weekly,monthly,yearly',
+            'transport_eligible'       => 'nullable|in:yes,no',
+
+            // Loan & Benefits
+            'can_apply_loan'           => 'nullable|in:yes,no',
+            'pf_effective_date'        => 'nullable|date',
+            'can_apply_advance'        => 'nullable|in:yes,no',
+            'gratuity_eligible'        => 'nullable|in:yes,no',
+        ], [
+            // 🧾 Custom Messages
+            'emp_type.in'                     => 'Employment type must be either Permanent or Contractual.',
+            'orientation_to.after_or_equal'   => 'Orientation end date must be after or equal to the start date.',
+            'orientation_days.min'            => 'Orientation days must be at least 1 day.',
+            'probation_duration.min'          => 'Probation duration cannot be negative.',
+        ]);
+
+        return $validated;
+
+    }
+
+    public function employeeOfficeInfoSave(Request $request, $validated, $employee_office_info = null)
+    {
+        if(empty($employee_office_info)){
+            $employee_office_data = EmployeeOfficeInfo::create($validated);
+        }else{
+            $employee_office_data = $employee_office_info->update($validated);
+
+        }
+        return $employee_office_data;
+    }
+
+    public function employeeEligiblePlanValidation($request){
+        $validated = $request->validate([
+            'employee_id' => 'required',
+
+            // Shift Plan
+            'shift_plan_from' => 'nullable|date',
+            'shift_plan_to' => 'nullable|date|after_or_equal:shift_plan_from',
+            'shift_plan_status' => 'nullable|in:active,inactive',
+
+            // Leave Plan
+            'leave_plan_from' => 'nullable|date',
+            'leave_plan_to' => 'nullable|date|after_or_equal:leave_plan_from',
+            'leave_plan_status' => 'nullable|in:active,inactive',
+
+            // OT Plan
+            'ot_plan_from' => 'nullable|date',
+            'ot_plan_to' => 'nullable|date|after_or_equal:ot_plan_from',
+            'ot_plan_status' => 'nullable|in:active,inactive',
+
+            // Attendance Bonus Plan
+            'attendance_bonus_plan_from' => 'nullable|date',
+            'attendance_bonus_plan_to' => 'nullable|date|after_or_equal:attendance_bonus_plan_from',
+            'attendance_bonus_plan_status' => 'nullable|in:active,inactive',
+
+            // Day Off Work Plan
+            'day_off_work_plan_from' => 'nullable|date',
+            'day_off_work_plan_to' => 'nullable|date|after_or_equal:day_off_work_plan_from',
+            'day_off_work_plan_status' => 'nullable|in:active,inactive',
+
+            // Roster Plans
+            'roster_plans_from' => 'nullable|date',
+            'roster_plans_to' => 'nullable|date|after_or_equal:roster_plans_from',
+            'roster_plans_status' => 'nullable|in:active,inactive',
+
+            // Bonus Plan
+            'bonus_plan_from' => 'nullable|date',
+            'bonus_plan_to' => 'nullable|date|after_or_equal:bonus_plan_from',
+            'bonus_plan_status' => 'nullable|in:active,inactive',
+
+            // Allowance Plan
+            'allowance_plan_from' => 'nullable|date',
+            'allowance_plan_to' => 'nullable|date|after_or_equal:allowance_plan_from',
+            'allowance_plan_status' => 'nullable|in:active,inactive',
+
+            // Late Deduction Plan
+            'late_deduction_plan_from' => 'nullable|date',
+            'late_deduction_plan_to' => 'nullable|date|after_or_equal:late_deduction_plan_from',
+            'late_deduction_plan_status' => 'nullable|in:active,inactive',
+
+            // Production Plan
+            'production_plan_from' => 'nullable|date',
+            'production_plan_to' => 'nullable|date|after_or_equal:production_plan_from',
+            'production_plan_status' => 'nullable|in:active,inactive',
+
+            // Early Out Deduction Plan
+            'early_out_deduction_plan_from' => 'nullable|date',
+            'early_out_deduction_plan_to' => 'nullable|date|after_or_equal:early_out_deduction_plan_from',
+            'early_out_deduction_plan_status' => 'nullable|in:active,inactive',
+
+            // Salary Breakdown Plan
+            'salary_breakdown_plan_from' => 'nullable|date',
+            'salary_breakdown_plan_to' => 'nullable|date|after_or_equal:salary_breakdown_plan_from',
+            'salary_breakdown_plan_status' => 'nullable|in:active,inactive',
+
+            // Medical Plan
+            'medical_plan_from' => 'nullable|date',
+            'medical_plan_to' => 'nullable|date|after_or_equal:medical_plan_from',
+            'medical_plan_status' => 'nullable|in:active,inactive',
+
+            // Night Bill Plan
+            'night_bill_plan_from' => 'nullable|date',
+            'night_bill_plan_to' => 'nullable|date|after_or_equal:night_bill_plan_from',
+            'night_bill_plan_status' => 'nullable|in:active,inactive',
+
+            // Tiffin Plan
+            'tiffin_plan_from' => 'nullable|date',
+            'tiffin_plan_to' => 'nullable|date|after_or_equal:tiffin_plan_from',
+            'tiffin_plan_status' => 'nullable|in:active,inactive',
+
+            // Dinner Plan
+            'dinner_plan_from' => 'nullable|date',
+            'dinner_plan_to' => 'nullable|date|after_or_equal:dinner_plan_from',
+            'dinner_plan_status' => 'nullable|in:active,inactive',
+
+            // Breakfast Plan
+            'breakfast_plan_from' => 'nullable|date',
+            'breakfast_plan_to' => 'nullable|date|after_or_equal:breakfast_plan_from',
+            'breakfast_plan_status' => 'nullable|in:active,inactive',
+
+            // Food Com Plan
+            'food_com_plan_from' => 'nullable|date',
+            'food_com_plan_to' => 'nullable|date|after_or_equal:food_com_plan_from',
+            'food_com_plan_status' => 'nullable|in:active,inactive',
+
+            // Excessive Late Plan
+            'excessive_late_plan_from' => 'nullable|date',
+            'excessive_late_plan_to' => 'nullable|date|after_or_equal:excessive_late_plan_from',
+            'excessive_late_plan_status' => 'nullable|in:active,inactive',
+
+            // Lunch Plan
+            'lunch_plan_from' => 'nullable|date',
+            'lunch_plan_to' => 'nullable|date|after_or_equal:lunch_plan_from',
+            'lunch_plan_status' => 'nullable|in:active,inactive',
+
+            // Snacks Plan
+            'snacks_plan_from' => 'nullable|date',
+            'snacks_plan_to' => 'nullable|date|after_or_equal:snacks_plan_from',
+            'snacks_plan_status' => 'nullable|in:active,inactive',
+        ],
+            [
+                'employee_id.required' => 'The employee field is required.',
+                'employee_id.exists' => 'The selected employee is invalid.',
+                'employee_id.unique' => 'The employee has already been assigned a plan.',
+                'shift_plan_from.date' => 'The shift plan from date is invalid.',
+                'shift_plan_to.date' => 'The shift plan to date is invalid.',
+                'shift_plan_to.after_or_equal' => 'The shift plan to date must be after or equal to the from date.',
+                'shift_plan_status.in' => 'The shift plan status must be either active or inactive.',
+                'leave_plan_from.date' => 'The leave plan from date is invalid.',
+                'leave_plan_to.date' => 'The leave plan to date is invalid.',
+                'leave_plan_to.after_or_equal' => 'The leave plan to date must be after or equal to the from date.',
+                'leave_plan_status.in' => 'The leave plan status must be either active or inactive.',
+                'ot_plan_from.date' => 'The OT plan from date is invalid.',
+                'ot_plan_to.date' => 'The OT plan to date is invalid.',
+                'ot_plan_to.after_or_equal' => 'The OT plan to date must be after or equal to the from date.',
+                'ot_plan_status.in' => 'The OT plan status must be either active or inactive.',
+                'attendance_bonus_plan_from.date' => 'The attendance bonus  plan from date is invalid.',
+                'attendance_bonus_plan_to.date' => 'The attendance bonus plan to date is invalid.',
+                'attendance_bonus_plan_to.after_or_equal' => 'The attendance bonus plan to date must be after or equal to the from date.',
+                'attendance_bonus_plan_status.in' => 'The attendance bonus plan status must be either active or inactive.',
+                'day_off_work_plan_from.date' => 'The day off work plan from date is invalid.',
+                'day_off_work_plan_to.date' => 'The day off work plan to date is invalid.',
+                'day_off_work_plan_to.after_or_equal' => 'The day off work plan to date must be after or equal to the from date.',
+                'day_off_work_plan_status.in' => 'The day off work plan status must be either active or inactive.',
+                'roster_plans_from.date' => 'The roster plans from date is invalid.',
+                'roster_plans_to.date' => 'The roster plans to date is invalid.',
+                'roster_plans_to.after_or_equal' => 'The roster plans to date must be after or equal to the from date.',
+                'roster_plans_status.in' => 'The roster plans status must be either active or inactive.',
+                'bonus_plan_from.date' => 'The bonus plan from date is invalid.',
+                'bonus_plan_to.date' => 'The bonus plan to date is invalid.',
+                'bonus_plan_to.after_or_equal' => 'The bonus plan to date must be after or equal to the from date.',
+                'bonus_plan_status.in' => 'The bonus plan status must be either active or inactive.',
+                'allowance_plan_from.date' => 'The allowance plan from date is invalid.',
+                'allowance_plan_to.date' => 'The allowance plan to date is invalid.',
+                'allowance_plan_to.after_or_equal' => 'The allowance plan to date must be after or equal to the from date.',
+                'allowance_plan_status.in' => 'The allowance plan status must be either active or inactive.',
+                'late_deduction_plan_from.date' => 'The late deduction plan from date is invalid.',
+                'late_deduction_plan_to.date' => 'The late deduction plan to date is invalid.',
+                'late_deduction_plan_to.after_or_equal' => 'The late deduction plan to date must be after or equal to the from date.',
+                'late_deduction_plan_status.in' => 'The late deduction plan status must be either active or inactive.',
+                'production_plan_from.date' => 'The production plan from date is invalid.',
+                'production_plan_to.date' => 'The production plan to date is invalid.',
+                'production_plan_to.after_or_equal' => 'The production plan to date must be after or equal to the from date.',
+                'production_plan_status.in' => 'The production plan status must be either active or inactive.',
+                'early_out_deduction_plan_from.date' => 'The early out deduction plan from date is invalid.',
+                'early_out_deduction_plan_to.date' => 'The early out deduction plan to date is invalid.',
+                'early_out_deduction_plan_to.after_or_equal' => 'The early out deduction plan to date must be after or equal to the from date.',
+                'early_out_deduction_plan_status.in' => 'The early out deduction plan status must be either active or inactive.',
+                'salary_breakdown_plan_from.date' => 'The salary breakdown plan from date is invalid.',
+                'salary_breakdown_plan_to.date' => 'The salary breakdown plan to date is invalid.',
+                'salary_breakdown_plan_to.after_or_equal' => 'The salary breakdown plan to date must be after or equal to the from date.',
+                'salary_breakdown_plan_status.in' => 'The salary breakdown plan status must be either active or inactive.',
+            ]);
+        return $validated;
+    }
+
+    public function employeeEligiblePanInfoSave($validated, $employeePlan = null){
+
+        if(isset($employeePlan)){
+            $employeePlan->update($validated);
+            return $employeePlan;
+        }else{
+            $data = EmployeeEligiblePlan::create($validated);
+            return $data;
+        }
+    }
+
+    public function employeeEducationInfoValidation($request){
+        $validated = $request->validate([
+            'employee_id' => 'required',
+            'educations' => 'nullable|array',
+            'educations.*.education_title' => 'required_with:educations|string',
+            'educations.*.institute' => 'required_with:educations|string',
+            'educations.*.group_major' => 'nullable|string',
+            'educations.*.board_university' => 'nullable|string',
+            'educations.*.result_grade' => 'nullable|string',
+            'educations.*.passing_year' => 'required_with:educations|string',
+            'educations.*.gpa_cgpa' => 'nullable|string',
+            'experiences' => 'nullable|array',
+            'experiences.*.company' => 'required_with:experiences|string',
+            'experiences.*.designation' => 'required_with:experiences|string',
+            'experiences.*.department' => 'nullable|string',
+            'experiences.*.date_from' => 'required_with:experiences|date',
+            'experiences.*.date_to' => 'required_with:experiences|date',
+            'experiences.*.duration' => 'nullable|string',
+            'experiences.*.responsibility' => 'required_with:experiences|string',
+            'trainings' => 'nullable|array',
+            'trainings.*.training_title' => 'required_with:trainings|string',
+            'trainings.*.course_name' => 'required_with:trainings|string',
+            'trainings.*.training_code' => 'nullable|string',
+            'trainings.*.institute' => 'required_with:trainings|string',
+            'trainings.*.country' => 'required_with:trainings|string',
+            'trainings.*.location' => 'required_with:trainings|string',
+            'trainings.*.duration' => 'required_with:trainings|string',
+            'trainings.*.from_date' => 'required_with:trainings|date',
+            'trainings.*.to_date' => 'required_with:trainings|date',
+        ]);
+        return $validated;
+    }
+
+    public function employeeEducationInfoSave($validated, $employeeEduData = null){
+        if(isset($employeeEduData)){
+            $employeeEduData->update($validated);
+            return $employeeEduData;
+        }else{
+//            $data = new EmployeeEducationExperienceTraining($validated);
+//            dd($data->getAttributes());
+
+            $data = EmployeeEducationExperienceTraining::create($validated);
+            return $data;
+        }
+    }
+
+    public function employeeNomineeInformationValidation($request)
+    {
+        $validated = $request->validate([
+            'employee_id' => 'required|integer|exists:employees,id',
+            'nominee_name' => 'required|string|max:255',
+            'father_name' => 'nullable|string|max:255',
+            'mother_name' => 'nullable|string|max:255',
+            'spouse_name' => 'nullable|string|max:255',
+            'gender' => 'required|in:male,female,other',
+            'date_of_birth' => 'required|date|before:today',
+            'religion' => 'nullable|string|max:100',
+            'marital_status' => 'required|in:single,married,divorced,widowed',
+            'nationality' => 'required|string|max:100',
+            'blood_group' => 'nullable|in:A+,A-,B+,B-,AB+,AB-,O+,O-',
+            'photo_path' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'nid' => 'nullable|string|max:50',
+            'birth_reg_no' => 'nullable|string|max:50',
+            'bank_account_no' => 'nullable|string|max:50',
+            'ratio' => 'required|numeric|min:0|max:100',
+            'phone' => 'nullable|string|max:20',
+            'mobile' => 'required|string|max:20',
+            'present_address_line' => 'nullable|string|max:255',
+            'village' => 'nullable|string|max:255',
+            'post_office' => 'nullable|string|max:255',
+            'thana' => 'nullable|string|max:255',
+            'district' => 'nullable|string|max:255',
+            'state' => 'nullable|string|max:255',
+            'zip_code' => 'nullable|string|max:20',
+            'country' => 'required|string|max:100',
+        ], [
+            'employee_id.required' => 'Employee ID is required.',
+            'employee_id.exists' => 'The selected employee does not exist.',
+            'nominee_name.required' => 'Nominee name is required.',
+            'gender.required' => 'Please select gender.',
+            'gender.in' => 'Gender must be male, female, or other.',
+            'date_of_birth.required' => 'Date of birth is required.',
+            'date_of_birth.before' => 'Date of birth must be a valid past date.',
+            'marital_status.required' => 'Please select marital status.',
+            'marital_status.in' => 'Invalid marital status value.',
+            'nationality.required' => 'Nationality is required.',
+            'blood_group.in' => 'Invalid blood group format.',
+            'photo_path.image' => 'Photo must be an image file.',
+            'photo_path.mimes' => 'Photo must be jpeg, jpg, or png format.',
+            'photo_path.max' => 'Photo size must not exceed 2MB.',
+            'ratio.required' => 'Nominee ratio is required.',
+            'ratio.numeric' => 'Ratio must be a valid number.',
+            'ratio.max' => 'Ratio cannot exceed 100%.',
+            'mobile.required' => 'Mobile number is required.',
+            'country.required' => 'Country field is required.',
+        ]);
+
+        return $validated;
     }
 
 

@@ -1,9 +1,10 @@
 @extends('structure.master')
 @section('content')
-    @include('employees.partials.creation_button')
-
+    @if(Route::currentRouteNamed('employees.education_information.create'))
+        @include('employees.partials.creation_button')
+    @endif
     <div class="mt-4">
-        <form id="employeeForm" method="POST" action="{{ isset($employeeData) ? route('employee.education-experience-training.update', $employeeData->employee_id) : route('employee.education-experience-training.store') }}">
+        <form id="employeeForm" method="POST" action="{{ isset($employeeData) ? route('employees.education_information.update', $employeeData->employee_id) : route('employees.education_information.store') }}">
             @if(isset($employeeData))
                 @method('PUT')
             @endif
@@ -14,35 +15,18 @@
                 <div class="col-12">
                     <div class="card shadow-sm">
                         <div class="card-header bg-primary text-white">
-                            <h5 class="card-title mb-0"><i class="mdi mdi-account me-2"></i>Select Employee</h5>
+                            <h5 class="card-title mb-0"><i class="mdi mdi-account me-2"></i>Employee Name</h5>
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="mb-3">
-                                        <label for="employee_id" class="form-label">
-                                            Employee <span class="text-danger">*</span>
-                                        </label>
-                                        <select class="form-select select2 @error('employee_id') is-invalid @enderror"
-                                                id="employee_id"
-                                                name="employee_id"
-                                                {{ isset($employeeData) ? 'disabled' : '' }}
-                                                required>
-                                            <option value="">Select Employee</option>
-                                            @foreach($employees as $employee)
-                                                <option value="{{ $employee->id }}" 
-                                                    {{ old('employee_id', $employeeData->employee_id ?? '') == $employee->id ? 'selected' : '' }}>
-                                                    {{ $employee->full_name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @if(isset($employeeData))
-                                            <input type="hidden" name="employee_id" value="{{ $employeeData->employee_id }}">
-                                        @endif
-                                        @error('employee_id')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+                                <div class="col-lg-6 mb-3">
+                                    <label for="employee_id" class="form-label">Employee Name <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" readonly
+                                           value="{{ $employee->full_name }}">
+
+                                    <input type="hidden" name="employee_id" value="{{ $employee->id }}">
+
                                 </div>
                             </div>
                         </div>
@@ -63,9 +47,9 @@
                         <div class="card-body">
                             <div id="educationContainer">
                                 @php
-                                    $educations = old('educations', $employeeData->employee_educations ?? []);
+                                    $educations = old('educations', $employeeData->educations ?? []);
                                 @endphp
-                                
+
                                 @if(empty($educations))
                                     <!-- Initial Empty Row for Create -->
                                     <div class="education-row border rounded p-3 mb-3 bg-light" data-row="0">
@@ -113,37 +97,37 @@
                                             <div class="row g-3">
                                                 <div class="col-md-4">
                                                     <label class="form-label">Education Title <span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" name="educations[{{ $index }}][education_title]" 
+                                                    <input type="text" class="form-control" name="educations[{{ $index }}][education_title]"
                                                            value="{{ $education['education_title'] ?? '' }}" placeholder="e.g., Bachelor of Science">
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label class="form-label">Institute <span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" name="educations[{{ $index }}][institute]" 
+                                                    <input type="text" class="form-control" name="educations[{{ $index }}][institute]"
                                                            value="{{ $education['institute'] ?? '' }}" placeholder="e.g., University of Dhaka">
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label class="form-label">Group/Major</label>
-                                                    <input type="text" class="form-control" name="educations[{{ $index }}][group_major]" 
+                                                    <input type="text" class="form-control" name="educations[{{ $index }}][group_major]"
                                                            value="{{ $education['group_major'] ?? '' }}" placeholder="e.g., Computer Science">
                                                 </div>
                                                 <div class="col-md-3">
                                                     <label class="form-label">Board/University</label>
-                                                    <input type="text" class="form-control" name="educations[{{ $index }}][board_university]" 
+                                                    <input type="text" class="form-control" name="educations[{{ $index }}][board_university]"
                                                            value="{{ $education['board_university'] ?? '' }}" placeholder="e.g., Dhaka University">
                                                 </div>
                                                 <div class="col-md-3">
                                                     <label class="form-label">Result/Grade</label>
-                                                    <input type="text" class="form-control" name="educations[{{ $index }}][result_grade]" 
+                                                    <input type="text" class="form-control" name="educations[{{ $index }}][result_grade]"
                                                            value="{{ $education['result_grade'] ?? '' }}" placeholder="e.g., First Class">
                                                 </div>
                                                 <div class="col-md-3">
                                                     <label class="form-label">Passing Year <span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" name="educations[{{ $index }}][passing_year]" 
+                                                    <input type="text" class="form-control" name="educations[{{ $index }}][passing_year]"
                                                            value="{{ $education['passing_year'] ?? '' }}" placeholder="e.g., 2020">
                                                 </div>
                                                 <div class="col-md-3">
                                                     <label class="form-label">GPA/CGPA</label>
-                                                    <input type="text" class="form-control" name="educations[{{ $index }}][gpa_cgpa]" 
+                                                    <input type="text" class="form-control" name="educations[{{ $index }}][gpa_cgpa]"
                                                            value="{{ $education['gpa_cgpa'] ?? '' }}" placeholder="e.g., 3.75">
                                                 </div>
                                             </div>
@@ -169,9 +153,9 @@
                         <div class="card-body">
                             <div id="experienceContainer">
                                 @php
-                                    $experiences = old('experiences', $employeeData->employee_experiences ?? []);
+                                    $experiences = old('experiences', $employeeData->experiences ?? []);
                                 @endphp
-                                
+
                                 @if(empty($experiences))
                                     <!-- Initial Empty Row -->
                                     <div class="experience-row border rounded p-3 mb-3 bg-light" data-row="0">
@@ -219,32 +203,32 @@
                                             <div class="row g-3">
                                                 <div class="col-md-4">
                                                     <label class="form-label">Company <span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" name="experiences[{{ $index }}][company]" 
+                                                    <input type="text" class="form-control" name="experiences[{{ $index }}][company]"
                                                            value="{{ $experience['company'] ?? '' }}" placeholder="e.g., ABC Corporation Ltd">
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label class="form-label">Designation <span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" name="experiences[{{ $index }}][designation]" 
+                                                    <input type="text" class="form-control" name="experiences[{{ $index }}][designation]"
                                                            value="{{ $experience['designation'] ?? '' }}" placeholder="e.g., Senior Software Engineer">
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label class="form-label">Department</label>
-                                                    <input type="text" class="form-control" name="experiences[{{ $index }}][department]" 
+                                                    <input type="text" class="form-control" name="experiences[{{ $index }}][department]"
                                                            value="{{ $experience['department'] ?? '' }}" placeholder="e.g., IT Department">
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label class="form-label">Date From <span class="text-danger">*</span></label>
-                                                    <input type="date" class="form-control" name="experiences[{{ $index }}][date_from]" 
+                                                    <input type="date" class="form-control" name="experiences[{{ $index }}][date_from]"
                                                            value="{{ $experience['date_from'] ?? '' }}">
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label class="form-label">Date To <span class="text-danger">*</span></label>
-                                                    <input type="date" class="form-control" name="experiences[{{ $index }}][date_to]" 
+                                                    <input type="date" class="form-control" name="experiences[{{ $index }}][date_to]"
                                                            value="{{ $experience['date_to'] ?? '' }}">
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label class="form-label">Duration</label>
-                                                    <input type="text" class="form-control" name="experiences[{{ $index }}][duration]" 
+                                                    <input type="text" class="form-control" name="experiences[{{ $index }}][duration]"
                                                            value="{{ $experience['duration'] ?? '' }}" placeholder="e.g., 2 years 6 months">
                                                 </div>
                                                 <div class="col-md-12">
@@ -274,9 +258,9 @@
                         <div class="card-body">
                             <div id="trainingContainer">
                                 @php
-                                    $trainings = old('trainings', $employeeData->employee_trainings ?? []);
+                                    $trainings = old('trainings', $employeeData->trainings ?? []);
                                 @endphp
-                                
+
                                 @if(empty($trainings))
                                     <!-- Initial Empty Row -->
                                     <div class="training-row border rounded p-3 mb-3 bg-light" data-row="0">
@@ -332,47 +316,47 @@
                                             <div class="row g-3">
                                                 <div class="col-md-4">
                                                     <label class="form-label">Training Title <span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" name="trainings[{{ $index }}][training_title]" 
+                                                    <input type="text" class="form-control" name="trainings[{{ $index }}][training_title]"
                                                            value="{{ $training['training_title'] ?? '' }}" placeholder="e.g., Advanced Laravel Development">
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label class="form-label">Course Name</label>
-                                                    <input type="text" class="form-control" name="trainings[{{ $index }}][course_name]" 
+                                                    <input type="text" class="form-control" name="trainings[{{ $index }}][course_name]"
                                                            value="{{ $training['course_name'] ?? '' }}" placeholder="e.g., Web Development Masterclass">
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label class="form-label">Training Code</label>
-                                                    <input type="text" class="form-control" name="trainings[{{ $index }}][training_code]" 
+                                                    <input type="text" class="form-control" name="trainings[{{ $index }}][training_code]"
                                                            value="{{ $training['training_code'] ?? '' }}" placeholder="e.g., TRN-2025-001">
                                                 </div>
                                                 <div class="col-md-3">
                                                     <label class="form-label">Institute</label>
-                                                    <input type="text" class="form-control" name="trainings[{{ $index }}][institute]" 
+                                                    <input type="text" class="form-control" name="trainings[{{ $index }}][institute]"
                                                            value="{{ $training['institute'] ?? '' }}" placeholder="e.g., Training Center">
                                                 </div>
                                                 <div class="col-md-3">
                                                     <label class="form-label">Country</label>
-                                                    <input type="text" class="form-control" name="trainings[{{ $index }}][country]" 
+                                                    <input type="text" class="form-control" name="trainings[{{ $index }}][country]"
                                                            value="{{ $training['country'] ?? '' }}" placeholder="e.g., Bangladesh">
                                                 </div>
                                                 <div class="col-md-3">
                                                     <label class="form-label">Location</label>
-                                                    <input type="text" class="form-control" name="trainings[{{ $index }}][location]" 
+                                                    <input type="text" class="form-control" name="trainings[{{ $index }}][location]"
                                                            value="{{ $training['location'] ?? '' }}" placeholder="e.g., Dhaka">
                                                 </div>
                                                 <div class="col-md-3">
                                                     <label class="form-label">Duration</label>
-                                                    <input type="text" class="form-control" name="trainings[{{ $index }}][duration]" 
+                                                    <input type="text" class="form-control" name="trainings[{{ $index }}][duration]"
                                                            value="{{ $training['duration'] ?? '' }}" placeholder="e.g., 5 days">
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label">From Date <span class="text-danger">*</span></label>
-                                                    <input type="date" class="form-control" name="trainings[{{ $index }}][from_date]" 
+                                                    <input type="date" class="form-control" name="trainings[{{ $index }}][from_date]"
                                                            value="{{ $training['from_date'] ?? '' }}">
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label">To Date <span class="text-danger">*</span></label>
-                                                    <input type="date" class="form-control" name="trainings[{{ $index }}][to_date]" 
+                                                    <input type="date" class="form-control" name="trainings[{{ $index }}][to_date]"
                                                            value="{{ $training['to_date'] ?? '' }}">
                                                 </div>
                                             </div>

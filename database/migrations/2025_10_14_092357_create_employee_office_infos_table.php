@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('employees_office_info', function (Blueprint $table) {
+        Schema::create('employee_office_infos', function (Blueprint $table) {
             $table->id();
             // Basic Identifiers
-            $table->unsignedBigInteger('employee_id')->index()->nullable();
-            $table->string('emp_type')->nullable();
+            $table->unsignedBigInteger('employee_id')->index()->nullable()->unique();
+            $table->enum('emp_type', ['permanent', 'contractual'])->nullable();
             $table->unsignedBigInteger('grade_id')->nullable();
             $table->string('hr_file_no')->nullable();
             $table->unsignedBigInteger('tofsil_id')->nullable();
@@ -39,7 +39,7 @@ return new class extends Migration
             $table->unsignedBigInteger('current_designation_id')->nullable();
 
             // Orientation Information
-            $table->boolean('orientation_required');
+            $table->enum('orientation_required', ['yes', 'no'])->default('no');
             $table->date('orientation_from')->nullable();
             $table->date('orientation_to')->nullable();
             $table->string('orientation_type')->nullable();
@@ -55,16 +55,16 @@ return new class extends Migration
             // Attendance & Benefits
             $table->json('weekends')->nullable(); // e.g. "Friday,Saturday"
             $table->json('alternate_off_day')->nullable();
-            $table->enum('ot_allowed',['yes', 'no']);
-            $table->enum('pf_eligible',['yes', 'no']);
-            $table->string('salary_type')->nullable(); // e.g. "Monthly", "Hourly"
-            $table->enum('transport_eligible',['yes', 'no'])->default('yes');
+            $table->enum('ot_allowed',['yes', 'no'])->default('no');
+            $table->enum('pf_eligible',['yes', 'no'])->default('no');
+            $table->enum('salary_type', ['hourly', 'daily', 'weekly', 'monthly', 'yearly' ])->nullable();
+            $table->enum('transport_eligible',['yes', 'no'])->default('no');
 
             // Loan & Benefits Eligibility
-            $table->enum('can_apply_loan',['yes', 'no']);
+            $table->enum('can_apply_loan',['yes', 'no'])->default('no');
             $table->date('pf_effective_date')->nullable();
-            $table->enum('can_apply_advance',['yes', 'no']);
-            $table->enum('gratuity_eligible',['yes', 'no']);
+            $table->enum('can_apply_advance',['yes', 'no'])->default('no');
+            $table->enum('gratuity_eligible',['yes', 'no'])->default('no');
 
 
             $table->timestamps();
@@ -76,6 +76,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('office_info_employees');
+        Schema::dropIfExists('employee_office_infos');
     }
 };

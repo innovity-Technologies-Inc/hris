@@ -3,8 +3,10 @@
 namespace App;
 
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+
 
 class HelperClass
 {
@@ -27,6 +29,7 @@ class HelperClass
     {
         Storage::disk('public')->delete($file_path);
     }
+
 
 
 }

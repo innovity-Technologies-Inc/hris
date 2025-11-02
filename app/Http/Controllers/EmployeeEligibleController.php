@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\EmployeeEligiblePlanImport;
+use App\Models\EmployeeEducationExperienceTraining;
 use App\Models\EmployeeEligiblePlan;
 use App\Models\Employee;
 use App\Services\EmployeeServices;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EmployeeEligibleController extends Controller
 {
@@ -14,17 +18,16 @@ class EmployeeEligibleController extends Controller
     public function __construct(EmployeeServices $empServices){
         $this->empServices = $empServices;
     }
-    /**
-     * Show the form for creating a new resource.
-     */
 
-    public function showForm()
+
+    public function create($id)
     {
-        $title = 'Employees';
-        $section = 'Employees';
-        $sub_section = 'Index';
-        $employees = Employee::all();
-        return view('employees.eligible_plans.form', compact('employees', 'title', 'section', 'sub_section'));
+        $title = 'Add Employees Eligible Plan';
+        $section = 'Employees Eligible Plan';
+        $sub_section = 'Create';
+        $section_url = route('employees.index');
+        $employee = $this->empServices->getEmployeeById($id);
+        return view('employees.eligible_plans.form', compact('employee', 'title', 'section', 'sub_section', 'section_url'));
     }
 
     /**
@@ -32,182 +35,31 @@ class EmployeeEligibleController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'employee_id' => 'required',
-
-            // Shift Plan
-            'shift_plan_from' => 'nullable|date',
-            'shift_plan_to' => 'nullable|date|after_or_equal:shift_plan_from',
-            'shift_plan_status' => 'nullable|in:active,inactive',
-
-            // Leave Plan
-            'leave_plan_from' => 'nullable|date',
-            'leave_plan_to' => 'nullable|date|after_or_equal:leave_plan_from',
-            'leave_plan_status' => 'nullable|in:active,inactive',
-
-            // OT Plan
-            'ot_plan_from' => 'nullable|date',
-            'ot_plan_to' => 'nullable|date|after_or_equal:ot_plan_from',
-            'ot_plan_status' => 'nullable|in:active,inactive',
-
-            // Attendance Bonus Plan
-            'attendance_bonus_plan_from' => 'nullable|date',
-            'attendance_bonus_plan_to' => 'nullable|date|after_or_equal:attendance_bonus_plan_from',
-            'attendance_bonus_plan_status' => 'nullable|in:active,inactive',
-
-            // Day Off Work Plan
-            'day_off_work_plan_from' => 'nullable|date',
-            'day_off_work_plan_to' => 'nullable|date|after_or_equal:day_off_work_plan_from',
-            'day_off_work_plan_status' => 'nullable|in:active,inactive',
-
-            // Roster Plans
-            'roster_plans_from' => 'nullable|date',
-            'roster_plans_to' => 'nullable|date|after_or_equal:roster_plans_from',
-            'roster_plans_status' => 'nullable|in:active,inactive',
-
-            // Bonus Plan
-            'bonus_plan_from' => 'nullable|date',
-            'bonus_plan_to' => 'nullable|date|after_or_equal:bonus_plan_from',
-            'bonus_plan_status' => 'nullable|in:active,inactive',
-
-            // Allowance Plan
-            'allowance_plan_from' => 'nullable|date',
-            'allowance_plan_to' => 'nullable|date|after_or_equal:allowance_plan_from',
-            'allowance_plan_status' => 'nullable|in:active,inactive',
-
-            // Late Deduction Plan
-            'late_deduction_plan_from' => 'nullable|date',
-            'late_deduction_plan_to' => 'nullable|date|after_or_equal:late_deduction_plan_from',
-            'late_deduction_plan_status' => 'nullable|in:active,inactive',
-
-            // Production Plan
-            'production_plan_from' => 'nullable|date',
-            'production_plan_to' => 'nullable|date|after_or_equal:production_plan_from',
-            'production_plan_status' => 'nullable|in:active,inactive',
-
-            // Early Out Deduction Plan
-            'early_out_deduction_plan_from' => 'nullable|date',
-            'early_out_deduction_plan_to' => 'nullable|date|after_or_equal:early_out_deduction_plan_from',
-            'early_out_deduction_plan_status' => 'nullable|in:active,inactive',
-
-            // Salary Breakdown Plan
-            'salary_breakdown_plan_from' => 'nullable|date',
-            'salary_breakdown_plan_to' => 'nullable|date|after_or_equal:salary_breakdown_plan_from',
-            'salary_breakdown_plan_status' => 'nullable|in:active,inactive',
-
-            // Medical Plan
-            'medical_plan_from' => 'nullable|date',
-            'medical_plan_to' => 'nullable|date|after_or_equal:medical_plan_from',
-            'medical_plan_status' => 'nullable|in:active,inactive',
-
-            // Night Bill Plan
-            'night_bill_plan_from' => 'nullable|date',
-            'night_bill_plan_to' => 'nullable|date|after_or_equal:night_bill_plan_from',
-            'night_bill_plan_status' => 'nullable|in:active,inactive',
-
-            // Tiffin Plan
-            'tiffin_plan_from' => 'nullable|date',
-            'tiffin_plan_to' => 'nullable|date|after_or_equal:tiffin_plan_from',
-            'tiffin_plan_status' => 'nullable|in:active,inactive',
-
-            // Dinner Plan
-            'dinner_plan_from' => 'nullable|date',
-            'dinner_plan_to' => 'nullable|date|after_or_equal:dinner_plan_from',
-            'dinner_plan_status' => 'nullable|in:active,inactive',
-
-            // Breakfast Plan
-            'breakfast_plan_from' => 'nullable|date',
-            'breakfast_plan_to' => 'nullable|date|after_or_equal:breakfast_plan_from',
-            'breakfast_plan_status' => 'nullable|in:active,inactive',
-
-            // Food Com Plan
-            'food_com_plan_from' => 'nullable|date',
-            'food_com_plan_to' => 'nullable|date|after_or_equal:food_com_plan_from',
-            'food_com_plan_status' => 'nullable|in:active,inactive',
-
-            // Excessive Late Plan
-            'excessive_late_plan_from' => 'nullable|date',
-            'excessive_late_plan_to' => 'nullable|date|after_or_equal:excessive_late_plan_from',
-            'excessive_late_plan_status' => 'nullable|in:active,inactive',
-
-            // Lunch Plan
-            'lunch_plan_from' => 'nullable|date',
-            'lunch_plan_to' => 'nullable|date|after_or_equal:lunch_plan_from',
-            'lunch_plan_status' => 'nullable|in:active,inactive',
-
-            // Snacks Plan
-            'snacks_plan_from' => 'nullable|date',
-            'snacks_plan_to' => 'nullable|date|after_or_equal:snacks_plan_from',
-            'snacks_plan_status' => 'nullable|in:active,inactive',
-        ],
-    [
-            'employee_id.required' => 'The employee field is required.',
-            'employee_id.exists' => 'The selected employee is invalid.',
-            'employee_id.unique' => 'The employee has already been assigned a plan.',
-            'shift_plan_from.date' => 'The shift plan from date is invalid.',
-            'shift_plan_to.date' => 'The shift plan to date is invalid.',
-            'shift_plan_to.after_or_equal' => 'The shift plan to date must be after or equal to the from date.',
-            'shift_plan_status.in' => 'The shift plan status must be either active or inactive.',
-            'leave_plan_from.date' => 'The leave plan from date is invalid.',
-            'leave_plan_to.date' => 'The leave plan to date is invalid.',
-            'leave_plan_to.after_or_equal' => 'The leave plan to date must be after or equal to the from date.',
-            'leave_plan_status.in' => 'The leave plan status must be either active or inactive.',
-            'ot_plan_from.date' => 'The OT plan from date is invalid.',
-            'ot_plan_to.date' => 'The OT plan to date is invalid.',
-            'ot_plan_to.after_or_equal' => 'The OT plan to date must be after or equal to the from date.',
-            'ot_plan_status.in' => 'The OT plan status must be either active or inactive.',
-            'attendance_bonus_plan_from.date' => 'The attendance bonus  plan from date is invalid.',
-            'attendance_bonus_plan_to.date' => 'The attendance bonus plan to date is invalid.',
-            'attendance_bonus_plan_to.after_or_equal' => 'The attendance bonus plan to date must be after or equal to the from date.',
-            'attendance_bonus_plan_status.in' => 'The attendance bonus plan status must be either active or inactive.',
-            'day_off_work_plan_from.date' => 'The day off work plan from date is invalid.',
-            'day_off_work_plan_to.date' => 'The day off work plan to date is invalid.',
-            'day_off_work_plan_to.after_or_equal' => 'The day off work plan to date must be after or equal to the from date.',
-            'day_off_work_plan_status.in' => 'The day off work plan status must be either active or inactive.',
-            'roster_plans_from.date' => 'The roster plans from date is invalid.',
-            'roster_plans_to.date' => 'The roster plans to date is invalid.',
-            'roster_plans_to.after_or_equal' => 'The roster plans to date must be after or equal to the from date.',
-            'roster_plans_status.in' => 'The roster plans status must be either active or inactive.',
-            'bonus_plan_from.date' => 'The bonus plan from date is invalid.',
-            'bonus_plan_to.date' => 'The bonus plan to date is invalid.',
-            'bonus_plan_to.after_or_equal' => 'The bonus plan to date must be after or equal to the from date.',
-            'bonus_plan_status.in' => 'The bonus plan status must be either active or inactive.',
-            'allowance_plan_from.date' => 'The allowance plan from date is invalid.',
-            'allowance_plan_to.date' => 'The allowance plan to date is invalid.',
-            'allowance_plan_to.after_or_equal' => 'The allowance plan to date must be after or equal to the from date.',
-            'allowance_plan_status.in' => 'The allowance plan status must be either active or inactive.',
-            'late_deduction_plan_from.date' => 'The late deduction plan from date is invalid.',
-            'late_deduction_plan_to.date' => 'The late deduction plan to date is invalid.',
-            'late_deduction_plan_to.after_or_equal' => 'The late deduction plan to date must be after or equal to the from date.',
-            'late_deduction_plan_status.in' => 'The late deduction plan status must be either active or inactive.',
-            'production_plan_from.date' => 'The production plan from date is invalid.',
-            'production_plan_to.date' => 'The production plan to date is invalid.',
-            'production_plan_to.after_or_equal' => 'The production plan to date must be after or equal to the from date.',
-            'production_plan_status.in' => 'The production plan status must be either active or inactive.',
-            'early_out_deduction_plan_from.date' => 'The early out deduction plan from date is invalid.',
-            'early_out_deduction_plan_to.date' => 'The early out deduction plan to date is invalid.',
-            'early_out_deduction_plan_to.after_or_equal' => 'The early out deduction plan to date must be after or equal to the from date.',
-            'early_out_deduction_plan_status.in' => 'The early out deduction plan status must be either active or inactive.',
-            'salary_breakdown_plan_from.date' => 'The salary breakdown plan from date is invalid.',
-            'salary_breakdown_plan_to.date' => 'The salary breakdown plan to date is invalid.',
-            'salary_breakdown_plan_to.after_or_equal' => 'The salary breakdown plan to date must be after or equal to the from date.',
-            'salary_breakdown_plan_status.in' => 'The salary breakdown plan status must be either active or inactive.',
-    ]);
+        $validated = $this->empServices->employeeEligiblePlanValidation($request);
 
         try {
-            EmployeeEligiblePlan::create($validated);
+            $employee = $this->empServices->employeeEligiblePanInfoSave($validated);
 
-            return redirect()
-                ->route('employees.index')
-                ->with([
-                    'message' => 'Employee Info Imported Successfully',
-                    'alert-type' => 'success'
-                ]);
         } catch (\Exception $e) {
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with('error', 'Failed to create employee eligible plans. ' . $e->getMessage());
+            Log::error($e->getMessage());
+            return redirect()->back()->with([
+                    'message' => 'Something went wrong. Please try again later.',
+                    'alert-type' => 'error'
+                    ]);
+        }
+
+        $employeeEducation = EmployeeEducationExperienceTraining::where('employee_id', $employee->employee_id)->first();
+        if(empty($employeeEducation)){
+            return redirect()->route('employees.education_information.create', $employee->employee_id)->with([
+                'message' => 'Employee eligible plans added successfully.',
+                'alert-type' => 'success'
+            ]);
+        }
+        else{
+            return redirect()->route('employees.profile.eligible_plans', $employee->employee_id)->with([
+                'message' => 'Employee eligible plans added successfully.',
+                'alert-type' => 'success'
+            ]);
         }
     }
 
@@ -218,10 +70,12 @@ class EmployeeEligibleController extends Controller
     {
         $title = 'Employees';
         $section = 'Employees';
-        $sub_section = 'Index';
-        $employees = $this->empServices->getEmployeeById($id);
+        $sub_section = 'Employees Eligible Plan';
+        $section_url = route('employees.index');
+        $employee = $this->empServices->getEmployeeById($id);
         $employeePlan = EmployeeEligiblePlan::where('employee_id', $id)->first();
-        return view('employees.eligible_plans.info', compact('employeePlan', 'employees', 'title', 'section', 'sub_section'));
+//        dd($employeePlan);
+        return view('employees.profile', compact('employeePlan', 'employee', 'title', 'section', 'sub_section', 'section_url'));
     }
 
     /**
@@ -229,210 +83,57 @@ class EmployeeEligibleController extends Controller
      */
     public function edit($id)
     {
-        $employeePlan = EmployeeEligiblePlan::findOrFail($id);
-        $employees = Employee::orderBy('full_name')->get();
-        $title = 'Employees';
-        $section = 'Employees';
-        $sub_section = 'Index';
+        $employee = $this->empServices->getEmployeeById($id);
+        $employeePlan = EmployeeEligiblePlan::where('employee_id', $id)->first();
+        $title = 'Edit Employee Eligible Plan';
+        $section = 'Employees Eligible Plan';
+        $sub_section = 'Edit';
+        $section_url = route('employees.index');
 
-        return view('employees.eligible_plans.form', compact('employeePlan', 'employees', 'title', 'section', 'sub_section'));
+        return view('employees.eligible_plans.form', compact('employeePlan', 'employee', 'title', 'section', 'sub_section', 'section_url'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, EmployeeEligiblePlan $employeeEligiblePlan)
+    public function update(Request $request, $id)
     {
-        $validated = $request->validate([
-            'employee_id' => 'required|exists:employees,id|unique:employee_eligible_plans,employee_id,' . $employeeEligiblePlan->id,
-
-            // Shift Plan
-            'shift_plan_from' => 'nullable|date',
-            'shift_plan_to' => 'nullable|date|after_or_equal:shift_plan_from',
-            'shift_plan_status' => 'nullable|in:active,inactive',
-
-            // Leave Plan
-            'leave_plan_from' => 'nullable|date',
-            'leave_plan_to' => 'nullable|date|after_or_equal:leave_plan_from',
-            'leave_plan_status' => 'nullable|in:active,inactive',
-
-            // OT Plan
-            'ot_plan_from' => 'nullable|date',
-            'ot_plan_to' => 'nullable|date|after_or_equal:ot_plan_from',
-            'ot_plan_status' => 'nullable|in:active,inactive',
-
-            // Attendance Bonus Plan
-            'attendance_bonus_plan_from' => 'nullable|date',
-            'attendance_bonus_plan_to' => 'nullable|date|after_or_equal:attendance_bonus_plan_from',
-            'attendance_bonus_plan_status' => 'nullable|in:active,inactive',
-
-            // Day Off Work Plan
-            'day_off_work_plan_from' => 'nullable|date',
-            'day_off_work_plan_to' => 'nullable|date|after_or_equal:day_off_work_plan_from',
-            'day_off_work_plan_status' => 'nullable|in:active,inactive',
-
-            // Roster Plans
-            'roster_plans_from' => 'nullable|date',
-            'roster_plans_to' => 'nullable|date|after_or_equal:roster_plans_from',
-            'roster_plans_status' => 'nullable|in:active,inactive',
-
-            // Bonus Plan
-            'bonus_plan_from' => 'nullable|date',
-            'bonus_plan_to' => 'nullable|date|after_or_equal:bonus_plan_from',
-            'bonus_plan_status' => 'nullable|in:active,inactive',
-
-            // Allowance Plan
-            'allowance_plan_from' => 'nullable|date',
-            'allowance_plan_to' => 'nullable|date|after_or_equal:allowance_plan_from',
-            'allowance_plan_status' => 'nullable|in:active,inactive',
-
-            // Late Deduction Plan
-            'late_deduction_plan_from' => 'nullable|date',
-            'late_deduction_plan_to' => 'nullable|date|after_or_equal:late_deduction_plan_from',
-            'late_deduction_plan_status' => 'nullable|in:active,inactive',
-
-            // Production Plan
-            'production_plan_from' => 'nullable|date',
-            'production_plan_to' => 'nullable|date|after_or_equal:production_plan_from',
-            'production_plan_status' => 'nullable|in:active,inactive',
-
-            // Early Out Deduction Plan
-            'early_out_deduction_plan_from' => 'nullable|date',
-            'early_out_deduction_plan_to' => 'nullable|date|after_or_equal:early_out_deduction_plan_from',
-            'early_out_deduction_plan_status' => 'nullable|in:active,inactive',
-
-            // Salary Breakdown Plan
-            'salary_breakdown_plan_from' => 'nullable|date',
-            'salary_breakdown_plan_to' => 'nullable|date|after_or_equal:salary_breakdown_plan_from',
-            'salary_breakdown_plan_status' => 'nullable|in:active,inactive',
-
-            // Medical Plan
-            'medical_plan_from' => 'nullable|date',
-            'medical_plan_to' => 'nullable|date|after_or_equal:medical_plan_from',
-            'medical_plan_status' => 'nullable|in:active,inactive',
-
-            // Night Bill Plan
-            'night_bill_plan_from' => 'nullable|date',
-            'night_bill_plan_to' => 'nullable|date|after_or_equal:night_bill_plan_from',
-            'night_bill_plan_status' => 'nullable|in:active,inactive',
-
-            // Tiffin Plan
-            'tiffin_plan_from' => 'nullable|date',
-            'tiffin_plan_to' => 'nullable|date|after_or_equal:tiffin_plan_from',
-            'tiffin_plan_status' => 'nullable|in:active,inactive',
-
-            // Dinner Plan
-            'dinner_plan_from' => 'nullable|date',
-            'dinner_plan_to' => 'nullable|date|after_or_equal:dinner_plan_from',
-            'dinner_plan_status' => 'nullable|in:active,inactive',
-
-            // Breakfast Plan
-            'breakfast_plan_from' => 'nullable|date',
-            'breakfast_plan_to' => 'nullable|date|after_or_equal:breakfast_plan_from',
-            'breakfast_plan_status' => 'nullable|in:active,inactive',
-
-            // Food Com Plan
-            'food_com_plan_from' => 'nullable|date',
-            'food_com_plan_to' => 'nullable|date|after_or_equal:food_com_plan_from',
-            'food_com_plan_status' => 'nullable|in:active,inactive',
-
-            // Excessive Late Plan
-            'excessive_late_plan_from' => 'nullable|date',
-            'excessive_late_plan_to' => 'nullable|date|after_or_equal:excessive_late_plan_from',
-            'excessive_late_plan_status' => 'nullable|in:active,inactive',
-
-            // Lunch Plan
-            'lunch_plan_from' => 'nullable|date',
-            'lunch_plan_to' => 'nullable|date|after_or_equal:lunch_plan_from',
-            'lunch_plan_status' => 'nullable|in:active,inactive',
-
-            // Snacks Plan
-            'snacks_plan_from' => 'nullable|date',
-            'snacks_plan_to' => 'nullable|date|after_or_equal:snacks_plan_from',
-            'snacks_plan_status' => 'nullable|in:active,inactive',
-        ],[
-            'employee_id.required' => 'The employee field is required.',
-            'employee_id.exists' => 'The selected employee is invalid.',
-            'employee_id.unique' => 'The employee has already been assigned a plan.',
-            'shift_plan_from.date' => 'The shift plan from date is invalid.',
-            'shift_plan_to.date' => 'The shift plan to date is invalid.',
-            'shift_plan_to.after_or_equal' => 'The shift plan to date must be after or equal to the from date.',
-            'shift_plan_status.in' => 'The shift plan status must be either active or inactive.',
-            'leave_plan_from.date' => 'The leave plan from date is invalid.',
-            'leave_plan_to.date' => 'The leave plan to date is invalid.',
-            'leave_plan_to.after_or_equal' => 'The leave plan to date must be after or equal to the from date.',
-            'leave_plan_status.in' => 'The leave plan status must be either active or inactive.',
-            'ot_plan_from.date' => 'The OT plan from date is invalid.',
-            'ot_plan_to.date' => 'The OT plan to date is invalid.',
-            'ot_plan_to.after_or_equal' => 'The OT plan to date must be after or equal to the from date.',
-            'ot_plan_status.in' => 'The OT plan status must be either active or inactive.',
-            'attendance_bonus_plan_from.date' => 'The attendance bonus  plan from date is invalid.',
-            'attendance_bonus_plan_to.date' => 'The attendance bonus plan to date is invalid.',
-            'attendance_bonus_plan_to.after_or_equal' => 'The attendance bonus plan to date must be after or equal to the from date.',
-            'attendance_bonus_plan_status.in' => 'The attendance bonus plan status must be either active or inactive.',
-            'day_off_work_plan_from.date' => 'The day off work plan from date is invalid.',
-            'day_off_work_plan_to.date' => 'The day off work plan to date is invalid.',
-            'day_off_work_plan_to.after_or_equal' => 'The day off work plan to date must be after or equal to the from date.',
-            'day_off_work_plan_status.in' => 'The day off work plan status must be either active or inactive.',
-            'roster_plans_from.date' => 'The roster plans from date is invalid.',
-            'roster_plans_to.date' => 'The roster plans to date is invalid.',
-            'roster_plans_to.after_or_equal' => 'The roster plans to date must be after or equal to the from date.',
-            'roster_plans_status.in' => 'The roster plans status must be either active or inactive.',
-            'bonus_plan_from.date' => 'The bonus plan from date is invalid.',
-            'bonus_plan_to.date' => 'The bonus plan to date is invalid.',
-            'bonus_plan_to.after_or_equal' => 'The bonus plan to date must be after or equal to the from date.',
-            'bonus_plan_status.in' => 'The bonus plan status must be either active or inactive.',
-            'allowance_plan_from.date' => 'The allowance plan from date is invalid.',
-            'allowance_plan_to.date' => 'The allowance plan to date is invalid.',
-            'allowance_plan_to.after_or_equal' => 'The allowance plan to date must be after or equal to the from date.',
-            'allowance_plan_status.in' => 'The allowance plan status must be either active or inactive.',
-            'late_deduction_plan_from.date' => 'The late deduction plan from date is invalid.',
-            'late_deduction_plan_to.date' => 'The late deduction plan to date is invalid.',
-            'late_deduction_plan_to.after_or_equal' => 'The late deduction plan to date must be after or equal to the from date.',
-            'late_deduction_plan_status.in' => 'The late deduction plan status must be either active or inactive.',
-            'production_plan_from.date' => 'The production plan from date is invalid.',
-            'production_plan_to.date' => 'The production plan to date is invalid.',
-            'production_plan_to.after_or_equal' => 'The production plan to date must be after or equal to the from date.',
-            'production_plan_status.in' => 'The production plan status must be either active or inactive.',
-            'early_out_deduction_plan_from.date' => 'The early out deduction plan from date is invalid.',
-            'early_out_deduction_plan_to.date' => 'The early out deduction plan to date is invalid.',
-            'early_out_deduction_plan_to.after_or_equal' => 'The early out deduction plan to date must be after or equal to the from date.',
-            'early_out_deduction_plan_status.in' => 'The early out deduction plan status must be either active or inactive.',
-            'salary_breakdown_plan_from.date' => 'The salary breakdown plan from date is invalid.',
-            'salary_breakdown_plan_to.date' => 'The salary breakdown plan to date is invalid.',
-            'salary_breakdown_plan_to.after_or_equal' => 'The salary breakdown plan to date must be after or equal to the from date.',
-            'salary_breakdown_plan_status.in' => 'The salary breakdown plan status must be either active or inactive.',
-    ]);
-
+        $validated = $this->empServices->employeeEligiblePlanValidation($request);
+        $employeePlan = EmployeeEligiblePlan::findOrFail($id);
         try {
-            $employeeEligiblePlan->update($validated);
-
+            $employeeEligiblePlan = $this->empServices->employeeEligiblePanInfoSave($validated, $employeePlan);
+            $employee = $employeeEligiblePlan->employee_id;
             return redirect()
-                ->route('employees.eligible_plans.info', $employeeEligiblePlan)
-                ->with('success', 'Employee eligible plans updated successfully.');
+                ->route('employees.profile.eligible_plans', $employee)
+                ->with(['message' => 'Employee eligible plans updated successfully.',
+                    'alert-type' => 'success']);
         } catch (\Exception $e) {
             return redirect()
                 ->back()
                 ->withInput()
-                ->with('error', 'Failed to update employee eligible plans. ' . $e->getMessage());
+                ->with(['message' => 'Something went wrong. Please try again later.',
+                    'alert-type' => 'error']);
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(EmployeeEligiblePlan $employeeEligiblePlan)
-    {
-        try {
-            $employeeEligiblePlan->delete();
-
-            return redirect()
-                ->route('employees.index')
-                ->with('success', 'Employee eligible plans deleted successfully.');
-        } catch (\Exception $e) {
-            return redirect()
-                ->back()
-                ->with('error', 'Failed to delete employee eligible plans. ' . $e->getMessage());
+    public function import(Request $request){
+        $request->validate([
+            'file' => 'required|mimes:text/csv,text/plain,application/csv,text/comma-separated-values,text/anytext,application/octet-stream,application/txt,xlsx,csv,txt',
+        ]);
+//    dd($request->all());
+        try{
+            Excel::import(new EmployeeEligiblePlanImport(), $request->file('file'));
+            return redirect()->route('employees.index')->with([
+                'message' => 'Imported Successfully',
+                'alert-type' => 'success'
+            ]);
+        }catch (\Exception $e){
+            Log::error($e->getMessage());
+            return redirect()->back()->with([
+                'message' => $e->getMessage(). 'Contact with your administrator',
+                'alert-type' => 'error'
+            ]);
         }
+
     }
 }

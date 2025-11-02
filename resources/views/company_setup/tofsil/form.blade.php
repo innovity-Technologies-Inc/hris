@@ -26,10 +26,10 @@
                                 <div class="row">
 
                                     <div class="col-lg-12 mb-2">
-                                        <label for="simpleinput" class="form-label">Tofsil Name<span
+                                        <label for="simpleinput" class="form-label">Act Name<span
                                                 class="text-danger">*</span></label>
                                         <input type="text" id="simpleinput" class="form-control" name="name"
-                                               placeholder="Enter Tofsil Name"
+                                               placeholder="Enter Act Name"
                                                value="{{ isset($tofsil)? $tofsil->name : old('name')}}">
                                         @error('name')
                                         <small class="text-danger">{{$message}}</small>

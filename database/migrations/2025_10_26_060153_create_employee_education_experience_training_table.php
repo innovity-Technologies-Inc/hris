@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('employee_id');
 
-            $table->json('employee_educations')->nullable();
-            $table->json('employee_experiences')->nullable();
-            $table->json('employee_trainings')->nullable();
+            $table->json('educations')->nullable();
+            $table->json('experiences')->nullable();
+            $table->json('trainings')->nullable();
 
             $table->timestamps();
         });

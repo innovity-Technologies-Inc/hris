@@ -2,101 +2,130 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\EmployeeEducationInfoImport;
 use App\Models\EmployeeEducationExperienceTraining;
-use App\Models\Employee;
+use App\Models\EmployeeOfficeInfo;
+use App\Services\EmployeeServices;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EmployeeEducationExperienceTrainingController extends Controller
 {
-    public function create()
+    protected $empServices;
+    public function __construct(EmployeeServices $empServices){
+        $this->empServices = $empServices;
+    }
+
+    public function create($id)
     {
-        $employees = Employee::all();
-        return view('employees.education_experience_trainings.form', compact('employees'));
+        $title = 'Add Employees Information';
+        $section = 'Employees Education, Experience, and Training';
+        $sub_section = 'Add';
+        $section_url = route('employees.index');
+        $employee = $this->empServices->getEmployeeById($id);
+        return view('employees.education_experience_trainings.form', compact('employee', 'title', 'section', 'sub_section', 'section_url'));
     }
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'employee_id' => 'required',
-            'educations' => 'nullable|array',
-            'educations.*.education_title' => 'required_with:educations|string',
-            'educations.*.institute' => 'required_with:educations|string',
-            'educations.*.passing_year' => 'required_with:educations|string',
-            'experiences' => 'nullable|array',
-            'experiences.*.company' => 'required_with:experiences|string',
-            'experiences.*.designation' => 'required_with:experiences|string',
-            'experiences.*.date_from' => 'required_with:experiences|date',
-            'experiences.*.date_to' => 'required_with:experiences|date',
-            'trainings' => 'nullable|array',
-            'trainings.*.training_title' => 'required_with:trainings|string',
-            'trainings.*.from_date' => 'required_with:trainings|date',
-            'trainings.*.to_date' => 'required_with:trainings|date',
-        ]);
+        $validated = $this->empServices->employeeEducationInfoValidation($request);
+        try{
+            $employeeEduData = $this->empServices->employeeEducationInfoSave($validated);
+        }catch(\Exception $e){
+            Log::error($e->getMessage());
+            return redirect()->back()->with([
+                'message' => 'Something Went Wrong',
+                'alert-type' => 'error'
+            ]);
+        }
+        $employeeOfficeInfo = EmployeeOfficeInfo::where('employee_id', $employeeEduData->employee_id)->first();
 
-        EmployeeEducationExperienceTraining::updateOrCreate(
-            ['employee_id' => $request->employee_id],
-            [
-                'employee_educations' => $request->educations ?? [],
-                'employee_experiences' => $request->experiences ?? [],
-                'employee_trainings' => $request->trainings ?? [],
-            ]
-        );
-
-        return redirect()->back()->with([
-            'message' => 'Employee Education, Experience, and Training information saved successfully.',
-            'alert-type' => 'success'
-        ]);
+        if(empty($employeeOfficeInfo)){
+            return redirect()->route('employees.office_informations.create', $employeeEduData->employee_id)->with([
+                'message' => 'Education Info Added Successfully',
+                'alert-type' => 'success'
+            ]);
+        }
+        else{
+            return redirect()->route('employees.profile.education_information', $employeeEduData->employee_id)->with([
+                    'message' => 'Education Info Added Successfully',
+                    'alert-type' => 'success'
+                ]
+            );
+        }
     }
     public function show($id)
     {
-    $employee = Employee::findOrFail($id);
+        $title = 'Employees';
+        $section = 'Employees';
+        $sub_section = 'Employees Education, Experience, and Training';
+        $section_url = route('employees.index');
+        $employee = $this->empServices->getEmployeeById($id);
 
-    // Get the JSON record
-    $employeeData = EmployeeEducationExperienceTraining::where('employee_id', $id)->first();
+        // Get the JSON record
+        $employeeData = EmployeeEducationExperienceTraining::where('employee_id', $id)->first();
 
-    // Extract arrays from JSON columns (will be empty arrays if null)
-    $educations = $employeeData->employee_educations ?? [];
-    $experiences = $employeeData->employee_experiences ?? [];
-    $trainings = $employeeData->employee_trainings ?? [];
 
-    return view('employees.education_experience_trainings.info', compact('employee', 'educations', 'experiences', 'trainings'));
+        // Extract arrays from JSON columns (will be empty arrays if null)
+        $educations = $employeeData->educations ?? [];
+        $experiences = $employeeData->experiences ?? [];
+        $trainings = $employeeData->trainings ?? [];
+
+        return view('employees.profile', compact('employee', 'educations', 'experiences', 'trainings', 'title', 'section', 'sub_section', 'section_url', 'employeeData'));
     }
     public function edit($id)
     {
+        $employee = $this->empServices->getEmployeeById($id);
+        $title = 'Add Employees Information';
+        $section = 'Employees Education, Experience, and Training';
+        $sub_section = 'Edit';
+        $section_url = route('employees.index');
         $employeeData = EmployeeEducationExperienceTraining::where('employee_id', $id)->firstOrFail();
-        $employees = Employee::all();
 
-        return view('employees.education_experience_trainings.form', compact('employeeData', 'employees'));
+        return view('employees.education_experience_trainings.form', compact('employeeData', 'employee', 'title', 'section', 'sub_section', 'section_url'));
     }
     public function update(Request $request, $id)
     {
-        $validated = $request->validate([
-            'employee_id' => 'required',
-            'educations' => 'nullable|array',
-            'educations.*.education_title' => 'required_with:educations|string',
-            'educations.*.institute' => 'required_with:educations|string',
-            'educations.*.passing_year' => 'required_with:educations|string',
-            'experiences' => 'nullable|array',
-            'experiences.*.company' => 'required_with:experiences|string',
-            'experiences.*.designation' => 'required_with:experiences|string',
-            'experiences.*.date_from' => 'required_with:experiences|date',
-            'experiences.*.date_to' => 'required_with:experiences|date',
-            'trainings' => 'nullable|array',
-            'trainings.*.training_title' => 'required_with:trainings|string',
-            'trainings.*.from_date' => 'required_with:trainings|date',
-            'trainings.*.to_date' => 'required_with:trainings|date',
-        ]);
+        $validated = $this->empServices->employeeEducationInfoValidation($request);
+        $employeeEduData = EmployeeEducationExperienceTraining::where('employee_id', $id)->first();
 
-        EmployeeEducationExperienceTraining::where('employee_id', $id)->update([
-            'employee_educations' => $request->educations ?? [],
-            'employee_experiences' => $request->experiences ?? [],
-            'employee_trainings' => $request->trainings ?? [],
-        ]);
-
-        return redirect()->back()->with([
-            'message' => 'Employee Education, Experience, and Training information updated successfully.',
+        try{
+            $employeeEduData = $this->empServices->employeeEducationInfoSave($validated, $employeeEduData);
+            $employee = $employeeEduData->employee_id;
+        }catch(\Exception $e){
+            Log::error($e->getMessage());
+            return redirect()->back()->with([
+                'message' => 'Something Went Wrong',
+                'alert-type' => 'error'
+            ]);
+        }
+        return redirect()->route('employees.profile.education_information', $employee)->with([
+            'message' => 'Updated successfully.',
             'alert-type' => 'success'
         ]);
     }
+
+    public function import(Request $request){
+        $request->validate([
+            'file' => 'required|mimes:text/csv,text/plain,application/csv,text/comma-separated-values,text/anytext,application/octet-stream,application/txt,xlsx,csv,txt',
+        ]);
+//    dd($request->all());
+        try{
+            Excel::import(new EmployeeEducationInfoImport(), $request->file('file'));
+            return redirect()->route('employees.index')->with([
+                'message' => 'Imported Successfully',
+                'alert-type' => 'success'
+            ]);
+        }catch (\Exception $e){
+            Log::error($e->getMessage());
+            return redirect()->back()->with([
+                'message' => $e->getMessage(). 'Contact with your administrator',
+                'alert-type' => 'error'
+            ]);
+        }
+
+    }
+
 
 
 }

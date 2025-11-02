@@ -39,13 +39,9 @@
                         <td>{{ $employee->applicant_id }}</td>
                         <td>{{ $employee->full_name }}</td>
                         <td>
-                            <a href="{{ route('employees.profile', $employee->id) }}" class="btn btn-secondary btn-sm"
+                            <a href="{{ route('employees.profile.general_informations', $employee->id) }}" class="btn btn-secondary btn-sm"
                                 title="View">
                                 <i style="height: 12px; width: 12px" data-feather="eye"></i>
-                            </a>
-                            <a href="{{ route('employees.general_informations.edit', $employee->id) }}" class="btn btn-primary btn-sm"
-                                title="Edit">
-                                <i style="height: 12px; width: 12px" data-feather="edit"></i>
                             </a>
                         </td>
                     </tr>
