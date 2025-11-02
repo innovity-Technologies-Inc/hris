@@ -18,10 +18,11 @@ use App\Http\Controllers\BankAccountsController;
 use App\Http\Controllers\EmployeeProfileController;
 use App\Http\Controllers\EmployeeEligibleController;
 use App\Http\Controllers\EmployeeEducationExperienceTrainingController;
+use App\Http\Controllers\EmployeeSalaryBreakdownController;
 use App\Http\Controllers\EmployeeNomineeController;
 
 Route::get('test', function () {
-   return view('employees.nominees.view');
+   return view('employees.salary_breakdown.view');
 });
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -191,6 +192,15 @@ Route::prefix('employees')->group(function () {
         Route::put('education-information/{id}/update', 'update')->name('employees.education_information.update');
         Route::post('education-information/import', 'import')->name('employees.education_information.import');
 
+    });
+    Route::controller(EmployeeSalaryBreakdownController::class)->group(function () {
+        // Route::get('profile/{id}/salary-breakdown', 'show')->name('employees.salary_breakdown');
+        Route::get('salary-breakdown/create/{id}', 'create')->name('employees.salary_breakdown.create');
+        Route::post('salary-breakdown/store', 'store')->name('employees.salary_breakdown.store');
+        Route::get('profile/{id}/salary-breakdown', 'show')->name('employees.profile.salary_breakdown');
+        Route::get('salary-breakdown/edit/{id}', 'edit')->name('employees.salary_breakdown.edit');
+        Route::put('salary-breakdown/{id}/update', 'update')->name('employees.salary_breakdown.update');
+        Route::post('salary-breakdown/import', 'import')->name('employees.salary_breakdown.import');
     });
 
     Route::controller(EmployeeNomineeController::class)->group(function(){
