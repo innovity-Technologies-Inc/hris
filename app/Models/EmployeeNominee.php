@@ -27,8 +27,6 @@ class EmployeeNominee extends Model
         'photo_path',
         'nid',
         'birth_reg_no',
-        'bank_account_no',
-        'ratio',
         'phone',
         'mobile',
         'present_address_line',
@@ -41,10 +39,10 @@ class EmployeeNominee extends Model
         'country',
     ];
 
-    protected $casts = [
-        'date_of_birth' => 'date',
-        'ratio' => 'decimal:2',
-    ];
+//    protected $casts = [
+//        'date_of_birth' => 'date',
+//        'ratio' => 'decimal:2',
+//    ];
 
     public function getEmployee()
     {

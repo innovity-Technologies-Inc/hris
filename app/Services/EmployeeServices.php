@@ -13,6 +13,7 @@ use App\Models\EmployeeEducationExperienceTraining;
 use App\Models\EmployeeEligiblePlan;
 use App\Models\EmployeeNominee;
 use App\Models\EmployeeOfficeInfo;
+use App\Models\EmployeeSalaryBreakdown;
 use App\Models\SalaryGrade;
 use App\Models\Section;
 use App\Models\Tofsil;
@@ -598,7 +599,7 @@ class EmployeeServices
             'father_name' => 'nullable|string|max:255',
             'mother_name' => 'nullable|string|max:255',
             'spouse_name' => 'nullable|string|max:255',
-            'gender' => 'required|in:male,female,other',
+            'gender' => 'required|in:Male,Female,Other',
             'date_of_birth' => 'required|date|before:today',
             'religion' => 'nullable|string|max:100',
             'marital_status' => 'required|in:single,married,divorced,widowed',
@@ -665,6 +666,65 @@ class EmployeeServices
         }
     }
 
+    public function employeeSalaryBreakdownValidation($request){
+        $validated = $request->validate([
+            'employee_id' => 'required|exists:employees,id',
 
+            'basic_salary' => 'required|numeric|min:0',
+            'house_allowance' => 'nullable|numeric|min:0',
+            'transport_allowance' => 'nullable|numeric|min:0',
+            'food_allowance' => 'nullable|numeric|min:0',
+            'medical_allowance' => 'nullable|numeric|min:0',
+            'other_earnings' => 'nullable|numeric|min:0',
+            'gross_salary' => 'required|numeric|min:0',
+
+            'currency' => 'nullable|string|in:BDT,USD,EUR,INR',
+        ],
+            [
+                'employee_id.required' => 'The employee field is required.',
+                'employee_id.exists' => 'The selected employee does not exist.',
+
+                'basic_salary.required' => 'The basic salary is required.',
+                'basic_salary.numeric' => 'The basic salary must be a valid number.',
+                'basic_salary.min' => 'The basic salary must be a positive value.',
+
+                'house_allowance.numeric' => 'The house allowance must be a valid number.',
+                'house_allowance.min' => 'The house allowance must be a positive value.',
+
+                'transport_allowance.numeric' => 'The transport allowance must be a valid number.',
+                'transport_allowance.min' => 'The transport allowance must be a positive value.',
+
+                'food_allowance.numeric' => 'The food allowance must be a valid number.',
+                'food_allowance.min' => 'The food allowance must be a positive value.',
+
+                'medical_allowance.numeric' => 'The medical allowance must be a valid number.',
+                'medical_allowance.min' => 'The medical allowance must be a positive value.',
+
+
+                'other_earnings.numeric' => 'The other earnings must be a valid number.',
+                'other_earnings.min' => 'The other earnings must be a positive value.',
+
+                'gross_salary.required' => 'The gross salary is required.',
+                'gross_salary.numeric' => 'The gross salary must be a valid number.',
+                'gross_salary.min' => 'The gross salary must be a positive value.',
+
+                'currency.string' => 'The currency must be a valid string.',
+                'currency.in' => 'The currency must be one of the following: BDT, USD, EUR, INR.',
+
+            ]);
+
+        return $validated;
+    }
+
+    public function employeeSalaryBreakdownInfoSave($validated, $employeeSalaryBreakdown = null){
+
+        if(isset($employeeSalaryBreakdown)){
+            $employeeSalaryBreakdown->update($validated);
+            return $employeeSalaryBreakdown;
+        }else{
+            $data = EmployeeSalaryBreakdown::create($validated);
+            return $data;
+        }
+    }
 
 }

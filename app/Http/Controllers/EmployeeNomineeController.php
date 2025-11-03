@@ -8,6 +8,7 @@ use App\Models\Employee;
 use App\Models\EmployeeEligiblePlan;
 use App\Models\EmployeeNominee;
 use App\Models\EmployeeNomineeInfo;
+use App\Models\EmployeeSalaryBreakdown;
 use App\Services\EmployeeServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -43,21 +44,21 @@ class EmployeeNomineeController extends Controller
             ]);
         }
 
-        /*$employeeEligiblePlan = EmployeeEligiblePlan::where('employee_id', $employee->employee_id)->first();
+        $employeeSalary = EmployeeSalaryBreakdown::where('employee_id', $employee->employee_id)->first();
 
-        if(empty($employeeEligiblePlan)){
-            return redirect()->route('employees.eligible_plans.create', $employee->employee_id)->with([
+        if(empty($employeeSalary)){
+            return redirect()->route('employees.nominee_information.create', $employee->employee_id)->with([
                 'message' => 'Nominee Info Added Successfully',
                 'alert-type' => 'success'
             ]);
         }
-        else{*/
+        else{
             return redirect()->route('employees.profile.nominee_information', $employee->employee_id)->with([
                     'message' => 'Nominee Info Added Successfully',
                     'alert-type' => 'success'
                 ]
             );
-//        }
+        }
 
     }
 
@@ -67,6 +68,7 @@ class EmployeeNomineeController extends Controller
         $section_url = route('employees.index');
         $sub_section = 'Nominee Edit';
         $employee_nominee_info = EmployeeNominee::where('employee_id', $id)->first();
+//        dd($employee_nominee_info);
         if($employee_nominee_info){
             $employee = Employee::select('id', 'full_name')->where('id', $id)->first();
             return view('employees.nominee_information.form', compact('title', 'section',
@@ -78,6 +80,25 @@ class EmployeeNomineeController extends Controller
             ]);
         }
 
+    }
+
+    public function update(Request $request, $id){
+        $validated = $this->empServices->employeeNomineeInfoValidation($request);
+        $employeeNomineeData = EmployeeNominee::findOrFail($id);
+        try {
+            $employeeNomineeData = $this->empServices->employeeNomineeInfoSave($request, $validated, $employeeNomineeData);
+            $employee = $employeeNomineeData->employee_id;
+            return redirect()
+                ->route('employees.profile.nominee_information', $employee)
+                ->with(['message' => 'Employee nominee information updated successfully.',
+                    'alert-type' => 'success']);
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(['message' => 'Something went wrong. Please try again later.',
+                    'alert-type' => 'error']);
+        }
     }
 
 

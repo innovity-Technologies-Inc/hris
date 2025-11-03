@@ -1,8 +1,15 @@
 @extends('structure.master')
 @section('content')
     <div class="mt-4">
-        <form class="" method="POST" enctype="multipart/form-data" action="#" autocomplete="off">
-            @csrf
+        @if(!isset($employeeData))
+            @include('employees.partials.creation_button')
+        @endif
+            <form class="" method="POST" enctype="multipart/form-data"
+                  action="{{isset($employeeData) ? route('employees.salary_breakdown.update', $employeeData->id) : route('employees.salary_breakdown.store') }}">
+                @if(isset($employeeData))
+                    @method('PUT')
+                @endif
+                @csrf
 
             <!-- Employee Information Section -->
             <div class="row">
@@ -15,22 +22,15 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="form-group mb-3">
-                                        <label class="form-label fw-bold">Employee Name</label>
-                                        <input type="text" class="form-control bg-light"
-                                            value=""
-                                            readonly>
-                                        <input type="hidden" name="employee_id" value="">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group mb-3">
-                                        <label class="form-label fw-bold">Effective Date <span class="text-danger">*</span></label>
-                                        <input type="date" class="form-control"
-                                            name="effective_date"
-                                            value=""
-                                            required>
+                                        <label for="employee_id" class="form-label">Employee Name <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" readonly
+                                               value="{{ $employee->full_name }}">
+
+                                        <input type="hidden" name="employee_id" value="{{ $employee->id }}">
+
                                     </div>
                                 </div>
                             </div>
@@ -57,7 +57,7 @@
                                         <input type="number" step="0.01"
                                             class="form-control"
                                             name="basic_salary" id="basic_salary"
-                                            value=""
+                                            value="{{isset($employeeData) ? $employeeData->basic_salary : old('basic_salary')}}"
                                             placeholder="0.00" required>
                                     </div>
                                 </div>
@@ -65,9 +65,11 @@
                                     <div class="form-group mb-3">
                                         <label class="form-label fw-bold">Currency <span class="text-danger">*</span></label>
                                         <select class="form-select" name="currency" required>
-                                            <option value="BDT" selected>BDT - Bangladeshi Taka</option>
-                                            <option value="USD">USD - US Dollar</option>
-                                            <option value="EUR">EUR - Euro</option>
+                                            <option value="BDT"  {{isset($employeeData) && $employeeData->currency == 'BDT' ? 'selected' : '' }} {{ old('currency') == 'BDT' ? 'selected' : '' }}>BDT - Bangladeshi Taka</option>
+                                            <option value="USD" {{isset($employeeData) && $employeeData->currency == 'USD' ? 'selected' : '' }} {{ old('currency') == 'USD' ? 'selected' : '' }}>USD - US Dollar</option>
+                                            <option value="EUR" {{isset($employeeData) && $employeeData->currency == 'EUR' ? 'selected' : '' }} {{ old('currency') == 'EUR' ? 'selected' : '' }}>EUR - Euro</option>
+                                            <option value="LB" {{isset($employeeData) && $employeeData->currency == 'LB' ? 'selected' : '' }} {{ old('currency') == 'LB' ? 'selected' : '' }}>LB - Pound</option>
+
                                         </select>
                                     </div>
                                 </div>
@@ -86,7 +88,7 @@
                                         <input type="number" step="0.01"
                                             class="form-control earnings-input"
                                             name="house_allowance"
-                                            value=""
+                                            value="{{isset($employeeData) ? $employeeData->house_allowance : old('house_allowance')}}"
                                             placeholder="0.00">
                                     </div>
                                 </div>
@@ -96,7 +98,7 @@
                                         <input type="number" step="0.01"
                                             class="form-control earnings-input"
                                             name="transport_allowance"
-                                            value=""
+                                            value="{{isset($employeeData) ? $employeeData->transport_allowance : old('transport_allowance')}}"
                                             placeholder="0.00">
                                     </div>
                                 </div>
@@ -106,7 +108,7 @@
                                         <input type="number" step="0.01"
                                             class="form-control earnings-input"
                                             name="food_allowance"
-                                            value=""
+                                            value="{{isset($employeeData) ? $employeeData->food_allowance : old('food_allowance')}}"
                                             placeholder="0.00">
                                     </div>
                                 </div>
@@ -116,37 +118,18 @@
                                         <input type="number" step="0.01"
                                             class="form-control earnings-input"
                                             name="medical_allowance"
-                                            value=""
+                                            value="{{isset($employeeData) ? $employeeData->medical_allowance : old('medical_allowance')}}"
                                             placeholder="0.00">
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-group mb-3">
-                                        <label class="form-label">Performance Bonus</label>
-                                        <input type="number" step="0.01"
-                                            class="form-control earnings-input"
-                                            name="performance_bonus"
-                                            value=""
-                                            placeholder="0.00">
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group mb-3">
-                                        <label class="form-label">Overtime Pay</label>
-                                        <input type="number" step="0.01"
-                                            class="form-control earnings-input"
-                                            name="overtime_pay"
-                                            value=""
-                                            placeholder="0.00">
-                                    </div>
-                                </div>
+
                                 <div class="col-md-12">
                                     <div class="form-group mb-3">
-                                        <label class="form-label">Other Earnings (Commissions, Incentives, etc.)</label>
+                                        <label class="form-label">Other Earnings</label>
                                         <input type="number" step="0.01"
                                             class="form-control earnings-input"
                                             name="other_earnings"
-                                            value=""
+                                            value="{{isset($employeeData) ? $employeeData->other_earnings : old('other_earnings')}}"
                                             placeholder="0.00">
                                     </div>
                                 </div>
