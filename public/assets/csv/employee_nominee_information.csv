@@ -1,0 +1,6 @@
+Employee_id,Nominee_name,Father_name,Mother_name,Spouse_name,Gender,Date_of_birth,Religion,Marital_status,Nationality,Blood_group,Photo_path,Nid,Birth_reg_no,Phone,Mobile,Present_address_line,Village,Post_office,Thana,District,State,Zip_code,Country
+APP000001,Ahmed Rafiq,Mofizur Rahman,Nasima Begum,Nargis Sultana,Male,5/10/1985,Muslim,Married,Bangladesh,O+,,1.23E+12,1001,1710000001,1810000002,"123 Main St, Dhaka",Kazipara,Dhanmondi,Thana1,Dhaka,Dhaka,1200,Bangladesh
+APP000002,Sultana Yasmin,Shahidul Islam,Farida Begum,Shahinur Akter,Female,8/15/1990,Muslim,Single,Bangladesh,A+,,1.23E+12,1002,1720000001,1820000002,"456 New Road, Chittagong",Kadamtali,Agrabad,Thana2,Chittagong,Chittagong,4200,Bangladesh
+APP000003,Rakib Hasan,Abdul Kader,Salma Begum,N/A,Male,2/20/1988,Muslim,Married,Bangladesh,B+,,1.23E+12,1003,1730000001,1830000002,"789 Green Lane, Sylhet",Ashuganj,Kalapara,Thana3,Sylhet,Sylhet,3100,Bangladesh
+APP000004,Rina Begum,Abdul Jabbar,Shirin Akter,Rahim Uddin,Female,12/1/1995,Muslim,Married,Bangladesh,O-,,1.23E+12,1004,1740000001,1840000002,"987 East Rd, Rajshahi",Banaripara,Boalia,Thana4,Rajshahi,Rajshahi,6000,Bangladesh
+APP000005,Jannat Ara,Mahbub Alam,Jamila Khatun,Fakhrul Islam,Female,3/12/1992,Muslim,Single,Bangladesh,AB+,,1.23E+12,1005,1750000001,1850000002,"321 West Side, Khulna",Tolaram,Khulna Sadar,Thana5,Khulna,Khulna,9000,Bangladesh

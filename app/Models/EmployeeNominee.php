@@ -27,8 +27,6 @@ class EmployeeNominee extends Model
         'photo_path',
         'nid',
         'birth_reg_no',
-        'bank_account_no',
-        'ratio',
         'phone',
         'mobile',
         'present_address_line',

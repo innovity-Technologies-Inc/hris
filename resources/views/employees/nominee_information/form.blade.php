@@ -250,45 +250,6 @@
                 </div>
             </div>
 
-            <!-- Financial Information Section -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">Financial Information</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-lg-6 mb-3">
-                                    <label for="bank_account_no" class="form-label">Bank Account Number</label>
-                                    <input type="text"
-                                           class="form-control @error('bank_account_no') is-invalid @enderror"
-                                           id="bank_account_no" name="bank_account_no"
-                                           value="{{ isset($employee_nominee_info) ? $employee_nominee_info->bank_account_no : old('bank_account_no') }}"
-                                           placeholder="Enter bank account number">
-                                    @error('bank_account_no')
-                                    <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-
-                                <div class="col-lg-6 mb-3">
-                                    <label for="ratio" class="form-label">Ratio (%) <span
-                                            class="text-danger">*</span></label>
-                                    <input type="number" class="form-control @error('ratio') is-invalid @enderror"
-                                           id="ratio" name="ratio"
-                                           value="{{ isset($employee_nominee_info) ? $employee_nominee_info->ratio : old('ratio') }}"
-                                           min="0" max="100" step="0.01" placeholder="e.g., 100.00" required>
-                                    @error('ratio')
-                                    <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                    <small class="text-muted">Enter percentage (e.g., 50 for 50%)</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Contact Information Section -->
             <div class="row">
                 <div class="col-12">

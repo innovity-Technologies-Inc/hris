@@ -16,12 +16,7 @@
                                 <span class="d-none d-sm-block">Identification</span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link p-2" id="financial_tab" data-bs-toggle="tab" href="#financial"
-                               role="tab">
-                                <span class="d-none d-sm-block">Financial Information</span>
-                            </a>
-                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link p-2" id="contact_tab" data-bs-toggle="tab" href="#contact"
                                role="tab">
@@ -43,9 +38,7 @@
                                 <div class="col-12">
                                     <div class="alert alert-info">
                                         <i class="mdi mdi-account-heart me-2"></i>
-                                        <strong>Employee:</strong> {{ $employee->full_name }} | <strong>Nominee Ratio:
-                                        </strong>
-                                        {{ $employee_nominee_info->ratio }}%
+                                        <strong>Employee:</strong> {{ $employee->full_name }}
                                     </div>
                                 </div>
                             </div>
@@ -166,59 +159,6 @@
                                             </div>
                                             <p class="mb-0 fs-15 text-dark">{{ $employee_nominee_info->birth_reg_no }}
                                             </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Financial Information Tab -->
-                        <div class="tab-pane pt-4" id="financial" role="tabpanel">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h5 class="fs-16 text-dark fw-semibold mb-3">Banking Details</h5>
-                                    <div class="table-responsive">
-                                        <table class="table table-borderless mb-0">
-                                            <tbody>
-                                            <tr>
-                                                <td class="fw-semibold" style="width: 40%;">Bank Account Number
-                                                </td>
-                                                <td>{{ $employee_nominee_info->bank_account_no }}</td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                    <h5 class="fs-16 text-dark fw-semibold mb-3 mt-4">Nominee Allocation</h5>
-                                    <div class="card bg-success bg-opacity-10 border-success">
-                                        <div class="card-body">
-                                            <div class="text-center">
-                                                <h2 class="text-success mb-0">{{ $employee_nominee_info->ratio }}%
-                                                </h2>
-                                                <p class="mb-0 text-muted">Allocated Ratio</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <h5 class="fs-16 text-dark fw-semibold mb-3">Financial Summary</h5>
-                                    <div class="card border">
-                                        <div class="card-body">
-                                            <div class="mb-3 pb-3 border-bottom">
-                                                <i class="mdi mdi-bank text-primary fs-20 me-2"></i>
-                                                <span class="fw-semibold">Bank:</span>
-                                                {{ $employee_nominee_info->bank_name }}
-                                            </div>
-                                            <div class="mb-3 pb-3 border-bottom">
-                                                <i class="mdi mdi-office-building text-info fs-20 me-2"></i>
-                                                <span class="fw-semibold">Branch:</span>
-                                                {{ $employee_nominee_info->branch_name }}
-                                            </div>
-                                            {{-- <div>
-                                            <i class="mdi mdi-calendar-check text-success fs-20 me-2"></i>
-                                            <span class="fw-semibold">Account Type:</span> Savings Account
-                                        </div> --}}
                                         </div>
                                     </div>
                                 </div>

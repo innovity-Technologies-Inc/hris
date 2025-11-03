@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('employee_nominees', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('employee_id');
+            $table->id()->index();
+            $table->unsignedBigInteger('employee_id')->index();
 
             // Personal Details
             $table->string('nominee_name');
@@ -31,10 +31,6 @@ return new class extends Migration
             // Identification
             $table->string('nid')->nullable();
             $table->string('birth_reg_no')->nullable();
-
-            // Financial
-            $table->string('bank_account_no')->nullable();
-            $table->decimal('ratio', 5, 2)->nullable(); // e.g., 100.00 for 100%
 
             // Contact & Address
             $table->string('phone')->nullable();

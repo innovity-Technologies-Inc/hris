@@ -200,7 +200,7 @@
                                             data-section-number="6"
                                             data-form-action="{{ route('employees.nominee_information.import') }}"
                                             data-excel-link="{{asset('assets/excel/employee_nominee_information.xlsx')}}"
-                                            data-csv-link="{{asset('assets/excel/employee_nominee_information.csv')}}">
+                                            data-csv-link="{{asset('assets/csv/employee_nominee_information.csv')}}">
                                         <i class="bi bi-upload me-2"></i>Upload
                                     </button>
                                 </div>
