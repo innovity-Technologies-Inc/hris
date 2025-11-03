@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('bank_accounts', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('bank_id');
-            $table->unsignedBigInteger('branch_id');
-            $table->string('account_no');
-            $table->string('holder_name');
-            $table->enum('account_type', ['current', 'savings', 'credit']);
+            $table->id()->index();
+            $table->unsignedBigInteger('bank_id')->index();
+            $table->unsignedBigInteger('branch_id')->index();
+            $table->string('account_no')->index();
+            $table->string('holder_name')->index();
+            $table->enum('account_type', ['current', 'savings', 'credit'])->index();
             $table->string('contact_person');
             $table->string('contact_person_no');
             $table->string('email');

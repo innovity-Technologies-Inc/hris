@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tofsils', function (Blueprint $table) {
-            $table->id();
+            $table->id()->index();
             $table->string('name');
             $table->longText('description');
             $table->enum('status', ['active', 'inactive']);

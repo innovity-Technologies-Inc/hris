@@ -20,6 +20,7 @@ use App\Http\Controllers\EmployeeEligibleController;
 use App\Http\Controllers\EmployeeEducationExperienceTrainingController;
 use App\Http\Controllers\EmployeeSalaryBreakdownController;
 use App\Http\Controllers\EmployeeNomineeController;
+use App\Http\Controllers\EmployeeBankAccountController;
 
 Route::get('test', function () {
    return view('employees.salary_breakdown.view');
@@ -202,6 +203,15 @@ Route::prefix('employees')->group(function () {
         Route::put('nominee-information/{id}/update', 'update')->name('employees.nominee_information.update');
         Route::post('nominee-information/import', 'import')->name('employees.nominee_information.import');
 
+    });
+    Route::controller(EmployeeBankAccountController::class)->group(function () {
+        Route::get('bank-accounts', 'index')->name('employees_bank_accounts.index');
+        Route::get('bank-accounts/create', 'create')->name('employees_bank_accounts.create');
+        Route::post('bank-accounts/store', 'store')->name('employees_bank_accounts.store');
+        Route::get('bank-accounts/show/{id}', 'show')->name('employees_bank_accounts.show');
+        Route::get('bank-accounts/edit/{id}', 'edit')->name('employees_bank_accounts.edit');
+        Route::put('bank-accounts/{id}/update', 'update')->name('employees_bank_accounts.update');
+        Route::delete('bank-accounts/delete/{id}', 'destroy')->name('employees_bank_accounts.delete');
     });
 
     Route::controller(EmployeeSalaryBreakdownController::class)->group(function(){

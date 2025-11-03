@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('salary_grades', function (Blueprint $table) {
-            $table->id();
+            $table->id()->index();
             $table->string('name');
             $table->unsignedBigInteger('tofsil_id');
             $table->enum('status', ['active', 'inactive']);
