@@ -193,15 +193,6 @@ Route::prefix('employees')->group(function () {
         Route::post('education-information/import', 'import')->name('employees.education_information.import');
 
     });
-    Route::controller(EmployeeSalaryBreakdownController::class)->group(function () {
-        // Route::get('profile/{id}/salary-breakdown', 'show')->name('employees.salary_breakdown');
-        Route::get('salary-breakdown/create/{id}', 'create')->name('employees.salary_breakdown.create');
-        Route::post('salary-breakdown/store', 'store')->name('employees.salary_breakdown.store');
-        Route::get('profile/{id}/salary-breakdown', 'show')->name('employees.profile.salary_breakdown');
-        Route::get('salary-breakdown/edit/{id}', 'edit')->name('employees.salary_breakdown.edit');
-        Route::put('salary-breakdown/{id}/update', 'update')->name('employees.salary_breakdown.update');
-        Route::post('salary-breakdown/import', 'import')->name('employees.salary_breakdown.import');
-    });
 
     Route::controller(EmployeeNomineeController::class)->group(function(){
         Route::get('nominee-information/create/{id}', 'create')->name('employees.nominee_information.create');
@@ -210,6 +201,16 @@ Route::prefix('employees')->group(function () {
         Route::get('nominee-information/edit/{id}', 'edit')->name('employees.nominee_information.edit');
         Route::put('nominee-information/{id}/update', 'update')->name('employees.nominee_information.update');
         Route::post('nominee-information/import', 'import')->name('employees.nominee_information.import');
+
+    });
+
+    Route::controller(EmployeeSalaryBreakdownController::class)->group(function(){
+        Route::get('salary-breakdown/create/{id}', 'create')->name('employees.salary_breakdown.create');
+        Route::post('salary-breakdown/store', 'store')->name('employees.salary_breakdown.store');
+        Route::get('profile/{id}/salary-breakdown', 'show')->name('employees.profile.salary_breakdown');
+        Route::get('salary-breakdown/edit/{id}', 'edit')->name('employees.salary_breakdown.edit');
+        Route::put('salary-breakdown/{id}/update', 'update')->name('employees.salary_breakdown.update');
+        Route::post('salary-breakdown/import', 'import')->name('employees.salary_breakdown.import');
 
     });
 

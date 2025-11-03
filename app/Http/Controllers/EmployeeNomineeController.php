@@ -8,6 +8,7 @@ use App\Models\Employee;
 use App\Models\EmployeeEligiblePlan;
 use App\Models\EmployeeNominee;
 use App\Models\EmployeeNomineeInfo;
+use App\Models\EmployeeSalaryBreakdown;
 use App\Services\EmployeeServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -43,21 +44,21 @@ class EmployeeNomineeController extends Controller
             ]);
         }
 
-        /*$employeeEligiblePlan = EmployeeEligiblePlan::where('employee_id', $employee->employee_id)->first();
+        $employeeSalary = EmployeeSalaryBreakdown::where('employee_id', $employee->employee_id)->first();
 
-        if(empty($employeeEligiblePlan)){
-            return redirect()->route('employees.eligible_plans.create', $employee->employee_id)->with([
+        if(empty($employeeSalary)){
+            return redirect()->route('employees.nominee_information.create', $employee->employee_id)->with([
                 'message' => 'Nominee Info Added Successfully',
                 'alert-type' => 'success'
             ]);
         }
-        else{*/
+        else{
             return redirect()->route('employees.profile.nominee_information', $employee->employee_id)->with([
                     'message' => 'Nominee Info Added Successfully',
                     'alert-type' => 'success'
                 ]
             );
-//        }
+        }
 
     }
 

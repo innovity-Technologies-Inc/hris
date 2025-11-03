@@ -19,12 +19,9 @@ return new class extends Migration
             $table->string('transport_allowance')->nullable();
             $table->string('food_allowance')->nullable();
             $table->string('medical_allowance')->nullable();
-            $table->string('performance_bonus')->nullable();
-            $table->string('overtime_pay')->nullable();
             $table->string('other_earnings')->nullable();
             $table->string('gross_salary');
             $table->string('currency')->default('BDT');
-            $table->date('effective_date');
             $table->timestamps();
         });
     }

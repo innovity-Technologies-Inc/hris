@@ -23,6 +23,9 @@
     @elseif(Route::currentRouteNamed('employees.profile.nominee_information'))
         @include('employees.partials.profile_view.nominee_information')
 
+    @elseif(Route::currentRouteNamed('employees.profile.salary_breakdown'))
+        @include('employees.partials.profile_view.salary_breakdown')
+
     @endif
 
 
