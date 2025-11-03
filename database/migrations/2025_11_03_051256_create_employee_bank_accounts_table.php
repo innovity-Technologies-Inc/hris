@@ -11,14 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('divisions', function (Blueprint $table) {
+        Schema::create('employee_bank_accounts', function (Blueprint $table) {
             $table->id()->index();
-            $table->string('division_name');
-            $table->string('short_name');
+            $table->unsignedBigInteger('employee_id');
+            $table->unsignedBigInteger('bank_id');
+            $table->unsignedBigInteger('branch_id')->nullable();
+            $table->string('account_holder_name');
+            $table->string('account_number');
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->text('remarks')->nullable();
-            $table->enum('status', ['active', 'inactive']);
-            $table->unsignedBigInteger('company_id');
-            $table->unsignedBigInteger('location_id');
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('divisions');
+        Schema::dropIfExists('employee_bank_accounts');
     }
 };
