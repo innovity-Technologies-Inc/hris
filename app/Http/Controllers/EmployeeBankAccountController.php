@@ -6,19 +6,19 @@ use App\Models\EmployeeBankAccount;
 use App\Models\Employee;
 use App\Models\Bank;
 use App\Models\Branch;
+use App\Services\EmployeeServices;
 use Illuminate\Http\Request;
 
 class EmployeeBankAccountController extends Controller
 {
+    protected $empServices;
+    public function __construct(EmployeeServices $empServices){
+        $this->empServices = $empServices;
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $employeeBankAccounts = EmployeeBankAccount::all();
-
-        return view('employee_bank_accounts.index', compact('employeeBankAccounts'));
-    }
 
     /**
      * Show the form for creating a new resource.
@@ -37,37 +37,23 @@ class EmployeeBankAccountController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'employee_id' => 'required',
-            'bank_id' => 'required',
-            'branch_id' => 'nullable',
-            'account_holder_name' => 'required|string|max:255',
-            'account_number' => 'required|string|max:255|unique:employee_bank_accounts,account_number',
-            'status' => 'required|in:active,inactive',
-            'remarks' => 'nullable|string',
-        ], [
-            'employee_id.required' => 'Please select an employee.',
-            'employee_id.exists' => 'The selected employee does not exist.',
-            'bank_id.required' => 'Please select a bank.',
-            'bank_id.exists' => 'The selected bank does not exist.',
-            'branch_id.exists' => 'The selected branch does not exist.',
-            'account_holder_name.required' => 'Account holder name is required.',
-            'account_holder_name.max' => 'Account holder name cannot exceed 255 characters.',
-            'account_number.required' => 'Account number is required.',
-            'account_number.unique' => 'This account number already exists in the system.',
-            'account_number.max' => 'Account number cannot exceed 255 characters.',
-            'status.required' => 'Please select a status.',
-            'status.in' => 'Status must be either active or inactive.',
-        ]);
+        $validated = $this->empServices->employeeBankAccountsInfoValidation($request);
 
+        $employee = $this->empServices->employeeBankAccountsInfoSave($validated);
 
-        EmployeeBankAccount::create($validated);
-
-        return redirect()->route('employees_bank_accounts.create')
-            ->with([
-                'message' => 'Employee bank account added successfully',
+        /*$employeeNominee = EmployeeNominee::where('employee_id', $employee->employee_id)->first();
+        if(empty($employeeNominee)){
+            return redirect()->route('employees.nominee_information.create', $employee->employee_id)->with([
+                'message' => 'Employee eligible plans added successfully.',
                 'alert-type' => 'success'
             ]);
+        }
+        else{*/
+            return redirect()->route('employees.profile.bank_accounts', $employee->employee_id)->with([
+                'message' => 'Employee bank account details added successfully.',
+                'alert-type' => 'success'
+            ]);
+//        }
     }
 
     /**

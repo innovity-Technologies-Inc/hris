@@ -6,6 +6,7 @@ use App\Imports\EmployeeEligiblePlanImport;
 use App\Models\EmployeeEducationExperienceTraining;
 use App\Models\EmployeeEligiblePlan;
 use App\Models\Employee;
+use App\Models\EmployeeNominee;
 use App\Services\EmployeeServices;
 
 use Illuminate\Http\Request;
@@ -48,9 +49,9 @@ class EmployeeEligibleController extends Controller
                     ]);
         }
 
-        $employeeEducation = EmployeeEducationExperienceTraining::where('employee_id', $employee->employee_id)->first();
-        if(empty($employeeEducation)){
-            return redirect()->route('employees.education_information.create', $employee->employee_id)->with([
+        $employeeNominee = EmployeeNominee::where('employee_id', $employee->employee_id)->first();
+        if(empty($employeeNominee)){
+            return redirect()->route('employees.nominee_information.create', $employee->employee_id)->with([
                 'message' => 'Employee eligible plans added successfully.',
                 'alert-type' => 'success'
             ]);

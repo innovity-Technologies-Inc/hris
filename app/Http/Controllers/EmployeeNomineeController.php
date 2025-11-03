@@ -47,7 +47,7 @@ class EmployeeNomineeController extends Controller
         $employeeSalary = EmployeeSalaryBreakdown::where('employee_id', $employee->employee_id)->first();
 
         if(empty($employeeSalary)){
-            return redirect()->route('employees.nominee_information.create', $employee->employee_id)->with([
+            return redirect()->route('employees.salary_breakdown.create', $employee->employee_id)->with([
                 'message' => 'Nominee Info Added Successfully',
                 'alert-type' => 'success'
             ]);

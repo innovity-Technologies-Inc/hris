@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Imports\SalaryBreakdownImport;
+use App\Models\EmployeeBankAccount;
 use App\Services\EmployeeServices;
 use Illuminate\Http\Request;
 use App\Models\Employee;
@@ -46,19 +47,19 @@ class EmployeeSalaryBreakdownController extends Controller
             ]);
         }
 
-        /*$employeeEducation = EmployeeEducationExperienceTraining::where('employee_id', $employee->employee_id)->first();
-        if(empty($employeeEducation)){
-            return redirect()->route('employees.education_information.create', $employee->employee_id)->with([
+        $employeeBankDetails = EmployeeBankAccount::where('employee_id', $employee->employee_id)->first();
+        if(empty($employeeBankDetails)){
+            return redirect()->route('employees.bank_details.create', $employee->employee_id)->with([
                 'message' => 'Employee eligible plans added successfully.',
                 'alert-type' => 'success'
             ]);
-        }*/
-//        else{
+        }
+        else{
             return redirect()->route('employees.profile.salary_breakdown', $employee->employee_id)->with([
                 'message' => 'Employee Salary Breakdown added successfully.',
                 'alert-type' => 'success'
             ]);
-//        }
+        }
     }
 
     /**
