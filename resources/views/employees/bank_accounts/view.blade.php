@@ -186,34 +186,6 @@
         </div>
     </div>
 
-    <!-- Delete Modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title">
-                        <i class="fas fa-exclamation-triangle text-warning"></i> Confirm Delete
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Are you sure you want to delete this bank account?</p>
-                    <p class="text-muted small mb-0">This action cannot be undone.</p>
-                </div>
-                <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <form action="#" method="POST" class="d-inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">
-                            <i class="fas fa-trash-alt"></i> Delete
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <style>
         .icon-circle {
             width: 45px;
