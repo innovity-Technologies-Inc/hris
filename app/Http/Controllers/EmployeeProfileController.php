@@ -275,4 +275,9 @@ class EmployeeProfileController extends Controller
         return response()->json($designations);
     }
 
+    public function getBranchesByBank($bank_id){
+        $branches= $this->empServices->getBranchesByBank($bank_id);
+        return response()->json($branches);
+    }
+
 }

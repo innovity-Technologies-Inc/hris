@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\HelperClass;
+use App\Models\Branch;
 use App\Models\Company;
 use App\Models\CompanyLocation;
 use App\Models\Department;
@@ -288,6 +289,11 @@ class EmployeeServices
     public function getDesignationsByDivision($division_id){
         $designations= Designation::where('division_id', $division_id)->get();
         return $designations;
+    }
+
+    public function getBranchesByBank($bank_id){
+        $branches= Branch::where('bank_id', $bank_id)->get();
+        return $branches;
     }
 
     public function employeeOfficeInfoValidation($request)
@@ -734,7 +740,7 @@ class EmployeeServices
             'bank_id' => 'required',
             'branch_id' => 'nullable',
             'account_holder_name' => 'required|string|max:255',
-            'account_number' => 'required|string|max:255|unique:employee_bank_accounts,account_number',
+            'account_number' => 'required|string|max:255',
             'status' => 'required|in:active,inactive',
             'remarks' => 'nullable|string',
         ], [
@@ -746,7 +752,6 @@ class EmployeeServices
             'account_holder_name.required' => 'Account holder name is required.',
             'account_holder_name.max' => 'Account holder name cannot exceed 255 characters.',
             'account_number.required' => 'Account number is required.',
-            'account_number.unique' => 'This account number already exists in the system.',
             'account_number.max' => 'Account number cannot exceed 255 characters.',
             'status.required' => 'Please select a status.',
             'status.in' => 'Status must be either active or inactive.',
@@ -754,10 +759,10 @@ class EmployeeServices
         return $validated;
     }
 
-    public function employeeBankAccountsInfoSave($validated, $employeeBankAccounts = null){
-        if(isset($employeeBankAccounts)){
-            $employeeBankAccounts->update($validated);
-            return $employeeBankAccounts;
+    public function employeeBankAccountsInfoSave($validated, $employeeData = null){
+        if(isset($employeeData)){
+            $employeeData->update($validated);
+            return $employeeData;
         }else{
             $data = EmployeeBankAccount::create($validated);
             return $data;

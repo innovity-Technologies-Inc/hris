@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\EmployeeBankAccountDetailsImport;
 use App\Models\EmployeeBankAccount;
 use App\Models\Employee;
 use App\Models\Bank;
 use App\Models\Branch;
 use App\Services\EmployeeServices;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EmployeeBankAccountController extends Controller
 {
@@ -23,13 +26,15 @@ class EmployeeBankAccountController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create($id)
     {
-        $employees = Employee::all();
+        $title = 'Add Employees Bank Account Details';
+        $section = 'Employees';
+        $sub_section = 'Add Bank Account Details';
+        $section_url = route('employees.index');
         $banks = Bank::all();
-        $branches = Branch::all();
-
-        return view('employees_bank_accounts.form', compact('employees', 'banks', 'branches'));
+        $employee = $this->empServices->getEmployeeById($id);
+        return view('employees.bank_accounts.form', compact('title', 'section', 'sub_section', 'section_url', 'banks', 'employee'));
     }
 
     /**
@@ -61,10 +66,14 @@ class EmployeeBankAccountController extends Controller
      */
     public function show(string $id)
     {
-        $employeeBankAccount = EmployeeBankAccount::with(['getEmployee', 'getBank', 'getBranch'])
-            ->findOrFail($id);
+        $title = 'Employees';
+        $section = 'Employees';
+        $sub_section = 'Employees Bank Accounts';
+        $section_url = route('employees.index');
+        $employee = $this->empServices->getEmployeeById($id);
+        $employeeData = EmployeeBankAccount::where('employee_id', $id)->first();
+        return view('employees.profile', compact('employeeData', 'employee', 'title', 'section', 'sub_section', 'section_url'));
 
-        return view('employees.bank_accounts.view', compact('employeeBankAccount'));
     }
 
     /**
@@ -72,15 +81,14 @@ class EmployeeBankAccountController extends Controller
      */
     public function edit(string $id)
     {
-        $employeeBankAccount = EmployeeBankAccount::findOrFail($id);
-
-        $employees = Employee::all();
-
+        $employee = $this->empServices->getEmployeeById($id);
+        $employeeData = EmployeeBankAccount::where('employee_id', $id)->first();
+        $title = 'Edit Employee Bank Account Details';
+        $section = 'Employees';
+        $sub_section = 'Bank Details/Edit';
+        $section_url = route('employees.index');
         $banks = Bank::all();
-
-        $branches = Branch::all();
-
-        return view('employees.bank_accounts.form', compact('employeeBankAccount', 'employees', 'banks', 'branches'));
+        return view('employees.bank_accounts.form', compact('employeeData', 'employee', 'title', 'section', 'sub_section', 'section_url', 'banks'));
     }
 
     /**
@@ -88,47 +96,46 @@ class EmployeeBankAccountController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $employeeBankAccount = EmployeeBankAccount::findOrFail($id);
-
-        $validated = $request->validate([
-            'employee_id' => 'required|exists:employees,id',
-            'bank_id' => 'required|exists:banks,id',
-            'branch_id' => 'nullable|exists:branches,id',
-            'account_holder_name' => 'required|string|max:255',
-            'account_number' => 'required|string|max:255|unique:employee_bank_accounts,account_number,' . $id,
-            'status' => 'required|in:active,inactive',
-            'remarks' => 'nullable|string',
-        ], [
-            'employee_id.required' => 'Please select an employee.',
-            'employee_id.exists' => 'The selected employee does not exist.',
-            'bank_id.required' => 'Please select a bank.',
-            'bank_id.exists' => 'The selected bank does not exist.',
-            'branch_id.exists' => 'The selected branch does not exist.',
-            'account_holder_name.required' => 'Account holder name is required.',
-            'account_holder_name.max' => 'Account holder name cannot exceed 255 characters.',
-            'account_number.required' => 'Account number is required.',
-            'account_number.unique' => 'This account number already exists in the system.',
-            'account_number.max' => 'Account number cannot exceed 255 characters.',
-            'status.required' => 'Please select a status.',
-            'status.in' => 'Status must be either active or inactive.',
-        ]);
-
-        $employeeBankAccount->update($validated);
-
-        return redirect()->route('employees_bank_accounts.index')
-            ->with('success', 'Employee bank account updated successfully.');
+        $validated = $this->empServices->employeeBankAccountsInfoValidation($request);
+        $employeeData = EmployeeBankAccount::findOrFail($id);
+        try {
+            $employeeData = $this->empServices->employeeBankAccountsInfoSave($validated, $employeeData);
+            $employee = $employeeData->employee_id;
+            return redirect()
+                ->route('employees.profile.bank_accounts', $employee)
+                ->with(['message' => 'Employee bank account details updated successfully.',
+                    'alert-type' => 'success']);
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(['message' => 'Something went wrong. Please try again later.',
+                    'alert-type' => 'error']);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        $employeeBankAccount = EmployeeBankAccount::findOrFail($id);
+    public function import(Request $request){
+        $request->validate([
+            'file' => 'required|mimes:text/csv,text/plain,application/csv,text/comma-separated-values,text/anytext,application/octet-stream,application/txt,xlsx,csv,txt',
+        ]);
+//    dd($request->all());
+        try{
+            Excel::import(new EmployeeBankAccountDetailsImport(), $request->file('file'));
+            return redirect()->route('employees.index')->with([
+                'message' => 'Imported Successfully',
+                'alert-type' => 'success'
+            ]);
+        }catch (\Exception $e){
+            Log::error($e->getMessage());
+            return redirect()->back()->with([
+                'message' => $e->getMessage(). 'Contact with your administrator',
+                'alert-type' => 'error'
+            ]);
+        }
 
-        $employeeBankAccount->delete();
-
-        return redirect()->route('employees_bank_accounts.index')
-            ->with('success', 'Employee bank account deleted successfully.');
     }
+
 }

@@ -26,6 +26,10 @@
     @elseif(Route::currentRouteNamed('employees.profile.salary_breakdown'))
         @include('employees.partials.profile_view.salary_breakdown')
 
+    @elseif(Route::currentRouteNamed('employees.profile.bank_accounts'))
+        @include('employees.partials.profile_view.bank_accounts')
+
+
     @endif
 
 

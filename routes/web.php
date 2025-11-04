@@ -233,4 +233,6 @@ Route::controller(EmployeeProfileController::class)->group(function () {
     Route::get('get-departments/{division_id}', 'getDepartmentByDivision');
     Route::get('get-sections/{department_id}', 'getSectionByDepartment');
     Route::get('get-designations/{division_id}', 'getDesignationsByDivision');
+    Route::get('get-branches/{bank_id}', 'getBranchesByBank');
+
 });

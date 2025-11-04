@@ -100,6 +100,24 @@
             </div>
         @endif
 
+        @if(isset($employee->id))
+            <div class="col">
+                <a href="{{route('employees.profile.bank_accounts', $employee->id)}}"
+                   class="btn btn-outline-secondary w-100 py-3 text-decoration-none @if(request()->routeIs('employees.bank_accounts.create') || request()->routeIs('employees.profile.bank_accounts')) active @endif">
+                    <span class="badge bg-secondary rounded-circle me-2">7</span>
+                    Accounts Information
+                </a>
+            </div>
+        @else
+            <div class="col">
+                <button type="submit"
+                        class="btn btn-outline-secondary w-100 py-3 text-decoration-none information">
+                    <span class="badge bg-secondary rounded-circle me-2">7</span>
+                    Accounts Information
+                </button>
+            </div>
+        @endif
+
 
 
 
