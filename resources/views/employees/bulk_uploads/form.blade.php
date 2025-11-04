@@ -236,6 +236,37 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Section 7 -->
+                        <div class="col-md-4">
+                            <div class="card h-100 border shadow-sm professional-card">
+                                <div class="card-body p-4">
+                                    <div class="d-flex align-items-start mb-3">
+                                        <span
+                                            class="badge bg-dark text-white rounded-circle me-3 d-flex align-items-center justify-content-center fw-bold"
+                                            style="width: 36px; height: 36px; font-size: 14px;">7</span>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1 fw-semibold text-dark">Account Details</h6>
+                                            <p class="text-muted small mb-0" style="font-size: 0.813rem;">Bank Account Details</p>
+                                        </div>
+                                    </div>
+                                    <button type="button"
+                                            class="btn btn-outline-dark btn-sm w-100 text-uppercase fw-semibold"
+                                            style="font-size: 0.75rem; letter-spacing: 0.5px;"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#bulkUploadModal"
+                                            data-section="bank-account-details"
+                                            data-section-name="Bank Account Details"
+                                            data-section-number="7"
+                                            data-form-action="{{ route('employees.bank_accounts.import') }}"
+                                            data-excel-link="{{asset('assets/excel/employee_bank_account_details.xlsx')}}"
+                                            data-csv-link="{{asset('assets/csv/employee_bank_account_details.csv')}}">
+                                        <i class="bi bi-upload me-2"></i>Upload
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
 

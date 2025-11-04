@@ -1,0 +1,6 @@
+Employee_id,Bank_id,Branch_id,Account_holder_name,Account_number,Status,Remarks
+APP000001,1001,201,Rumanuzzaman Kazi,1.23457E+11,active,Closed by customer
+APP000002,1002,202,Lami Sultana,9.87654E+11,inactive,Account frozen due to fraud
+APP000003,1003,203,Mirza Rahman,4.56789E+11,active,Account verified
+APP000004,1004,204,Tariq Ahmed,5.6789E+11,active,Awaiting approval
+APP000005,1005,205,Shahin Alam,6.78901E+11,inactive,Closed by customer
