@@ -616,7 +616,6 @@ class EmployeeServices
             'nid' => 'nullable|string|max:50',
             'birth_reg_no' => 'nullable|string|max:50',
             'bank_account_no' => 'nullable|string|max:50',
-            'ratio' => 'required|numeric|min:0|max:100',
             'phone' => 'nullable|string|max:20',
             'mobile' => 'required|string|max:20',
             'present_address_line' => 'nullable|string|max:255',
