@@ -4,6 +4,15 @@
         @include('employees.partials.creation_button')
     @endif
     <div class="mt-4">
+        {{--@if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif--}}
 
         <form class="" method="POST" enctype="multipart/form-data"
               action="{{isset($employee_nominee_info) ? route('employees.nominee_information.update', $employee_nominee_info->id) : route('employees.nominee_information.store') }}">

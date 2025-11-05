@@ -12,7 +12,8 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-12">
-                            <form action="#" method="post">
+                            <form action="{{route('plans.meal_plans.store')}}" method="post">
+                                @csrf
                                 {{-- First Row: Meal Plan Name, Meal Type and Status --}}
                                 <div class="mb-3 row">
                                     <div class="col-lg-4">
@@ -130,15 +131,24 @@
                                     </tr>
                                     </thead>
                                     <tbody>
+                                    @php
+                                    $sl = 1
+                                    @endphp
+                                    @foreach($breakfast_plans as $item)
                                         <tr>
-                                            <th scope="row">1</th>
-                                            <td>Morning Special</td>
-                                            <td>07:00 AM</td>
-                                            <td>09:00 AM</td>
+                                            <th scope="row">{{$sl++}}</th>
+                                            <td>{{$item->name}}</td>
+                                            <td>{{$item->start_time}}</td>
+                                            <td>{{$item->end_time}}</td>
                                             <td>
-                                                <span class="badge text-bg-success">Active</span>
+                                                @if($item->status == 'active')
+                                                    <span class="badge text-bg-success">Active</span>
+                                                @else
+                                                    <span class="badge text-bg-danger">Inactive</span>
+
+                                                @endif
                                             </td>
-                                            <td>50.00</td>
+                                            <td>{{$item->cost}}</td>
                                             <td>
                                                 <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal"
                                                         data-bs-target="#meal_plan_view1">
@@ -153,29 +163,7 @@
                                                 </button>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <th scope="row">2</th>
-                                            <td>Light Breakfast</td>
-                                            <td>08:00 AM</td>
-                                            <td>10:00 AM</td>
-                                            <td>
-                                                <span class="badge text-bg-success">Active</span>
-                                            </td>
-                                            <td>40.00</td>
-                                            <td>
-                                                <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal"
-                                                        data-bs-target="#meal_plan_view2">
-                                                    <i style="height: 12px; width: 12px" data-feather="eye"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                                        data-bs-target="#meal_plan_edit2">
-                                                    <i style="height: 12px; width: 12px" data-feather="edit"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-danger">
-                                                    <i style="height: 12px; width: 12px" data-feather="trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
+                                    @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -197,15 +185,24 @@
                                     </tr>
                                     </thead>
                                     <tbody>
+                                    @php
+                                        $sl = 1
+                                    @endphp
+                                    @foreach($lunch_plans as $item)
                                         <tr>
-                                            <th scope="row">1</th>
-                                            <td>Traditional Lunch</td>
-                                            <td>12:00 PM</td>
-                                            <td>02:00 PM</td>
+                                            <th scope="row">{{$sl++}}</th>
+                                            <td>{{$item->name}}</td>
+                                            <td>{{$item->start_time}}</td>
+                                            <td>{{$item->end_time}}</td>
                                             <td>
-                                                <span class="badge text-bg-success">Active</span>
+                                                @if($item->status == 'active')
+                                                    <span class="badge text-bg-success">Active</span>
+                                                @else
+                                                    <span class="badge text-bg-danger">Inactive</span>
+
+                                                @endif
                                             </td>
-                                            <td>120.00</td>
+                                            <td>{{$item->cost}}</td>
                                             <td>
                                                 <button type="button" class="btn btn-info btn-sm">
                                                     <i style="height: 12px; width: 12px" data-feather="eye"></i>
@@ -218,48 +215,7 @@
                                                 </button>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <th scope="row">2</th>
-                                            <td>Premium Lunch</td>
-                                            <td>01:00 PM</td>
-                                            <td>03:00 PM</td>
-                                            <td>
-                                                <span class="badge text-bg-danger">Inactive</span>
-                                            </td>
-                                            <td>150.00</td>
-                                            <td>
-                                                <button type="button" class="btn btn-info btn-sm">
-                                                    <i style="height: 12px; width: 12px" data-feather="eye"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-primary btn-sm">
-                                                    <i style="height: 12px; width: 12px" data-feather="edit"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-danger">
-                                                    <i style="height: 12px; width: 12px" data-feather="trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">3</th>
-                                            <td>Quick Lunch</td>
-                                            <td>12:30 PM</td>
-                                            <td>01:30 PM</td>
-                                            <td>
-                                                <span class="badge text-bg-success">Active</span>
-                                            </td>
-                                            <td>80.00</td>
-                                            <td>
-                                                <button type="button" class="btn btn-info btn-sm">
-                                                    <i style="height: 12px; width: 12px" data-feather="eye"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-primary btn-sm">
-                                                    <i style="height: 12px; width: 12px" data-feather="edit"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-danger">
-                                                    <i style="height: 12px; width: 12px" data-feather="trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -281,15 +237,24 @@
                                     </tr>
                                     </thead>
                                     <tbody>
+                                    @php
+                                        $sl = 1
+                                    @endphp
+                                    @foreach($snacks_plans as $item)
                                         <tr>
-                                            <th scope="row">1</th>
-                                            <td>Evening Snacks</td>
-                                            <td>04:00 PM</td>
-                                            <td>05:30 PM</td>
+                                            <th scope="row">{{$sl++}}</th>
+                                            <td>{{$item->name}}</td>
+                                            <td>{{$item->start_time}}</td>
+                                            <td>{{$item->end_time}}</td>
                                             <td>
-                                                <span class="badge text-bg-success">Active</span>
+                                                @if($item->status == 'active')
+                                                    <span class="badge text-bg-success">Active</span>
+                                                @else
+                                                    <span class="badge text-bg-danger">Inactive</span>
+
+                                                @endif
                                             </td>
-                                            <td>30.00</td>
+                                            <td>{{$item->cost}}</td>
                                             <td>
                                                 <button type="button" class="btn btn-info btn-sm">
                                                     <i style="height: 12px; width: 12px" data-feather="eye"></i>
@@ -302,6 +267,7 @@
                                                 </button>
                                             </td>
                                         </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -323,15 +289,24 @@
                                     </tr>
                                     </thead>
                                     <tbody>
+                                    @php
+                                        $sl = 1
+                                    @endphp
+                                    @foreach($dinner_plans as $item)
                                         <tr>
-                                            <th scope="row">1</th>
-                                            <td>Healthy Dinner</td>
-                                            <td>07:00 PM</td>
-                                            <td>09:00 PM</td>
+                                            <th scope="row">{{$sl++}}</th>
+                                            <td>{{$item->name}}</td>
+                                            <td>{{$item->start_time}}</td>
+                                            <td>{{$item->end_time}}</td>
                                             <td>
-                                                <span class="badge text-bg-success">Active</span>
+                                                @if($item->status == 'active')
+                                                    <span class="badge text-bg-success">Active</span>
+                                                @else
+                                                    <span class="badge text-bg-danger">Inactive</span>
+
+                                                @endif
                                             </td>
-                                            <td>100.00</td>
+                                            <td>{{$item->cost}}</td>
                                             <td>
                                                 <button type="button" class="btn btn-info btn-sm">
                                                     <i style="height: 12px; width: 12px" data-feather="eye"></i>
@@ -344,27 +319,7 @@
                                                 </button>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <th scope="row">2</th>
-                                            <td>Premium Dinner</td>
-                                            <td>08:00 PM</td>
-                                            <td>10:00 PM</td>
-                                            <td>
-                                                <span class="badge text-bg-danger">Inactive</span>
-                                            </td>
-                                            <td>180.00</td>
-                                            <td>
-                                                <button type="button" class="btn btn-info btn-sm">
-                                                    <i style="height: 12px; width: 12px" data-feather="eye"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-primary btn-sm">
-                                                    <i style="height: 12px; width: 12px" data-feather="edit"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-danger">
-                                                    <i style="height: 12px; width: 12px" data-feather="trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>

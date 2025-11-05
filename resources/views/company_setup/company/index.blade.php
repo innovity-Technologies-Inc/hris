@@ -45,6 +45,7 @@
                                             <span class="badge text-bg-danger">Inactive</span>
 
                                     @endif
+                                    </td>
                                     <td>
                                         <a type="button" class="btn btn-primary btn-sm" href="{{route('companies.edit', $item->id)}}">
                                             <i style="height: 12px; width: 12px" data-feather="edit"></i>
@@ -77,7 +78,7 @@
                             </tbody>
                         </table>
 
-                        
+
                         <div class="mt-3">
                             {{$companies->links()}}
                         </div>

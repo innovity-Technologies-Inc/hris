@@ -33,6 +33,46 @@
                         <span> Dashboard </span>
                     </a>
                 </li>
+                <!-- Add Employees Information Menu -->
+                <li>
+                    <a href="#sidebarEmployees" data-bs-toggle="collapse"
+                       class="@if (Route::is('employees.*')) menuitem-active @endif">
+                        <i data-feather="users"></i>
+                        <span> Employees </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="sidebarEmployees">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link @if (Route::is('employees.*')) menuitem-active @endif'
+                                   href='{{ route('employees.index') }}'>Employee Information</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('employees.*')) menuitem-active @endif'
+                                   href='{{route('employees.import')}}'>Bulk Upload</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <!-- Add Plans -->
+                <li>
+                    <a href="#plans" data-bs-toggle="collapse"
+                       class="@if (Route::is('plans.*')) menuitem-active @endif">
+                        <i data-feather="layers"></i>
+                        <span> Plans </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="plans">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link @if (Route::is('plans.meal_plans.*')) menuitem-active @endif'
+                                   href='{{ route('plans.meal_plans.index') }}'>Meal Plans</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
                 <!-- Company Info Menu -->
                 <li>
                     <a href="#sidebarCompany" data-bs-toggle="collapse"
@@ -126,27 +166,7 @@
                     </div>
                 </li>
 
-                <!-- Add Employees Information Menu -->
-                <li>
-                    <a href="#sidebarEmployees" data-bs-toggle="collapse"
-                        class="@if (Route::is('employees.*')) menuitem-active @endif">
-                        <i data-feather="users"></i>
-                        <span> Employees </span>
-                        <span class="menu-arrow"></span>
-                    </a>
-                    <div class="collapse" id="sidebarEmployees">
-                        <ul class="nav-second-level">
-                            <li>
-                                <a class='tp-link @if (Route::is('employees.*')) menuitem-active @endif'
-                                    href='{{ route('employees.index') }}'>Employee Information</a>
-                            </li>
-                            <li>
-                                <a class='tp-link @if (Route::is('employees.*')) menuitem-active @endif'
-                                    href='{{route('employees.import')}}'>Bulk Upload</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
+
 
 
 

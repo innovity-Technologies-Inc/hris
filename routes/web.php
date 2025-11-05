@@ -21,6 +21,7 @@ use App\Http\Controllers\EmployeeEducationExperienceTrainingController;
 use App\Http\Controllers\EmployeeSalaryBreakdownController;
 use App\Http\Controllers\EmployeeNomineeController;
 use App\Http\Controllers\EmployeeBankAccountController;
+use App\Http\Controllers\MealPlansController;
 
 Route::get('test', function () {
    return view('employees.salary_breakdown.view');
@@ -222,6 +223,18 @@ Route::prefix('employees')->group(function () {
         Route::put('bank-accounts/{id}/update', 'update')->name('employees.bank_accounts.update');
         Route::post('bank-accounts/import', 'import')->name('employees.bank_accounts.import');
 
+    });
+
+});
+
+Route::prefix('plans')->group(function () {
+    Route::prefix('meal-plans')->group(function () {
+        Route::controller(MealPlansController::class)->group(function(){
+            Route::get('/', 'index')->name('plans.meal_plans.index');
+            Route::post('store', 'store')->name('plans.meal_plans.store');
+            Route::put('update/{id}', 'update')->name('plans.meal_plans.update');
+            Route::delete('delete/{id}', 'delete')->name('plans.meal_plans.delete');
+        });
     });
 
 });
