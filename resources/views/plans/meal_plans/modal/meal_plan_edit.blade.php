@@ -3,20 +3,20 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel1">Edit Meal Plan</h5>
+                <h5 class="modal-title" id="editModalLabel1">Edit /h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="#" method="POST">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-lg-4 mb-3">
-                            <label class="form-label">Meal Plan Name<span class="text-danger">*</span></label>
+                            <label class="form-label">Name<span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="meal_plan_name" value="Morning Special">
                         </div>
 
                         <div class="col-lg-4 mb-3">
-                            <label class="form-label">Meal Type<span class="text-danger">*</span></label>
-                            <select class="form-select" name="meal_type">
+                            <label class="form-label">Type<span class="text-danger">*</span></label>
+                            <select class="form-select" name="type">
                                 <option value="breakfast" selected>Breakfast</option>
                                 <option value="lunch">Lunch</option>
                                 <option value="snacks">Snacks</option>
@@ -48,8 +48,8 @@
                         </div>
 
                         <div class="col-lg-4 mb-3">
-                            <label class="form-label">Per Meal Cost (Tk)<span class="text-danger">*</span></label>
-                            <input type="number" class="form-control" name="per_meal_cost" value="50.00" step="0.01">
+                            <label class="form-label">Cost (Tk)<span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" name="cost" value="50.00" step="0.01">
                         </div>
                     </div>
                 </div>
@@ -67,20 +67,20 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel2">Edit Meal Plan</h5>
+                <h5 class="modal-title" id="editModalLabel2">Edit /h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="#" method="POST">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-lg-4 mb-3">
-                            <label class="form-label">Meal Plan Name<span class="text-danger">*</span></label>
+                            <label class="form-label">Name<span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="meal_plan_name" value="Light Breakfast">
                         </div>
 
                         <div class="col-lg-4 mb-3">
-                            <label class="form-label">Meal Type<span class="text-danger">*</span></label>
-                            <select class="form-select" name="meal_type">
+                            <label class="form-label">Type<span class="text-danger">*</span></label>
+                            <select class="form-select" name="type">
                                 <option value="breakfast" selected>Breakfast</option>
                                 <option value="lunch">Lunch</option>
                                 <option value="snacks">Snacks</option>
@@ -112,8 +112,8 @@
                         </div>
 
                         <div class="col-lg-4 mb-3">
-                            <label class="form-label">Per Meal Cost (Tk)<span class="text-danger">*</span></label>
-                            <input type="number" class="form-control" name="per_meal_cost" value="40.00" step="0.01">
+                            <label class="form-label">Cost (Tk)<span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" name="cost" value="40.00" step="0.01">
                         </div>
                     </div>
                 </div>

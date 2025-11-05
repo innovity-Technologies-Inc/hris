@@ -9,12 +9,12 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-lg-6 mb-3">
-                        <label class="form-label fw-bold">Meal Plan Name:</label>
+                        <label class="form-label fw-bold">Name:</label>
                         <p class="form-control-plaintext">Morning Special</p>
                     </div>
 
                     <div class="col-lg-6 mb-3">
-                        <label class="form-label fw-bold">Meal Type:</label>
+                        <label class="form-label fw-bold">Type:</label>
                         <p class="form-control-plaintext">Breakfast</p>
                     </div>
 
@@ -29,7 +29,7 @@
                     </div>
 
                     <div class="col-lg-6 mb-3">
-                        <label class="form-label fw-bold">Per Meal Cost:</label>
+                        <label class="form-label fw-bold">Cost:</label>
                         <p class="form-control-plaintext">50.00 Tk</p>
                     </div>
 
@@ -42,7 +42,9 @@
 
                     <div class="col-lg-12 mb-3">
                         <label class="form-label fw-bold">Description:</label>
-                        <p class="form-control-plaintext">Paratha, Egg & Tea - A traditional morning breakfast with freshly made paratha, boiled eggs, and hot tea. Perfect way to start your day with energy.</p>
+                        <p class="form-control-plaintext">Paratha, Egg & Tea - A traditional morning breakfast with
+                            freshly made paratha, boiled eggs, and hot tea. Perfect way to start your day with energy.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -64,12 +66,12 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-lg-6 mb-3">
-                        <label class="form-label fw-bold">Meal Plan Name:</label>
+                        <label class="form-label fw-bold">Name:</label>
                         <p class="form-control-plaintext">Light Breakfast</p>
                     </div>
 
                     <div class="col-lg-6 mb-3">
-                        <label class="form-label fw-bold">Meal Type:</label>
+                        <label class="form-label fw-bold">Type:</label>
                         <p class="form-control-plaintext">Breakfast</p>
                     </div>
 
@@ -84,7 +86,7 @@
                     </div>
 
                     <div class="col-lg-6 mb-3">
-                        <label class="form-label fw-bold">Per Meal Cost:</label>
+                        <label class="form-label fw-bold">Cost:</label>
                         <p class="form-control-plaintext">40.00 Tk</p>
                     </div>
 
@@ -97,7 +99,8 @@
 
                     <div class="col-lg-12 mb-3">
                         <label class="form-label fw-bold">Description:</label>
-                        <p class="form-control-plaintext">Bread, Butter & Milk - A light and healthy breakfast option with fresh bread, butter, and warm milk.</p>
+                        <p class="form-control-plaintext">Bread, Butter & Milk - A light and healthy breakfast option
+                            with fresh bread, butter, and warm milk.</p>
                     </div>
                 </div>
             </div>

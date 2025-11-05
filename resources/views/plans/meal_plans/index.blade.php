@@ -16,15 +16,15 @@
                                 {{-- First Row: Meal Plan Name, Meal Type and Status --}}
                                 <div class="mb-3 row">
                                     <div class="col-lg-4">
-                                        <label for="meal_plan_name" class="form-label">Meal Plan Name<span class="text-danger">*</span></label>
-                                        <input type="text" id="meal_plan_name" class="form-control" name="meal_plan_name"
-                                               placeholder="Enter Meal Plan Name">
+                                        <label for="name" class="form-label">Name<span class="text-danger">*</span></label>
+                                        <input type="text" id="name" class="form-control" name="name"
+                                               placeholder="Enter Name">
                                     </div>
 
                                     <div class="col-lg-4">
-                                        <label for="meal_type" class="form-label">Meal Type<span class="text-danger">*</span></label>
-                                        <select class="form-select" id="meal_type" name="meal_type">
-                                            <option value="">Select Meal Type</option>
+                                        <label for="type" class="form-label">Type<span class="text-danger">*</span></label>
+                                        <select class="form-select" id="type" name="type">
+                                            <option value="">Type</option>
                                             <option value="breakfast">Breakfast</option>
                                             <option value="lunch">Lunch</option>
                                             <option value="snacks">Snacks</option>
@@ -50,7 +50,7 @@
                                     </div>
                                 </div>
 
-                                {{-- Third Row: Start Time, End Time, Per Meal Cost --}}
+                                {{-- Third Row: Start Time, End Time, Cost --}}
                                 <div class="mb-3 row">
                                     <div class="col-lg-4">
                                         <label for="start_time" class="form-label">Start Time<span class="text-danger">*</span></label>
@@ -63,8 +63,8 @@
                                     </div>
 
                                     <div class="col-lg-4">
-                                        <label for="per_meal_cost" class="form-label">Per Meal Cost (Tk)<span class="text-danger">*</span></label>
-                                        <input type="number" id="per_meal_cost" class="form-control" name="per_meal_cost"
+                                        <label for="cost" class="form-label">Cost (Tk)<span class="text-danger">*</span></label>
+                                        <input type="number" id="cost" class="form-control" name="cost"
                                                placeholder="Enter Cost" step="0.01">
                                     </div>
                                 </div>
@@ -125,7 +125,7 @@
                                         <th scope="col">Start Time</th>
                                         <th scope="col">End Time</th>
                                         <th scope="col">Status</th>
-                                        <th scope="col">Per Meal Cost (Tk)</th>
+                                        <th scope="col">Cost (Tk)</th>
                                         <th scope="col">Action</th>
                                     </tr>
                                     </thead>
@@ -192,7 +192,7 @@
                                         <th scope="col">Start Time</th>
                                         <th scope="col">End Time</th>
                                         <th scope="col">Status</th>
-                                        <th scope="col">Per Meal Cost (Tk)</th>
+                                        <th scope="col">Cost (Tk)</th>
                                         <th scope="col">Action</th>
                                     </tr>
                                     </thead>
@@ -276,7 +276,7 @@
                                         <th scope="col">Start Time</th>
                                         <th scope="col">End Time</th>
                                         <th scope="col">Status</th>
-                                        <th scope="col">Per Meal Cost (Tk)</th>
+                                        <th scope="col">Cost (Tk)</th>
                                         <th scope="col">Action</th>
                                     </tr>
                                     </thead>
@@ -318,7 +318,7 @@
                                         <th scope="col">Start Time</th>
                                         <th scope="col">End Time</th>
                                         <th scope="col">Status</th>
-                                        <th scope="col">Per Meal Cost (Tk)</th>
+                                        <th scope="col">Cost (Tk)</th>
                                         <th scope="col">Action</th>
                                     </tr>
                                     </thead>
