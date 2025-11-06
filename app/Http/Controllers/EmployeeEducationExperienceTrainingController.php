@@ -21,7 +21,7 @@ class EmployeeEducationExperienceTrainingController extends Controller
     {
         $title = 'Add Employees Information';
         $section = 'Employees Education, Experience, and Training';
-        $sub_section = 'Add';
+        $sub_section = 'Education, Experience, and Training / Add';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
         return view('employees.education_experience_trainings.form', compact('employee', 'title', 'section', 'sub_section', 'section_url'));
@@ -56,7 +56,7 @@ class EmployeeEducationExperienceTrainingController extends Controller
     }
     public function show($id)
     {
-        $title = 'Employees';
+        $title = 'Employees Education, Experience, and Training';
         $section = 'Employees';
         $sub_section = 'Employees Education, Experience, and Training';
         $section_url = route('employees.index');
@@ -76,9 +76,9 @@ class EmployeeEducationExperienceTrainingController extends Controller
     public function edit($id)
     {
         $employee = $this->empServices->getEmployeeById($id);
-        $title = 'Add Employees Information';
-        $section = 'Employees Education, Experience, and Training';
-        $sub_section = 'Edit';
+        $title = 'Add Employees Education, Experience, and Training Information';
+        $section = 'Employees';
+        $sub_section = 'Education, Experience, and Training / Edit';
         $section_url = route('employees.index');
         $employeeData = EmployeeEducationExperienceTraining::where('employee_id', $id)->firstOrFail();
 

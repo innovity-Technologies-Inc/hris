@@ -24,8 +24,8 @@ class EmployeeEligibleController extends Controller
     public function create($id)
     {
         $title = 'Add Employees Eligible Plan';
-        $section = 'Employees Eligible Plan';
-        $sub_section = 'Create';
+        $section = 'Employees';
+        $sub_section = 'Eligible Plan / Create';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
         return view('employees.eligible_plans.form', compact('employee', 'title', 'section', 'sub_section', 'section_url'));
@@ -69,7 +69,7 @@ class EmployeeEligibleController extends Controller
      */
     public function show($id)
     {
-        $title = 'Employees';
+        $title = 'Employees Eligible Plans';
         $section = 'Employees';
         $sub_section = 'Employees Eligible Plan';
         $section_url = route('employees.index');
@@ -87,8 +87,8 @@ class EmployeeEligibleController extends Controller
         $employee = $this->empServices->getEmployeeById($id);
         $employeePlan = EmployeeEligiblePlan::where('employee_id', $id)->first();
         $title = 'Edit Employee Eligible Plan';
-        $section = 'Employees Eligible Plan';
-        $sub_section = 'Edit';
+        $section = 'Employees';
+        $sub_section = 'Eligible Plan / Edit';
         $section_url = route('employees.index');
 
         return view('employees.eligible_plans.form', compact('employeePlan', 'employee', 'title', 'section', 'sub_section', 'section_url'));

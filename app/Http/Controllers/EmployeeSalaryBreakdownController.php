@@ -22,8 +22,8 @@ class EmployeeSalaryBreakdownController extends Controller
     public function create($id)
     {
         $title = 'Add Employees Salary Breakdown';
-        $section = 'Employee Salary Breakdown';
-        $sub_section = 'Add';
+        $section = 'Employees';
+        $sub_section = 'Salary Breakdown / Add';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
         return view('employees.salary_breakdown.form', compact('employee', 'title', 'section', 'sub_section', 'section_url'));
@@ -67,7 +67,7 @@ class EmployeeSalaryBreakdownController extends Controller
      */
     public function show($id)
     {
-        $title = 'Employees';
+        $title = 'Employees Salary Breakdown';
         $section = 'Employees';
         $sub_section = 'Employees Salary Breakdown';
         $section_url = route('employees.index');
@@ -85,8 +85,8 @@ class EmployeeSalaryBreakdownController extends Controller
         $employee = $this->empServices->getEmployeeById($id);
         $employeeData = EmployeeSalaryBreakdown::where('employee_id', $id)->first();
         $title = 'Edit Employee Salary Breakdown';
-        $section = 'Employees Salary Breakdown';
-        $sub_section = 'Edit';
+        $section = 'Employees';
+        $sub_section = 'Salary Breakdown / Edit';
         $section_url = route('employees.index');
         return view('employees.salary_breakdown.form', compact('employeeData', 'employee', 'title', 'section', 'sub_section', 'section_url'));
     }

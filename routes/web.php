@@ -24,7 +24,7 @@ use App\Http\Controllers\EmployeeBankAccountController;
 use App\Http\Controllers\MealPlansController;
 
 Route::get('test', function () {
-   return view('employees.salary_breakdown.view');
+   return view('plans.bulk_uploads.form');
 });
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -228,6 +228,10 @@ Route::prefix('employees')->group(function () {
 });
 
 Route::prefix('plans')->group(function () {
+    Route::get('bulk-upload', function () {
+        return view('plans.bulk_uploads.form');
+    })->name('plans.bulk_upload');
+
     Route::prefix('meal-plans')->group(function () {
         Route::controller(MealPlansController::class)->group(function(){
             Route::get('/', 'index')->name('plans.meal_plans.index');

@@ -30,7 +30,7 @@ class EmployeeBankAccountController extends Controller
     {
         $title = 'Add Employees Bank Account Details';
         $section = 'Employees';
-        $sub_section = 'Add Bank Account Details';
+        $sub_section = 'Bank Account Details / Add ';
         $section_url = route('employees.index');
         $banks = Bank::all();
         $employee = $this->empServices->getEmployeeById($id);
@@ -66,7 +66,7 @@ class EmployeeBankAccountController extends Controller
      */
     public function show(string $id)
     {
-        $title = 'Employees';
+        $title = 'Employees Bank Accounts Details';
         $section = 'Employees';
         $sub_section = 'Employees Bank Accounts';
         $section_url = route('employees.index');
@@ -85,7 +85,7 @@ class EmployeeBankAccountController extends Controller
         $employeeData = EmployeeBankAccount::where('employee_id', $id)->first();
         $title = 'Edit Employee Bank Account Details';
         $section = 'Employees';
-        $sub_section = 'Bank Details/Edit';
+        $sub_section = 'Bank Account Details/Edit';
         $section_url = route('employees.index');
         $banks = Bank::all();
         return view('employees.bank_accounts.form', compact('employeeData', 'employee', 'title', 'section', 'sub_section', 'section_url', 'banks'));

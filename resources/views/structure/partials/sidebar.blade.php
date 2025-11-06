@@ -36,7 +36,7 @@
                 <!-- Add Employees Information Menu -->
                 <li>
                     <a href="#sidebarEmployees" data-bs-toggle="collapse"
-                       class="@if (Route::is('employees.*')) menuitem-active @endif">
+                        class="@if (Route::is('employees.*')) menuitem-active @endif">
                         <i data-feather="users"></i>
                         <span> Employees </span>
                         <span class="menu-arrow"></span>
@@ -45,11 +45,11 @@
                         <ul class="nav-second-level">
                             <li>
                                 <a class='tp-link @if (Route::is('employees.*')) menuitem-active @endif'
-                                   href='{{ route('employees.index') }}'>Employee Information</a>
+                                    href='{{ route('employees.index') }}'>Employee Information</a>
                             </li>
                             <li>
                                 <a class='tp-link @if (Route::is('employees.*')) menuitem-active @endif'
-                                   href='{{route('employees.import')}}'>Bulk Upload</a>
+                                    href='{{ route('employees.import') }}'>Bulk Upload</a>
                             </li>
                         </ul>
                     </div>
@@ -58,7 +58,7 @@
                 <!-- Add Plans -->
                 <li>
                     <a href="#plans" data-bs-toggle="collapse"
-                       class="@if (Route::is('plans.*')) menuitem-active @endif">
+                        class="@if (Route::is('plans.*')) menuitem-active @endif">
                         <i data-feather="layers"></i>
                         <span> Plans </span>
                         <span class="menu-arrow"></span>
@@ -67,7 +67,11 @@
                         <ul class="nav-second-level">
                             <li>
                                 <a class='tp-link @if (Route::is('plans.meal_plans.*')) menuitem-active @endif'
-                                   href='{{ route('plans.meal_plans.index') }}'>Meal Plans</a>
+                                    href='{{ route('plans.meal_plans.index') }}'>Meal Plans</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('plans.bulk_upload')) menuitem-active @endif'
+                                    href='{{ route('plans.bulk_upload') }}'>Bulk Upload</a>
                             </li>
                         </ul>
                     </div>
@@ -157,10 +161,10 @@
                                     href='{{ route('job_creations.index') }}'>Job Creations</a>
                             </li>
 
-                            {{--<li>
+                            {{-- <li>
                                 <a class='tp-link @if (Route::is('gazette_locations.*')) menuitem-active @endif'
                                     href='{{ route('gazette_locations.index') }}'>Gazette Locations</a>
-                            </li>--}}
+                            </li> --}}
 
                         </ul>
                     </div>
