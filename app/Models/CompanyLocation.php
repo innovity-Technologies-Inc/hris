@@ -10,6 +10,10 @@ class CompanyLocation extends Model
         'company_id',
         'unit_name',
         'location_address',
+        'state',
+        'division',
+        'city',
+        'country',
         'status',
     ];
 
@@ -17,5 +21,5 @@ class CompanyLocation extends Model
     {
         return $this->belongsTo(Company::class, 'company_id', 'id');
     }
-    
+
 }

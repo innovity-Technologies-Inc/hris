@@ -203,7 +203,7 @@ html[data-bs-theme="dark"] {
     --bs-tertiary-bg: #1d2124;
     --bs-tertiary-bg-rgb: 29, 33, 36;
     --bs-primary-text-emphasis: #70bbff;
-    --bs-dashboard-accent: #c26316;
+    --bs-dashboard-accent: #70bbff;
     --bs-secondary-text-emphasis: #c089a4;
     --bs-success-text-emphasis: #7eb2aa;
     --bs-info-text-emphasis: #67e5ff;
@@ -9879,7 +9879,7 @@ fieldset:disabled .btn {
 
 .text-primary {
     --bs-text-opacity: 1;
-    color: rgba(var(--bs-primary-rgb), var(--bs-text-opacity)) !important;
+    color: #963b68 !important;
 }
 
 .text-secondary {
