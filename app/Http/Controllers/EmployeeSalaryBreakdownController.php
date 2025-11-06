@@ -69,7 +69,7 @@ class EmployeeSalaryBreakdownController extends Controller
     {
         $title = 'Employees Salary Breakdown';
         $section = 'Employees';
-        $sub_section = 'Employees Salary Breakdown';
+        $sub_section = 'Profile - Salary Breakdown';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
         $employeeData = EmployeeSalaryBreakdown::where('employee_id', $id)->first();

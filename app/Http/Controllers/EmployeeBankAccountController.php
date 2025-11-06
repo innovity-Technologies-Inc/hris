@@ -68,7 +68,7 @@ class EmployeeBankAccountController extends Controller
     {
         $title = 'Employees Bank Accounts Details';
         $section = 'Employees';
-        $sub_section = 'Employees Bank Accounts';
+        $sub_section = 'Profile - Bank Account Details';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
         $employeeData = EmployeeBankAccount::where('employee_id', $id)->first();

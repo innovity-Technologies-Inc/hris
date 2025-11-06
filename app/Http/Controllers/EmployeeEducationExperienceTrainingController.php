@@ -58,7 +58,7 @@ class EmployeeEducationExperienceTrainingController extends Controller
     {
         $title = 'Employees Education, Experience, and Training';
         $section = 'Employees';
-        $sub_section = 'Employees Education, Experience, and Training';
+        $sub_section = 'Profile - Education, Experience, and Training';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
 

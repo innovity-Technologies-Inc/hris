@@ -71,7 +71,7 @@ class EmployeeEligibleController extends Controller
     {
         $title = 'Employees Eligible Plans';
         $section = 'Employees';
-        $sub_section = 'Employees Eligible Plan';
+        $sub_section = 'Profile - Eligible Plan';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
         $employeePlan = EmployeeEligiblePlan::where('employee_id', $id)->first();

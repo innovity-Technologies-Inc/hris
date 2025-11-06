@@ -48,7 +48,7 @@ class EmployeeProfileController extends Controller
     public function profileView($id){
         $title = 'Employee Profile';
         $section = 'Employees';
-        $sub_section = 'Employee Profile';
+        $sub_section = 'Profile';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
         return view('employees.profile', compact('title', 'section', 'sub_section', 'employee', 'section_url'));
@@ -204,7 +204,7 @@ class EmployeeProfileController extends Controller
     public function showOfficeInfo($id){
         $title = 'Employee Office Profile';
         $section = 'Employees';
-        $sub_section = 'Office Profile';
+        $sub_section = 'Profile - Office Information';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
         $employee_office_info = EmployeeOfficeInfo::where('employee_id', $id)->first();
