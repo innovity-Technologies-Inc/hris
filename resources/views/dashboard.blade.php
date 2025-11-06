@@ -17,7 +17,7 @@
 
         [data-bs-theme=dark] .header-card {
             background: var(--bs-body-bg);
-            border-color: var(--primary-color);
+            border-color: var(--bs-dashboard-accent);
         }
 
         .header-title {
@@ -25,8 +25,17 @@
             letter-spacing: 1px;
         }
 
+        [data-bs-theme=dark] .header-title {
+            color: var(--bs-dashboard-accent);
+        }
+
         .header-subtitle {
             color: var(--primary-color);
+            opacity: 0.8;
+        }
+
+        [data-bs-theme=dark] .header-subtitle {
+            color: var(--bs-dashboard-accent);
             opacity: 0.8;
         }
 
@@ -40,6 +49,7 @@
 
         [data-bs-theme=dark] .stat-card {
             background: var(--bs-body-bg);
+            border-left-color: var(--bs-dashboard-accent);
         }
 
         .stat-card::before {
@@ -55,6 +65,10 @@
             transition: all 0.4s ease;
         }
 
+        [data-bs-theme=dark] .stat-card::before {
+            background: var(--bs-dashboard-accent);
+        }
+
         .stat-card::after {
             content: '→';
             position: absolute;
@@ -67,10 +81,19 @@
             color: var(--primary-color);
         }
 
+        [data-bs-theme=dark] .stat-card::after {
+            color: var(--bs-dashboard-accent);
+        }
+
         .stat-card:hover {
             transform: translateY(-8px) scale(1.02);
             box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15) !important;
             background: var(--primary-color) !important;
+            border-left-color: #000000;
+        }
+
+        [data-bs-theme=dark] .stat-card:hover {
+            background: var(--bs-dashboard-accent) !important;
             border-left-color: #000000;
         }
 
@@ -92,6 +115,11 @@
             transition: all 0.3s ease;
             background: rgba(var(--primary-color-rgb), 0.12);
             color: var(--primary-color);
+        }
+
+        [data-bs-theme=dark] .stat-icon {
+            background: rgba(194, 99, 22, 0.12);
+            color: var(--bs-dashboard-accent);
         }
 
         .stat-card:hover .stat-icon {
