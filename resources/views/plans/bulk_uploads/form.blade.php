@@ -60,16 +60,18 @@
                                             style="width: 36px; height: 36px; font-size: 14px;">1</span>
                                         <div class="flex-grow-1">
                                             <h6 class="mb-1 fw-semibold text-dark">Meal Plan</h6>
-                                            <p class="text-muted small mb-0" style="font-size: 0.813rem;">Employee meal plan
+                                            <p class="text-muted small mb-0" style="font-size: 0.813rem;">Employee meal
+                                                plan
                                                 details</p>
                                         </div>
                                     </div>
                                     <button type="button"
-                                        class="btn btn-outline-dark btn-sm w-100 text-uppercase fw-semibold"
-                                        style="font-size: 0.75rem; letter-spacing: 0.5px;" data-bs-toggle="modal"
-                                        data-bs-target="#bulkUploadModal" data-section="meal-plan"
-                                        data-section-name="Meal Plan" data-section-number="1" data-form-action="#"
-                                        data-excel-link="#" data-csv-link="#">
+                                            class="btn btn-outline-dark btn-sm w-100 text-uppercase fw-semibold"
+                                            style="font-size: 0.75rem; letter-spacing: 0.5px;" data-bs-toggle="modal"
+                                            data-bs-target="#bulkUploadModal" data-section="meal-plan"
+                                            data-section-name="Meal Plan" data-section-number="1" data-form-action="{{route('plans.meal_plans.import')}}"
+                                            data-excel-link="{{asset('assets/excel/employee_bank_account_details.xlsx')}}"
+                                            data-csv-link="{{asset('assets/csv/employee_bank_account_details.csv')}}">
                                         <i class="bi bi-upload me-2"></i>Upload
                                     </button>
                                 </div>
@@ -91,11 +93,12 @@
                                         </div>
                                     </div>
                                     <button type="button"
-                                        class="btn btn-outline-dark btn-sm w-100 text-uppercase fw-semibold"
-                                        style="font-size: 0.75rem; letter-spacing: 0.5px;" data-bs-toggle="modal"
-                                        data-bs-target="#bulkUploadModal" data-section="shift-plan"
-                                        data-section-name="Shift Plan" data-section-number="2" data-form-action="#"
-                                        data-excel-link="#" data-csv-link="#">
+                                            class="btn btn-outline-dark btn-sm w-100 text-uppercase fw-semibold"
+                                            style="font-size: 0.75rem; letter-spacing: 0.5px;" data-bs-toggle="modal"
+                                            data-bs-target="#bulkUploadModal" data-section="shift-plan"
+                                            data-section-name="Shift Plan" data-section-number="2" data-form-action="#"
+                                            data-excel-link="{{asset('assets/excel/employee_bank_account_details.xlsx')}}"
+                                            data-csv-link="{{asset('assets/csv/employee_bank_account_details.csv')}}">
                                         <i class="bi bi-upload me-2"></i>Upload
                                     </button>
                                 </div>
@@ -117,11 +120,12 @@
                                         </div>
                                     </div>
                                     <button type="button"
-                                        class="btn btn-outline-dark btn-sm w-100 text-uppercase fw-semibold"
-                                        style="font-size: 0.75rem; letter-spacing: 0.5px;" data-bs-toggle="modal"
-                                        data-bs-target="#bulkUploadModal" data-section="leave-plan"
-                                        data-section-name="Leave Plan" data-section-number="3" data-form-action="#"
-                                        data-excel-link="#" data-csv-link="#">
+                                            class="btn btn-outline-dark btn-sm w-100 text-uppercase fw-semibold"
+                                            style="font-size: 0.75rem; letter-spacing: 0.5px;" data-bs-toggle="modal"
+                                            data-bs-target="#bulkUploadModal" data-section="leave-plan"
+                                            data-section-name="Leave Plan" data-section-number="3" data-form-action="#"
+                                            data-excel-link="{{asset('assets/excel/meal_plans.xlsx')}}"
+                                            data-csv-link="{{asset('assets/csv/meal_plans.csv')}}">
                                         <i class="bi bi-upload me-2"></i>Upload
                                     </button>
                                 </div>

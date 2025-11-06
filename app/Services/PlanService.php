@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\MealPlan;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PlanService
 {
@@ -15,7 +16,7 @@ class PlanService
         }
         return $plan;
     }
-    public function planDelete($id, $modelName){
+    public function planDelete($modelName, $id){
         $plan = $modelName::findOrFail($id);
         $plan->delete();
     }
@@ -34,6 +35,7 @@ class PlanService
         $plan = $modelName::findOrFail($id);
         return $plan;
     }
+
     public function mealPlanValidation($request){
         $validated = $request->validate([
             'name' => 'required|string|max:255',

@@ -19,26 +19,36 @@
                                     <div class="col-lg-4">
                                         <label for="name" class="form-label">Name<span class="text-danger">*</span></label>
                                         <input type="text" id="name" class="form-control" name="name"
-                                               placeholder="Enter Name">
+                                               placeholder="Enter Name" value="{{old('name')}}">
+                                        @error('name')
+                                        <small class="text-danger">{{$message}}</small>
+                                        @enderror
                                     </div>
+
 
                                     <div class="col-lg-4">
                                         <label for="type" class="form-label">Type<span class="text-danger">*</span></label>
                                         <select class="form-select" id="type" name="type">
                                             <option value="">Type</option>
-                                            <option value="breakfast">Breakfast</option>
-                                            <option value="lunch">Lunch</option>
-                                            <option value="snacks">Snacks</option>
-                                            <option value="dinner">Dinner</option>
+                                            <option value="breakfast" {{(old('type') == 'breakfast') ? 'selected' : ''}}>Breakfast</option>
+                                            <option value="lunch" {{(old('type') == 'lunch') ? 'selected' : ''}}>Lunch</option>
+                                            <option value="snacks" {{(old('type') == 'snacks') ? 'selected' : ''}}>Snacks</option>
+                                            <option value="dinner" {{(old('type') == 'dinner') ? 'selected' : ''}}>Dinner</option>
                                         </select>
+                                        @error('type')
+                                        <small class="text-danger">{{$message}}</small>
+                                        @enderror
                                     </div>
 
                                     <div class="col-lg-4">
                                         <label for="status" class="form-label">Status<span class="text-danger">*</span></label>
                                         <select class="form-select" id="status" name="status">
-                                            <option value="active">Active</option>
-                                            <option value="inactive">Inactive</option>
+                                            <option value="active" {{(old('type') == 'active') ? 'selected' : ''}}>Active</option>
+                                            <option value="inactive" {{(old('type') == 'inactive') ? 'selected' : ''}}>Inactive</option>
                                         </select>
+                                        @error('status')
+                                        <small class="text-danger">{{$message}}</small>
+                                        @enderror
                                     </div>
                                 </div>
 
@@ -47,7 +57,10 @@
                                     <div class="col-lg-12">
                                         <label for="description" class="form-label">Description</label>
                                         <textarea id="description" class="form-control" name="description"
-                                                  placeholder="Enter Description" rows="3"></textarea>
+                                                  placeholder="Enter Description" rows="3">{{old('description')}}</textarea>
+                                        @error('description')
+                                        <small class="text-danger">{{$message}}</small>
+                                        @enderror
                                     </div>
                                 </div>
 
@@ -55,18 +68,27 @@
                                 <div class="mb-3 row">
                                     <div class="col-lg-4">
                                         <label for="start_time" class="form-label">Start Time<span class="text-danger">*</span></label>
-                                        <input type="time" id="start_time" class="form-control" name="start_time">
+                                        <input type="time" id="start_time" class="form-control" name="start_time" value="{{old('start_time')}}">
+                                        @error('start_time')
+                                        <small class="text-danger">{{$message}}</small>
+                                        @enderror
                                     </div>
 
                                     <div class="col-lg-4">
                                         <label for="end_time" class="form-label">End Time<span class="text-danger">*</span></label>
-                                        <input type="time" id="end_time" class="form-control" name="end_time">
+                                        <input type="time" id="end_time" class="form-control" name="end_time" value="{{old('end_time')}}">
+                                        @error('end_time')
+                                        <small class="text-danger">{{$message}}</small>
+                                        @enderror
                                     </div>
 
                                     <div class="col-lg-4">
                                         <label for="cost" class="form-label">Cost (Tk)<span class="text-danger">*</span></label>
                                         <input type="number" id="cost" class="form-control" name="cost"
-                                               placeholder="Enter Cost" step="0.01">
+                                               placeholder="Enter Cost" step="0.01" value="{{old('cost')}}">
+                                        @error('cost')
+                                        <small class="text-danger">{{$message}}</small>
+                                        @enderror
                                     </div>
                                 </div>
 
@@ -151,17 +173,24 @@
                                             <td>{{$item->cost}}</td>
                                             <td>
                                                 <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal"
-                                                        data-bs-target="#meal_plan_view1">
+                                                        data-bs-target="#meal_plan_view-{{$item->id}}">
                                                     <i style="height: 12px; width: 12px" data-feather="eye"></i>
                                                 </button>
                                                 <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                                        data-bs-target="#meal_plan_edit1">
+                                                        data-bs-target="#meal_plan_edit-{{$item->id}}">
                                                     <i style="height: 12px; width: 12px" data-feather="edit"></i>
                                                 </button>
-                                                <button class="btn btn-sm btn-danger">
-                                                    <i style="height: 12px; width: 12px" data-feather="trash"></i>
-                                                </button>
+                                                <form method="post" action="{{route('plans.meal_plans.delete', $item->id)}}" style="display: inline">
+                                                    @method('delete')
+                                                    @csrf
+                                                    <button class="btn btn-sm btn-danger confirmDelete" type="submit">
+                                                        <i style="height: 12px; width: 12px" data-feather="trash"></i>
+                                                    </button>
+                                                </form>
+
                                             </td>
+                                            @include('plans.meal_plans.modal.meal_plan_edit')
+                                            @include('plans.meal_plans.modal.meal_plan_view')
                                         </tr>
                                     @endforeach
                                     </tbody>
@@ -204,15 +233,26 @@
                                             </td>
                                             <td>{{$item->cost}}</td>
                                             <td>
-                                                <button type="button" class="btn btn-info btn-sm">
+                                                <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal"
+                                                        data-bs-target="#meal_plan_view-{{$item->id}}">
                                                     <i style="height: 12px; width: 12px" data-feather="eye"></i>
                                                 </button>
-                                                <button type="button" class="btn btn-primary btn-sm">
+                                                @include('plans.meal_plans.modal.meal_plan_view')
+
+                                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                                        data-bs-target="#meal_plan_edit-{{$item->id}}">
                                                     <i style="height: 12px; width: 12px" data-feather="edit"></i>
                                                 </button>
-                                                <button class="btn btn-sm btn-danger">
-                                                    <i style="height: 12px; width: 12px" data-feather="trash"></i>
-                                                </button>
+                                                @include('plans.meal_plans.modal.meal_plan_edit')
+
+                                                <form method="post" action="{{route('plans.meal_plans.delete', $item->id)}}" style="display: inline">
+                                                    @method('delete')
+                                                    @csrf
+                                                    <button class="btn btn-sm btn-danger confirmDelete" type="submit">
+                                                        <i style="height: 12px; width: 12px" data-feather="trash"></i>
+                                                    </button>
+                                                </form>
+
                                             </td>
                                         </tr>
                                         @endforeach
@@ -256,16 +296,25 @@
                                             </td>
                                             <td>{{$item->cost}}</td>
                                             <td>
-                                                <button type="button" class="btn btn-info btn-sm">
+                                                <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal"
+                                                        data-bs-target="#meal_plan_view-{{$item->id}}">
                                                     <i style="height: 12px; width: 12px" data-feather="eye"></i>
                                                 </button>
-                                                <button type="button" class="btn btn-primary btn-sm">
+                                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                                        data-bs-target="#meal_plan_edit-{{$item->id}}">
                                                     <i style="height: 12px; width: 12px" data-feather="edit"></i>
                                                 </button>
-                                                <button class="btn btn-sm btn-danger">
-                                                    <i style="height: 12px; width: 12px" data-feather="trash"></i>
-                                                </button>
+                                                <form method="post" action="{{route('plans.meal_plans.delete', $item->id)}}" style="display: inline">
+                                                    @method('delete')
+                                                    @csrf
+                                                    <button class="btn btn-sm btn-danger confirmDelete" type="submit">
+                                                        <i style="height: 12px; width: 12px" data-feather="trash"></i>
+                                                    </button>
+                                                </form>
+
                                             </td>
+                                            @include('plans.meal_plans.modal.meal_plan_edit')
+                                            @include('plans.meal_plans.modal.meal_plan_view')
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -308,16 +357,26 @@
                                             </td>
                                             <td>{{$item->cost}}</td>
                                             <td>
-                                                <button type="button" class="btn btn-info btn-sm">
+                                                <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal"
+                                                        data-bs-target="#meal_plan_view-{{$item->id}}">
                                                     <i style="height: 12px; width: 12px" data-feather="eye"></i>
                                                 </button>
-                                                <button type="button" class="btn btn-primary btn-sm">
+                                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                                        data-bs-target="#meal_plan_edit-{{$item->id}}">
                                                     <i style="height: 12px; width: 12px" data-feather="edit"></i>
                                                 </button>
-                                                <button class="btn btn-sm btn-danger">
-                                                    <i style="height: 12px; width: 12px" data-feather="trash"></i>
-                                                </button>
+                                                <form method="post" action="{{route('plans.meal_plans.delete', $item->id)}}" style="display: inline">
+                                                    @method('delete')
+                                                    @csrf
+                                                    <button class="btn btn-sm btn-danger confirmDelete" type="submit">
+                                                        <i style="height: 12px; width: 12px" data-feather="trash"></i>
+                                                    </button>
+                                                </form>
+
                                             </td>
+                                            @include('plans.meal_plans.modal.meal_plan_edit')
+                                            @include('plans.meal_plans.modal.meal_plan_view')
+
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -329,9 +388,5 @@
             </div>
         </div>
     </div>
-
-    {{-- Include Modals --}}
-    @include('plans.meal_plans.modal.meal_plan_view')
-    @include('plans.meal_plans.modal.meal_plan_edit')
 
 @endsection

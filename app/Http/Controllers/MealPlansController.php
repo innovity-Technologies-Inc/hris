@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\MealPlansImport;
 use App\Models\MealPlan;
 use App\Services\PlanService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MealPlansController extends Controller
 {
@@ -25,8 +27,9 @@ class MealPlansController extends Controller
         return view('plans.meal_plans.index', compact('title', 'section', 'sub_section', 'breakfast_plans', 'lunch_plans', 'dinner_plans', 'snacks_plans'));;
     }
     public function store(Request $request){
+        $validated = $this->planServices->mealPlanValidation($request);
+
         try {
-            $validated = $this->planServices->mealPlanValidation($request);
             $this->planServices->planSave($validated, MealPlan::class);
         }catch (\Exception $e){
             Log::error($e->getMessage());
@@ -41,8 +44,8 @@ class MealPlansController extends Controller
         ]);
     }
     public function update(Request $request, $id){
+        $validated = $this->planServices->mealPlanValidation($request);
         try {
-            $validated = $this->planServices->mealPlanValidation($request);
             $this->planServices->planSave($validated, MealPlan::class, $id);
         }catch (\Exception $e){
             Log::error($e->getMessage());
@@ -71,4 +74,26 @@ class MealPlansController extends Controller
             'message' => 'Meal Plan Deleted Successfully',
         ]);
     }
+
+    public function import(Request $request){
+        $request->validate([
+            'file' => 'required|mimes:text/csv,text/plain,application/csv,text/comma-separated-values,text/anytext,application/octet-stream,application/txt,xlsx,csv,txt',
+        ]);
+//        dd($request->all());
+        try{
+            Excel::import(new MealPlansImport(), $request->file('file'));
+            return redirect()->route('plans.meal_plans.index')->with([
+                'message' => 'Imported Successfully',
+                'alert-type' => 'success'
+            ]);
+        }catch (\Exception $e){
+            Log::error($e->getMessage());
+            return redirect()->back()->with([
+                'message' => $e->getMessage(). 'Contact with your administrator',
+                'alert-type' => 'error'
+            ]);
+        }
+
+    }
+
 }

@@ -238,6 +238,8 @@ Route::prefix('plans')->group(function () {
             Route::post('store', 'store')->name('plans.meal_plans.store');
             Route::put('update/{id}', 'update')->name('plans.meal_plans.update');
             Route::delete('delete/{id}', 'delete')->name('plans.meal_plans.delete');
+            Route::post('import', 'import')->name('plans.meal_plans.import');
+
         });
     });
 
