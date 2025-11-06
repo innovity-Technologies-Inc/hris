@@ -6,20 +6,40 @@
             min-height: calc(100vh - 100px);
         }
 
-        .header-gradient {
-            background: var(--primary-color);
+        [data-bs-theme=dark] .dashboard-bg {
+            background: linear-gradient(135deg, #1a1d20 0%, #2c3034 100%);
+        }
+
+        .header-card {
+            background: white;
+            border: 2px solid var(--primary-color);
+        }
+
+        [data-bs-theme=dark] .header-card {
+            background: var(--bs-body-bg);
+            border-color: var(--primary-color);
         }
 
         .header-title {
-            letter-spacing: 1.5px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            color: var(--primary-color);
+            letter-spacing: 1px;
+        }
+
+        .header-subtitle {
+            color: var(--primary-color);
+            opacity: 0.8;
         }
 
         .stat-card {
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border-left: 5px solid;
+            border-left: 5px solid var(--primary-color);
             cursor: pointer;
             animation: fadeInUp 0.6s ease forwards;
+            background: white;
+        }
+
+        [data-bs-theme=dark] .stat-card {
+            background: var(--bs-body-bg);
         }
 
         .stat-card::before {
@@ -30,6 +50,7 @@
             width: 150px;
             height: 150px;
             opacity: 0.06;
+            background: var(--primary-color);
             transform: translate(30px, -30px) rotate(15deg);
             transition: all 0.4s ease;
         }
@@ -37,144 +58,89 @@
         .stat-card::after {
             content: '→';
             position: absolute;
-            bottom: 1.5rem;
-            right: 1.5rem;
+            bottom: 1rem;
+            right: 1rem;
             font-size: 1.5rem;
             opacity: 0;
             transition: all 0.3s ease;
             font-weight: bold;
+            color: var(--primary-color);
         }
 
         .stat-card:hover {
             transform: translateY(-8px) scale(1.02);
             box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15) !important;
+            background: var(--primary-color) !important;
+            border-left-color: #000000;
         }
 
         .stat-card:hover::before {
             transform: translate(20px, -20px) rotate(25deg);
             opacity: 0.1;
+            background: white;
         }
 
         .stat-card:hover::after {
-            opacity: 0.6;
-            right: 1rem;
-        }
-
-        .stat-card.companies {
-            border-left-color: #2c3e50;
-        }
-
-        .stat-card.companies::before,
-        .stat-card.companies::after {
-            background: #2c3e50;
-            color: #2c3e50;
-        }
-
-        .stat-card.business-units {
-            border-left-color: #34495e;
-        }
-
-        .stat-card.business-units::before,
-        .stat-card.business-units::after {
-            background: #34495e;
-            color: #34495e;
-        }
-
-        .stat-card.departments {
-            border-left-color: #5d6d7e;
-        }
-
-        .stat-card.departments::before,
-        .stat-card.departments::after {
-            background: #5d6d7e;
-            color: #5d6d7e;
-        }
-
-        .stat-card.sections {
-            border-left-color: #7f8c8d;
-        }
-
-        .stat-card.sections::before,
-        .stat-card.sections::after {
-            background: #7f8c8d;
-            color: #7f8c8d;
-        }
-
-        .stat-card.divisions {
-            border-left-color: #95a5a6;
-        }
-
-        .stat-card.divisions::before,
-        .stat-card.divisions::after {
-            background: #95a5a6;
-            color: #95a5a6;
-        }
-
-        .stat-card.employees {
-            border-left-color: #17a2b8;
-        }
-
-        .stat-card.employees::before,
-        .stat-card.employees::after {
-            background: #17a2b8;
-            color: #17a2b8;
+            opacity: 0.8;
+            right: 0.5rem;
+            color: white !important;
         }
 
         .stat-icon {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             transition: all 0.3s ease;
+            background: rgba(var(--primary-color-rgb), 0.12);
+            color: var(--primary-color);
         }
 
         .stat-card:hover .stat-icon {
             transform: scale(1.1) rotate(5deg);
-        }
-
-        .stat-card.companies .stat-icon {
-            background: rgba(44, 62, 80, 0.12);
-            color: #2c3e50;
-        }
-
-        .stat-card.business-units .stat-icon {
-            background: rgba(52, 73, 94, 0.12);
-            color: #34495e;
-        }
-
-        .stat-card.departments .stat-icon {
-            background: rgba(93, 109, 126, 0.12);
-            color: #5d6d7e;
-        }
-
-        .stat-card.sections .stat-icon {
-            background: rgba(127, 140, 141, 0.12);
-            color: #7f8c8d;
-        }
-
-        .stat-card.divisions .stat-icon {
-            background: rgba(149, 165, 166, 0.12);
-            color: #95a5a6;
-        }
-
-        .stat-card.employees .stat-icon {
-            background: rgba(23, 162, 184, 0.12);
-            color: #17a2b8;
+            background: rgba(255, 255, 255, 0.2) !important;
+            color: white !important;
         }
 
         .stat-label {
             letter-spacing: 0.8px;
             transition: all 0.3s ease;
+            color: #6c757d;
+        }
+
+        [data-bs-theme=dark] .stat-label {
+            color: var(--bs-secondary-color);
         }
 
         .stat-card:hover .stat-label {
-            color: #495057 !important;
+            color: white !important;
         }
 
         .stat-value {
             transition: all 0.3s ease;
+            color: #2c3e50;
+        }
+
+        [data-bs-theme=dark] .stat-value {
+            color: var(--bs-body-color);
         }
 
         .stat-card:hover .stat-value {
             transform: scale(1.05);
+            color: white !important;
+        }
+
+        .stat-footer {
+            color: #868e96 !important;
+            transition: all 0.3s ease;
+        }
+
+        [data-bs-theme=dark] .stat-footer {
+            color: var(--bs-secondary-color) !important;
+        }
+
+        .stat-card:hover .stat-footer,
+        .stat-card:hover .stat-footer i,
+        .stat-card:hover .stat-footer span {
+            color: white !important;
         }
 
         @keyframes fadeInUp {
@@ -216,30 +182,29 @@
 
     <div class="dashboard-bg p-4">
         <div class="container-fluid">
-            <div
-                class="header-gradient text-white text-center rounded-4 shadow-lg mb-4 py-5 px-4 position-relative overflow-hidden">
-                <h1 class="header-title display-4 fw-bold mb-2 position-relative" style="z-index: 1;">
+            <div class="header-card text-center rounded-3 shadow mb-4 py-3 px-4">
+                <h1 class="header-title h3 fw-bold mb-1">
                     GenItech HRIS System
                 </h1>
-                <p class="lead fw-light mb-0 position-relative" style="z-index: 1; opacity: 0.95;">
+                <p class="header-subtitle small mb-0">
                     Human Resource Information System Dashboard
                 </p>
             </div>
 
             <div class="row g-4 mt-2">
-                <div class="col-12 col-md-6 col-lg-4">
+                <div class="col-12 col-md-6 col-lg-3">
                     <a href="{{ route('companies.index') }}" class="text-decoration-none d-block">
-                        <div class="stat-card companies bg-white rounded-3 shadow p-4 position-relative overflow-hidden">
-                            <div class="stat-icon rounded-3 d-flex align-items-center justify-content-center mb-3 fs-3">
+                        <div class="stat-card companies rounded-3 shadow p-3 position-relative overflow-hidden">
+                            <div class="stat-icon rounded-3 d-flex align-items-center justify-content-center mb-2 fs-4">
                                 <i class="fas fa-building"></i>
                             </div>
                             <div class="stat-label text-uppercase text-secondary small fw-semibold mb-2">
                                 Total Companies
                             </div>
-                            <div class="stat-value display-4 fw-bold text-dark" style="line-height: 1;">
+                            <div class="stat-value h2 fw-bold text-dark mb-0" style="line-height: 1;">
                                 {{ $stats['companies'] ?? 0 }}
                             </div>
-                            <div class="mt-3 pt-3 border-top d-flex align-items-center gap-2 small text-muted">
+                            <div class="mt-2 pt-2 border-top d-flex align-items-center gap-2 small stat-footer">
                                 <i class="fas fa-chart-line"></i>
                                 <span>View all companies</span>
                             </div>
@@ -247,20 +212,19 @@
                     </a>
                 </div>
 
-                <div class="col-12 col-md-6 col-lg-4">
+                <div class="col-12 col-md-6 col-lg-3">
                     <a href="{{ route('company_locations.index') }}" class="text-decoration-none d-block">
-                        <div
-                            class="stat-card business-units bg-white rounded-3 shadow p-4 position-relative overflow-hidden">
-                            <div class="stat-icon rounded-3 d-flex align-items-center justify-content-center mb-3 fs-3">
+                        <div class="stat-card business-units rounded-3 shadow p-3 position-relative overflow-hidden">
+                            <div class="stat-icon rounded-3 d-flex align-items-center justify-content-center mb-2 fs-4">
                                 <i class="fas fa-map-marker-alt"></i>
                             </div>
                             <div class="stat-label text-uppercase text-secondary small fw-semibold mb-2">
                                 Business Units
                             </div>
-                            <div class="stat-value display-4 fw-bold text-dark" style="line-height: 1;">
+                            <div class="stat-value h2 fw-bold text-dark mb-0" style="line-height: 1;">
                                 {{ $stats['business_units'] ?? 0 }}
                             </div>
-                            <div class="mt-3 pt-3 border-top d-flex align-items-center gap-2 small text-muted">
+                            <div class="mt-2 pt-2 border-top d-flex align-items-center gap-2 small stat-footer">
                                 <i class="fas fa-chart-line"></i>
                                 <span>View all locations</span>
                             </div>
@@ -268,19 +232,19 @@
                     </a>
                 </div>
 
-                <div class="col-12 col-md-6 col-lg-4">
+                <div class="col-12 col-md-6 col-lg-3">
                     <a href="{{ route('departments.index') }}" class="text-decoration-none d-block">
-                        <div class="stat-card departments bg-white rounded-3 shadow p-4 position-relative overflow-hidden">
-                            <div class="stat-icon rounded-3 d-flex align-items-center justify-content-center mb-3 fs-3">
+                        <div class="stat-card departments rounded-3 shadow p-3 position-relative overflow-hidden">
+                            <div class="stat-icon rounded-3 d-flex align-items-center justify-content-center mb-2 fs-4">
                                 <i class="fas fa-sitemap"></i>
                             </div>
                             <div class="stat-label text-uppercase text-secondary small fw-semibold mb-2">
                                 Departments
                             </div>
-                            <div class="stat-value display-4 fw-bold text-dark" style="line-height: 1;">
+                            <div class="stat-value h2 fw-bold text-dark mb-0" style="line-height: 1;">
                                 {{ $stats['departments'] ?? 0 }}
                             </div>
-                            <div class="mt-3 pt-3 border-top d-flex align-items-center gap-2 small text-muted">
+                            <div class="mt-2 pt-2 border-top d-flex align-items-center gap-2 small stat-footer">
                                 <i class="fas fa-chart-line"></i>
                                 <span>View all departments</span>
                             </div>
@@ -288,19 +252,19 @@
                     </a>
                 </div>
 
-                <div class="col-12 col-md-6 col-lg-4">
+                <div class="col-12 col-md-6 col-lg-3">
                     <a href="{{ route('sections.index') }}" class="text-decoration-none d-block">
-                        <div class="stat-card sections bg-white rounded-3 shadow p-4 position-relative overflow-hidden">
-                            <div class="stat-icon rounded-3 d-flex align-items-center justify-content-center mb-3 fs-3">
+                        <div class="stat-card sections rounded-3 shadow p-3 position-relative overflow-hidden">
+                            <div class="stat-icon rounded-3 d-flex align-items-center justify-content-center mb-2 fs-4">
                                 <i class="fas fa-layer-group"></i>
                             </div>
                             <div class="stat-label text-uppercase text-secondary small fw-semibold mb-2">
                                 Sections
                             </div>
-                            <div class="stat-value display-4 fw-bold text-dark" style="line-height: 1;">
+                            <div class="stat-value h2 fw-bold text-dark mb-0" style="line-height: 1;">
                                 {{ $stats['sections'] ?? 0 }}
                             </div>
-                            <div class="mt-3 pt-3 border-top d-flex align-items-center gap-2 small text-muted">
+                            <div class="mt-2 pt-2 border-top d-flex align-items-center gap-2 small stat-footer">
                                 <i class="fas fa-chart-line"></i>
                                 <span>View all sections</span>
                             </div>
@@ -308,19 +272,19 @@
                     </a>
                 </div>
 
-                <div class="col-12 col-md-6 col-lg-4">
+                <div class="col-12 col-md-6 col-lg-3">
                     <a href="{{ route('divisions.index') }}" class="text-decoration-none d-block">
-                        <div class="stat-card divisions bg-white rounded-3 shadow p-4 position-relative overflow-hidden">
-                            <div class="stat-icon rounded-3 d-flex align-items-center justify-content-center mb-3 fs-3">
+                        <div class="stat-card divisions rounded-3 shadow p-3 position-relative overflow-hidden">
+                            <div class="stat-icon rounded-3 d-flex align-items-center justify-content-center mb-2 fs-4">
                                 <i class="fas fa-project-diagram"></i>
                             </div>
                             <div class="stat-label text-uppercase text-secondary small fw-semibold mb-2">
                                 Divisions
                             </div>
-                            <div class="stat-value display-4 fw-bold text-dark" style="line-height: 1;">
+                            <div class="stat-value h2 fw-bold text-dark mb-0" style="line-height: 1;">
                                 {{ $stats['divisions'] ?? 0 }}
                             </div>
-                            <div class="mt-3 pt-3 border-top d-flex align-items-center gap-2 small text-muted">
+                            <div class="mt-2 pt-2 border-top d-flex align-items-center gap-2 small stat-footer">
                                 <i class="fas fa-chart-line"></i>
                                 <span>View all divisions</span>
                             </div>
@@ -328,19 +292,19 @@
                     </a>
                 </div>
 
-                <div class="col-12 col-md-6 col-lg-4">
+                <div class="col-12 col-md-6 col-lg-3">
                     <a href="{{ route('employees.index') }}" class="text-decoration-none d-block">
-                        <div class="stat-card employees bg-white rounded-3 shadow p-4 position-relative overflow-hidden">
-                            <div class="stat-icon rounded-3 d-flex align-items-center justify-content-center mb-3 fs-3">
+                        <div class="stat-card employees rounded-3 shadow p-3 position-relative overflow-hidden">
+                            <div class="stat-icon rounded-3 d-flex align-items-center justify-content-center mb-2 fs-4">
                                 <i class="fas fa-users"></i>
                             </div>
                             <div class="stat-label text-uppercase text-secondary small fw-semibold mb-2">
                                 Total Employees
                             </div>
-                            <div class="stat-value display-4 fw-bold text-dark" style="line-height: 1;">
+                            <div class="stat-value h2 fw-bold text-dark mb-0" style="line-height: 1;">
                                 {{ $stats['employees'] ?? 0 }}
                             </div>
-                            <div class="mt-3 pt-3 border-top d-flex align-items-center gap-2 small text-muted">
+                            <div class="mt-2 pt-2 border-top d-flex align-items-center gap-2 small stat-footer">
                                 <i class="fas fa-chart-line"></i>
                                 <span>View all employees</span>
                             </div>
