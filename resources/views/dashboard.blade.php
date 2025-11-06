@@ -118,7 +118,7 @@
         }
 
         [data-bs-theme=dark] .stat-icon {
-            background: rgba(194, 99, 22, 0.12);
+            background: rgba(0, 0, 0, 0.3);
             color: var(--bs-dashboard-accent);
         }
 
@@ -131,11 +131,11 @@
         .stat-label {
             letter-spacing: 0.8px;
             transition: all 0.3s ease;
-            color: #6c757d;
+            color: var(--primary-color);
         }
 
         [data-bs-theme=dark] .stat-label {
-            color: var(--bs-secondary-color);
+            color: var(--bs-dashboard-accent);
         }
 
         .stat-card:hover .stat-label {
@@ -157,12 +157,12 @@
         }
 
         .stat-footer {
-            color: #868e96 !important;
+            color: var(--primary-color) !important;
             transition: all 0.3s ease;
         }
 
         [data-bs-theme=dark] .stat-footer {
-            color: var(--bs-secondary-color) !important;
+            color: var(--bs-dashboard-accent) !important;
         }
 
         .stat-card:hover .stat-footer,
@@ -246,7 +246,7 @@
                             <div class="stat-icon rounded-3 d-flex align-items-center justify-content-center mb-2 fs-4">
                                 <i class="fas fa-map-marker-alt"></i>
                             </div>
-                            <div class="stat-label text-uppercase text-secondary small fw-semibold mb-2">
+                            <div class="stat-label text-uppercase small fw-semibold mb-2">
                                 Business Units
                             </div>
                             <div class="stat-value h2 fw-bold text-dark mb-0" style="line-height: 1;">
@@ -266,7 +266,7 @@
                             <div class="stat-icon rounded-3 d-flex align-items-center justify-content-center mb-2 fs-4">
                                 <i class="fas fa-sitemap"></i>
                             </div>
-                            <div class="stat-label text-uppercase text-secondary small fw-semibold mb-2">
+                            <div class="stat-label text-uppercase small fw-semibold mb-2">
                                 Departments
                             </div>
                             <div class="stat-value h2 fw-bold text-dark mb-0" style="line-height: 1;">
@@ -286,7 +286,7 @@
                             <div class="stat-icon rounded-3 d-flex align-items-center justify-content-center mb-2 fs-4">
                                 <i class="fas fa-layer-group"></i>
                             </div>
-                            <div class="stat-label text-uppercase text-secondary small fw-semibold mb-2">
+                            <div class="stat-label text-uppercase small fw-semibold mb-2">
                                 Sections
                             </div>
                             <div class="stat-value h2 fw-bold text-dark mb-0" style="line-height: 1;">
@@ -306,7 +306,7 @@
                             <div class="stat-icon rounded-3 d-flex align-items-center justify-content-center mb-2 fs-4">
                                 <i class="fas fa-project-diagram"></i>
                             </div>
-                            <div class="stat-label text-uppercase text-secondary small fw-semibold mb-2">
+                            <div class="stat-label text-uppercase small fw-semibold mb-2">
                                 Divisions
                             </div>
                             <div class="stat-value h2 fw-bold text-dark mb-0" style="line-height: 1;">
@@ -326,7 +326,7 @@
                             <div class="stat-icon rounded-3 d-flex align-items-center justify-content-center mb-2 fs-4">
                                 <i class="fas fa-users"></i>
                             </div>
-                            <div class="stat-label text-uppercase text-secondary small fw-semibold mb-2">
+                            <div class="stat-label text-uppercase small fw-semibold mb-2">
                                 Total Employees
                             </div>
                             <div class="stat-value h2 fw-bold text-dark mb-0" style="line-height: 1;">

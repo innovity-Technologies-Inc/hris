@@ -5,8 +5,8 @@
     <div class="row">
         <div class="col-xl-12">
             <div class="card">
-                 <div class="card-header">
-                    <a type="button" class="btn btn-warning btn-sm" href="{{route('company_locations.create')}}">
+                <div class="card-header">
+                    <a type="button" class="btn btn-warning btn-sm" href="{{ route('company_locations.create') }}">
                         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                     </a>
                 </div>
@@ -30,8 +30,13 @@
                                         <th scope="row">{{ $i++ }}</th>
                                         <td>{{ $location->unit_name }}</td>
                                         <td>{{ $location->getCompany->name }}</td>
-                                        <td>{{ $location->location_address }}</td>
+                                        <td>{{ Str::limit($location->location_address, 30) }}</td>
                                         <td>
+                                            <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal"
+                                                data-bs-target="#viewLocationModal{{ $location->id }}">
+                                                <i style="height: 12px; width: 12px" data-feather="eye"></i>
+                                            </button>
+
                                             <a href="{{ route('company_locations.edit', $location->id) }}"
                                                 class="btn btn-primary btn-sm">
                                                 <i style="height: 12px; width: 12px" data-feather="edit"></i>
@@ -47,16 +52,15 @@
                                                 </button>
                                             </form>
                                         </td>
-
-                                        {{-- @include('company_setup.modal.location_edit') --}}
-
                                     </tr>
+
+                                    @include('company_setup.company_locations.view_modal')
                                 @endforeach
                             </tbody>
                         </table>
 
                         <div class="mt-3">
-                            {{$locations->links()}}
+                            {{ $locations->links() }}
                         </div>
                     </div>
                 </div>

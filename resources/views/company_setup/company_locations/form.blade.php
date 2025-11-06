@@ -64,7 +64,51 @@
                                         @enderror
                                     </div>
 
-                                     <div class="col-lg-12 mb-2">
+                                    <div class="col-lg-6 mb-2">
+                                        <label for="state" class="form-label">State</label>
+                                        <input type="text" id="state" class="form-control" name="state"
+                                            placeholder="Enter State"
+                                            value="{{ isset($company_location) ? $company_location->state : old('state') }}"
+                                            maxlength="255">
+                                        @error('state')
+                                            <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
+
+                                    <div class="col-lg-6 mb-2">
+                                        <label for="division" class="form-label">Division</label>
+                                        <input type="text" id="division" class="form-control" name="division"
+                                            placeholder="Enter Division"
+                                            value="{{ isset($company_location) ? $company_location->division : old('division') }}"
+                                            maxlength="255">
+                                        @error('division')
+                                            <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
+
+                                    <div class="col-lg-6 mb-2">
+                                        <label for="city" class="form-label">City</label>
+                                        <input type="text" id="city" class="form-control" name="city"
+                                            placeholder="Enter City"
+                                            value="{{ isset($company_location) ? $company_location->city : old('city') }}"
+                                            maxlength="255">
+                                        @error('city')
+                                            <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
+
+                                    <div class="col-lg-6 mb-2">
+                                        <label for="country" class="form-label">Country</label>
+                                        <input type="text" id="country" class="form-control" name="country"
+                                            placeholder="Enter Country"
+                                            value="{{ isset($company_location) ? $company_location->country : old('country') }}"
+                                            maxlength="255">
+                                        @error('country')
+                                            <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
+
+                                    <div class="col-lg-12 mb-2">
                                         <label for="example-select" class="form-label">Status</label>
                                         <select class="form-select" name="status">
                                             <option value="active">Active</option>

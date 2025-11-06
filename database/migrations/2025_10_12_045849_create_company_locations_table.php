@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id()->index();
             $table->string('unit_name');
             $table->string('location_address');
+            $table->string('state')->nullable();
+            $table->string('division')->nullable();
+            $table->string('city')->nullable();
+            $table->string('country')->nullable();
             $table->enum('status', ['active', 'inactive']);
             $table->unsignedBigInteger('company_id');
             $table->timestamps();
