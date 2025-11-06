@@ -6,7 +6,6 @@ use App\Imports\SalaryBreakdownImport;
 use App\Models\EmployeeBankAccount;
 use App\Services\EmployeeServices;
 use Illuminate\Http\Request;
-use App\Models\Employee;
 use App\Models\EmployeeSalaryBreakdown;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
@@ -22,8 +21,8 @@ class EmployeeSalaryBreakdownController extends Controller
     public function create($id)
     {
         $title = 'Add Employees Salary Breakdown';
-        $section = 'Employee Salary Breakdown';
-        $sub_section = 'Add';
+        $section = 'Employees';
+        $sub_section = 'Salary Breakdown/Add';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
         return view('employees.salary_breakdown.form', compact('employee', 'title', 'section', 'sub_section', 'section_url'));
@@ -69,7 +68,7 @@ class EmployeeSalaryBreakdownController extends Controller
     {
         $title = 'Employees';
         $section = 'Employees';
-        $sub_section = 'Employees Salary Breakdown';
+        $sub_section = 'Profile/Salary Breakdown';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
         $employeeData = EmployeeSalaryBreakdown::where('employee_id', $id)->first();
