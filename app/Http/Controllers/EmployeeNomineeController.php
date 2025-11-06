@@ -106,7 +106,7 @@ class EmployeeNomineeController extends Controller
     public function show($id){
         $title = 'Employee Nominee Information';
         $section = 'Employees';
-        $sub_section = 'Nominee Information / Profile';
+        $sub_section = 'Profile - Nominee Information';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
         $employee_nominee_info = EmployeeNominee::where('employee_id', $id)->first();
