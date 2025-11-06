@@ -22,9 +22,9 @@ class EmployeeProfileController extends Controller
     }
 
     public function index(Request $request, FlexSearch $flexsearch){
-        $title = 'Employees';
+        $title = 'Employees List';
         $section = 'Employees';
-        $sub_section = 'Index';
+        $sub_section = 'Employees / List';
 
         $employees = $this->empServices->employeeSearchResult($request, $flexsearch);
 
@@ -38,8 +38,8 @@ class EmployeeProfileController extends Controller
     public function generalInfoCreate(){
         $title = 'Add Employee Information';
         $section = 'Employees';
+        $sub_section = 'General Information / Create';
         $section_url = route('employees.index');
-        $sub_section = 'Create';
         return view('employees.general_informations.form', compact('title', 'section', 'sub_section', 'section_url'));
     }
 
@@ -48,7 +48,7 @@ class EmployeeProfileController extends Controller
     public function profileView($id){
         $title = 'Employee Profile';
         $section = 'Employees';
-        $sub_section = 'Profile';
+        $sub_section = 'Employee Profile';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
         return view('employees.profile', compact('title', 'section', 'sub_section', 'employee', 'section_url'));
@@ -74,7 +74,7 @@ class EmployeeProfileController extends Controller
     public function generalInfoEdit($id){
         $title = 'Edit Employee Information';
         $section = 'Employees';
-        $sub_section = 'Edit';
+        $sub_section = 'General Information / Edit';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
         $employee_id = $employee->id;
@@ -120,10 +120,10 @@ class EmployeeProfileController extends Controller
     }
 
     public function officeInfoCreate($id){
-        $title = 'Add Employee Information';
+        $title = 'Add Employee Office Information';
         $section = 'Employees';
+        $sub_section = 'Office Information / Create';
         $section_url = route('employees.index');
-        $sub_section = 'Create';
         $employee = Employee::select('id', 'full_name')->where('id', $id)->first();
         $companies = $this->empServices->getCompanies();
         $acts = $this->empServices->getActs();
@@ -162,10 +162,10 @@ class EmployeeProfileController extends Controller
     }
 
     public function officeInfoEdit($id){
-        $title = 'Edit Employee Information';
+        $title = 'Edit Employee Office Information';
         $section = 'Employees';
+        $sub_section = 'Office Information / Edit';
         $section_url = route('employees.index');
-        $sub_section = 'Edit';
         $employee_office_info = EmployeeOfficeInfo::where('employee_id', $id)->first();
         if($employee_office_info){
             $employee = Employee::select('id', 'full_name')->where('id', $id)->first();
@@ -202,9 +202,9 @@ class EmployeeProfileController extends Controller
     }
 
     public function showOfficeInfo($id){
-        $title = 'Employee Profile';
+        $title = 'Employee Office Profile';
         $section = 'Employees';
-        $sub_section = 'Profile';
+        $sub_section = 'Office Profile';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
         $employee_office_info = EmployeeOfficeInfo::where('employee_id', $id)->first();

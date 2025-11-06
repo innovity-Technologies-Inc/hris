@@ -24,8 +24,8 @@ class EmployeeNomineeController extends Controller
     public function create($id)
     {
         $title = 'Add Nominee Information';
-        $section = 'Employees Nominee Information';
-        $sub_section = 'Add';
+        $section = 'Employees';
+        $sub_section = 'Nominee Information / Add';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
         return view('employees.nominee_information.form', compact('employee', 'title', 'section', 'sub_section', 'section_url'));
@@ -65,8 +65,8 @@ class EmployeeNomineeController extends Controller
     public function edit($id){
         $title = 'Edit Employee Nominee Information';
         $section = 'Employees';
+        $sub_section = 'Nominee Information / Edit';
         $section_url = route('employees.index');
-        $sub_section = 'Nominee Edit';
         $employee_nominee_info = EmployeeNominee::where('employee_id', $id)->first();
 //        dd($employee_nominee_info);
         if($employee_nominee_info){
@@ -104,9 +104,9 @@ class EmployeeNomineeController extends Controller
 
 
     public function show($id){
-        $title = 'Employee Profile';
+        $title = 'Employee Nominee Information';
         $section = 'Employees';
-        $sub_section = 'Profile';
+        $sub_section = 'Nominee Information / Profile';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
         $employee_nominee_info = EmployeeNominee::where('employee_id', $id)->first();
