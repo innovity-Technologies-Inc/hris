@@ -174,9 +174,14 @@
                     </div>
                 </li>
 
-
-
-
+                <!-- Organization Structure Menu -->
+                <li>
+                    <a href="{{ route('organization-structure.index') }}"
+                        class="@if (Route::is('organization-structure.*')) menuitem-active @endif">
+                        <i data-feather="git-branch"></i>
+                        <span> Structure </span>
+                    </a>
+                </li>
 
             </ul>
 

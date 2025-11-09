@@ -28,6 +28,27 @@ class OrganizationStructure extends Model
         'status',
     ];
 
+    // Accessor to convert database type to form-friendly lowercase format
+    public function getTypeFormAttribute()
+    {
+        $typeMap = [
+            'Group' => 'group',
+            'Company' => 'company',
+            'Branch Unit' => 'location',
+            'Division' => 'division',
+            'Department' => 'department',
+            'Section' => 'section'
+        ];
+        
+        return $typeMap[$this->type] ?? strtolower($this->type);
+    }
+
+    // Accessor to convert database status to lowercase
+    public function getStatusFormAttribute()
+    {
+        return strtolower($this->status);
+    }
+
     // Relationships
     public function getGroup()
     {

@@ -23,6 +23,7 @@ use App\Http\Controllers\EmployeeNomineeController;
 use App\Http\Controllers\EmployeeBankAccountController;
 use App\Http\Controllers\MealPlansController;
 use App\Http\Controllers\ShiftPlanController;
+use App\Http\Controllers\OrganizationStructureController;
 
 Route::get('test', function () {
    return view('plans.bulk_uploads.form');
@@ -266,5 +267,21 @@ Route::controller(EmployeeProfileController::class)->group(function () {
     Route::get('get-sections/{department_id}', 'getSectionByDepartment');
     Route::get('get-designations/{division_id}', 'getDesignationsByDivision');
     Route::get('get-branches/{bank_id}', 'getBranchesByBank');
+});
 
+Route::controller(OrganizationStructureController::class)->group(function () {
+    Route::get('organization-structure', 'index')->name('organization-structure.index');
+    Route::get('organization-structure/create', 'create')->name('organization-structure.create');
+    Route::post('organization-structure', 'store')->name('organization-structure.store');
+    Route::get('organization-structure/{id}/edit', 'edit')->name('organization-structure.edit');
+    Route::put('organization-structure/{id}', 'update')->name('organization-structure.update');
+    Route::delete('organization-structure/{id}', 'destroy')->name('organization-structure.destroy');
+
+    // AJAX routes for dynamic dropdowns
+    Route::get('get-groups', 'getGroups');
+    Route::get('get-companies/{group_id}', 'getCompanies');
+    Route::get('get-locations/{company_id}', 'getLocations');
+    Route::get('get-org-divisions/{company_id}', 'getDivisions');
+    Route::get('get-org-departments/{division_id}', 'getDepartments');
+    Route::get('get-org-sections/{department_id}', 'getSections');
 });
