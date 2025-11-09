@@ -18168,4 +18168,119 @@ html[data-bs-theme="dark"] .table-light {
     color: var(--bs-dashboard-accent) !important;
 }
 
+/* Dark mode support for tables and forms */
+[data-bs-theme="dark"] .table {
+    --bs-table-bg: transparent;
+    --bs-table-color: var(--bs-body-color);
+    --bs-table-border-color: var(--bs-border-color);
+}
+
+[data-bs-theme="dark"] .table-bordered > :not(caption) > * > * {
+    border-color: var(--bs-border-color);
+}
+
+[data-bs-theme="dark"] .form-label {
+    color: var(--bs-body-color);
+}
+
+[data-bs-theme="dark"] .text-muted {
+    color: var(--bs-secondary-color) !important;
+}
+
+[data-bs-theme="dark"] .card {
+    background-color: var(--bs-card-bg);
+    border-color: var(--bs-border-color);
+}
+
+[data-bs-theme="dark"] .card-header {
+    background-color: var(--bs-secondary-bg);
+    border-color: var(--bs-border-color);
+}
+
+/* Ensure proper contrast for placeholders in dark mode */
+[data-bs-theme="dark"] .form-control::placeholder,
+[data-bs-theme="dark"] .form-select::placeholder {
+    color: var(--bs-secondary-color);
+    opacity: 1;
+}
+
+/* Pagination in dark mode */
+[data-bs-theme="dark"] .pagination .page-link {
+    background-color: var(--bs-secondary-bg);
+    color: var(--bs-body-color);
+    border-color: var(--bs-border-color);
+}
+
+[data-bs-theme="dark"] .pagination .page-link:hover {
+    background-color: var(--bs-tertiary-bg);
+    color: var(--bs-body-color);
+}
+
+[data-bs-theme="dark"] .pagination .page-item.active .page-link {
+    background-color: #108dff;
+    border-color: #108dff;
+    color: white;
+}
+
+[data-bs-theme="dark"] .pagination .page-item.disabled .page-link {
+    background-color: var(--bs-tertiary-bg);
+    color: var(--bs-secondary-color);
+}
+
+/* Filter section background */
+.filter-section-bg {
+    background-color: #f0f4f7;
+}
+
+[data-bs-theme="dark"] .filter-section-bg {
+    background-color: #2a2b34;
+}
+
+/* Input group background for dark mode */
+.input-group-bg {
+    background-color: var(--bs-secondary-bg);
+}
+
+/* Additional dark mode utility classes to replace hardcoded bg-white and bg-light */
+.bg-themed {
+    background-color: var(--bs-secondary-bg) !important;
+}
+
+.bg-themed-light {
+    background-color: var(--bs-tertiary-bg) !important;
+}
+
+/* For elements that need white in light mode and secondary in dark mode */
+[data-bs-theme="light"] .bg-adaptive {
+    background-color: #ffffff !important;
+}
+
+[data-bs-theme="dark"] .bg-adaptive {
+    background-color: var(--bs-secondary-bg) !important;
+}
+
+/* For elements that need light gray in light mode and tertiary in dark mode */
+[data-bs-theme="light"] .bg-adaptive-light {
+    background-color: #f0f4f7 !important;
+}
+
+[data-bs-theme="dark"] .bg-adaptive-light {
+    background-color: var(--bs-tertiary-bg) !important;
+}
+
+/* Badge color adjustments for dark mode */
+[data-bs-theme="dark"] .badge.bg-light {
+    background-color: var(--bs-tertiary-bg) !important;
+    color: var(--bs-body-color) !important;
+}
+
+[data-bs-theme="dark"] .badge.text-dark {
+    color: var(--bs-body-color) !important;
+}
+
+/* Border color for dark mode */
+[data-bs-theme="dark"] .border-dark {
+    border-color: var(--bs-border-color) !important;
+}
+
 /*# sourceMappingURL=app.min.css.map */

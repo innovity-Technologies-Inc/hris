@@ -226,7 +226,7 @@
                             <div class="stat-icon rounded-3 d-flex align-items-center justify-content-center mb-2 fs-4">
                                 <i class="fas fa-building"></i>
                             </div>
-                            <div class="stat-label text-uppercase text-secondary small fw-semibold mb-2">
+                            <div class="stat-label text-uppercase small fw-semibold mb-2">
                                 Total Companies
                             </div>
                             <div class="stat-value h2 fw-bold text-dark mb-0" style="line-height: 1;">
