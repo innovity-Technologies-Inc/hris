@@ -1,7 +1,29 @@
 @extends('structure.master')
 @section('content')
     <div class="container-fluid mt-4">
-        <form method="POST" enctype="multipart/form-data">
+
+        {{-- Display Success/Error Messages --}}
+        @if (session('message'))
+            <div class="alert alert-{{ session('alert-type', 'info') }} alert-dismissible fade show" role="alert">
+                {{ session('message') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        {{-- Display Validation Errors --}}
+        @if ($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <h6 class="mb-2">Please fix the following errors:</h6>
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        <form method="POST" action="{{ route('plans.shift_plans.store') }}" enctype="multipart/form-data">
             @csrf
 
             <!-- Basic Shift Information -->
@@ -141,7 +163,8 @@
                         <div class="card-body" id="lunch_section" style="display: none;">
                             <div class="mb-3">
                                 <label for="lunch_start_time" class="form-label fw-semibold">Start Time</label>
-                                <input type="time" class="form-control" id="lunch_start_time" name="lunch_start_time">
+                                <input type="time" class="form-control" id="lunch_start_time"
+                                    name="lunch_start_time">
                             </div>
                             <div class="mb-0">
                                 <label for="lunch_end_time" class="form-label fw-semibold">End Time</label>
@@ -168,7 +191,8 @@
                         <div class="card-body" id="snacks_section" style="display: none;">
                             <div class="mb-3">
                                 <label for="snacks_start_time" class="form-label fw-semibold">Start Time</label>
-                                <input type="time" class="form-control" id="snacks_start_time" name="snacks_start_time">
+                                <input type="time" class="form-control" id="snacks_start_time"
+                                    name="snacks_start_time">
                             </div>
                             <div class="mb-0">
                                 <label for="snacks_end_time" class="form-label fw-semibold">End Time</label>
@@ -195,7 +219,8 @@
                         <div class="card-body" id="dinner_section" style="display: none;">
                             <div class="mb-3">
                                 <label for="dinner_start_time" class="form-label fw-semibold">Start Time</label>
-                                <input type="time" class="form-control" id="dinner_start_time" name="dinner_start_time">
+                                <input type="time" class="form-control" id="dinner_start_time"
+                                    name="dinner_start_time">
                             </div>
                             <div class="mb-0">
                                 <label for="dinner_end_time" class="form-label fw-semibold">End Time</label>
@@ -261,7 +286,8 @@
                 // Hide all break sections
                 ['breakfast', 'lunch', 'snacks', 'dinner'].forEach(function(breakType) {
                     document.getElementById(breakType + '_section').style.display = 'none';
-                    document.querySelector('input[name="' + breakType + '_status"][type="hidden"]').disabled = false;
+                    document.querySelector('input[name="' + breakType + '_status"][type="hidden"]')
+                        .disabled = false;
                 });
 
                 // Keep shift active status checked

@@ -22,6 +22,7 @@ use App\Http\Controllers\EmployeeSalaryBreakdownController;
 use App\Http\Controllers\EmployeeNomineeController;
 use App\Http\Controllers\EmployeeBankAccountController;
 use App\Http\Controllers\MealPlansController;
+use App\Http\Controllers\ShiftPlanController;
 
 Route::get('test', function () {
    return view('plans.bulk_uploads.form');
@@ -239,6 +240,18 @@ Route::prefix('plans')->group(function () {
             Route::put('update/{id}', 'update')->name('plans.meal_plans.update');
             Route::delete('delete/{id}', 'delete')->name('plans.meal_plans.delete');
             Route::post('import', 'import')->name('plans.meal_plans.import');
+
+        });
+    });
+
+    Route::prefix('shift-plans')->group(function () {
+        Route::controller(ShiftPlanController::class)->group(function(){
+            Route::get('/', 'index')->name('plans.shift_plans.index');
+            Route::get('create', 'create')->name('plans.shift_plans.create');
+            Route::post('store', 'store')->name('plans.shift_plans.store');
+            Route::put('update/{id}', 'update')->name('plans.shift_plans.update');
+            Route::delete('delete/{id}', 'delete')->name('plans.shift_plans.delete');
+            Route::post('import', 'import')->name('plans.shift_plans.import');
 
         });
     });
