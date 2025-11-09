@@ -10,7 +10,7 @@
                         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                     </a>
                 </div><!-- end card header -->
-                
+
 
                 <div class="card-body">
                     <div class="table-responsive">
@@ -21,7 +21,7 @@
                                     <th scope="col">Division Name</th>
                                     <th scope="col">Short Name</th>
                                     <th scope="col">Company</th>
-                                    <th scope="col">Location</th>
+                                    <th scope="col">Branch</th>
                                     <th scope="col">Remarks</th>
                                     <th scope="col">Action</th>
                                 </tr>
@@ -56,7 +56,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        
+
                         <div class="mt-3">
                             {{$divisions->links()}}
                         </div>

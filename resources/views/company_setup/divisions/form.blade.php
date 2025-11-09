@@ -62,11 +62,11 @@
                                         @enderror
                                     </div>
                                     <div class="col-md-6 mb-2">
-                                        <label for="location_id" class="form-label">Location <span
+                                        <label for="location_id" class="form-label">Branch <span
                                                 class="text-danger">*</span></label>
                                         <select id="location_id" class="form-select select2_list" name="location_id"
                                             required>
-                                            <option value="">Select Location</option>
+                                            <option value="">Select Branch</option>
                                             @foreach ($locations as $location)
                                                 <option value="{{ $location->id }}"
                                                     {{ isset($division) && $division->location_id == $location->id ? 'selected' : '' }}>
