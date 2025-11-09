@@ -77,41 +77,38 @@ class PlanService
         $validate = $request->validate([
             'shift_name' => 'required|string|max:255',
             'clock_in_time' => 'required|date_format:H:i',
-            'clock_out_time' => 'required|date_format:H:i|after:clock_in_time',
-            'treat_as_full_day_minutes' => 'required|integer|min:0',
-            'treat_as_half_day_minutes' => 'required|integer|min:0',
+            'clock_out_time' => 'required|date_format:H:i',
+            'treat_as_full_day_minutes' => 'nullable|integer|min:0',
+            'treat_as_half_day_minutes' => 'nullable|integer|min:0',
             'grace_time' => 'nullable|date_format:H:i',
             'late_after_minutes' => 'nullable|integer|min:0',
             'excessive_late_after_minutes' => 'nullable|integer|min:0',
-            'early_out_grace_minutes' => 'required|integer|min:0',
+            'early_out_grace_minutes' => 'nullable|integer|min:0',
             'early_out_before' => 'nullable|date_format:H:i',
 
             // Meal fields
             'breakfast_status' => 'required|in:active,inactive',
             'breakfast_start_time' => 'nullable|date_format:H:i|required_if:breakfast_status,active',
-            'breakfast_end_time' => 'nullable|date_format:H:i|required_if:breakfast_status,active|after:breakfast_start_time',
+            'breakfast_end_time' => 'nullable|date_format:H:i|required_if:breakfast_status,active',
 
             'lunch_status' => 'required|in:active,inactive',
             'lunch_start_time' => 'nullable|date_format:H:i|required_if:lunch_status,active',
-            'lunch_end_time' => 'nullable|date_format:H:i|required_if:lunch_status,active|after:lunch_start_time',
+            'lunch_end_time' => 'nullable|date_format:H:i|required_if:lunch_status,active',
 
             'snacks_status' => 'required|in:active,inactive',
             'snacks_start_time' => 'nullable|date_format:H:i|required_if:snacks_status,active',
-            'snacks_end_time' => 'nullable|date_format:H:i|required_if:snacks_status,active|after:snacks_start_time',
+            'snacks_end_time' => 'nullable|date_format:H:i|required_if:snacks_status,active',
 
             'dinner_status' => 'required|in:active,inactive',
             'dinner_start_time' => 'nullable|date_format:H:i|required_if:dinner_status,active',
-            'dinner_end_time' => 'nullable|date_format:H:i|required_if:dinner_status,active|after:dinner_start_time',
+            'dinner_end_time' => 'nullable|date_format:H:i|required_if:dinner_status,active',
 
             'active_ind' => 'required|in:active,inactive',
         ], [
             // Custom error messages
             'shift_name.required' => 'Shift name is required.',
             'clock_in_time.required' => 'Clock in time is required.',
-            'clock_out_time.after' => 'Clock out time must be after clock in time.',
-            'treat_as_full_day_minutes.required' => 'Please specify full day minutes.',
-            'treat_as_half_day_minutes.required' => 'Please specify half day minutes.',
-            'early_out_grace_minutes.required' => 'Early out grace minutes are required.',
+            'clock_out_time.required' => 'Clock out time is required.',
             'breakfast_end_time.after' => 'Breakfast end time must be after start time.',
             'lunch_end_time.after' => 'Lunch end time must be after start time.',
             'snacks_end_time.after' => 'Snacks end time must be after start time.',
