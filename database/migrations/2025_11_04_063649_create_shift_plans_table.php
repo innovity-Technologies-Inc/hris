@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('shift_plans', function (Blueprint $table) {
-            $table->id();
-           $table->string('shift_name');
+            $table->id()->index();
+            $table->string('shift_name');
             $table->time('clock_in_time');
             $table->time('clock_out_time');
             $table->integer('treat_as_full_day_minutes');

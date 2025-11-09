@@ -66,21 +66,21 @@
 
                                 {{-- Third Row: Start Time, End Time, Cost --}}
                                 <div class="mb-3 row">
-                                    <div class="col-lg-4">
-                                        <label for="start_time" class="form-label">Start Time<span class="text-danger">*</span></label>
-                                        <input type="time" id="start_time" class="form-control" name="start_time" value="{{old('start_time')}}">
-                                        @error('start_time')
-                                        <small class="text-danger">{{$message}}</small>
-                                        @enderror
-                                    </div>
+{{--                                    <div class="col-lg-4">--}}
+{{--                                        <label for="start_time" class="form-label">Start Time<span class="text-danger">*</span></label>--}}
+{{--                                        <input type="time" id="start_time" class="form-control" name="start_time" value="{{old('start_time')}}">--}}
+{{--                                        @error('start_time')--}}
+{{--                                        <small class="text-danger">{{$message}}</small>--}}
+{{--                                        @enderror--}}
+{{--                                    </div>--}}
 
-                                    <div class="col-lg-4">
-                                        <label for="end_time" class="form-label">End Time<span class="text-danger">*</span></label>
-                                        <input type="time" id="end_time" class="form-control" name="end_time" value="{{old('end_time')}}">
-                                        @error('end_time')
-                                        <small class="text-danger">{{$message}}</small>
-                                        @enderror
-                                    </div>
+{{--                                    <div class="col-lg-4">--}}
+{{--                                        <label for="end_time" class="form-label">End Time<span class="text-danger">*</span></label>--}}
+{{--                                        <input type="time" id="end_time" class="form-control" name="end_time" value="{{old('end_time')}}">--}}
+{{--                                        @error('end_time')--}}
+{{--                                        <small class="text-danger">{{$message}}</small>--}}
+{{--                                        @enderror--}}
+{{--                                    </div>--}}
 
                                     <div class="col-lg-4">
                                         <label for="cost" class="form-label">Cost (Tk)<span class="text-danger">*</span></label>

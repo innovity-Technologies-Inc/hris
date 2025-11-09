@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "83195d649e9f571080946b72d605cea6",
+    "content-hash": "dfcafe7ff95b38498f73aa4c3bdbce65",
     "packages": [
         {
             "name": "brick/math",
@@ -293,16 +293,16 @@
         },
         {
             "name": "daiyanmozumder/laravel-flexsearch",
-            "version": "v1.0.0",
+            "version": "v3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MiltonDaiyan/LaravelFlexSearch.git",
-                "reference": "e0b5bb933e5f0504268f232791c8b8e0eaac94d2"
+                "reference": "d8b3532bd7ce579ba885e699a72c02405731d055"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MiltonDaiyan/LaravelFlexSearch/zipball/e0b5bb933e5f0504268f232791c8b8e0eaac94d2",
-                "reference": "e0b5bb933e5f0504268f232791c8b8e0eaac94d2",
+                "url": "https://api.github.com/repos/MiltonDaiyan/LaravelFlexSearch/zipball/d8b3532bd7ce579ba885e699a72c02405731d055",
+                "reference": "d8b3532bd7ce579ba885e699a72c02405731d055",
                 "shasum": ""
             },
             "require": {
@@ -335,9 +335,9 @@
             "description": "A flexible Laravel search and filter helper for Eloquent models.",
             "support": {
                 "issues": "https://github.com/MiltonDaiyan/LaravelFlexSearch/issues",
-                "source": "https://github.com/MiltonDaiyan/LaravelFlexSearch/tree/v1.0.0"
+                "source": "https://github.com/MiltonDaiyan/LaravelFlexSearch/tree/v3.0.0"
             },
-            "time": "2025-10-27T21:16:02+00:00"
+            "time": "2025-11-06T07:44:02+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
