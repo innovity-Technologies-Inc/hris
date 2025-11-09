@@ -75,12 +75,12 @@ class PlanService
     public function shiftPlanValidation($request)
     {
         $validate = $request->validate([
-            'shift_name' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'clock_in_time' => 'required|date_format:H:i',
             'clock_out_time' => 'required|date_format:H:i',
             'treat_as_full_day_minutes' => 'nullable|integer|min:0',
             'treat_as_half_day_minutes' => 'nullable|integer|min:0',
-            'grace_time' => 'nullable|date_format:H:i',
+            'grace_time' => 'nullable|integer|min:0',
             'late_after_minutes' => 'nullable|integer|min:0',
             'excessive_late_after_minutes' => 'nullable|integer|min:0',
             'early_out_grace_minutes' => 'nullable|integer|min:0',

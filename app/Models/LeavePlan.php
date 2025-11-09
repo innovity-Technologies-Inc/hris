@@ -10,7 +10,7 @@ class LeavePlan extends Model
     use HasFactory;
 
     protected $fillable = [
-        'leave_name',
+        'name',
         'short_name',
         'applicable_gender',
         'day_type',
