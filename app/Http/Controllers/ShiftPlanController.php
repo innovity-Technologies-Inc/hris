@@ -20,8 +20,8 @@ class ShiftPlanController extends Controller
         $title = 'Shift Plan';
         $section = 'Plans Setup';
         $sub_section = 'Shift Plan';
-        $plans = $this->planServices->getPlans(ShiftPlan::class, 20);
-        return view('plans.shift_plans.index', compact('title', 'section', 'sub_section', 'plans'));
+        $shiftPlans = $this->planServices->getPlans(ShiftPlan::class, 20);
+        return view('plans.shift_plans.index', compact('title', 'section', 'sub_section', 'shiftPlans'));
     }
     public function store(Request $request){
         $validated = $this->planServices->shiftPlanValidation($request);
