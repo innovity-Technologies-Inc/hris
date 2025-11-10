@@ -115,7 +115,7 @@
 
                             <li>
                                 <a class='tp-link @if (Route::is('company_locations.*')) menuitem-active @endif'
-                                    href='{{ route('company_locations.index') }}'>Company Locations</a>
+                                    href='{{ route('company_locations.index') }}'>Company Branches</a>
                             </li>
                             <li>
                                 <a class='tp-link @if (Route::is('divisions.*')) menuitem-active @endif'
@@ -152,7 +152,7 @@
 
                             <li>
                                 <a class='tp-link @if (Route::is('branches.*')) menuitem-active @endif'
-                                    href='{{ route('branches.index') }}'>Branches</a>
+                                    href='{{ route('branches.index') }}'>Bank Branches</a>
                             </li>
 
                             <li>
@@ -174,9 +174,14 @@
                     </div>
                 </li>
 
-
-
-
+                <!-- Organization Structure Menu -->
+                <li>
+                    <a href="{{ route('organization-structure.index') }}"
+                        class="@if (Route::is('organization-structure.*')) menuitem-active @endif">
+                        <i data-feather="git-branch"></i>
+                        <span> Structure </span>
+                    </a>
+                </li>
 
             </ul>
 

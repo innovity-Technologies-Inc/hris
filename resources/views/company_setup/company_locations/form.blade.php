@@ -7,9 +7,8 @@
             <div class="card">
 
                 <div class="card-header">
-                    <h5 class="card-title mb-0">{{ isset($company_location) ? 'Edit' : 'Add' }} Company Location</h5>
+                    <h5 class="card-title mb-0">{{ isset($company_location) ? 'Edit' : 'Add' }} Company Branch</h5>
                 </div>
-
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-12">
@@ -41,10 +40,10 @@
                                     </div>
 
                                     <div class="col-lg-12 mb-2">
-                                        <label for="unit_name" class="form-label">Unit Name <span
+                                        <label for="unit_name" class="form-label">Branch Name <span
                                                 class="text-danger">*</span></label>
                                         <input type="text" id="unit_name" class="form-control" name="unit_name"
-                                            placeholder="Enter Unit Name"
+                                            placeholder="Enter Branch Name"
                                             value="{{ isset($company_location) ? $company_location->unit_name : old('unit_name') }}"
                                             required maxlength="255">
                                         @error('unit_name')

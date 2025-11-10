@@ -15,31 +15,21 @@ class DesignationController extends Controller
         $section = 'Company Setup';
         $sub_section = 'Designation';
         $designations = Designation::orderBy('company_designation')->paginate(10);
-        $companies = Company::orderBy('name')->get();
-        $locations = CompanyLocation::orderBy('unit_name')->get();
-        $divisions = Division::orderBy('division_name')->get();
-        return view('company_setup.designation.index', compact('title', 'section', 'sub_section', 'designations', 'companies', 'locations', 'divisions'));
+        return view('company_setup.designation.index', compact('title', 'section', 'sub_section', 'designations'));
     }
     public function create(){
         $title = 'Create Designation';
         $section = 'Company Setup';
         $sub_section = 'Designation';
-        $companies = Company::all()->sortBy('name');
-        $locations = CompanyLocation::all()->sortBy('unit_name');
-        $divisions = Division::all()->sortBy('division_name');
-        return view('company_setup.designation.form', compact('title', 'section', 'sub_section', 'companies', 'locations', 'divisions'));
+        return view('company_setup.designation.form', compact('title', 'section', 'sub_section'));
     }
       public function store(Request $request)
     {
         $validatedData =  $request->validate([
-            'company_id' => 'required',
-            'location_id' => 'required',
-            'division_id' => 'required',
             'designation_level' => 'required|string|max:255',
             'company_designation' => 'required|string|max:255',
             'status' => 'required|in:active,inactive',
         ], [
-            'division_name.required' => 'Please enter a division name.',
             'short_name.required' => 'Please enter a short name.',
             'status.required' => 'Please select a status.',
         ]);
@@ -55,22 +45,15 @@ class DesignationController extends Controller
         $title = 'Edit Designation';
         $section = 'Company Setup';
         $sub_section = 'Designation';
-        $companies = Company::all()->sortBy('name');
-        $locations = CompanyLocation::all()->sortBy('unit_name');
-        $divisions = Division::all()->sortBy('division_name');
         $designation = Designation::findOrFail($id);
-        return view('company_setup.designation.form', compact('title', 'section', 'sub_section', 'companies', 'locations', 'divisions', 'designation'));
+        return view('company_setup.designation.form', compact('title', 'section', 'sub_section', 'designation'));
     }
     public function update(Request $request, $id){
         $validatedData =  $request->validate([
-            'company_id' => 'required',
-            'location_id' => 'required',
-            'division_id' => 'required',
             'designation_level' => 'required|string|max:255',
             'company_designation' => 'required|string|max:255',
             'status' => 'required|in:active,inactive',
         ], [
-            'division_name.required' => 'Please enter a division name.',
             'short_name.required' => 'Please enter a short name.',
             'status.required' => 'Please select a status.',
         ]);

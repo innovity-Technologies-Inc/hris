@@ -17,7 +17,7 @@
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Unit Name</th>
+                                    <th scope="col">Branch Name</th>
                                     <th scope="col">Company Name</th>
                                     <th scope="col">Location Address</th>
                                     <th scope="col">Action</th>

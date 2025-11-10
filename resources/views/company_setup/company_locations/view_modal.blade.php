@@ -5,7 +5,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="viewLocationModalLabel{{ $location->id }}">
-                    <i class="fas fa-map-marker-alt me-2"></i>Company Location Details
+                    <i class="fas fa-map-marker-alt me-2"></i>Company Branch Details
                     @if ($location->status == 'active')
                         <span class="badge bg-success ms-2">Active</span>
                     @else
@@ -32,7 +32,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <p class="mb-2">
-                                            <strong>Unit Name:</strong><br>
+                                            <strong>Branch Name:</strong><br>
                                             <span class="text-muted">{{ $location->unit_name ?? 'N/A' }}</span>
                                         </p>
                                     </div>

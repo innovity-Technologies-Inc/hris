@@ -12,9 +12,9 @@ class CompanyLocationController extends Controller
 {
     public function index()
     {
-        $title = 'Company Locations';
+        $title = 'Company Branches';
         $section = 'Company Setup';
-        $sub_section = 'Company Locations';
+        $sub_section = 'Company Branches';
         $locations = CompanyLocation::latest()->paginate(10);
         return view('company_setup.company_locations.index', compact('title', 'section', 'sub_section', 'locations'));
     }
