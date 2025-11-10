@@ -7,7 +7,7 @@
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-header">
-                    <a type="button" class="btn btn-primary btn-sm" href="{{ route('plans.shift_plans.create') }}">
+                    <a type="button" class="btn btn-warning btn-sm" href="{{ route('plans.shift_plans.create') }}">
                         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                     </a>
                 </div><!-- end card header -->
@@ -25,10 +25,10 @@
                             </thead>
                             <tbody>
                                 @php($i = 1)
-                            @foreach($shiftPlans as $item)
+                            @foreach($plans as $item)
                                 <tr>
                                     <th scope="row">{{ $i++ }}</th>
-                                    <td>{{ $item->shift_name }}</td>
+                                    <td>{{ $item->name }}</td>
                                     <td>
                                         @if($item->active_ind == 'active')
                                             <span class="badge text-bg-success">Active</span>
@@ -37,19 +37,19 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <a type="button" class="btn btn-primary btn-sm" href="#" title="View">
+                                        <a type="button" class="btn btn-primary btn-sm" href="{{ route('plans.shift_plans.show', $item->id) }}" title="View">
                                             <i style="height: 12px; width: 12px" data-feather="eye"></i>
                                         </a>
 
-                                        <a type="button" class="btn btn-warning btn-sm" href="#" title="Edit">
+                                        <a type="button" class="btn btn-warning btn-sm" href="{{ route('plans.shift_plans.edit', $item->id) }}" title="Edit">
                                             <i style="height: 12px; width: 12px" data-feather="edit"></i>
                                         </a>
 
-                                        <form action="#" method="POST" style="display: inline-block">
+                                        <form action="{{ route('plans.shift_plans.delete', $item->id) }}" method="POST" style="display: inline-block">
                                             @csrf
                                             @method('DELETE')
 
-                                            <button class="btn btn-sm btn-danger confirmDelete" title="Delete">
+                                            <button class="btn btn-sm btn-danger confirmDelete" title="Delete" type="submit">
                                                 <i style="height: 12px; width: 12px" data-feather="trash"></i>
                                             </button>
                                         </form>
@@ -61,7 +61,7 @@
                         </table>
 
                         <div class="mt-3">
-                            {{-- $shiftPlans->links() --}}
+                            {{ $plans->links() }}
                         </div>
                     </div>
                 </div>

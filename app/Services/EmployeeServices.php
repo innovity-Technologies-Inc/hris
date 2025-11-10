@@ -48,7 +48,7 @@ class EmployeeServices
         $employees = $flexsearch->apply( $query,
             $filters,
             $searchTerm,
-            $searchableFields)->orderBy('first_name', 'asc')->paginate(50);
+            $searchableFields)->orderBy('id', 'desc')->paginate(50);
 
         return $employees;
     }
@@ -286,8 +286,8 @@ class EmployeeServices
         return $grades;
     }
 
-    public function getDesignationsByDivision($division_id){
-        $designations= Designation::where('division_id', $division_id)->get();
+    public function getDesignations(){
+        $designations= Designation::all();
         return $designations;
     }
 

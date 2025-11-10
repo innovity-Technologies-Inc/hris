@@ -20,10 +20,12 @@
                 </tr>
             </thead>
             <tbody>
-                @php($i = 1)
+            @php
+                $sl = \App\HelperClass::indexNumberSerialization($employees);
+            @endphp
                 @foreach ($employees as $employee)
                     <tr>
-                        <th scope="row">{{ $i++ }}</th>
+                        <th scope="row">{{ $sl++ }}</th>
                         <td>
                             @if ($employee->photo_path)
                                 <img src="{{ asset('storage/' . $employee->photo_path) }}" alt="Profile"

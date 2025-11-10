@@ -27,10 +27,12 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @php($i=1)
+                            @php
+                                $sl = \App\HelperClass::indexNumberSerialization($bank_accounts);
+                            @endphp
                             @foreach($bank_accounts as $item)
                                 <tr>
-                                    <th scope="row">{{$i++}}</th>
+                                    <th scope="row">{{$sl++}}</th>
                                     <td>{{$item->account_no}}</td>
                                     <td>{{$item->holder_name}}</td>
                                     <td>{{$item->getBank->name}}</td>

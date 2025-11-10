@@ -250,6 +250,8 @@ Route::prefix('plans')->group(function () {
             Route::get('/', 'index')->name('plans.shift_plans.index');
             Route::get('create', 'create')->name('plans.shift_plans.create');
             Route::post('store', 'store')->name('plans.shift_plans.store');
+            Route::get('{id}', 'show')->name('plans.shift_plans.show');
+            Route::get('edit/{id}', 'edit')->name('plans.shift_plans.edit');
             Route::put('update/{id}', 'update')->name('plans.shift_plans.update');
             Route::delete('delete/{id}', 'delete')->name('plans.shift_plans.delete');
             Route::post('import', 'import')->name('plans.shift_plans.import');

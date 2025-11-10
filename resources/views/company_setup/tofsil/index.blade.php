@@ -24,10 +24,12 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @php($i=1)
+                            @php
+                                $sl = \App\HelperClass::indexNumberSerialization($tofsils);
+                            @endphp
                             @foreach($tofsils as $item)
                                 <tr>
-                                    <th scope="row">{{$i++}}</th>
+                                    <th scope="row">{{$sl++}}</th>
                                     <td>{{$item->name}}</td>
 
                                     <td>

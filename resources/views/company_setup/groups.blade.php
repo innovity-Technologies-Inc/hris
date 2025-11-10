@@ -1,25 +1,73 @@
 @extends('structure.master')
-
 @section('content')
-    {{-- List of Company Locations --}}
+    {{--    Form --}}
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Add Group Name</h5>
+                </div><!-- end card header -->
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <form action="{{ route('groups.save') }}" method="post">
+                                @csrf
+                                @method('put')
+                                <div class="mb-3 row">
+                                    <div class="col-lg-12">
+                                        <label for="simpleinput" class="form-label">Group Name<span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" id="simpleinput" class="form-control" name="name"
+                                            placeholder="Enter Group Name" value="{{ isset($group) ? $group->name : old('name') }}">
+                                        @error('name')
+                                            <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
+
+                                    {{--<div class="col-lg-4">
+                                        <label for="example-select" class="form-label">Status</label>
+                                        <select class="form-select" id="example-select" name="status">
+                                            <option value="active">Active</option>
+                                            <option value="inactive">Inactive</option>
+                                        </select>
+                                    </div>--}}
+
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">Submit</button>
+
+
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    {{--    list --}}
+    {{--
     <div class="row">
         <div class="col-xl-12">
             <div class="card">
-                 <div class="card-header">
-                    <a type="button" class="btn btn-warning btn-sm" href="{{route('divisions.create')}}">
-                        <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
-                    </a>
-                </div><!-- end card header -->
-
-
-                <div class="card-body">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Group List</h5>
                     <form id="filterForm">
-                        {{-- First Row: Keyword Search --}}
-                        <div class="row mb-3">
+                        --}}
+    {{-- First Row: Keyword Search --}}{{--
+
+                        <div class="row mb-1 mt-2">
                             <div class="col-12">
                                 <div class="input-group input-group-md">
                                     <input type="text" class="form-control border-end-0" id="keywordSearch"
-                                           name="keyword" placeholder="Search divisions by name"
+                                           name="keyword" placeholder="Search groups by name"
                                            aria-label="Keyword Search" value="{{ request('keyword') }}">
                                     <span class="input-group-text border-start-0 input-group-bg">
                                                     <i class="mdi mdi-magnify text-muted"></i>
@@ -28,25 +76,23 @@
                             </div>
                         </div>
                     </form>
+                </div><!-- end card header -->
 
-                    <div class="table-responsive" id="search-result">
-                            @include('company_setup.divisions.search_results')
-                        <div class="mt-3">
-                            {{$divisions->links()}}
-                        </div>
-                    </div>
+                <div class="card-body" id="search-result">
+                    @include('company_setup.group_search_results')
                 </div>
-            </div><!-- end card -->
+            </div>
         </div>
-    </div><!-- end row -->
 
+    </div>
+--}}
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <script>
         $(document).ready(function() {
             // Function to perform AJAX search
-            function fetchData(url = "{{ route('divisions.index') }}") {
+            function fetchData(url = "{{ route('groups.index') }}") {
                 const queryString = $('#filterForm').serialize();
 
                 $.ajax({
@@ -88,7 +134,7 @@
                 $('.select2_list').val(null).trigger('change');
 
                 // Reload the page without query string
-                window.location.href = "{{ route('divisions.index') }}";
+                window.location.href = "{{ route('groups.index') }}";
             });
 
             // Handle pagination via AJAX
@@ -97,6 +143,13 @@
                 const url = $(this).attr('href');
                 fetchData(url);
             });
+        });
+    </script>
+
+    <script>
+        document.getElementById('resetFilters').addEventListener('click', function() {
+            document.getElementById('keywordSearch').value = '';
+            document.getElementById('filterForm').submit();
         });
     </script>
 @endsection

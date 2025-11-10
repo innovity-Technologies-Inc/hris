@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('shift_plans', function (Blueprint $table) {
             $table->id()->index();
-            $table->string('shift_name');
+            $table->string('name')->index();;
             $table->time('clock_in_time');
             $table->time('clock_out_time');
             $table->integer('treat_as_full_day_minutes');
             $table->integer('treat_as_half_day_minutes');
-            $table->time('grace_time')->nullable();
+            $table->integer('grace_time')->nullable();
             $table->integer('late_after_minutes')->nullable();
             $table->integer('excessive_late_after_minutes')->nullable();
             $table->integer('early_out_grace_minutes')->default(5);

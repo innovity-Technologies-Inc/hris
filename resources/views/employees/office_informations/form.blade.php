@@ -192,7 +192,13 @@
                                         id="joining_designation_id" name="joining_designation_id"
                                         data-placeholder="Select Designation">
                                         <option value="">Select Designation</option>
-
+                                        @foreach ($designations as $item)
+                                            <option
+                                                value="{{ $item->id }}"
+                                                {{ old('joining_designation_id', $employee_office_info->joining_designation_id ?? '') == $item->id ? 'selected' : '' }}>
+                                                {{ $item->company_designation }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                     @error('joining_designation_id')
                                         <small class="text-danger">{{ $message }}</small>
@@ -249,7 +255,8 @@
                                                 value="{{ $company->id }}"
                                                 {{ old('joining_company_id', $employee_office_info->joining_company_id ?? '') == $company->id ? 'selected' : '' }}>
                                                 {{ $company->name }}
-                                            </option>                                        @endforeach
+                                            </option>
+                                        @endforeach
                                     </select>
                                     @error('current_company_id')
                                         <small class="text-danger">{{ $message }}</small>
@@ -316,7 +323,13 @@
                                         id="current_designation_id" name="current_designation_id"
                                         data-placeholder="Select Designation">
                                         <option value="">Select Designation</option>
-                                        <!-- Add designation options dynamically -->
+                                        @foreach ($designations as $item)
+                                            <option
+                                                value="{{ $item->id }}"
+                                                {{ old('current_designation_id', $employee_office_info->current_designation_id ?? '') == $item->id ? 'selected' : '' }}>
+                                                {{ $item->company_designation }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                     @error('current_designation_id')
                                         <small class="text-danger">{{ $message }}</small>
@@ -485,43 +498,43 @@
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="weekends[]"
                                             id="weekend_friday" value="Friday"
-                                            {{ in_array('Friday', old('weekends', [])) || isset($employee_office_info) && in_array('Friday',  $employee_office_info->weekends) ? 'checked' : '' }}>
+                                            {{ in_array('Friday', old('weekends', [])) || isset($employee_office_info) && in_array('Friday',  $employee_office_info->weekends ?? []) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="weekend_friday">Friday</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="weekends[]"
                                             id="weekend_saturday" value="Saturday"
-                                            {{ in_array('Saturday', old('weekends', [])) || isset($employee_office_info) && in_array('Saturday', $employee_office_info->weekends)  ? 'checked' : '' }}>
+                                            {{ in_array('Saturday', old('weekends', [])) || isset($employee_office_info) && in_array('Saturday', $employee_office_info->weekends ?? [])  ? 'checked' : '' }}>
                                         <label class="form-check-label" for="weekend_saturday">Saturday</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="weekends[]"
                                             id="weekend_sunday" value="Sunday"
-                                            {{ in_array('Sunday', old('weekends', [])) || isset($employee_office_info) && in_array('Sunday', $employee_office_info->weekends) ? 'checked' : '' }}>
+                                            {{ in_array('Sunday', old('weekends', [])) || isset($employee_office_info) && in_array('Sunday', $employee_office_info->weekends ?? []) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="weekend_sunday">Sunday</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="weekends[]"
                                                id="" value="Monday"
-                                            {{ in_array('Monday', old('weekends', [])) || isset($employee_office_info) && in_array('Monday', $employee_office_info->weekends) ? 'checked' : '' }}>
+                                            {{ in_array('Monday', old('weekends', [])) || isset($employee_office_info) && in_array('Monday', $employee_office_info->weekends ?? []) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="">Monday</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="weekends[]"
                                                id="" value="Tuesday"
-                                            {{ in_array('Tuesday', old('weekends', [])) || isset($employee_office_info) && in_array('Tuesday', $employee_office_info->weekends) ? 'checked' : '' }}>
+                                            {{ in_array('Tuesday', old('weekends', [])) || isset($employee_office_info) && in_array('Tuesday', $employee_office_info->weekends ?? []) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="">Tuesday</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="weekends[]"
                                                id="" value="Wednesday"
-                                            {{ in_array('Wednesday', old('weekends', [])) || isset($employee_office_info) && in_array('Wednesday', $employee_office_info->weekends) ? 'checked' : '' }}>
+                                            {{ in_array('Wednesday', old('weekends', [])) || isset($employee_office_info) && in_array('Wednesday', $employee_office_info->weekends ?? []) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="">Wednesday</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="weekends[]"
                                                id="" value="Thursday"
-                                            {{ in_array('Thursday', old('weekends', [])) || isset($employee_office_info) && in_array('Thursday', $employee_office_info->weekends) ? 'checked' : '' }}>
+                                            {{ in_array('Thursday', old('weekends', [])) || isset($employee_office_info) && in_array('Thursday', $employee_office_info->weekends ?? []) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="">Thursday</label>
                                     </div>
                                     @error('weekends')
@@ -534,44 +547,50 @@
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="alternate_off_day[]"
                                                id="weekend_friday" value="Friday"
-                                            {{ in_array('Friday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Friday', $employee_office_info->alternate_off_day) ? 'checked' : '' }}>
+                                            {{ in_array('Friday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Friday', $employee_office_info->alternate_off_day ?? []) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="weekend_friday">Friday</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="alternate_off_day[]"
                                                id="weekend_saturday" value="Saturday"
-                                            {{ in_array('Saturday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Saturday', $employee_office_info->alternate_off_day)  ? 'checked' : '' }}>
+                                            {{ in_array('Saturday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Saturday', $employee_office_info->alternate_off_day ?? [])  ? 'checked' : '' }}>
                                         <label class="form-check-label" for="weekend_saturday">Saturday</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="alternate_off_day[]"
                                                id="weekend_sunday" value="Sunday"
-                                            {{ in_array('Sunday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Sunday', $employee_office_info->alternate_off_day) ? 'checked' : '' }}>
+                                            {{ in_array('Sunday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Sunday', $employee_office_info->alternate_off_day ?? []) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="weekend_sunday">Sunday</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="alternate_off_day[]"
                                                id="" value="Monday"
-                                            {{ in_array('Monday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Monday', $employee_office_info->alternate_off_day) ? 'checked' : '' }}>
+                                            {{ in_array('Monday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Monday', $employee_office_info->alternate_off_day ?? []) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="">Monday</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="alternate_off_day[]"
                                                id="" value="Tuesday"
-                                            {{ in_array('Tuesday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Tuesday', $employee_office_info->alternate_off_day) ? 'checked' : '' }}>
+                                            {{ in_array('Tuesday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Tuesday', $employee_office_info->alternate_off_day ?? []) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="">Tuesday</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="alternate_off_day[]"
                                                id="" value="Wednesday"
-                                            {{ in_array('Wednesday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Wednesday', $employee_office_info->alternate_off_day) ? 'checked' : '' }}>
+                                            {{ in_array('Wednesday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Wednesday', $employee_office_info->alternate_off_day ?? []) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="">Wednesday</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="alternate_off_day[]"
                                                id="" value="Thursday"
-                                            {{ in_array('Thursday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Thursday', $employee_office_info->alternate_off_day) ? 'checked' : '' }}>
+                                            {{ in_array('Thursday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Thursday', $employee_office_info->alternate_off_day ?? []) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="">Thursday</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="alternate_off_day[]"
+                                               id="" value="None"
+                                            {{ in_array('None', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('None', $employee_office_info->alternate_off_day ?? []) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="">None</label>
                                     </div>
                                     @error('alternate_off_day')
                                     <small class="text-danger d-block">{{ $message }}</small>
@@ -710,7 +729,7 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-end gap-2">
                                 <button type="reset" class="btn btn-secondary">Reset</button>
-                                <button type="submit" class="btn btn-primary">Submit Payroll Information</button>
+                                <button type="submit" class="btn btn-primary">Submit</button>
                             </div>
                         </div>
                     </div>
@@ -756,7 +775,6 @@
 
         });
     </script>
-
 
     <script>
         $(function() {
@@ -814,7 +832,7 @@
                 }
             }
 
-            function loadDesignations(divisionId, selectedDesignation = null) {
+            /*function loadDesignations(divisionId, selectedDesignation = null) {
                 if (divisionId) {
                     $.get('/get-designations/' + divisionId, function(data) {
                         let $designationSelect = $('#joining_designation_id');
@@ -825,7 +843,7 @@
                         });
                     });
                 }
-            }
+            }*/
 
             // --- Change Events ---
             $('#joining_company_id').on('change', function() {
@@ -844,9 +862,9 @@
                 loadSections($(this).val());
             });
 
-            $('#joining_division_id').on('change', function() {
+            /*$('#joining_division_id').on('change', function() {
                 loadDesignations($(this).val());
-            });
+            });*/
 
             // --- Auto-load existing values from DB when editing ---
             @if(isset($employee_office_info))
@@ -855,7 +873,7 @@
             let divisionId  = "{{ old('joining_division_id', $employee_office_info->joining_division_id ?? '') }}";
             let deptId      = "{{ old('joining_department_id', $employee_office_info->joining_department_id ?? '') }}";
             let sectionId   = "{{ old('joining_section_id', $employee_office_info->joining_section_id ?? '') }}";
-            let designationId   = "{{ old('joining_designation_id', $employee_office_info->joining_designation_id ?? '') }}";
+            {{--let designationId   = "{{ old('joining_designation_id', $employee_office_info->joining_designation_id ?? '') }}";--}}
 
             if (companyId) {
                 loadUnits(companyId, unitId);
@@ -863,7 +881,7 @@
                     loadDivisions(unitId, divisionId);
                     if (divisionId) {
                         loadDepartments(divisionId, deptId);
-                        loadDesignations(divisionId, designationId);
+                        // loadDesignations(divisionId, designationId);
                         if (deptId) {
                             loadSections(deptId, sectionId);
                         }
@@ -931,7 +949,7 @@
                 }
             }
 
-            function loadDesignations(divisionId, selectedDesignation = null) {
+            /*function loadDesignations(divisionId, selectedDesignation = null) {
                 if (divisionId) {
                     $.get('/get-designations/' + divisionId, function(data) {
                         let $designationSelect = $('#current_designation_id');
@@ -942,7 +960,7 @@
                         });
                     });
                 }
-            }
+            }*/
 
             // --- Change Events ---
             $('#current_company_id').on('change', function() {
@@ -961,9 +979,9 @@
                 loadSections($(this).val());
             });
 
-            $('#current_division_id').on('change', function() {
+            /*$('#current_division_id').on('change', function() {
                 loadDesignations($(this).val());
-            });
+            });*/
 
             // --- Auto-load existing values from DB when editing ---
             @if(isset($employee_office_info))
@@ -972,7 +990,7 @@
             let divisionId  = "{{ old('current_division_id', $employee_office_info->current_division_id ?? '') }}";
             let deptId      = "{{ old('current_department_id', $employee_office_info->current_department_id ?? '') }}";
             let sectionId   = "{{ old('current_section_id', $employee_office_info->current_section_id ?? '') }}";
-            let designationId   = "{{ old('current_designation_id', $employee_office_info->current_designation_id ?? '') }}";
+            {{--let designationId   = "{{ old('current_designation_id', $employee_office_info->current_designation_id ?? '') }}";--}}
 
             if (companyId) {
                 loadUnits(companyId, unitId);
@@ -980,7 +998,7 @@
                     loadDivisions(unitId, divisionId);
                     if (divisionId) {
                         loadDepartments(divisionId, deptId);
-                        loadDesignations(divisionId, designationId);
+                        // loadDesignations(divisionId, designationId);
                         if (deptId) {
                             loadSections(deptId, sectionId);
                         }

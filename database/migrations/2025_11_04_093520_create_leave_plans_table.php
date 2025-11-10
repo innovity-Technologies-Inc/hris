@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('leave_plans', function (Blueprint $table) {
             $table->id()->index();
-            $table->string('leave_name');
+            $table->string('name')->index();
             $table->string('short_name');
 
             // Enum fields

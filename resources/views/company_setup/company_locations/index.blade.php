@@ -24,10 +24,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @php($i = 1)
+                            @php
+                                $sl = \App\HelperClass::indexNumberSerialization($locations);
+                            @endphp
                                 @foreach ($locations as $location)
                                     <tr>
-                                        <th scope="row">{{ $i++ }}</th>
+                                        <th scope="row">{{ $sl++ }}</th>
                                         <td>{{ $location->unit_name }}</td>
                                         <td>{{ $location->getCompany->name }}</td>
                                         <td>{{ Str::limit($location->location_address, 30) }}</td>

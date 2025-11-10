@@ -10,7 +10,7 @@ class ShiftPlan extends Model
     use HasFactory;
 
     protected $fillable = [
-        'shift_name',
+        'name',
         'clock_in_time',
         'clock_out_time',
         'treat_as_full_day_minutes',
@@ -38,8 +38,6 @@ class ShiftPlan extends Model
     protected $casts = [
         'clock_in_time' => 'datetime:H:i',
         'clock_out_time' => 'datetime:H:i',
-        'grace_time' => 'datetime:H:i',
-        'early_out_before' => 'datetime:H:i',
         'breakfast_start_time' => 'datetime:H:i',
         'breakfast_end_time' => 'datetime:H:i',
         'lunch_start_time' => 'datetime:H:i',

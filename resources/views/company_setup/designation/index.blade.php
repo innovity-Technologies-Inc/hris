@@ -24,7 +24,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @php($i = 1)
+                            @php
+                                $sl = \App\HelperClass::indexNumberSerialization($designations);
+                            @endphp
                                 @foreach ($designations as $designation)
                                     <tr>
                                         <th scope="row">{{ $i++ }}</th>

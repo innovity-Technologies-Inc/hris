@@ -20,14 +20,15 @@ class ShiftPlanController extends Controller
         $title = 'Shift Plan';
         $section = 'Plans Setup';
         $sub_section = 'Shift Plan';
-        $shiftPlans = $this->planServices->getPlans(ShiftPlan::class, 20);
-        return view('plans.shift_plans.index', compact('title', 'section', 'sub_section', 'shiftPlans'));
+        $plans = $this->planServices->getPlans(ShiftPlan::class, 20);
+        return view('plans.shift_plans.index', compact('title', 'section', 'sub_section', 'plans'));
     }
     public function create(){
         $title = 'Create Shift Plan';
-        $section = 'Plans Setup';
-        $sub_section = 'Shift Plan';
-        return view('plans.shift_plans.form', compact('title', 'section', 'sub_section'));
+        $section = 'Shift Plans';
+        $sub_section = 'Create';
+        $section_url = route('plans.shift_plans.index');
+        return view('plans.shift_plans.form', compact('title', 'section', 'sub_section', 'section_url'));
     }
     public function store(Request $request){
         $validated = $this->planServices->shiftPlanValidation($request);
@@ -41,10 +42,28 @@ class ShiftPlanController extends Controller
                 'alert-type' => 'error',
             ]);
         }
-        return redirect()->back()->with([
+        return redirect()->route('plans.shift_plans.index')->with([
             'message' => 'Shift Plan Created Successfully',
             'alert-type' => 'success',
         ]);
+    }
+
+    public function show($id){
+        $title = 'Shift Plan';
+        $section = 'Shift Plans';
+        $sub_section = 'Show';
+        $section_url = route('plans.shift_plans.index');
+        $plan = $this->planServices->getPlanById($id, ShiftPlan::class );
+//        dd($plan);
+        return view('plans.shift_plans.view', compact('title', 'section', 'sub_section', 'section_url', 'plan'));
+    }
+    public function edit($id){
+            $title = 'Create Shift Plan';
+            $section = 'Shift Plans';
+            $sub_section = 'Edit';
+            $section_url = route('plans.shift_plans.index');
+            $plan = $this->planServices->getPlanById($id,ShiftPlan::class );
+            return view('plans.shift_plans.form', compact('title', 'section', 'sub_section', 'section_url', 'plan'));
     }
     public function update(Request $request, $id){
         $validated = $this->planServices->shiftPlanValidation($request);
@@ -57,7 +76,7 @@ class ShiftPlanController extends Controller
                 'alert-type' => 'error',
             ]);
         }
-        return redirect()->back()->with([
+        return redirect()->route('plans.shift_plans.index')->with([
             'message' => 'Shift Plan Updated Successfully',
             'alert-type' => 'success',
         ]);

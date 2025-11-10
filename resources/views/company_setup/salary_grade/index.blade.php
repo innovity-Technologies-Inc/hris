@@ -25,10 +25,12 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @php($i=1)
+                            @php
+                                $sl = \App\HelperClass::indexNumberSerialization($salary_grades);
+                            @endphp
                             @foreach($salary_grades as $item)
                                 <tr>
-                                    <th scope="row">{{$i++}}</th>
+                                    <th scope="row">{{$sl++}}</th>
                                     <td>{{$item->name}}</td>
                                     <td>{{$item->getTofsil->name}}</td>
 
