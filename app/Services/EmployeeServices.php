@@ -286,8 +286,8 @@ class EmployeeServices
         return $grades;
     }
 
-    public function getDesignationsByDivision($division_id){
-        $designations= Designation::where('division_id', $division_id)->get();
+    public function getDesignations(){
+        $designations= Designation::all();
         return $designations;
     }
 

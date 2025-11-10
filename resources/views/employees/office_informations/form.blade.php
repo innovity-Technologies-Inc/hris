@@ -192,7 +192,13 @@
                                         id="joining_designation_id" name="joining_designation_id"
                                         data-placeholder="Select Designation">
                                         <option value="">Select Designation</option>
-
+                                        @foreach ($designations as $item)
+                                            <option
+                                                value="{{ $item->id }}"
+                                                {{ old('joining_designation_id', $employee_office_info->joining_designation_id ?? '') == $item->id ? 'selected' : '' }}>
+                                                {{ $item->company_designation }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                     @error('joining_designation_id')
                                         <small class="text-danger">{{ $message }}</small>
@@ -249,7 +255,8 @@
                                                 value="{{ $company->id }}"
                                                 {{ old('joining_company_id', $employee_office_info->joining_company_id ?? '') == $company->id ? 'selected' : '' }}>
                                                 {{ $company->name }}
-                                            </option>                                        @endforeach
+                                            </option>
+                                        @endforeach
                                     </select>
                                     @error('current_company_id')
                                         <small class="text-danger">{{ $message }}</small>
@@ -316,7 +323,13 @@
                                         id="current_designation_id" name="current_designation_id"
                                         data-placeholder="Select Designation">
                                         <option value="">Select Designation</option>
-                                        <!-- Add designation options dynamically -->
+                                        @foreach ($designations as $item)
+                                            <option
+                                                value="{{ $item->id }}"
+                                                {{ old('current_designation_id', $employee_office_info->current_designation_id ?? '') == $item->id ? 'selected' : '' }}>
+                                                {{ $item->company_designation }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                     @error('current_designation_id')
                                         <small class="text-danger">{{ $message }}</small>
@@ -716,7 +729,7 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-end gap-2">
                                 <button type="reset" class="btn btn-secondary">Reset</button>
-                                <button type="submit" class="btn btn-primary">Submit Payroll Information</button>
+                                <button type="submit" class="btn btn-primary">Submit</button>
                             </div>
                         </div>
                     </div>
@@ -762,7 +775,6 @@
 
         });
     </script>
-
 
     <script>
         $(function() {
@@ -820,7 +832,7 @@
                 }
             }
 
-            function loadDesignations(divisionId, selectedDesignation = null) {
+            /*function loadDesignations(divisionId, selectedDesignation = null) {
                 if (divisionId) {
                     $.get('/get-designations/' + divisionId, function(data) {
                         let $designationSelect = $('#joining_designation_id');
@@ -831,7 +843,7 @@
                         });
                     });
                 }
-            }
+            }*/
 
             // --- Change Events ---
             $('#joining_company_id').on('change', function() {
@@ -850,9 +862,9 @@
                 loadSections($(this).val());
             });
 
-            $('#joining_division_id').on('change', function() {
+            /*$('#joining_division_id').on('change', function() {
                 loadDesignations($(this).val());
-            });
+            });*/
 
             // --- Auto-load existing values from DB when editing ---
             @if(isset($employee_office_info))
@@ -861,7 +873,7 @@
             let divisionId  = "{{ old('joining_division_id', $employee_office_info->joining_division_id ?? '') }}";
             let deptId      = "{{ old('joining_department_id', $employee_office_info->joining_department_id ?? '') }}";
             let sectionId   = "{{ old('joining_section_id', $employee_office_info->joining_section_id ?? '') }}";
-            let designationId   = "{{ old('joining_designation_id', $employee_office_info->joining_designation_id ?? '') }}";
+            {{--let designationId   = "{{ old('joining_designation_id', $employee_office_info->joining_designation_id ?? '') }}";--}}
 
             if (companyId) {
                 loadUnits(companyId, unitId);
@@ -869,7 +881,7 @@
                     loadDivisions(unitId, divisionId);
                     if (divisionId) {
                         loadDepartments(divisionId, deptId);
-                        loadDesignations(divisionId, designationId);
+                        // loadDesignations(divisionId, designationId);
                         if (deptId) {
                             loadSections(deptId, sectionId);
                         }
@@ -937,7 +949,7 @@
                 }
             }
 
-            function loadDesignations(divisionId, selectedDesignation = null) {
+            /*function loadDesignations(divisionId, selectedDesignation = null) {
                 if (divisionId) {
                     $.get('/get-designations/' + divisionId, function(data) {
                         let $designationSelect = $('#current_designation_id');
@@ -948,7 +960,7 @@
                         });
                     });
                 }
-            }
+            }*/
 
             // --- Change Events ---
             $('#current_company_id').on('change', function() {
@@ -967,9 +979,9 @@
                 loadSections($(this).val());
             });
 
-            $('#current_division_id').on('change', function() {
+            /*$('#current_division_id').on('change', function() {
                 loadDesignations($(this).val());
-            });
+            });*/
 
             // --- Auto-load existing values from DB when editing ---
             @if(isset($employee_office_info))
@@ -978,7 +990,7 @@
             let divisionId  = "{{ old('current_division_id', $employee_office_info->current_division_id ?? '') }}";
             let deptId      = "{{ old('current_department_id', $employee_office_info->current_department_id ?? '') }}";
             let sectionId   = "{{ old('current_section_id', $employee_office_info->current_section_id ?? '') }}";
-            let designationId   = "{{ old('current_designation_id', $employee_office_info->current_designation_id ?? '') }}";
+            {{--let designationId   = "{{ old('current_designation_id', $employee_office_info->current_designation_id ?? '') }}";--}}
 
             if (companyId) {
                 loadUnits(companyId, unitId);
@@ -986,7 +998,7 @@
                     loadDivisions(unitId, divisionId);
                     if (divisionId) {
                         loadDepartments(divisionId, deptId);
-                        loadDesignations(divisionId, designationId);
+                        // loadDesignations(divisionId, designationId);
                         if (deptId) {
                             loadSections(deptId, sectionId);
                         }

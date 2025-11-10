@@ -127,8 +127,9 @@ class EmployeeProfileController extends Controller
         $employee = Employee::select('id', 'full_name')->where('id', $id)->first();
         $companies = $this->empServices->getCompanies();
         $acts = $this->empServices->getActs();
+        $designations = $this->empServices->getDesignations();
         return view('employees.office_informations.form', compact('title', 'section',
-            'sub_section', 'section_url', 'employee', 'companies', 'acts'));
+            'sub_section', 'section_url', 'employee', 'companies', 'acts', 'designations'));
     }
 
     public function officeInfoStore(Request $request){
@@ -167,12 +168,13 @@ class EmployeeProfileController extends Controller
         $sub_section = 'Office Information / Edit';
         $section_url = route('employees.index');
         $employee_office_info = EmployeeOfficeInfo::where('employee_id', $id)->first();
+        $designations = $this->empServices->getDesignations();
         if($employee_office_info){
             $employee = Employee::select('id', 'full_name')->where('id', $id)->first();
             $companies = $this->empServices->getCompanies();
             $acts = $this->empServices->getActs();
             return view('employees.office_informations.form', compact('title', 'section',
-                'sub_section', 'section_url', 'employee', 'companies', 'acts', 'employee_office_info'));
+                'sub_section', 'section_url', 'employee', 'companies', 'acts', 'employee_office_info', 'designations'));
         }else{
             return redirect()->route('employees.index')->with([
                 'message' => 'Employee Not Found',
@@ -268,11 +270,6 @@ class EmployeeProfileController extends Controller
     public function getGradeByAct($tofsil_id){
         $grades = $this->empServices->getGradeByAct($tofsil_id);
         return response()->json($grades);
-    }
-
-    public function getDesignationsByDivision($division_id){
-        $designations= $this->empServices->getDesignationsByDivision($division_id);
-        return response()->json($designations);
     }
 
     public function getBranchesByBank($bank_id){
