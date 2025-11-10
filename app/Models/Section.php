@@ -7,14 +7,29 @@ use Illuminate\Database\Eloquent\Model;
 class Section extends Model
 {
     protected $fillable = [
-        'department_id',
-        'section_name',
+        'name',
         'short_name',
+        'department_id',
+        'division_id',
+        'location_id',
+        'company_id',
         'status',
     ];
 
     public function getDepartment()
     {
         return $this->belongsTo(Department::class, 'department_id', 'id');
+    }
+    public function getDivision()
+    {
+        return $this->belongsTo(Division::class, 'division_id', 'id');
+    }
+    public function getLocation()
+    {
+        return $this->belongsTo(CompanyLocation::class, 'location_id', 'id');
+    }
+    public function getCompany()
+    {
+        return $this->belongsTo(Company::class, 'company_id', 'id');
     }
 }

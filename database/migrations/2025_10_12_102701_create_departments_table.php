@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('departments', function (Blueprint $table) {
             $table->id()->index();
-            $table->unsignedBigInteger('division_id');
             $table->string('department_name');
             $table->string('short_name');
             $table->string('job_number_code');
+            $table->unsignedBigInteger('division_id');
+            $table->unsignedBigInteger('location_id');
+            $table->unsignedBigInteger('company_id');
             $table->enum('status', ['active', 'inactive']);
             $table->timestamps();
         });

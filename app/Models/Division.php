@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Division extends Model
 {
     protected $fillable = [
-        'division_name',
+        'name',
         'short_name',
         'remarks',
         'status',

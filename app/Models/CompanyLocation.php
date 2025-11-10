@@ -8,7 +8,7 @@ class CompanyLocation extends Model
 {
     protected $fillable = [
         'company_id',
-        'unit_name',
+        'name',
         'location_address',
         'state',
         'division',
