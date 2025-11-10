@@ -17,9 +17,6 @@
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Company Name</th>
-                                    <th scope="col">Location Name</th>
-                                    <th scope="col">Division Name</th>
                                     <th scope="col">Designation Level</th>
                                     <th scope="col">Company Designation</th>
                                     <th scope="col">Status</th>
@@ -31,9 +28,6 @@
                                 @foreach ($designations as $designation)
                                     <tr>
                                         <th scope="row">{{ $i++ }}</th>
-                                        <td>{{ $designation->getCompany->name }}</td>
-                                        <td>{{ $designation->getLocation->unit_name }}</td>
-                                        <td>{{ $designation->getDivision->division_name }}</td>
                                         <td>{{ $designation->designation_level }}</td>
                                         <td>{{ $designation->company_designation }}</td>
                                         <td>

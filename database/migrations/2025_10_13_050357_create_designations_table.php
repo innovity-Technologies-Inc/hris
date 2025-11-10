@@ -13,9 +13,6 @@ return new class extends Migration
     {
         Schema::create('designations', function (Blueprint $table) {
             $table->id()->index();
-            $table->unsignedBigInteger('company_id');
-            $table->unsignedBigInteger('location_id');
-            $table->unsignedBigInteger('division_id');
             $table->string('designation_level');
             $table->string('company_designation');
             $table->enum('status', ['active', 'inactive']);
