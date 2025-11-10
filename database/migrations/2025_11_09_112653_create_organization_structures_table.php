@@ -32,9 +32,10 @@ return new class extends Migration
         $table->unsignedBigInteger('division_id')->nullable();
         $table->unsignedBigInteger('department_id')->nullable();
         $table->unsignedBigInteger('section_id')->nullable();
+        $table->unsignedBigInteger('employee_id')->nullable();
 
         // Shared information
-        $table->string('designation', 100)->nullable();
+        $table->string('position', 100)->nullable();
         $table->string('contact_no', 20)->nullable();
         $table->string('email', 150)->nullable();
         $table->text('address')->nullable();

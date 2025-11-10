@@ -20,7 +20,8 @@ class OrganizationStructure extends Model
         'division_id',
         'department_id',
         'section_id',
-        'designation',
+        'employee_id',
+        'position',
         'contact_no',
         'email',
         'address',
@@ -39,7 +40,7 @@ class OrganizationStructure extends Model
             'Department' => 'department',
             'Section' => 'section'
         ];
-        
+
         return $typeMap[$this->type] ?? strtolower($this->type);
     }
 
@@ -78,6 +79,10 @@ class OrganizationStructure extends Model
     public function getSection()
     {
         return $this->belongsTo(Section::class, 'section_id', 'id');
+    }
+    public function getEmployee()
+    {
+        return $this->belongsTo(Employee::class, 'employee_id', 'id');
     }
 }
 
