@@ -7,7 +7,7 @@
             <div class="card">
 
                 <div class="card-header">
-                    <h5 class="card-title mb-0">Add Group</h5>
+                    <h5 class="card-title mb-0">Add Group Name</h5>
                 </div><!-- end card header -->
 
                 <div class="card-body">
@@ -15,24 +15,26 @@
                         <div class="col-lg-12">
                             <form action="{{ route('groups.save') }}" method="post">
                                 @csrf
+                                @method('put')
                                 <div class="mb-3 row">
-                                    <div class="col-lg-8">
+                                    <div class="col-lg-12">
                                         <label for="simpleinput" class="form-label">Group Name<span
                                                 class="text-danger">*</span></label>
                                         <input type="text" id="simpleinput" class="form-control" name="name"
-                                            placeholder="Enter Group Name" value="{{ old('name') }}">
+                                            placeholder="Enter Group Name" value="{{ isset($group) ? $group->name : old('name') }}">
                                         @error('name')
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
 
-                                    <div class="col-lg-4">
+                                    {{--<div class="col-lg-4">
                                         <label for="example-select" class="form-label">Status</label>
                                         <select class="form-select" id="example-select" name="status">
                                             <option value="active">Active</option>
                                             <option value="inactive">Inactive</option>
                                         </select>
-                                    </div>
+                                    </div>--}}
+
                                 </div>
 
                                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -51,14 +53,16 @@
 
 
     {{--    list --}}
-
+    {{--
     <div class="row">
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-title mb-0">Group List</h5>
                     <form id="filterForm">
-                        {{-- First Row: Keyword Search --}}
+                        --}}
+    {{-- First Row: Keyword Search --}}{{--
+
                         <div class="row mb-1 mt-2">
                             <div class="col-12">
                                 <div class="input-group input-group-md">
@@ -71,7 +75,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </form>
                 </div><!-- end card header -->
 
@@ -82,6 +85,7 @@
         </div>
 
     </div>
+--}}
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 

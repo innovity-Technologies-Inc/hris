@@ -13,52 +13,24 @@
 
 
                 <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered mb-0">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Division Name</th>
-                                    <th scope="col">Short Name</th>
-                                    <th scope="col">Company</th>
-                                    <th scope="col">Location</th>
-                                    <th scope="col">Remarks</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            @php
-                                $sl = \App\HelperClass::indexNumberSerialization($divisions);
-                            @endphp
-                                @foreach ($divisions as $division)
-                                    <tr>
-                                        <th scope="row">{{ $sl++ }}</th>
-                                        <td>{{ $division->division_name }}</td>
-                                        <td>{{ $division->short_name }}</td>
-                                        <td>{{ $division->getCompany->name }}</td>
-                                        <td>{{ $division->getLocation->unit_name }}</td>
-                                        <td>{{ $division->remarks }}</td>
-                                        <td>
-                                            <a href="{{ route('divisions.edit', $division->id) }}"
-                                                class="btn btn-primary btn-sm">
-                                                <i style="height: 12px; width: 12px" data-feather="edit"></i>
-                                            </a>
+                    <form id="filterForm">
+                        {{-- First Row: Keyword Search --}}
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <div class="input-group input-group-md">
+                                    <input type="text" class="form-control border-end-0" id="keywordSearch"
+                                           name="keyword" placeholder="Search divisions by name"
+                                           aria-label="Keyword Search" value="{{ request('keyword') }}">
+                                    <span class="input-group-text border-start-0 input-group-bg">
+                                                    <i class="mdi mdi-magnify text-muted"></i>
+                                                </span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
 
-                                            <form action="{{ route('divisions.delete', $division->id) }}"
-                                                method="POST" style="display: inline-block">
-                                                @csrf
-                                                @method('DELETE')
-
-                                                <button class="btn btn-sm btn-danger confirmDelete">
-                                                    <i style="height: 12px; width: 12px" data-feather="trash"></i>
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-
+                    <div class="table-responsive" id="search-result">
+                            @include('company_setup.divisions.search_results')
                         <div class="mt-3">
                             {{$divisions->links()}}
                         </div>
@@ -67,4 +39,64 @@
             </div><!-- end card -->
         </div>
     </div><!-- end row -->
+
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Function to perform AJAX search
+            function fetchData(url = "{{ route('divisions.index') }}") {
+                const queryString = $('#filterForm').serialize();
+
+                $.ajax({
+                    url: url,
+                    method: "GET",
+                    data: queryString,
+                    beforeSend: function() {
+                        $('#search-result').html(
+                            '<div class="text-center py-4 text-muted">Loading Data...</div>');
+                    },
+                    success: function(response) {
+                        $('#search-result').html(response);
+                        // Reinitialize Feather icons if used in results
+                        if (typeof feather !== 'undefined') {
+                            feather.replace();
+                        }
+                        // Update URL without page param
+                        const newUrl = '?' + queryString;
+                        window.history.pushState(null, '', newUrl || location.pathname);
+                    },
+                    error: function(xhr) {
+                        console.error('AJAX Error:', xhr.responseText);
+                    }
+                });
+            }
+
+            // Trigger search on input or change
+            $('#filterForm').on('input change', function(e) {
+                e.preventDefault();
+                fetchData();
+            });
+
+            // Reset filters: clear form and reload base URL
+            $('#resetFilters').on('click', function() {
+                // Clear all form fields
+                $('#filterForm')[0].reset();
+
+                // If using Select2, you may need to trigger change
+                $('.select2_list').val(null).trigger('change');
+
+                // Reload the page without query string
+                window.location.href = "{{ route('divisions.index') }}";
+            });
+
+            // Handle pagination via AJAX
+            $(document).on('click', '#search-result .pagination a', function(e) {
+                e.preventDefault();
+                const url = $(this).attr('href');
+                fetchData(url);
+            });
+        });
+    </script>
 @endsection

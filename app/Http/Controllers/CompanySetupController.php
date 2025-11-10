@@ -17,15 +17,15 @@ class CompanySetupController extends Controller
         $title = 'Group';
         $section = 'Company Setup';
         $sub_section = 'Group';
-
-        $query = Group::query();
+        $group = Group::first();
+        /*$query = Group::query();
         $searchTerm = $request->get('keyword');
         $searchableFields = ['name'];
         $groups = $flexsearch->apply( $query, [], $searchTerm, $searchableFields)->orderBy('id', 'desc')->paginate(10);
         if ($request->ajax()) {
             return view('company_setup.group_search_results', compact('groups'))->render();
-        }
-        return view('company_setup.groups', compact('title', 'section', 'sub_section', 'groups'));
+        }*/
+        return view('company_setup.groups', compact('title', 'section', 'sub_section', 'group'));
     }
     public function groupSave(Request $request){
         $request->validate([
