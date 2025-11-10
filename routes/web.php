@@ -284,4 +284,6 @@ Route::controller(OrganizationStructureController::class)->group(function () {
     Route::get('get-org-divisions/{company_id}', 'getDivisions');
     Route::get('get-org-departments/{division_id}', 'getDepartments');
     Route::get('get-org-sections/{department_id}', 'getSections');
+    Route::get('get-org-employees', 'getEmployees');
+    Route::get('get-org-employee-by-id/{id}', 'getEmployeeById');
 });

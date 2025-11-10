@@ -9,6 +9,7 @@ use App\Models\CompanyLocation;
 use App\Models\Division;
 use App\Models\Department;
 use App\Models\Section;
+use App\Models\Employee;
 use App\HelperClass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -26,7 +27,8 @@ class OrganizationStructureController extends Controller
             'getBranchUnit',
             'getDivision',
             'getDepartment',
-            'getSection'
+            'getSection',
+            'getEmployee'
         ])->latest()->get();
 
         return view('organization_structure.index', compact('organizationStructures'));
@@ -43,6 +45,7 @@ class OrganizationStructureController extends Controller
         $divisions = Division::where('status', 'active')->get();
         $departments = Department::where('status', 'active')->get();
         $sections = Section::where('status', 'active')->get();
+        $employees = Employee::all();
 
         return view('organization_structure.form', compact(
             'groups',
@@ -50,7 +53,8 @@ class OrganizationStructureController extends Controller
             'locations',
             'divisions',
             'departments',
-            'sections'
+            'sections',
+            'employees'
         ));
     }
 
@@ -60,11 +64,12 @@ class OrganizationStructureController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'member_type' => 'required|in:Board Member,Key Member',
             'type' => 'required|in:group,company,location,division,department,section',
-            'name' => 'required|string|max:255',
-            'designation' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:organization_structure,email',
-            'contact_no' => 'required|string|max:20',
+            'name' => 'nullable|string|max:255',
+            'position' => 'required|string|max:255',
+            'email' => 'nullable|email|max:255|unique:organization_structure,email',
+            'contact_no' => 'nullable|string|max:20',
             'address' => 'nullable|string',
             'status' => 'nullable|in:active,inactive',
             'photo_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -74,11 +79,41 @@ class OrganizationStructureController extends Controller
             'division_id' => 'nullable|exists:divisions,id',
             'department_id' => 'nullable|exists:departments,id',
             'section_id' => 'nullable|exists:sections,id',
+            'employee_id' => 'nullable|exists:employees,id',
         ]);
 
-        // Custom validation based on type
+        // Custom validation based on type and member_type
         $validator->after(function ($validator) use ($request) {
             $type = $request->input('type');
+            $memberType = $request->input('member_type');
+
+            // Board Member: only group and company types
+            if ($memberType === 'Board Member' && !in_array($type, ['group', 'company'])) {
+                $validator->errors()->add('type', 'Board Members can only be assigned to Group or Company.');
+            }
+
+            // Key Member: only location, division, department, section types
+            if ($memberType === 'Key Member' && in_array($type, ['group', 'company'])) {
+                $validator->errors()->add('type', 'Key Members cannot be assigned to Group or Company.');
+            }
+
+            // Key Member must have employee_id
+            if ($memberType === 'Key Member' && !$request->filled('employee_id')) {
+                $validator->errors()->add('employee_id', 'Employee selection is required for Key Members.');
+            }
+
+            // Board Member must have name, email, contact_no
+            if ($memberType === 'Board Member') {
+                if (!$request->filled('name')) {
+                    $validator->errors()->add('name', 'Name is required for Board Members.');
+                }
+                if (!$request->filled('email')) {
+                    $validator->errors()->add('email', 'Email is required for Board Members.');
+                }
+                if (!$request->filled('contact_no')) {
+                    $validator->errors()->add('contact_no', 'Contact number is required for Board Members.');
+                }
+            }
 
             $typeRequirements = [
                 'group' => ['group_id'],
@@ -106,9 +141,10 @@ class OrganizationStructureController extends Controller
         }
 
         $data = $request->only([
+            'member_type',
             'type',
             'name',
-            'designation',
+            'position',
             'email',
             'contact_no',
             'address',
@@ -118,7 +154,16 @@ class OrganizationStructureController extends Controller
             'division_id',
             'department_id',
             'section_id',
+            'employee_id',
         ]);
+
+        // If Key Member, get name from employee
+        if ($request->input('member_type') === 'Key Member' && $request->filled('employee_id')) {
+            $employee = \App\Models\Employee::find($request->input('employee_id'));
+            if ($employee) {
+                $data['name'] = $employee->full_name;
+            }
+        }
 
         // Transform type and status to match database enum values
         $typeMap = [
@@ -175,6 +220,7 @@ class OrganizationStructureController extends Controller
         $divisions = Division::where('status', 'active')->get();
         $departments = Department::where('status', 'active')->get();
         $sections = Section::where('status', 'active')->get();
+        $employees = Employee::all();
 
         return view('organization_structure.form', compact(
             'organizationStructure',
@@ -183,7 +229,8 @@ class OrganizationStructureController extends Controller
             'locations',
             'divisions',
             'departments',
-            'sections'
+            'sections',
+            'employees'
         ));
     }
 
@@ -195,11 +242,12 @@ class OrganizationStructureController extends Controller
         $organizationStructure = OrganizationStructure::findOrFail($id);
 
         $validator = Validator::make($request->all(), [
+            'member_type' => 'required|in:Board Member,Key Member',
             'type' => 'required|in:group,company,location,division,department,section',
-            'name' => 'required|string|max:255',
-            'designation' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:organization_structure,email,' . $id,
-            'contact_no' => 'required|string|max:20',
+            'name' => 'nullable|string|max:255',
+            'position' => 'required|string|max:255',
+            'email' => 'nullable|email|max:255|unique:organization_structure,email,' . $id,
+            'contact_no' => 'nullable|string|max:20',
             'address' => 'nullable|string',
             'status' => 'nullable|in:active,inactive',
             'photo_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -209,11 +257,41 @@ class OrganizationStructureController extends Controller
             'division_id' => 'nullable|exists:divisions,id',
             'department_id' => 'nullable|exists:departments,id',
             'section_id' => 'nullable|exists:sections,id',
+            'employee_id' => 'nullable|exists:employees,id',
         ]);
 
-        // Custom validation based on type
+        // Custom validation based on type and member_type
         $validator->after(function ($validator) use ($request) {
             $type = $request->input('type');
+            $memberType = $request->input('member_type');
+
+            // Board Member: only group and company types
+            if ($memberType === 'Board Member' && !in_array($type, ['group', 'company'])) {
+                $validator->errors()->add('type', 'Board Members can only be assigned to Group or Company.');
+            }
+
+            // Key Member: only location, division, department, section types
+            if ($memberType === 'Key Member' && in_array($type, ['group', 'company'])) {
+                $validator->errors()->add('type', 'Key Members cannot be assigned to Group or Company.');
+            }
+
+            // Key Member must have employee_id
+            if ($memberType === 'Key Member' && !$request->filled('employee_id')) {
+                $validator->errors()->add('employee_id', 'Employee selection is required for Key Members.');
+            }
+
+            // Board Member must have name, email, contact_no
+            if ($memberType === 'Board Member') {
+                if (!$request->filled('name')) {
+                    $validator->errors()->add('name', 'Name is required for Board Members.');
+                }
+                if (!$request->filled('email')) {
+                    $validator->errors()->add('email', 'Email is required for Board Members.');
+                }
+                if (!$request->filled('contact_no')) {
+                    $validator->errors()->add('contact_no', 'Contact number is required for Board Members.');
+                }
+            }
 
             $typeRequirements = [
                 'group' => ['group_id'],
@@ -241,9 +319,10 @@ class OrganizationStructureController extends Controller
         }
 
         $data = $request->only([
+            'member_type',
             'type',
             'name',
-            'designation',
+            'position',
             'email',
             'contact_no',
             'address',
@@ -253,7 +332,16 @@ class OrganizationStructureController extends Controller
             'division_id',
             'department_id',
             'section_id',
+            'employee_id',
         ]);
+
+        // If Key Member, get name from employee
+        if ($request->input('member_type') === 'Key Member' && $request->filled('employee_id')) {
+            $employee = \App\Models\Employee::find($request->input('employee_id'));
+            if ($employee) {
+                $data['name'] = $employee->full_name;
+            }
+        }
 
         // Transform type and status to match database enum values
         $typeMap = [
@@ -366,5 +454,43 @@ class OrganizationStructureController extends Controller
             ->where('department_id', $department_id)
             ->get(['id', 'section_name']);
         return response()->json($sections);
+    }
+
+    /**
+     * Get employees for Select2
+     */
+    public function getEmployees(Request $request)
+    {
+        $search = $request->input('search', '');
+        $page = $request->input('page', 1);
+        $perPage = 20;
+
+        $query = \App\Models\Employee::query();
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('full_name', 'LIKE', "%{$search}%")
+                    ->orWhere('system_id', 'LIKE', "%{$search}%")
+                    ->orWhere('applicant_id', 'LIKE', "%{$search}%");
+            });
+        }
+
+        $employees = $query->select('id', 'full_name', 'system_id')
+            ->orderBy('full_name')
+            ->skip(($page - 1) * $perPage)
+            ->take($perPage)
+            ->get();
+
+        return response()->json($employees);
+    }
+
+    /**
+     * Get employee by ID
+     */
+    public function getEmployeeById($id)
+    {
+        $employee = \App\Models\Employee::select('id', 'full_name', 'system_id')
+            ->findOrFail($id);
+        return response()->json($employee);
     }
 }

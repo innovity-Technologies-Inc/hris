@@ -6,7 +6,7 @@
             <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title" id="viewModalLabel{{ $member->id }}">
                     <i data-feather="user" style="height: 16px; width: 16px"></i>
-                    Key Member Details
+                    {{ $member->member_type === 'Board Member' ? 'Board Member Details' : 'Key Member Details' }}
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                     aria-label="Close"></button>
@@ -15,7 +15,13 @@
                 <div class="row">
                     <!-- Profile Image Section -->
                     <div class="col-md-12 mb-4 text-center">
-                        @if ($member->photo_path)
+                        @php($isKey = ($member->member_type ?? '') === 'Key Member')
+                        @if ($isKey && $member->getEmployee && $member->getEmployee->photo_path)
+                            <img src="{{ asset('storage/' . $member->getEmployee->photo_path) }}"
+                                class="rounded-circle border-3 border-primary shadow-sm"
+                                style="width: 120px; height: 120px; object-fit: cover; border: 3px solid;"
+                                alt="Profile Image">
+                        @elseif ($member->photo_path)
                             <img src="{{ asset('storage/' . $member->photo_path) }}"
                                 class="rounded-circle border-3 border-primary shadow-sm"
                                 style="width: 120px; height: 120px; object-fit: cover; border: 3px solid;"
@@ -113,8 +119,8 @@
                     </div>
 
                     <div class="col-md-6 mb-3">
-                        <strong>Designation:</strong>
-                        <p class="mb-0">{{ $member->designation }}</p>
+                        <strong>Position:</strong>
+                        <p class="mb-0">{{ $member->position }}</p>
                     </div>
 
                     <div class="col-md-12 mb-3 mt-3">
@@ -127,14 +133,30 @@
                     <div class="col-md-6 mb-3">
                         <strong>Email:</strong>
                         <p class="mb-0">
-                            <a href="mailto:{{ $member->email }}">{{ $member->email }}</a>
+                            @if ($isKey && $member->getEmployee && $member->getEmployee->work_email)
+                                <a href="mailto:{{ $member->getEmployee->work_email }}">{{ $member->getEmployee->work_email }}</a>
+                            @elseif ($isKey && $member->getEmployee && $member->getEmployee->personal_email)
+                                <a href="mailto:{{ $member->getEmployee->personal_email }}">{{ $member->getEmployee->personal_email }}</a>
+                            @elseif (!empty($member->email))
+                                <a href="mailto:{{ $member->email }}">{{ $member->email }}</a>
+                            @else
+                                <span class="text-muted">N/A</span>
+                            @endif
                         </p>
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <strong>Phone:</strong>
                         <p class="mb-0">
-                            <a href="tel:{{ $member->contact_no }}">{{ $member->contact_no }}</a>
+                            @if ($isKey && $member->getEmployee && $member->getEmployee->work_mobile)
+                                <a href="tel:{{ $member->getEmployee->work_mobile }}">{{ $member->getEmployee->work_mobile }}</a>
+                            @elseif ($isKey && $member->getEmployee && $member->getEmployee->personal_mobile)
+                                <a href="tel:{{ $member->getEmployee->personal_mobile }}">{{ $member->getEmployee->personal_mobile }}</a>
+                            @elseif (!empty($member->contact_no))
+                                <a href="tel:{{ $member->contact_no }}">{{ $member->contact_no }}</a>
+                            @else
+                                <span class="text-muted">N/A</span>
+                            @endif
                         </p>
                     </div>
 

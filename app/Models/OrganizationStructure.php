@@ -13,6 +13,7 @@ class OrganizationStructure extends Model
 
     protected $fillable = [
         'name',
+        'member_type',
         'type',
         'group_id',
         'company_id',
@@ -22,6 +23,7 @@ class OrganizationStructure extends Model
         'section_id',
         'employee_id',
         'position',
+        'designation',
         'contact_no',
         'email',
         'address',

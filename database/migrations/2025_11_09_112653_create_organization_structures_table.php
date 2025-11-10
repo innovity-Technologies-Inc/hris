@@ -15,6 +15,9 @@ return new class extends Migration
         $table->bigIncrements('id');
         $table->string('name', 150);
 
+        // Member type: Board Member or Key Member
+        $table->enum('member_type', ['Board Member', 'Key Member'])->default('Board Member');
+
         // Unified type for both entities
         $table->enum('type', [
             'Group',
