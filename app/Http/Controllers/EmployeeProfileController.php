@@ -246,24 +246,24 @@ class EmployeeProfileController extends Controller
 
 
 
-    public function getUnitByCompany($company_id){
-        $units = $this->empServices->getUnitByCompany($company_id);
+    public function getUnit($company_id){
+        $units = $this->empServices->getUnit($company_id);
         return response()->json($units);
 
     }
 
-    public function getDivisionByUnit($location_id){
-        $divisions = $this->empServices->getDivisionByUnit($location_id);
+    public function getDivision($company_id, $location_id){
+        $divisions = $this->empServices->getDivision($company_id, $location_id);
         return response()->json($divisions);
     }
 
-    public function getDepartmentByDivision($division_id){
-        $departments = $this->empServices->getDepartmentByDivision($division_id);
+    public function getDepartment($company_id, $location_id, $division_id){
+        $departments = $this->empServices->getDepartment($company_id, $location_id, $division_id);
         return response()->json($departments);
     }
 
-    public function getSectionByDepartment($department_id){
-        $sections = $this->empServices->getSectionByDepartment($department_id);
+    public function getSection($company_id, $location_id, $division_id, $department_id){
+        $sections = $this->empServices->getSection($company_id, $location_id, $division_id, $department_id);
         return response()->json($sections);
     }
 

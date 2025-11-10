@@ -263,11 +263,11 @@ Route::prefix('plans')->group(function () {
 
 Route::controller(EmployeeProfileController::class)->group(function () {
     Route::get('get-grades/{tofsil_id}', 'getGradeByAct');
-    Route::get('get-units/{company_id}', 'getUnitByCompany');
-    Route::get('get-divisions/{unit_id}', 'getDivisionByUnit');
-    Route::get('get-departments/{division_id}', 'getDepartmentByDivision');
-    Route::get('get-sections/{department_id}', 'getSectionByDepartment');
-    Route::get('get-designations/{division_id}', 'getDesignationsByDivision');
+    Route::get('get-units/{company_id}', 'getUnit');
+    Route::get('get-divisions/{unit_id}', 'getDivision');
+    Route::get('get-departments/{division_id}', 'getDepartment');
+    Route::get('get-sections/{department_id}', 'getSection');
+    Route::get('get-designations/{division_id}', 'getDesignations');
     Route::get('get-branches/{bank_id}', 'getBranchesByBank');
 });
 
@@ -278,14 +278,4 @@ Route::controller(OrganizationStructureController::class)->group(function () {
     Route::get('organization-structure/{id}/edit', 'edit')->name('organization-structure.edit');
     Route::put('organization-structure/{id}', 'update')->name('organization-structure.update');
     Route::delete('organization-structure/{id}', 'destroy')->name('organization-structure.destroy');
-
-    // AJAX routes for dynamic dropdowns
-    Route::get('get-groups', 'getGroups');
-    Route::get('get-companies/{group_id}', 'getCompanies');
-    Route::get('get-locations/{company_id}', 'getLocations');
-    Route::get('get-org-divisions/{company_id}', 'getDivisions');
-    Route::get('get-org-departments/{division_id}', 'getDepartments');
-    Route::get('get-org-sections/{department_id}', 'getSections');
-    Route::get('get-org-employees', 'getEmployees');
-    Route::get('get-org-employee-by-id/{id}', 'getEmployeeById');
 });

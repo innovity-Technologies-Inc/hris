@@ -31,7 +31,8 @@ class EmployeeServices
         return $employees;
     }
 
-    public function employeeSearchResult(Request $request, $flexsearch){
+    public function employeeSearchResult(Request $request, $flexsearch)
+    {
         $query = Employee::query();
 
         $filters = [
@@ -45,7 +46,7 @@ class EmployeeServices
 
         $searchableFields = ['applicant_id', 'full_name', 'system_id'];
 
-        $employees = $flexsearch->apply( $query,
+        $employees = $flexsearch->apply($query,
             $filters,
             $searchTerm,
             $searchableFields)->orderBy('id', 'desc')->paginate(50);
@@ -175,18 +176,19 @@ class EmployeeServices
 
     public function employeeAttachmentValidation($validated, $request, $file, $key_name)
     {
-            $file_path = HelperClass::file_upload($file, 'employee_attachments');
-            $validated[$key_name] = $file_path;
-            return $validated;
+        $file_path = HelperClass::file_upload($file, 'employee_attachments');
+        $validated[$key_name] = $file_path;
+        return $validated;
     }
 
-    public function employeeAttachmentDelete($file_path){
-        if($file_path != null){
+    public function employeeAttachmentDelete($file_path)
+    {
+        if ($file_path != null) {
             HelperClass::file_delete($file_path);
         }
     }
 
-    public function employeeInfoSave(Request $request,$validated, $id = null)
+    public function employeeInfoSave(Request $request, $validated, $id = null)
     {
 
         $validated['full_name'] = trim(($validated['first_name'] ?? '') . ' ' .
@@ -194,42 +196,42 @@ class EmployeeServices
             ($validated['last_name'] ?? ''));
         Log::info($validated);
 
-        if($request->hasFile('photo_path')) {
+        if ($request->hasFile('photo_path')) {
             $photo = $request->file('photo_path');
             $validated = $this->employeeAttachmentValidation($validated, $request, $photo, 'photo_path');
             Log::info('Photo Uploaded');
         }
-        if($request->hasFile('fingerprint_path')) {
+        if ($request->hasFile('fingerprint_path')) {
             $fingerprint = $request->file('fingerprint_path');
             $validated = $this->employeeAttachmentValidation($validated, $request, $fingerprint, 'fingerprint_path');
             Log::info('Fingerprint Uploaded');
         }
 
-        if($request->hasFile('signature_path')) {
+        if ($request->hasFile('signature_path')) {
             $signature = $request->file('signature_path');
             $validated = $this->employeeAttachmentValidation($validated, $request, $signature, 'signature_path');
             Log::info('Signature Uploaded');
         }
 
-        if($request->hasFile('experience_attachment_path')) {
+        if ($request->hasFile('experience_attachment_path')) {
             $experience_attachment = $request->file('experience_attachment_path');
             $validated = $this->employeeAttachmentValidation($validated, $request, $experience_attachment, 'experience_attachment_path');
         }
-        if(empty($id)){
+        if (empty($id)) {
             $employee_data = Employee::create($validated);
-        }else{
+        } else {
             $employee = $this->getEmployeeById($id);
 
-            if($request->hasFile('photo_path')) {
+            if ($request->hasFile('photo_path')) {
                 $this->employeeAttachmentDelete($employee->photo_path);
             }
-            if($request->hasFile('fingerprint_path')) {
+            if ($request->hasFile('fingerprint_path')) {
                 $this->employeeAttachmentDelete($employee->fingerprint_path);
             }
-            if($request->hasFile('signature_path')) {
+            if ($request->hasFile('signature_path')) {
                 $this->employeeAttachmentDelete($employee->signature_path);
             }
-            if($request->hasFile('experience_attachment_path')) {
+            if ($request->hasFile('experience_attachment_path')) {
                 $this->employeeAttachmentDelete($employee->experience_attachment_path);
             }
             $employee->update($validated);
@@ -251,48 +253,64 @@ class EmployeeServices
         return $employee;
     }
 
-    public function getCompanies(){
+    public function getCompanies()
+    {
         $companies = Company::all();
         return $companies;
     }
 
-    public function getUnitByCompany($company_id){
+    public function getUnit($company_id)
+    {
         $units = CompanyLocation::where('company_id', $company_id)->get();
         return $units;
     }
 
-    public function getDivisionByUnit($location_id){
-        $divisions = Division::where('location_id', $location_id)->get();
+    public function getDivision($company_id, $location_id)
+    {
+        $divisions = Division::where('company_id', $company_id)
+            ->where('location_id', $location_id)->get();
         return $divisions;
     }
 
-    public function getDepartmentByDivision($division_id){
-        $departments = Department::where('division_id', $division_id)->get();
+    public function getDepartment($company_id, $location_id, $division_id)
+    {
+        $departments = Department::where('company_id', $company_id)
+            ->where('location_id', $location_id)
+        ->where('division_id', $division_id)
+
+                ->get();
         return $departments;
     }
 
-    public function getSectionByDepartment($department_id){
-        $sections = Section::where('department_id', $department_id)->get();
+    public function getSection($company_id, $location_id, $division_id, $department_id)
+    {
+        $sections = Section::where('company_id', $company_id)
+            ->where('location_id', $location_id)
+            ->where('division_id', $division_id)->where('department_id', $department_id)->get();
         return $sections;
     }
 
-    public function getActs(){
+    public function getActs()
+    {
         $acts = Tofsil::all();
         return $acts;
     }
 
-    public function getGradeByAct($tofsil_id){
+    public function getGradeByAct($tofsil_id)
+    {
         $grades = SalaryGrade::where('tofsil_id', $tofsil_id)->get();
         return $grades;
     }
 
-    public function getDesignations(){
-        $designations= Designation::all();
+    public function getDesignations()
+    {
+        $designations = Designation::all();
         return $designations;
     }
 
-    public function getBranchesByBank($bank_id){
-        $branches= Branch::where('bank_id', $bank_id)->get();
+    public function getBranchesByBank($bank_id)
+    {
+        $branches = Branch::where('bank_id', $bank_id)->get();
         return $branches;
     }
 
@@ -300,65 +318,65 @@ class EmployeeServices
     {
         $validated = $request->validate([
             // Basic Identifiers
-            'employee_id'              => 'required|integer',
-            'emp_type'                 => 'nullable|in:permanent,contractual',
-            'grade_id'                 => 'nullable|integer',
-            'hr_file_no'               => 'nullable|string|max:255',
-            'tofsil_id'                => 'nullable|integer',
-            'file_note'                => 'nullable|string',
+            'employee_id' => 'required|integer',
+            'emp_type' => 'nullable|in:permanent,contractual',
+            'grade_id' => 'nullable|integer',
+            'hr_file_no' => 'nullable|string|max:255',
+            'tofsil_id' => 'nullable|integer',
+            'file_note' => 'nullable|string',
 
             // Joining Information
-            'joining_company_id'       => 'nullable|integer',
+            'joining_company_id' => 'nullable|integer',
             'joining_business_unit_id' => 'nullable|integer',
-            'joining_division_id'      => 'nullable|integer',
-            'joining_department_id'    => 'nullable|integer',
-            'joining_section_id'       => 'nullable|integer',
-            'joining_designation_id'   => 'nullable|integer',
-            'date_of_join'             => 'nullable|date',
+            'joining_division_id' => 'nullable|integer',
+            'joining_department_id' => 'nullable|integer',
+            'joining_section_id' => 'nullable|integer',
+            'joining_designation_id' => 'nullable|integer',
+            'date_of_join' => 'nullable|date',
 
             // Current Posting Information
-            'current_company_id'       => 'nullable|integer',
+            'current_company_id' => 'nullable|integer',
             'current_business_unit_id' => 'nullable|integer',
-            'current_division_id'      => 'nullable|integer',
-            'current_department_id'    => 'nullable|integer',
-            'current_section_id'       => 'nullable|integer',
-            'current_designation_id'   => 'nullable|integer',
+            'current_division_id' => 'nullable|integer',
+            'current_department_id' => 'nullable|integer',
+            'current_section_id' => 'nullable|integer',
+            'current_designation_id' => 'nullable|integer',
 
             // Orientation
-            'orientation_required'     => 'required|in:yes,no',
-            'orientation_from'         => 'nullable|date',
-            'orientation_to'           => 'nullable|date|after_or_equal:orientation_from',
-            'orientation_type'         => 'nullable|string|max:100',
-            'orientation_days'         => 'nullable|integer|min:1',
+            'orientation_required' => 'required|in:yes,no',
+            'orientation_from' => 'nullable|date',
+            'orientation_to' => 'nullable|date|after_or_equal:orientation_from',
+            'orientation_type' => 'nullable|string|max:100',
+            'orientation_days' => 'nullable|integer|min:1',
 
             // Employment & Performance
-            'confirmation_date'        => 'nullable|date',
-            'probation_duration'       => 'nullable|integer|min:0',
-            'next_promotion_date'      => 'nullable|date',
-            'promotion_cycle'          => 'nullable|string|max:100',
-            'increment_cycle'          => 'nullable|string|max:100',
+            'confirmation_date' => 'nullable|date',
+            'probation_duration' => 'nullable|integer|min:0',
+            'next_promotion_date' => 'nullable|date',
+            'promotion_cycle' => 'nullable|string|max:100',
+            'increment_cycle' => 'nullable|string|max:100',
 
             // Attendance & Benefits
-            'weekends'                 => 'nullable|array',
-            'weekends.*'               => 'string',
-            'alternate_off_day'        => 'nullable|array',
-            'alternate_off_day.*'      => 'string',
-            'ot_allowed'               => 'nullable|in:yes,no',
-            'pf_eligible'              => 'nullable|in:yes,no',
-            'salary_type'              => 'nullable|in:hourly,daily,weekly,monthly,yearly',
-            'transport_eligible'       => 'nullable|in:yes,no',
+            'weekends' => 'nullable|array',
+            'weekends.*' => 'string',
+            'alternate_off_day' => 'nullable|array',
+            'alternate_off_day.*' => 'string',
+            'ot_allowed' => 'nullable|in:yes,no',
+            'pf_eligible' => 'nullable|in:yes,no',
+            'salary_type' => 'nullable|in:hourly,daily,weekly,monthly,yearly',
+            'transport_eligible' => 'nullable|in:yes,no',
 
             // Loan & Benefits
-            'can_apply_loan'           => 'nullable|in:yes,no',
-            'pf_effective_date'        => 'nullable|date',
-            'can_apply_advance'        => 'nullable|in:yes,no',
-            'gratuity_eligible'        => 'nullable|in:yes,no',
+            'can_apply_loan' => 'nullable|in:yes,no',
+            'pf_effective_date' => 'nullable|date',
+            'can_apply_advance' => 'nullable|in:yes,no',
+            'gratuity_eligible' => 'nullable|in:yes,no',
         ], [
             // 🧾 Custom Messages
-            'emp_type.in'                     => 'Employment type must be either Permanent or Contractual.',
-            'orientation_to.after_or_equal'   => 'Orientation end date must be after or equal to the start date.',
-            'orientation_days.min'            => 'Orientation days must be at least 1 day.',
-            'probation_duration.min'          => 'Probation duration cannot be negative.',
+            'emp_type.in' => 'Employment type must be either Permanent or Contractual.',
+            'orientation_to.after_or_equal' => 'Orientation end date must be after or equal to the start date.',
+            'orientation_days.min' => 'Orientation days must be at least 1 day.',
+            'probation_duration.min' => 'Probation duration cannot be negative.',
         ]);
 
         return $validated;
@@ -367,16 +385,17 @@ class EmployeeServices
 
     public function employeeOfficeInfoSave(Request $request, $validated, $employee_office_info = null)
     {
-        if(empty($employee_office_info)){
+        if (empty($employee_office_info)) {
             $employee_office_data = EmployeeOfficeInfo::create($validated);
-        }else{
+        } else {
             $employee_office_data = $employee_office_info->update($validated);
 
         }
         return $employee_office_data;
     }
 
-    public function employeeEligiblePlanValidation($request){
+    public function employeeEligiblePlanValidation($request)
+    {
         $validated = $request->validate([
             'employee_id' => 'required',
 
@@ -541,18 +560,20 @@ class EmployeeServices
         return $validated;
     }
 
-    public function employeeEligiblePanInfoSave($validated, $employeePlan = null){
+    public function employeeEligiblePanInfoSave($validated, $employeePlan = null)
+    {
 
-        if(isset($employeePlan)){
+        if (isset($employeePlan)) {
             $employeePlan->update($validated);
             return $employeePlan;
-        }else{
+        } else {
             $data = EmployeeEligiblePlan::create($validated);
             return $data;
         }
     }
 
-    public function employeeEducationInfoValidation($request){
+    public function employeeEducationInfoValidation($request)
+    {
         $validated = $request->validate([
             'employee_id' => 'required',
             'educations' => 'nullable|array',
@@ -585,11 +606,12 @@ class EmployeeServices
         return $validated;
     }
 
-    public function employeeEducationInfoSave($validated, $employeeEduData = null){
-        if(isset($employeeEduData)){
+    public function employeeEducationInfoSave($validated, $employeeEduData = null)
+    {
+        if (isset($employeeEduData)) {
             $employeeEduData->update($validated);
             return $employeeEduData;
-        }else{
+        } else {
 //            $data = new EmployeeEducationExperienceTraining($validated);
 //            dd($data->getAttributes());
 
@@ -651,9 +673,10 @@ class EmployeeServices
         return $validated;
     }
 
-    public function employeeNomineeInfoSave($request, $validated, $employeeNomineeData = null){
-        if(isset($employeeNomineeData)){
-            if($request->hasFile('photo_path')) {
+    public function employeeNomineeInfoSave($request, $validated, $employeeNomineeData = null)
+    {
+        if (isset($employeeNomineeData)) {
+            if ($request->hasFile('photo_path')) {
                 $this->employeeAttachmentDelete($employeeNomineeData->photo_path);
                 $photo = $request->file('photo_path');
                 $validated = $this->employeeAttachmentValidation($validated, $request, $photo, 'photo_path');
@@ -661,8 +684,8 @@ class EmployeeServices
             }
             $employeeNomineeData->update($validated);
             return $employeeNomineeData;
-        }else{
-            if($request->hasFile('photo_path')) {
+        } else {
+            if ($request->hasFile('photo_path')) {
                 $photo = $request->file('photo_path');
                 $validated = $this->employeeAttachmentValidation($validated, $request, $photo, 'photo_path');
                 Log::info('Photo Uploaded');
@@ -672,7 +695,8 @@ class EmployeeServices
         }
     }
 
-    public function employeeSalaryBreakdownValidation($request){
+    public function employeeSalaryBreakdownValidation($request)
+    {
         $validated = $request->validate([
             'employee_id' => 'required|exists:employees,id',
 
@@ -722,18 +746,20 @@ class EmployeeServices
         return $validated;
     }
 
-    public function employeeSalaryBreakdownInfoSave($validated, $employeeSalaryBreakdown = null){
+    public function employeeSalaryBreakdownInfoSave($validated, $employeeSalaryBreakdown = null)
+    {
 
-        if(isset($employeeSalaryBreakdown)){
+        if (isset($employeeSalaryBreakdown)) {
             $employeeSalaryBreakdown->update($validated);
             return $employeeSalaryBreakdown;
-        }else{
+        } else {
             $data = EmployeeSalaryBreakdown::create($validated);
             return $data;
         }
     }
 
-    public function employeeBankAccountsInfoValidation($request){
+    public function employeeBankAccountsInfoValidation($request)
+    {
         $validated = $request->validate([
             'employee_id' => 'required',
             'bank_id' => 'required',
@@ -758,11 +784,12 @@ class EmployeeServices
         return $validated;
     }
 
-    public function employeeBankAccountsInfoSave($validated, $employeeData = null){
-        if(isset($employeeData)){
+    public function employeeBankAccountsInfoSave($validated, $employeeData = null)
+    {
+        if (isset($employeeData)) {
             $employeeData->update($validated);
             return $employeeData;
-        }else{
+        } else {
             $data = EmployeeBankAccount::create($validated);
             return $data;
         }
