@@ -485,43 +485,43 @@
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="weekends[]"
                                             id="weekend_friday" value="Friday"
-                                            {{ in_array('Friday', old('weekends', [])) || isset($employee_office_info) && in_array('Friday',  $employee_office_info->weekends) ? 'checked' : '' }}>
+                                            {{ in_array('Friday', old('weekends', [])) || isset($employee_office_info) && in_array('Friday',  $employee_office_info->weekends ?? []) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="weekend_friday">Friday</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="weekends[]"
                                             id="weekend_saturday" value="Saturday"
-                                            {{ in_array('Saturday', old('weekends', [])) || isset($employee_office_info) && in_array('Saturday', $employee_office_info->weekends)  ? 'checked' : '' }}>
+                                            {{ in_array('Saturday', old('weekends', [])) || isset($employee_office_info) && in_array('Saturday', $employee_office_info->weekends ?? [])  ? 'checked' : '' }}>
                                         <label class="form-check-label" for="weekend_saturday">Saturday</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="weekends[]"
                                             id="weekend_sunday" value="Sunday"
-                                            {{ in_array('Sunday', old('weekends', [])) || isset($employee_office_info) && in_array('Sunday', $employee_office_info->weekends) ? 'checked' : '' }}>
+                                            {{ in_array('Sunday', old('weekends', [])) || isset($employee_office_info) && in_array('Sunday', $employee_office_info->weekends ?? []) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="weekend_sunday">Sunday</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="weekends[]"
                                                id="" value="Monday"
-                                            {{ in_array('Monday', old('weekends', [])) || isset($employee_office_info) && in_array('Monday', $employee_office_info->weekends) ? 'checked' : '' }}>
+                                            {{ in_array('Monday', old('weekends', [])) || isset($employee_office_info) && in_array('Monday', $employee_office_info->weekends ?? []) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="">Monday</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="weekends[]"
                                                id="" value="Tuesday"
-                                            {{ in_array('Tuesday', old('weekends', [])) || isset($employee_office_info) && in_array('Tuesday', $employee_office_info->weekends) ? 'checked' : '' }}>
+                                            {{ in_array('Tuesday', old('weekends', [])) || isset($employee_office_info) && in_array('Tuesday', $employee_office_info->weekends ?? []) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="">Tuesday</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="weekends[]"
                                                id="" value="Wednesday"
-                                            {{ in_array('Wednesday', old('weekends', [])) || isset($employee_office_info) && in_array('Wednesday', $employee_office_info->weekends) ? 'checked' : '' }}>
+                                            {{ in_array('Wednesday', old('weekends', [])) || isset($employee_office_info) && in_array('Wednesday', $employee_office_info->weekends ?? []) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="">Wednesday</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="weekends[]"
                                                id="" value="Thursday"
-                                            {{ in_array('Thursday', old('weekends', [])) || isset($employee_office_info) && in_array('Thursday', $employee_office_info->weekends) ? 'checked' : '' }}>
+                                            {{ in_array('Thursday', old('weekends', [])) || isset($employee_office_info) && in_array('Thursday', $employee_office_info->weekends ?? []) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="">Thursday</label>
                                     </div>
                                     @error('weekends')
@@ -534,44 +534,50 @@
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="alternate_off_day[]"
                                                id="weekend_friday" value="Friday"
-                                            {{ in_array('Friday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Friday', $employee_office_info->alternate_off_day) ? 'checked' : '' }}>
+                                            {{ in_array('Friday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Friday', $employee_office_info->alternate_off_day ?? []) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="weekend_friday">Friday</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="alternate_off_day[]"
                                                id="weekend_saturday" value="Saturday"
-                                            {{ in_array('Saturday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Saturday', $employee_office_info->alternate_off_day)  ? 'checked' : '' }}>
+                                            {{ in_array('Saturday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Saturday', $employee_office_info->alternate_off_day ?? [])  ? 'checked' : '' }}>
                                         <label class="form-check-label" for="weekend_saturday">Saturday</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="alternate_off_day[]"
                                                id="weekend_sunday" value="Sunday"
-                                            {{ in_array('Sunday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Sunday', $employee_office_info->alternate_off_day) ? 'checked' : '' }}>
+                                            {{ in_array('Sunday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Sunday', $employee_office_info->alternate_off_day ?? []) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="weekend_sunday">Sunday</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="alternate_off_day[]"
                                                id="" value="Monday"
-                                            {{ in_array('Monday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Monday', $employee_office_info->alternate_off_day) ? 'checked' : '' }}>
+                                            {{ in_array('Monday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Monday', $employee_office_info->alternate_off_day ?? []) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="">Monday</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="alternate_off_day[]"
                                                id="" value="Tuesday"
-                                            {{ in_array('Tuesday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Tuesday', $employee_office_info->alternate_off_day) ? 'checked' : '' }}>
+                                            {{ in_array('Tuesday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Tuesday', $employee_office_info->alternate_off_day ?? []) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="">Tuesday</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="alternate_off_day[]"
                                                id="" value="Wednesday"
-                                            {{ in_array('Wednesday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Wednesday', $employee_office_info->alternate_off_day) ? 'checked' : '' }}>
+                                            {{ in_array('Wednesday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Wednesday', $employee_office_info->alternate_off_day ?? []) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="">Wednesday</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="alternate_off_day[]"
                                                id="" value="Thursday"
-                                            {{ in_array('Thursday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Thursday', $employee_office_info->alternate_off_day) ? 'checked' : '' }}>
+                                            {{ in_array('Thursday', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('Thursday', $employee_office_info->alternate_off_day ?? []) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="">Thursday</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="alternate_off_day[]"
+                                               id="" value="None"
+                                            {{ in_array('None', old('alternate_off_day', [])) || isset($employee_office_info) && in_array('None', $employee_office_info->alternate_off_day ?? []) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="">None</label>
                                     </div>
                                     @error('alternate_off_day')
                                     <small class="text-danger d-block">{{ $message }}</small>
