@@ -48,7 +48,7 @@ class EmployeeServices
         $employees = $flexsearch->apply( $query,
             $filters,
             $searchTerm,
-            $searchableFields)->orderBy('first_name', 'asc')->paginate(50);
+            $searchableFields)->orderBy('id', 'desc')->paginate(50);
 
         return $employees;
     }

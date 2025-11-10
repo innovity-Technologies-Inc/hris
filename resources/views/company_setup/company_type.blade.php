@@ -83,10 +83,12 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @php($i=1)
+                            @php
+                                $sl = \App\HelperClass::indexNumberSerialization($company_types);
+                            @endphp
                             @foreach($company_types as $company_type)
                                 <tr>
-                                    <th scope="row">{{$i++}}</th>
+                                    <th scope="row">{{$sl++}}</th>
                                     <td>{{$company_type->name}}</td>
                                     <td>{{$company_type->short_name}}</td>
                                     <td>

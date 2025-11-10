@@ -27,10 +27,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @php($i = 1)
+                            @php
+                                $sl = \App\HelperClass::indexNumberSerialization($designations);
+                            @endphp
                                 @foreach ($designations as $designation)
                                     <tr>
-                                        <th scope="row">{{ $i++ }}</th>
+                                        <th scope="row">{{ $sl++ }}</th>
                                         <td>{{ $designation->getCompany->name }}</td>
                                         <td>{{ $designation->getLocation->unit_name }}</td>
                                         <td>{{ $designation->getDivision->division_name }}</td>

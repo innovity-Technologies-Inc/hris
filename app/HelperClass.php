@@ -30,6 +30,11 @@ class HelperClass
         Storage::disk('public')->delete($file_path);
     }
 
+    public static function indexNumberSerialization($data){
+        $sl = ($data->currentPage() - 1) * $data->perPage() + 1;
+        return $sl;
+    }
+
 
 
 }

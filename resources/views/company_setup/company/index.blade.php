@@ -26,10 +26,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @php($i = 1)
+                            @php
+                                $sl = \App\HelperClass::indexNumberSerialization($companies);
+                            @endphp
                                 @foreach ($companies as $item)
                                     <tr>
-                                        <th scope="row">{{ $i++ }}</th>
+                                        <th scope="row">{{ $sl++ }}</th>
                                         <td>
                                             <img src="{{ asset('storage/' . $item->logo) }}" height="24px" alt="Logo">
                                         </td>

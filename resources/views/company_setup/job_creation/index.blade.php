@@ -28,10 +28,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @php($i = 1)
+                            @php
+                                $sl = \App\HelperClass::indexNumberSerialization($job_creations);
+                            @endphp
                                 @foreach ($job_creations as $jobCreation)
                                     <tr>
-                                        <th scope="row">{{ $i++ }}</th>
+                                        <th scope="row">{{ $sl++ }}</th>
                                         <td>{{ $jobCreation->getDesignation->company_designation }}</td>
                                         <td>{{ $jobCreation->getDepartment->department_name }}</td>
                                         <td>{{ $jobCreation->job_ind }}</td>
@@ -63,7 +65,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        
+
                         <div class="mt-3">
                             {{ $job_creations->links() }}
                         </div>

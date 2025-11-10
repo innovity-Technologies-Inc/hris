@@ -25,10 +25,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @php($i = 1)
-                                @foreach ($sections as $section)
+                            @php
+                                $sl = \App\HelperClass::indexNumberSerialization($sections);
+                            @endphp
+                            @foreach ($sections as $section)
                                     <tr>
-                                        <th scope="row">{{ $i++ }}</th>
+                                        <th scope="row">{{ $sl++ }}</th>
                                         <td>{{ $section->getDepartment->department_name }}</td>
                                         <td>{{ $section->section_name }}</td>
                                         <td>{{ $section->short_name }}</td>

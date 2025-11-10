@@ -24,10 +24,12 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @php($i=1)
+                            @php
+                                $sl = \App\HelperClass::indexNumberSerialization($gazette_locations);
+                            @endphp
                             @foreach($gazette_locations as $item)
                                 <tr>
-                                    <th scope="row">{{$i++}}</th>
+                                    <th scope="row">{{$sl++}}</th>
                                     <td>{{$item->name}}</td>
                                     <td>
                                         @if($item->status == 'active')

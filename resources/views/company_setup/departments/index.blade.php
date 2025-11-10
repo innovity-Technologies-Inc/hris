@@ -10,7 +10,7 @@
                         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                     </a>
                 </div><!-- end card header -->
-                
+
 
                 <div class="card-body">
                     <div class="table-responsive">
@@ -26,10 +26,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @php($i = 1)
+                            @php
+                                $sl = \App\HelperClass::indexNumberSerialization($departments);
+                            @endphp
                                 @foreach ($departments as $department)
                                     <tr>
-                                        <th scope="row">{{ $i++ }}</th>
+                                        <th scope="row">{{ $sl++ }}</th>
                                         <td>{{ $department->getDivision->division_name }}</td>
                                         <td>{{ $department->department_name }}</td>
                                         <td>{{ $department->short_name }}</td>
@@ -56,7 +58,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        
+
                         <div class="mt-3">
                             {{$departments->links()}}
                         </div>

@@ -6,18 +6,26 @@ use App\HelperClass;
 use App\Models\Company;
 use App\Models\CompanyType;
 use App\Models\Group;
+use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class CompanySetupController extends Controller
 {
 
-    public function groupIndex(){
+    public function groupIndex(Request $request, FlexSearch $flexsearch){
         $title = 'Group';
         $section = 'Company Setup';
         $sub_section = 'Group';
-        $groups = Group::latest()->paginate(10);
-        return view('company_setup.group', compact('title', 'section', 'sub_section', 'groups'));
+
+        $query = Group::query();
+        $searchTerm = $request->get('keyword');
+        $searchableFields = ['name'];
+        $groups = $flexsearch->apply( $query, [], $searchTerm, $searchableFields)->orderBy('id', 'desc')->paginate(10);
+        if ($request->ajax()) {
+            return view('company_setup.group_search_results', compact('groups'))->render();
+        }
+        return view('company_setup.groups', compact('title', 'section', 'sub_section', 'groups'));
     }
     public function groupSave(Request $request){
         $request->validate([
