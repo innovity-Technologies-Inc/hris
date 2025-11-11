@@ -16,7 +16,7 @@
                         <div class="col-12">
                             <div class="input-group input-group-md">
                                 <input type="text" class="form-control border-end-0" id="keywordSearch" name="keyword"
-                                       placeholder="Search branches by keyword" aria-label="Keyword Search">
+                                    placeholder="Search branches by keyword" aria-label="Keyword Search">
                                 <span class="input-group-text border-start-0 input-group-bg">
                                     <i class="mdi mdi-magnify text-muted"></i>
                                 </span>
@@ -38,13 +38,13 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            @php
-                                $sl = \App\HelperClass::indexNumberSerialization($locations);
-                            @endphp
+                                @php
+                                    $sl = \App\HelperClass::indexNumberSerialization($locations);
+                                @endphp
                                 @foreach ($locations as $location)
                                     <tr>
                                         <th scope="row">{{ $sl++ }}</th>
-                                        <td>{{ $location->unit_name }}</td>
+                                        <td>{{ $location->name }}</td>
                                         <td>{{ $location->getCompany->name }}</td>
                                         <td>{{ Str::limit($location->location_address, 30) }}</td>
                                         <td>
