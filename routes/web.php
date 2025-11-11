@@ -24,6 +24,7 @@ use App\Http\Controllers\EmployeeBankAccountController;
 use App\Http\Controllers\MealPlansController;
 use App\Http\Controllers\ShiftPlanController;
 use App\Http\Controllers\OrganizationStructureController;
+use App\Http\Controllers\OTPlanController;
 
 Route::get('test', function () {
    return view('plans.bulk_uploads.form');
@@ -259,6 +260,19 @@ Route::prefix('plans')->group(function () {
             Route::put('update/{id}', 'update')->name('plans.shift_plans.update');
             Route::delete('delete/{id}', 'delete')->name('plans.shift_plans.delete');
             Route::post('import', 'import')->name('plans.shift_plans.import');
+
+        });
+    });
+
+    Route::prefix('ot-plans')->group(function () {
+        Route::controller(OTPlanController::class)->group(function(){
+            Route::get('/', 'index')->name('plans.ot_plans.index');
+            Route::get('create', 'create')->name('plans.ot_plans.create');
+            Route::post('store', 'store')->name('plans.ot_plans.store');
+            Route::get('{id}', 'show')->name('plans.ot_plans.show');
+            Route::get('edit/{id}', 'edit')->name('plans.ot_plans.edit');
+            Route::put('update/{id}', 'update')->name('plans.ot_plans.update');
+            Route::delete('delete/{id}', 'delete')->name('plans.ot_plans.delete');
 
         });
     });

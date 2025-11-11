@@ -117,4 +117,59 @@ class PlanService
         return $validate;
     }
 
+    public function otPlanValidation($request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'ot_type' => 'required|in:regular,holiday,night_shift,weekend,other',
+            'overtime_rate_type' => 'required|in:multiplier,per_hour',
+            'overtime_rate' => 'required|numeric|min:0',
+            'minimum_overtime_hours' => 'nullable|numeric|min:0',
+            'maximum_overtime_hours' => 'nullable|numeric|min:0|gt:minimum_overtime_hours',
+            'overtime_start_time' => 'nullable|date_format:H:i',
+            'overtime_end_time' => 'nullable|date_format:H:i|after:overtime_start_time',
+            'max_ot_limit' => 'nullable|numeric|min:0',
+            'max_ot_period' => 'nullable|in:daily,weekly,monthly,yearly|required_with:max_ot_limit',
+            'notes' => 'nullable|string',
+            'active_ind' => 'required|in:active,inactive',
+        ], [
+            'name.required' => 'OT plan name is required.',
+            'name.string' => 'OT plan name must be a string.',
+            'name.max' => 'OT plan name may not exceed 255 characters.',
+
+            'ot_type.required' => 'Please select an overtime type.',
+            'ot_type.in' => 'The selected overtime type is invalid.',
+
+            'overtime_rate_type.required' => 'Please select a rate type.',
+            'overtime_rate_type.in' => 'The selected rate type is invalid.',
+
+            'overtime_rate.required' => 'Overtime rate is required.',
+            'overtime_rate.numeric' => 'Overtime rate must be a number.',
+            'overtime_rate.min' => 'Overtime rate must be at least 0.',
+
+            'minimum_overtime_hours.numeric' => 'Minimum hours must be a number.',
+            'minimum_overtime_hours.min' => 'Minimum hours must be at least 0.',
+
+            'maximum_overtime_hours.numeric' => 'Maximum hours must be a number.',
+            'maximum_overtime_hours.min' => 'Maximum hours must be at least 0.',
+            'maximum_overtime_hours.gt' => 'Maximum hours must be greater than minimum hours.',
+
+            'overtime_start_time.date_format' => 'Start time must be in the format HH:MM.',
+            'overtime_end_time.date_format' => 'End time must be in the format HH:MM.',
+            'overtime_end_time.after' => 'End time must be after start time.',
+
+            'max_ot_limit.numeric' => 'OT limit must be a number.',
+            'max_ot_limit.min' => 'OT limit must be at least 0.',
+
+            'max_ot_period.in' => 'The selected period is invalid.',
+            'max_ot_period.required_with' => 'Period is required when OT limit is set.',
+
+            'active_ind.required' => 'Please select the plan status.',
+            'active_ind.in' => 'The selected status is invalid.',
+        ]);
+
+        return $validated;
+    }
+
 }
