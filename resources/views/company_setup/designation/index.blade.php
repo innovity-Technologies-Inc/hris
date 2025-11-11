@@ -43,7 +43,7 @@
                             @endphp
                                 @foreach ($designations as $designation)
                                     <tr>
-                                        <th scope="row">{{ $i++ }}</th>
+                                        <th scope="row">{{ $sl++ }}</th>
                                         <td>{{ $designation->designation_level }}</td>
                                         <td>{{ $designation->company_designation }}</td>
                                         <td>
