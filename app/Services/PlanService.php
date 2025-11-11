@@ -172,4 +172,61 @@ class PlanService
         return $validated;
     }
 
+    public function leavePlanValidation($request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'short_name' => 'nullable|string|max:100',
+            'applicable_gender' => 'required|in:Both,Male,Female',
+            'day_type' => 'required|in:Calculative,Fixed',
+            'leave_type' => 'required|in:Casual Leave,Sick Leave,Maternal Leave,Paternal Leave,Earned Leave,Comp Off',
+            'leave_limit' => 'nullable|integer|min:0',
+            'max_no_of_days' => 'nullable|integer|min:0',
+            'display_serial' => 'nullable|integer|min:0',
+            'apply_limit' => 'nullable|integer|min:0',
+            'allow_fractional_leave' => 'required|in:active,inactive',
+            'off_day_include' => 'nullable|integer|min:0',
+            'active_ind' => 'required|in:active,inactive',
+        ], [
+            'name.required' => 'Leave plan name is required.',
+            'name.string' => 'Leave plan name must be a string.',
+            'name.max' => 'Leave plan name may not exceed 255 characters.',
+
+            'short_name.string' => 'Short name must be a string.',
+            'short_name.max' => 'Short name may not exceed 100 characters.',
+
+            'applicable_gender.required' => 'Please select applicable gender.',
+            'applicable_gender.in' => 'The selected gender is invalid.',
+
+            'day_type.required' => 'Please select day type.',
+            'day_type.in' => 'The selected day type is invalid.',
+
+            'leave_type.required' => 'Please select leave type.',
+            'leave_type.in' => 'The selected leave type is invalid.',
+
+            'leave_limit.integer' => 'Leave limit must be a number.',
+            'leave_limit.min' => 'Leave limit must be at least 0.',
+
+            'max_no_of_days.integer' => 'Maximum days must be a number.',
+            'max_no_of_days.min' => 'Maximum days must be at least 0.',
+
+            'display_serial.integer' => 'Display serial must be a number.',
+            'display_serial.min' => 'Display serial must be at least 0.',
+
+            'apply_limit.required' => 'Please select apply limit option.',
+            'apply_limit.in' => 'The selected option is invalid.',
+
+            'allow_fractional_leave.required' => 'Please select fractional leave option.',
+            'allow_fractional_leave.in' => 'The selected option is invalid.',
+
+            'off_day_include.required' => 'Please select off day include option.',
+            'off_day_include.in' => 'The selected option is invalid.',
+
+            'active_ind.required' => 'Please select the plan status.',
+            'active_ind.in' => 'The selected status is invalid.',
+        ]);
+
+        return $validated;
+    }
+
 }

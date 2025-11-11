@@ -25,6 +25,7 @@ use App\Http\Controllers\MealPlansController;
 use App\Http\Controllers\ShiftPlanController;
 use App\Http\Controllers\OrganizationStructureController;
 use App\Http\Controllers\OTPlanController;
+use App\Http\Controllers\LeavePlanController;
 
 Route::get('test', function () {
    return view('plans.bulk_uploads.form');
@@ -260,6 +261,19 @@ Route::prefix('plans')->group(function () {
             Route::put('update/{id}', 'update')->name('plans.shift_plans.update');
             Route::delete('delete/{id}', 'delete')->name('plans.shift_plans.delete');
             Route::post('import', 'import')->name('plans.shift_plans.import');
+
+        });
+    });
+
+    Route::prefix('leave-plans')->group(function () {
+        Route::controller(LeavePlanController::class)->group(function(){
+            Route::get('/', 'index')->name('plans.leave_plans.index');
+            Route::get('create', 'create')->name('plans.leave_plans.create');
+            Route::post('store', 'store')->name('plans.leave_plans.store');
+            Route::get('{id}', 'show')->name('plans.leave_plans.show');
+            Route::get('edit/{id}', 'edit')->name('plans.leave_plans.edit');
+            Route::put('update/{id}', 'update')->name('plans.leave_plans.update');
+            Route::delete('delete/{id}', 'delete')->name('plans.leave_plans.delete');
 
         });
     });

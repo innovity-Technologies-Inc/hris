@@ -27,11 +27,11 @@ return new class extends Migration
             $table->integer('display_serial')->default(0);
 
             // Toggle/Checkbox fields as enum
-            $table->enum('apply_limit', ['active', 'inactive'])->default('inactive');
+            $table->integer('apply_limit')->default(0);
             $table->enum('allow_fractional_leave', ['active', 'inactive'])->default('inactive');
 
             // Off Day Include
-            $table->enum('off_day_include', ['Excluding', 'In Between', 'Succeeding'])->default('Excluding');
+            $table->integer('off_day_include')->default(0);
 
             // Active indicator
             $table->enum('active_ind', ['active', 'inactive'])->default('active');

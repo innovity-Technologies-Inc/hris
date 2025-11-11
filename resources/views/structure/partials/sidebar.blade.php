@@ -74,6 +74,14 @@
                                     href='{{ route('plans.shift_plans.index') }}'>Shift Plans</a>
                             </li>
                             <li>
+                                <a class='tp-link @if (Route::is('plans.leave_plans.*')) menuitem-active @endif'
+                                    href='{{ route('plans.leave_plans.index') }}'>Leave Plans</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('plans.ot_plans.*')) menuitem-active @endif'
+                                    href='{{ route('plans.ot_plans.index') }}'>OT Plans</a>
+                            </li>
+                            <li>
                                 <a class='tp-link @if (Route::is('plans.bulk_upload')) menuitem-active @endif'
                                     href='{{ route('plans.bulk_upload') }}'>Bulk Upload</a>
                             </li>
