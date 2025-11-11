@@ -1,5 +1,6 @@
 @extends('structure.master')
 @section('content')
+    <div class="bulk-upload">
     <div class="row justify-content-center">
         <div class="col-12 col-xl-12">
             <!-- Main Card -->
@@ -139,6 +140,7 @@
             </div>
         </div>
     </div>
+    </div>
 
     <!-- Include the modal -->
     @include('plans.bulk_uploads.import')
@@ -162,6 +164,49 @@
         .btn-outline-dark:hover {
             background-color: #212529;
             border-color: #212529;
+        }
+    </style>
+    <style>
+        /* Dark mode fixes for bulk upload pages */
+        [data-bs-theme="dark"] .bulk-upload {
+            color: var(--bs-dashboard-accent);
+        }
+
+        [data-bs-theme="dark"] .bulk-upload .card,
+        [data-bs-theme="dark"] .bulk-upload .card-header,
+        [data-bs-theme="dark"] .bulk-upload .alert {
+            background-color: var(--bs-dark-bg-subtle) !important;
+            border-color: var(--bs-dark-border-subtle) !important;
+        }
+
+        [data-bs-theme="dark"] .bulk-upload .bg-white {
+            background-color: var(--bs-dark-bg-subtle) !important;
+        }
+
+        [data-bs-theme="dark"] .bulk-upload .text-muted,
+        [data-bs-theme="dark"] .bulk-upload .text-dark,
+        [data-bs-theme="dark"] .bulk-upload .text-secondary,
+        [data-bs-theme="dark"] .bulk-upload h1,
+        [data-bs-theme="dark"] .bulk-upload h2,
+        [data-bs-theme="dark"] .bulk-upload h3,
+        [data-bs-theme="dark"] .bulk-upload h4,
+        [data-bs-theme="dark"] .bulk-upload h5,
+        [data-bs-theme="dark"] .bulk-upload h6,
+        [data-bs-theme="dark"] .bulk-upload p,
+        [data-bs-theme="dark"] .bulk-upload span,
+        [data-bs-theme="dark"] .bulk-upload label,
+        [data-bs-theme="dark"] .bulk-upload i {
+            color: var(--bs-dashboard-accent) !important;
+        }
+
+        [data-bs-theme="dark"] .bulk-upload .btn-outline-dark {
+            color: var(--bs-dashboard-accent) !important;
+            border-color: var(--bs-dashboard-accent) !important;
+        }
+
+        [data-bs-theme="dark"] .bulk-upload .badge.bg-dark {
+            background-color: var(--bs-dashboard-accent) !important;
+            color: #000 !important;
         }
     </style>
 @endsection
