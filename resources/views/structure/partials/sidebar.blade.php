@@ -92,7 +92,8 @@
                                 Route::is('branches.*') ||
                                 Route::is('tofsils.*') ||
                                 Route::is('salary_grades.*') ||
-                                Route::is('gazette_locations.*')) menuitem-active @endif ">
+                                Route::is('gazette_locations.*') ||
+                                Route::is('company_setup.bulk_upload')) menuitem-active @endif ">
                         <i data-feather="box"></i>
                         <span> Company Info </span>
                         <span class="menu-arrow"></span>
@@ -163,6 +164,11 @@
                             <li>
                                 <a class='tp-link @if (Route::is('job_creations.*')) menuitem-active @endif'
                                     href='{{ route('job_creations.index') }}'>Job Creations</a>
+                            </li>
+
+                            <li>
+                                <a class='tp-link @if (Route::is('company_setup.bulk_upload')) menuitem-active @endif'
+                                    href='{{ route('company_setup.bulk_upload') }}'>Bulk Upload</a>
                             </li>
 
                             {{-- <li>

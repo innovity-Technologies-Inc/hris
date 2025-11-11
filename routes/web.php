@@ -35,6 +35,10 @@ Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
 
 Route::prefix('company-setup')->group(function () {
+    Route::get('bulk-upload', function () {
+        return view('company_setup.bulk_uploads.form');
+    })->name('company_setup.bulk_upload');
+
     Route::controller(CompanySetupController::class)->group(function () {
         Route::get('groups', 'groupIndex')->name('groups.index');
         Route::post('groups/save', 'groupSave')->name('groups.save');
