@@ -2,18 +2,7 @@
 @section('content')
     <div class="container-fluid mt-4">
 
-        {{-- Display Validation Errors --}}
-        @if ($errors->any())
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <h6 class="mb-2">Please fix the following errors:</h6>
-                <ul class="mb-0">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
+
 
         <form method="POST"
             action="{{ isset($plan) ? route('plans.ot_plans.update', $plan->id) : route('plans.ot_plans.store') }}"
@@ -274,10 +263,12 @@
                     <div class="form-check form-switch mb-0">
                         <input type="hidden" name="active_ind" value="inactive">
                         <input class="form-check-input" type="checkbox" name="active_ind" id="active_ind"
-                            value="active" checked {{ isset($plan) && $plan->active_ind == 'active' ? 'checked' : '' }}
-                            {{ old('active_ind') == 'active' ? 'checked' : '' }}>
+                            value="active" {{ (isset($plan) && $plan->active_ind == 'active') || old('active_ind', 'active') == 'active' ? 'checked' : '' }}>
                         <label class="form-check-label" for="active_ind">Active</label>
                     </div>
+                    @error('active_ind')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
             </div>
 
