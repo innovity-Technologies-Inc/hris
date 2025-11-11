@@ -10,8 +10,22 @@
                         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                     </a>
                 </div>
+                {{-- Search Filter Form --}}
+                <form id="filterForm">
+                    <div class="row mb-1 mt-2 mx-4">
+                        <div class="col-12">
+                            <div class="input-group input-group-md">
+                                <input type="text" class="form-control border-end-0" id="keywordSearch" name="keyword"
+                                       placeholder="Search branches by keyword" aria-label="Keyword Search">
+                                <span class="input-group-text border-start-0 input-group-bg">
+                                    <i class="mdi mdi-magnify text-muted"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
 
-                <div class="card-body">
+                <div class="card-body" id="search-result">
                     <div class="table-responsive">
                         <table class="table table-bordered mb-0">
                             <thead>
