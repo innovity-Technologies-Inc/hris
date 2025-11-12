@@ -77,36 +77,108 @@
                     </h5>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="overtime_rate_type" class="form-label fw-semibold">
-                                Rate Type <span class="text-danger">*</span>
+                    <!-- Main Configuration Type Selection -->
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold">
+                                Configuration Type <span class="text-danger">*</span>
                             </label>
-                            <select class="form-select" id="overtime_rate_type" name="overtime_rate_type" required>
-                                <option value="">Select Rate Type</option>
-                                <option value="multiplier"
-                                    {{ isset($plan) && $plan->overtime_rate_type == 'multiplier' ? 'selected' : '' }}>
-                                    Multiplier (e.g., 1.5x base rate)</option>
-                                <option value="per_hour"
-                                    {{ isset($plan) && $plan->overtime_rate_type == 'per_hour' ? 'selected' : '' }}>Per
-                                    Hour (e.g., $10/hour)</option>
-                            </select>
-                            @error('overtime_rate_type')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
+                            <div class="d-flex gap-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="ot_config_type"
+                                        id="ot_config_salary" value="salary_based"
+                                        {{ !isset($plan) || (isset($plan) && $plan->ot_config_type != 'custom') ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="ot_config_salary">
+                                        Based on Salary
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="ot_config_type"
+                                        id="ot_config_custom" value="custom"
+                                        {{ isset($plan) && $plan->ot_config_type == 'custom' ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="ot_config_custom">
+                                        Custom Rate
+                                    </label>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="overtime_rate" class="form-label fw-semibold">
-                                Overtime Rate <span class="text-danger">*</span>
-                            </label>
-                            <input type="number" step="0.01" class="form-control" id="overtime_rate"
-                                name="overtime_rate" placeholder="1.50"
-                                value="{{ isset($plan) ? $plan->overtime_rate : old('overtime_rate', '1.50') }}" required>
-                            <small class="text-muted">For multiplier: use 1.5 for 1.5x | For per hour: use actual
-                                amount</small>
-                            @error('overtime_rate')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
+                    </div>
+
+                    <!-- Overtime Rate Configuration (Based on Salary) -->
+                    <div id="salary_based_section" class="border rounded p-3 mb-3">
+                        <h6 class="fw-semibold mb-3">
+                            <i class="mdi mdi-calculator text-primary me-1"></i>Overtime Rate Configuration (Based on
+                            Salary)
+                        </h6>
+
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label fw-semibold">
+                                    Rate Type <span class="text-danger">*</span>
+                                </label>
+                                <div class="d-flex gap-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="salary_rate_type"
+                                            id="rate_type_basic" value="basic_rate"
+                                            {{ isset($plan) && $plan->salary_rate_type == 'basic_rate' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="rate_type_basic">
+                                            Basic Rate
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="salary_rate_type"
+                                            id="rate_type_multiplier" value="multiplier"
+                                            {{ !isset($plan) || (isset($plan) && $plan->salary_rate_type != 'basic_rate') ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="rate_type_multiplier">
+                                            Multiplier
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" id="multiplier_field_row">
+                            <div class="col-md-4 mb-3">
+                                <label for="overtime_multiplier" class="form-label fw-semibold">
+                                    Overtime Rate <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <input type="number" step="0.01" class="form-control form-control-sm"
+                                        id="overtime_multiplier" name="overtime_multiplier" placeholder="1.5"
+                                        value="{{ isset($plan) ? $plan->overtime_multiplier : old('overtime_multiplier', '1.5') }}"
+                                        style="max-width: 120px;">
+                                    <span class="input-group-text bg-light">X Base Rate</span>
+                                </div>
+                                <small class="text-muted">Enter fractional number (e.g., 1.5, 2.0, 2.5)</small>
+                                @error('overtime_multiplier')
+                                    <span class="text-danger d-block">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Overtime Rate (Custom) -->
+                    <div id="custom_rate_section" class="border rounded p-3">
+                        <h6 class="fw-semibold mb-3">
+                            <i class="mdi mdi-cash text-success me-1"></i>Overtime Rate (Custom)
+                        </h6>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="custom_overtime_rate" class="form-label fw-semibold">
+                                    Amount Per Hour <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text">৳</span>
+                                    <input type="number" step="0.01" class="form-control" id="custom_overtime_rate"
+                                        name="custom_overtime_rate" placeholder="Enter amount per hour"
+                                        value="{{ isset($plan) ? $plan->custom_overtime_rate : old('custom_overtime_rate') }}">
+                                </div>
+                                <small class="text-muted">Fixed amount per overtime hour</small>
+                                @error('custom_overtime_rate')
+                                    <span class="text-danger d-block">{{ $message }}</span>
+                                @enderror
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -185,75 +257,6 @@
                 </div>
             </div>
 
-            <!-- OT Limits -->
-            <div class="card border mb-4">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0 fw-semibold">
-                        <i class="mdi mdi-alert-circle-outline text-danger me-2"></i>OT Limits
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="max_ot_limit" class="form-label fw-semibold">
-                                Maximum OT Limit (Hours)
-                            </label>
-                            <input type="number" step="0.01" class="form-control" id="max_ot_limit"
-                                name="max_ot_limit" placeholder="Leave empty for no limit"
-                                value="{{ isset($plan) ? $plan->max_ot_limit : old('max_ot_limit') }}">
-                            <small class="text-muted">Maximum OT hours per period (optional)</small>
-                            @error('max_ot_limit')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="max_ot_period" class="form-label fw-semibold">
-                                Limit Period
-                            </label>
-                            <select class="form-select" id="max_ot_period" name="max_ot_period">
-                                <option value="">Select Period</option>
-                                <option value="daily"
-                                    {{ isset($plan) && $plan->max_ot_period == 'daily' ? 'selected' : '' }}>Daily</option>
-                                <option value="weekly"
-                                    {{ isset($plan) && $plan->max_ot_period == 'weekly' ? 'selected' : '' }}>Weekly
-                                </option>
-                                <option value="monthly"
-                                    {{ isset($plan) && $plan->max_ot_period == 'monthly' ? 'selected' : '' }}>Monthly
-                                </option>
-                                <option value="yearly"
-                                    {{ isset($plan) && $plan->max_ot_period == 'yearly' ? 'selected' : '' }}>Yearly
-                                </option>
-                            </select>
-                            <small class="text-muted">Period for maximum OT limit</small>
-                            @error('max_ot_period')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Additional Notes -->
-            <div class="card border mb-4">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0 fw-semibold">
-                        <i class="mdi mdi-note-text-outline text-secondary me-2"></i>Additional Notes
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12 mb-3">
-                            <label for="notes" class="form-label fw-semibold">Notes</label>
-                            <textarea class="form-control" id="notes" name="notes" rows="4"
-                                placeholder="Any additional information about this OT plan...">{{ isset($plan) ? $plan->notes : old('notes') }}</textarea>
-                            @error('notes')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Plan Status -->
             <div class="card border mb-4">
                 <div class="card-header bg-light d-flex justify-content-between align-items-center">
@@ -263,7 +266,8 @@
                     <div class="form-check form-switch mb-0">
                         <input type="hidden" name="active_ind" value="inactive">
                         <input class="form-check-input" type="checkbox" name="active_ind" id="active_ind"
-                            value="active" {{ (isset($plan) && $plan->active_ind == 'active') || old('active_ind', 'active') == 'active' ? 'checked' : '' }}>
+                            value="active"
+                            {{ (isset($plan) && $plan->active_ind == 'active') || old('active_ind', 'active') == 'active' ? 'checked' : '' }}>
                         <label class="form-check-label" for="active_ind">Active</label>
                     </div>
                     @error('active_ind')
@@ -293,8 +297,74 @@
         document.querySelector('form').addEventListener('reset', function() {
             setTimeout(function() {
                 document.getElementById('active_ind').checked = true;
+                document.getElementById('ot_config_salary').checked = true;
+                document.getElementById('rate_type_multiplier').checked = true;
+                toggleOTConfigSections();
             }, 0);
         });
-    </script>
 
+        // Toggle between salary-based and custom OT rate configuration
+        function toggleOTConfigSections() {
+            const salaryBased = document.getElementById('ot_config_salary').checked;
+            const salarySection = document.getElementById('salary_based_section');
+            const customSection = document.getElementById('custom_rate_section');
+
+            if (salaryBased) {
+                // Enable salary-based section
+                salarySection.style.opacity = '1';
+                salarySection.style.pointerEvents = 'auto';
+                salarySection.querySelectorAll('input').forEach(input => {
+                    input.disabled = false;
+                });
+
+                // Disable custom section
+                customSection.style.opacity = '0.5';
+                customSection.style.pointerEvents = 'none';
+                customSection.querySelectorAll('input').forEach(input => {
+                    input.disabled = true;
+                });
+            } else {
+                // Disable salary-based section
+                salarySection.style.opacity = '0.5';
+                salarySection.style.pointerEvents = 'none';
+                salarySection.querySelectorAll('input').forEach(input => {
+                    input.disabled = true;
+                });
+
+                // Enable custom section
+                customSection.style.opacity = '1';
+                customSection.style.pointerEvents = 'auto';
+                customSection.querySelectorAll('input').forEach(input => {
+                    input.disabled = false;
+                });
+            }
+        }
+
+        // Toggle multiplier field visibility based on rate type
+        function toggleMultiplierField() {
+            const isMultiplier = document.getElementById('rate_type_multiplier').checked;
+            const multiplierRow = document.getElementById('multiplier_field_row');
+
+            if (isMultiplier) {
+                multiplierRow.style.display = 'flex';
+            } else {
+                multiplierRow.style.display = 'none';
+            }
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize on page load
+            toggleOTConfigSections();
+            toggleMultiplierField();
+
+            // Listen for configuration type changes
+            document.getElementById('ot_config_salary').addEventListener('change', toggleOTConfigSections);
+            document.getElementById('ot_config_custom').addEventListener('change', toggleOTConfigSections);
+
+            // Listen for rate type changes
+            document.getElementById('rate_type_basic').addEventListener('change', toggleMultiplierField);
+            document.getElementById('rate_type_multiplier').addEventListener('change', toggleMultiplierField);
+        });
+    </script>
 @endsection

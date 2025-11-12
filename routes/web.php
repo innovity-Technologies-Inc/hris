@@ -28,7 +28,7 @@ use App\Http\Controllers\OTPlanController;
 use App\Http\Controllers\LeavePlanController;
 
 Route::get('test', function () {
-   return view('plans.bulk_uploads.form');
+   return view('software_setting.index');
 });
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');

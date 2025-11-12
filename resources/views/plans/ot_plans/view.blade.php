@@ -44,26 +44,61 @@
                 </h5>
             </div>
             <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="text-muted small">Rate Type</label>
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label class="text-muted small">Configuration Type</label>
                         <p class="fw-semibold mb-0">
-                            <span
-                                class="badge bg-primary">{{ ucwords(str_replace('_', ' ', $plan->overtime_rate_type)) }}</span>
-                        </p>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="text-muted small">Overtime Rate</label>
-                        <p class="fw-semibold mb-0">
-                            @if ($plan->overtime_rate_type == 'multiplier')
-                                <span class="badge bg-success fs-6">{{ $plan->overtime_rate }}x</span>
-                            @else
-                                <span
-                                    class="badge bg-success fs-6">${{ number_format($plan->overtime_rate, 2) }}/hour</span>
-                            @endif
+                            <span class="badge bg-primary">
+                                {{ $plan->ot_config_type == 'salary_based' ? 'Based on Salary' : 'Custom Rate' }}
+                            </span>
                         </p>
                     </div>
                 </div>
+
+                @if ($plan->ot_config_type == 'salary_based')
+                    <!-- Salary Based Configuration -->
+                    <div class="border rounded p-3 bg-light">
+                        <h6 class="fw-semibold mb-3 text-primary">
+                            <i class="mdi mdi-calculator me-1"></i>Overtime Rate Configuration (Based on Salary)
+                        </h6>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">Rate Type</label>
+                                <p class="fw-semibold mb-0">
+                                    <span class="badge bg-info">
+                                        {{ $plan->salary_rate_type == 'basic_rate' ? 'Basic Rate' : 'Multiplier' }}
+                                    </span>
+                                </p>
+                            </div>
+                            @if ($plan->salary_rate_type == 'multiplier')
+                                <div class="col-md-6 mb-3">
+                                    <label class="text-muted small">Overtime Multiplier</label>
+                                    <p class="fw-semibold mb-0">
+                                        <span
+                                            class="badge bg-success fs-6">{{ number_format($plan->overtime_multiplier, 2) }}
+                                            X Base Rate</span>
+                                    </p>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                @else
+                    <!-- Custom Rate Configuration -->
+                    <div class="border rounded p-3 bg-light">
+                        <h6 class="fw-semibold mb-3 text-success">
+                            <i class="mdi mdi-cash me-1"></i>Overtime Rate (Custom)
+                        </h6>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">Amount Per Hour</label>
+                                <p class="fw-semibold mb-0">
+                                    <span class="badge bg-success fs-6">৳
+                                        {{ number_format($plan->custom_overtime_rate, 2) }}/hour</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
 
@@ -141,87 +176,6 @@
                         </div>
                     </div>
                 @endif
-            </div>
-        </div>
-
-        <!-- OT Limits -->
-        <div class="card border mb-4">
-            <div class="card-header bg-light">
-                <h5 class="mb-0 fw-semibold">
-                    <i class="mdi mdi-alert-circle-outline text-danger me-2"></i>OT Limits
-                </h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="text-muted small">Maximum OT Limit</label>
-                        <p class="fw-semibold mb-0">
-                            @if ($plan->max_ot_limit)
-                                <span class="badge bg-warning text-dark fs-6">{{ number_format($plan->max_ot_limit, 2) }}
-                                    hours</span>
-                            @else
-                                <span class="text-muted">No Limit</span>
-                            @endif
-                        </p>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="text-muted small">Limit Period</label>
-                        <p class="fw-semibold mb-0">
-                            @if ($plan->max_ot_period)
-                                <span class="badge bg-secondary">{{ ucwords($plan->max_ot_period) }}</span>
-                            @else
-                                <span class="text-muted">Not Applicable</span>
-                            @endif
-                        </p>
-                    </div>
-                </div>
-
-                @if ($plan->max_ot_limit && $plan->max_ot_period)
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="alert alert-warning mb-0">
-                                <i class="mdi mdi-alert-outline me-2"></i>
-                                Maximum {{ number_format($plan->max_ot_limit, 2) }} hours of OT allowed per
-                                {{ $plan->max_ot_period }} period
-                            </div>
-                        </div>
-                    </div>
-                @endif
-            </div>
-        </div>
-
-        <!-- Additional Notes -->
-        @if ($plan->notes)
-            <div class="card border mb-4">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0 fw-semibold">
-                        <i class="mdi mdi-note-text-outline text-secondary me-2"></i>Additional Notes
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <p class="mb-0">{{ $plan->notes }}</p>
-                </div>
-            </div>
-        @endif
-
-        <!-- Metadata -->
-        <div class="card border mb-4">
-            <div class="card-header bg-light">
-                <h5 class="mb-0 fw-semibold">
-                    <i class="mdi mdi-information-outline text-primary me-2"></i>Metadata
-                </h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="text-muted small">Created At</label>
-                        <p class="fw-semibold mb-0">{{ $plan->created_at->format('d M, Y h:i A') }}</p>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="text-muted small">Last Updated</label>
-                        <p class="fw-semibold mb-0">{{ $plan->updated_at->format('d M, Y h:i A') }}</p>
-                    </div>
-                </div>
             </div>
         </div>
 

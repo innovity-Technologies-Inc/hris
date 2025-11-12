@@ -10,10 +10,32 @@
     <meta name="author" content="Daiyan">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
+    <script>
+        // Set theme ASAP to avoid flash/flicker before CSS loads
+        (function() {
+            try {
+                var saved = localStorage.getItem("__CONFIG__");
+                var theme = 'light';
+                if (saved) {
+                    var cfg = JSON.parse(saved);
+                    if (cfg && (cfg.theme === 'dark' || cfg.theme === 'light')) {
+                        theme = cfg.theme;
+                    }
+                }
+                document.documentElement.setAttribute('data-bs-theme', theme);
+            } catch (e) {
+                // default stays 'light'
+            }
+        })();
+    </script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
     <!-- App css -->
     <link href="{{ asset('assets/css/app.css') }}" rel="stylesheet" type="text/css" id="app-style">
@@ -51,6 +73,199 @@
 
 
     <style>
+        :root {
+            /* Default (fallback) values */
+            --sidebar-bg-start: #0f172a;
+            --sidebar-bg-end: #111827;
+            --sidebar-text: #e5e7eb;
+            --sidebar-muted: #94a3b8;
+            --sidebar-accent: #108dff;
+            --sidebar-hover-bg: rgba(255, 255, 255, 0.06);
+            --sidebar-active-bg: rgba(16, 141, 255, 0.15);
+            --sidebar-active-color: #ffffff;
+            --sidebar-divider: rgba(255, 255, 255, 0.06);
+        }
+
+        /* Sidebar color modes follow app theme (navbar toggle) */
+        html[data-bs-theme='light'] .app-sidebar-menu {
+            --sidebar-bg-start: #ffffff;
+            --sidebar-bg-end: #f8fafc;
+            --sidebar-text: #0f172a;
+            --sidebar-muted: #64748b;
+            --sidebar-accent: #0d6efd;
+            --sidebar-hover-bg: rgba(2, 6, 23, 0.06);
+            --sidebar-active-bg: rgba(13, 110, 253, 0.15);
+            --sidebar-active-color: #0f172a;
+            --sidebar-divider: rgba(2, 6, 23, 0.08);
+        }
+
+        html[data-bs-theme='dark'] .app-sidebar-menu {
+            --sidebar-bg-start: #0f172a;
+            --sidebar-bg-end: #111827;
+            --sidebar-text: #e5e7eb;
+            --sidebar-muted: #94a3b8;
+            --sidebar-accent: #108dff;
+            --sidebar-hover-bg: rgba(255, 255, 255, 0.06);
+            --sidebar-active-bg: rgba(16, 141, 255, 0.15);
+            --sidebar-active-color: #ffffff;
+            --sidebar-divider: rgba(255, 255, 255, 0.06);
+        }
+
+        /* Sidebar polish */
+        .app-sidebar-menu {
+            background: linear-gradient(180deg, var(--sidebar-bg-start) 0%, var(--sidebar-bg-end) 100%);
+            padding-top: 0 !important;
+            box-shadow: 4px 0 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .app-sidebar-menu .logo-box {
+            padding: 8px 16px 10px;
+            border-bottom: 1px solid var(--sidebar-divider);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 56px;
+            text-align: center;
+        }
+
+        /* Remove any accidental top padding from Simplebar wrappers */
+        .app-sidebar-menu .simplebar-content,
+        .app-sidebar-menu .simplebar-content-wrapper {
+            padding-top: 0 !important;
+            margin-top: 0 !important;
+        }
+
+        /* Remove default margins that can create extra gap */
+        .app-sidebar-menu .logo {
+            margin: 0;
+            line-height: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .app-sidebar-menu .logo-sm,
+        .app-sidebar-menu .logo-lg {
+            display: inline-flex;
+            align-items: center;
+            line-height: 0;
+        }
+
+        .app-sidebar-menu .logo img {
+            display: block;
+        }
+
+        .app-sidebar-menu #side-menu {
+            padding: 8px 10px 16px;
+        }
+
+        .app-sidebar-menu #side-menu .menu-title {
+            color: var(--sidebar-muted);
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin: 12px 12px 6px;
+        }
+
+        .app-sidebar-menu #side-menu>li>a {
+            color: var(--sidebar-text);
+            padding: 10px 12px;
+            margin: 4px 8px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .app-sidebar-menu #side-menu>li>a:hover {
+            background: var(--sidebar-hover-bg);
+            transform: translateX(2px);
+        }
+
+        .app-sidebar-menu #side-menu>li>a.menuitem-active {
+            background: var(--sidebar-active-bg);
+            color: var(--sidebar-active-color);
+            box-shadow: inset 0 0 0 1px rgba(16, 141, 255, 0.25);
+        }
+
+        .app-sidebar-menu #side-menu>li>a.menuitem-active::before {
+            content: "";
+            position: absolute;
+            left: -2px;
+            top: 8px;
+            bottom: 8px;
+            width: 3px;
+            border-radius: 3px;
+            background: var(--sidebar-accent);
+        }
+
+        .app-sidebar-menu #side-menu>li>a svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            opacity: 0.9;
+        }
+
+        .app-sidebar-menu .menu-arrow {
+            margin-left: auto;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            opacity: 0.7;
+        }
+
+        .app-sidebar-menu a[aria-expanded="true"] .menu-arrow {
+            transform: rotate(90deg);
+            opacity: 1;
+        }
+
+        /* Second level */
+        .app-sidebar-menu .nav-second-level {
+            padding-left: 10px;
+            margin: 4px 0 8px;
+        }
+
+        .app-sidebar-menu .nav-second-level>li>a {
+            display: block;
+            padding: 8px 12px 8px 34px;
+            margin: 2px 8px;
+            border-radius: 8px;
+            color: var(--sidebar-text);
+            opacity: 0.9;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .app-sidebar-menu .nav-second-level>li>a::before {
+            content: "";
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--sidebar-muted);
+            opacity: 0.6;
+        }
+
+        .app-sidebar-menu .nav-second-level>li>a:hover {
+            background: var(--sidebar-hover-bg);
+            color: var(--sidebar-text);
+        }
+
+        .app-sidebar-menu .nav-second-level>li>a.menuitem-active {
+            background: var(--sidebar-active-bg);
+            color: var(--sidebar-active-color);
+        }
+
+        .app-sidebar-menu .nav-second-level>li>a.menuitem-active::before {
+            background: var(--sidebar-accent);
+            opacity: 1;
+        }
+
         .filepond--credits {
             display: none !important;
             visibility: hidden;
@@ -164,6 +379,138 @@
             border-color: var(--bs-border-color);
             color: var(--bs-body-color);
         }
+
+        /* Content polish */
+        .content-page {
+            background: radial-gradient(1200px 400px at 20% -5%, rgba(16, 141, 255, 0.06), transparent 40%),
+                radial-gradient(900px 300px at 110% 10%, rgba(99, 102, 241, 0.05), transparent 35%),
+                var(--bs-body-bg);
+        }
+
+        .content-page .content {
+            padding-top: 8px;
+        }
+
+        .content-page .content .container-fluid {
+            padding-top: 0;
+            margin-top: 0;
+        }
+
+        /* Cards */
+        .card,
+        .card-body,
+        .card-header,
+        .card-footer {
+            background-color: var(--bs-secondary-bg);
+            border-color: var(--bs-border-color);
+        }
+
+        .card {
+            border-radius: 14px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+        }
+
+        .card-header {
+            border-bottom: 1px solid var(--bs-border-color);
+            font-weight: 600;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            --bs-breadcrumb-divider-color: var(--sidebar-muted);
+            --bs-breadcrumb-item-active-color: var(--bs-body-color);
+            color: var(--sidebar-muted);
+            margin-bottom: 0.75rem;
+        }
+
+        .breadcrumb .breadcrumb-item+.breadcrumb-item::before {
+            opacity: 0.6;
+        }
+
+        /* Forms */
+        .form-control,
+        .form-select,
+        .select2-container--bootstrap-5 .select2-selection {
+            background-color: var(--bs-secondary-bg);
+            color: var(--bs-body-color);
+            border-color: var(--bs-border-color);
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .form-control:focus,
+        .form-select:focus,
+        .select2-container--bootstrap-5.select2-container--focus .select2-selection {
+            box-shadow: 0 0 0 .25rem rgba(16, 141, 255, 0.25);
+            border-color: rgba(16, 141, 255, 0.6);
+        }
+
+        /* Buttons */
+        .btn {
+            transition: transform 0.05s ease, box-shadow 0.2s ease;
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn-primary,
+        .btn-outline-primary:hover {
+            box-shadow: 0 6px 16px rgba(16, 141, 255, 0.35);
+        }
+
+        /* Tables */
+        .table> :not(caption)>*>* {
+            background-color: transparent;
+            color: var(--bs-body-color);
+            box-shadow: inset 0 -1px 0 var(--bs-border-color);
+        }
+
+        .table thead th {
+            background: var(--bs-tertiary-bg);
+            border-bottom: 1px solid var(--bs-border-color);
+            font-weight: 600;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.04);
+        }
+
+        /* Simplebar scrollbar */
+        .simplebar-scrollbar::before {
+            background: linear-gradient(180deg, rgba(16, 141, 255, 0.7), rgba(99, 102, 241, 0.7));
+            border-radius: 6px;
+        }
+
+        .simplebar-track.simplebar-vertical {
+            width: 10px;
+        }
+
+        .simplebar-track.simplebar-vertical .simplebar-scrollbar::before {
+            left: 2px;
+            right: 2px;
+        }
+
+        /* Swap logo images based on theme */
+        .app-sidebar-menu .logo-lg img.logo-img-light,
+        .app-sidebar-menu .logo-lg img.logo-img-dark {
+            display: none !important;
+        }
+
+        html[data-bs-theme='dark'] .app-sidebar-menu .logo-lg img.logo-img-light {
+            display: inline-block !important;
+        }
+
+        html[data-bs-theme='dark'] .app-sidebar-menu .logo-lg img.logo-img-dark {
+            display: none !important;
+        }
+
+        html[data-bs-theme='light'] .app-sidebar-menu .logo-lg img.logo-img-light {
+            display: none !important;
+        }
+
+        html[data-bs-theme='light'] .app-sidebar-menu .logo-lg img.logo-img-dark {
+            display: inline-block !important;
+        }
     </style>
 
 </head>
@@ -221,6 +568,15 @@
 
     <script>
         $(document).ready(function() {
+            if (window.feather) {
+                window.feather.replace({
+                    width: 18,
+                    height: 18
+                });
+            }
+            // Logo visibility is controlled via CSS by html[data-bs-theme]
+
+            // Sidebar color mode now follows global theme (navbar toggle)
             // basic select2
             $('.select2_list').select2({
                 width: '100%',
