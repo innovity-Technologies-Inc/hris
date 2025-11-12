@@ -11,7 +11,7 @@
     <div class="py-4" style="max-width: 1000px; margin: 0 auto;">
         <!-- Main Card -->
         <div class="card shadow-lg border-0 rounded-4">
-    
+
             <!-- Form Body -->
             <div class="card-body p-4 p-md-5">
                 <form id="settingsForm" action="#" method="POST" enctype="multipart/form-data">
@@ -214,17 +214,17 @@
                                     <span class="badge bg-secondary ms-2">Non-editable</span>
                                 </div>
                             </div>
-                            <div class="card-body p-4">
+                            <div class="card-body">
                                 <div class="row g-3">
                                     <!-- Level 1: Group -->
-                                    <div class="col-md-6">
-                                        <div class="card bg-dark text-white border-0 h-100">
-                                            <div class="card-body p-4">
+                                    <div class="col-md-4">
+                                        <div class="card bg-secondary text-white border-0 h-100">
+                                            <div class="card-body p-2">
                                                 <div class="d-flex align-items-center">
-                                                    <span class="badge bg-white text-dark me-3">Level 1</span>
+                                                    <span class="badge bg-white text-dark me-2">Level 1</span>
                                                     <div class="flex-fill">
                                                         <i class="bi bi-building me-2"></i>
-                                                        <span class="fw-bold fs-5">Group</span>
+                                                        <span class="fw-bold">Group</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -232,14 +232,14 @@
                                     </div>
 
                                     <!-- Level 2: Company -->
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="card bg-secondary text-white border-0 h-100">
-                                            <div class="card-body p-4">
+                                            <div class="card-body p-2">
                                                 <div class="d-flex align-items-center">
-                                                    <span class="badge bg-white text-dark me-3">Level 2</span>
+                                                    <span class="badge bg-white text-dark me-2">Level 2</span>
                                                     <div class="flex-fill">
                                                         <i class="bi bi-buildings me-2"></i>
-                                                        <span class="fw-bold fs-5">Company</span>
+                                                        <span class="fw-bold">Company</span>
                                                     </div>
                                                 </div>
                                             </div>
