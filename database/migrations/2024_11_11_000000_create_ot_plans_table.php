@@ -19,13 +19,10 @@ class CreateOtPlansTable extends Migration
             $table->enum('ot_type', ['regular', 'holiday', 'night_shift', 'weekend', 'other'])
                   ->default('regular');
 
-            /**
-             * Overtime Rate:
-             * - type = 'multiplier' → 1.5x base rate
-             * - type = 'per_hour' → $10/hour
-             */
-            $table->enum('overtime_rate_type', ['multiplier', 'per_hour'])->default('multiplier');
-            $table->decimal('overtime_rate', 8, 2)->default(1.50);
+            $table->enum('ot_config_type', ['salary_based', 'custom'])->default('salary_based');
+            $table->enum('salary_rate_type', ['basic_rate', 'multiplier'])->default('multiplier')->nullable();
+            $table->decimal('overtime_multiplier', 8, 2)->nullable();
+            $table->decimal('custom_overtime_rate', 8, 2)->nullable();
 
             // Hours
             $table->decimal('minimum_overtime_hours', 6, 2)->default(0.00);
@@ -35,18 +32,12 @@ class CreateOtPlansTable extends Migration
             $table->time('overtime_start_time')->nullable();
             $table->time('overtime_end_time')->nullable();
 
-            // OT Limits
-            $table->decimal('max_ot_limit', 8, 2)->nullable();
-            $table->enum('max_ot_period', ['daily', 'weekly', 'monthly', 'yearly'])->nullable();
 
-            // Notes
-            $table->text('notes')->nullable();
 
             // Status
             $table->enum('active_ind', ['active', 'inactive'])->default('active');
 
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

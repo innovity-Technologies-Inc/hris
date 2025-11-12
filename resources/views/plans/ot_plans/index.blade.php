@@ -33,7 +33,7 @@
                                     <th scope="col">#</th>
                                     <th scope="col">OT Plan Name</th>
                                     <th scope="col">OT Type</th>
-                                    <th scope="col">Rate Type</th>
+                                    <th scope="col">Config Type</th>
                                     <th scope="col">Rate</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Action</th>
@@ -51,12 +51,31 @@
                                             <span
                                                 class="badge text-bg-info">{{ ucwords(str_replace('_', ' ', $item->ot_type)) }}</span>
                                         </td>
-                                        <td>{{ ucwords(str_replace('_', ' ', $item->overtime_rate_type)) }}</td>
                                         <td>
-                                            @if ($item->overtime_rate_type == 'multiplier')
-                                                {{ $item->overtime_rate }}x
+                                            @if ($item->ot_config_type == 'salary_based')
+                                                <span class="badge text-bg-primary">Salary Based</span>
                                             @else
-                                                ${{ number_format($item->overtime_rate, 2) }}/hr
+                                                <span class="badge text-bg-success">Custom</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($item->ot_config_type == 'salary_based')
+                                                @if ($item->salary_rate_type == 'multiplier' && $item->overtime_multiplier)
+                                                    <span
+                                                        class="badge text-bg-secondary">{{ number_format($item->overtime_multiplier, 2) }}x
+                                                        Base Rate</span>
+                                                @elseif ($item->salary_rate_type == 'basic_rate')
+                                                    <span class="badge text-bg-secondary">Basic Rate</span>
+                                                @else
+                                                    <span class="text-muted">-</span>
+                                                @endif
+                                            @else
+                                                @if ($item->custom_overtime_rate)
+                                                    <span
+                                                        class="badge text-bg-secondary">৳{{ number_format($item->custom_overtime_rate, 2) }}/hr</span>
+                                                @else
+                                                    <span class="text-muted">-</span>
+                                                @endif
                                             @endif
                                         </td>
                                         <td>
