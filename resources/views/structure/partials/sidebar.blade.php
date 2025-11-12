@@ -6,20 +6,13 @@
         <div id="sidebar-menu">
 
             <div class="logo-box">
-                <a class='logo logo-light' href='{{ route('dashboard') }}'>
+                <a class='logo' href='{{ route('dashboard') }}'>
                     <span class="logo-sm">
                         <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">
                     </span>
                     <span class="logo-lg">
-                        <img src="{{ asset('assets/images/logo-light.png') }}" alt="" height="24">
-                    </span>
-                </a>
-                <a class='logo logo-dark' href='{{ route('dashboard') }}'>
-                    <span class="logo-sm">
-                        <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">
-                    </span>
-                    <span class="logo-lg">
-                        <img src="{{ asset('assets/images/logo-dark.png') }}" alt="" height="24">
+                        <img class="logo-img-light" src="{{ asset('assets/images/logo-light.png') }}" alt="" height="24">
+                        <img class="logo-img-dark" src="{{ asset('assets/images/logo-dark.png') }}" alt="" height="24">
                     </span>
                 </a>
             </div>
@@ -35,13 +28,13 @@
                 </li>
                 <!-- Add Employees Information Menu -->
                 <li>
-                    <a href="#sidebarEmployees" data-bs-toggle="collapse"
+                    <a href="#sidebarEmployees" data-bs-toggle="collapse" aria-expanded="{{ Route::is('employees.*') ? 'true' : 'false' }}"
                         class="@if (Route::is('employees.*')) menuitem-active @endif">
                         <i data-feather="users"></i>
                         <span> Employees </span>
                         <span class="menu-arrow"></span>
                     </a>
-                    <div class="collapse" id="sidebarEmployees">
+                    <div class="collapse @if (Route::is('employees.*')) show @endif" id="sidebarEmployees">
                         <ul class="nav-second-level">
                             <li>
                                 <a class='tp-link @if (Route::is('employees.*')) menuitem-active @endif'
@@ -57,13 +50,13 @@
 
                 <!-- Add Plans -->
                 <li>
-                    <a href="#plans" data-bs-toggle="collapse"
+                    <a href="#plans" data-bs-toggle="collapse" aria-expanded="{{ Route::is('plans.*') ? 'true' : 'false' }}"
                         class="@if (Route::is('plans.*')) menuitem-active @endif">
                         <i data-feather="layers"></i>
                         <span> Plans </span>
                         <span class="menu-arrow"></span>
                     </a>
-                    <div class="collapse" id="plans">
+                    <div class="collapse @if (Route::is('plans.*')) show @endif" id="plans">
                         <ul class="nav-second-level">
                             <li>
                                 <a class='tp-link @if (Route::is('plans.meal_plans.*')) menuitem-active @endif'
@@ -90,23 +83,26 @@
                 </li>
 
                 <!-- Company Info Menu -->
+                @php
+                    $companyOpen = Route::is('groups.*') ||
+                                   Route::is('companies.*') ||
+                                   Route::is('company_types.*') ||
+                                   Route::is('company_locations.*') ||
+                                   Route::is('banks.*') ||
+                                   Route::is('branches.*') ||
+                                   Route::is('tofsils.*') ||
+                                   Route::is('salary_grades.*') ||
+                                   Route::is('gazette_locations.*') ||
+                                   Route::is('company_setup.bulk_upload');
+                @endphp
                 <li>
-                    <a href="#sidebarCompany" data-bs-toggle="collapse"
-                        class="@if (Route::is('groups.*') ||
-                                Route::is('companies.*') ||
-                                Route::is('company_types.*') ||
-                                Route::is('company_locations.*') ||
-                                Route::is('banks.*') ||
-                                Route::is('branches.*') ||
-                                Route::is('tofsils.*') ||
-                                Route::is('salary_grades.*') ||
-                                Route::is('gazette_locations.*') ||
-                                Route::is('company_setup.bulk_upload')) menuitem-active @endif ">
+                    <a href="#sidebarCompany" data-bs-toggle="collapse" aria-expanded="{{ $companyOpen ? 'true' : 'false' }}"
+                        class="@if ($companyOpen) menuitem-active @endif ">
                         <i data-feather="box"></i>
                         <span> Company Info </span>
                         <span class="menu-arrow"></span>
                     </a>
-                    <div class="collapse" id="sidebarCompany">
+                    <div class="collapse @if ($companyOpen) show @endif" id="sidebarCompany">
                         <ul class="nav-second-level">
                             <li>
                                 <a class='tp-link @if (Route::is('groups.*')) menuitem-active @endif'
