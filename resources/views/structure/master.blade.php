@@ -15,6 +15,9 @@
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}">
 
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
     <!-- App css -->
     <link href="{{ asset('assets/css/app.css') }}" rel="stylesheet" type="text/css" id="app-style">
 
