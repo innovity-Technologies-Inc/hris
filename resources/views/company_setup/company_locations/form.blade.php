@@ -40,13 +40,13 @@
                                     </div>
 
                                     <div class="col-lg-12 mb-2">
-                                        <label for="unit_name" class="form-label">Branch Name <span
+                                        <label for="name" class="form-label">Branch Name <span
                                                 class="text-danger">*</span></label>
-                                        <input type="text" id="unit_name" class="form-control" name="unit_name"
+                                        <input type="text" id="name" class="form-control" name="name"
                                             placeholder="Enter Branch Name"
-                                            value="{{ isset($company_location) ? $company_location->unit_name : old('unit_name') }}"
+                                            value="{{ isset($company_location) ? $company_location->name : old('name') }}"
                                             required maxlength="255">
-                                        @error('unit_name')
+                                        @error('name')
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>

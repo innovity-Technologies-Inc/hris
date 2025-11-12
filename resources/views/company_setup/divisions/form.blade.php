@@ -23,13 +23,13 @@
 
                                 <div class="row">
                                     <div class="col-md-6 mb-2">
-                                        <label for="division_name" class="form-label">Division Name <span
+                                        <label for="name" class="form-label">Division Name <span
                                                 class="text-danger">*</span></label>
-                                        <input type="text" id="division_name" class="form-control" name="division_name"
+                                        <input type="text" id="name" class="form-control" name="name"
                                             placeholder="Enter Division Name"
-                                            value="{{ isset($division) ? $division->division_name : old('division_name') }}"
-                                            required maxlength="255">
-                                        @error('division_name')
+                                            value="{{ isset($division) ? $division->name : old('name') }}" required
+                                            maxlength="255">
+                                        @error('name')
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
@@ -70,7 +70,7 @@
                                             @foreach ($locations as $location)
                                                 <option value="{{ $location->id }}"
                                                     {{ isset($division) && $division->location_id == $location->id ? 'selected' : '' }}>
-                                                    {{ $location->unit_name }}</option>
+                                                    {{ $location->name }}</option>
                                             @endforeach
                                         </select>
                                         @error('location_id')
@@ -78,23 +78,23 @@
                                         @enderror
                                     </div>
 
-                                <div class="col-md-12 mb-2">
-                                    <label for="remarks" class="form-label">Remarks</label>
-                                    <textarea id="remarks" class="form-control" name="remarks" placeholder="Enter Remarks">{{ isset($division) ? $division->remarks : old('remarks') }}</textarea>
-                                    @error('remarks')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
+                                    <div class="col-md-12 mb-2">
+                                        <label for="remarks" class="form-label">Remarks</label>
+                                        <textarea id="remarks" class="form-control" name="remarks" placeholder="Enter Remarks">{{ isset($division) ? $division->remarks : old('remarks') }}</textarea>
+                                        @error('remarks')
+                                            <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
 
-                                <div class="col-md-12 mb-2">
-                                    <label for="status" class="form-label">Status</label>
-                                    <select class="form-select" name="status">
-                                        <option value="active" @if (isset($division) && $division->status == 'active') selected @endif>Active
-                                        </option>
-                                        <option value="inactive" @if (isset($division) && $division->status == 'inactive') selected @endif>
-                                            Inactive</option>
-                                    </select>
-                                </div>
+                                    <div class="col-md-12 mb-2">
+                                        <label for="status" class="form-label">Status</label>
+                                        <select class="form-select" name="status">
+                                            <option value="active" @if (isset($division) && $division->status == 'active') selected @endif>Active
+                                            </option>
+                                            <option value="inactive" @if (isset($division) && $division->status == 'inactive') selected @endif>
+                                                Inactive</option>
+                                        </select>
+                                    </div>
                                 </div>
 
 

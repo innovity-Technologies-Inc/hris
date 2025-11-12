@@ -33,7 +33,7 @@
                                     <div class="col-md-6">
                                         <p class="mb-2">
                                             <strong>Branch Name:</strong><br>
-                                            <span class="text-muted">{{ $location->unit_name ?? 'N/A' }}</span>
+                                            <span class="text-muted">{{ $location->name ?? 'N/A' }}</span>
                                         </p>
                                     </div>
                                 </div>

@@ -46,22 +46,55 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-4 mb-2">
+                                    <div class="col-md-3 mb-2">
+                                        <label for="company_id" class="form-label">Company <span
+                                                class="text-danger">*</span></label>
+                                        <select class="form-select select2_list" name="company_id" id="company_id" required>
+                                            <option value="">Choose Company</option>
+                                            @foreach ($companies as $item)
+                                                <option value="{{ $item->id }}"
+                                                    @if (isset($department) && $department->company_id == $item->id) selected @endif>
+                                                    {{ $item->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('company_id')
+                                            <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label for="location_id" class="form-label">Branch <span
+                                                class="text-danger">*</span></label>
+                                        <select id="location_id" class="form-select select2_list" name="location_id"
+                                            required>
+                                            <option value="">Select Branch</option>
+                                            @foreach ($locations as $location)
+                                                <option value="{{ $location->id }}"
+                                                    {{ isset($department) && $department->location_id == $location->id ? 'selected' : '' }}>
+                                                    {{ $location->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('location_id')
+                                            <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-3 mb-2">
                                         <label for="division_id" class="form-label">Division <span
                                                 class="text-danger">*</span></label>
-                                        <select id="division_id" class="form-select" name="division_id" required>
+                                        <select id="division_id" class="form-select select2_list" name="division_id"
+                                            required>
                                             <option value="">Select Division</option>
                                             @foreach ($divisions as $division)
                                                 <option value="{{ $division->id }}"
                                                     @if (isset($department) && $department->division_id == $division->id) selected @endif>
-                                                    {{ $division->division_name }}</option>
+                                                    {{ $division->name }}</option>
                                             @endforeach
                                         </select>
                                         @error('division_id')
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
-<div class="col-md-4 mb-2">
+                                    <div class="col-md-3 mb-2">
                                         <label for="job_number_code" class="form-label">Job Number Code <span
                                                 class="text-danger">*</span></label>
                                         <input type="text" id="job_number_code" class="form-control"
@@ -72,6 +105,8 @@
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-md-4 mb-2">
                                         <label for="status" class="form-label">Status</label>
                                         <select class="form-select" name="status">
@@ -86,11 +121,11 @@
 
 
 
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <button type="submit" class="btn btn-primary">Submit</button>
-                                        </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-primary">Submit</button>
                                     </div>
+                                </div>
 
                             </form>
                         </div>

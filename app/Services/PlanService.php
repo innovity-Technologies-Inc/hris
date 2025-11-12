@@ -117,4 +117,116 @@ class PlanService
         return $validate;
     }
 
+    public function otPlanValidation($request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'ot_type' => 'required|in:regular,holiday,night_shift,weekend,other',
+            'overtime_rate_type' => 'required|in:multiplier,per_hour',
+            'overtime_rate' => 'required|numeric|min:0',
+            'minimum_overtime_hours' => 'nullable|numeric|min:0',
+            'maximum_overtime_hours' => 'nullable|numeric|min:0|gt:minimum_overtime_hours',
+            'overtime_start_time' => 'nullable|date_format:H:i',
+            'overtime_end_time' => 'nullable|date_format:H:i|after:overtime_start_time',
+            'max_ot_limit' => 'nullable|numeric|min:0',
+            'max_ot_period' => 'nullable|in:daily,weekly,monthly,yearly|required_with:max_ot_limit',
+            'notes' => 'nullable|string',
+            'active_ind' => 'required|in:active,inactive',
+        ], [
+            'name.required' => 'OT plan name is required.',
+            'name.string' => 'OT plan name must be a string.',
+            'name.max' => 'OT plan name may not exceed 255 characters.',
+
+            'ot_type.required' => 'Please select an overtime type.',
+            'ot_type.in' => 'The selected overtime type is invalid.',
+
+            'overtime_rate_type.required' => 'Please select a rate type.',
+            'overtime_rate_type.in' => 'The selected rate type is invalid.',
+
+            'overtime_rate.required' => 'Overtime rate is required.',
+            'overtime_rate.numeric' => 'Overtime rate must be a number.',
+            'overtime_rate.min' => 'Overtime rate must be at least 0.',
+
+            'minimum_overtime_hours.numeric' => 'Minimum hours must be a number.',
+            'minimum_overtime_hours.min' => 'Minimum hours must be at least 0.',
+
+            'maximum_overtime_hours.numeric' => 'Maximum hours must be a number.',
+            'maximum_overtime_hours.min' => 'Maximum hours must be at least 0.',
+            'maximum_overtime_hours.gt' => 'Maximum hours must be greater than minimum hours.',
+
+            'overtime_start_time.date_format' => 'Start time must be in the format HH:MM.',
+            'overtime_end_time.date_format' => 'End time must be in the format HH:MM.',
+            'overtime_end_time.after' => 'End time must be after start time.',
+
+            'max_ot_limit.numeric' => 'OT limit must be a number.',
+            'max_ot_limit.min' => 'OT limit must be at least 0.',
+
+            'max_ot_period.in' => 'The selected period is invalid.',
+            'max_ot_period.required_with' => 'Period is required when OT limit is set.',
+
+            'active_ind.required' => 'Please select the plan status.',
+            'active_ind.in' => 'The selected status is invalid.',
+        ]);
+
+        return $validated;
+    }
+
+    public function leavePlanValidation($request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'short_name' => 'nullable|string|max:100',
+            'applicable_gender' => 'required|in:Both,Male,Female',
+            'day_type' => 'required|in:Calculative,Fixed',
+            'leave_type' => 'required|in:Casual Leave,Sick Leave,Maternal Leave,Paternal Leave,Earned Leave,Comp Off',
+            'leave_limit' => 'nullable|integer|min:0',
+            'max_no_of_days' => 'nullable|integer|min:0',
+            'display_serial' => 'nullable|integer|min:0',
+            'apply_limit' => 'nullable|integer|min:0',
+            'allow_fractional_leave' => 'required|in:active,inactive',
+            'off_day_include' => 'nullable|integer|min:0',
+            'active_ind' => 'required|in:active,inactive',
+        ], [
+            'name.required' => 'Leave plan name is required.',
+            'name.string' => 'Leave plan name must be a string.',
+            'name.max' => 'Leave plan name may not exceed 255 characters.',
+
+            'short_name.string' => 'Short name must be a string.',
+            'short_name.max' => 'Short name may not exceed 100 characters.',
+
+            'applicable_gender.required' => 'Please select applicable gender.',
+            'applicable_gender.in' => 'The selected gender is invalid.',
+
+            'day_type.required' => 'Please select day type.',
+            'day_type.in' => 'The selected day type is invalid.',
+
+            'leave_type.required' => 'Please select leave type.',
+            'leave_type.in' => 'The selected leave type is invalid.',
+
+            'leave_limit.integer' => 'Leave limit must be a number.',
+            'leave_limit.min' => 'Leave limit must be at least 0.',
+
+            'max_no_of_days.integer' => 'Maximum days must be a number.',
+            'max_no_of_days.min' => 'Maximum days must be at least 0.',
+
+            'display_serial.integer' => 'Display serial must be a number.',
+            'display_serial.min' => 'Display serial must be at least 0.',
+
+            'apply_limit.required' => 'Please select apply limit option.',
+            'apply_limit.in' => 'The selected option is invalid.',
+
+            'allow_fractional_leave.required' => 'Please select fractional leave option.',
+            'allow_fractional_leave.in' => 'The selected option is invalid.',
+
+            'off_day_include.required' => 'Please select off day include option.',
+            'off_day_include.in' => 'The selected option is invalid.',
+
+            'active_ind.required' => 'Please select the plan status.',
+            'active_ind.in' => 'The selected status is invalid.',
+        ]);
+
+        return $validated;
+    }
+
 }
