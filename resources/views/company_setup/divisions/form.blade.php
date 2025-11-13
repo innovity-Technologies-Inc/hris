@@ -61,32 +61,9 @@
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
+
+
                                     <div class="col-md-6 mb-2">
-                                        <label for="location_id" class="form-label">Branch <span
-                                                class="text-danger">*</span></label>
-                                        <select id="location_id" class="form-select select2_list" name="location_id"
-                                            required>
-                                            <option value="">Select Branch</option>
-                                            @foreach ($locations as $location)
-                                                <option value="{{ $location->id }}"
-                                                    {{ isset($division) && $division->location_id == $location->id ? 'selected' : '' }}>
-                                                    {{ $location->name }}</option>
-                                            @endforeach
-                                        </select>
-                                        @error('location_id')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
-                                    </div>
-
-                                    <div class="col-md-12 mb-2">
-                                        <label for="remarks" class="form-label">Remarks</label>
-                                        <textarea id="remarks" class="form-control" name="remarks" placeholder="Enter Remarks">{{ isset($division) ? $division->remarks : old('remarks') }}</textarea>
-                                        @error('remarks')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
-                                    </div>
-
-                                    <div class="col-md-12 mb-2">
                                         <label for="status" class="form-label">Status</label>
                                         <select class="form-select" name="status">
                                             <option value="active" @if (isset($division) && $division->status == 'active') selected @endif>Active

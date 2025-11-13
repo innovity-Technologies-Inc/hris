@@ -2,6 +2,17 @@
 @section('content')
     {{--    Form --}}
 
+    {{--@if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif--}}
+
+
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -15,11 +26,13 @@
                         <div class="col-lg-12">
                             <form action="{{ route('groups.save') }}" method="post">
                                 @csrf
-                                @method('put')
                                 <div class="mb-3 row">
                                     <div class="col-lg-12">
                                         <label for="simpleinput" class="form-label">Group Name<span
                                                 class="text-danger">*</span></label>
+                                        <input type="hidden" name="type" value="{{ isset($group) ? 'edit' : 'create' }}">
+                                        <input type="hidden" name="id" value="{{ isset($group) ? $group->id : '' }}">
+
                                         <input type="text" id="simpleinput" class="form-control" name="name"
                                             placeholder="Enter Group Name" value="{{ isset($group) ? $group->name : old('name') }}">
                                         @error('name')

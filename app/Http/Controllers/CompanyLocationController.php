@@ -31,7 +31,7 @@ class CompanyLocationController extends Controller
         $validatedData = $request->validate(
             [
                 'company_id' => 'required',
-                'unit_name' => 'required|string|max:255',
+                'name' => 'required|string|max:255',
                 'location_address' => 'required|string|max:255',
                 'state' => 'nullable|string|max:255',
                 'division' => 'nullable|string|max:255',
@@ -41,7 +41,7 @@ class CompanyLocationController extends Controller
             ],
             [
                 'company_id.required' => 'Please select a company.',
-                'unit_name.required' => 'Please enter a unit name.',
+                'name.required' => 'Please enter a unit name.',
                 'location_address.required' => 'Please enter a location address.',
                 'state.required' => 'Please enter a state.',
                 'division.required' => 'Please enter a division.',

@@ -8,8 +8,6 @@
                 <th scope="col">Division Name</th>
                 <th scope="col">Short Name</th>
                 <th scope="col">Company</th>
-                <th scope="col">Location</th>
-                <th scope="col">Remarks</th>
                 <th scope="col">Action</th>
             </tr>
         </thead>
@@ -23,8 +21,6 @@
                     <td>{{ $division->name }}</td>
                     <td>{{ $division->short_name }}</td>
                     <td>{{ $division->getCompany->name }}</td>
-                    <td>{{ $division->getLocation->name }}</td>
-                    <td>{{ $division->remarks }}</td>
                     <td>
                         <a href="{{ route('divisions.edit', $division->id) }}" class="btn btn-primary btn-sm">
                             <i style="height: 12px; width: 12px" data-feather="edit"></i>

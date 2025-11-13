@@ -30,18 +30,23 @@ class CompanySetupController extends Controller
     public function groupSave(Request $request){
         $request->validate([
             'name' => 'required|string|max:255',
-            'status' => 'required',
         ], [
             'name.required' => 'Please Enter Name',
             'name.max' => 'Name Must Be Less Than 255 Characters',
             'name.string' => 'Name Must Be String',
         ]);
 
-        if (isset($request->id)){
+        if ($request->type == 'edit'){
             $group = Group::find($request->id);
-            $group->update($request->all());
+            $group->update([
+                'name' => $request->name,
+                'status' => 'active'
+            ]);
         }else{
-            Group::create($request->all());
+            Group::create([
+                'name' => $request->name,
+                'status' => 'active'
+            ]);
         }
 
         return redirect()->back()->with([

@@ -193,6 +193,25 @@
                     </a>
                 </li>
 
+                <!-- Add Plans -->
+                <li>
+                    <a href="#settings" data-bs-toggle="collapse" aria-expanded="{{ Route::is('settings.*') ? 'true' : 'false' }}"
+                       class="@if (Route::is('settings.*')) menuitem-active @endif">
+                        <i data-feather="settings"></i>
+                        <span> Settings </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse @if (Route::is('settings.*')) show @endif" id="settings">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link @if (Route::is('settings.general_settings.*')) menuitem-active @endif'
+                                   href='{{ route('settings.general_settings') }}'>General</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </li>
+
             </ul>
 
         </div>

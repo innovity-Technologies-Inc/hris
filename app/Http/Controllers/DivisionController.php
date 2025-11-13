@@ -30,14 +30,12 @@ class DivisionController extends Controller
         $validatedData = $request->validate(
             [
                 'company_id' => 'required',
-                'location_id' => 'required',
-                'division_name' => 'required|string|max:255',
+                'name' => 'required|string|max:255',
                 'short_name' => 'required|string|max:50',
-                'remarks' => 'nullable|string',
                 'status' => 'required|in:active,inactive',
             ],
             [
-                'division_name.required' => 'Please enter a division name.',
+                'name.required' => 'Please enter a division name.',
                 'short_name.required' => 'Please enter a short name.',
                 'status.required' => 'Please select a status.',
             ]
@@ -66,19 +64,16 @@ class DivisionController extends Controller
         $request->validate(
             [
                 'company_id' => 'required',
-                'location_id' => 'required',
-                'division_name' => 'required|string|max:255',
+                'name' => 'required|string|max:255',
                 'short_name' => 'required|string|max:50',
-                'remarks' => 'nullable|string|max:500',
                 'status' => 'required',
 
             ],
             [
-                'division_name.required' => 'Please enter a division name.',
+                'name.required' => 'Please enter a division name.',
                 'short_name.required' => 'Please enter a short name.',
                 'status.required' => 'Please select a status.',
                 'company_id.required' => 'Please select a company.',
-                'location_id.required' => 'Please select a location.',
             ]
         );
 

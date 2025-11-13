@@ -37,9 +37,9 @@
                                     <span class="badge bg-danger ms-2">Required</span>
                                 </label>
                                 <input type="text" class="form-control form-control-lg" id="softwareName"
-                                    name="software_name" placeholder="Enter your software name"
-                                    value="{{ old('software_name') }}" required>
-                                @error('software_name')
+                                    name="name" placeholder="Enter your software name"
+                                    value="{{ old('name') }}" required>
+                                @error('name')
                                     <div class="text-danger small mt-2">{{ $message }}</div>
                                 @enderror
                                 <div class="form-text mt-2">

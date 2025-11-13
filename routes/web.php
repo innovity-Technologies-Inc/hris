@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TofsilsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CompanySetupController;
@@ -296,10 +297,9 @@ Route::prefix('plans')->group(function () {
 Route::controller(EmployeeProfileController::class)->group(function () {
     Route::get('get-grades/{tofsil_id}', 'getGradeByAct');
     Route::get('get-units/{company_id}', 'getUnit');
-    Route::get('get-divisions/{unit_id}', 'getDivision');
-    Route::get('get-departments/{division_id}', 'getDepartment');
-    Route::get('get-sections/{department_id}', 'getSection');
-    Route::get('get-designations/{division_id}', 'getDesignations');
+    Route::get('get-divisions/{company_id}/{unit_id}', 'getDivision');
+    Route::get('get-departments/{company_id}/{unit_id}/{division_id}', 'getDepartment');
+    Route::get('get-sections/{company_id}/{unit_id}/{division_id}/{department_id}', 'getSection');
     Route::get('get-branches/{bank_id}', 'getBranchesByBank');
 });
 
@@ -310,4 +310,12 @@ Route::controller(OrganizationStructureController::class)->group(function () {
     Route::get('organization-structure/{id}/edit', 'edit')->name('organization-structure.edit');
     Route::put('organization-structure/{id}', 'update')->name('organization-structure.update');
     Route::delete('organization-structure/{id}', 'destroy')->name('organization-structure.destroy');
+});
+
+Route::prefix('settings')->group(function () {
+    Route::controller(SettingsController::class)->group(function (){
+       Route::get('general-settings', 'generalSettingIndex')->name('settings.general_settings');
+       Route::post('general-settings/save', 'generalSettingSave')->name('settings.general_settings.store');
+
+    });
 });
