@@ -275,6 +275,7 @@ Route::prefix('plans')->group(function () {
             Route::get('edit/{id}', 'edit')->name('plans.leave_plans.edit');
             Route::put('update/{id}', 'update')->name('plans.leave_plans.update');
             Route::delete('delete/{id}', 'delete')->name('plans.leave_plans.delete');
+            Route::post('import', 'import')->name('plans.leave_plans.import');
 
         });
     });
@@ -288,6 +289,7 @@ Route::prefix('plans')->group(function () {
             Route::get('edit/{id}', 'edit')->name('plans.ot_plans.edit');
             Route::put('update/{id}', 'update')->name('plans.ot_plans.update');
             Route::delete('delete/{id}', 'delete')->name('plans.ot_plans.delete');
+            Route::post('import', 'import')->name('plans.ot_plans.import');
 
         });
     });

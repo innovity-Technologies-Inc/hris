@@ -4,12 +4,15 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOtPlansTable extends Migration
+return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         Schema::create('ot_plans', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
 
             // Basic Info
             $table->string('name')->index();
@@ -17,7 +20,7 @@ class CreateOtPlansTable extends Migration
 
             // Overtime Type
             $table->enum('ot_type', ['regular', 'holiday', 'night_shift', 'weekend', 'other'])
-                  ->default('regular');
+                ->default('regular');
 
             $table->enum('ot_config_type', ['salary_based', 'custom'])->default('salary_based');
             $table->enum('salary_rate_type', ['basic_rate', 'multiplier'])->default('multiplier')->nullable();
@@ -41,8 +44,11 @@ class CreateOtPlansTable extends Migration
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::dropIfExists('ot_plans');
     }
-}
+};

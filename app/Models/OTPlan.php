@@ -27,13 +27,4 @@ class OTPlan extends Model
         'overtime_end_time',
         'active_ind',
     ];
-
-    protected $casts = [
-        'overtime_multiplier' => 'decimal:2',
-        'custom_overtime_rate' => 'decimal:2',
-        'minimum_overtime_hours' => 'decimal:2',
-        'maximum_overtime_hours' => 'decimal:2',
-        'overtime_start_time' => 'datetime:H:i',
-        'overtime_end_time' => 'datetime:H:i',
-    ];
 }

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\LeavePlansImport;
 use App\Models\LeavePlan;
 use App\Services\PlanService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class LeavePlanController extends Controller
 {
@@ -110,4 +112,26 @@ class LeavePlanController extends Controller
             'message' => 'Leave Plan Deleted Successfully',
         ]);
     }
+
+    public function import(Request $request){
+        $request->validate([
+            'file' => 'required|mimes:text/csv,text/plain,application/csv,text/comma-separated-values,text/anytext,application/octet-stream,application/txt,xlsx,csv,txt',
+        ]);
+//        dd($request->all());
+        try{
+            Excel::import(new LeavePlansImport(), $request->file('file'));
+            return redirect()->route('plans.leave_plans.index')->with([
+                'message' => 'Imported Successfully',
+                'alert-type' => 'success'
+            ]);
+        }catch (\Exception $e){
+            Log::error($e->getMessage());
+            return redirect()->back()->with([
+                'message' => $e->getMessage(). 'Contact with your administrator',
+                'alert-type' => 'error'
+            ]);
+        }
+
+    }
+
 }
