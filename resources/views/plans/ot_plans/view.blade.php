@@ -92,8 +92,8 @@
                             <div class="col-md-6 mb-3">
                                 <label class="text-muted small">Amount Per Hour</label>
                                 <p class="fw-semibold mb-0">
-                                    <span class="badge bg-success fs-6">৳
-                                        {{ number_format($plan->custom_overtime_rate, 2) }}/hour</span>
+                                    <span class="badge bg-success fs-6">
+                                        {{ \App\HelperClass::getGeneralSetting()->currency ?? '৳' }}{{ number_format($plan->custom_overtime_rate, 2) }}/hour</span>
                                 </p>
                             </div>
                         </div>

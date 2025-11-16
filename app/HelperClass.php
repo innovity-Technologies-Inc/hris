@@ -42,7 +42,7 @@ class HelperClass
         return $data;
     }
 
-    public static function getOrganizationStructure(){
+    public static function getGeneralSetting(){
         $data = GeneralSetting::first();
         return $data;
     }

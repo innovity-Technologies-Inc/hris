@@ -94,7 +94,7 @@
                                     </div>
 
                                     <div class="col-lg-4">
-                                        <label for="cost" class="form-label">Cost (Tk)<span class="text-danger">*</span></label>
+                                        <label for="cost" class="form-label">Cost ({{\App\HelperClass::getGeneralSetting()->currency ?? 'Tk'}})<span class="text-danger">*</span></label>
                                         <input type="number" id="cost" class="form-control" name="cost"
                                                placeholder="Enter Cost" step="0.01" value="{{old('cost')}}">
                                         @error('cost')
@@ -159,7 +159,7 @@
                                         <th scope="col">Start Time</th>
                                         <th scope="col">End Time</th>
                                         <th scope="col">Status</th>
-                                        <th scope="col">Cost (Tk)</th>
+                                        <th scope="col">Cost ({{\App\HelperClass::getGeneralSetting()->currency ?? 'Tk'}})</th>
                                         <th scope="col">Action</th>
                                     </tr>
                                     </thead>
@@ -220,7 +220,7 @@
                                         <th scope="col">Start Time</th>
                                         <th scope="col">End Time</th>
                                         <th scope="col">Status</th>
-                                        <th scope="col">Cost (Tk)</th>
+                                        <th scope="col">Cost ({{\App\HelperClass::getGeneralSetting()->currency ?? 'Tk'}})</th>
                                         <th scope="col">Action</th>
                                     </tr>
                                     </thead>
@@ -283,7 +283,7 @@
                                         <th scope="col">Start Time</th>
                                         <th scope="col">End Time</th>
                                         <th scope="col">Status</th>
-                                        <th scope="col">Cost (Tk)</th>
+                                        <th scope="col">Cost ({{\App\HelperClass::getGeneralSetting()->currency ?? 'Tk'}})</th>
                                         <th scope="col">Action</th>
                                     </tr>
                                     </thead>
@@ -344,7 +344,7 @@
                                         <th scope="col">Start Time</th>
                                         <th scope="col">End Time</th>
                                         <th scope="col">Status</th>
-                                        <th scope="col">Cost (Tk)</th>
+                                        <th scope="col">Cost ({{\App\HelperClass::getGeneralSetting()->currency ?? 'Tk'}})</th>
                                         <th scope="col">Action</th>
                                     </tr>
                                     </thead>
