@@ -3,6 +3,7 @@
 namespace App;
 
 
+use App\Models\GeneralSetting;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -35,6 +36,16 @@ class HelperClass
         return $sl;
     }
 
+
+    public static function getCurrency(){
+        $data = GeneralSetting::first()->currency;
+        return $data;
+    }
+
+    public static function getOrganizationStructure(){
+        $data = GeneralSetting::first();
+        return $data;
+    }
 
 
 }

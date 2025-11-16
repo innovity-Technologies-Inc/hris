@@ -1,12 +1,5 @@
 @extends('structure.master')
 
-@php
-    $title = 'Software Settings';
-    $section = 'Settings';
-    $sub_section = 'Software Configuration';
-    $section_url = route('dashboard');
-@endphp
-
 @section('content')
     <div class="py-4" style="max-width: 1000px; margin: 0 auto;">
         <!-- Main Card -->
@@ -14,8 +7,17 @@
 
             <!-- Form Body -->
             <div class="card-body p-4 p-md-5">
-                <form id="settingsForm" action="#" method="POST" enctype="multipart/form-data">
+                <form id="settingsForm" action="{{route('settings.general_settings.store')}}" method="POST"
+                      enctype="multipart/form-data">
                     @csrf
+
+                    <input type="hidden" name="id" value="{{ isset($generalSetting) ? $generalSetting->id : '' }}">
+
+                    <input type="hidden" name="branch_status" value="0">
+                    <input type="hidden" name="division_status" value="0">
+                    <input type="hidden" name="department_status" value="0">
+                    <input type="hidden" name="section_status" value="0">
+
 
                     <!-- Basic Information Section -->
                     <div class="mb-5">
@@ -31,16 +33,17 @@
                         <div class="card border shadow-sm mb-4">
                             <div class="card-body p-4">
                                 <label for="softwareName"
-                                    class="form-label fw-semibold text-dark mb-3 d-flex align-items-center">
+                                       class="form-label fw-semibold text-dark mb-3 d-flex align-items-center">
                                     <i class="bi bi-app-indicator text-primary me-2 fs-5"></i>
                                     <span>Software Name</span>
                                     <span class="badge bg-danger ms-2">Required</span>
                                 </label>
                                 <input type="text" class="form-control form-control-lg" id="softwareName"
-                                    name="name" placeholder="Enter your software name"
-                                    value="{{ old('name') }}" required>
+                                       name="name" placeholder="Enter your software name"
+                                       value="{{ isset($generalSetting) ? $generalSetting->name : old('name') }}"
+                                       required>
                                 @error('name')
-                                    <div class="text-danger small mt-2">{{ $message }}</div>
+                                <div class="text-danger small mt-2">{{ $message }}</div>
                                 @enderror
                                 <div class="form-text mt-2">
                                     <i class="bi bi-lightbulb text-warning me-1"></i>
@@ -62,22 +65,30 @@
                                     <!-- Light Theme Logo -->
                                     <div class="col-md-4">
                                         <label for="logoLight"
-                                            class="form-label fw-semibold text-dark mb-3 d-flex align-items-center">
+                                               class="form-label fw-semibold text-dark mb-3 d-flex align-items-center">
                                             <i class="bi bi-brightness-high-fill text-warning me-2 fs-5"></i>
                                             <span>Light Theme Logo</span>
                                         </label>
                                         <input type="file" class="form-control" id="logoLight" name="logo_light"
-                                            accept="image/*" onchange="previewLogo(event, 'logoLightPreview')">
+                                               accept="image/*" onchange="previewLogo(event, 'logoLightPreview')">
                                         @error('logo_light')
-                                            <div class="text-danger small mt-2">{{ $message }}</div>
+                                        <div class="text-danger small mt-2">{{ $message }}</div>
                                         @enderror
                                         <div class="mt-3">
-                                            <div class="border border-3 border-dashed rounded-3 bg-white d-flex align-items-center justify-content-center"
+                                            <div
+                                                class="border border-3 border-dashed rounded-3 bg-white d-flex align-items-center justify-content-center"
                                                 id="logoLightPreview" style="height: 150px;">
-                                                <div class="text-center">
-                                                    <i class="bi bi-sun fs-1 text-warning mb-2 d-block"></i>
-                                                    <span class="text-muted small">Light Logo</span>
-                                                </div>
+                                                @if(isset($generalSetting) && $generalSetting->logo_light)
+                                                    <img src="{{ asset('storage/' . $generalSetting->logo_light) }}"
+                                                         alt="Light Logo"
+                                                         class="img-fluid rounded-3 shadow"
+                                                         style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                                                @else
+                                                    <div class="text-center">
+                                                        <i class="bi bi-sun fs-1 text-warning mb-2 d-block"></i>
+                                                        <span class="text-muted small">Light Logo</span>
+                                                    </div>
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="form-text mt-2">
@@ -89,22 +100,30 @@
                                     <!-- Dark Theme Logo -->
                                     <div class="col-md-4">
                                         <label for="logoDark"
-                                            class="form-label fw-semibold text-dark mb-3 d-flex align-items-center">
+                                               class="form-label fw-semibold text-dark mb-3 d-flex align-items-center">
                                             <i class="bi bi-moon-stars-fill text-primary me-2 fs-5"></i>
                                             <span>Dark Theme Logo</span>
                                         </label>
                                         <input type="file" class="form-control" id="logoDark" name="logo_dark"
-                                            accept="image/*" onchange="previewLogo(event, 'logoDarkPreview')">
+                                               accept="image/*" onchange="previewLogo(event, 'logoDarkPreview')">
                                         @error('logo_dark')
-                                            <div class="text-danger small mt-2">{{ $message }}</div>
+                                        <div class="text-danger small mt-2">{{ $message }}</div>
                                         @enderror
                                         <div class="mt-3">
-                                            <div class="border border-3 border-dashed rounded-3 bg-dark d-flex align-items-center justify-content-center"
+                                            <div
+                                                class="border border-3 border-dashed rounded-3 bg-dark d-flex align-items-center justify-content-center"
                                                 id="logoDarkPreview" style="height: 150px;">
-                                                <div class="text-center">
-                                                    <i class="bi bi-moon-stars fs-1 text-white mb-2 d-block"></i>
-                                                    <span class="text-white small">Dark Logo</span>
-                                                </div>
+                                                @if(isset($generalSetting) && $generalSetting->logo_dark)
+                                                    <img src="{{ asset('storage/' . $generalSetting->logo_dark) }}"
+                                                         alt="Light Logo"
+                                                         class="img-fluid rounded-3 shadow"
+                                                         style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                                                @else
+                                                    <div class="text-center">
+                                                        <i class="bi bi-moon-stars fs-1 text-white mb-2 d-block"></i>
+                                                        <span class="text-white small">Dark Logo</span>
+                                                    </div>
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="form-text mt-2">
@@ -116,23 +135,32 @@
                                     <!-- Favicon -->
                                     <div class="col-md-4">
                                         <label for="favicon"
-                                            class="form-label fw-semibold text-dark mb-3 d-flex align-items-center">
+                                               class="form-label fw-semibold text-dark mb-3 d-flex align-items-center">
                                             <i class="bi bi-star-fill text-danger me-2 fs-5"></i>
                                             <span>Favicon Icon</span>
                                         </label>
                                         <input type="file" class="form-control" id="favicon" name="favicon"
-                                            accept="image/x-icon,image/png,image/svg+xml"
-                                            onchange="previewLogo(event, 'faviconPreview')">
+                                               accept="image/x-icon,image/png,image/svg+xml"
+                                               onchange="previewLogo(event, 'faviconPreview')">
                                         @error('favicon')
-                                            <div class="text-danger small mt-2">{{ $message }}</div>
+                                        <div class="text-danger small mt-2">{{ $message }}</div>
                                         @enderror
                                         <div class="mt-3">
-                                            <div class="border border-3 border-dashed rounded-3 bg-light d-flex align-items-center justify-content-center"
+                                            <div
+                                                class="border border-3 border-dashed rounded-3 bg-light d-flex align-items-center justify-content-center"
                                                 id="faviconPreview" style="height: 150px;">
-                                                <div class="text-center">
-                                                    <i class="bi bi-star fs-1 text-danger mb-2 d-block"></i>
-                                                    <span class="text-muted small">Favicon</span>
-                                                </div>
+                                                @if(isset($generalSetting) && $generalSetting->favicon)
+                                                    <img src="{{ asset('storage/' . $generalSetting->favicon) }}"
+                                                         alt="Favicon"
+                                                         class="img-fluid rounded-3 shadow"
+                                                         style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                                                @else
+                                                    <div class="text-center">
+                                                        <i class="bi bi-star fs-1 text-danger mb-2 d-block"></i>
+                                                        <span class="text-muted small">Favicon</span>
+                                                    </div>
+                                                @endif
+
                                             </div>
                                         </div>
                                         <div class="form-text mt-2">
@@ -146,7 +174,8 @@
                                 <div class="alert alert-info border-2 mt-4 mb-0 d-flex align-items-start" role="alert">
                                     <i class="bi bi-lightbulb-fill fs-5 me-3 flex-shrink-0"></i>
                                     <div>
-                                        <strong>Tip:</strong> Upload separate logos optimized for light and dark themes to
+                                        <strong>Tip:</strong> Upload separate logos optimized for light and dark themes
+                                        to
                                         ensure perfect visibility in all modes. Recommended size: 200x60px (PNG with
                                         transparent background).
                                     </div>
@@ -158,34 +187,61 @@
                         <div class="card border shadow-sm">
                             <div class="card-body p-4">
                                 <label for="currency"
-                                    class="form-label fw-semibold text-dark mb-3 d-flex align-items-center">
+                                       class="form-label fw-semibold text-dark mb-3 d-flex align-items-center">
                                     <i class="bi bi-currency-exchange text-primary me-2 fs-5"></i>
                                     <span>Currency</span>
                                     <span class="badge bg-danger ms-2">Required</span>
                                 </label>
                                 <select class="form-select form-select-lg" id="currency" name="currency" required>
                                     <option value="">Choose your currency</option>
-                                    <option value="USD" {{ old('currency') == 'USD' ? 'selected' : '' }}>🇺🇸 USD - US
-                                        Dollar ($)</option>
-                                    <option value="BDT" {{ old('currency') == 'BDT' ? 'selected' : '' }}>🇧🇩 BDT -
-                                        Bangladeshi Taka (৳)</option>
-                                    <option value="EUR" {{ old('currency') == 'EUR' ? 'selected' : '' }}>🇪🇺 EUR - Euro
-                                        (€)</option>
-                                    <option value="GBP" {{ old('currency') == 'GBP' ? 'selected' : '' }}>🇬🇧 GBP -
-                                        British Pound (£)</option>
-                                    <option value="INR" {{ old('currency') == 'INR' ? 'selected' : '' }}>🇮🇳 INR -
-                                        Indian Rupee (₹)</option>
-                                    <option value="JPY" {{ old('currency') == 'JPY' ? 'selected' : '' }}>🇯🇵 JPY -
-                                        Japanese Yen (¥)</option>
-                                    <option value="CNY" {{ old('currency') == 'CNY' ? 'selected' : '' }}>🇨🇳 CNY -
-                                        Chinese Yuan (¥)</option>
-                                    <option value="AUD" {{ old('currency') == 'AUD' ? 'selected' : '' }}>🇦🇺 AUD -
-                                        Australian Dollar (A$)</option>
-                                    <option value="CAD" {{ old('currency') == 'CAD' ? 'selected' : '' }}>🇨🇦 CAD -
-                                        Canadian Dollar (C$)</option>
+                                    <option
+                                        value="USD" {{ isset($generalSetting) && $generalSetting->currency == 'USD' ? 'selected' : '' }}>
+                                        🇺🇸 USD - US
+                                        Dollar ($)
+                                    </option>
+                                    <option
+                                        value="BDT" {{ isset($generalSetting) && $generalSetting->currency == 'BDT' ? 'selected' : '' }}>
+                                        🇧🇩 BDT -
+                                        Bangladeshi Taka (৳)
+                                    </option>
+                                    <option
+                                        value="EUR" {{ isset($generalSetting) && $generalSetting->currency == 'EUR' ? 'selected' : '' }}>
+                                        🇪🇺 EUR - Euro
+                                        (€)
+                                    </option>
+                                    <option
+                                        value="GBP" {{ isset($generalSetting) && $generalSetting->currency == 'GBP' ? 'selected' : '' }}>
+                                        🇬🇧 GBP -
+                                        British Pound (£)
+                                    </option>
+                                    <option
+                                        value="INR" {{ isset($generalSetting) && $generalSetting->currency == 'INR' ? 'selected' : '' }}>
+                                        🇮🇳 INR -
+                                        Indian Rupee (₹)
+                                    </option>
+                                    <option
+                                        value="JPY" {{ isset($generalSetting) && $generalSetting->currency == 'JPY' ? 'selected' : '' }}>
+                                        🇯🇵 JPY -
+                                        Japanese Yen (¥)
+                                    </option>
+                                    <option
+                                        value="CNY" {{ isset($generalSetting) && $generalSetting->currency == 'CNY' ? 'selected' : '' }}>
+                                        🇨🇳 CNY -
+                                        Chinese Yuan (¥)
+                                    </option>
+                                    <option
+                                        value="AUD" {{ isset($generalSetting) && $generalSetting->currency == 'AUD' ? 'selected' : '' }}>
+                                        🇦🇺 AUD -
+                                        Australian Dollar (A$)
+                                    </option>
+                                    <option
+                                        value="CAD" {{ isset($generalSetting) && $generalSetting->currency == 'CAD' ? 'selected' : '' }}>
+                                        🇨🇦 CAD -
+                                        Canadian Dollar (C$)
+                                    </option>
                                 </select>
                                 @error('currency')
-                                    <div class="text-danger small mt-2">{{ $message }}</div>
+                                <div class="text-danger small mt-2">{{ $message }}</div>
                                 @enderror
                                 <div class="form-text mt-2">
                                     <i class="bi bi-info-circle me-1"></i>
@@ -219,7 +275,7 @@
                                     <!-- Level 1: Group -->
                                     <div class="col-md-4">
                                         <div class="card bg-secondary text-white border-0 h-100">
-                                            <div class="card-body p-2">
+                                            <div class="p-2">
                                                 <div class="d-flex align-items-center">
                                                     <span class="badge bg-white text-dark me-2">Level 1</span>
                                                     <div class="flex-fill">
@@ -234,7 +290,7 @@
                                     <!-- Level 2: Company -->
                                     <div class="col-md-4">
                                         <div class="card bg-secondary text-white border-0 h-100">
-                                            <div class="card-body p-2">
+                                            <div class="p-2">
                                                 <div class="d-flex align-items-center">
                                                     <span class="badge bg-white text-dark me-2">Level 2</span>
                                                     <div class="flex-fill">
@@ -262,12 +318,12 @@
                                 <div class="list-group list-group-flush">
                                     <!-- Branch Unit -->
                                     <label class="list-group-item list-group-item-action p-4 border-0 border-bottom"
-                                        for="checkBranchUnit" style="cursor: pointer;">
+                                           for="checkBranchUnit" style="cursor: pointer;">
                                         <div class="d-flex align-items-center">
                                             <input class="form-check-input me-3" type="checkbox" value="1"
-                                                id="checkBranchUnit" name="org_levels[]"
-                                                {{ in_array('1', old('org_levels', [])) ? 'checked' : '' }}
-                                                style="width: 1.5rem; height: 1.5rem; cursor: pointer;">
+                                                   id="checkBranchUnit" name="branch_status"
+                                                   {{ isset($generalSetting) && $generalSetting->branch_status == 1 ? 'checked' : '' }}
+                                                   style="width: 1.5rem; height: 1.5rem; cursor: pointer;">
                                             <div class="flex-fill">
                                                 <div class="d-flex align-items-center mb-1">
                                                     <span class="badge bg-primary me-2">Level 3</span>
@@ -283,12 +339,12 @@
 
                                     <!-- Division -->
                                     <label class="list-group-item list-group-item-action p-4 border-0 border-bottom"
-                                        for="checkDivision" style="cursor: pointer;">
+                                           for="checkDivision" style="cursor: pointer;">
                                         <div class="d-flex align-items-center">
-                                            <input class="form-check-input me-3" type="checkbox" value="2"
-                                                id="checkDivision" name="org_levels[]"
-                                                {{ in_array('2', old('org_levels', [])) ? 'checked' : '' }}
-                                                style="width: 1.5rem; height: 1.5rem; cursor: pointer;">
+                                            <input class="form-check-input me-3" type="checkbox" value="1"
+                                                   id="checkDivision" name="division_status"
+                                                   {{ isset($generalSetting) && $generalSetting->division_status == 1 ? 'checked' : '' }}
+                                                   style="width: 1.5rem; height: 1.5rem; cursor: pointer;">
                                             <div class="flex-fill">
                                                 <div class="d-flex align-items-center mb-1">
                                                     <span class="badge bg-info me-2">Level 4</span>
@@ -304,12 +360,12 @@
 
                                     <!-- Department -->
                                     <label class="list-group-item list-group-item-action p-4 border-0 border-bottom"
-                                        for="checkDepartment" style="cursor: pointer;">
+                                           for="checkDepartment" style="cursor: pointer;">
                                         <div class="d-flex align-items-center">
-                                            <input class="form-check-input me-3" type="checkbox" value="3"
-                                                id="checkDepartment" name="org_levels[]"
-                                                {{ in_array('3', old('org_levels', [])) ? 'checked' : '' }}
-                                                style="width: 1.5rem; height: 1.5rem; cursor: pointer;">
+                                            <input class="form-check-input me-3" type="checkbox" value="1"
+                                                   id="checkDepartment" name="department_status"
+                                                   {{ isset($generalSetting) && $generalSetting->department_status == 1 ? 'checked' : '' }}
+                                                   style="width: 1.5rem; height: 1.5rem; cursor: pointer;">
                                             <div class="flex-fill">
                                                 <div class="d-flex align-items-center mb-1">
                                                     <span class="badge bg-warning me-2">Level 5</span>
@@ -324,13 +380,14 @@
                                     </label>
 
                                     <!-- Section -->
-                                    <label class="list-group-item list-group-item-action p-4 border-0" for="checkSection"
-                                        style="cursor: pointer;">
+                                    <label class="list-group-item list-group-item-action p-4 border-0"
+                                           for="checkSection"
+                                           style="cursor: pointer;">
                                         <div class="d-flex align-items-center">
-                                            <input class="form-check-input me-3" type="checkbox" value="4"
-                                                id="checkSection" name="org_levels[]"
-                                                {{ in_array('4', old('org_levels', [])) ? 'checked' : '' }}
-                                                style="width: 1.5rem; height: 1.5rem; cursor: pointer;">
+                                            <input class="form-check-input me-3" type="checkbox" value="1"
+                                                   id="checkSection" name="section_status"
+                                                   {{ isset($generalSetting) && $generalSetting->section_status == 1 ? 'checked' : '' }}
+                                                   style="width: 1.5rem; height: 1.5rem; cursor: pointer;">
                                             <div class="flex-fill">
                                                 <div class="d-flex align-items-center mb-1">
                                                     <span class="badge bg-danger me-2">Level 6</span>
@@ -351,7 +408,7 @@
                     <!-- Action Buttons -->
                     <div class="d-flex justify-content-end gap-3">
                         <a href="{{ route('dashboard') }}"
-                            class="btn btn-lg btn-outline-secondary px-4 px-md-5 rounded-3">
+                           class="btn btn-lg btn-outline-secondary px-4 px-md-5 rounded-3">
                             <i class="bi bi-x-circle me-2"></i>Cancel
                         </a>
                         <button type="submit" class="btn btn-lg btn-dark px-4 px-md-5 rounded-3 shadow">
@@ -376,7 +433,7 @@
 
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     preview.innerHTML = '<img src="' + e.target.result +
                         '" alt="Preview" class="img-fluid rounded-3 shadow" style="max-width: 100%; max-height: 100%; object-fit: contain;">';
                 }
@@ -386,17 +443,17 @@
 
         // Add hover effects to list items
         document.querySelectorAll('.list-group-item-action').forEach(item => {
-            item.addEventListener('mouseenter', function() {
+            item.addEventListener('mouseenter', function () {
                 this.style.backgroundColor = 'var(--bs-light)';
             });
-            item.addEventListener('mouseleave', function() {
+            item.addEventListener('mouseleave', function () {
                 this.style.backgroundColor = '';
             });
         });
 
         // Add input validation styling
         document.querySelectorAll('input[required], select[required]').forEach(field => {
-            field.addEventListener('blur', function() {
+            field.addEventListener('blur', function () {
                 if (this.value.trim() === '') {
                     this.classList.add('border-danger');
                     this.classList.remove('border-success');

@@ -117,24 +117,31 @@
                                 <a class='tp-link @if (Route::is('companies.*')) menuitem-active @endif'
                                     href='{{ route('companies.index') }}'>Companies</a>
                             </li>
-
-                            <li>
-                                <a class='tp-link @if (Route::is('company_locations.*')) menuitem-active @endif'
-                                    href='{{ route('company_locations.index') }}'>Company Branches</a>
-                            </li>
+                            @if(\App\HelperClass::getOrganizationStructure()->branch_status == 1)
+                                <li>
+                                    <a class='tp-link @if (Route::is('company_locations.*')) menuitem-active @endif'
+                                       href='{{ route('company_locations.index') }}'>Company Branches</a>
+                                </li>
+                            @endif
+                            @if(\App\HelperClass::getOrganizationStructure()->division_status == 1)
                             <li>
                                 <a class='tp-link @if (Route::is('divisions.*')) menuitem-active @endif'
                                     href='{{ route('divisions.index') }}'>Divisions</a>
                             </li>
+                            @endif
+                            @if(\App\HelperClass::getOrganizationStructure()->department_status == 1)
                             <li>
                                 <a class='tp-link @if (Route::is('departments.*')) menuitem-active @endif'
                                     href='{{ route('departments.index') }}'>Departments</a>
                             </li>
+                            @endif
+                            @if(\App\HelperClass::getOrganizationStructure()->section_status == 1)
                             <li>
                                 <a class='tp-link @if (Route::is('sections.*')) menuitem-active @endif'
                                     href='{{ route('sections.index') }}'>Sections</a>
 
                             </li>
+                            @endif
                             <li>
                                 <a class='tp-link @if (Route::is('designations.*')) menuitem-active @endif'
                                     href='{{ route('designations.index') }}'>Designations</a>

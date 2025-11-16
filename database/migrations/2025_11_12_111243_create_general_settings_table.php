@@ -14,13 +14,14 @@ return new class extends Migration
         Schema::create('general_settings', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('currency')->nullable();
             $table->string('logo_light')->nullable();
             $table->string('logo_dark')->nullable();
             $table->string('favicon')->nullable();
-            $table->enum('branch_status', ['active', 'inactive'])->nullable();
-            $table->enum('division_status', ['active', 'inactive'])->nullable();
-            $table->enum('department_status', ['active', 'inactive'])->nullable();
-            $table->enum('section_status', ['active', 'inactive'])->nullable();
+            $table->tinyInteger('branch_status')->default(0);
+            $table->tinyInteger('division_status')->default(0);
+            $table->tinyInteger('department_status')->default(0);
+            $table->tinyInteger('section_status')->default(0);
 
             $table->timestamps();
         });

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\HelperClass;
 use App\Models\GeneralSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class SettingsController extends Controller
 {
@@ -20,6 +21,11 @@ class SettingsController extends Controller
             'logo_light' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'logo_dark' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'favicon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'currency' => 'required|string|max:255',
+            'branch_status' => 'nullable',
+            'division_status' => 'nullable',
+            'department_status' => 'nullable',
+            'section_status' => 'nullable',
         ], [
             'name.required' => 'Please Enter Name',
             'name.max' => 'Name Must Be Less Than 255 Characters',
@@ -34,47 +40,53 @@ class SettingsController extends Controller
             'favicon.mimes' => 'Please Upload Image File',
             'favicon.max' => 'Favicon Must Be Less Than 2 MB',
         ]);
-
-        if ($request->id != null){
-            $generalSetting = GeneralSetting::find($request->id);
-            if ($request->hasFile('logo_light')){
-                if($generalSetting->logo_light != null){
-                    HelperClass::file_delete($generalSetting->logo_light);
+        try {
+            if ($request->id != null){
+                $generalSetting = GeneralSetting::find($request->id);
+                if ($request->hasFile('logo_light')){
+                    if($generalSetting->logo_light != null){
+                        HelperClass::file_delete($generalSetting->logo_light);
+                    }
+                    $logo_path = HelperClass::file_upload($request->file('logo_light'), 'logo');
+                    $validate['logo_light'] = $logo_path;
                 }
-                $logo_path = HelperClass::file_upload($request->file('logo_light'), 'logo');
-                $validate['logo_light'] = $logo_path;
-            }
-            if ($request->hasFile('logo_dark')){
-                if($generalSetting->logo_dark != null){
-                    HelperClass::file_delete($generalSetting->logo_dark);
+                if ($request->hasFile('logo_dark')){
+                    if($generalSetting->logo_dark != null){
+                        HelperClass::file_delete($generalSetting->logo_dark);
+                    }
+                    $logo_path = HelperClass::file_upload($request->file('logo_dark'), 'logo');
+                    $validate['logo_dark'] = $logo_path;
                 }
-                $logo_path = HelperClass::file_upload($request->file('logo_dark'), 'logo');
-                $validate['logo_dark'] = $logo_path;
-            }
 
-            if ($request->hasFile('favicon')){
-                if($generalSetting->favicon != null){
-                    HelperClass::file_delete($generalSetting->favicon);
+                if ($request->hasFile('favicon')){
+                    if($generalSetting->favicon != null){
+                        HelperClass::file_delete($generalSetting->favicon);
+                    }
+                    $favicon_path = HelperClass::file_upload($request->file('favicon'), 'logo');
+                    $validate['favicon'] = $favicon_path;
                 }
-                $favicon_path = HelperClass::file_upload($request->file('favicon'), 'logo');
-                $validate['favicon'] = $favicon_path;
+                $generalSetting->update($validate);
+            }else{
+                if ($request->hasFile('logo_light')){
+                    $logo_path = HelperClass::file_upload($request->file('logo_light'), 'logo');
+                    $validate['logo_light'] = $logo_path;
+                }
+                if ($request->hasFile('logo_dark')){
+                    $logo_path = HelperClass::file_upload($request->file('logo_dark'), 'logo');
+                    $validate['logo_dark'] = $logo_path;
+                }
+                if ($request->hasFile('favicon')){
+                    $favicon_path = HelperClass::file_upload($request->file('favicon'), 'logo');
+                    $validate['favicon'] = $favicon_path;
+                }
+                GeneralSetting::create($validate);
             }
-
-            $generalSetting->update($validate);
-        }else{
-            if ($request->hasFile('logo_light')){
-                $logo_path = HelperClass::file_upload($request->file('logo_light'), 'logo');
-                $validate['logo_light'] = $logo_path;
-            }
-            if ($request->hasFile('logo_dark')){
-                $logo_path = HelperClass::file_upload($request->file('logo_dark'), 'logo');
-                $validate['logo_dark'] = $logo_path;
-            }
-            if ($request->hasFile('favicon')){
-                $favicon_path = HelperClass::file_upload($request->file('favicon'), 'logo');
-                $validate['favicon'] = $favicon_path;
-            }
-            GeneralSetting::create($validate);
+        }catch(\Exception $e){
+            Log::error($e->getMessage());
+            return redirect()->back()->with([
+                'message' => 'Something Went Wrong',
+                'alert-type' => 'error'
+            ]);
         }
 
         return redirect()->back()->with([
