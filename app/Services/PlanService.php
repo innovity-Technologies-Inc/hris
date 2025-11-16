@@ -180,7 +180,7 @@ class PlanService
             'short_name' => 'nullable|string|max:100',
             'applicable_gender' => 'required|in:Both,Male,Female',
             'day_type' => 'required|in:Calculative,Fixed',
-            'leave_type' => 'required|in:Casual Leave,Sick Leave,Maternal Leave,Paternal Leave,Earned Leave,Comp Off',
+            'leave_type' => 'required',
             'leave_limit' => 'nullable|integer|min:0',
             'max_no_of_days' => 'nullable|integer|min:0',
             'display_serial' => 'nullable|integer|min:0',

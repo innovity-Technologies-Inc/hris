@@ -1,0 +1,6 @@
+Name,Short_Name,Applicable_Gender,Day_Type,Leave_Type,Leave_Limit,Max_No_Of_Days,Display_Serial,Apply_Limit,Allow_Fractional_Leave,Off_Day_Include,Active_Ind
+Annual Leave,AL,Both,Calculative,Annual Leave,20,15,1,5,active,0,active
+Casual Leave,CL,Both,Calculative,Casual Leave,10,3,2,2,inactive,0,active
+Sick Leave,SL,Both,Calculative,Sick Leave,14,7,3,3,active,0,active
+Maternity Leave,ML,Female,Fixed,Maternity Leave,120,60,4,1,inactive,0,active
+Paternity Leave,PL,Male,Fixed,Paternity Leave,10,5,5,1,inactive,0,active

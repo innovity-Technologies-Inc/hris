@@ -37,11 +37,11 @@
                     <div class="collapse @if (Route::is('employees.*')) show @endif" id="sidebarEmployees">
                         <ul class="nav-second-level">
                             <li>
-                                <a class='tp-link @if (Route::is('employees.*')) menuitem-active @endif'
+                                <a class='tp-link @if (Route::is('employees.index')) menuitem-active @endif'
                                     href='{{ route('employees.index') }}'>Employee Information</a>
                             </li>
                             <li>
-                                <a class='tp-link @if (Route::is('employees.*')) menuitem-active @endif'
+                                <a class='tp-link @if (Route::is('employees.import')) menuitem-active @endif'
                                     href='{{ route('employees.import') }}'>Bulk Upload</a>
                             </li>
                         </ul>

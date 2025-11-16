@@ -72,7 +72,7 @@
                                             @else
                                                 @if ($item->custom_overtime_rate)
                                                     <span
-                                                        class="badge text-bg-secondary">৳{{ number_format($item->custom_overtime_rate, 2) }}/hr</span>
+                                                        class="badge text-bg-secondary">{{\App\HelperClass::getCurrency()}} {{ number_format($item->custom_overtime_rate, 2) }}/hr</span>
                                                 @else
                                                     <span class="text-muted">-</span>
                                                 @endif

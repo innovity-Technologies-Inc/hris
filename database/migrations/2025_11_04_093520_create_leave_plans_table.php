@@ -19,7 +19,7 @@ return new class extends Migration
             // Enum fields
             $table->enum('applicable_gender', ['Both', 'Male', 'Female'])->default('Both');
             $table->enum('day_type', ['Calculative', 'Fixed'])->default('Calculative');
-            $table->enum('leave_type', ['Casual Leave', 'Sick Leave', 'Maternal Leave', 'Paternal Leave', 'Earned Leave', 'Comp Off'])->default('Casual Leave');
+            $table->string('leave_type');
 
             // Numerical fields
             $table->integer('leave_limit')->default(0);

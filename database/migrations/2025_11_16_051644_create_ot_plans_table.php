@@ -19,11 +19,11 @@ return new class extends Migration
             $table->text('description')->nullable();
 
             // Overtime Type
-            $table->enum('ot_type', ['regular', 'holiday', 'night_shift', 'weekend', 'other'])
+            $table->enum('ot_type', ['regular', 'holiday', 'night', 'weekend', 'other'])
                 ->default('regular');
 
-            $table->enum('ot_config_type', ['salary_based', 'custom'])->default('salary_based');
-            $table->enum('salary_rate_type', ['basic_rate', 'multiplier'])->default('multiplier')->nullable();
+            $table->enum('ot_config_type', ['Salary Based', 'Custom'])->default('Salary Based');
+            $table->enum('salary_rate_type', ['Basic Rate', 'Multiplier'])->default('Basic Rate')->nullable();
             $table->decimal('overtime_multiplier', 8, 2)->nullable();
             $table->decimal('custom_overtime_rate', 8, 2)->nullable();
 

@@ -24,6 +24,7 @@ class OTPlanController extends Controller
         $section = 'Plans Setup';
         $sub_section = 'OT Plan';
         $plans = $this->planServices->getPlans(OTPlan::class, 20);
+//        dd($plans);
         return view('plans.ot_plans.index', compact('title', 'section', 'sub_section', 'plans'));
     }
 
@@ -127,7 +128,7 @@ class OTPlanController extends Controller
         }catch (\Exception $e){
             Log::error($e->getMessage());
             return redirect()->back()->with([
-                'message' => $e->getMessage(). 'Contact with your administrator',
+                'message' => 'Something went wrong. Contact with your administrator',
                 'alert-type' => 'error'
             ]);
         }

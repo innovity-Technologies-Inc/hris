@@ -89,7 +89,7 @@ class MealPlansController extends Controller
         }catch (\Exception $e){
             Log::error($e->getMessage());
             return redirect()->back()->with([
-                'message' => $e->getMessage(). 'Contact with your administrator',
+                'message' => 'Something went wrong. Contact with your administrator',
                 'alert-type' => 'error'
             ]);
         }
