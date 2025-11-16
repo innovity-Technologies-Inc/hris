@@ -29,7 +29,7 @@ use App\Http\Controllers\OTPlanController;
 use App\Http\Controllers\LeavePlanController;
 
 Route::get('test', function () {
-   return view('software_setting.index');
+   return view('plans.roster_plan.index');
 });
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');

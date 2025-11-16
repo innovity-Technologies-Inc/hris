@@ -1,3 +1,6 @@
+@php
+    $generalSettings = \App\HelperClass::getGeneralSetting();
+@endphp
 <!-- Left Sidebar Start -->
 <div class="app-sidebar-menu">
     <div class="h-100" data-simplebar="">
@@ -11,8 +14,8 @@
                         <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">
                     </span>
                     <span class="logo-lg">
-                        <img class="logo-img-light" src="{{ asset('assets/images/logo-light.png') }}" alt="" height="24">
-                        <img class="logo-img-dark" src="{{ asset('assets/images/logo-dark.png') }}" alt="" height="24">
+                        <img class="logo-img-light" src="{{ isset($generalSettings->logo_dark) ? asset('storage/' . $generalSettings->logo_dark) : asset('assets/images/logo-light.png') }}" alt="" height="24">
+                        <img class="logo-img-dark" src="{{ isset($generalSettings->logo_light) ? asset('storage/' . $generalSettings->logo_light) : asset('assets/images/logo-dark.png') }}" alt="" height="24">
                     </span>
                 </a>
             </div>
@@ -117,25 +120,25 @@
                                 <a class='tp-link @if (Route::is('companies.*')) menuitem-active @endif'
                                     href='{{ route('companies.index') }}'>Companies</a>
                             </li>
-                            @if(\App\HelperClass::getOrganizationStructure()->branch_status == 1)
+                            @if(isset($generalSettings->branch_status) && $generalSettings->branch_status == 1)
                                 <li>
                                     <a class='tp-link @if (Route::is('company_locations.*')) menuitem-active @endif'
                                        href='{{ route('company_locations.index') }}'>Company Branches</a>
                                 </li>
                             @endif
-                            @if(\App\HelperClass::getOrganizationStructure()->division_status == 1)
+                            @if(isset($generalSettings->division_status) && $generalSettings->division_status == 1)
                             <li>
                                 <a class='tp-link @if (Route::is('divisions.*')) menuitem-active @endif'
                                     href='{{ route('divisions.index') }}'>Divisions</a>
                             </li>
                             @endif
-                            @if(\App\HelperClass::getOrganizationStructure()->department_status == 1)
+                            @if(isset($generalSettings->department_status) && $generalSettings->department_status == 1)
                             <li>
                                 <a class='tp-link @if (Route::is('departments.*')) menuitem-active @endif'
                                     href='{{ route('departments.index') }}'>Departments</a>
                             </li>
                             @endif
-                            @if(\App\HelperClass::getOrganizationStructure()->section_status == 1)
+                            @if(isset($generalSettings->section_status) && $generalSettings->section_status == 1)
                             <li>
                                 <a class='tp-link @if (Route::is('sections.*')) menuitem-active @endif'
                                     href='{{ route('sections.index') }}'>Sections</a>

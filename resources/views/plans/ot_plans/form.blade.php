@@ -169,7 +169,7 @@
                                     Amount Per Hour <span class="text-danger">*</span>
                                 </label>
                                 <div class="input-group">
-                                    <span class="input-group-text">৳</span>
+                                    <span class="input-group-text">{{\App\HelperClass::getGeneralSetting()->currency ?? '৳'}}</span>
                                     <input type="number" step="0.01" class="form-control" id="custom_overtime_rate"
                                         name="custom_overtime_rate" placeholder="Enter amount per hour"
                                         value="{{ isset($plan) ? $plan->custom_overtime_rate : old('custom_overtime_rate') }}">
