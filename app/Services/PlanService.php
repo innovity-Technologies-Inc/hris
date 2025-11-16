@@ -230,4 +230,27 @@ class PlanService
         return $validated;
     }
 
+    public function rosterPlanValidation($request){
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'short_name' => 'nullable|string|max:255',
+            'swapping' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'status' => 'required|in:active,inactive',
+            'first_shift_id' => 'required|integer|exists:shifts,id',
+            'second_shift_id' => 'required|integer|exists:shifts,id',
+        ],[
+            'name.required' => 'The name field is required.',
+            'status.required' => 'Status is required.',
+            'status.in' => 'Status must be either active or inactive.',
+
+            'first_shift_id.required' => 'First shift is required.',
+            'first_shift_id.exists' => 'The selected first shift does not exist.',
+
+            'second_shift_id.required' => 'Second shift is required.',
+            'second_shift_id.exists' => 'The selected second shift does not exist.',
+        ]);
+        return $validated;
+    }
+
 }
