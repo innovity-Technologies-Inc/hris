@@ -237,8 +237,8 @@ class PlanService
             'swapping' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'status' => 'required|in:active,inactive',
-            'first_shift_id' => 'required|integer|exists:shifts,id',
-            'second_shift_id' => 'required|integer|exists:shifts,id',
+            'first_shift_id' => 'required',
+            'second_shift_id' => 'required',
         ],[
             'name.required' => 'The name field is required.',
             'status.required' => 'Status is required.',

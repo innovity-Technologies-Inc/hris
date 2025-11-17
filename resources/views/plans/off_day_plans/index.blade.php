@@ -1,39 +1,45 @@
 @php
     // Dummy data - In production, this would come from the controller
-    $plans = collect([
+    $offDayPlans = collect([
         (object)[
             'id' => 1,
-            'plan_name' => 'Weekly Day-Night Rotation',
-            'short_name' => 'WDN',
-            'repetition_days' => 7,
+            'name' => 'Friday Off-Day Coverage',
+            'short_name' => 'FRI-OFF',
+            'start_time' => '00:00:00',
+            'end_time' => '23:59:59',
+            'grace_time_before' => 30,
+            'grace_time_after' => 30,
+            'remuneration_amount' => 1500.00,
             'status' => 'active',
-            'shift_1_name' => 'Morning Shift',
-            'shift_2_name' => 'Night Shift',
         ],
         (object)[
             'id' => 2,
-            'plan_name' => 'Weekend Coverage Plan',
-            'short_name' => 'WCP',
-            'repetition_days' => 14,
+            'name' => 'Weekend Emergency Plan',
+            'short_name' => 'WKD-EMG',
+            'start_time' => '08:00:00',
+            'end_time' => '20:00:00',
+            'grace_time_before' => 15,
+            'grace_time_after' => 45,
+            'remuneration_amount' => 2000.00,
             'status' => 'active',
-            'shift_1_name' => 'Day Shift',
-            'shift_2_name' => null,
         ],
         (object)[
             'id' => 3,
-            'plan_name' => 'Monthly Rotation Schedule',
+            'name' => 'Holiday Special Coverage',
             'short_name' => null,
-            'repetition_days' => 30,
+            'start_time' => '06:00:00',
+            'end_time' => '18:00:00',
+            'grace_time_before' => 0,
+            'grace_time_after' => 60,
+            'remuneration_amount' => 2500.00,
             'status' => 'inactive',
-            'shift_1_name' => 'Evening Shift',
-            'shift_2_name' => 'Night Shift',
         ],
     ]);
 @endphp
 
 @extends('structure.master')
 @section('content')
-    {{-- Roster Plans List --}}
+    {{-- Off-Day Plans List --}}
 
     <div class="row">
         <div class="col-xl-12">
@@ -50,7 +56,7 @@
                         <div class="col-12">
                             <div class="input-group input-group-md">
                                 <input type="text" class="form-control border-end-0" id="keywordSearch" name="keyword"
-                                    placeholder="Search roster plans by name" aria-label="Keyword Search">
+                                    placeholder="Search off-day plans by name" aria-label="Keyword Search">
                                 <span class="input-group-text border-start-0 input-group-bg">
                                     <i class="mdi mdi-magnify text-muted"></i>
                                 </span>
@@ -67,21 +73,19 @@
                                     <th scope="col">#</th>
                                     <th scope="col">Plan Name</th>
                                     <th scope="col">Short Name</th>
-                                    <th scope="col">Repetition Days</th>
-                                    <th scope="col">Shift 1</th>
-                                    <th scope="col">Shift 2</th>
+                                    <th scope="col">Remuneration</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @php
-                                    $sl = 1; // In production: $sl = \App\HelperClass::indexNumberSerialization($plans);
+                                    $sl = 1; // In production: $sl = \App\HelperClass::indexNumberSerialization($offDayPlans);
                                 @endphp
-                                @foreach ($plans as $item)
+                                @foreach ($offDayPlans as $item)
                                     <tr>
                                         <th scope="row">{{ $sl++ }}</th>
-                                        <td>{{ $item->plan_name }}</td>
+                                        <td>{{ $item->name }}</td>
                                         <td>
                                             @if ($item->short_name)
                                                 <span class="badge text-bg-secondary">{{ $item->short_name }}</span>
@@ -90,21 +94,11 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <span class="badge text-bg-info">{{ $item->repetition_days }} Days</span>
-                                        </td>
-                                        <td>
-                                            @if ($item->shift_1_name)
-                                                <span class="badge text-bg-primary">{{ $item->shift_1_name }}</span>
-                                            @else
-                                                <span class="text-muted">-</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if ($item->shift_2_name)
-                                                <span class="badge text-bg-success">{{ $item->shift_2_name }}</span>
-                                            @else
-                                                <span class="text-muted">-</span>
-                                            @endif
+                                            <strong class="text-success">
+                                                {{ \App\HelperClass::getGeneralSetting()->currency ?? '৳' }}
+                                                {{ number_format($item->remuneration_amount, 2) }}
+                                            </strong>
+
                                         </td>
                                         <td>
                                             @if ($item->status == 'active')
@@ -113,6 +107,8 @@
                                                 <span class="badge text-bg-danger">Inactive</span>
                                             @endif
                                         </td>
+
+                                        
                                         <td>
                                             <a type="button" class="btn btn-primary btn-sm"
                                                 href="#" title="View">
@@ -143,7 +139,7 @@
 
                         {{-- Pagination - Uncomment in production --}}
                         {{-- <div class="mt-3">
-                            {{ $plans->links() }}
+                            {{ $offDayPlans->links() }}
                         </div> --}}
                     </div>
                 </div>

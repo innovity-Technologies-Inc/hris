@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class RosterPlan extends Model
 {
     protected $fillable = [
-        'name', 'status', 'short_name', 'description', 'swapping', 'first_shift_id', 'second_shift_id'
+        'name', 'short_name', 'swapping', 'description', 'status', 'first_shift_id', 'second_shift_id'
     ];
 
     public function getFirstShift(){

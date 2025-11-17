@@ -121,4 +121,10 @@ class RosterPlansController extends Controller
         }
 
     }
+    public function getShiftDetails($shift_id){
+        $shift = ShiftPlan::find($shift_id);
+        return response()->json([
+            'shift' => $shift
+        ]);
+    }
 }

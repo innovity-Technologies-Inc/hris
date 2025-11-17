@@ -27,6 +27,7 @@ use App\Http\Controllers\ShiftPlanController;
 use App\Http\Controllers\OrganizationStructureController;
 use App\Http\Controllers\OTPlanController;
 use App\Http\Controllers\LeavePlanController;
+use App\Http\Controllers\RosterPlansController;
 
 Route::get('test', function () {
    return view('plans.roster_plan.index');
@@ -294,6 +295,19 @@ Route::prefix('plans')->group(function () {
         });
     });
 
+    Route::prefix('roster-plans')->group(function () {
+        Route::controller(RosterPlansController::class)->group(function(){
+            Route::get('/', 'index')->name('plans.roster_plans.index');
+            Route::get('create', 'create')->name('plans.roster_plans.create');
+            Route::post('store', 'store')->name('plans.roster_plans.store');
+            Route::get('{id}', 'show')->name('plans.roster_plans.show');
+            Route::get('edit/{id}', 'edit')->name('plans.roster_plans.edit');
+            Route::put('update/{id}', 'update')->name('plans.roster_plans.update');
+            Route::delete('delete/{id}', 'delete')->name('plans.roster_plans.delete');
+            Route::post('import', 'import')->name('plans.roster_plans.import');
+        });
+    });
+
 });
 
 Route::controller(EmployeeProfileController::class)->group(function () {
@@ -303,6 +317,10 @@ Route::controller(EmployeeProfileController::class)->group(function () {
     Route::get('get-departments/{company_id}/{unit_id}/{division_id}', 'getDepartment');
     Route::get('get-sections/{company_id}/{unit_id}/{division_id}/{department_id}', 'getSection');
     Route::get('get-branches/{bank_id}', 'getBranchesByBank');
+});
+
+Route::controller(RosterPlansController::class)->group(function () {
+    Route::get('get-shift-details/{shift_id}', 'getShiftDetails');
 });
 
 Route::controller(OrganizationStructureController::class)->group(function () {
