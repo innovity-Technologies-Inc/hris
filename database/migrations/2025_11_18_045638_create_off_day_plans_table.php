@@ -11,15 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('roster_plans', function (Blueprint $table) {
+        Schema::create('off_day_plans', function (Blueprint $table) {
             $table->id()->index();
-            $table->string('name');
+            $table->string('name')->index();
             $table->string('short_name')->nullable();
-            $table->string('swapping')->nullable();
-            $table->longText('description')->nullable();
+            $table->time('start_time');
+            $table->time('end_time');
+            $table->unsignedBigInteger('grace_time');
+            $table->unsignedBigInteger('grace_time_before')->nullable();
+            $table->decimal('remuneration', 10, 2);
             $table->enum('status', ['active', 'inactive']);
-            $table->unsignedBigInteger('first_shift_id');
-            $table->unsignedBigInteger('second_shift_id');
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roster_plans');
+        Schema::dropIfExists('off_day_plans');
     }
 };

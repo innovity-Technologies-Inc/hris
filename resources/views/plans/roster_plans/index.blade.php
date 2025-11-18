@@ -57,7 +57,7 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <span class="badge text-bg-info">{{ $item->repetition_days }} Days</span>
+                                            <span class="badge text-bg-info">{{ $item->swapping }} Days</span>
                                         </td>
                                         <td>
                                             @if ($item->getFirstShift->name)

@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Imports\LeavePlansImport;
-use App\Models\LeavePlan;
+use App\Imports\OffDayPlansImport;
+use App\Models\OffDayPlan;
 use App\Services\PlanService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 
-class LeavePlanController extends Controller
+class OffDayPlansController extends Controller
 {
     protected $planServices;
 
@@ -18,36 +18,30 @@ class LeavePlanController extends Controller
         $this->planServices = $planServices;
     }
 
-    public function index(Request $request)
+    public function index()
     {
-        $title = 'Leave Plan';
+        $title = 'Off Day Plan';
         $section = 'Plans Setup';
-        $sub_section = 'Leave Plan';
-        $columns = ['name', 'short_name','leave_type'];
-        $term = $request->get('keyword');
-        $plans = $this->planServices->search(LeavePlan::class, $columns, [], [], $term, 20);
-//        dd($plans);
-        if ($request->ajax()) {
-            return view('plans.leave_plans.search_results', compact('plans'))->render();
-        }
-        return view('plans.leave_plans.index', compact('title', 'section', 'sub_section', 'plans'));
+        $sub_section = 'Off Day Plan';
+        $plans = $this->planServices->getPlans(OffDayPlan::class, 20);
+        return view('plans.off_day_plans.index', compact('title', 'section', 'sub_section', 'plans'));
     }
 
     public function create()
     {
-        $title = 'Create Leave Plan';
-        $section = 'Leave Plans';
+        $title = 'Create Off Day Plan';
+        $section = 'Off Day Plans';
         $sub_section = 'Create';
-        $section_url = route('plans.leave_plans.index');
-        return view('plans.leave_plans.form', compact('title', 'section', 'sub_section', 'section_url'));
+        $section_url = route('plans.off_day_plans.index');
+        return view('plans.off_day_plans.form', compact('title', 'section', 'sub_section', 'section_url'));
     }
 
     public function store(Request $request)
     {
-        $validated = $this->planServices->leavePlanValidation($request);
+        $validated = $this->planServices->offDayPlanValidation($request);
 
         try {
-            $this->planServices->planSave($validated, LeavePlan::class);
+            $this->planServices->planSave($validated, OffDayPlan::class);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return redirect()->back()->with([
@@ -56,38 +50,38 @@ class LeavePlanController extends Controller
             ]);
         }
 
-        return redirect()->route('plans.leave_plans.index')->with([
-            'message' => 'Leave Plan Created Successfully',
+        return redirect()->route('plans.off_day_plans.index')->with([
+            'message' => 'Off Day Plan Created Successfully',
             'alert-type' => 'success',
         ]);
     }
 
     public function show($id)
     {
-        $title = 'Leave Plan';
-        $section = 'Leave Plans';
+        $title = 'Off Day Plan';
+        $section = 'Off Day Plans';
         $sub_section = 'Show';
-        $section_url = route('plans.leave_plans.index');
-        $plan = $this->planServices->getPlanById($id, LeavePlan::class);
-        return view('plans.leave_plans.view', compact('title', 'section', 'sub_section', 'section_url', 'plan'));
+        $section_url = route('plans.off_day_plans.index');
+        $plan = $this->planServices->getPlanById($id, OffDayPlan::class);
+        return view('plans.off_day_plans.view', compact('title', 'section', 'sub_section', 'section_url', 'plan'));
     }
 
     public function edit($id)
     {
-        $title = 'Edit Leave Plan';
-        $section = 'Leave Plans';
+        $title = 'Edit Off Day Plan';
+        $section = 'Off Day Plans';
         $sub_section = 'Edit';
-        $section_url = route('plans.leave_plans.index');
-        $plan = $this->planServices->getPlanById($id, LeavePlan::class);
-        return view('plans.leave_plans.form', compact('title', 'section', 'sub_section', 'section_url', 'plan'));
+        $section_url = route('plans.off_day_plans.index');
+        $plan = $this->planServices->getPlanById($id, OffDayPlan::class);
+        return view('plans.off_day_plans.form', compact('title', 'section', 'sub_section', 'section_url', 'plan'));
     }
 
     public function update(Request $request, $id)
     {
-        $validated = $this->planServices->leavePlanValidation($request);
+        $validated = $this->planServices->offDayPlanValidation($request);
 
         try {
-            $this->planServices->planSave($validated, LeavePlan::class, $id);
+            $this->planServices->planSave($validated, OffDayPlan::class, $id);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return redirect()->back()->with([
@@ -96,8 +90,8 @@ class LeavePlanController extends Controller
             ]);
         }
 
-        return redirect()->route('plans.leave_plans.index')->with([
-            'message' => 'Leave Plan Updated Successfully',
+        return redirect()->route('plans.off_day_plans.index')->with([
+            'message' => 'Off Day Plan Updated Successfully',
             'alert-type' => 'success',
         ]);
     }
@@ -105,7 +99,7 @@ class LeavePlanController extends Controller
     public function delete($id)
     {
         try {
-            $this->planServices->planDelete(LeavePlan::class, $id);
+            $this->planServices->planDelete(OffDayPlan::class, $id);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return redirect()->back()->with([
@@ -115,7 +109,7 @@ class LeavePlanController extends Controller
         }
 
         return redirect()->back()->with([
-            'message' => 'Leave Plan Deleted Successfully',
+            'message' => 'Off Day Plan Deleted Successfully',
         ]);
     }
 
@@ -125,8 +119,8 @@ class LeavePlanController extends Controller
         ]);
 //        dd($request->all());
         try{
-            Excel::import(new LeavePlansImport(), $request->file('file'));
-            return redirect()->route('plans.leave_plans.index')->with([
+            Excel::import(new OffDayPlansImport(), $request->file('file'));
+            return redirect()->route('plans.off_day_plans.index')->with([
                 'message' => 'Imported Successfully',
                 'alert-type' => 'success'
             ]);
@@ -139,5 +133,4 @@ class LeavePlanController extends Controller
         }
 
     }
-
 }

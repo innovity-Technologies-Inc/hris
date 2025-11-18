@@ -3,39 +3,59 @@
 namespace App\Services;
 
 use App\Models\MealPlan;
+use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 
 class PlanService
 {
-    public function planSave($validated, $modelName, $id = null){
-        if (isset($id)){
+    public function search($modelName, $searchableColumns, $relationalModels = null, $filters = null, $searchTerm = null, $paginate = 10)
+    {
+        $flexSearch = new FlexSearch();
+        if ($relationalModels) {
+            $query = $modelName::with($relationalModels);
+        }else{
+            $query = $modelName::query();
+        }
+        $result = $flexSearch->apply($query, $filters ?? [], $searchTerm, $searchableColumns)->paginate($paginate);
+        return $result;
+    }
+
+    public function planSave($validated, $modelName, $id = null)
+    {
+        if (isset($id)) {
             $plan = $modelName::findOrFail($id);
             $plan->update($validated);
-        }else{
+        } else {
             $plan = $modelName::create($validated);
         }
         return $plan;
     }
-    public function planDelete($modelName, $id){
+
+    public function planDelete($modelName, $id)
+    {
         $plan = $modelName::findOrFail($id);
         $plan->delete();
     }
 
-    public function getPlans($modelName, $paginate){
+    public function getPlans($modelName, $paginate)
+    {
         $plans = $modelName::latest()->paginate($paginate);
         return $plans;
     }
 
-    public function getPlanByID($id, $modelName){
+    public function getPlanByID($id, $modelName)
+    {
         $plan = $modelName::findOrFail($id);
         return $plan;
     }
 
-    public function getMealPlans($type){
+    public function getMealPlans($type)
+    {
         $mealPlans = MealPlan::where('type', $type)->get();
         return $mealPlans;
     }
 
-    public function mealPlanValidation($request){
+    public function mealPlanValidation($request)
+    {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'type' => 'required|in:breakfast,lunch,snacks,dinner',
@@ -230,7 +250,8 @@ class PlanService
         return $validated;
     }
 
-    public function rosterPlanValidation($request){
+    public function rosterPlanValidation($request)
+    {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'short_name' => 'nullable|string|max:255',
@@ -239,7 +260,7 @@ class PlanService
             'status' => 'required|in:active,inactive',
             'first_shift_id' => 'required',
             'second_shift_id' => 'required',
-        ],[
+        ], [
             'name.required' => 'The name field is required.',
             'status.required' => 'Status is required.',
             'status.in' => 'Status must be either active or inactive.',
@@ -249,6 +270,34 @@ class PlanService
 
             'second_shift_id.required' => 'Second shift is required.',
             'second_shift_id.exists' => 'The selected second shift does not exist.',
+        ]);
+        return $validated;
+    }
+
+    public function offDayPlanValidation($request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'short_name' => 'nullable|string|max:255',
+
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i|after:start_time',
+
+            'grace_time' => 'required|integer|min:0',
+            'grace_time_before' => 'nullable|integer|min:0',
+
+            'remuneration' => 'required|numeric|min:0|max:99999999.99',
+            'status' => 'required|in:active,inactive'
+        ], [
+            'name.required' => 'Name is required.',
+            'start_time.required' => 'Start time is required.',
+            'end_time.after' => 'End time must be after start time.',
+
+            'grace_time.required' => 'Grace time is required.',
+            'grace_time.integer' => 'Grace time must be a number.',
+
+            'remuneration.required' => 'Remuneration amount is required.',
+            'remuneration.numeric' => 'Remuneration must be a valid number.',
         ]);
         return $validated;
     }

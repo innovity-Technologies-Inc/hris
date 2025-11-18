@@ -29,10 +29,10 @@ class RosterPlansImport implements ToCollection
                 'name' => $row[0],
                 'short_name' => $row[1],
                 'swapping' => $row[2],
-                'description' => $row[2],
-                'status' => strtolower($row[3] ?? 'active'),
-                'first_shift_id' => $this->getId(ShiftPlan::class, $row[4]),
-                'second_shift_id' => $this->getId(ShiftPlan::class, $row[5]),
+                'description' => $row[3],
+                'status' => strtolower($row[4] ?? 'active'),
+                'first_shift_id' => $this->getId(ShiftPlan::class, $row[5]),
+                'second_shift_id' => $this->getId(ShiftPlan::class, $row[6]),
             ]);
         });
     }

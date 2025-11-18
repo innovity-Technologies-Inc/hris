@@ -75,14 +75,14 @@
                             <label class="text-muted small">Clock In Time</label>
                             <p class="fw-semibold mb-0">
                                 <i class="mdi mdi-clock-start text-success me-1"></i>
-                                {{ $plan->getFirstShift->clock_in_time }}
+                                {{ \Carbon\Carbon::parse($plan->getFirstShift->clock_in_time)->format('H:i:s') }}
                             </p>
                         </div>
                         <div class="col-md-3 mb-3">
                             <label class="text-muted small">Clock Out Time</label>
                             <p class="fw-semibold mb-0">
                                 <i class="mdi mdi-clock-end text-danger me-1"></i>
-                                {{ $plan->getFirstShift->clock_out_time }}
+                                {{ \Carbon\Carbon::parse($plan->getFirstShift->clock_out_time)->format('H:i:s') }}
                             </p>
                         </div>
                         <div class="col-md-3 mb-3">
@@ -138,14 +138,14 @@
                             <label class="text-muted small">Clock In Time</label>
                             <p class="fw-semibold mb-0">
                                 <i class="mdi mdi-clock-start text-success me-1"></i>
-                                {{ $plan->getSecondShift->clock_in_time }}
+                                {{ \Carbon\Carbon::parse($plan->getSecondShift->clock_in_time)->format('H:i:s') }}
                             </p>
                         </div>
                         <div class="col-md-3 mb-3">
                             <label class="text-muted small">Clock Out Time</label>
                             <p class="fw-semibold mb-0">
                                 <i class="mdi mdi-clock-end text-danger me-1"></i>
-                                {{ $plan->getSecondShift->clock_out_time }}
+                                {{ \Carbon\Carbon::parse($plan->getSecondShift->clock_out_time)->format('H:i:s') }}
                             </p>
                         </div>
                         <div class="col-md-3 mb-3">

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('ot_plans', function (Blueprint $table) {
-            $table->id();
+            $table->id()->index();
 
             // Basic Info
             $table->string('name')->index();

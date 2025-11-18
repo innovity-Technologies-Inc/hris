@@ -82,6 +82,10 @@
                                    href='{{ route('plans.roster_plans.index') }}'>Roster Plans</a>
                             </li>
                             <li>
+                                <a class='tp-link @if (Route::is('plans.off_day_plans.*')) menuitem-active @endif'
+                                   href='{{ route('plans.off_day_plans.index') }}'>Off-Day Work Plans</a>
+                            </li>
+                            <li>
                                 <a class='tp-link @if (Route::is('plans.bulk_upload')) menuitem-active @endif'
                                     href='{{ route('plans.bulk_upload') }}'>Bulk Upload</a>
                             </li>

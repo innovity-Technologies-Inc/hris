@@ -28,6 +28,7 @@ use App\Http\Controllers\OrganizationStructureController;
 use App\Http\Controllers\OTPlanController;
 use App\Http\Controllers\LeavePlanController;
 use App\Http\Controllers\RosterPlansController;
+use App\Http\Controllers\OffDayPlansController;
 
 Route::get('test', function () {
    return view('plans.roster_plan.index');
@@ -305,6 +306,19 @@ Route::prefix('plans')->group(function () {
             Route::put('update/{id}', 'update')->name('plans.roster_plans.update');
             Route::delete('delete/{id}', 'delete')->name('plans.roster_plans.delete');
             Route::post('import', 'import')->name('plans.roster_plans.import');
+        });
+    });
+
+    Route::prefix('off-day-plans')->group(function () {
+        Route::controller(OffDayPlansController::class)->group(function(){
+            Route::get('/', 'index')->name('plans.off_day_plans.index');
+            Route::get('create', 'create')->name('plans.off_day_plans.create');
+            Route::post('store', 'store')->name('plans.off_day_plans.store');
+            Route::get('{id}', 'show')->name('plans.off_day_plans.show');
+            Route::get('edit/{id}', 'edit')->name('plans.off_day_plans.edit');
+            Route::put('update/{id}', 'update')->name('plans.off_day_plans.update');
+            Route::delete('delete/{id}', 'delete')->name('plans.off_day_plans.delete');
+            Route::post('import', 'import')->name('plans.off_day_plans.import');
         });
     });
 

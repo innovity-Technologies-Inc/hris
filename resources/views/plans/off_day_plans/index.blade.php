@@ -1,42 +1,3 @@
-@php
-    // Dummy data - In production, this would come from the controller
-    $offDayPlans = collect([
-        (object)[
-            'id' => 1,
-            'name' => 'Friday Off-Day Coverage',
-            'short_name' => 'FRI-OFF',
-            'start_time' => '00:00:00',
-            'end_time' => '23:59:59',
-            'grace_time_before' => 30,
-            'grace_time_after' => 30,
-            'remuneration_amount' => 1500.00,
-            'status' => 'active',
-        ],
-        (object)[
-            'id' => 2,
-            'name' => 'Weekend Emergency Plan',
-            'short_name' => 'WKD-EMG',
-            'start_time' => '08:00:00',
-            'end_time' => '20:00:00',
-            'grace_time_before' => 15,
-            'grace_time_after' => 45,
-            'remuneration_amount' => 2000.00,
-            'status' => 'active',
-        ],
-        (object)[
-            'id' => 3,
-            'name' => 'Holiday Special Coverage',
-            'short_name' => null,
-            'start_time' => '06:00:00',
-            'end_time' => '18:00:00',
-            'grace_time_before' => 0,
-            'grace_time_after' => 60,
-            'remuneration_amount' => 2500.00,
-            'status' => 'inactive',
-        ],
-    ]);
-@endphp
-
 @extends('structure.master')
 @section('content')
     {{-- Off-Day Plans List --}}
@@ -45,7 +6,7 @@
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-header">
-                    <a type="button" class="btn btn-warning btn-sm" href="#">
+                    <a type="button" class="btn btn-warning btn-sm" href="{{route('plans.off_day_plans.create')}}">
                         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                     </a>
                 </div><!-- end card header -->
@@ -80,9 +41,9 @@
                             </thead>
                             <tbody>
                                 @php
-                                    $sl = 1; // In production: $sl = \App\HelperClass::indexNumberSerialization($offDayPlans);
+                                    $sl = 1; // In production: $sl = \App\HelperClass::indexNumberSerialization($plans);
                                 @endphp
-                                @foreach ($offDayPlans as $item)
+                                @foreach ($plans as $item)
                                     <tr>
                                         <th scope="row">{{ $sl++ }}</th>
                                         <td>{{ $item->name }}</td>
@@ -96,7 +57,7 @@
                                         <td>
                                             <strong class="text-success">
                                                 {{ \App\HelperClass::getGeneralSetting()->currency ?? '৳' }}
-                                                {{ number_format($item->remuneration_amount, 2) }}
+                                                {{ number_format($item->remuneration, 2) }}
                                             </strong>
 
                                         </td>
@@ -108,19 +69,19 @@
                                             @endif
                                         </td>
 
-                                        
+
                                         <td>
                                             <a type="button" class="btn btn-primary btn-sm"
-                                                href="#" title="View">
+                                                href="{{route('plans.off_day_plans.show', $item->id)}}" title="View">
                                                 <i style="height: 12px; width: 12px" data-feather="eye"></i>
                                             </a>
 
                                             <a type="button" class="btn btn-warning btn-sm"
-                                                href="#" title="Edit">
+                                                href="{{route('plans.off_day_plans.edit', $item->id)}}" title="Edit">
                                                 <i style="height: 12px; width: 12px" data-feather="edit"></i>
                                             </a>
 
-                                            <form action="#" method="POST"
+                                            <form action="{{route('plans.off_day_plans.delete', $item->id)}}" method="POST"
                                                 style="display: inline-block">
                                                 @csrf
                                                 @method('DELETE')
@@ -139,7 +100,7 @@
 
                         {{-- Pagination - Uncomment in production --}}
                         {{-- <div class="mt-3">
-                            {{ $offDayPlans->links() }}
+                            {{ $plans->links() }}
                         </div> --}}
                     </div>
                 </div>

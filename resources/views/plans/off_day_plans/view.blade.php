@@ -1,20 +1,20 @@
-@php
-    $offDayPlan = (object)[
-        'id' => 1,
-        'name' => 'Friday Off-Day Coverage',
-        'short_name' => 'FRI-OFF',
-        'status' => 'active', // or 'inactive'
-        'start_time' => '12:00 AM',
-        'end_time' => '11:59 PM',
-        'grace_time_before' => 30,
-        'grace_time_after' => 30,
-        'remuneration_amount' => 1500.00,
-        'description' => 'Special compensation plan for employees working on designated off-days (Fridays). Includes full-day coverage with grace periods for attendance flexibility.',
-    ];
-@endphp
-
 @extends('structure.master')
 @section('content')
+
+    @php
+        $start = Carbon\Carbon::parse($plan->start_time);
+        $end   = Carbon\Carbon::parse($plan->end_time);
+
+        $diffMinutes = $start->diffInMinutes($end);
+
+        $hours = floor($diffMinutes / 60);
+        $minutes = $diffMinutes % 60;
+
+        $formatted_diff = $hours. ' : '.$minutes;
+
+        $start_time = $start->format('h:i A');
+        $end_time = $end->format('h:i A');
+    @endphp
 <div class="container-fluid mt-4">
     {{-- Page Header --}}
     <div class="mb-4">
@@ -30,21 +30,21 @@
             <h5 class="mb-0 fw-semibold">
                 <i class="mdi mdi-information-outline text-primary me-2"></i>Basic Off-Day Plan Information
             </h5>
-            <span class="badge bg-{{ $offDayPlan->status == 'active' ? 'success' : 'secondary' }}">
-                {{ ucfirst($offDayPlan->status) }}
+            <span class="badge bg-{{ $plan->status == 'active' ? 'success' : 'secondary' }}">
+                {{ ucfirst($plan->status) }}
             </span>
         </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label class="text-muted small">Plan Name</label>
-                    <p class="fw-semibold mb-0">{{ $offDayPlan->name }}</p>
+                    <p class="fw-semibold mb-0">{{ $plan->name }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <label class="text-muted small">Short Name</label>
                     <p class="fw-semibold mb-0">
-                        @if(isset($offDayPlan->short_name) && $offDayPlan->short_name)
-                            <span class="badge bg-secondary fs-6">{{ $offDayPlan->short_name }}</span>
+                        @if(isset($plan->short_name) && $plan->short_name)
+                            <span class="badge bg-secondary fs-6">{{ $plan->short_name }}</span>
                         @else
                             <span class="text-muted">-</span>
                         @endif
@@ -55,20 +55,11 @@
                     <p class="fw-semibold mb-0">
                         <span class="badge bg-success fs-6">
                             {{ \App\HelperClass::getGeneralSetting()->currency ?? '৳' }}
-                            {{ number_format($offDayPlan->remuneration_amount, 2) }}
+                            {{ number_format($plan->remuneration, 2) }}
                         </span>
                     </p>
                 </div>
             </div>
-
-            @if ($offDayPlan->description)
-                <div class="row">
-                    <div class="col-md-12 mb-3">
-                        <label class="text-muted small">Description</label>
-                        <p class="fw-semibold mb-0">{{ $offDayPlan->description }}</p>
-                    </div>
-                </div>
-            @endif
         </div>
     </div>
 
@@ -89,33 +80,21 @@
                         <label class="text-muted small">Start Time</label>
                         <p class="fw-semibold mb-0">
                             <i class="mdi mdi-clock-start text-success me-1"></i>
-                            {{ $offDayPlan->start_time }}
+                            {{ $start_time }}
                         </p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label class="text-muted small">End Time</label>
                         <p class="fw-semibold mb-0">
                             <i class="mdi mdi-clock-end text-danger me-1"></i>
-                            {{ $offDayPlan->end_time }}
+                            {{ $end_time }}
                         </p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label class="text-muted small">Duration</label>
                         <p class="fw-semibold mb-0">
                             <span class="badge bg-secondary fs-6">
-                                @php
-                                    $startTime = \Carbon\Carbon::parse($offDayPlan->start_time);
-                                    $endTime = \Carbon\Carbon::parse($offDayPlan->end_time);
-
-                                    // Handle overnight periods (end time is next day)
-                                    if ($endTime->lessThan($startTime)) {
-                                        $endTime->addDay();
-                                    }
-
-                                    // Round to nearest hour
-                                    $durationHours = round($startTime->diffInMinutes($endTime) / 60);
-                                @endphp
-                                {{ $durationHours }} hours
+                                {{ $formatted_diff }} hr
                             </span>
                         </p>
                     </div>
@@ -138,36 +117,36 @@
                 </h6>
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label class="text-muted small">Grace Time Before (Clock In)</label>
+                        <label class="text-muted small">Grace Time (Clock In)</label>
                         <p class="fw-semibold mb-2">
                             <span class="badge bg-warning text-dark fs-6">
                                 <i class="mdi mdi-clock-fast me-1"></i>
-                                {{ $offDayPlan->grace_time_before }} minutes
+                                {{ $plan->grace_time }} minutes
                             </span>
                         </p>
                         <small class="text-muted">
-                            Employees can clock in from:
+                            Employees can clock in until:
                             <strong>
                                 @php
-                                    $effectiveStart = \Carbon\Carbon::parse($offDayPlan->start_time)->subMinutes($offDayPlan->grace_time_before);
+                                    $effectiveStart = \Carbon\Carbon::parse($plan->start_time)->addMinutes($plan->grace_time);
                                 @endphp
                                 {{ $effectiveStart->format('h:i A') }}
                             </strong>
                         </small>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label class="text-muted small">Grace Time After (Clock Out)</label>
+                        <label class="text-muted small">Grace Time (Clock Out)</label>
                         <p class="fw-semibold mb-2">
                             <span class="badge bg-info fs-6">
                                 <i class="mdi mdi-clock-plus me-1"></i>
-                                {{ $offDayPlan->grace_time_after }} minutes
+                                {{ $plan->grace_time_before }} minutes
                             </span>
                         </p>
                         <small class="text-muted">
-                            Employees can clock out until:
+                            Employees can clock out after:
                             <strong>
                                 @php
-                                    $effectiveEnd = \Carbon\Carbon::parse($offDayPlan->end_time)->addMinutes($offDayPlan->grace_time_after);
+                                    $effectiveEnd = \Carbon\Carbon::parse($plan->end_time)->subMinutes($plan->grace_time_before);
                                 @endphp
                                 {{ $effectiveEnd->format('h:i A') }}
                             </strong>
@@ -179,8 +158,7 @@
                     <div class="col-md-12">
                         <div class="alert alert-info mb-0">
                             <i class="mdi mdi-information-outline me-2"></i>
-                            Grace periods allow attendance flexibility without penalty. Total grace time:
-                            <strong>{{ $offDayPlan->grace_time_before + $offDayPlan->grace_time_after }} minutes</strong>
+                            Grace periods allow attendance flexibility without penalty.
                         </div>
                     </div>
                 </div>
@@ -204,7 +182,7 @@
                     <label class="text-muted small d-block mb-2">Fixed Remuneration Amount</label>
                     <h2 class="fw-bold text-success mb-1">
                         {{ \App\HelperClass::getGeneralSetting()->currency ?? '৳' }}
-                        {{ number_format($offDayPlan->remuneration_amount, 2) }}
+                        {{ number_format($plan->remuneration, 2) }}
                     </h2>
                     <small class="text-muted">Per off-day worked</small>
                 </div>
@@ -212,70 +190,20 @@
                 <div class="alert alert-success mb-0">
                     <i class="mdi mdi-check-circle-outline me-2"></i>
                     Employees working during this off-day will receive a fixed payment of
-                    <strong>{{ \App\HelperClass::getGeneralSetting()->currency ?? '৳' }}{{ number_format($offDayPlan->remuneration_amount, 2) }}</strong>
+                    <strong>{{ \App\HelperClass::getGeneralSetting()->currency ?? '৳' }}{{ number_format($plan->remuneration, 2) }}</strong>
                 </div>
             </div>
         </div>
     </div>
 
-    {{-- Off-Day Plan Summary --}}
-    <div class="card border mb-4">
-        <div class="card-header bg-light">
-            <h5 class="mb-0 fw-semibold">
-                <i class="mdi mdi-chart-box text-info me-2"></i>Off-Day Plan Summary
-            </h5>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-4 mb-3">
-                    <label class="text-muted small">Total Duration</label>
-                    <p class="fw-semibold mb-0">
-                        <span class="badge bg-primary fs-6">
-                            {{ $durationHours }} hours
-                        </span>
-                    </p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <label class="text-muted small">Total Grace Time</label>
-                    <p class="fw-semibold mb-0">
-                        <span class="badge bg-warning text-dark fs-6">
-                            {{ $offDayPlan->grace_time_before + $offDayPlan->grace_time_after }} minutes
-                        </span>
-                    </p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <label class="text-muted small">Plan Status</label>
-                    <p class="fw-semibold mb-0">
-                        <span class="badge bg-{{ $offDayPlan->status == 'active' ? 'success' : 'secondary' }} fs-6">
-                            {{ ucfirst($offDayPlan->status) }}
-                        </span>
-                    </p>
-                </div>
-            </div>
-
-            <div class="row mt-2">
-                <div class="col-md-12">
-                    <div class="alert alert-{{ $offDayPlan->status == 'active' ? 'success' : 'secondary' }} mb-0">
-                        <i class="mdi mdi-{{ $offDayPlan->status == 'active' ? 'check-circle' : 'information' }}-outline me-2"></i>
-                        This off-day plan is currently <strong>{{ $offDayPlan->status }}</strong>
-                        @if($offDayPlan->status == 'active')
-                            and can be assigned to employees for off-day work scheduling.
-                        @else
-                            and cannot be used for off-day assignments until activated.
-                        @endif
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     {{-- Page Actions - Fixed at Bottom Right --}}
     <div class="d-flex float-end justify-content-right align-items-center mb-4">
         <div>
-            <a href="#" class="btn btn-primary me-2">
+            <a href="{{route('plans.off_day_plans.edit', $plan->id)}}" class="btn btn-primary me-2">
                 <i class="mdi mdi-pencil me-1"></i>Edit
             </a>
-            <a href="#" class="btn btn-secondary">
+            <a href="{{route('plans.off_day_plans.index')}}" class="btn btn-secondary">
                 <i class="mdi mdi-arrow-left me-1"></i>Back to List
             </a>
         </div>
