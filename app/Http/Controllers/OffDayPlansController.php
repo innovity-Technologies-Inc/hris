@@ -18,12 +18,18 @@ class OffDayPlansController extends Controller
         $this->planServices = $planServices;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $title = 'Off Day Plan';
         $section = 'Plans Setup';
         $sub_section = 'Off Day Plan';
-        $plans = $this->planServices->getPlans(OffDayPlan::class, 20);
+        $columns = ['name', 'short_name'];
+        $term = $request->get('keyword');
+        $plans = $this->planServices->search(OffDayPlan::class, $columns, [], [], $term, 20);
+
+        if ($request->ajax()) {
+            return view('plans.off_day_plans.search_results', compact('plans'))->render();
+        }
         return view('plans.off_day_plans.index', compact('title', 'section', 'sub_section', 'plans'));
     }
 

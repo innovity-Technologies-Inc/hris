@@ -35,16 +35,16 @@ class ShiftPlan extends Model
         'active_ind',
     ];
 
-    protected $casts = [
-        'clock_in_time' => 'datetime:H:i',
-        'clock_out_time' => 'datetime:H:i',
-        'breakfast_start_time' => 'datetime:H:i',
-        'breakfast_end_time' => 'datetime:H:i',
-        'lunch_start_time' => 'datetime:H:i',
-        'lunch_end_time' => 'datetime:H:i',
-        'snacks_start_time' => 'datetime:H:i',
-        'snacks_end_time' => 'datetime:H:i',
-        'dinner_start_time' => 'datetime:H:i',
-        'dinner_end_time' => 'datetime:H:i',
-    ];
+    // protected $casts = [
+    //     'clock_in_time' => 'datetime:H:i',
+    //     'clock_out_time' => 'datetime:H:i',
+    //     'breakfast_start_time' => 'datetime:H:i',
+    //     'breakfast_end_time' => 'datetime:H:i',
+    //     'lunch_start_time' => 'datetime:H:i',
+    //     'lunch_end_time' => 'datetime:H:i',
+    //     'snacks_start_time' => 'datetime:H:i',
+    //     'snacks_end_time' => 'datetime:H:i',
+    //     'dinner_start_time' => 'datetime:H:i',
+    //     'dinner_end_time' => 'datetime:H:i',
+    // ];
 }
