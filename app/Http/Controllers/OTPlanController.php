@@ -18,12 +18,19 @@ class OTPlanController extends Controller
         $this->planServices = $planServices;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $title = 'OT Plan';
         $section = 'Plans Setup';
         $sub_section = 'OT Plan';
-        $plans = $this->planServices->getPlans(OTPlan::class, 20);
+        $term = $request->get('keyword');
+        $columns = ['name', 'ot_type'];
+
+
+        $plans = $this->planServices->search(OTPlan::class, $columns, [], [], $term, 20);
+        if ($request->ajax()) {
+            return view('plans.ot_plans.search_results', compact('plans'))->render();
+        }
 //        dd($plans);
         return view('plans.ot_plans.index', compact('title', 'section', 'sub_section', 'plans'));
     }

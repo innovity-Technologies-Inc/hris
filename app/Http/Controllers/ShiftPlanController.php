@@ -16,11 +16,17 @@ class ShiftPlanController extends Controller
         $this->planServices = $planServices;
     }
 
-    public function index(){
+    public function index(Request $request){
         $title = 'Shift Plan';
         $section = 'Plans Setup';
         $sub_section = 'Shift Plan';
-        $plans = $this->planServices->getPlans(ShiftPlan::class, 20);
+        $term = $request->get('keyword');
+        $columns = ['name'];
+
+        $plans = $this->planServices->search(ShiftPlan::class, $columns, [], [], $term, 20);
+        if ($request->ajax()) {
+            return view('plans.shift_plans.search_results', compact('plans'))->render();
+        }
         return view('plans.shift_plans.index', compact('title', 'section', 'sub_section', 'plans'));
     }
     public function create(){

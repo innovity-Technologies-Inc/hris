@@ -18,11 +18,17 @@ class RosterPlansController extends Controller
         $this->planServices = $planServices;
     }
 
-    public function index(){
+    public function index(Request $request){
         $title = 'Roster Plan';
         $section = 'Plans Setup';
         $sub_section = 'Roster Plan';
-        $plans = $this->planServices->getPlans(RosterPlan::class, 20);
+        $term = $request->get('keyword');
+        $columns = ['name', 'short_name'];
+
+        $plans = $this->planServices->search(RosterPlan::class, $columns, [], [], $term, 20);
+        if ($request->ajax()) {
+            return view('plans.roster_plans.search_results', compact('plans'))->render();
+        }
         return view('plans.roster_plans.index', compact('title', 'section', 'sub_section', 'plans'));
     }
     public function create(){
