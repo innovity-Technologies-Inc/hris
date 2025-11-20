@@ -119,6 +119,23 @@
         @endif
 
 
+        @if(isset($employee->id))
+            <div class="col">
+                <a href="{{route('employees.profile.plans', $employee->id)}}"
+                   class="btn btn-outline-secondary w-100 py-3 text-decoration-none @if(request()->routeIs('employees.profile.plans')) active @endif">
+                    <span class="badge bg-secondary rounded-circle me-2">8</span>
+                    Plans
+                </a>
+            </div>
+        @else
+            <div class="col">
+                <button type="submit"
+                        class="btn btn-outline-secondary w-100 py-3 text-decoration-none information">
+                    <span class="badge bg-secondary rounded-circle me-2">8</span>
+                    Plans
+                </button>
+            </div>
+        @endif
 
 
     </div>

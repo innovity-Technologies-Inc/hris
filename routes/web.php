@@ -29,9 +29,11 @@ use App\Http\Controllers\OTPlanController;
 use App\Http\Controllers\LeavePlanController;
 use App\Http\Controllers\RosterPlansController;
 use App\Http\Controllers\OffDayPlansController;
+use App\Http\Controllers\EmployeePlansController;
+
 
 Route::get('test', function () {
-   return view('plans.roster_plan.index');
+   return view('employees.plans_assign.assign');
 });
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -194,7 +196,6 @@ Route::prefix('employees')->group(function () {
         Route::put('eligible-plans/{id}/update', 'update')->name('employees.eligible_plans.update');
         Route::get('profile/{id}/eligible-plans', 'show')->name('employees.profile.eligible_plans');
         Route::post('eligible-plans/import', 'import')->name('employees.eligible_plans.import');
-
         });
 
     Route::controller(EmployeeEducationExperienceTrainingController::class)->group(function(){
@@ -204,7 +205,6 @@ Route::prefix('employees')->group(function () {
         Route::get('education-information/edit/{id}', 'edit')->name('employees.education_information.edit');
         Route::put('education-information/{id}/update', 'update')->name('employees.education_information.update');
         Route::post('education-information/import', 'import')->name('employees.education_information.import');
-
     });
 
     Route::controller(EmployeeNomineeController::class)->group(function(){
@@ -233,6 +233,10 @@ Route::prefix('employees')->group(function () {
         Route::get('bank-accounts/edit/{id}', 'edit')->name('employees.bank_accounts.edit');
         Route::put('bank-accounts/{id}/update', 'update')->name('employees.bank_accounts.update');
         Route::post('bank-accounts/import', 'import')->name('employees.bank_accounts.import');
+    });
+
+    Route::controller(EmployeePlansController::class)->group(function () {
+        Route::get('profile/{id}/plans', 'plansView')->name('employees.profile.plans');
 
     });
 

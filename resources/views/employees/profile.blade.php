@@ -29,7 +29,8 @@
     @elseif(Route::currentRouteNamed('employees.profile.bank_accounts'))
         @include('employees.partials.profile_view.bank_accounts')
 
-
+    @elseif(Route::currentRouteNamed('employees.profile.plans'))
+        @include('employees.partials.profile_view.plans')
     @endif
 
 
