@@ -134,36 +134,6 @@
             </div>
         </div>
 
-        <!-- Timestamps & Metadata -->
-        <div class="card border mb-4">
-            <div class="card-header bg-light">
-                <h5 class="mb-0 fw-semibold">
-                    <i class="mdi mdi-clock-outline text-info me-2"></i>Record Information
-                </h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <!-- Created At -->
-                    <div class="col-md-6 mb-3">
-                        <label class="text-muted small">Created At</label>
-                        <p class="fw-semibold mb-0">
-                            <i class="mdi mdi-calendar-plus text-success me-1"></i>
-                            {{ $plan->created_at->format('M d, Y h:i A') }}
-                        </p>
-                    </div>
-
-                    <!-- Last Updated -->
-                    <div class="col-md-6 mb-3">
-                        <label class="text-muted small">Last Updated</label>
-                        <p class="fw-semibold mb-0">
-                            <i class="mdi mdi-calendar-edit text-warning me-1"></i>
-                            {{ $plan->updated_at->format('M d, Y h:i A') }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Page Actions -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <!-- Back Button -->
