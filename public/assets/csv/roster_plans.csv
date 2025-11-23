@@ -1,6 +1,6 @@
- Name,Short Name,Swapping,Description,Status,First Shift Name,Second Shift Name
-Alpha Team,A-Team,1,Primary roster for project Alpha.,Active,Morning 1,Morning 3
-Beta Squad,Beta,2,Backup roster for Beta operations.,Inactive,Morning 3,Morning 1
-Gamma Unit,Gamma,3,Ad-hoc tasks and on-call staff.,Active,Morning 1,Morning 3
-Delta Crew,Delta,7,Day-shift focused crew.,Active,Morning 3,Morning 1
-Epsilon Group,Eps,15,Flexible roster for overflow.,Inactive,Morning 3,Morning 1
+Roster name,short_name,swapping,description,status,first_shift_name,second_shift_name
+Roster Plan Alpha,RP-A,yes,Main morning + flexible overlap,active,Morning Shift A,Morning Shift B
+Roster Plan Bravo,RP-B,no,Split morning shifts for coverage,active,Morning Shift B,Morning Shift C
+Roster Plan Charlie,RP-C,yes,Extended morning rotation,inactive,Morning Shift C,Morning Shift D
+Roster Plan Delta,RP-D,no,Half-day + backup,active,Morning Shift D,Morning Shift E
+Roster Plan Echo,RP-E,yes,Flexible mix for part-timers,active,Morning Shift E,Morning Shift A

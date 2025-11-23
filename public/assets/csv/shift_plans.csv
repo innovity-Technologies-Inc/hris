@@ -1,6 +1,6 @@
-Name,Clock_in_time,Clock_out_time,Treat_as_full_day_minutes,Treat_as_half_day_minutes,Grace_time,Late_after_minutes,Excessive_late_after_minutes,Early_out_grace_minutes,Breakfast_status,Breakfast_start_time,Breakfast_end_time,Lunch_status,Lunch_start_time,Lunch_end_time,Snacks_status,Snacks_start_time,Snacks_end_time,Dinner_status,Dinner_start_time,Dinner_end_time,Active_ind
-Morning 1,9:30,16:00,480,240,10,15,30,5,active,7:45,8:15,inactive,,,inactive,,,inactive,,,active
-Morning 2,8:30,16:45,480,240,10,15,30,5,active,8:45,8:15,active,13:00,14:30,active,17:30,18:15,inactive,,,inactive
-Morning 3,8:30,17:30,480,240,10,15,30,5,active,8:45,8:00,active,13:15,14:15,inactive,,,active,20:30,21:45,active
-Morning 4,9:00,18:30,480,240,10,15,30,5,active,7:45,8:00,active,12:00,14:45,inactive,,,active,19:15,21:15,active
-Morning 5,9:00,17:45,480,240,10,15,30,5,active,7:45,9:15,inactive,,,inactive,,,inactive,,,active
+Shift_name,clock_in_time,clock_out_time,treat_as_full_day_minutes,treat_as_half_day_minutes,grace_time,late_after_minutes,excessive_late_after_minutes,early_out_grace_minutes,early_out_before,breakfast_status,breakfast_start_time,breakfast_end_time,lunch_status,lunch_start_time,lunch_end_time,snacks_status,snacks_start_time,snacks_end_time,dinner_status,dinner_start_time,dinner_end_time,Status
+Morning Shift A,8:00,16:30,480,240,10,5,30,5,16:25,active,10:00,10:15,active,13:00,13:30,inactive,,,inactive,,,active
+Morning Shift B,14:00,22:00,480,240,15,10,45,5,21:55,inactive,,,active,18:00,18:30,active,20:00,20:15,inactive,,,active
+Morning Shift C,22:00,6:00,480,240,0,0,60,10,5:50,inactive,,,inactive,,,inactive,,,active,2:00,2:30,active
+Morning Shift D,9:00,13:00,240,120,5,2,15,5,12:55,active,10:30,10:45,inactive,,,inactive,,,inactive,,,inactive
+Morning Shift E,7:30,12:30,300,150,,,,5,12:25,inactive,,,active,11:30,12:00,active,9:30,9:45,active,17:00,17:15,active
