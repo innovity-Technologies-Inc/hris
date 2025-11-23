@@ -69,8 +69,8 @@
                                                 days
                                             </span>
                                     </td>
-                                    <td>{{ date('d M Y', strtotime($plan['effective_from'])) }}</td>
-                                    <td>{{ date('d M Y', strtotime($plan['effective_to'])) }}</td>
+                                    <td>{{ date('d M Y', strtotime($plan['from'])) }}</td>
+                                    <td>{{ date('d M Y', strtotime($plan['to'])) }}</td>
                                     <td>
                                             <span class="badge bg-success">
                                                 <i class="mdi mdi-check-circle me-1"></i>{{ $plan['status'] }}

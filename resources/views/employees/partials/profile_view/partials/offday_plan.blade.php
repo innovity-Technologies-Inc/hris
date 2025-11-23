@@ -53,11 +53,11 @@
                                     <td><span
                                             class="badge bg-secondary-subtle text-secondary">#{{ $plan['id'] }}</span>
                                     </td>
-                                    <td><strong>{{ $plan['name'] }}</strong></td>
+                                    <td><strong>{{ $plan->getPlan->name }}</strong></td>
                                     <td>
-                                        @if (!empty($plan['short_name']))
+                                        @if (!empty($plan->getPlan->short_name))
                                             <span
-                                                class="badge bg-secondary-subtle text-secondary">{{ $plan['short_name'] }}</span>
+                                                class="badge bg-secondary-subtle text-secondary">{{ $plan->getPlan->short_name }}</span>
                                         @else
                                             <span class="text-muted">-</span>
                                         @endif
@@ -67,8 +67,8 @@
                                             ৳{{ number_format($plan['remuneration_amount'], 2) }}
                                         </strong>
                                     </td>
-                                    <td>{{ date('d M Y', strtotime($plan['effective_from'])) }}</td>
-                                    <td>{{ date('d M Y', strtotime($plan['effective_to'])) }}</td>
+                                    <td>{{ date('d M Y', strtotime($plan['from'])) }}</td>
+                                    <td>{{ date('d M Y', strtotime($plan['to'])) }}</td>
                                     <td>
                                             <span class="badge bg-success">
                                                 <i class="mdi mdi-check-circle me-1"></i>{{ $plan['status'] }}
@@ -131,11 +131,11 @@
                                     <td><span
                                             class="badge bg-secondary-subtle text-secondary">#{{ $plan['id'] }}</span>
                                     </td>
-                                    <td>{{ $plan['name'] }}</td>
+                                    <td>{{ $plan->getPlan->name }}</td>
                                     <td>
-                                        @if (!empty($plan['short_name']))
+                                        @if (!empty($plan->getPlan->short_name))
                                             <span
-                                                class="badge bg-light text-secondary">{{ $plan['short_name'] }}</span>
+                                                class="badge bg-light text-secondary">{{ $plan->getPlan->short_name }}</span>
                                         @else
                                             <span class="text-muted">-</span>
                                         @endif
@@ -145,8 +145,8 @@
                                                 ৳{{ number_format($plan['remuneration_amount'], 2) }}
                                             </span>
                                     </td>
-                                    <td>{{ date('d M Y', strtotime($plan['effective_from'])) }}</td>
-                                    <td>{{ date('d M Y', strtotime($plan['effective_to'])) }}</td>
+                                    <td>{{ date('d M Y', strtotime($plan['from'])) }}</td>
+                                    <td>{{ date('d M Y', strtotime($plan['to'])) }}</td>
                                     <td>
                                             <span class="badge bg-warning-subtle text-warning">
                                                 <i class="mdi mdi-clock-alert-outline me-1"></i>{{ $plan['status'] }}

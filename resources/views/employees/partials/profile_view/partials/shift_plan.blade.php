@@ -52,7 +52,7 @@
                                     <td><span
                                             class="badge bg-secondary-subtle text-secondary">#{{ $plan['id'] }}</span>
                                     </td>
-                                    <td><strong>{{ $plan['shift_name'] }}</strong></td>
+                                    <td><strong>{{ $plan->getPlan->name }}</strong></td>
                                     <td>
                                             <span class="badge bg-info-subtle text-secondary">
                                                 <i class="mdi mdi-clock-in me-1"></i>{{ $plan['clock_in'] }}
@@ -63,8 +63,8 @@
                                                 <i class="mdi mdi-clock-out me-1"></i>{{ $plan['clock_out'] }}
                                             </span>
                                     </td>
-                                    <td>{{ date('d M Y', strtotime($plan['effective_from'])) }}</td>
-                                    <td>{{ date('d M Y', strtotime($plan['effective_to'])) }}</td>
+                                    <td>{{ date('d M Y', strtotime($plan['from'])) }}</td>
+                                    <td>{{ date('d M Y', strtotime($plan['to'])) }}</td>
                                     <td>
                                             <span class="badge bg-success">
                                                 <i class="mdi mdi-check-circle me-1"></i>{{ $plan['status'] }}
@@ -127,7 +127,7 @@
                                     <td><span
                                             class="badge bg-secondary-subtle text-secondary">#{{ $plan['id'] }}</span>
                                     </td>
-                                    <td>{{ $plan['shift_name'] }}</td>
+                                    <td>{{ $plan->getPlan->name }}</td>
                                     <td>
                                             <span class="badge bg-light text-secondary">
                                                 <i class="mdi mdi-clock-in me-1"></i>{{ $plan['clock_in'] }}
@@ -138,8 +138,8 @@
                                                 <i class="mdi mdi-clock-out me-1"></i>{{ $plan['clock_out'] }}
                                             </span>
                                     </td>
-                                    <td>{{ date('d M Y', strtotime($plan['effective_from'])) }}</td>
-                                    <td>{{ date('d M Y', strtotime($plan['effective_to'])) }}</td>
+                                    <td>{{ date('d M Y', strtotime($plan['from'])) }}</td>
+                                    <td>{{ date('d M Y', strtotime($plan['to'])) }}</td>
                                     <td>
                                             <span class="badge bg-warning-subtle text-warning">
                                                 <i class="mdi mdi-clock-alert-outline me-1"></i>{{ $plan['status'] }}

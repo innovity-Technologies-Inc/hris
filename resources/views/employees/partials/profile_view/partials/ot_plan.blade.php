@@ -53,7 +53,7 @@
                                     <td><span
                                             class="badge bg-secondary-subtle text-secondary">#{{ $plan['id'] }}</span>
                                     </td>
-                                    <td><strong>{{ $plan['name'] }}</strong></td>
+                                    <td><strong>{{ $plan->getPlan->name }}</strong></td>
                                     <td>
                                             <span class="badge bg-info-subtle text-info">
                                                 {{ ucwords(str_replace('_', ' ', $plan['ot_type'])) }}
@@ -89,8 +89,8 @@
                                             @endif
                                         @endif
                                     </td>
-                                    <td>{{ date('d M Y', strtotime($plan['effective_from'])) }}</td>
-                                    <td>{{ date('d M Y', strtotime($plan['effective_to'])) }}</td>
+                                    <td>{{ date('d M Y', strtotime($plan['from'])) }}</td>
+                                    <td>{{ date('d M Y', strtotime($plan['to'])) }}</td>
                                     <td>
                                             <span class="badge bg-success">
                                                 <i class="mdi mdi-check-circle me-1"></i>{{ $plan['status'] }}
@@ -154,7 +154,7 @@
                                     <td><span
                                             class="badge bg-secondary-subtle text-secondary">#{{ $plan['id'] }}</span>
                                     </td>
-                                    <td>{{ $plan['name'] }}</td>
+                                    <td>{{ $plan->getPlan->name }}</td>
                                     <td>
                                             <span class="badge bg-light text-secondary">
                                                 {{ ucwords(str_replace('_', ' ', $plan['ot_type'])) }}
@@ -190,8 +190,8 @@
                                             @endif
                                         @endif
                                     </td>
-                                    <td>{{ date('d M Y', strtotime($plan['effective_from'])) }}</td>
-                                    <td>{{ date('d M Y', strtotime($plan['effective_to'])) }}</td>
+                                    <td>{{ date('d M Y', strtotime($plan['from'])) }}</td>
+                                    <td>{{ date('d M Y', strtotime($plan['to'])) }}</td>
                                     <td>
                                             <span class="badge bg-warning-subtle text-warning">
                                                 <i class="mdi mdi-clock-alert-outline me-1"></i>{{ $plan['status'] }}

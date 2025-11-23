@@ -135,7 +135,7 @@
                                                     class="mdi mdi-silverware-fork-knife me-1"></i>{{ $plan->type }}
                                             </span>
                                     </td>
-                                    <td>{{ $plan->name }}</td>
+                                    <td>{{ $plan->getPlan->name }}</td>
                                     <td><span
                                             class="text-success fw-semibold">৳{{ number_format($plan->daily_cost ?? 0) }}</span>
                                     </td>

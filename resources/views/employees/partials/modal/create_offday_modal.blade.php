@@ -19,7 +19,7 @@
                                 <option value="">-- Choose Plan --</option>
                                 @foreach ($offDayPlans as $plan)
                                     <option value="{{ $plan->id }}">
-                                        {{ $plan->name }}
+                                        {{ $plan->getPlan->name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -29,7 +29,7 @@
                                 <i class="mdi mdi-calendar-start text-success me-1"></i>
                                 Effective From <span class="text-danger">*</span>
                             </label>
-                            <input type="date" id="modal_offday_effective_from" name="effective_from"
+                            <input type="date" id="modal_offday_effective_from" name="from"
                                 class="form-control" value="{{ date('Y-m-d') }}" required>
                         </div>
                         <div class="col-md-6">
@@ -37,7 +37,7 @@
                                 <i class="mdi mdi-calendar-end text-danger me-1"></i>
                                 Effective To <span class="text-danger">*</span>
                             </label>
-                            <input type="date" id="modal_offday_effective_to" name="effective_to"
+                            <input type="date" id="modal_offday_effective_to" name="to"
                                 class="form-control" required>
                         </div>
                     </div>

@@ -27,7 +27,7 @@
                             <select id="modal_shift_plan_id" name="shift_plan_id" class="form-select" required>
                                 <option value="">-- Choose Plan --</option>
                                 @foreach ($shiftPlans as $plan)
-                                    <option value="{{$plan->id}}">{{$plan->name}}</option>
+                                    <option value="{{$plan->id}}">{{ $plan->getPlan->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -38,7 +38,7 @@
                                 <i class="mdi mdi-calendar-start text-success me-1"></i>
                                 Effective From <span class="text-danger">*</span>
                             </label>
-                            <input type="date" id="modal_shift_effective_from" name="effective_from"
+                            <input type="date" id="modal_shift_effective_from" name="from"
                                 class="form-control" value="{{ date('Y-m-d') }}" required>
                         </div>
 
@@ -48,7 +48,7 @@
                                 <i class="mdi mdi-calendar-end text-danger me-1"></i>
                                 Effective To <span class="text-danger">*</span>
                             </label>
-                            <input type="date" id="modal_shift_effective_to" name="effective_to" class="form-control"
+                            <input type="date" id="modal_shift_effective_to" name="to" class="form-control"
                                 required>
                         </div>
                     </div>

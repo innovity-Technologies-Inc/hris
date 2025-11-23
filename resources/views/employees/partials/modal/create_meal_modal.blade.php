@@ -26,10 +26,11 @@
                             </label>
                             <select id="modal_meal_type" name="meal_type" class="form-select" required>
                                 <option value="">-- Select Meal Type --</option>
-                                    <option value="breakfast">Breakfast</option>
-                                    <option value="lunch">Lunch</option>
-                                    <option value="snacks">Snacks</option>
-                                    <option value="dinner">Dinner</option>
+                                <option value="Breakfast">Breakfast</option>
+                                <option value="Lunch">Lunch</option>
+                                <option value="Snacks">Snacks</option>
+                                <option value="Dinner">Dinner</option>
+
                             </select>
                         </div>
 
@@ -41,6 +42,13 @@
                             </label>
                             <select id="modal_meal_plan_id" name="meal_plan_id" class="form-select" required>
                                 <option value="">-- Choose Plan --</option>
+                                @foreach ($mealPlans as $plan)
+                                    <option value="{{ $plan->id }}"
+                                        data-plan-name="{{ $plan->getPlan->name }}"
+                                        data-plan-price="{{ $plan->getPlan->price }}">
+                                        {{ $plan->getPlan->name }}
+                                    </option>
+                                @endforeach
 
                             </select>
                         </div>
@@ -51,7 +59,7 @@
                                 <i class="mdi mdi-calendar-start text-success me-1"></i>
                                 Effective From <span class="text-danger">*</span>
                             </label>
-                            <input type="date" id="modal_effective_from" name="effective_from" class="form-control"
+                            <input type="date" id="modal_effective_from" name="from" class="form-control"
                                 value="{{ date('Y-m-d') }}" required>
                         </div>
 
@@ -61,7 +69,7 @@
                                 <i class="mdi mdi-calendar-end text-danger me-1"></i>
                                 Effective To <span class="text-danger">*</span>
                             </label>
-                            <input type="date" id="modal_effective_to" name="effective_to" class="form-control"
+                            <input type="date" id="modal_effective_to" name="to" class="form-control"
                                 required>
                         </div>
                     </div>
