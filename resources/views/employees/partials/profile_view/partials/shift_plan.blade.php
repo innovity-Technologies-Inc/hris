@@ -27,11 +27,11 @@
                         <i class="mdi mdi-check-circle text-success fs-5 me-2"></i>
                         <h6 class="mb-0 fw-semibold text-success">Active Shift Plan Assignments</h6>
                     </div>
-                    <span class="badge bg-success">{{ count($activeShiftPLan) }} Active</span>
+                    <span class="badge bg-success">{{$totalActiveShiftPlan}} Active</span>
                 </div>
             </div>
             <div class="card-body p-0">
-                @if (count($activeShiftPLan) > 0)
+                @if ($totalActiveShiftPlan > 0)
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead class="table-light">
@@ -102,11 +102,11 @@
                         <i class="mdi mdi-history text-secondary fs-5 me-2"></i>
                         <h6 class="mb-0 fw-semibold text-secondary">Previous Shift Plan Assignments</h6>
                     </div>
-                    <span class="badge bg-secondary">{{ count($previousShiftPlans) }} Records</span>
+                    <span class="badge bg-secondary">{{ $totalPreviousShiftPlan }} Records</span>
                 </div>
             </div>
             <div class="card-body p-0">
-                @if (count($previousShiftPlans) > 0)
+                @if ($totalPreviousShiftPlan > 0)
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead class="table-light">

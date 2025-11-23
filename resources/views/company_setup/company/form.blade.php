@@ -1,5 +1,14 @@
 @extends('structure.master')
 @section('content')
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
     {{--    Form--}}
 
@@ -134,6 +143,9 @@
                                             <input type="file" class="form-control filepond" name="logo">
                                         </div>
                                     </div>
+                                    @error('logo')
+                                    <small class="text-danger">{{$message}}</small>
+                                    @enderror
 
                                 </div>
 

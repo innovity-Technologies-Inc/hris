@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('plan_id')->index();
             $table->date('from');
             $table->date('to');
-            $table->enum('status', ['Active', 'Inactive'])->default('Active');
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
     }

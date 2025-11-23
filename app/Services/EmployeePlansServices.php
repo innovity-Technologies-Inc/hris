@@ -2,17 +2,24 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\DB;
+
 class EmployeePlansServices
 {
-    public function planSave($validated, $modelName, $id = null)
+    public function planSave($validated, $modelName)
     {
-        if (isset($id)) {
-            $plan = $modelName::findOrFail($id);
-            $plan->update($validated);
-        } else {
+        $validated['status'] = 'active';
+        $active_plan = $modelName::where('status', 'active')->first();
+        if (empty($active_plan)) {
             $plan = $modelName::create($validated);
+            return $plan;
+        }else{
+            DB::transaction(function () use ($validated, $modelName, $active_plan) {
+                $active_plan->update(['status' => 'inactive']);
+                $plan = $modelName::create($validated);
+                return $plan;
+            });
         }
-        return $plan;
     }
 
     public function planDelete($modelName, $id)

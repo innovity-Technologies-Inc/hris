@@ -27,7 +27,7 @@
                             <select id="modal_shift_plan_id" name="shift_plan_id" class="form-select" required>
                                 <option value="">-- Choose Plan --</option>
                                 @foreach ($shiftPlans as $plan)
-                                    <option value="{{$plan->id}}">{{ $plan->getPlan->name }}</option>
+                                    <option value="{{$plan->id}}">{{ $plan->name }}</option>
                                 @endforeach
                             </select>
                         </div>

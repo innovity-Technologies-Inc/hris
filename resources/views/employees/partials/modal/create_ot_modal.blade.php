@@ -19,7 +19,7 @@
                                 <option value="">-- Choose Plan --</option>
                                 @foreach ($otPlans as $plan)
                                     <option value="{{ $plan->id }}">
-                                        {{ $plan->getPlan->name }}
+                                        {{ $plan->name }}
                                     </option>
                                 @endforeach
                             </select>

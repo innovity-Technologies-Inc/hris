@@ -18,6 +18,7 @@
                     @csrf
 
                     <div class="row g-3">
+                        <input type="hidden" name="employee_id" value="{{ $employee->id }}">
                         {{-- Meal Type --}}
                         <div class="col-md-6">
                             <label for="modal_meal_type" class="form-label fw-semibold">
@@ -26,10 +27,10 @@
                             </label>
                             <select id="modal_meal_type" name="meal_type" class="form-select" required>
                                 <option value="">-- Select Meal Type --</option>
-                                <option value="Breakfast">Breakfast</option>
-                                <option value="Lunch">Lunch</option>
-                                <option value="Snacks">Snacks</option>
-                                <option value="Dinner">Dinner</option>
+                                <option value="breakfast">Breakfast</option>
+                                <option value="lunch">Lunch</option>
+                                <option value="snacks">Snacks</option>
+                                <option value="dinner">Dinner</option>
 
                             </select>
                         </div>
@@ -40,15 +41,8 @@
                                 <i class="mdi mdi-food text-success me-1"></i>
                                 Select Meal Plan <span class="text-danger">*</span>
                             </label>
-                            <select id="modal_meal_plan_id" name="meal_plan_id" class="form-select" required>
+                            <select id="modal_meal_plan_id" name="plan_id" class="form-select" required>
                                 <option value="">-- Choose Plan --</option>
-                                @foreach ($mealPlans as $plan)
-                                    <option value="{{ $plan->id }}"
-                                        data-plan-name="{{ $plan->getPlan->name }}"
-                                        data-plan-price="{{ $plan->getPlan->price }}">
-                                        {{ $plan->getPlan->name }}
-                                    </option>
-                                @endforeach
 
                             </select>
                         </div>
@@ -109,8 +103,8 @@
                                     {{-- Daily Cost --}}
                                     <div class="col-md-4">
                                         <div class="border-start border-success border-3 ps-3">
-                                            <small class="text-muted d-block">Daily Rate</small>
-                                            <strong id="modal-detail-price" class="text-success fs-5">৳0</strong>
+                                            <small class="text-muted d-block">Cost ({{\App\HelperClass::getCurrency()}})</small>
+                                            <strong id="modal-detail-price" class="text-success fs-5"></strong>
                                             <small class="text-muted">/day</small>
                                         </div>
                                     </div>
@@ -136,103 +130,97 @@
     </div>
 </div>
 
-{{-- Modal JavaScript --}}
+
+<script src="{{asset('assets/libs/jquery/jquery.min.js')}}"></script>
+
+
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const modalPlanSelector = document.getElementById('modal_meal_plan_id');
-        const modalMealType = document.getElementById('modal_meal_type');
-        const modalPlanDetails = document.getElementById('modal-plan-details');
-        const modal = document.getElementById('createMealPlanModal');
+    $(function() {
 
-        // Detail elements
-        const detailType = document.getElementById('modal-detail-type');
-        const detailName = document.getElementById('modal-detail-name');
-        const detailPrice = document.getElementById('modal-detail-price');
-
-        // Add transition styles
-        if (modalPlanDetails) {
-            modalPlanDetails.style.transition = 'all 0.3s ease';
-            modalPlanDetails.style.opacity = '0';
+        function loadMeals(mealType, selectedMeal = null) {
+            if (mealType) {
+                $.get('/get-meal-plans/' + mealType, function(data) {
+                    let $gradeSelect = $('#modal_meal_plan_id');
+                    $gradeSelect.html('<option value="">-- Select --</option>');
+                    $.each(data, function(key, value) {
+                        let selected = (selectedMeal == value.id) ? 'selected' : '';
+                        $gradeSelect.append('<option value="'+ value.id +'" '+selected+'>'+ value.name +'</option>');
+                    });
+                });
+            }
         }
 
-        // Update plan type when meal type changes
-        if (modalMealType) {
-            modalMealType.addEventListener('change', function() {
-                if (detailType && this.value) {
-                    detailType.textContent = this.value;
-                }
-            });
+        // --- Change Event ---
+        $('#modal_meal_type').on('change', function() {
+            loadMeals($(this).val());
+        });
+
+        // --- Auto-load existing values from DB when editing ---
+        @if(isset($employee_meal_info))
+        let mealType = "{{ old('modal_meal_type', $employee_meal_info->modal_meal_type ?? '') }}";
+        let meals  = "{{ old('modal_meal_plan_id', $employee_meal_info->modal_meal_plan_id ?? '') }}";
+
+        if (mealType) {
+            loadMeals(mealType, meals);
+        }
+        @endif
+
+    });
+</script>
+
+<script>
+    $(function() {
+
+        function loadMeals(mealType, selectedMeal = null) {
+            if (mealType) {
+                $.get('/get-meal-plans/' + mealType, function(data) {
+                    let $select = $('#modal_meal_plan_id');
+                    $select.html('<option value="">-- Select --</option>');
+
+                    $.each(data, function(key, value) {
+                        let selected = (selectedMeal == value.id) ? 'selected' : '';
+                        $select.append('<option value="'+ value.id +'" '+selected+'>'+ value.name +'</option>');
+                    });
+                });
+            }
         }
 
-        // Handle plan selection
-        if (modalPlanSelector) {
-            modalPlanSelector.addEventListener('change', function() {
-                const selectedOption = this.options[this.selectedIndex];
+        // ============================
+        // 🚀 Show Plan Details
+        // ============================
+        $('#modal_meal_plan_id').on('change', function() {
+            let planId = $(this).val();
 
-                if (this.value) {
-                    // Extract plan data
-                    const planName = selectedOption.getAttribute('data-plan-name');
-                    const planPrice = parseInt(selectedOption.getAttribute('data-plan-price'));
+            if (planId) {
+                $.ajax({
+                    url: "/get-meal-plan-details/" + planId,
+                    type: "GET",
+                    success: function(data) {
 
-                    // Get selected meal type
-                    const mealTypeSelect = document.getElementById('modal_meal_type');
-                    const mealType = mealTypeSelect ? mealTypeSelect.value : '-';
+                        // Show details block
+                        $('#modal-plan-details').show();
 
-                    // Update details
-                    if (detailType) detailType.textContent = mealType;
-                    if (detailName) detailName.textContent = planName;
-                    if (detailPrice) detailPrice.textContent = '৳' + planPrice.toLocaleString();
+                        // Update fields
+                        $('#modal-detail-type').text(data.type ?? '-');
+                        $('#modal-detail-name').text(data.name ?? '-');
+                        $('#modal-detail-price').text(data.cost ?? '0');
+                    }
+                });
+            } else {
+                $('#modal-plan-details').hide();
+            }
+        });
 
-                    // Show details with smooth animation
-                    modalPlanDetails.style.display = 'block';
-                    setTimeout(() => {
-                        modalPlanDetails.style.opacity = '1';
-                    }, 10);
-                } else {
-                    // Hide details
-                    modalPlanDetails.style.opacity = '0';
-                    setTimeout(() => {
-                        modalPlanDetails.style.display = 'none';
-                    }, 300);
-                }
-            });
+        // Load meals if editing
+        @if(isset($employee_meal_info))
+        let mealType = "{{ old('modal_meal_type', $employee_meal_info->modal_meal_type ?? '') }}";
+        let meals  = "{{ old('modal_meal_plan_id', $employee_meal_info->modal_meal_plan_id ?? '') }}";
+
+        if (mealType) {
+            loadMeals(mealType, meals);
         }
+        @endif
 
-        // Reset modal when closed
-        if (modal) {
-            modal.addEventListener('hidden.bs.modal', function() {
-                document.getElementById('createMealPlanForm').reset();
-                if (modalPlanDetails) {
-                    modalPlanDetails.style.display = 'none';
-                    modalPlanDetails.style.opacity = '0';
-                }
-            });
-        }
     });
 
-    // Form submission handler
-    function submitModalForm() {
-        const form = document.getElementById('createMealPlanForm');
-
-        if (form.checkValidity()) {
-            // In production, submit the form via AJAX or normal submission
-            const formData = new FormData(form);
-
-            console.log('Form Data:');
-            for (let [key, value] of formData.entries()) {
-                console.log(key + ': ' + value);
-            }
-
-            alert('Assignment created successfully!\n(In production, this would submit to your Laravel route)');
-
-            // Close modal
-            const modal = bootstrap.Modal.getInstance(document.getElementById('createMealPlanModal'));
-            modal.hide();
-
-            // Optionally reload page or update table
-            // location.reload();
-        } else {
-            form.reportValidity();
-        }
-    }
 </script>
