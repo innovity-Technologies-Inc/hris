@@ -28,11 +28,11 @@
                         <i class="mdi mdi-check-circle text-success fs-5 me-2"></i>
                         <h6 class="mb-0 fw-semibold text-success">Active Roster Plan Assignments</h6>
                     </div>
-                    <span class="badge bg-success">{{ count($activeRosterPLan) }} Active</span>
+                    <span class="badge bg-success">{{ $totalActiveRosterPlan }} Active</span>
                 </div>
             </div>
             <div class="card-body p-0">
-                @if (count($activeRosterPLan) > 0)
+                @if ($totalActiveRosterPlan)
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead class="table-light">
@@ -108,11 +108,11 @@
                         <i class="mdi mdi-history text-secondary fs-5 me-2"></i>
                         <h6 class="mb-0 fw-semibold text-secondary">Previous Roster Plan Assignments</h6>
                     </div>
-                    <span class="badge bg-secondary">{{ count($previousRosterPlans) }} Records</span>
+                    <span class="badge bg-secondary">{{ $totalPreviousRosterPlan }} Records</span>
                 </div>
             </div>
             <div class="card-body p-0">
-                @if (count($previousRosterPlans) > 0)
+                @if ($totalPreviousRosterPlan > 0)
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead class="table-light">

@@ -70,13 +70,11 @@
                                             class="btn btn-outline-dark btn-sm w-100 text-uppercase fw-semibold"
                                             style="font-size: 0.75rem; letter-spacing: 0.5px;" data-bs-toggle="modal"
                                             data-bs-target="#bulkUploadModal" data-section="meal-plan"
-                                            data-section-name="Meal Plan" data-section-number="1"
-                                            data-form-action="{{ route('plans.meal_plans.import') }}"
-                                            data-excel-link="{{ asset('assets/excel/employee_bank_account_details.xlsx') }}"
-                                            data-csv-link="{{ asset('assets/csv/employee_bank_account_details.csv') }}">
-                                            <i class="bi bi-upload me-2"></i>Upload
-                                        </button>
-                                    </div>
+                                            data-section-name="Meal Plan" data-section-number="1" data-form-action="{{route('plans.meal_plans.import')}}"
+                                            data-excel-link="{{asset('assets/excel/meal_plans.xlsx')}}"
+                                            data-csv-link="{{asset('assets/csv/meal_plans.csv')}}">
+                                        <i class="bi bi-upload me-2"></i>Upload
+                                    </button>
                                 </div>
                             </div>
 

@@ -350,6 +350,15 @@ Route::controller(EmployeeProfileController::class)->group(function () {
     Route::get('get-branches/{bank_id}', 'getBranchesByBank');
 });
 
+Route::controller(EmployeePlansController::class)->group(function (){
+    Route::get('get-meal-plans/{type}', 'getMealPlanByType');
+    Route::get('get-meal-plan-details/{id}', 'getMealPlanDetails');
+    Route::get('get-offday-plan-details/{id}', 'getOffDayPlanDetails');
+    Route::post('/assign-off-day-plan', 'assignOffDayPlan');
+
+
+});
+
 Route::controller(RosterPlansController::class)->group(function () {
     Route::get('get-shift-details/{shift_id}', 'getShiftDetails');
 });

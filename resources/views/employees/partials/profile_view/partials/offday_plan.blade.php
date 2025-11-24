@@ -28,11 +28,11 @@
                         <i class="mdi mdi-check-circle text-success fs-5 me-2"></i>
                         <h6 class="mb-0 fw-semibold text-success">Active Off Day Plan Assignments</h6>
                     </div>
-                    <span class="badge bg-success">{{ count($activeOffDayPLan) }} Active</span>
+                    <span class="badge bg-success">{{ $totalActiveOffDayPlan }} Active</span>
                 </div>
             </div>
             <div class="card-body p-0">
-                @if (count($activeOffDayPLan) > 0)
+                @if ($totalActiveOffDayPlan > 0)
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead class="table-light">
@@ -106,11 +106,11 @@
                         <i class="mdi mdi-history text-secondary fs-5 me-2"></i>
                         <h6 class="mb-0 fw-semibold text-secondary">Previous Off Day Plan Assignments</h6>
                     </div>
-                    <span class="badge bg-secondary">{{ count($previousOffDayPlans) }} Records</span>
+                    <span class="badge bg-secondary">{{ $totalPreviousOffDayPlan }} Records</span>
                 </div>
             </div>
             <div class="card-body p-0">
-                @if (count($previousOffDayPlans) > 0)
+                @if ($totalPreviousOffDayPlan > 0)
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead class="table-light">
