@@ -7,7 +7,7 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form id="createOffDayPlanForm" method="POST" action="/assign-off-day-plan">
+                <form id="createOffDayPlanForm" method="POST" action="{{route('employees.profile.plans.store', 'offday-plans')}}">
                     @csrf
                     <input type="hidden" name="employee_id" value="{{ $employee->id }}">
                     <div class="row g-3">
@@ -139,66 +139,45 @@
     });
 </script>
 
+
 <script>
     function submitOffDayModalForm() {
 
         let form = $('#createOffDayPlanForm');
         let submitBtn = $('.btn.btn-primary', form);
 
-        // Disable button & show loading
         submitBtn.prop('disabled', true).html(`<i class="mdi mdi-loading mdi-spin me-1"></i> Saving...`);
 
         $.ajax({
-            url: form.attr('action'),   // your form action URL
+            url: form.attr('action'),
             type: "POST",
             data: form.serialize(),
             success: function (response) {
-
-                // Show success message (Toastr, SweetAlert, etc.)
                 Swal.fire({
                     icon: 'success',
                     title: 'Success',
                     text: response.message ?? "Off Day Plan Assigned Successfully!",
                 });
 
+                // Replace tables
+                $('#activeOffdayTableWrapper').html($(response.tableHtml).find('#activeOffdayTableWrapper').html());
+                $('#previousOffdayTableWrapper').html($(response.tableHtml).find('#previousOffdayTableWrapper').html());
+
                 // Reset form & hide modal
                 form.trigger('reset');
                 $('#modal-offday-plan-details').hide();
                 $('#createOffDayPlanModal').modal('hide');
 
-                // Optionally reload a table or list
-                if (typeof loadOffdayTable === 'function') {
-                    loadOffdayTable();
-                }
-
-                // Re-enable submit button
                 submitBtn.prop('disabled', false).html(`<i class="mdi mdi-check-circle me-1"></i> Create Assignment`);
             },
             error: function (xhr) {
-
-                // Handle Laravel validation errors
-                if (xhr.status === 422) {
+                let message = 'Something went wrong!';
+                if(xhr.status === 422){
                     let errors = xhr.responseJSON.errors;
-                    let message = "";
-
-                    $.each(errors, function (key, value) {
-                        message += value + "<br>";
-                    });
-
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Validation Error',
-                        html: message
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Something went wrong!'
-                    });
+                    message = '';
+                    $.each(errors, function(key, val){ message += val + "<br>"; });
                 }
-
-                // Re-enable button
+                Swal.fire({ icon:'error', title:'Error', html: message });
                 submitBtn.prop('disabled', false).html(`<i class="mdi mdi-check-circle me-1"></i> Create Assignment`);
             }
         });
