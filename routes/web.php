@@ -236,7 +236,10 @@ Route::prefix('employees')->group(function () {
     });
 
     Route::controller(EmployeePlansController::class)->group(function () {
-        Route::get('profile/{id}/plans', 'plansView')->name('employees.profile.plans');
+        Route::get('profile/{id}/plans/{types}', 'plansView')->name('employees.profile.plans');
+        Route::get('profile/plans/{types}/store', 'assignPlan')->name('employees.profile.plans.store');
+        Route::get('profile/plans/{types}/remove/{id}', 'removePlan')->name('employees.profile.plans.remove');
+        Route::get('profile/plans/{types}/delete/{id}', 'deletePlan')->name('employees.profile.plans.delete');
 
     });
 
@@ -341,8 +344,6 @@ Route::controller(EmployeePlansController::class)->group(function (){
     Route::get('get-meal-plans/{type}', 'getMealPlanByType');
     Route::get('get-meal-plan-details/{id}', 'getMealPlanDetails');
     Route::get('get-offday-plan-details/{id}', 'getOffDayPlanDetails');
-    Route::post('/assign-off-day-plan', 'assignOffDayPlan');
-
 
 });
 

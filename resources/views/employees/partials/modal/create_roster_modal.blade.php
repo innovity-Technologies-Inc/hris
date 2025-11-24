@@ -7,7 +7,7 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form id="createRosterPlanForm" method="POST" action="#">
+                <form id="createRosterPlanForm" method="POST" action="{{route('employees.profile.plans.store', 'roster-plans')}}">
                     @csrf
                     <div class="row g-3">
                         <div class="col-md-6">

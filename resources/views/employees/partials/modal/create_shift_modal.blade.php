@@ -14,7 +14,7 @@
 
             {{-- Modal Body --}}
             <div class="modal-body">
-                <form id="createShiftPlanForm" method="POST" action="#">
+                <form id="createShiftPlanForm" method="POST" action="{{route('employees.profile.plans.store', 'shift-plans')}}">
                     @csrf
 
                     <div class="row g-3">
