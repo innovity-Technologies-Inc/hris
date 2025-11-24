@@ -47,31 +47,31 @@
                                 <th class="text-center">Actions</th>
                             </tr>
                             </thead>
+                            @php($sl=1)
                             <tbody>
-                            @foreach ($activeOffDayPLan as $plan)
                                 <tr>
                                     <td><span
-                                            class="badge bg-secondary-subtle text-secondary">#{{ $plan['id'] }}</span>
+                                            class="badge bg-secondary-subtle text-secondary">#{{ $sl++ }}</span>
                                     </td>
-                                    <td><strong>{{ $plan->getPlan->name }}</strong></td>
+                                    <td><strong>{{ $activeOffDayPLan->getPlan->name }}</strong></td>
                                     <td>
-                                        @if (!empty($plan->getPlan->short_name))
+                                        @if (!empty($activeOffDayPLan->getPlan->short_name))
                                             <span
-                                                class="badge bg-secondary-subtle text-secondary">{{ $plan->getPlan->short_name }}</span>
+                                                class="badge bg-secondary-subtle text-secondary">{{ $activeOffDayPLan->getPlan->short_name }}</span>
                                         @else
                                             <span class="text-muted">-</span>
                                         @endif
                                     </td>
                                     <td>
                                         <strong class="text-success">
-                                            ৳{{ number_format($plan['remuneration_amount'], 2) }}
+                                            ৳{{ number_format($activeOffDayPLan->remuneration, 2) }}
                                         </strong>
                                     </td>
-                                    <td>{{ date('d M Y', strtotime($plan['from'])) }}</td>
-                                    <td>{{ date('d M Y', strtotime($plan['to'])) }}</td>
+                                    <td>{{ date('d M Y', strtotime($activeOffDayPLan->from)) }}</td>
+                                    <td>{{ date('d M Y', strtotime($activeOffDayPLan->to)) }}</td>
                                     <td>
                                             <span class="badge bg-success">
-                                                <i class="mdi mdi-check-circle me-1"></i>{{ $plan['status'] }}
+                                                <i class="mdi mdi-check-circle me-1"></i>{{ $activeOffDayPLan->status }}
                                             </span>
                                     </td>
                                     <td class="text-center">
@@ -81,7 +81,6 @@
                                         </button>
                                     </td>
                                 </tr>
-                            @endforeach
                             </tbody>
                         </table>
                     </div>
