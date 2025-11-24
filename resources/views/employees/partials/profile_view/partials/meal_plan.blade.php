@@ -142,20 +142,20 @@
                                     <td>{{ \Carbon\Carbon::parse($plan->from)->format('jS F Y') }}</td>
                                     <td>{{ \Carbon\Carbon::parse($plan->from)->format('jS F Y') }}</td>
                                     <td>
-                                        @if ($plan['status'] == 'Expired')
+                                        @if ($plan->status == 'Expired')
                                             <span class="badge bg-warning-subtle text-warning">
                                                     <i
-                                                        class="mdi mdi-clock-alert-outline me-1"></i>{{ $plan['status'] }}
+                                                        class="mdi mdi-clock-alert-outline me-1"></i>{{ $plan->status }}
                                                 </span>
                                         @else
                                             <span class="badge bg-danger-subtle text-danger">
-                                                    <i class="mdi mdi-close-circle me-1"></i>{{ $plan['status'] }}
+                                                    <i class="mdi mdi-close-circle me-1"></i>{{ $plan->status }}
                                                 </span>
                                         @endif
                                     </td>
                                     <td class="text-center">
                                         <button type="button" class="btn btn-sm btn-danger" title="Delete Record"
-                                                onclick="confirmDelete({{ $plan['id'] }})">
+                                                onclick="confirmDelete({{ $plan->id }})">
                                             <i class="mdi mdi-delete"></i> Delete
                                         </button>
                                     </td>

@@ -128,7 +128,7 @@
                             @foreach ($previousOffDayPlans as $plan)
                                 <tr class="text-muted">
                                     <td><span
-                                            class="badge bg-secondary-subtle text-secondary">#{{ $plan['id'] }}</span>
+                                            class="badge bg-secondary-subtle text-secondary">#{{ $plan->id }}</span>
                                     </td>
                                     <td>{{ $plan->getPlan->name }}</td>
                                     <td>
@@ -141,19 +141,19 @@
                                     </td>
                                     <td>
                                             <span class="text-success">
-                                                ৳{{ number_format($plan['remuneration_amount'], 2) }}
+                                                ৳{{ number_format($plan->remuneration_amount, 2) }}
                                             </span>
                                     </td>
-                                    <td>{{ date('d M Y', strtotime($plan['from'])) }}</td>
-                                    <td>{{ date('d M Y', strtotime($plan['to'])) }}</td>
+                                    <td>{{ date('d M Y', strtotime($plan->from)) }}</td>
+                                    <td>{{ date('d M Y', strtotime($plan->to)) }}</td>
                                     <td>
                                             <span class="badge bg-warning-subtle text-warning">
-                                                <i class="mdi mdi-clock-alert-outline me-1"></i>{{ $plan['status'] }}
+                                                <i class="mdi mdi-clock-alert-outline me-1"></i>{{ $plan->status }}
                                             </span>
                                     </td>
                                     <td class="text-center">
                                         <button type="button" class="btn btn-sm btn-danger" title="Delete Record"
-                                                onclick="confirmOffDayDelete({{ $plan['id'] }})">
+                                                onclick="confirmOffDayDelete({{ $plan->id }})">
                                             <i class="mdi mdi-delete"></i> Delete
                                         </button>
                                     </td>

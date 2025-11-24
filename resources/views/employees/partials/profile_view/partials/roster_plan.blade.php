@@ -48,10 +48,9 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach ($activeRosterPLan as $plan)
                                 <tr>
                                     <td><span
-                                            class="badge bg-secondary-subtle text-secondary">#{{ $plan['id'] }}</span>
+                                            class="badge bg-secondary-subtle text-secondary">#{{ $plan->id }}</span>
                                     </td>
                                     <td><strong>{{ $plan->getPlan->name }}</strong></td>
                                     <td>
@@ -65,15 +64,15 @@
                                     <td>
                                             <span class="badge bg-primary-subtle text-primary">
                                                 <i
-                                                    class="mdi mdi-calendar-range me-1"></i>{{ $plan['repetition_days'] }}
+                                                    class="mdi mdi-calendar-range me-1"></i>{{ $plan->repetition_days }}
                                                 days
                                             </span>
                                     </td>
-                                    <td>{{ date('d M Y', strtotime($plan['from'])) }}</td>
-                                    <td>{{ date('d M Y', strtotime($plan['to'])) }}</td>
+                                    <td>{{ date('d M Y', strtotime($plan->from)) }}</td>
+                                    <td>{{ date('d M Y', strtotime($plan->to)) }}</td>
                                     <td>
                                             <span class="badge bg-success">
-                                                <i class="mdi mdi-check-circle me-1"></i>{{ $plan['status'] }}
+                                                <i class="mdi mdi-check-circle me-1"></i>{{ $plan->status }}
                                             </span>
                                     </td>
                                     <td class="text-center">
@@ -83,7 +82,6 @@
                                         </button>
                                     </td>
                                 </tr>
-                            @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -131,9 +129,9 @@
                             @foreach ($previousRosterPlans as $plan)
                                 <tr class="text-muted">
                                     <td><span
-                                            class="badge bg-secondary-subtle text-secondary">#{{ $plan['id'] }}</span>
+                                            class="badge bg-secondary-subtle text-secondary">#{{ $plan->id }}</span>
                                     </td>
-                                    <td>{{ $plan['plan_name'] }}</td>
+                                    <td>{{ $plan->plan_name }}</td>
                                     <td>
                                         @if (!empty($plan->getPlan->short_name))
                                             <span
@@ -145,20 +143,20 @@
                                     <td>
                                             <span class="badge bg-light text-secondary">
                                                 <i
-                                                    class="mdi mdi-calendar-range me-1"></i>{{ $plan['repetition_days'] }}
+                                                    class="mdi mdi-calendar-range me-1"></i>{{ $plan->repetition_days }}
                                                 days
                                             </span>
                                     </td>
-                                    <td>{{ date('d M Y', strtotime($plan['effective_from'])) }}</td>
-                                    <td>{{ date('d M Y', strtotime($plan['effective_to'])) }}</td>
+                                    <td>{{ date('d M Y', strtotime($plan->from)) }}</td>
+                                    <td>{{ date('d M Y', strtotime($plan->to)) }}</td>
                                     <td>
                                             <span class="badge bg-warning-subtle text-warning">
-                                                <i class="mdi mdi-clock-alert-outline me-1"></i>{{ $plan['status'] }}
+                                                <i class="mdi mdi-clock-alert-outline me-1"></i>{{ $plan->status }}
                                             </span>
                                     </td>
                                     <td class="text-center">
                                         <button type="button" class="btn btn-sm btn-danger" title="Delete Record"
-                                                onclick="confirmRosterDelete({{ $plan['id'] }})">
+                                                onclick="confirmRosterDelete({{ $plan->id }})">
                                             <i class="mdi mdi-delete"></i> Delete
                                         </button>
                                     </td>
