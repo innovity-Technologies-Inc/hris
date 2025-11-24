@@ -77,7 +77,7 @@
                                     <td class="text-center">
                                         <button type="button" class="btn btn-sm btn-warning"
                                                 title="Edit Assignment">
-                                            <i class="mdi mdi-pencil"></i> Edit
+                                            <i class="mdi mdi-close"></i> Remove
                                         </button>
                                     </td>
                                 </tr>

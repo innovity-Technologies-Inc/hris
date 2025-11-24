@@ -26,15 +26,14 @@ class EmployeePlansController extends Controller
         $this->empPlans = $empPlans;
     }
 
-    public function plansView($id, Request $request)
+    public function plansView($id, Request $request, $type)
     {
         $title = 'Employee Profile';
         $section = 'Employees';
         $sub_section = 'Profile';
         $section_url = route('employees.index');
         $employee = Employee::find($id);
-        $type = $request->query('type');
-        if ($request->query('type') === 'meal-plans'){
+        if ($type === 'meal-plans'){
             $mealPlans = MealPlan::where('status', 'active')->get();
             $activeMealPlans = EmployeeMealPlan::where('employee_id', $id)->where('status', 'active')->get();
             $totalActiveMealPlan = !empty($activeMealPlans) ? $activeMealPlans->count() : 0;
@@ -44,7 +43,7 @@ class EmployeePlansController extends Controller
             return view('employees.profile', compact('title', 'section', 'sub_section', 'section_url',
                 'employee', 'mealPlans', 'activeMealPlans', 'previousMealPlans', 'totalActiveMealPlan',
                 'totalPreviousMealPlan', 'type'));
-        }elseif ($request->query('type') === 'shift-plans'){
+        }elseif ($type === 'shift-plans'){
             $shiftPlans = ShiftPlan::where('active_ind', 'active')->get();
             $activeShiftPLan = EmployeeShiftPlan::where('employee_id', $id)->where('status', 'active')->first();
             $totalActiveShiftPlan = !empty($activeShiftPLan) ? $activeShiftPLan->count() : 0;
@@ -54,7 +53,7 @@ class EmployeePlansController extends Controller
             return view('employees.profile', compact('title', 'section', 'sub_section', 'section_url',
                 'employee', 'activeShiftPLan', 'previousShiftPlans', 'shiftPlans', 'totalActiveShiftPlan', 'totalPreviousShiftPlan', 'type'));
 
-        }elseif ($request->query('type') === 'roster-plans'){
+        }elseif ($type === 'roster-plans'){
             $rosterPlans = RosterPlan::where('status', 'active')->get();
             $activeRosterPLan = EmployeeRosterPlan::where('employee_id', $id)->where('status', 'active')->first();
             $totalActiveRosterPlan = !empty($activeRosterPLan) ? $activeRosterPLan->count() : 0;
@@ -65,7 +64,7 @@ class EmployeePlansController extends Controller
                 'employee', 'activeRosterPLan',
                 'previousRosterPlans', 'rosterPlans',
                 'totalActiveRosterPlan', 'totalPreviousRosterPlan', 'type'));
-        }elseif ($request->query('type') === 'ot-plans'){
+        }elseif ($type === 'ot-plans'){
             $otPlans = OTPlan::where('active_ind', 'active')->get();
             $activeOtPLan = EmployeeOtPlan::where('employee_id', $id)->where('status', 'active')->first();
             $totalActiveOtPlan = !empty($activeOtPLan) ? $activeOtPLan->count() : 0;
@@ -75,7 +74,7 @@ class EmployeePlansController extends Controller
             return view('employees.profile', compact('title', 'section', 'sub_section', 'section_url',
                 'employee', 'activeOtPLan', 'previousOtPlans', 'otPlans', 'totalActiveOtPlan', 'totalPreviousOtPlan', 'type'));
 
-        }elseif ($request->query('type') === 'offday-plans'){
+        }elseif ($type === 'offday-plans'){
             $offDayPlans = OffDayPlan::where('status', 'active')->get();
             $activeOffDayPLan = EmployeeOffdayPlan::where('employee_id', $id)->where('status', 'active')->first();
             $totalActiveOffDayPlan = !empty($activeOffDayPLan) ? $activeOffDayPLan->count() : 0;
@@ -90,19 +89,19 @@ class EmployeePlansController extends Controller
 
     }
 
-    public function assignPlan(Request $request)
+    public function assignPlan(Request $request, $type)
     {
         $validated = $this->empPlans->validation($request);
 
-        if ($request->query('type') === 'meal-plans'){
+        if ($type === 'meal-plans'){
 
-        }elseif ($request->query('type') === 'shift-plans'){
+        }elseif ($type === 'shift-plans'){
             $this->empPlans->planSave($validated, EmployeeShiftPlan::class);
-        }elseif ($request->query('type') === 'roster-plans'){
+        }elseif ($type === 'roster-plans'){
             $this->empPlans->planSave($validated, EmployeeRosterPlan::class);
-        }elseif ($request->query('type') === 'ot-plans'){
+        }elseif ($type === 'ot-plans'){
             $this->empPlans->planSave($validated, EmployeeOtPlan::class);
-        }elseif ($request->query('type') === 'offday-plans'){
+        }elseif ($type === 'offday-plans'){
             $this->empPlans->planSave($validated, EmployeeOffdayPlan::class);
         }
 
@@ -112,19 +111,19 @@ class EmployeePlansController extends Controller
         ]);
     }
 
-    public function removePlan(Request $request)
+    public function removePlan(Request $request, $type)
     {
         $validated = $this->empPlans->validation($request);
 
-        if ($request->query('type') === 'meal-plans'){
+        if ($type === 'meal-plans'){
 
-        }elseif ($request->query('type') === 'shift-plans'){
+        }elseif ($type === 'shift-plans'){
             $this->empPlans->planSave($validated, EmployeeShiftPlan::class);
-        }elseif ($request->query('type') === 'roster-plans'){
+        }elseif ($type === 'roster-plans'){
             $this->empPlans->planSave($validated, EmployeeRosterPlan::class);
-        }elseif ($request->query('type') === 'ot-plans'){
+        }elseif ($type === 'ot-plans'){
             $this->empPlans->planSave($validated, EmployeeOtPlan::class);
-        }elseif ($request->query('type') === 'offday-plans'){
+        }elseif ($type === 'offday-plans'){
             $this->empPlans->planSave($validated, EmployeeOffdayPlan::class);
         }
 
@@ -134,19 +133,19 @@ class EmployeePlansController extends Controller
         ]);
     }
 
-    public function deletePlan(Request $request)
+    public function deletePlan(Request $request, $type)
     {
         $validated = $this->empPlans->validation($request);
 
-        if ($request->query('type') === 'meal-plans'){
+        if ($type === 'meal-plans'){
 
-        }elseif ($request->query('type') === 'shift-plans'){
+        }elseif ($type === 'shift-plans'){
             $this->empPlans->planSave($validated, EmployeeShiftPlan::class);
-        }elseif ($request->query('type') === 'roster-plans'){
+        }elseif ($type === 'roster-plans'){
             $this->empPlans->planSave($validated, EmployeeRosterPlan::class);
-        }elseif ($request->query('type') === 'ot-plans'){
+        }elseif ($type === 'ot-plans'){
             $this->empPlans->planSave($validated, EmployeeOtPlan::class);
-        }elseif ($request->query('type') === 'offday-plans'){
+        }elseif ($type === 'offday-plans'){
             $this->empPlans->planSave($validated, EmployeeOffdayPlan::class);
         }
 

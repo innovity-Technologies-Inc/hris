@@ -14,7 +14,7 @@
 
             {{-- Modal Body --}}
             <div class="modal-body">
-                <form id="createMealPlanForm" method="POST" action="#">
+                <form id="createMealPlanForm" method="POST" action="{{route('employees.profile.plans.store', 'meal-plans')}}">
                     @csrf
 
                     <div class="row g-3">
@@ -140,11 +140,11 @@
         function loadMeals(mealType, selectedMeal = null) {
             if (mealType) {
                 $.get('/get-meal-plans/' + mealType, function(data) {
-                    let $gradeSelect = $('#modal_meal_plan_id');
-                    $gradeSelect.html('<option value="">-- Select --</option>');
+                    let $mealSelect = $('#modal_meal_plan_id');
+                    $mealSelect.html('<option value="">-- Select --</option>');
                     $.each(data, function(key, value) {
                         let selected = (selectedMeal == value.id) ? 'selected' : '';
-                        $gradeSelect.append('<option value="'+ value.id +'" '+selected+'>'+ value.name +'</option>');
+                        $mealSelect.append('<option value="'+ value.id +'" '+selected+'>'+ value.name +'</option>');
                     });
                 });
             }

@@ -236,10 +236,10 @@ Route::prefix('employees')->group(function () {
     });
 
     Route::controller(EmployeePlansController::class)->group(function () {
-        Route::get('profile/{id}/plans/{types}', 'plansView')->name('employees.profile.plans');
-        Route::get('profile/plans/{types}/store', 'assignPlan')->name('employees.profile.plans.store');
-        Route::get('profile/plans/{types}/remove/{id}', 'removePlan')->name('employees.profile.plans.remove');
-        Route::get('profile/plans/{types}/delete/{id}', 'deletePlan')->name('employees.profile.plans.delete');
+        Route::get('profile/{id}/plans/{type}', 'plansView')->name('employees.profile.plans');
+        Route::post('profile/plans/{type}/store', 'assignPlan')->name('employees.profile.plans.store');
+        Route::post('profile/plans/{type}/remove/{id}', 'removePlan')->name('employees.profile.plans.remove');
+        Route::delete('profile/plans/{type}/delete/{id}', 'deletePlan')->name('employees.profile.plans.delete');
 
     });
 
