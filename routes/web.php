@@ -33,7 +33,7 @@ use App\Http\Controllers\EmployeePlansController;
 
 
 Route::get('test', function () {
-   return view('employees.plans_assign.assign');
+   return view('search.search_employee');
 });
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
