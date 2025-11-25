@@ -49,60 +49,66 @@
                             </thead>
                             @php($sl=1)
                             <tbody>
-                                <tr>
-                                    <td><span
-                                            class="badge bg-secondary-subtle text-secondary">#{{ $sl++ }}</span>
-                                    </td>
-                                    <td><strong>{{ $plan->getPlan->name }}</strong></td>
-                                    <td>
+                            <tr>
+                                <td><span
+                                        class="badge bg-secondary-subtle text-secondary">#{{ $sl++ }}</span>
+                                </td>
+                                <td><strong>{{ $activeOtPLan->getPlan->name }}</strong></td>
+                                <td>
                                             <span class="badge bg-info-subtle text-info">
-                                                {{ ucwords(str_replace('_', ' ', $plan->ot_type)) }}
+                                                {{ ucwords(str_replace('_', ' ', $activeOtPLan->getPlan->ot_type)) }}
                                             </span>
-                                    </td>
-                                    <td>
-                                        @if ($plan->ot_config_type == 'salary_based')
-                                            <span class="badge bg-primary-subtle text-primary">Salary Based</span>
-                                        @else
-                                            <span class="badge bg-success-subtle text-success">Custom</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if ($plan->ot_config_type == 'salary_based')
-                                            @if (isset($plan->salary_rate_type) &&
-                                                    $plan->salary_rate_type == 'multiplier' &&
-                                                    isset($plan->overtime_multiplier))
-                                                <span class="badge bg-success-subtle text-success">
-                                                        {{ number_format($plan->overtime_multiplier, 2) }}x
+                                </td>
+                                <td>
+                                    @if ($activeOtPLan->getPlan->ot_config_type == 'salary_based')
+                                        <span class="badge bg-primary-subtle text-primary">Salary Based</span>
+                                    @else
+                                        <span class="badge bg-success-subtle text-success">Custom</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($activeOtPLan->getPlan->ot_config_type == 'salary_based')
+                                        @if (isset($activeOtPLan->getPlan->salary_rate_type) &&
+                                                $activeOtPLan->getPlan->salary_rate_type == 'multiplier' &&
+                                                isset($activeOtPLan->getPlan->overtime_multiplier))
+                                            <span class="badge bg-success-subtle text-success">
+                                                        {{ number_format($activeOtPLan->getPlan->overtime_multiplier, 2) }}x
                                                     </span>
-                                            @elseif (isset($plan->salary_rate_type) && $plan->salary_rate_type == 'basic_rate')
-                                                <span class="badge bg-info-subtle text-info">Basic Rate</span>
-                                            @else
-                                                <span class="text-muted">-</span>
-                                            @endif
+                                        @elseif (isset($activeOtPLan->getPlan->salary_rate_type) && $activeOtPLan->getPlan->salary_rate_type == 'basic_rate')
+                                            <span class="badge bg-info-subtle text-info">Basic Rate</span>
                                         @else
-                                            @if (isset($plan->custom_overtime_rate))
-                                                <span class="badge bg-warning-subtle text-warning">
-                                                        ৳{{ number_format($plan->custom_overtime_rate, 2) }}/hr
-                                                    </span>
-                                            @else
-                                                <span class="text-muted">-</span>
-                                            @endif
+                                            <span class="text-muted">-</span>
                                         @endif
-                                    </td>
-                                    <td>{{ date('d M Y', strtotime($plan->from)) }}</td>
-                                    <td>{{ date('d M Y', strtotime($plan->to)) }}</td>
-                                    <td>
+                                    @else
+                                        @if (isset($activeOtPLan->getPlan->custom_overtime_rate))
+                                            <span class="badge bg-warning-subtle text-warning">
+                                                        ৳{{ number_format($activeOtPLan->getPlan->custom_overtime_rate, 2) }}/hr
+                                                    </span>
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    @endif
+                                </td>
+                                <td>{{ date('d M Y', strtotime($activeOtPLan->from)) }}</td>
+                                <td>{{ date('d M Y', strtotime($activeOtPLan->to)) }}</td>
+                                <td>
                                             <span class="badge bg-success">
-                                                <i class="mdi mdi-check-circle me-1"></i>{{ $plan->status }}
+                                                <i class="mdi mdi-check-circle me-1"></i>{{ $activeOtPLan->status }}
                                             </span>
-                                    </td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-sm btn-warning"
+                                </td>
+                                <td class="text-center">
+                                    <form
+                                        action="{{route('employees.profile.plans.remove', ['id' => $activeOtPLan->id, 'type' => 'ot-plans'])}}"
+                                        method="post">
+                                        @csrf
+                                        @method('put')
+                                        <button type="submit" class="btn btn-sm btn-warning removeBtn"
                                                 title="Edit Assignment">
                                             <i class="mdi mdi-close"></i> Remove
                                         </button>
-                                    </td>
-                                </tr>
+                                    </form>
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -139,8 +145,6 @@
                                 <th>ID</th>
                                 <th>OT Plan Name</th>
                                 <th>OT Type</th>
-                                <th>Config Type</th>
-                                <th>Rate</th>
                                 <th>Effective From</th>
                                 <th>Effective To</th>
                                 <th>Status</th>
@@ -156,51 +160,28 @@
                                     <td>{{ $plan->getPlan->name }}</td>
                                     <td>
                                             <span class="badge bg-light text-secondary">
-                                                {{ ucwords(str_replace('_', ' ', $plan->ot_type)) }}
+                                                {{ ucwords(str_replace('_', ' ', $plan->getPlan->ot_type)) }}
                                             </span>
                                     </td>
-                                    <td>
-                                        @if ($plan->ot_config_type == 'salary_based')
-                                            <span class="badge bg-light text-secondary">Salary Based</span>
-                                        @else
-                                            <span class="badge bg-light text-secondary">Custom</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if ($plan->ot_config_type == 'salary_based')
-                                            @if (isset($plan->salary_rate_type) &&
-                                                    $plan->salary_rate_type == 'multiplier' &&
-                                                    isset($plan->overtime_multiplier))
-                                                <span class="badge bg-light text-secondary">
-                                                        {{ number_format($plan->overtime_multiplier, 2) }}x
-                                                    </span>
-                                            @elseif (isset($plan->salary_rate_type) && $plan->salary_rate_type == 'basic_rate')
-                                                <span class="badge bg-light text-secondary">Basic Rate</span>
-                                            @else
-                                                <span class="text-muted">-</span>
-                                            @endif
-                                        @else
-                                            @if (isset($plan->custom_overtime_rate))
-                                                <span class="badge bg-light text-secondary">
-                                                        ৳{{ number_format($plan->custom_overtime_rate, 2) }}/hr
-                                                    </span>
-                                            @else
-                                                <span class="text-muted">-</span>
-                                            @endif
-                                        @endif
-                                    </td>
+
                                     <td>{{ date('d M Y', strtotime($plan->from)) }}</td>
                                     <td>{{ date('d M Y', strtotime($plan->to)) }}</td>
                                     <td>
-                                            <span class="badge bg-warning-subtle text-warning">
-                                                <i class="mdi mdi-clock-alert-outline me-1"></i>{{ $plan->status }}
-                                            </span>
+<span class="badge bg-warning-subtle text-warning">
+<i class="mdi mdi-clock-alert-outline me-1"></i>{{ $plan->status }}
+</span>
                                     </td>
                                     <td class="text-center">
-                                        <button type="button" class="btn btn-sm btn-danger" title="Delete Record"
-                                                onclick="confirmOTDelete({{ $plan->id }})">
-                                            <i class="mdi mdi-delete"></i> Delete
-                                        </button>
+                                        <form
+                                            action="{{route('employees.profile.plans.delete', ['type' => 'ot-plans', 'id' => $plan->id])}}"
+                                            method="post">
+                                            @csrf
+                                            @method('delete')
+                                            <button type="submit" class="btn btn-sm btn-danger confirmDelete"
+                                                    title="Delete Record">
+                                                <i class="mdi mdi-delete"></i> Delete
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach

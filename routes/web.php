@@ -238,12 +238,22 @@ Route::prefix('employees')->group(function () {
     Route::controller(EmployeePlansController::class)->group(function () {
         Route::get('profile/{id}/plans/{type}', 'plansView')->name('employees.profile.plans');
         Route::post('profile/plans/{type}/store', 'assignPlan')->name('employees.profile.plans.store');
-        Route::post('profile/plans/{type}/remove/{id}', 'removePlan')->name('employees.profile.plans.remove');
+        Route::put('profile/plans/{type}/remove/{id}', 'removePlan')->name('employees.profile.plans.remove');
         Route::delete('profile/plans/{type}/delete/{id}', 'deletePlan')->name('employees.profile.plans.delete');
 
     });
 
 });
+
+Route::controller(EmployeePlansController::class)->group(function (){
+    Route::get('get-meal-plans/{type}', 'getMealPlanByType');
+    Route::get('get-meal-plan-details/{id}', 'getMealPlanDetails');
+    Route::get('get-offday-plan-details/{id}', 'getOffDayPlanDetails');
+    Route::get('get-ot-plan-details/{id}', 'getOtPlanDetails');
+
+
+});
+
 
 Route::prefix('plans')->group(function () {
     Route::get('bulk-upload', function () {
@@ -340,12 +350,6 @@ Route::controller(EmployeeProfileController::class)->group(function () {
     Route::get('get-branches/{bank_id}', 'getBranchesByBank');
 });
 
-Route::controller(EmployeePlansController::class)->group(function (){
-    Route::get('get-meal-plans/{type}', 'getMealPlanByType');
-    Route::get('get-meal-plan-details/{id}', 'getMealPlanDetails');
-    Route::get('get-offday-plan-details/{id}', 'getOffDayPlanDetails');
-
-});
 
 Route::controller(RosterPlansController::class)->group(function () {
     Route::get('get-shift-details/{shift_id}', 'getShiftDetails');

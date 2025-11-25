@@ -16,6 +16,7 @@ use App\Models\ShiftPlan;
 use App\Services\EmployeePlansServices;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class EmployeePlansController extends Controller
 {
@@ -122,16 +123,24 @@ class EmployeePlansController extends Controller
     {
         $validated = $this->empPlans->validation($request);
 
-        if ($type === 'meal-plans'){
+        try{
+            if ($type === 'meal-plans'){
 
-        }elseif ($type === 'shift-plans'){
-            $this->empPlans->planSave($validated, EmployeeShiftPlan::class);
-        }elseif ($type === 'roster-plans'){
-            $this->empPlans->planSave($validated, EmployeeRosterPlan::class);
-        }elseif ($type === 'ot-plans'){
-            $this->empPlans->planSave($validated, EmployeeOtPlan::class);
-        }elseif ($type === 'offday-plans'){
-            $this->empPlans->planSave($validated, EmployeeOffdayPlan::class);
+            }elseif ($type === 'shift-plans'){
+                $this->empPlans->planSave($validated, EmployeeShiftPlan::class);
+            }elseif ($type === 'roster-plans'){
+                $this->empPlans->planSave($validated, EmployeeRosterPlan::class);
+            }elseif ($type === 'ot-plans'){
+                $this->empPlans->planSave($validated, EmployeeOtPlan::class);
+            }elseif ($type === 'offday-plans'){
+                $this->empPlans->planSave($validated, EmployeeOffdayPlan::class);
+            }
+        }catch (\Exception $e){
+            Log::error($e->getMessage());
+            return redirect()->back()->with([
+                'message' => 'Something Went Wrong, Try Again Later',
+                'alert-type' => 'error',
+            ]);
         }
 
         return redirect()->back()->with([
@@ -143,7 +152,7 @@ class EmployeePlansController extends Controller
     public function removePlan($type, $id)
     {
         if ($type === 'meal-plans'){
-
+            $this->empPlans->planRemove($id, EmployeeMealPlan::class);
         }elseif ($type === 'shift-plans'){
             $this->empPlans->planRemove($id, EmployeeShiftPlan::class);
         }elseif ($type === 'roster-plans'){
@@ -160,10 +169,10 @@ class EmployeePlansController extends Controller
         ]);
     }
 
-    public function deletePlan($id, $type)
+    public function deletePlan($type, $id)
     {
         if ($type === 'meal-plans'){
-
+            $this->empPlans->planDelete($id, EmployeeMealPlan::class);
         }elseif ($type === 'shift-plans'){
             $this->empPlans->planDelete($id, EmployeeShiftPlan::class);
         }elseif ($type === 'roster-plans'){
@@ -209,6 +218,22 @@ class EmployeePlansController extends Controller
             'remuneration' => $plan->remuneration,
             'start_time' => Carbon::parse($plan->start_time)->format('h:i A'),
             'end_time' => Carbon::parse($plan->end_time)->format('h:i A'),
+        ]);
+    }
+
+    public function getOtPlanDetails($id)
+    {
+        $plan = OTPlan::find($id);
+        return response()->json([
+            'id' => $plan->id,
+            'name' => $plan->name,
+            'type' => $plan->ot_type,
+            'config' => $plan->ot_config_type,
+            'rate' => $plan->custom_overtime_rate,
+            'multiplier' => $plan->overtime_multiplier,
+            'salary_type' => $plan->salary_rate_type,
+            'start_time' => Carbon::parse($plan->overtime_start_time)->format('h:i A'),
+            'end_time' => Carbon::parse($plan->overtime_end_time)->format('h:i A'),
         ]);
     }
 

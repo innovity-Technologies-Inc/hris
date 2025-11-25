@@ -7,9 +7,9 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <form method="POST" action="{{route('employees.profile.plans.store', 'offday-plans')}}">
+                @csrf
 
             <div class="modal-body">
-                    @csrf
                     <input type="hidden" name="employee_id" value="{{ $employee->id }}">
                     <div class="row g-3">
                         <div class="col-md-6">

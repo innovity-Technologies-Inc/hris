@@ -15,7 +15,7 @@
                                 <i class="mdi mdi-calendar-multiple text-primary me-1"></i>
                                 Select Roster Plan <span class="text-danger">*</span>
                             </label>
-                            <select id="modal_roster_plan_id" name="roster_plan_id" class="form-select" required>
+                            <select id="modal_roster_plan_id" name="plan_id" class="form-select" required>
                                 <option value="">-- Choose Plan --</option>
                                 @foreach ($rosterPlans as $plan)
                                     <option value="{{ $plan->id }}">

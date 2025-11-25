@@ -73,6 +73,16 @@
                     <div class="skeleton-line" style="width: 50%"></div>
                 </div>
 
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
 
                 {{-- Tab Content --}}
                 <div id="tabContentWrapper" class="tab-content text-muted">

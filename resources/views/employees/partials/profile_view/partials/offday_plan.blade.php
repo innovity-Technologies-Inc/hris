@@ -31,7 +31,7 @@
                      style="width: 36px; height: 36px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
                     <i class="mdi mdi-check-circle text-white fs-6"></i>
                 </div>
-                <h5 class="mb-0 fw-bold text-dark">Active Off Day Plan Assignments</h5>
+                <h5 class="mb-0 fw-bold text-dark">Active Off Day Plan</h5>
             </div>
             <span class="badge bg-success shadow-sm px-3 py-2 rounded-pill">
                 {{ $totalActiveOffDayPlan }} Active
@@ -53,11 +53,16 @@
 
                             {{-- Status and Remove Button (Top Right Corner) --}}
                             <div class="position-absolute top-0 end-0 mt-3 me-3 d-flex align-items-center gap-2">
-                                <button type="button"
-                                        class="btn btn-outline-danger btn-sm rounded-pill px-3 py-2 shadow-sm"
-                                        title="Remove Assignment">
-                                    <i class="mdi mdi-close-circle me-1"></i> Remove
-                                </button>
+                                <form
+                                    action="{{route('employees.profile.plans.remove', ['id' => $activeOffDayPLan->id, 'type' => 'offday-plans'])}}"
+                                    method="post">
+                                    @csrf
+                                    @method('put')
+                                    <button type="submit" class="btn btn-sm btn-warning removeBtn"
+                                            title="Edit Assignment">
+                                        <i class="mdi mdi-close"></i> Remove
+                                    </button>
+                                </form>
                             </div>
 
                             {{-- Center Content: Icon and Plan Name --}}
@@ -154,7 +159,7 @@
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="d-flex align-items-center">
                         <i class="mdi mdi-history text-secondary fs-5 me-2"></i>
-                        <h6 class="mb-0 fw-semibold text-secondary">Previous Off Day Plan Assignments</h6>
+                        <h6 class="mb-0 fw-semibold text-secondary">Previous Off Day Work Plans</h6>
                     </div>
                     <span class="badge bg-secondary">{{ $totalPreviousOffDayPlan }} Records</span>
                 </div>
@@ -176,6 +181,7 @@
                             </tr>
                             </thead>
                             <tbody>
+                            @php $sl = 1 @endphp
                             @foreach ($previousOffDayPlans as $plan)
                                 <tr class="text-muted">
                                     <td><span
@@ -203,10 +209,16 @@
                                             </span>
                                     </td>
                                     <td class="text-center">
-                                        <button type="button" class="btn btn-sm btn-danger" title="Delete Record"
-                                                onclick="confirmOffDayDelete({{ $plan->id }})">
-                                            <i class="mdi mdi-delete"></i> Delete
-                                        </button>
+                                        <form
+                                            action="{{route('employees.profile.plans.delete', ['type' => 'offday-plans', 'id' => $plan->id])}}"
+                                            method="post">
+                                            @csrf
+                                            @method('delete')
+                                            <button type="submit" class="btn btn-sm btn-danger confirmDelete"
+                                                    title="Delete Record">
+                                                <i class="mdi mdi-delete"></i> Delete
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach
