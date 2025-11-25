@@ -6,8 +6,9 @@
                 <h5 class="modal-title"><i class="mdi mdi-calendar-blank me-2"></i>Create Off Day Plan Assignment</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
+            <form method="POST" action="{{route('employees.profile.plans.store', 'offday-plans')}}">
+
             <div class="modal-body">
-                <form id="createOffDayPlanForm" method="POST" action="{{route('employees.profile.plans.store', 'offday-plans')}}">
                     @csrf
                     <input type="hidden" name="employee_id" value="{{ $employee->id }}">
                     <div class="row g-3">
@@ -88,14 +89,15 @@
                             </div>
                         </div>
                     </div>
-                </form>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i
                         class="mdi mdi-close me-1"></i> Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="submitOffDayModalForm()"><i
-                        class="mdi mdi-check-circle me-1"></i> Create Assignment</button>
+                <button type="submit" class="btn btn-primary" onclick="submitOffDayModalForm()"><i
+                        class="mdi mdi-check-circle me-1"></i> Add</button>
             </div>
+            </form>
         </div>
     </div>
 </div>

@@ -12,7 +12,7 @@
             {{-- Create Button to Open Modal --}}
             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                     data-bs-target="#createOffDayPlanModal">
-                <i class="mdi mdi-plus-circle me-1"></i> Create New
+                <i class="mdi mdi-plus-circle me-1"></i> Add
             </button>
         </div>
     </div>
@@ -64,7 +64,7 @@
                                     </td>
                                     <td>
                                         <strong class="text-success">
-                                            ৳{{ number_format($activeOffDayPLan->remuneration, 2) }}
+                                            {{\App\HelperClass::getCurrency() ?? '৳'}} {{ number_format($activeOffDayPLan->getPlan->remuneration, 2) }}
                                         </strong>
                                     </td>
                                     <td>{{ date('d M Y', strtotime($activeOffDayPLan->from)) }}</td>
@@ -128,7 +128,7 @@
                             @foreach ($previousOffDayPlans as $plan)
                                 <tr class="text-muted">
                                     <td><span
-                                            class="badge bg-secondary-subtle text-secondary">#{{ $plan->id }}</span>
+                                            class="badge bg-secondary-subtle text-secondary">#{{ $sl++ }}</span>
                                     </td>
                                     <td>{{ $plan->getPlan->name }}</td>
                                     <td>
@@ -141,7 +141,7 @@
                                     </td>
                                     <td>
                                             <span class="text-success">
-                                                ৳{{ number_format($plan->remuneration_amount, 2) }}
+                                                {{\App\HelperClass::getCurrency() ?? '৳'}} {{ number_format($plan->getPlan->remuneration, 2) }}
                                             </span>
                                     </td>
                                     <td>{{ date('d M Y', strtotime($plan->from)) }}</td>

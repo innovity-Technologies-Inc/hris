@@ -46,7 +46,7 @@ class EmployeePlansController extends Controller
         }elseif ($type === 'shift-plans'){
             $shiftPlans = ShiftPlan::where('active_ind', 'active')->get();
             $activeShiftPLan = EmployeeShiftPlan::where('employee_id', $id)->where('status', 'active')->first();
-            $totalActiveShiftPlan = !empty($activeShiftPLan) ? $activeShiftPLan->count() : 0;
+            $totalActiveShiftPlan = !empty($activeShiftPLan) ? 1 : 0;
             $previousShiftPlans = EmployeeShiftPlan::where('employee_id', $id)->where('status', 'inactive')->get();
             $totalPreviousShiftPlan = !empty($previousShiftPlans) ? $previousShiftPlans->count() : 0;
 
@@ -56,7 +56,7 @@ class EmployeePlansController extends Controller
         }elseif ($type === 'roster-plans'){
             $rosterPlans = RosterPlan::where('status', 'active')->get();
             $activeRosterPLan = EmployeeRosterPlan::where('employee_id', $id)->where('status', 'active')->first();
-            $totalActiveRosterPlan = !empty($activeRosterPLan) ? $activeRosterPLan->count() : 0;
+            $totalActiveRosterPlan = !empty($activeRosterPLan) ? 1 : 0;
             $previousRosterPlans = EmployeeRosterPlan::where('employee_id', $id)->where('status', 'inactive')->get();
             $totalPreviousRosterPlan = !empty($previousRosterPlans) ? $previousRosterPlans->count() : 0;
 
@@ -67,7 +67,7 @@ class EmployeePlansController extends Controller
         }elseif ($type === 'ot-plans'){
             $otPlans = OTPlan::where('active_ind', 'active')->get();
             $activeOtPLan = EmployeeOtPlan::where('employee_id', $id)->where('status', 'active')->first();
-            $totalActiveOtPlan = !empty($activeOtPLan) ? $activeOtPLan->count() : 0;
+            $totalActiveOtPlan = !empty($activeOtPLan) ? 1 : 0;
             $previousOtPlans = EmployeeOtPlan::where('employee_id', $id)->where('status', 'inactive')->get();
             $totalPreviousOtPlan = !empty($previousOtPlans) ? $previousOtPlans->count() : 0;
 
@@ -77,7 +77,7 @@ class EmployeePlansController extends Controller
         }elseif ($type === 'offday-plans'){
             $offDayPlans = OffDayPlan::where('status', 'active')->get();
             $activeOffDayPLan = EmployeeOffdayPlan::where('employee_id', $id)->where('status', 'active')->first();
-            $totalActiveOffDayPlan = !empty($activeOffDayPLan) ? $activeOffDayPLan->count() : 0;
+            $totalActiveOffDayPlan = !empty($activeOffDayPLan) ? 1 : 0;
             $previousOffDayPlans = EmployeeOffdayPlan::where('employee_id', $id)->where('status', 'inactive')->get();
             $totalPreviousOffDayPlan = !empty($previousOffDayPlans) ? $previousOffDayPlans->count() : 0;
 

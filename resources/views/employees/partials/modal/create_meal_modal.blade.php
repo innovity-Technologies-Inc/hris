@@ -122,8 +122,8 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     <i class="mdi mdi-close me-1"></i> Cancel
                 </button>
-                <button type="button" class="btn btn-primary" onclick="submitModalForm()">
-                    <i class="mdi mdi-check-circle me-1"></i> Create Assignment
+                <button type="submit" class="btn btn-primary" onclick="submitModalForm()">
+                    <i class="mdi mdi-check-circle me-1"></i> Add
                 </button>
             </div>
         </div>

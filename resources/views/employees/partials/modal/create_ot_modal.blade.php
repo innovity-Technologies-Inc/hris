@@ -85,7 +85,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i
                         class="mdi mdi-close me-1"></i> Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="submitOTModalForm()"><i
+                <button type="submit" class="btn btn-primary" onclick="submitOTModalForm()"><i
                         class="mdi mdi-check-circle me-1"></i> Create Assignment</button>
             </div>
         </div>

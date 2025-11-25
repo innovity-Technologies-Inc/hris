@@ -2,7 +2,6 @@
 <div class="modal fade" id="createShiftPlanModal" tabindex="-1" aria-labelledby="createShiftPlanModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
             {{-- Modal Header --}}
             <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title" id="createShiftPlanModalLabel">
@@ -12,10 +11,11 @@
                     aria-label="Close"></button>
             </div>
 
+            <form id="createShiftPlanForm" method="POST" action="{{route('employees.profile.plans.store', 'shift-plans')}}">
+                @csrf
             {{-- Modal Body --}}
             <div class="modal-body">
-                <form id="createShiftPlanForm" method="POST" action="{{route('employees.profile.plans.store', 'shift-plans')}}">
-                    @csrf
+
 
                     <div class="row g-3">
                         {{-- Select Shift Plan --}}
@@ -86,7 +86,6 @@
                             </div>
                         </div>
                     </div>
-                </form>
             </div>
 
             {{-- Modal Footer --}}
@@ -94,10 +93,11 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     <i class="mdi mdi-close me-1"></i> Cancel
                 </button>
-                <button type="button" class="btn btn-primary" onclick="submitShiftModalForm()">
-                    <i class="mdi mdi-check-circle me-1"></i> Create Assignment
+                <button type="submit" class="btn btn-primary" onclick="submitShiftModalForm()">
+                    <i class="mdi mdi-check-circle me-1"></i> Add
                 </button>
             </div>
-        </div>
+            </form>
     </div>
-</div>
+
+    </div>
