@@ -153,9 +153,10 @@
                             </thead>
                             <tbody>
                             @foreach ($previousOtPlans as $plan)
+                                @php($sl = 1)
                                 <tr class="text-muted">
                                     <td><span
-                                            class="badge bg-secondary-subtle text-secondary">#{{ $plan->id }}</span>
+                                            class="badge bg-secondary-subtle text-secondary">#{{ $sl++ }}</span>
                                     </td>
                                     <td>{{ $plan->getPlan->name }}</td>
                                     <td>
