@@ -11,7 +11,7 @@
         <div>
             {{-- Create Button to Open Modal --}}
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createShiftPlanModal">
-                <i class="mdi mdi-plus-circle me-1"></i> Create New
+                <i class="mdi mdi-plus-circle me-1"></i> Add
             </button>
         </div>
     </div>
@@ -25,7 +25,7 @@
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="d-flex align-items-center">
                         <i class="mdi mdi-check-circle text-success fs-5 me-2"></i>
-                        <h6 class="mb-0 fw-semibold text-success">Active Shift Plan Assignments</h6>
+                        <h6 class="mb-0 fw-semibold text-success">Active Shift Plan</h6>
                     </div>
                     <span class="badge bg-success">{{$totalActiveShiftPlan}} Active</span>
                 </div>
@@ -47,37 +47,39 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach ($activeShiftPLan as $plan)
                                 <tr>
-                                    <td><span
-                                            class="badge bg-secondary-subtle text-secondary">#{{ $plan['id'] }}</span>
-                                    </td>
-                                    <td><strong>{{ $plan->getPlan->name }}</strong></td>
+
+                                    <td><strong>{{ $activeShiftPLan->getPlan->name }}</strong></td>
                                     <td>
                                             <span class="badge bg-info-subtle text-secondary">
-                                                <i class="mdi mdi-clock-in me-1"></i>{{ $plan['clock_in'] }}
+                                                <i class="mdi mdi-clock-in me-1"></i>{{ $activeShiftPLan->getPlan->clock_in }}
                                             </span>
                                     </td>
                                     <td>
                                             <span class="badge bg-warning-subtle text-warning">
-                                                <i class="mdi mdi-clock-out me-1"></i>{{ $plan['clock_out'] }}
+                                                <i class="mdi mdi-clock-out me-1"></i>{{ $activeShiftPLan['clock_out'] }}
                                             </span>
                                     </td>
-                                    <td>{{ date('d M Y', strtotime($plan['from'])) }}</td>
-                                    <td>{{ date('d M Y', strtotime($plan['to'])) }}</td>
+                                    <td>{{ date('d M Y', strtotime($activeShiftPLan->from)) }}</td>
+                                    <td>{{ date('d M Y', strtotime($activeShiftPLan['to'])) }}</td>
                                     <td>
                                             <span class="badge bg-success">
-                                                <i class="mdi mdi-check-circle me-1"></i>{{ $plan['status'] }}
+                                                <i class="mdi mdi-check-circle me-1"></i>{{ $activeShiftPLan['status'] }}
                                             </span>
                                     </td>
                                     <td class="text-center">
-                                        <button type="button" class="btn btn-sm btn-warning"
-                                                title="Edit Assignment">
-                                            <i class="mdi mdi-close"></i> Remove
-                                        </button>
+                                        <form
+                                            action="{{route('employees.profile.plans.remove', ['id' => $activeShiftPLan->id, 'type' => 'shift-plans'])}}"
+                                            method="post">
+                                            @csrf
+                                            @method('put')
+                                            <button type="submit" class="btn btn-sm btn-warning removeBtn"
+                                                    title="Edit Assignment">
+                                                <i class="mdi mdi-close"></i> Remove
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
-                            @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -125,31 +127,37 @@
                             @foreach ($previousShiftPlans as $plan)
                                 <tr class="text-muted">
                                     <td><span
-                                            class="badge bg-secondary-subtle text-secondary">#{{ $plan['id'] }}</span>
+                                            class="badge bg-secondary-subtle text-secondary">#{{ $plan->id }}</span>
                                     </td>
                                     <td>{{ $plan->getPlan->name }}</td>
                                     <td>
                                             <span class="badge bg-light text-secondary">
-                                                <i class="mdi mdi-clock-in me-1"></i>{{ $plan['clock_in'] }}
+                                                <i class="mdi mdi-clock-in me-1"></i>{{ \Carbon\Carbon::parse($plan->getPlan->clock_in)->format('h:i A') }}
                                             </span>
                                     </td>
                                     <td>
                                             <span class="badge bg-light text-secondary">
-                                                <i class="mdi mdi-clock-out me-1"></i>{{ $plan['clock_out'] }}
+                                                <i class="mdi mdi-clock-out me-1"></i>{{ \Carbon\Carbon::parse($plan->getPlan->clock_out)->format('h:i A') }}
                                             </span>
                                     </td>
-                                    <td>{{ date('d M Y', strtotime($plan['from'])) }}</td>
-                                    <td>{{ date('d M Y', strtotime($plan['to'])) }}</td>
+                                    <td>{{ date('d M Y', strtotime($plan->from)) }}</td>
+                                    <td>{{ date('d M Y', strtotime($plan->to)) }}</td>
                                     <td>
                                             <span class="badge bg-warning-subtle text-warning">
-                                                <i class="mdi mdi-clock-alert-outline me-1"></i>{{ $plan['status'] }}
+                                                <i class="mdi mdi-clock-alert-outline me-1"></i>{{ $plan->status }}
                                             </span>
                                     </td>
                                     <td class="text-center">
-                                        <button type="button" class="btn btn-sm btn-danger" title="Delete Record"
-                                                onclick="confirmShiftDelete({{ $plan['id'] }})">
-                                            <i class="mdi mdi-delete"></i> Delete
-                                        </button>
+                                        <form
+                                            action="{{route('employees.profile.plans.delete', ['type' => 'shift-plans', 'id' => $plan->id])}}"
+                                            method="post">
+                                            @csrf
+                                            @method('delete')
+                                            <button type="submit" class="btn btn-sm btn-danger confirmDelete"
+                                                    title="Delete Record">
+                                                <i class="mdi mdi-delete"></i> Delete
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach
@@ -167,3 +175,4 @@
     </div>
 </div>
 
+@include('employees.partials.modal.create_shift_modal')

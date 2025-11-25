@@ -250,6 +250,7 @@ Route::controller(EmployeePlansController::class)->group(function (){
     Route::get('get-meal-plan-details/{id}', 'getMealPlanDetails');
     Route::get('get-offday-plan-details/{id}', 'getOffDayPlanDetails');
     Route::get('get-ot-plan-details/{id}', 'getOtPlanDetails');
+    Route::get('get-shift-plan-details/{id}', 'getShiftPlanDetails');
 
 
 });

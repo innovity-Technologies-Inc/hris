@@ -236,6 +236,16 @@ class EmployeePlansController extends Controller
             'end_time' => Carbon::parse($plan->overtime_end_time)->format('h:i A'),
         ]);
     }
+    public function getShiftPlanDetails($id)
+    {
+        $plan = ShiftPlan::find($id);
+        return response()->json([
+            'id' => $plan->id,
+            'name' => $plan->name,
+            'start_time' => Carbon::parse($plan->clock_in_time)->format('h:i A'),
+            'end_time' => Carbon::parse($plan->clock_out_time)->format('h:i A'),
+        ]);
+    }
 
 
 }
