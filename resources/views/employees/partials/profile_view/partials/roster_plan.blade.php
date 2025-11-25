@@ -12,7 +12,7 @@
             {{-- Create Button to Open Modal --}}
             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                     data-bs-target="#createRosterPlanModal">
-                <i class="mdi mdi-plus-circle me-1"></i> Create New
+                <i class="mdi mdi-plus-circle me-1"></i> Add
             </button>
         </div>
     </div>
@@ -26,9 +26,8 @@
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="d-flex align-items-center">
                         <i class="mdi mdi-check-circle text-success fs-5 me-2"></i>
-                        <h6 class="mb-0 fw-semibold text-success">Active Roster Plan Assignments</h6>
+                        <h6 class="mb-0 fw-semibold text-success">Active Roster Plan</h6>
                     </div>
-                    <span class="badge bg-success">{{ $totalActiveRosterPlan }} Active</span>
                 </div>
             </div>
             <div class="card-body p-0">
@@ -49,14 +48,11 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td><span
-                                            class="badge bg-secondary-subtle text-secondary">#{{ $plan->id }}</span>
-                                    </td>
-                                    <td><strong>{{ $plan->getPlan->name }}</strong></td>
+                                    <td><strong>{{ $activeRosterPLan->getPlan->name }}</strong></td>
                                     <td>
-                                        @if (!empty($plan->getPlan->short_name))
+                                        @if (!empty($activeRosterPLan->getPlan->short_name))
                                             <span
-                                                class="badge bg-secondary-subtle text-secondary">{{ $plan->getPlan->short_name }}</span>
+                                                class="badge bg-secondary-subtle text-secondary">{{ $activeRosterPLan->getPlan->short_name }}</span>
                                         @else
                                             <span class="text-muted">-</span>
                                         @endif
@@ -64,22 +60,28 @@
                                     <td>
                                             <span class="badge bg-primary-subtle text-primary">
                                                 <i
-                                                    class="mdi mdi-calendar-range me-1"></i>{{ $plan->repetition_days }}
+                                                    class="mdi mdi-calendar-range me-1"></i>{{ $activeRosterPLan->getPlan->repetition_days }}
                                                 days
                                             </span>
                                     </td>
-                                    <td>{{ date('d M Y', strtotime($plan->from)) }}</td>
-                                    <td>{{ date('d M Y', strtotime($plan->to)) }}</td>
+                                    <td>{{ date('d M Y', strtotime($activeRosterPLan->from)) }}</td>
+                                    <td>{{ date('d M Y', strtotime($activeRosterPLan->to)) }}</td>
                                     <td>
                                             <span class="badge bg-success">
-                                                <i class="mdi mdi-check-circle me-1"></i>{{ $plan->status }}
+                                                <i class="mdi mdi-check-circle me-1"></i>{{ $activeRosterPLan->status }}
                                             </span>
                                     </td>
                                     <td class="text-center">
-                                        <button type="button" class="btn btn-sm btn-warning"
-                                                title="Edit Assignment">
-                                            <i class="mdi mdi-close"></i> Remove
-                                        </button>
+                                        <form
+                                            action="{{route('employees.profile.plans.remove', ['id' => $activeRosterPLan->id, 'type' => 'roster-plans'])}}"
+                                            method="post">
+                                            @csrf
+                                            @method('put')
+                                            <button type="submit" class="btn btn-sm btn-warning removeBtn"
+                                                    title="Edit Assignment">
+                                                <i class="mdi mdi-close"></i> Remove
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             </tbody>
@@ -117,7 +119,8 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Plan Name</th>
-                                <th>Short Name</th>
+                                <th>First Shift</th>
+                                <th>Second Shift</th>
                                 <th>Repetition Days</th>
                                 <th>Effective From</th>
                                 <th>Effective To</th>
@@ -131,19 +134,15 @@
                                     <td><span
                                             class="badge bg-secondary-subtle text-secondary">#{{ $plan->id }}</span>
                                     </td>
-                                    <td>{{ $plan->plan_name }}</td>
-                                    <td>
-                                        @if (!empty($plan->getPlan->short_name))
-                                            <span
-                                                class="badge bg-light text-secondary">{{ $plan->getPlan->short_name }}</span>
-                                        @else
-                                            <span class="text-muted">-</span>
-                                        @endif
-                                    </td>
+                                    <td>{{ $plan->getPlan->name }}</td>
+                                    <td>{{ $plan->getPlan->getFirstShift->name }}</td>
+                                    <td>{{ $plan->getPlan->getSecondShift->name }}</td>
+
+
                                     <td>
                                             <span class="badge bg-light text-secondary">
                                                 <i
-                                                    class="mdi mdi-calendar-range me-1"></i>{{ $plan->repetition_days }}
+                                                    class="mdi mdi-calendar-range me-1"></i>{{ $plan->getPlan->repetition_days }}
                                                 days
                                             </span>
                                     </td>
@@ -155,10 +154,16 @@
                                             </span>
                                     </td>
                                     <td class="text-center">
-                                        <button type="button" class="btn btn-sm btn-danger" title="Delete Record"
-                                                onclick="confirmRosterDelete({{ $plan->id }})">
-                                            <i class="mdi mdi-delete"></i> Delete
-                                        </button>
+                                        <form
+                                            action="{{route('employees.profile.plans.delete', ['type' => 'shift-plans', 'id' => $plan->id])}}"
+                                            method="post">
+                                            @csrf
+                                            @method('delete')
+                                            <button type="submit" class="btn btn-sm btn-danger confirmDelete"
+                                                    title="Delete Record">
+                                                <i class="mdi mdi-delete"></i> Delete
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach

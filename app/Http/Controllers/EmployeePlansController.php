@@ -247,5 +247,21 @@ class EmployeePlansController extends Controller
         ]);
     }
 
+    public function getRosterPlanDetails($id)
+    {
+        $plan = RosterPlan::find($id);
+        return response()->json([
+            'id' => $plan->id,
+            'name' => $plan->name,
+            'swapping' => $plan->swapping,
+            'first_shift_name' => $plan->getFirstShift->name,
+            'first_shift_start' => Carbon::parse($plan->getFirstShift->clock_in_time)->format('h:i A'),
+            'first_shift_end' => Carbon::parse($plan->getFirstShift->clock_out_time)->format('h:i A'),
+            'second_shift_name' => $plan->getSecondShift->name,
+            'second_shift_start' => Carbon::parse($plan->getSecondShift->clock_in_time)->format('h:i A'),
+            'second_shift_end' => Carbon::parse($plan->getSecondShift->clock_out_time)->format('h:i A'),
+        ]);
+    }
+
 
 }
