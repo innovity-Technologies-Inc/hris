@@ -40,6 +40,12 @@ class EmployeePlansController extends Controller
             $previousMealPlans = EmployeeMealPlan::where('employee_id', $id)->where('status', 'inactive')->get();
             $totalPreviousMealPlan = !empty($previousMealPlans) ? $previousMealPlans->count() : 0;
 
+            if ($request->ajax()) {
+                return view('employees.partials.profile_view.partials.meal_plan', compact('title', 'section', 'sub_section', 'section_url',
+                    'employee', 'mealPlans', 'activeMealPlans', 'previousMealPlans', 'totalActiveMealPlan',
+                    'totalPreviousMealPlan', 'type'))->render();
+            }
+
             return view('employees.profile', compact('title', 'section', 'sub_section', 'section_url',
                 'employee', 'mealPlans', 'activeMealPlans', 'previousMealPlans', 'totalActiveMealPlan',
                 'totalPreviousMealPlan', 'type'));
@@ -50,6 +56,11 @@ class EmployeePlansController extends Controller
             $previousShiftPlans = EmployeeShiftPlan::where('employee_id', $id)->where('status', 'inactive')->get();
             $totalPreviousShiftPlan = !empty($previousShiftPlans) ? $previousShiftPlans->count() : 0;
 
+            if ($request->ajax()) {
+                return view('employees.partials.profile_view.partials.shift_plan', compact('title', 'section', 'sub_section', 'section_url',
+                    'employee', 'activeShiftPLan', 'previousShiftPlans', 'shiftPlans', 'totalActiveShiftPlan', 'totalPreviousShiftPlan', 'type'))->render();
+            }
+
             return view('employees.profile', compact('title', 'section', 'sub_section', 'section_url',
                 'employee', 'activeShiftPLan', 'previousShiftPlans', 'shiftPlans', 'totalActiveShiftPlan', 'totalPreviousShiftPlan', 'type'));
 
@@ -59,6 +70,13 @@ class EmployeePlansController extends Controller
             $totalActiveRosterPlan = !empty($activeRosterPLan) ? 1 : 0;
             $previousRosterPlans = EmployeeRosterPlan::where('employee_id', $id)->where('status', 'inactive')->get();
             $totalPreviousRosterPlan = !empty($previousRosterPlans) ? $previousRosterPlans->count() : 0;
+
+            if ($request->ajax()) {
+                return view('employees.partials.profile_view.partials.roster_plan', compact('title', 'section', 'sub_section', 'section_url',
+                    'employee', 'activeRosterPLan',
+                    'previousRosterPlans', 'rosterPlans',
+                    'totalActiveRosterPlan', 'totalPreviousRosterPlan', 'type'))->render();
+            }
 
             return view('employees.profile', compact('title', 'section', 'sub_section', 'section_url',
                 'employee', 'activeRosterPLan',
@@ -71,6 +89,11 @@ class EmployeePlansController extends Controller
             $previousOtPlans = EmployeeOtPlan::where('employee_id', $id)->where('status', 'inactive')->get();
             $totalPreviousOtPlan = !empty($previousOtPlans) ? $previousOtPlans->count() : 0;
 
+            if ($request->ajax()) {
+                return view('employees.partials.profile_view.partials.ot_plan', compact('title', 'section', 'sub_section', 'section_url',
+                    'employee', 'activeOtPLan', 'previousOtPlans', 'otPlans', 'totalActiveOtPlan', 'totalPreviousOtPlan', 'type'))->render();
+            }
+
             return view('employees.profile', compact('title', 'section', 'sub_section', 'section_url',
                 'employee', 'activeOtPLan', 'previousOtPlans', 'otPlans', 'totalActiveOtPlan', 'totalPreviousOtPlan', 'type'));
 
@@ -80,6 +103,12 @@ class EmployeePlansController extends Controller
             $totalActiveOffDayPlan = !empty($activeOffDayPLan) ? 1 : 0;
             $previousOffDayPlans = EmployeeOffdayPlan::where('employee_id', $id)->where('status', 'inactive')->get();
             $totalPreviousOffDayPlan = !empty($previousOffDayPlans) ? $previousOffDayPlans->count() : 0;
+
+            if ($request->ajax()) {
+                return view('employees.partials.profile_view.partials.offday_plan', compact('title', 'section', 'sub_section', 'section_url',
+                    'employee', 'activeOffDayPLan', 'previousOffDayPlans', 'offDayPlans',
+                    'totalActiveOffDayPlan', 'totalPreviousOffDayPlan', 'type'))->render();
+            }
 
             return view('employees.profile', compact('title', 'section', 'sub_section', 'section_url',
                 'employee', 'activeOffDayPLan', 'previousOffDayPlans', 'offDayPlans',
