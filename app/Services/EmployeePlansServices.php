@@ -22,7 +22,13 @@ class EmployeePlansServices
         }
     }
 
-    public function planDelete($modelName, $id)
+    public function planRemove($id, $modelName){
+        $plan = $modelName::findOrFail($id);
+        $plan->update(['status' => 'inactive']);
+        return $plan;
+    }
+
+    public function planDelete($id, $modelName)
     {
         $plan = $modelName::findOrFail($id);
         $plan->delete();

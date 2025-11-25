@@ -140,46 +140,42 @@ class EmployeePlansController extends Controller
         ]);
     }
 
-    public function removePlan(Request $request, $type)
+    public function removePlan($type, $id)
     {
-        $validated = $this->empPlans->validation($request);
-
         if ($type === 'meal-plans'){
 
         }elseif ($type === 'shift-plans'){
-            $this->empPlans->planSave($validated, EmployeeShiftPlan::class);
+            $this->empPlans->planRemove($id, EmployeeShiftPlan::class);
         }elseif ($type === 'roster-plans'){
-            $this->empPlans->planSave($validated, EmployeeRosterPlan::class);
+            $this->empPlans->planRemove($id, EmployeeRosterPlan::class);
         }elseif ($type === 'ot-plans'){
-            $this->empPlans->planSave($validated, EmployeeOtPlan::class);
+            $this->empPlans->planRemove($id, EmployeeOtPlan::class);
         }elseif ($type === 'offday-plans'){
-            $this->empPlans->planSave($validated, EmployeeOffdayPlan::class);
+            $this->empPlans->planRemove($id, EmployeeOffdayPlan::class);
         }
 
         return redirect()->back()->with([
-            'message' => 'Plan Assigned Successfully',
+            'message' => 'Plan Removed Successfully',
             'alert-type' => 'success',
         ]);
     }
 
-    public function deletePlan(Request $request, $type)
+    public function deletePlan($id, $type)
     {
-        $validated = $this->empPlans->validation($request);
-
         if ($type === 'meal-plans'){
 
         }elseif ($type === 'shift-plans'){
-            $this->empPlans->planSave($validated, EmployeeShiftPlan::class);
+            $this->empPlans->planDelete($id, EmployeeShiftPlan::class);
         }elseif ($type === 'roster-plans'){
-            $this->empPlans->planSave($validated, EmployeeRosterPlan::class);
+            $this->empPlans->planDelete($id, EmployeeRosterPlan::class);
         }elseif ($type === 'ot-plans'){
-            $this->empPlans->planSave($validated, EmployeeOtPlan::class);
+            $this->empPlans->planDelete($id, EmployeeOtPlan::class);
         }elseif ($type === 'offday-plans'){
-            $this->empPlans->planSave($validated, EmployeeOffdayPlan::class);
+            $this->empPlans->planDelete($id, EmployeeOffdayPlan::class);
         }
 
         return redirect()->back()->with([
-            'message' => 'Plan Assigned Successfully',
+            'message' => 'Plan Deleted Successfully',
             'alert-type' => 'success',
         ]);
     }
