@@ -28,10 +28,6 @@ return new class extends Migration
             $table->date('ot_plan_to')->nullable();
             $table->enum('ot_plan_status', ['active', 'inactive'])->default('inactive');
 
-            $table->date('attendance_bonus_plan_from')->nullable();
-            $table->date('attendance_bonus_plan_to')->nullable();
-            $table->enum('attendance_bonus_plan_status', ['active', 'inactive'])->default('inactive');
-
             $table->date('day_off_work_plan_from')->nullable();
             $table->date('day_off_work_plan_to')->nullable();
             $table->enum('day_off_work_plan_status', ['active', 'inactive'])->default('inactive');
@@ -52,53 +48,21 @@ return new class extends Migration
             $table->date('late_deduction_plan_to')->nullable();
             $table->enum('late_deduction_plan_status', ['active', 'inactive'])->default('inactive');
 
-            $table->date('production_plan_from')->nullable();
-            $table->date('production_plan_to')->nullable();
-            $table->enum('production_plan_status', ['active', 'inactive'])->default('inactive');
-
             $table->date('early_out_deduction_plan_from')->nullable();
             $table->date('early_out_deduction_plan_to')->nullable();
             $table->enum('early_out_deduction_plan_status', ['active', 'inactive'])->default('inactive');
-
-            $table->date('salary_breakdown_plan_from')->nullable();
-            $table->date('salary_breakdown_plan_to')->nullable();
-            $table->enum('salary_breakdown_plan_status', ['active', 'inactive'])->default('inactive');
 
             $table->date('medical_plan_from')->nullable();
             $table->date('medical_plan_to')->nullable();
             $table->enum('medical_plan_status', ['active', 'inactive'])->default('inactive');
 
-            $table->date('night_bill_plan_from')->nullable();
-            $table->date('night_bill_plan_to')->nullable();
-            $table->enum('night_bill_plan_status', ['active', 'inactive'])->default('inactive');
-
-            $table->date('tiffin_plan_from')->nullable();
-            $table->date('tiffin_plan_to')->nullable();
-            $table->enum('tiffin_plan_status', ['active', 'inactive'])->default('inactive');
-
-            $table->date('dinner_plan_from')->nullable();
-            $table->date('dinner_plan_to')->nullable();
-            $table->enum('dinner_plan_status', ['active', 'inactive'])->default('inactive');
-
-            $table->date('breakfast_plan_from')->nullable();
-            $table->date('breakfast_plan_to')->nullable();
-            $table->enum('breakfast_plan_status', ['active', 'inactive'])->default('inactive');
-
-            $table->date('food_com_plan_from')->nullable();
-            $table->date('food_com_plan_to')->nullable();
-            $table->enum('food_com_plan_status', ['active', 'inactive'])->default('inactive');
-
             $table->date('excessive_late_plan_from')->nullable();
             $table->date('excessive_late_plan_to')->nullable();
             $table->enum('excessive_late_plan_status', ['active', 'inactive'])->default('inactive');
 
-            $table->date('lunch_plan_from')->nullable();
-            $table->date('lunch_plan_to')->nullable();
-            $table->enum('lunch_plan_status', ['active', 'inactive'])->default('inactive');
-
-            $table->date('snacks_plan_from')->nullable();
-            $table->date('snacks_plan_to')->nullable();
-            $table->enum('snacks_plan_status', ['active', 'inactive'])->default('inactive');
+            $table->date('meal_plan_from')->nullable();
+            $table->date('meal_plan_to')->nullable();
+            $table->enum('meal_plan_status', ['active', 'inactive'])->default('inactive');
 
             $table->timestamps();
         });

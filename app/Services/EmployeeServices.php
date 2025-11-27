@@ -414,11 +414,6 @@ class EmployeeServices
             'ot_plan_to' => 'nullable|date|after_or_equal:ot_plan_from',
             'ot_plan_status' => 'nullable|in:active,inactive',
 
-            // Attendance Bonus Plan
-            'attendance_bonus_plan_from' => 'nullable|date',
-            'attendance_bonus_plan_to' => 'nullable|date|after_or_equal:attendance_bonus_plan_from',
-            'attendance_bonus_plan_status' => 'nullable|in:active,inactive',
-
             // Day Off Work Plan
             'day_off_work_plan_from' => 'nullable|date',
             'day_off_work_plan_to' => 'nullable|date|after_or_equal:day_off_work_plan_from',
@@ -444,65 +439,25 @@ class EmployeeServices
             'late_deduction_plan_to' => 'nullable|date|after_or_equal:late_deduction_plan_from',
             'late_deduction_plan_status' => 'nullable|in:active,inactive',
 
-            // Production Plan
-            'production_plan_from' => 'nullable|date',
-            'production_plan_to' => 'nullable|date|after_or_equal:production_plan_from',
-            'production_plan_status' => 'nullable|in:active,inactive',
-
             // Early Out Deduction Plan
             'early_out_deduction_plan_from' => 'nullable|date',
             'early_out_deduction_plan_to' => 'nullable|date|after_or_equal:early_out_deduction_plan_from',
             'early_out_deduction_plan_status' => 'nullable|in:active,inactive',
-
-            // Salary Breakdown Plan
-            'salary_breakdown_plan_from' => 'nullable|date',
-            'salary_breakdown_plan_to' => 'nullable|date|after_or_equal:salary_breakdown_plan_from',
-            'salary_breakdown_plan_status' => 'nullable|in:active,inactive',
 
             // Medical Plan
             'medical_plan_from' => 'nullable|date',
             'medical_plan_to' => 'nullable|date|after_or_equal:medical_plan_from',
             'medical_plan_status' => 'nullable|in:active,inactive',
 
-            // Night Bill Plan
-            'night_bill_plan_from' => 'nullable|date',
-            'night_bill_plan_to' => 'nullable|date|after_or_equal:night_bill_plan_from',
-            'night_bill_plan_status' => 'nullable|in:active,inactive',
-
-            // Tiffin Plan
-            'tiffin_plan_from' => 'nullable|date',
-            'tiffin_plan_to' => 'nullable|date|after_or_equal:tiffin_plan_from',
-            'tiffin_plan_status' => 'nullable|in:active,inactive',
-
-            // Dinner Plan
-            'dinner_plan_from' => 'nullable|date',
-            'dinner_plan_to' => 'nullable|date|after_or_equal:dinner_plan_from',
-            'dinner_plan_status' => 'nullable|in:active,inactive',
-
-            // Breakfast Plan
-            'breakfast_plan_from' => 'nullable|date',
-            'breakfast_plan_to' => 'nullable|date|after_or_equal:breakfast_plan_from',
-            'breakfast_plan_status' => 'nullable|in:active,inactive',
-
-            // Food Com Plan
-            'food_com_plan_from' => 'nullable|date',
-            'food_com_plan_to' => 'nullable|date|after_or_equal:food_com_plan_from',
-            'food_com_plan_status' => 'nullable|in:active,inactive',
-
             // Excessive Late Plan
             'excessive_late_plan_from' => 'nullable|date',
             'excessive_late_plan_to' => 'nullable|date|after_or_equal:excessive_late_plan_from',
             'excessive_late_plan_status' => 'nullable|in:active,inactive',
 
-            // Lunch Plan
-            'lunch_plan_from' => 'nullable|date',
-            'lunch_plan_to' => 'nullable|date|after_or_equal:lunch_plan_from',
-            'lunch_plan_status' => 'nullable|in:active,inactive',
-
-            // Snacks Plan
-            'snacks_plan_from' => 'nullable|date',
-            'snacks_plan_to' => 'nullable|date|after_or_equal:snacks_plan_from',
-            'snacks_plan_status' => 'nullable|in:active,inactive',
+            // Meal Plan
+            'meal_plan_from' => 'nullable|date',
+            'meal_plan_to' => 'nullable|date|after_or_equal:meal_plan_from',
+            'meal_plan_status' => 'nullable|in:active,inactive',
         ],
             [
                 'employee_id.required' => 'The employee field is required.',
@@ -520,10 +475,6 @@ class EmployeeServices
                 'ot_plan_to.date' => 'The OT plan to date is invalid.',
                 'ot_plan_to.after_or_equal' => 'The OT plan to date must be after or equal to the from date.',
                 'ot_plan_status.in' => 'The OT plan status must be either active or inactive.',
-                'attendance_bonus_plan_from.date' => 'The attendance bonus  plan from date is invalid.',
-                'attendance_bonus_plan_to.date' => 'The attendance bonus plan to date is invalid.',
-                'attendance_bonus_plan_to.after_or_equal' => 'The attendance bonus plan to date must be after or equal to the from date.',
-                'attendance_bonus_plan_status.in' => 'The attendance bonus plan status must be either active or inactive.',
                 'day_off_work_plan_from.date' => 'The day off work plan from date is invalid.',
                 'day_off_work_plan_to.date' => 'The day off work plan to date is invalid.',
                 'day_off_work_plan_to.after_or_equal' => 'The day off work plan to date must be after or equal to the from date.',
@@ -544,18 +495,14 @@ class EmployeeServices
                 'late_deduction_plan_to.date' => 'The late deduction plan to date is invalid.',
                 'late_deduction_plan_to.after_or_equal' => 'The late deduction plan to date must be after or equal to the from date.',
                 'late_deduction_plan_status.in' => 'The late deduction plan status must be either active or inactive.',
-                'production_plan_from.date' => 'The production plan from date is invalid.',
-                'production_plan_to.date' => 'The production plan to date is invalid.',
-                'production_plan_to.after_or_equal' => 'The production plan to date must be after or equal to the from date.',
-                'production_plan_status.in' => 'The production plan status must be either active or inactive.',
                 'early_out_deduction_plan_from.date' => 'The early out deduction plan from date is invalid.',
                 'early_out_deduction_plan_to.date' => 'The early out deduction plan to date is invalid.',
                 'early_out_deduction_plan_to.after_or_equal' => 'The early out deduction plan to date must be after or equal to the from date.',
                 'early_out_deduction_plan_status.in' => 'The early out deduction plan status must be either active or inactive.',
-                'salary_breakdown_plan_from.date' => 'The salary breakdown plan from date is invalid.',
-                'salary_breakdown_plan_to.date' => 'The salary breakdown plan to date is invalid.',
-                'salary_breakdown_plan_to.after_or_equal' => 'The salary breakdown plan to date must be after or equal to the from date.',
-                'salary_breakdown_plan_status.in' => 'The salary breakdown plan status must be either active or inactive.',
+                'meal_plan_from.date' => 'The meal plan from date is invalid.',
+                'meal_plan_to.date' => 'The meal plan to date is invalid.',
+                'meal_plan_to.after_or_equal' => 'The meal plan to date must be after or equal to the from date.',
+                'meal_plan_status.in' => 'The meal plan status must be either active or inactive.',
             ]);
         return $validated;
     }
