@@ -302,4 +302,45 @@ class PlanService
         return $validated;
     }
 
+    public function bonusPlanValidation($request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'bonus_type' => 'required|in:festival,performance,annual,incentive,retention,other',
+
+            // Configuration fields
+            'bonus_config_type' => 'required|in:Salary Based,Custom',
+            'salary_rate_type' => 'required_if:bonus_config_type,Salary Based|nullable|in:Basic Rate,Multiplier',
+            'overtime_multiplier' => 'nullable|numeric|min:0',
+            'custom_overtime_rate' => 'nullable|numeric|min:0',
+
+            'status' => 'required|in:active,inactive',
+        ], [
+            'name.required' => 'Bonus plan name is required.',
+            'name.string' => 'Bonus plan name must be a string.',
+            'name.max' => 'Bonus plan name may not exceed 255 characters.',
+
+            'bonus_type.required' => 'Please select a bonus type.',
+            'bonus_type.in' => 'The selected bonus type is invalid.',
+
+            'bonus_config_type.required' => 'Please select a configuration type.',
+            'bonus_config_type.in' => 'The selected configuration type is invalid.',
+
+            'salary_rate_type.required_if' => 'Please select a rate type when using salary-based configuration.',
+            'salary_rate_type.in' => 'The selected rate type is invalid.',
+
+            'overtime_multiplier.numeric' => 'Overtime multiplier must be a number.',
+            'overtime_multiplier.min' => 'Overtime multiplier must be at least 0.',
+
+            'custom_overtime_rate.numeric' => 'Custom overtime rate must be a number.',
+            'custom_overtime_rate.min' => 'Custom overtime rate must be at least 0.',
+
+            'status.required' => 'Please select the plan status.',
+            'status.in' => 'The selected status is invalid.',
+        ]);
+
+        return $validated;
+    }
+
 }

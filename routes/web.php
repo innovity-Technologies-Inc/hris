@@ -30,6 +30,7 @@ use App\Http\Controllers\LeavePlanController;
 use App\Http\Controllers\RosterPlansController;
 use App\Http\Controllers\OffDayPlansController;
 use App\Http\Controllers\EmployeePlansController;
+use App\Http\Controllers\BonusPlanController;
 
 
 Route::get('test', function () {
@@ -338,6 +339,18 @@ Route::prefix('plans')->group(function () {
             Route::put('update/{id}', 'update')->name('plans.off_day_plans.update');
             Route::delete('delete/{id}', 'delete')->name('plans.off_day_plans.delete');
             Route::post('import', 'import')->name('plans.off_day_plans.import');
+        });
+    });
+    Route::prefix('bonus-plans')->group(function () {
+        Route::controller(BonusPlanController::class)->group(function(){
+            Route::get('/', 'index')->name('plans.bonus_plans.index');
+            Route::get('create', 'create')->name('plans.bonus_plans.create');
+            Route::post('store', 'store')->name('plans.bonus_plans.store');
+            Route::get('{id}', 'show')->name('plans.bonus_plans.show');
+            Route::get('edit/{id}', 'edit')->name('plans.bonus_plans.edit');
+            Route::put('update/{id}', 'update')->name('plans.bonus_plans.update');
+            Route::delete('delete/{id}', 'delete')->name('plans.bonus_plans.delete');
+            Route::post('import', 'import')->name('plans.bonus_plans.import');
         });
     });
 
