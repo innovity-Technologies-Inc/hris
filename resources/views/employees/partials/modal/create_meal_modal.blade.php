@@ -11,11 +11,12 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-
+            <form id="createMealPlanForm" method="POST" action="{{route('employees.profile.plans.store', 'meal-plans')}}">
+                @csrf
+                <input type="hidden" name="employee_id" value="{{ $employee->id }}">
             {{-- Modal Body --}}
             <div class="modal-body">
-                <form id="createMealPlanForm" method="POST" action="{{route('employees.profile.plans.store', 'meal-plans')}}">
-                    @csrf
+
 
                     <div class="row g-3">
                         <input type="hidden" name="employee_id" value="{{ $employee->id }}">
@@ -114,7 +115,6 @@
                         </div>
                     </div>
 
-                </form>
             </div>
 
             {{-- Modal Footer --}}
@@ -122,10 +122,12 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     <i class="mdi mdi-close me-1"></i> Cancel
                 </button>
-                <button type="submit" class="btn btn-primary" onclick="submitModalForm()">
+                <button type="submit" class="btn btn-primary">
                     <i class="mdi mdi-check-circle me-1"></i> Add
                 </button>
             </div>
+            </form>
+
         </div>
     </div>
 </div>

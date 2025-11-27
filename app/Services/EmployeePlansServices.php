@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\EmployeeMealPlan;
+use App\Models\MealPlan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -19,6 +21,24 @@ class EmployeePlansServices
                 $active_plan->update(['status' => 'inactive']);
                 $plan = $modelName::create($validated);
                 return $plan;
+            });
+        }
+    }
+
+    public function mealPlanSave($validated, $request)
+    {
+        $validated['status'] = 'active';
+        $meal_type = $request->meal_type;
+        $meal_plan = EmployeeMealPlan::where('status', 'active')->
+            where('type', $meal_type)->first();
+        if (empty($meal_plan)) {
+            $meal_plan = EmployeeMealPlan::create($validated);
+            return $meal_plan;
+        }else{
+            DB::transaction(function () use ($validated, $meal_plan) {
+                $meal_plan->update(['status' => 'inactive']);
+                $meal_plan = EmployeeMealPlan::create($validated);
+                return $meal_plan;
             });
         }
     }

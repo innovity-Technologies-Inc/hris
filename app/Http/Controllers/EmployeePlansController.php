@@ -125,7 +125,7 @@ class EmployeePlansController extends Controller
 
         try{
             if ($type === 'meal-plans'){
-
+                $this->empPlans->mealPlanSave($validated, $request);
             }elseif ($type === 'shift-plans'){
                 $this->empPlans->planSave($validated, EmployeeShiftPlan::class);
             }elseif ($type === 'roster-plans'){
