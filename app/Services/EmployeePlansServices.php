@@ -29,8 +29,10 @@ class EmployeePlansServices
     {
         $validated['status'] = 'active';
         $meal_type = $request->meal_type;
-        $meal_plan = EmployeeMealPlan::where('status', 'active')->
-            where('type', $meal_type)->first();
+        $meal_plan = EmployeeMealPlan::with('getPlan')->where('status', 'active')->
+            whereHas('getPlan', function ($q) use ($meal_type){
+                $q->where('type', $meal_type);
+        })->first();
         if (empty($meal_plan)) {
             $meal_plan = EmployeeMealPlan::create($validated);
             return $meal_plan;

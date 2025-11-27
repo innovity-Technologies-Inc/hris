@@ -63,20 +63,25 @@
                                     </td>
                                     <td><strong>{{ $plan->getPlan->name }}</strong></td>
                                     <td><span
-                                            class="text-success fw-semibold">৳{{ number_format($plan->getPlan->cost ?? 0) }}</span>
+                                            class="text-success fw-semibold">{{\App\HelperClass::getCurrency()}} {{ number_format($plan->getPlan->cost ?? 0) }}</span>
                                     </td>
                                     <td>{{ \Carbon\Carbon::parse($plan->from)->format('jS F Y') }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($plan->from)->format('jS F Y') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($plan->to)->format('jS F Y') }}</td>
                                     <td>
                                             <span class="badge bg-success">
                                                 <i class="mdi mdi-check-circle me-1"></i>{{ $plan->status }}
                                             </span>
                                     </td>
                                     <td class="text-center">
-                                        <button type="button" class="btn btn-sm btn-warning"
-                                                title="Edit Assignment">
-                                            <i class="mdi mdi-close"></i> Remove
-                                        </button>
+                                        <form
+                                            action="{{ route('employees.profile.plans.remove', ['id' => $plan->id, 'type' => 'meal-plans']) }}"
+                                            method="post">
+                                            @csrf
+                                            @method('put')
+                                            <button type="submit" class="btn btn-sm btn-outline-danger shadow-sm removeBtn">
+                                                <i class="mdi mdi-close-circle"></i> Remove
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach
@@ -137,12 +142,12 @@
                                     </td>
                                     <td>{{ $plan->getPlan->name }}</td>
                                     <td><span
-                                            class="text-success fw-semibold">৳{{ number_format($plan->daily_cost ?? 0) }}</span>
+                                            class="text-success fw-semibold">{{\App\HelperClass::getCurrency()}} {{ number_format($plan->getPlan->cost ?? 0) }}</span>
                                     </td>
                                     <td>{{ \Carbon\Carbon::parse($plan->from)->format('jS F Y') }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($plan->from)->format('jS F Y') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($plan->to)->format('jS F Y') }}</td>
                                     <td>
-                                        @if ($plan->status == 'Expired')
+                                        @if ($plan->status == 'inactive')
                                             <span class="badge bg-warning-subtle text-warning">
                                                     <i
                                                         class="mdi mdi-clock-alert-outline me-1"></i>{{ $plan->status }}
@@ -154,10 +159,16 @@
                                         @endif
                                     </td>
                                     <td class="text-center">
-                                        <button type="button" class="btn btn-sm btn-danger" title="Delete Record"
-                                                onclick="confirmDelete({{ $plan->id }})">
-                                            <i class="mdi mdi-delete"></i> Delete
-                                        </button>
+                                        <form
+                                            action="{{ route('employees.profile.plans.delete', ['type' => 'meal-plans', 'id' => $plan->id]) }}"
+                                            method="post">
+                                            @csrf
+                                            @method('delete')
+                                            <button type="submit" class="btn btn-sm btn-danger confirmDelete"
+                                                    title="Delete Record">
+                                                <i class="mdi mdi-delete"></i> Delete
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach
