@@ -1,796 +1,315 @@
-
-    <div class="container-fluid px-4 py-5">
-        <div class="row g-4">
-            {{-- Bonus Plan List Panel - Box Style (Wider) --}}
-            <div class="col-lg-4 col-md-5">
-                <div class="list-container">
-                    <div class="list-header">
-                        <h5 class="mb-3 fw-semibold">Bonus Plan List</h5>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="selectAll">
-                            <label class="form-check-label" for="selectAll">
-                                Select all
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="list-body" id="bonusPlanList">
-                        {{-- List items rendered by JavaScript --}}
-                    </div>
-
-                    <div class="list-footer">
-                        <button class="btn btn-primary w-100 py-2" id="submitBtn">
-                            <i class="bi bi-check-circle me-2"></i>Submit Selected
-                        </button>
+<div class="container-fluid px-4 py-5">
+    <div class="row g-4">
+        {{-- Bonus Plan List Panel --}}
+        <div class="col-lg-4 col-md-5">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-3 fw-semibold">💰 Bonus Plan List</h5>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="selectAll">
+                        <label class="form-check-label" for="selectAll">
+                            Select all
+                        </label>
                     </div>
                 </div>
-            </div>
 
-            {{-- Details Panel - Card Style (Compact) --}}
-            <div class="col-lg-8 col-md-7">
-                <div class="card details-card">
-                    <div class="card-header">
-                        <h5 class="mb-0 fw-semibold">
-                            <i class="bi bi-info-circle me-2"></i>Details
-                        </h5>
+                <div class="card-body p-3" style="max-height: 550px; overflow-y: auto;" id="bonusPlanList">
+                    {{-- List items will be populated here --}}
+                </div>
+
+                <div class="card-footer bg-light">
+                    <button class="btn btn-primary w-100 py-2" id="submitBtn">
+                        <i class="bi bi-check-circle me-2"></i>Submit Selected
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        {{-- Details Panel --}}
+        <div class="col-lg-8 col-md-7">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0 fw-semibold">
+                        <i class="bi bi-info-circle me-2"></i>Details
+                    </h5>
+                </div>
+                <div class="card-body" style="min-height: 400px;">
+                    {{-- Empty State --}}
+                    <div id="emptyState" class="d-flex flex-column align-items-center justify-content-center"
+                        style="height: 350px;">
+                        <i class="bi bi-file-earmark-text text-muted" style="font-size: 3rem; opacity: 0.3;"></i>
+                        <p class="text-muted mt-3">Select a bonus plan to view details</p>
                     </div>
-                    <div class="card-body" id="detailsPanel">
-                        <div class="empty-state">
-                            <i class="bi bi-file-earmark-text"></i>
-                            <p>Select a bonus plan to view details</p>
+
+                    {{-- Details Content (Hidden by default) --}}
+                    <div id="detailsContent" class="d-none">
+                        <div class="pb-3 border-bottom border-primary border-2 mb-3">
+                            <h4 class="fw-bold mb-1" id="planName"></h4>
+                            <div class="text-muted">
+                                <span class="me-3"><i class="bi bi-tag me-1"></i><span id="planType"></span></span>
+                                <span id="planStatusBadge"></span>
+                            </div>
+                        </div>
+
+                        {{-- Description (if available) --}}
+                        <div id="descriptionSection" class="mb-3 p-3 bg-light rounded border d-none">
+                            <h6 class="text-uppercase fw-bold mb-3" style="font-size: 0.813rem; letter-spacing: 0.8px;">
+                                <i class="bi bi-file-text me-2 text-primary"></i>Description
+                            </h6>
+                            <div class="fw-semibold" id="planDescription"></div>
+                        </div>
+
+                        {{-- Bonus Information --}}
+                        <div class="mb-3 p-3 bg-light rounded border">
+                            <h6 class="text-uppercase fw-bold mb-3" style="font-size: 0.813rem; letter-spacing: 0.8px;">
+                                <i class="bi bi-info-square me-2 text-primary"></i>Bonus Information
+                            </h6>
+                            <div class="row g-2">
+                                <div class="col-md-4">
+                                    <label class="text-secondary text-uppercase fw-semibold mb-1"
+                                        style="font-size: 0.688rem;">Bonus Type</label>
+                                    <div class="fw-semibold" id="bonusType"></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="text-secondary text-uppercase fw-semibold mb-1"
+                                        style="font-size: 0.688rem;">Config Type</label>
+                                    <div class="fw-semibold" id="configType"></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="text-secondary text-uppercase fw-semibold mb-1"
+                                        style="font-size: 0.688rem;">Status</label>
+                                    <div id="statusBadge"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Configuration Details --}}
+                        <div class="mb-3 p-3 bg-light rounded border">
+                            <h6 class="text-uppercase fw-bold mb-3" style="font-size: 0.813rem; letter-spacing: 0.8px;">
+                                <i class="bi bi-gear me-2 text-primary"></i>Configuration Details
+                            </h6>
+                            <div class="row g-2" id="configDetails">
+                                {{-- Populated dynamically --}}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        // Dummy data matching migration structure
-        const bonusPlans = [{
-                id: 1,
-                name: 'Eid Bonus',
-                description: 'Annual Eid festival bonus for all employees',
-                bonus_type: 'festival',
-                bonus_config_type: 'Salary Based',
-                salary_rate_type: 'Basic Rate',
-                overtime_multiplier: null,
-                custom_overtime_rate: null,
-                status: 'active'
-            },
-            {
-                id: 2,
-                name: 'Performance Bonus Q4',
-                description: 'Quarterly performance-based bonus for high achievers',
-                bonus_type: 'performance',
-                bonus_config_type: 'Salary Based',
-                salary_rate_type: 'Multiplier',
-                overtime_multiplier: 1.5,
-                custom_overtime_rate: null,
-                status: 'active'
-            },
-            {
-                id: 3,
-                name: 'Annual Excellence Award',
-                description: 'Annual bonus for outstanding employee performance',
-                bonus_type: 'annual',
-                bonus_config_type: 'Custom',
-                salary_rate_type: null,
-                overtime_multiplier: null,
-                custom_overtime_rate: 5000.00,
-                status: 'active'
-            },
-            {
-                id: 4,
-                name: 'Sales Incentive',
-                description: 'Special incentive for sales team meeting targets',
-                bonus_type: 'incentive',
-                bonus_config_type: 'Salary Based',
-                salary_rate_type: 'Multiplier',
-                overtime_multiplier: 2.0,
-                custom_overtime_rate: null,
-                status: 'active'
-            },
-            {
-                id: 5,
-                name: 'Retention Bonus 2025',
-                description: 'Long-term employee retention bonus program',
-                bonus_type: 'retention',
-                bonus_config_type: 'Custom',
-                salary_rate_type: null,
-                overtime_multiplier: null,
-                custom_overtime_rate: 10000.00,
-                status: 'inactive'
-            }
-        ];
-
-        /**
-         * Render bonus plan list items
-         */
-        function renderBonusPlanList() {
-            const listContainer = document.getElementById('bonusPlanList');
-            listContainer.innerHTML = '';
-
-            bonusPlans.forEach(plan => {
-                const listItem = document.createElement('div');
-                listItem.className = 'plan-item';
-                listItem.innerHTML = `
-            <div class="plan-item-content">
-                <div class="form-check">
-                    <input class="form-check-input plan-checkbox" type="checkbox" value="${plan.id}" id="plan${plan.id}">
-                    <label class="form-check-label" for="plan${plan.id}">
-                        <span class="plan-name">${plan.name}</span>
-                    </label>
-                </div>
-                <button class="btn-view" onclick="showDetails(${plan.id})" title="View Details">
-                    <i class="bi bi-eye"></i>
-                </button>
-            </div>
-        `;
-                listContainer.appendChild(listItem);
-            });
+<script>
+    // Dummy data matching migration structure
+    const bonusPlans = [{
+            id: 1,
+            name: 'Eid Bonus',
+            description: 'Annual Eid festival bonus for all employees',
+            bonus_type: 'festival',
+            bonus_config_type: 'Salary Based',
+            salary_rate_type: 'Basic Rate',
+            overtime_multiplier: null,
+            custom_overtime_rate: null,
+            status: 'active'
+        },
+        {
+            id: 2,
+            name: 'Performance Bonus Q4',
+            description: 'Quarterly performance-based bonus for high achievers',
+            bonus_type: 'performance',
+            bonus_config_type: 'Salary Based',
+            salary_rate_type: 'Multiplier',
+            overtime_multiplier: 1.5,
+            custom_overtime_rate: null,
+            status: 'active'
+        },
+        {
+            id: 3,
+            name: 'Annual Excellence Award',
+            description: 'Annual bonus for outstanding employee performance',
+            bonus_type: 'annual',
+            bonus_config_type: 'Custom',
+            salary_rate_type: null,
+            overtime_multiplier: null,
+            custom_overtime_rate: 5000.00,
+            status: 'active'
+        },
+        {
+            id: 4,
+            name: 'Sales Incentive',
+            description: 'Special incentive for sales team meeting targets',
+            bonus_type: 'incentive',
+            bonus_config_type: 'Salary Based',
+            salary_rate_type: 'Multiplier',
+            overtime_multiplier: 2.0,
+            custom_overtime_rate: null,
+            status: 'active'
+        },
+        {
+            id: 5,
+            name: 'Retention Bonus 2025',
+            description: 'Long-term employee retention bonus program',
+            bonus_type: 'retention',
+            bonus_config_type: 'Custom',
+            salary_rate_type: null,
+            overtime_multiplier: null,
+            custom_overtime_rate: 10000.00,
+            status: 'inactive'
         }
+    ];
 
-        /**
-         * Display details for selected bonus plan
-         */
-        function showDetails(planId) {
-            const plan = bonusPlans.find(p => p.id === planId);
-            if (!plan) return;
+    /**
+     * Render bonus plan list items
+     */
+    function renderBonusPlanList() {
+        const listContainer = document.getElementById('bonusPlanList');
+        listContainer.innerHTML = '';
 
-            const detailsPanel = document.getElementById('detailsPanel');
+        bonusPlans.forEach(plan => {
+            const listItem = document.createElement('div');
+            listItem.className = 'card mb-2 border hover-shadow';
+            listItem.style.cursor = 'pointer';
+            listItem.style.transition = 'all 0.3s ease';
 
-            // Format bonus type for display
-            const formatBonusType = (type) => {
-                return type.charAt(0).toUpperCase() + type.slice(1);
-            };
-
-            // Build configuration details HTML
-            let configDetailsHTML = '';
-            if (plan.bonus_config_type === 'Salary Based') {
-                if (plan.salary_rate_type === 'Basic Rate') {
-                    configDetailsHTML = `
-                        <div class="col-md-6">
-                            <div class="detail-field">
-                                <label>Salary Rate Type</label>
-                                <div class="detail-value">${plan.salary_rate_type}</div>
+            listItem.innerHTML = `
+                    <div class="card-body p-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="form-check">
+                                <input class="form-check-input plan-checkbox" type="checkbox" value="${plan.id}" id="plan${plan.id}">
+                                <label class="form-check-label fw-semibold" for="plan${plan.id}">
+                                    ${plan.name}
+                                </label>
                             </div>
-                        </div>
-                    `;
-                } else if (plan.salary_rate_type === 'Multiplier') {
-                    configDetailsHTML = `
-                        <div class="col-md-6">
-                            <div class="detail-field">
-                                <label>Salary Rate Type</label>
-                                <div class="detail-value">${plan.salary_rate_type}</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="detail-field">
-                                <label>Overtime Multiplier</label>
-                                <div class="detail-value highlight">${plan.overtime_multiplier}x</div>
-                            </div>
-                        </div>
-                    `;
-                }
-            } else if (plan.bonus_config_type === 'Custom') {
-                configDetailsHTML = `
-                    <div class="col-md-6">
-                        <div class="detail-field">
-                            <label>Custom Rate</label>
-                            <div class="detail-value highlight">৳${plan.custom_overtime_rate ? plan.custom_overtime_rate.toLocaleString() : '0.00'}</div>
+                            <button class="btn btn-sm btn-outline-primary" onclick="showDetails(${plan.id})" title="View Details">
+                                <i class="bi bi-eye"></i>
+                            </button>
                         </div>
                     </div>
                 `;
-            }
 
-            detailsPanel.innerHTML = `
-        <div class="details-header">
-            <h4 class="fw-bold mb-1">${plan.name}</h4>
-            <div class="text-muted">
-                <span class="me-3"><i class="bi bi-tag me-1"></i>${formatBonusType(plan.bonus_type)}</span>
-                <span class="badge ${plan.status === 'active' ? 'badge-active' : 'badge-inactive'}">
-                    ${plan.status === 'active' ? 'Active' : 'Inactive'}
-                </span>
-            </div>
-        </div>
+            listItem.addEventListener('mouseenter', function() {
+                this.style.borderColor = 'var(--bs-primary)';
+                this.style.transform = 'translateY(-2px)';
+            });
 
-        ${plan.description ? `
-            <div class="details-section">
-                <h6 class="section-title">
-                    <i class="bi bi-file-text me-2"></i>Description
-                </h6>
-                <div class="row g-2">
-                    <div class="col-12">
-                        <div class="detail-field">
-                            <div class="detail-value">${plan.description}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            ` : ''}
+            listItem.addEventListener('mouseleave', function() {
+                this.style.borderColor = 'var(--bs-border-color)';
+                this.style.transform = 'translateY(0)';
+            });
 
-        <div class="details-section">
-            <h6 class="section-title">
-                <i class="bi bi-info-square me-2"></i>Bonus Information
-            </h6>
-            <div class="row g-2">
-                <div class="col-md-4">
-                    <div class="detail-field">
-                        <label>Bonus Type</label>
-                        <div class="detail-value">${formatBonusType(plan.bonus_type)}</div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="detail-field">
-                        <label>Config Type</label>
-                        <div class="detail-value">${plan.bonus_config_type}</div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="detail-field">
-                        <label>Status</label>
-                        <div class="detail-value">
-                            <span class="badge ${plan.status === 'active' ? 'badge-enabled' : 'badge-disabled'}">
-                                ${plan.status === 'active' ? 'Active' : 'Inactive'}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+            listContainer.appendChild(listItem);
+        });
+    }
 
-        <div class="details-section">
-            <h6 class="section-title">
-                <i class="bi bi-gear me-2"></i>Configuration Details
-            </h6>
-            <div class="row g-2">
-                ${configDetailsHTML}
-            </div>
-        </div>
-    `;
+    /**
+     * Display details for selected bonus plan
+     */
+    function showDetails(planId) {
+        const plan = bonusPlans.find(p => p.id === planId);
+        if (!plan) return;
+
+        // Hide empty state and show details
+        document.getElementById('emptyState').classList.add('d-none');
+        document.getElementById('detailsContent').classList.remove('d-none');
+
+        // Populate details
+        document.getElementById('planName').textContent = plan.name;
+
+        const formatBonusType = (type) => type.charAt(0).toUpperCase() + type.slice(1);
+        document.getElementById('planType').textContent = formatBonusType(plan.bonus_type);
+
+        const statusBadge = plan.status === 'active' ?
+            '<span class="badge bg-success">Active</span>' :
+            '<span class="badge bg-secondary">Inactive</span>';
+        document.getElementById('planStatusBadge').innerHTML = statusBadge;
+
+        // Description
+        if (plan.description) {
+            document.getElementById('descriptionSection').classList.remove('d-none');
+            document.getElementById('planDescription').textContent = plan.description;
+        } else {
+            document.getElementById('descriptionSection').classList.add('d-none');
         }
 
-        /**
-         * Initialize event listeners
-         */
-        document.addEventListener('DOMContentLoaded', function() {
-            renderBonusPlanList();
+        // Bonus Information
+        document.getElementById('bonusType').textContent = formatBonusType(plan.bonus_type);
+        document.getElementById('configType').textContent = plan.bonus_config_type;
 
-            // Select All functionality
-            const selectAllCheckbox = document.getElementById('selectAll');
-            selectAllCheckbox.addEventListener('change', function() {
-                const checkboxes = document.querySelectorAll('.plan-checkbox');
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = this.checked;
-                });
-            });
+        const enabledBadge = plan.status === 'active' ?
+            '<span class="badge bg-info">Active</span>' :
+            '<span class="badge bg-secondary">Inactive</span>';
+        document.getElementById('statusBadge').innerHTML = enabledBadge;
 
-            // Update Select All based on individual selections
-            document.addEventListener('change', function(e) {
-                if (e.target.classList.contains('plan-checkbox')) {
-                    const checkboxes = document.querySelectorAll('.plan-checkbox');
-                    const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-                    selectAllCheckbox.checked = allChecked;
-                }
-            });
+        // Configuration Details
+        let configDetailsHTML = '';
+        if (plan.bonus_config_type === 'Salary Based') {
+            if (plan.salary_rate_type === 'Basic Rate') {
+                configDetailsHTML = `
+                        <div class="col-md-6">
+                            <label class="text-secondary text-uppercase fw-semibold mb-1" style="font-size: 0.688rem;">Salary Rate Type</label>
+                            <div class="fw-semibold">${plan.salary_rate_type}</div>
+                        </div>
+                    `;
+            } else if (plan.salary_rate_type === 'Multiplier') {
+                configDetailsHTML = `
+                        <div class="col-md-6">
+                            <label class="text-secondary text-uppercase fw-semibold mb-1" style="font-size: 0.688rem;">Salary Rate Type</label>
+                            <div class="fw-semibold">${plan.salary_rate_type}</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-secondary text-uppercase fw-semibold mb-1" style="font-size: 0.688rem;">Overtime Multiplier</label>
+                            <div class="fw-bold text-primary">${plan.overtime_multiplier}x</div>
+                        </div>
+                    `;
+            }
+        } else if (plan.bonus_config_type === 'Custom') {
+            configDetailsHTML = `
+                    <div class="col-md-6">
+                        <label class="text-secondary text-uppercase fw-semibold mb-1" style="font-size: 0.688rem;">Custom Rate</label>
+                        <div class="fw-bold text-primary">৳${plan.custom_overtime_rate ? plan.custom_overtime_rate.toLocaleString() : '0.00'}</div>
+                    </div>
+                `;
+        }
 
-            // Submit button handler
-            document.getElementById('submitBtn').addEventListener('click', function() {
-                const selectedIds = Array.from(document.querySelectorAll('.plan-checkbox:checked'))
-                    .map(cb => cb.value);
+        document.getElementById('configDetails').innerHTML = configDetailsHTML;
+    }
 
-                if (selectedIds.length === 0) {
-                    alert('Please select at least one bonus plan.');
-                    return;
-                }
+    /**
+     * Initialize event listeners
+     */
+    document.addEventListener('DOMContentLoaded', function() {
+        renderBonusPlanList();
 
-                console.log('Selected Plan IDs:', selectedIds);
-                alert('Selected Bonus Plans: ' + selectedIds.join(', '));
+        // Select All functionality
+        const selectAllCheckbox = document.getElementById('selectAll');
+        selectAllCheckbox.addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('.plan-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
             });
         });
-    </script>
 
-    <style>
-        /* CSS Variables for Theme Support */
-        :root {
-            --leave-card-bg: #ffffff;
-            --leave-card-border: #e1e4e8;
-            --leave-text-primary: #24292e;
-            --leave-text-secondary: #6a737d;
-            --leave-text-muted: #959da5;
-            --leave-hover-bg: rgba(3, 102, 214, 0.06);
-            --leave-active-bg: rgba(3, 102, 214, 0.15);
-            --leave-accent: #108dff;
-            --leave-accent-hover: #0366d6;
-            --leave-gradient-start: #fafbfc;
-            --leave-gradient-end: #f6f8fa;
-            --leave-shadow: rgba(0, 0, 0, 0.04);
-            --leave-shadow-hover: rgba(3, 102, 214, 0.1);
-            --leave-border-radius: 8px;
-            --leave-scrollbar-track: #f6f8fa;
-            --leave-scrollbar-thumb: #d1d5da;
-            --leave-badge-success-bg: #dcffe4;
-            --leave-badge-success-text: #176f2c;
-            --leave-badge-success-border: #9ce5a8;
-            --leave-badge-info-bg: #dbedff;
-            --leave-badge-info-text: #005cc5;
-            --leave-badge-info-border: #a8d4ff;
-            --leave-badge-inactive-bg: #f1f1f1;
-            --leave-badge-inactive-text: #586069;
-            --leave-badge-inactive-border: #d1d5da;
-        }
+        // Update Select All based on individual selections
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('plan-checkbox')) {
+                const checkboxes = document.querySelectorAll('.plan-checkbox');
+                const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+                selectAllCheckbox.checked = allChecked;
+            }
+        });
 
-        /* Dark Mode Variables */
-        html[data-bs-theme='dark'] {
-            --leave-card-bg: #1e293b;
-            --leave-card-border: rgba(255, 255, 255, 0.1);
-            --leave-text-primary: #f1f5f9;
-            --leave-text-secondary: #cbd5e1;
-            --leave-text-muted: #94a3b8;
-            --leave-hover-bg: rgba(16, 141, 255, 0.1);
-            --leave-active-bg: rgba(16, 141, 255, 0.2);
-            --leave-accent: #108dff;
-            --leave-accent-hover: #38a3ff;
-            --leave-gradient-start: #0f172a;
-            --leave-gradient-end: #1e293b;
-            --leave-shadow: rgba(0, 0, 0, 0.3);
-            --leave-shadow-hover: rgba(16, 141, 255, 0.2);
-            --leave-scrollbar-track: #0f172a;
-            --leave-scrollbar-thumb: #475569;
-            --leave-badge-success-bg: rgba(34, 197, 94, 0.15);
-            --leave-badge-success-text: #4ade80;
-            --leave-badge-success-border: rgba(34, 197, 94, 0.3);
-            --leave-badge-info-bg: rgba(16, 141, 255, 0.15);
-            --leave-badge-info-text: #60a5fa;
-            --leave-badge-info-border: rgba(16, 141, 255, 0.3);
-            --leave-badge-inactive-bg: rgba(100, 116, 139, 0.15);
-            --leave-badge-inactive-text: #94a3b8;
-            --leave-badge-inactive-border: rgba(100, 116, 139, 0.3);
-        }
+        // Submit button handler
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            const selectedIds = Array.from(document.querySelectorAll('.plan-checkbox:checked'))
+                .map(cb => cb.value);
 
-        /* List Container - Box Style */
-        .list-container {
-            background: var(--leave-card-bg);
-            border: 1px solid var(--leave-card-border);
-            border-radius: var(--leave-border-radius);
-            box-shadow: 0 4px 6px -1px var(--leave-shadow), 0 2px 4px -1px var(--leave-shadow);
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .list-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--leave-card-border);
-            background: linear-gradient(to bottom, var(--leave-gradient-start), var(--leave-gradient-end));
-        }
-
-        .list-header h5 {
-            color: var(--leave-text-primary);
-            font-size: 1.125rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-        }
-
-        .list-header h5::before {
-            content: '💰';
-            margin-right: 0.5rem;
-            font-size: 1.25rem;
-        }
-
-        .list-body {
-            padding: 1rem;
-            max-height: 550px;
-            overflow-y: auto;
-            background: var(--leave-card-bg);
-        }
-
-        .list-footer {
-            padding: 1.25rem;
-            border-top: 1px solid var(--leave-card-border);
-            background: linear-gradient(to top, var(--leave-gradient-start), var(--leave-gradient-end));
-        }
-
-        /* Plan Item - Box Style */
-        .plan-item {
-            background: var(--leave-card-bg);
-            border: 1px solid var(--leave-card-border);
-            border-radius: 6px;
-            margin-bottom: 0.75rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow: hidden;
-        }
-
-        .plan-item:hover {
-            border-color: var(--leave-accent);
-            box-shadow: 0 4px 12px var(--leave-shadow-hover);
-            transform: translateY(-2px);
-            background: var(--leave-hover-bg);
-        }
-
-        .plan-item-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 1.25rem;
-        }
-
-        .plan-name {
-            display: block;
-            font-weight: 600;
-            color: var(--leave-text-primary);
-            font-size: 0.938rem;
-            margin-bottom: 0.25rem;
-            letter-spacing: 0.01em;
-        }
-
-        .plan-code {
-            display: inline-block;
-            font-size: 0.688rem;
-            color: var(--leave-accent);
-            background: var(--leave-active-bg);
-            padding: 0.25rem 0.625rem;
-            border-radius: 4px;
-            margin-left: 0.5rem;
-            font-weight: 600;
-            border: 1px solid var(--leave-accent);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-view {
-            background: var(--leave-card-bg);
-            border: 1px solid var(--leave-card-border);
-            border-radius: 6px;
-            padding: 0.5rem 0.875rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: var(--leave-text-secondary);
-        }
-
-        .btn-view:hover {
-            background: var(--leave-accent);
-            color: #ffffff;
-            border-color: var(--leave-accent);
-            transform: scale(1.05);
-        }
-
-        .btn-view i {
-            font-size: 1rem;
-        }
-
-        /* Details Card - Compact */
-        .details-card {
-            border: 1px solid var(--leave-card-border);
-            border-radius: var(--leave-border-radius);
-            box-shadow: 0 4px 6px -1px var(--leave-shadow), 0 2px 4px -1px var(--leave-shadow);
-            overflow: hidden;
-            background: var(--leave-card-bg);
-        }
-
-        .details-card .card-header {
-            background: linear-gradient(135deg, var(--leave-accent), var(--leave-accent-hover));
-            border-bottom: 1px solid var(--leave-card-border);
-            padding: 1.25rem 1.5rem;
-        }
-
-        .details-card .card-header h5 {
-            color: #ffffff;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-        }
-
-        .details-card .card-header h5 i {
-            margin-right: 0.5rem;
-            font-size: 1.25rem;
-        }
-
-        .details-card .card-body {
-            padding: 1rem;
-            min-height: 400px;
-            background: var(--leave-card-bg);
-        }
-
-        /* Empty State */
-        .empty-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 350px;
-            color: var(--leave-text-muted);
-        }
-
-        .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            opacity: 0.3;
-            color: var(--leave-text-muted);
-        }
-
-        .empty-state p {
-            font-size: 1rem;
-            margin: 0;
-            font-weight: 500;
-        }
-
-        /* Details Content - Compact */
-        .details-header {
-            padding-bottom: 0.75rem;
-            border-bottom: 2px solid var(--leave-accent);
-            margin-bottom: 1rem;
-        }
-
-        .details-header h4 {
-            font-size: 1.25rem;
-            color: var(--leave-text-primary);
-            font-weight: 700;
-            margin-bottom: 0.375rem;
-        }
-
-        .details-header .text-muted {
-            color: var(--leave-text-secondary) !important;
-        }
-
-        .details-section {
-            margin-bottom: 1rem;
-            padding: 0.875rem;
-            background: var(--leave-hover-bg);
-            border-radius: 6px;
-            border: 1px solid var(--leave-card-border);
-        }
-
-        .section-title {
-            font-size: 0.813rem;
-            font-weight: 700;
-            color: var(--leave-text-primary);
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            margin-bottom: 0.75rem;
-            padding-bottom: 0.375rem;
-            border-bottom: 2px solid var(--leave-card-border);
-            display: flex;
-            align-items: center;
-        }
-
-        .section-title i {
-            color: var(--leave-accent);
-            margin-right: 0.375rem;
-            font-size: 1rem;
-        }
-
-        .detail-field {
-            margin-bottom: 0.5rem;
-        }
-
-        .detail-field label {
-            display: block;
-            font-size: 0.688rem;
-            color: var(--leave-text-secondary);
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .detail-value {
-            font-size: 0.875rem;
-            color: var(--leave-text-primary);
-            font-weight: 600;
-        }
-
-        .detail-value.highlight {
-            font-size: 1rem;
-            color: var(--leave-accent);
-            font-weight: 700;
-        }
-
-        /* Badges */
-        .badge {
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 0.375rem 0.75rem;
-            border-radius: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .badge-active {
-            background-color: var(--leave-badge-success-bg);
-            color: var(--leave-badge-success-text);
-            border: 1px solid var(--leave-badge-success-border);
-        }
-
-        .badge-inactive {
-            background-color: var(--leave-badge-inactive-bg);
-            color: var(--leave-badge-inactive-text);
-            border: 1px solid var(--leave-badge-inactive-border);
-        }
-
-        .badge-enabled {
-            background-color: var(--leave-badge-info-bg);
-            color: var(--leave-badge-info-text);
-            border: 1px solid var(--leave-badge-info-border);
-        }
-
-        .badge-disabled {
-            background-color: var(--leave-badge-inactive-bg);
-            color: var(--leave-badge-inactive-text);
-            border: 1px solid var(--leave-badge-inactive-border);
-        }
-
-        /* Submit Button */
-        #submitBtn {
-            background: linear-gradient(135deg, var(--leave-accent), var(--leave-accent-hover));
-            border: 1px solid var(--leave-accent);
-            color: #ffffff;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px var(--leave-shadow);
-            text-transform: uppercase;
-        }
-
-        #submitBtn:hover {
-            background: linear-gradient(135deg, var(--leave-accent-hover), #044289);
-            border-color: var(--leave-accent-hover);
-            box-shadow: 0 4px 12px var(--leave-shadow-hover);
-            transform: translateY(-2px);
-        }
-
-        #submitBtn:active {
-            transform: translateY(0);
-        }
-
-        /* Custom Checkbox */
-        .form-check-input {
-            border-color: var(--leave-card-border);
-            background-color: var(--leave-card-bg);
-        }
-
-        .form-check-input:checked {
-            background-color: var(--leave-accent);
-            border-color: var(--leave-accent);
-        }
-
-        .form-check-input:focus {
-            border-color: var(--leave-accent);
-            box-shadow: 0 0 0 0.2rem var(--leave-shadow-hover);
-        }
-
-        .form-check-label {
-            color: var(--leave-text-primary);
-            font-weight: 500;
-        }
-
-        /* Scrollbar Styling */
-        .list-body::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .list-body::-webkit-scrollbar-track {
-            background: var(--leave-scrollbar-track);
-            border-radius: 4px;
-        }
-
-        .list-body::-webkit-scrollbar-thumb {
-            background: var(--leave-scrollbar-thumb);
-            border-radius: 4px;
-        }
-
-        .list-body::-webkit-scrollbar-thumb:hover {
-            background: var(--leave-accent);
-        }
-
-        /* Page Container */
-        .container-fluid {
-            background: transparent;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 991px) {
-            .list-container {
-                margin-bottom: 1.5rem;
+            if (selectedIds.length === 0) {
+                alert('Please select at least one bonus plan.');
+                return;
             }
 
-            .list-body {
-                max-height: 350px;
-            }
-
-            .details-card .card-body {
-                min-height: 300px;
-            }
-
-            .details-section {
-                padding: 1rem;
-            }
-
-            .list-header h5,
-            .details-header h4 {
-                font-size: 1.125rem;
-            }
-        }
-
-        @media (max-width: 767px) {
-            .container-fluid {
-                padding: 1rem !important;
-            }
-
-            .list-header,
-            .list-footer {
-                padding: 1rem;
-            }
-
-            .list-body {
-                max-height: 300px;
-                padding: 0.75rem;
-            }
-
-            .plan-item-content {
-                padding: 0.875rem;
-            }
-
-            .details-card .card-body {
-                padding: 1rem;
-                min-height: 250px;
-            }
-
-            .details-section {
-                margin-bottom: 1rem;
-                padding: 0.875rem;
-            }
-
-            .detail-field {
-                margin-bottom: 0.75rem;
-            }
-
-            .btn-view {
-                padding: 0.375rem 0.625rem;
-            }
-        }
-
-        /* Smooth Transitions */
-        * {
-            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
-        }
-
-        /* Animation for Items */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .plan-item {
-            animation: fadeInUp 0.3s ease-out backwards;
-        }
-
-        .plan-item:nth-child(1) {
-            animation-delay: 0.05s;
-        }
-
-        .plan-item:nth-child(2) {
-            animation-delay: 0.1s;
-        }
-
-        .plan-item:nth-child(3) {
-            animation-delay: 0.15s;
-        }
-
-        .plan-item:nth-child(4) {
-            animation-delay: 0.2s;
-        }
-
-        .plan-item:nth-child(5) {
-            animation-delay: 0.25s;
-        }
-    </style>
+            console.log('Selected Plan IDs:', selectedIds);
+            alert('Selected Bonus Plans: ' + selectedIds.join(', '));
+        });
+    });
+</script>

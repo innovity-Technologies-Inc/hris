@@ -33,9 +33,9 @@ use App\Http\Controllers\EmployeePlansController;
 use App\Http\Controllers\BonusPlanController;
 
 
-Route::get('test', function () {
-   return view('search.search_employee');
-});
+// Route::get('test', function () {
+//    return view('leave');
+// });
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
