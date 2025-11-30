@@ -60,6 +60,20 @@
                         </a>
                     </li>
 
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link @if($type == 'bonus-plans') active @endif p-2 ajax-tab"
+                           data-url="{{route('employees.profile.plans', ['id' => $employee->id, 'type' => 'bonus-plans'])}}">
+                            <span class="d-none d-sm-block">Bonus Plan</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link @if($type == 'leave-plans') active @endif p-2 ajax-tab"
+                           data-url="{{route('employees.profile.plans', ['id' => $employee->id, 'type' => 'leave-plans'])}}">
+                            <span class="d-none d-sm-block">Leave Plan</span>
+                        </a>
+                    </li>
+
 
                 </ul>
 
@@ -100,6 +114,12 @@
 
                     @elseif($type == 'offday-plans')
                         @include('employees.partials.profile_view.partials.offday_plan')
+
+                    @elseif($type == 'bonus-plans')
+                        @include('employees.partials.profile_view.partials.bonus_plan')
+
+                    @elseif($type == 'leave-plans')
+                        @include('employees.partials.profile_view.partials.leave_plan')
 
                     @endif
 
