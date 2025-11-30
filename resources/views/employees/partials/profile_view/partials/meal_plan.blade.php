@@ -137,7 +137,7 @@
                                     <td>
                                             <span class="badge bg-light text-secondary">
                                                 <i
-                                                    class="mdi mdi-silverware-fork-knife me-1"></i>{{ $plan->type }}
+                                                    class="mdi mdi-silverware-fork-knife me-1"></i>{{ $plan->getPlan->type }}
                                             </span>
                                     </td>
                                     <td>{{ $plan->getPlan->name }}</td>
@@ -155,7 +155,7 @@
                                         @else
                                             <span class="badge bg-danger-subtle text-danger">
                                                     <i class="mdi mdi-close-circle me-1"></i>{{ $plan->status }}
-                                                </span>
+                                            </span>
                                         @endif
                                     </td>
                                     <td class="text-center">
