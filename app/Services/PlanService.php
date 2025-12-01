@@ -343,4 +343,33 @@ class PlanService
         return $validated;
     }
 
+    public function allowancePlanValidation($request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'short_name' => 'nullable|string|max:100',
+            'amount' => 'required|numeric|min:0',
+            'description' => 'nullable|string',
+            'status' => 'required|in:active,inactive',
+        ], [
+            'name.required' => 'Allowance plan name is required.',
+            'name.string' => 'Allowance plan name must be a string.',
+            'name.max' => 'Allowance plan name may not exceed 255 characters.',
+
+            'short_name.string' => 'Short name must be a string.',
+            'short_name.max' => 'Short name may not exceed 100 characters.',
+
+            'amount.required' => 'Amount is required.',
+            'amount.numeric' => 'Amount must be a valid number.',
+            'amount.min' => 'Amount must be at least 0.',
+
+            'description.string' => 'Description must be a string.',
+
+            'status.required' => 'Please select the plan status.',
+            'status.in' => 'The selected status is invalid.',
+        ]);
+
+        return $validated;
+    }
+
 }
