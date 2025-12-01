@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BonusPlan;
 use App\Models\Employee;
 use App\Models\EmployeeBonusPlan;
+use App\Models\EmployeeLeavePlan;
 use App\Models\EmployeeMealPlan;
 use App\Models\EmployeeOffdayPlan;
 use App\Models\EmployeeOtPlan;
@@ -121,8 +122,6 @@ class EmployeePlansController extends Controller
         }elseif ($type === 'bonus-plans'){
             $bonusPlans = BonusPlan::where('status', 'active')->get();
             $activeBonusPlans = EmployeeBonusPlan::where('employee_id', $id)->get();
-//            dd($activeBonusPlans);
-
             if ($request->ajax()) {
                 return view('employees.partials.profile_view.partials.bonus_plan', compact('title', 'section', 'sub_section', 'section_url',
                     'employee', 'bonusPlans', 'type', 'activeBonusPlans'))->render();
@@ -133,14 +132,15 @@ class EmployeePlansController extends Controller
 
         }elseif ($type === 'leave-plans'){
             $leavePlans = LeavePlan::where('active_ind', 'active')->get();
+            $activeLeavePlans = EmployeeLeavePlan::where('employee_id', $id)->get();
 
             if ($request->ajax()) {
                 return view('employees.partials.profile_view.partials.leave_plan', compact('title', 'section', 'sub_section', 'section_url',
-                    'employee', 'leavePlans', 'type'))->render();
+                    'employee', 'leavePlans', 'type', 'activeLeavePlans'))->render();
             }
 
             return view('employees.profile', compact('title', 'section', 'sub_section', 'section_url',
-                'employee', 'leavePlans', 'type'));
+                'employee', 'leavePlans', 'type', 'activeLeavePlans'));
 
         }
 
@@ -164,7 +164,7 @@ class EmployeePlansController extends Controller
             } elseif ($type === 'offday-plans') {
                 $validated = $this->empPlans->validation($request);
                 $this->empPlans->planSave($validated, EmployeeOffdayPlan::class);
-            } elseif ($type === 'bonus-plans')
+            } elseif ($type === 'bonus-plans') {
                 $bonusPlans = EmployeeBonusPlan::where('employee_id', $request->employee_id)->get();
                 if (!empty($bonusPlans)){
                     foreach ($bonusPlans as $plan){
@@ -184,6 +184,29 @@ class EmployeePlansController extends Controller
                             'plan_id' => $item,
                         ];
                         $this->empPlans->multipleActivePlanSave($validated, EmployeeBonusPlan::class);
+                    }
+                }
+            }elseif ($type === 'leave-plans'){
+                    $leavePlans = EmployeeLeavePlan::where('employee_id', $request->employee_id)->get();
+                    if (!empty($leavePlans)){
+                        foreach ($leavePlans as $plan){
+                            $plan->delete();
+                        }
+                        foreach ($request->plan_ids as $item) {
+                            $validated = [
+                                'employee_id' => $request->employee_id,
+                                'plan_id' => $item,
+                            ];
+                            $this->empPlans->multipleActivePlanSave($validated, EmployeeLeavePlan::class);
+                        }
+                    }else{
+                        foreach ($request->plan_ids as $item) {
+                            $validated = [
+                                'employee_id' => $request->employee_id,
+                                'plan_id' => $item,
+                            ];
+                            $this->empPlans->multipleActivePlanSave($validated, EmployeeLeavePlan::class);
+                        }
                     }
                 }
 
@@ -315,6 +338,10 @@ class EmployeePlansController extends Controller
 
     public function getBonusPlanDetails($id){
         $plan = BonusPlan::find($id);
+        return response()->json($plan);
+    }
+    public function getLeavePlanDetails($id){
+        $plan = LeavePlan::find($id);
         return response()->json($plan);
     }
 

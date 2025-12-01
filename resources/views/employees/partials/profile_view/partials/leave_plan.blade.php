@@ -1,317 +1,286 @@
-<div class="container-fluid px-4 py-5">
-    <div class="row g-4">
-        {{-- Leave Plan List Panel --}}
-        <div class="col-lg-4 col-md-5">
-            <div class="card shadow-sm">
-                <div class="card-header bg-light">
-                    <h5 class="mb-3 fw-semibold">📋 Leave Plan List</h5>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="selectAll">
-                        <label class="form-check-label" for="selectAll">
-                            Select all
-                        </label>
+<style>
+    .skeleton {
+        background: linear-gradient(90deg, #ececec 25%, #f5f5f5 37%, #ececec 63%);
+        animation: shimmer 1.4s infinite;
+        background-size: 400% 100%;
+        border-radius: 4px;
+    }
+
+    @keyframes shimmer {
+        0% { background-position: -400px 0; }
+        100% { background-position: 400px 0; }
+    }
+
+    #leave-plan-container .leave-plan-item.selected {
+        background-color: #e7f1ff;
+        border-radius: 4px;
+    }
+</style>
+
+<div id="leave-plan-container">
+    <div class="container-fluid px-4 py-5">
+        <div class="row g-4">
+
+            {{-- ====================== --}}
+            {{-- LEFT: LEAVE PLAN LIST --}}
+            {{-- ====================== --}}
+            <div class="col-lg-4 col-md-5">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-3 fw-semibold">📋 Leave Plan List</h5>
+                        @if(count($leavePlans) > 0)
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="leaveSelectAll" onchange="handleSelectAll('leave', this.checked)">
+                                <label class="form-check-label" for="leaveSelectAll">Select all</label>
+                            </div>
+                        @endif
                     </div>
-                </div>
 
-                <div class="card-body p-3" style="max-height: 550px; overflow-y: auto;" id="leavePlanList">
-                    {{-- List items will be populated here --}}
-                </div>
+                    <form action="{{ route('employees.profile.plans.store', 'leave-plans') }}" method="POST">
+                        @csrf
+                        <div class="card-body p-3" style="max-height: 550px; overflow-y: auto;">
+                            <input type="hidden" name="employee_id" value="{{ $employee->id }}">
 
-                <div class="card-footer bg-light">
-                    <button class="btn btn-primary w-100 py-2" id="submitBtn">
-                        <i class="bi bi-check-circle me-2"></i>Submit Selected
-                    </button>
+                            @foreach($leavePlans as $item)
+                                <div class="d-flex align-items-center mb-2 leave-plan-item">
+                                    <input type="checkbox"
+                                           class="form-check-input leave-plan-checkbox me-2"
+                                           name="plan_ids[]"
+                                           value="{{ $item->id }}"
+                                           id="leave-plan-{{ $item->id }}"
+                                           onchange="updateSelectAllState('leave')"
+                                           @if(isset($activeLeavePlans) && $activeLeavePlans->contains('plan_id', $item->id)) checked @endif>
+                                    <label for="leave-plan-{{ $item->id }}" class="form-check-label flex-grow-1">{{ $item->name }}</label>
+                                    <button type="button" class="btn btn-sm btn-outline-primary view-leave-plan-details ms-2" onclick="viewLeavePlanDetails({{ $item->id }}, this)" title="View Details">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                            @endforeach
+
+                            @if(count($leavePlans) === 0)
+                                <p class="text-muted">No leave plans available.</p>
+                            @endif
+                        </div>
+
+                        @if(count($leavePlans) > 0)
+                            <div class="card-footer bg-light">
+                                <button class="btn btn-primary w-100 py-2" type="submit">
+                                    <i class="bi bi-check-circle me-2"></i>Submit Selected
+                                </button>
+                            </div>
+                        @endif
+                    </form>
                 </div>
             </div>
-        </div>
 
-        {{-- Details Panel --}}
-        <div class="col-lg-8 col-md-7">
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0 fw-semibold">
-                        <i class="bi bi-info-circle me-2"></i>Details
-                    </h5>
-                </div>
-                <div class="card-body" style="min-height: 400px;">
-                    {{-- Empty State --}}
-                    <div id="emptyState" class="d-flex flex-column align-items-center justify-content-center" style="height: 350px;">
-                        <i class="bi bi-file-earmark-text text-muted" style="font-size: 3rem; opacity: 0.3;"></i>
-                        <p class="text-muted mt-3">Select a leave plan to view details</p>
+            {{-- ====================== --}}
+            {{-- RIGHT: DETAILS PANEL --}}
+            {{-- ====================== --}}
+            <div class="col-lg-8 col-md-7">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0 fw-semibold"><i class="bi bi-info-circle me-2"></i>Details</h5>
                     </div>
+                    <div class="card-body" style="min-height: 400px;">
 
-                    {{-- Details Content (Hidden by default) --}}
-                    <div id="detailsContent" class="d-none">
-                        <div class="pb-3 border-bottom border-primary border-2 mb-3">
-                            <h4 class="fw-bold mb-1" id="planName"></h4>
-                            <div class="text-muted">
-                                <span class="me-3"><i class="bi bi-tag me-1"></i><span id="planShortName"></span></span>
-                                <span id="planStatusBadge"></span>
-                            </div>
+                        {{-- EMPTY STATE --}}
+                        <div id="leavePlanEmptyState" class="d-flex flex-column align-items-center justify-content-center" style="height: 350px;">
+                            <i class="bi bi-file-earmark-text text-muted" style="font-size: 3rem; opacity: 0.3;"></i>
+                            <p class="text-muted mt-3">Click the eye icon on a plan to view details</p>
                         </div>
 
-                        {{-- Basic Information --}}
-                        <div class="mb-3 p-3 bg-light rounded border">
-                            <h6 class="text-uppercase fw-bold mb-3" style="font-size: 0.813rem; letter-spacing: 0.8px;">
-                                <i class="bi bi-info-square me-2 text-primary"></i>Basic Information
-                            </h6>
+                        {{-- SKELETON LOADER --}}
+                        <div id="leavePlanSkeletonLoader" class="d-none">
+                            <div class="skeleton mb-3" style="height: 30px; width: 50%;"></div>
+                            <div class="skeleton mb-2" style="height: 20px; width: 30%;"></div>
+                            <div class="skeleton mb-4" style="height: 20px; width: 20%;"></div>
+
                             <div class="row g-2">
-                                <div class="col-md-3">
-                                    <label class="text-secondary text-uppercase fw-semibold mb-1" style="font-size: 0.688rem;">Leave Type</label>
-                                    <div class="fw-semibold" id="leaveType"></div>
+                                <div class="col-md-4"><div class="skeleton" style="height: 70px;"></div></div>
+                                <div class="col-md-4"><div class="skeleton" style="height: 70px;"></div></div>
+                                <div class="col-md-4"><div class="skeleton" style="height: 70px;"></div></div>
+                            </div>
+                            <div class="row mt-3 g-2">
+                                <div class="col-md-4"><div class="skeleton" style="height: 70px;"></div></div>
+                                <div class="col-md-4"><div class="skeleton" style="height: 70px;"></div></div>
+                                <div class="col-md-4"><div class="skeleton" style="height: 70px;"></div></div>
+                            </div>
+                        </div>
+
+                        {{-- DETAILS CONTENT --}}
+                        <div id="leavePlanDetailsContent" class="d-none">
+                            <div class="pb-3 border-bottom border-primary border-2 mb-3">
+                                <h4 class="fw-bold mb-1" id="leavePlanName"></h4>
+                                <div class="text-muted">
+                                    <span class="me-3"><i class="bi bi-tag me-1"></i><span id="leavePlanShortName"></span></span>
+                                    <span id="leavePlanStatusBadge"></span>
                                 </div>
-                                <div class="col-md-3">
-                                    <label class="text-secondary text-uppercase fw-semibold mb-1" style="font-size: 0.688rem;">Applicable Gender</label>
-                                    <div class="fw-semibold" id="applicableGender"></div>
+                            </div>
+
+                            {{-- Basic Info --}}
+                            <div class="mb-3 p-3 bg-light rounded border">
+                                <h6 class="fw-bold mb-3"><i class="bi bi-info-square me-2 text-primary"></i>Basic Information</h6>
+                                <div class="row g-2">
+                                    <div class="col-md-3"><label class="small text-secondary">Leave Type</label><div id="leavePlanLeaveType" class="fw-semibold"></div></div>
+                                    <div class="col-md-3"><label class="small text-secondary">Gender</label><div id="leavePlanApplicableGender" class="fw-semibold"></div></div>
+                                    <div class="col-md-3"><label class="small text-secondary">Day Type</label><div id="leavePlanDayType" class="fw-semibold"></div></div>
+                                    <div class="col-md-3"><label class="small text-secondary">Display Serial</label><div id="leavePlanDisplaySerial" class="fw-semibold"></div></div>
                                 </div>
-                                <div class="col-md-3">
-                                    <label class="text-secondary text-uppercase fw-semibold mb-1" style="font-size: 0.688rem;">Day Type</label>
-                                    <div class="fw-semibold" id="dayType"></div>
+                            </div>
+
+                            {{-- Leave Allocation --}}
+                            <div class="mb-3 p-3 bg-light rounded border">
+                                <h6 class="fw-bold mb-3"><i class="bi bi-calendar-range me-2 text-primary"></i>Leave Allocation</h6>
+                                <div class="row g-2">
+                                    <div class="col-md-4"><label class="small text-secondary">Leave Limit</label><div id="leavePlanLeaveLimit" class="fw-bold text-primary"></div></div>
+                                    <div class="col-md-4"><label class="small text-secondary">Max No. of Days</label><div id="leavePlanMaxDays" class="fw-bold text-primary"></div></div>
+                                    <div class="col-md-4"><label class="small text-secondary">Apply Limit</label><div id="leavePlanApplyLimit" class="fw-bold text-primary"></div></div>
                                 </div>
-                                <div class="col-md-3">
-                                    <label class="text-secondary text-uppercase fw-semibold mb-1" style="font-size: 0.688rem;">Display Serial</label>
-                                    <div class="fw-semibold" id="displaySerial"></div>
+                            </div>
+
+                            {{-- Configuration --}}
+                            <div class="mb-3 p-3 bg-light rounded border">
+                                <h6 class="fw-bold mb-3"><i class="bi bi-gear me-2 text-primary"></i>Configuration</h6>
+                                <div class="row g-2">
+                                    <div class="col-md-6"><label class="small text-secondary">Fractional Leave</label><div id="leavePlanFractional" class="fw-semibold"></div></div>
+                                    <div class="col-md-6"><label class="small text-secondary">Include Off Days</label><div id="leavePlanIncludeOffDays" class="fw-semibold"></div></div>
                                 </div>
                             </div>
                         </div>
 
-                        {{-- Leave Allocation --}}
-                        <div class="mb-3 p-3 bg-light rounded border">
-                            <h6 class="text-uppercase fw-bold mb-3" style="font-size: 0.813rem; letter-spacing: 0.8px;">
-                                <i class="bi bi-calendar-range me-2 text-primary"></i>Leave Allocation
-                            </h6>
-                            <div class="row g-2">
-                                <div class="col-md-4">
-                                    <label class="text-secondary text-uppercase fw-semibold mb-1" style="font-size: 0.688rem;">Leave Limit</label>
-                                    <div class="fw-bold text-primary" id="leaveLimit"></div>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="text-secondary text-uppercase fw-semibold mb-1" style="font-size: 0.688rem;">Max No. of Days</label>
-                                    <div class="fw-bold text-primary" id="maxDays"></div>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="text-secondary text-uppercase fw-semibold mb-1" style="font-size: 0.688rem;">Apply Limit</label>
-                                    <div class="fw-bold text-primary" id="applyLimit"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Configuration --}}
-                        <div class="mb-3 p-3 bg-light rounded border">
-                            <h6 class="text-uppercase fw-bold mb-3" style="font-size: 0.813rem; letter-spacing: 0.8px;">
-                                <i class="bi bi-gear me-2 text-primary"></i>Configuration
-                            </h6>
-                            <div class="row g-2">
-                                <div class="col-md-6">
-                                    <label class="text-secondary text-uppercase fw-semibold mb-1" style="font-size: 0.688rem;">Allow Fractional Leave</label>
-                                    <div id="fractionalLeave"></div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="text-secondary text-uppercase fw-semibold mb-1" style="font-size: 0.688rem;">Include Off Days</label>
-                                    <div class="fw-semibold" id="offDayInclude"></div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
 
-    <script>
-        // Dummy data matching migration structure
-        const leavePlans = [{
-                id: 1,
-                name: 'Annual Leave',
-                short_name: 'AL',
-                applicable_gender: 'Both',
-                day_type: 'Calculative',
-                leave_type: 'Paid',
-                leave_limit: 20,
-                max_no_of_days: 30,
-                display_serial: 1,
-                apply_limit: 2,
-                allow_fractional_leave: 'active',
-                off_day_include: 0,
-                active_ind: 'active'
-            },
-            {
-                id: 2,
-                name: 'Maternity Leave',
-                short_name: 'ML',
-                applicable_gender: 'Female',
-                day_type: 'Fixed',
-                leave_type: 'Paid',
-                leave_limit: 120,
-                max_no_of_days: 120,
-                display_serial: 2,
-                apply_limit: 1,
-                allow_fractional_leave: 'inactive',
-                off_day_include: 1,
-                active_ind: 'active'
-            },
-            {
-                id: 3,
-                name: 'Sick Leave',
-                short_name: 'SL',
-                applicable_gender: 'Both',
-                day_type: 'Calculative',
-                leave_type: 'Paid',
-                leave_limit: 15,
-                max_no_of_days: 20,
-                display_serial: 3,
-                apply_limit: 3,
-                allow_fractional_leave: 'active',
-                off_day_include: 0,
-                active_ind: 'active'
-            },
-            {
-                id: 4,
-                name: 'Casual Leave',
-                short_name: 'CL',
-                applicable_gender: 'Both',
-                day_type: 'Fixed',
-                leave_type: 'Paid',
-                leave_limit: 10,
-                max_no_of_days: 10,
-                display_serial: 4,
-                apply_limit: 5,
-                allow_fractional_leave: 'inactive',
-                off_day_include: 0,
-                active_ind: 'active'
-            },
-            {
-                id: 5,
-                name: 'Paternity Leave',
-                short_name: 'PL',
-                applicable_gender: 'Male',
-                day_type: 'Fixed',
-                leave_type: 'Paid',
-                leave_limit: 15,
-                max_no_of_days: 15,
-                display_serial: 5,
-                apply_limit: 1,
-                allow_fractional_leave: 'inactive',
-                off_day_include: 1,
-                active_ind: 'active'
-            }
-        ];
+<script>
+    if (typeof window.planScriptsInitialized === 'undefined') {
+        window.planScriptsInitialized = true;
 
-    /**
-     * Render leave plan list items
-     */
-    function renderLeavePlanList() {
-        const listContainer = document.getElementById('leavePlanList');
-        listContainer.innerHTML = '';
+        // These functions are global and will be called by inline onclick/onchange attributes.
+        // This approach is robust against AJAX content replacement issues.
 
-        leavePlans.forEach(plan => {
-            const listItem = document.createElement('div');
-            listItem.className = 'card mb-2 border hover-shadow';
-            listItem.style.cursor = 'pointer';
-            listItem.style.transition = 'all 0.3s ease';
+        function viewBonusPlanDetails(id, button) {
+            const container = $("#bonus-plan-container");
+            if (!container.length) return;
 
-            listItem.innerHTML = `
-                <div class="card-body p-3">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="form-check">
-                            <input class="form-check-input plan-checkbox" type="checkbox" value="${plan.id}" id="plan${plan.id}">
-                            <label class="form-check-label fw-semibold" for="plan${plan.id}">
-                                ${plan.name}
-                            </label>
-                        </div>
-                        <button class="btn btn-sm btn-outline-primary" onclick="showDetails(${plan.id})" title="View Details">
-                            <i class="bi bi-eye"></i>
-                        </button>
-                    </div>
-                </div>
-            `;
+            // Visual feedback for the clicked button
+            container.find('.view-bonus-plan-details').removeClass('active');
+            $(button).addClass('active');
 
-            listItem.addEventListener('mouseenter', function() {
-                this.style.borderColor = 'var(--bs-primary)';
-                this.style.transform = 'translateY(-2px)';
+            const emptyState = container.find("#bonusPlanEmptyState");
+            const detailsContent = container.find("#bonusPlanDetailsContent");
+            const skeletonLoader = container.find("#bonusPlanSkeletonLoader");
+
+            emptyState.addClass("d-none");
+            detailsContent.addClass("d-none");
+            skeletonLoader.removeClass("d-none");
+
+            $.ajax({
+                url: `/get-bonus-plan-details/${id}`,
+                type: "GET",
+                success: function(res) {
+                    detailsContent.find("#bonusPlanName").text(res.name);
+                    detailsContent.find("#bonusPlanType").text(res.bonus_type);
+                    detailsContent.find("#bonusPlanStatusBadge").html(`<span class="badge bg-${res.status === 'active' ? 'success' : 'secondary'}">${res.status}</span>`);
+                    if (res.description) {
+                        detailsContent.find("#bonusDescriptionSection").removeClass("d-none");
+                        detailsContent.find("#bonusPlanDescription").html(res.description);
+                    } else {
+                        detailsContent.find("#bonusDescriptionSection").addClass("d-none");
+                    }
+                    detailsContent.find("#bonusBonusType").text(res.bonus_type);
+                    detailsContent.find("#bonusConfigType").text(res.bonus_config_type);
+                    detailsContent.find("#bonusStatusBadge").html(`<span class="badge bg-${res.status === 'active' ? 'success' : 'danger'}">${res.status}</span>`);
+                    let configHtml = "";
+                    if (res.bonus_config_type === "Custom") {
+                        configHtml = `<div class="col-md-4"><label class="text-secondary text-uppercase fw-semibold mb-1">Custom Overtime Rate</label><div class="fw-semibold">${res.custom_overtime_rate ?? '-'}</div></div>`;
+                    } else if (res.bonus_config_type === "Salary Based") {
+                        configHtml += `<div class="col-md-4"><label class="text-secondary text-uppercase fw-semibold mb-1">Salary Rate Type</label><div class="fw-semibold">${res.salary_rate_type ?? '-'}</div></div>`;
+                        if (res.salary_rate_type === "Multiplier") {
+                            configHtml += `<div class="col-md-4"><label class="text-secondary text-uppercase fw-semibold mb-1">Overtime Multiplier</label><div class="fw-semibold">${res.overtime_multiplier ?? '-'}</div></div>`;
+                        }
+                    }
+                    detailsContent.find("#bonusConfigDetails").html(configHtml);
+
+                    skeletonLoader.addClass("d-none");
+                    detailsContent.removeClass("d-none");
+                },
+                error: function() {
+                    container.find("#bonusPlanSkeletonLoader").addClass("d-none");
+                    container.find("#bonusPlanDetailsContent").addClass("d-none");
+                    container.find("#bonusPlanEmptyState").removeClass("d-none").find("p").text("Error loading details.");
+                }
             });
+        }
 
-            listItem.addEventListener('mouseleave', function() {
-                this.style.borderColor = 'var(--bs-border-color)';
-                this.style.transform = 'translateY(0)';
+        function viewLeavePlanDetails(id, button) {
+            const container = $("#leave-plan-container");
+            if (!container.length) return;
+
+            // Visual feedback for the clicked button
+            container.find('.view-leave-plan-details').removeClass('active');
+            $(button).addClass('active');
+
+            const emptyState = container.find("#leavePlanEmptyState");
+            const detailsContent = container.find("#leavePlanDetailsContent");
+            const skeletonLoader = container.find("#leavePlanSkeletonLoader");
+
+            emptyState.addClass("d-none");
+            detailsContent.addClass("d-none");
+            skeletonLoader.removeClass("d-none");
+
+            $.ajax({
+                url: `/get-leave-plan-details/${id}`,
+                type: "GET",
+                success: function(plan) {
+                    skeletonLoader.addClass("d-none");
+                    detailsContent.removeClass("d-none");
+                    detailsContent.find("#leavePlanName").text(plan.name);
+                    detailsContent.find("#leavePlanShortName").text(plan.short_name);
+                    detailsContent.find("#leavePlanLeaveType").text(plan.leave_type);
+                    detailsContent.find("#leavePlanApplicableGender").text(plan.applicable_gender);
+                    detailsContent.find("#leavePlanDayType").text(plan.day_type);
+                    detailsContent.find("#leavePlanDisplaySerial").text(plan.display_serial);
+                    detailsContent.find("#leavePlanLeaveLimit").text(plan.leave_limit);
+                    detailsContent.find("#leavePlanMaxDays").text(plan.max_no_of_days);
+                    detailsContent.find("#leavePlanApplyLimit").text(plan.apply_limit);
+                    detailsContent.find("#leavePlanFractional").text(plan.allow_fractional_leave ? "Yes" : "No");
+                    detailsContent.find("#leavePlanIncludeOffDays").text(plan.off_day_include ? "Yes" : "No");
+                    detailsContent.find("#leavePlanStatusBadge").html(plan.active_ind ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-danger">Inactive</span>');
+                },
+                error: function() {
+                    container.find("#leavePlanSkeletonLoader").addClass("d-none");
+                    container.find("#leavePlanDetailsContent").addClass("d-none");
+                    container.find("#leavePlanEmptyState").removeClass("d-none").find("p").text("Error loading details.");
+                }
             });
+        }
 
-            listContainer.appendChild(listItem);
-        });
+        function handleSelectAll(planType, isChecked) {
+            const container = $(`#${planType}-plan-container`);
+            container.find(`.${planType}-plan-checkbox`).prop("checked", isChecked);
+        }
+
+        function updateSelectAllState(planType) {
+            const container = $(`#${planType}-plan-container`);
+            const allCheckboxes = container.find(`.${planType}-plan-checkbox`);
+            const checkedCheckboxes = container.find(`.${planType}-plan-checkbox:checked`);
+            const selectAllCheckbox = container.find(`#${planType}SelectAll`);
+
+            selectAllCheckbox.prop("checked", allCheckboxes.length > 0 && allCheckboxes.length === checkedCheckboxes.length);
+        }
     }
 
-    /**
-     * Display details for selected leave plan
-     */
-    function showDetails(planId) {
-        const plan = leavePlans.find(p => p.id === planId);
-        if (!plan) return;
-
-        // Hide empty state and show details
-        document.getElementById('emptyState').classList.add('d-none');
-        document.getElementById('detailsContent').classList.remove('d-none');
-
-        // Populate details
-        document.getElementById('planName').textContent = plan.name;
-        document.getElementById('planShortName').textContent = plan.short_name;
-
-        const statusBadge = plan.active_ind === 'active'
-            ? '<span class="badge bg-success">Active</span>'
-            : '<span class="badge bg-secondary">Inactive</span>';
-        document.getElementById('planStatusBadge').innerHTML = statusBadge;
-
-        document.getElementById('leaveType').textContent = plan.leave_type;
-        document.getElementById('applicableGender').textContent = plan.applicable_gender;
-        document.getElementById('dayType').textContent = plan.day_type;
-        document.getElementById('displaySerial').textContent = plan.display_serial;
-
-        document.getElementById('leaveLimit').textContent = plan.leave_limit + ' days';
-        document.getElementById('maxDays').textContent = plan.max_no_of_days + ' days';
-        document.getElementById('applyLimit').textContent = plan.apply_limit + ' times';
-
-        const fractionalBadge = plan.allow_fractional_leave === 'active'
-            ? '<span class="badge bg-info">Enabled</span>'
-            : '<span class="badge bg-secondary">Disabled</span>';
-        document.getElementById('fractionalLeave').innerHTML = fractionalBadge;
-
-        document.getElementById('offDayInclude').textContent = plan.off_day_include ? 'Yes' : 'No';
-    }        /**
-         * Initialize event listeners
-         */
-        document.addEventListener('DOMContentLoaded', function() {
-            renderLeavePlanList();
-
-            // Select All functionality
-            const selectAllCheckbox = document.getElementById('selectAll');
-            selectAllCheckbox.addEventListener('change', function() {
-                const checkboxes = document.querySelectorAll('.plan-checkbox');
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = this.checked;
-                });
-            });
-
-            // Update Select All based on individual selections
-            document.addEventListener('change', function(e) {
-                if (e.target.classList.contains('plan-checkbox')) {
-                    const checkboxes = document.querySelectorAll('.plan-checkbox');
-                    const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-                    selectAllCheckbox.checked = allChecked;
-                }
-            });
-
-            // Submit button handler
-            document.getElementById('submitBtn').addEventListener('click', function() {
-                const selectedIds = Array.from(document.querySelectorAll('.plan-checkbox:checked'))
-                    .map(cb => cb.value);
-
-                if (selectedIds.length === 0) {
-                    alert('Please select at least one leave plan.');
-                    return;
-                }
-
-                console.log('Selected Plan IDs:', selectedIds);
-                alert('Selected Leave Plans: ' + selectedIds.join(', '));
-            });
-        });
-    </script>
+    // A self-executing function to run state updates once the DOM is ready.
+    // This needs to run every time the script is loaded, even if functions are already defined.
+    (function() {
+        if (typeof updateSelectAllState !== 'undefined') {
+            updateSelectAllState('bonus');
+            updateSelectAllState('leave');
+        }
+    })();
+</script>
