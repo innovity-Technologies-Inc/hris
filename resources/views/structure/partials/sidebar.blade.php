@@ -90,6 +90,10 @@
                                    href='{{ route('plans.bonus_plans.index') }}'>Bonus Plans</a>
                             </li>
                             <li>
+                                <a class='tp-link @if (Route::is('plans.allowance_plans.*')) menuitem-active @endif'
+                                   href='{{ route('plans.allowance_plans.index') }}'>Allowance Plans</a>
+                            </li>
+                            <li>
                                 <a class='tp-link @if (Route::is('plans.bulk_upload')) menuitem-active @endif'
                                     href='{{ route('plans.bulk_upload') }}'>Bulk Upload</a>
                             </li>
