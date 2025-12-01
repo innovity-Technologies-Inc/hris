@@ -253,6 +253,8 @@ Route::controller(EmployeePlansController::class)->group(function (){
     Route::get('get-ot-plan-details/{id}', 'getOtPlanDetails');
     Route::get('get-shift-plan-details/{id}', 'getShiftPlanDetails');
     Route::get('get-roster-plan-details/{id}', 'getRosterPlanDetails');
+    Route::get('get-bonus-plan-details/{id}', 'getBonusPlanDetails');
+    Route::get('get-leave-plan-details/{id}', 'getLeavePlanDetails');
 
 
 });

@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BonusPlan;
 use App\Models\Employee;
+use App\Models\EmployeeBonusPlan;
 use App\Models\EmployeeMealPlan;
 use App\Models\EmployeeOffdayPlan;
 use App\Models\EmployeeOtPlan;
 use App\Models\EmployeeRosterPlan;
 use App\Models\EmployeeShiftPlan;
+use App\Models\LeavePlan;
 use App\Models\MealPlan;
 use App\Models\OffDayPlan;
 use App\Models\OTPlan;
@@ -115,26 +118,75 @@ class EmployeePlansController extends Controller
                 'employee', 'activeOffDayPLan', 'previousOffDayPlans', 'offDayPlans',
                 'totalActiveOffDayPlan', 'totalPreviousOffDayPlan', 'type'));
 
+        }elseif ($type === 'bonus-plans'){
+            $bonusPlans = BonusPlan::where('status', 'active')->get();
+            $activeBonusPlans = EmployeeBonusPlan::where('employee_id', $id)->get();
+//            dd($activeBonusPlans);
+
+            if ($request->ajax()) {
+                return view('employees.partials.profile_view.partials.bonus_plan', compact('title', 'section', 'sub_section', 'section_url',
+                    'employee', 'bonusPlans', 'type', 'activeBonusPlans'))->render();
+            }
+
+            return view('employees.profile', compact('title', 'section', 'sub_section', 'section_url',
+                'employee', 'bonusPlans', 'type', 'activeBonusPlans'));
+
+        }elseif ($type === 'leave-plans'){
+            $leavePlans = LeavePlan::where('active_ind', 'active')->get();
+
+            if ($request->ajax()) {
+                return view('employees.partials.profile_view.partials.leave_plan', compact('title', 'section', 'sub_section', 'section_url',
+                    'employee', 'leavePlans', 'type'))->render();
+            }
+
+            return view('employees.profile', compact('title', 'section', 'sub_section', 'section_url',
+                'employee', 'leavePlans', 'type'));
+
         }
 
     }
 
     public function assignPlan(Request $request, $type)
     {
-        $validated = $this->empPlans->validation($request);
-
-        try{
-            if ($type === 'meal-plans'){
+        try {
+            if ($type === 'meal-plans') {
+                $validated = $this->empPlans->validation($request);
                 $this->empPlans->mealPlanSave($validated, $request);
-            }elseif ($type === 'shift-plans'){
+            } elseif ($type === 'shift-plans') {
+                $validated = $this->empPlans->validation($request);
                 $this->empPlans->planSave($validated, EmployeeShiftPlan::class);
-            }elseif ($type === 'roster-plans'){
+            } elseif ($type === 'roster-plans') {
+                $validated = $this->empPlans->validation($request);
                 $this->empPlans->planSave($validated, EmployeeRosterPlan::class);
-            }elseif ($type === 'ot-plans'){
+            } elseif ($type === 'ot-plans') {
+                $validated = $this->empPlans->validation($request);
                 $this->empPlans->planSave($validated, EmployeeOtPlan::class);
-            }elseif ($type === 'offday-plans'){
+            } elseif ($type === 'offday-plans') {
+                $validated = $this->empPlans->validation($request);
                 $this->empPlans->planSave($validated, EmployeeOffdayPlan::class);
-            }
+            } elseif ($type === 'bonus-plans')
+                $bonusPlans = EmployeeBonusPlan::where('employee_id', $request->employee_id)->get();
+                if (!empty($bonusPlans)){
+                    foreach ($bonusPlans as $plan){
+                        $plan->delete();
+                    }
+                    foreach ($request->plan_ids as $item) {
+                        $validated = [
+                            'employee_id' => $request->employee_id,
+                            'plan_id' => $item,
+                        ];
+                        $this->empPlans->multipleActivePlanSave($validated, EmployeeBonusPlan::class);
+                    }
+                }else{
+                    foreach ($request->plan_ids as $item) {
+                        $validated = [
+                            'employee_id' => $request->employee_id,
+                            'plan_id' => $item,
+                        ];
+                        $this->empPlans->multipleActivePlanSave($validated, EmployeeBonusPlan::class);
+                    }
+                }
+
         }catch (\Exception $e){
             Log::error($e->getMessage());
             return redirect()->back()->with([
@@ -188,8 +240,6 @@ class EmployeePlansController extends Controller
             'alert-type' => 'success',
         ]);
     }
-
-
 
     public function getMealPlanByType($type)
     {
@@ -261,6 +311,11 @@ class EmployeePlansController extends Controller
             'second_shift_start' => Carbon::parse($plan->getSecondShift->clock_in_time)->format('h:i A'),
             'second_shift_end' => Carbon::parse($plan->getSecondShift->clock_out_time)->format('h:i A'),
         ]);
+    }
+
+    public function getBonusPlanDetails($id){
+        $plan = BonusPlan::find($id);
+        return response()->json($plan);
     }
 
 

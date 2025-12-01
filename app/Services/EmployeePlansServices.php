@@ -25,6 +25,13 @@ class EmployeePlansServices
         }
     }
 
+    public function multipleActivePlanSave($validated, $modelName)
+    {
+        $validated['status'] = 'active';
+            $plan = $modelName::create($validated);
+            return $plan;
+    }
+
     public function mealPlanSave($validated, $request)
     {
         $validated['status'] = 'active';
