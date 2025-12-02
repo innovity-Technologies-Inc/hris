@@ -246,6 +246,12 @@ Route::prefix('employees')->group(function () {
 
     });
 
+    // Leave Info Route
+    Route::get('profile/{id}/leave-info', function ($id) {
+        $employee = \App\Models\Employee::findOrFail($id);
+        return view('employees.profile', compact('employee'));
+    })->name('employees.profile.leave_info');
+
 });
 
 Route::controller(EmployeePlansController::class)->group(function (){
