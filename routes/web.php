@@ -409,3 +409,14 @@ Route::prefix('settings')->group(function () {
 
     });
 });
+
+// Leave Management Routes (Demo - using views directly without controller)
+Route::prefix('leaves')->group(function () {
+    Route::get('/', function () {
+        return view('leaves.index');
+    })->name('leaves.index');
+
+    Route::get('/create', function () {
+        return view('leaves.create');
+    })->name('leaves.create');
+});
