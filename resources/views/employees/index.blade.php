@@ -104,10 +104,15 @@
             </div>
         </div>
 
-        <div class="col-lg-12">
-            <div class="card-header border-bottom p-4">
-                <div id="search-result" class="card-body p-0">
-                    @include('employees.partials.search_results')
+        <div class="col-lg-12 mt-3">
+            <div class="card border-0 shadow-sm rounded">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Employees List</h5>
+                </div>
+                <div class="card-body">
+                    <div id="search-result">
+                        @include('employees.partials.search_results')
+                    </div>
                 </div>
             </div>
         </div>

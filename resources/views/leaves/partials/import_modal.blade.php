@@ -108,65 +108,6 @@
                             </div>
                         </div>
                     </div>
-
-                    {{-- Expected Columns Info --}}
-                    <div class="card border-info mt-4">
-                        <div class="card-header bg-info-subtle">
-                            <h6 class="mb-0 text-info fw-semibold">
-                                <i class="mdi mdi-table me-2"></i>Expected Columns in Upload File
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-sm table-bordered mb-0">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Column Name</th>
-                                            <th>Description</th>
-                                            <th>Required</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><code>employee_id</code></td>
-                                            <td>Employee ID (e.g., EMP001)</td>
-                                            <td><span class="badge bg-danger">Yes</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td><code>leave_plan</code></td>
-                                            <td>Leave Plan Name</td>
-                                            <td><span class="badge bg-danger">Yes</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td><code>from_date</code></td>
-                                            <td>Start Date (YYYY-MM-DD)</td>
-                                            <td><span class="badge bg-danger">Yes</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td><code>to_date</code></td>
-                                            <td>End Date (YYYY-MM-DD)</td>
-                                            <td><span class="badge bg-danger">Yes</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td><code>days</code></td>
-                                            <td>Number of Days</td>
-                                            <td><span class="badge bg-danger">Yes</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td><code>reason</code></td>
-                                            <td>Reason for Leave</td>
-                                            <td><span class="badge bg-warning text-dark">Optional</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td><code>status</code></td>
-                                            <td>Status (pending/approved/rejected)</td>
-                                            <td><span class="badge bg-warning text-dark">Optional</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 {{-- Modal Footer --}}

@@ -50,84 +50,94 @@
             (object) ['id' => 5, 'name' => 'Paternity Leave', 'days' => 7],
         ]);
 
-        // Dummy leave applications as objects
+        // Dummy leave applications as objects (using field names from migration)
         $dummyLeaveApplications = collect([
             (object) [
                 'id' => 1,
-                'employee' => (object) [
+                'employee_id' => 1,
+                'plan_id' => 1,
+                'getEmployee' => (object) [
                     'id' => 1,
                     'full_name' => 'John Doe',
                     'applicant_id' => 'EMP001',
                     'system_id' => 'SYS001',
                 ],
-                'leave_plan' => (object) ['id' => 1, 'name' => 'Annual Leave'],
-                'days' => 5,
-                'from_date' => '2025-12-05',
-                'to_date' => '2025-12-10',
+                'getPlan' => (object) ['id' => 1, 'name' => 'Annual Leave'],
+                'leave_count' => 5,
+                'from' => '2025-12-05',
+                'to' => '2025-12-10',
                 'reason' => 'Family vacation to visit relatives',
                 'status' => 'pending',
                 'created_at' => '2025-12-01',
             ],
             (object) [
                 'id' => 2,
-                'employee' => (object) [
+                'employee_id' => 2,
+                'plan_id' => 2,
+                'getEmployee' => (object) [
                     'id' => 2,
                     'full_name' => 'Jane Smith',
                     'applicant_id' => 'EMP002',
                     'system_id' => 'SYS002',
                 ],
-                'leave_plan' => (object) ['id' => 2, 'name' => 'Sick Leave'],
-                'days' => 3,
-                'from_date' => '2025-12-02',
-                'to_date' => '2025-12-04',
+                'getPlan' => (object) ['id' => 2, 'name' => 'Sick Leave'],
+                'leave_count' => 3,
+                'from' => '2025-12-02',
+                'to' => '2025-12-04',
                 'reason' => 'Medical appointment and recovery',
                 'status' => 'approved',
                 'created_at' => '2025-12-01',
             ],
             (object) [
                 'id' => 3,
-                'employee' => (object) [
+                'employee_id' => 3,
+                'plan_id' => 3,
+                'getEmployee' => (object) [
                     'id' => 3,
                     'full_name' => 'Mike Johnson',
                     'applicant_id' => 'EMP003',
                     'system_id' => 'SYS003',
                 ],
-                'leave_plan' => (object) ['id' => 3, 'name' => 'Casual Leave'],
-                'days' => 1,
-                'from_date' => '2025-12-03',
-                'to_date' => '2025-12-03',
+                'getPlan' => (object) ['id' => 3, 'name' => 'Casual Leave'],
+                'leave_count' => 1,
+                'from' => '2025-12-03',
+                'to' => '2025-12-03',
                 'reason' => 'Personal work',
                 'status' => 'rejected',
                 'created_at' => '2025-12-01',
             ],
             (object) [
                 'id' => 4,
-                'employee' => (object) [
+                'employee_id' => 4,
+                'plan_id' => 1,
+                'getEmployee' => (object) [
                     'id' => 4,
                     'full_name' => 'Sarah Williams',
                     'applicant_id' => 'EMP004',
                     'system_id' => 'SYS004',
                 ],
-                'leave_plan' => (object) ['id' => 1, 'name' => 'Annual Leave'],
-                'days' => 10,
-                'from_date' => '2025-12-15',
-                'to_date' => '2025-12-25',
+                'getPlan' => (object) ['id' => 1, 'name' => 'Annual Leave'],
+                'leave_count' => 10,
+                'from' => '2025-12-15',
+                'to' => '2025-12-25',
                 'reason' => 'Year-end vacation',
                 'status' => 'pending',
                 'created_at' => '2025-12-02',
             ],
             (object) [
                 'id' => 5,
-                'employee' => (object) [
+                'employee_id' => 5,
+                'plan_id' => 5,
+                'getEmployee' => (object) [
                     'id' => 5,
                     'full_name' => 'David Brown',
                     'applicant_id' => 'EMP005',
                     'system_id' => 'SYS005',
                 ],
-                'leave_plan' => (object) ['id' => 5, 'name' => 'Paternity Leave'],
-                'days' => 7,
-                'from_date' => '2025-12-10',
-                'to_date' => '2025-12-17',
+                'getPlan' => (object) ['id' => 5, 'name' => 'Paternity Leave'],
+                'leave_count' => 7,
+                'from' => '2025-12-10',
+                'to' => '2025-12-17',
                 'reason' => 'Birth of child',
                 'status' => 'approved',
                 'created_at' => '2025-12-02',
@@ -166,60 +176,6 @@
                                         </div>
                                     </div>
 
-                                    {{-- Second Row: Employee Name, Employee ID, and System ID --}}
-                                    <div class="row mb-2">
-                                        <div class="col-md-4">
-                                            <label for="employeeName" class="form-label text-muted small fw-semibold mb-1">
-                                                Employee Name
-                                            </label>
-                                            <select id="employeeName" name="employee_name"
-                                                class="form-select form-select-sm select2_list"
-                                                data-placeholder="Select employee name">
-                                                <option value="">Choose One</option>
-                                                @foreach ($dummyEmployees as $employee)
-                                                    <option value="{{ $employee->full_name }}"
-                                                        {{ request('employee_name') == $employee->full_name ? 'selected' : '' }}>
-                                                        {{ $employee->full_name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <label for="employeeId" class="form-label text-muted small fw-semibold mb-1">
-                                                Employee ID
-                                            </label>
-                                            <select id="employeeId" name="employee_id"
-                                                class="form-select form-select-sm select2_list"
-                                                data-placeholder="Select employee ID">
-                                                <option value="">Choose One</option>
-                                                @foreach ($dummyEmployees as $employee)
-                                                    <option value="{{ $employee->applicant_id }}"
-                                                        {{ request('employee_id') == $employee->applicant_id ? 'selected' : '' }}>
-                                                        {{ $employee->applicant_id }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <label for="systemId" class="form-label text-muted small fw-semibold mb-1">
-                                                System ID
-                                            </label>
-                                            <select id="systemId" name="system_id"
-                                                class="form-select form-select-sm select2_list"
-                                                data-placeholder="Select system ID">
-                                                <option value="">Choose One</option>
-                                                @foreach ($dummyEmployees as $employee)
-                                                    <option value="{{ $employee->system_id }}"
-                                                        {{ request('system_id') == $employee->system_id ? 'selected' : '' }}>
-                                                        {{ $employee->system_id }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-
                                     {{-- Reset Button --}}
                                     <div class="row">
                                         <div class="col-12 text-end">
@@ -237,9 +193,12 @@
             </div>
         </div>
 
-        <div class="col-lg-12">
-            <div class="card-header border-bottom p-4">
-                <div id="search-result" class="card-body p-0">
+        <div class="col-lg-12 mt-3">
+            <div class="card border-0 shadow-sm rounded">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Leave Applications List</h5>
+                </div>
+                <div class="card-body">
                     {{-- Action Buttons --}}
                     <div class="d-flex justify-content-between mb-3">
                         <a type="button" class="btn btn-warning btn-sm" href="#"
@@ -255,72 +214,66 @@
                     @if ($dummyLeaveApplications->isEmpty())
                         <div class="text-center py-4 text-muted">No leave applications found.</div>
                     @else
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered mb-0">
-                                    <thead>
+                        <div class="table-responsive">
+                            <table class="table table-bordered mb-0">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Employee Name</th>
+                                        <th scope="col">Plan Name</th>
+                                        <th scope="col">Days</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col" style="width: 180px;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php $sl = 1; @endphp
+                                    @foreach ($dummyLeaveApplications as $application)
                                         <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Employee Name</th>
-                                            <th scope="col">Plan Name</th>
-                                            <th scope="col">Days</th>
-                                            <th scope="col">Status</th>
-                                            <th scope="col" style="width: 180px;">Action</th>
+                                            <th scope="row">{{ $sl++ }}</th>
+                                            <td>{{ $application->getEmployee->full_name }}</td>
+                                            <td>{{ $application->getPlan->name }}</td>
+                                            <td>{{ $application->leave_count }}</td>
+                                            <td>
+                                                @if ($application->status == 'pending')
+                                                    <span class="badge bg-warning text-dark">Pending</span>
+                                                @elseif($application->status == 'approved')
+                                                    <span class="badge bg-success">Approved</span>
+                                                @else
+                                                    <span class="badge bg-danger">Rejected</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-secondary btn-sm" title="View"
+                                                    data-bs-toggle="modal" data-bs-target="#viewLeaveModal"
+                                                    data-id="{{ $application->id }}"
+                                                    data-employee="{{ $application->getEmployee->full_name }}"
+                                                    data-employee-id="{{ $application->getEmployee->applicant_id }}"
+                                                    data-system-id="{{ $application->getEmployee->system_id }}"
+                                                    data-plan="{{ $application->getPlan->name }}"
+                                                    data-days="{{ $application->leave_count }}"
+                                                    data-from="{{ $application->from }}" data-to="{{ $application->to }}"
+                                                    data-reason="{{ $application->reason }}"
+                                                    data-status="{{ $application->status }}"
+                                                    data-created="{{ $application->created_at }}">
+                                                    <i style="height: 12px; width: 12px" data-feather="eye"></i>
+                                                </button>
+                                                @if ($application->status == 'pending')
+                                                    <button type="button" class="btn btn-success btn-sm" title="Approve">
+                                                        <i style="height: 12px; width: 12px" data-feather="check"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-danger btn-sm" title="Reject">
+                                                        <i style="height: 12px; width: 12px" data-feather="x"></i>
+                                                    </button>
+                                                @endif
+                                                <button type="button" class="btn btn-outline-danger btn-sm" title="Delete">
+                                                    <i style="height: 12px; width: 12px" data-feather="trash-2"></i>
+                                                </button>
+                                            </td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php $sl = 1; @endphp
-                                        @foreach ($dummyLeaveApplications as $application)
-                                            <tr>
-                                                <th scope="row">{{ $sl++ }}</th>
-                                                <td>{{ $application->employee->full_name }}</td>
-                                                <td>{{ $application->leave_plan->name }}</td>
-                                                <td>{{ $application->days }}</td>
-                                                <td>
-                                                    @if ($application->status == 'pending')
-                                                        <span class="badge bg-warning text-dark">Pending</span>
-                                                    @elseif($application->status == 'approved')
-                                                        <span class="badge bg-success">Approved</span>
-                                                    @else
-                                                        <span class="badge bg-danger">Rejected</span>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    <button type="button" class="btn btn-secondary btn-sm" title="View"
-                                                        data-bs-toggle="modal" data-bs-target="#viewLeaveModal"
-                                                        data-id="{{ $application->id }}"
-                                                        data-employee="{{ $application->employee->full_name }}"
-                                                        data-employee-id="{{ $application->employee->applicant_id }}"
-                                                        data-system-id="{{ $application->employee->system_id }}"
-                                                        data-plan="{{ $application->leave_plan->name }}"
-                                                        data-days="{{ $application->days }}"
-                                                        data-from="{{ $application->from_date }}"
-                                                        data-to="{{ $application->to_date }}"
-                                                        data-reason="{{ $application->reason }}"
-                                                        data-status="{{ $application->status }}"
-                                                        data-created="{{ $application->created_at }}">
-                                                        <i style="height: 12px; width: 12px" data-feather="eye"></i>
-                                                    </button>
-                                                    @if ($application->status == 'pending')
-                                                        <button type="button" class="btn btn-success btn-sm"
-                                                            title="Approve">
-                                                            <i style="height: 12px; width: 12px" data-feather="check"></i>
-                                                        </button>
-                                                        <button type="button" class="btn btn-danger btn-sm"
-                                                            title="Reject">
-                                                            <i style="height: 12px; width: 12px" data-feather="x"></i>
-                                                        </button>
-                                                    @endif
-                                                    <button type="button" class="btn btn-outline-danger btn-sm"
-                                                        title="Delete">
-                                                        <i style="height: 12px; width: 12px" data-feather="trash-2"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     @endif
                 </div>
