@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('deduction_plans', function (Blueprint $table) {
+        Schema::create('employee_deduction_plans', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('employee_id')->index();
             $table->decimal('late_deduction', 8, 2)->default(0.00);
             $table->decimal('early_out_deduction', 8, 2)->default(0.00);
             $table->decimal('excessive_late_deduction', 8, 2)->default(0.00);
-            $table->string('status')->default('active');
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('deduction_plans');
+        Schema::dropIfExists('employee_deduction_plans');
     }
 };
