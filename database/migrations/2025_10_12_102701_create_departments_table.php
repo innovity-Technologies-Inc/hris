@@ -15,10 +15,9 @@ return new class extends Migration
             $table->id()->index();
             $table->string('department_name');
             $table->string('short_name');
-            $table->string('job_number_code');
             $table->unsignedBigInteger('division_id');
-            $table->unsignedBigInteger('location_id');
-            $table->unsignedBigInteger('company_id');
+            $table->unsignedBigInteger('location_id')->nullable();
+            $table->unsignedBigInteger('company_id')->nullable();
             $table->enum('status', ['active', 'inactive']);
             $table->timestamps();
         });

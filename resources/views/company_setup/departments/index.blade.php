@@ -36,7 +36,6 @@
                                     <th scope="col">Division</th>
                                     <th scope="col">Department Name</th>
                                     <th scope="col">Short Name</th>
-                                    <th scope="col">Job No. Code</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
@@ -52,7 +51,6 @@
                                         <td>{{ $department->getDivision->name }}</td>
                                         <td>{{ $department->department_name }}</td>
                                         <td>{{ $department->short_name }}</td>
-                                        <td>{{ $department->job_number_code }}</td>
                                         <td>
                                             <a href="{{ route('departments.edit', $department->id) }}"
                                                 class="btn btn-primary btn-sm">
