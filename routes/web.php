@@ -35,9 +35,9 @@ use App\Http\Controllers\AllowancePlanController;
 use App\Http\Controllers\LeavesController;
 
 
-// Route::get('test', function () {
-//    return view('leave');
-// });
+Route::get('test', function () {
+   return view('plans.deduction_plans.form');
+});
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
