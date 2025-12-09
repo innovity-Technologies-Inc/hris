@@ -2,15 +2,7 @@
 @section('content')
     <div class="container-fluid mt-4">
 
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+
 
 
         <form method="POST"
@@ -34,9 +26,9 @@
                             <label for="name" class="form-label fw-semibold">
                                 OT Plan Name <span class="text-danger">*</span>
                             </label>
-                            <input type="text" class="form-control" id="name" name="name"
-                                placeholder="E.g., Regular OT - 1.5x" value="{{ isset($plan) ? $plan->name : old('name') }}"
-                                required>
+                            <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"
+                                name="name" placeholder="E.g., Regular OT - 1.5x"
+                                value="{{ isset($plan) ? $plan->name : old('name') }}" required>
                             @error('name')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -45,7 +37,8 @@
                             <label for="ot_type" class="form-label fw-semibold">
                                 Overtime Type <span class="text-danger">*</span>
                             </label>
-                            <select class="form-select" id="ot_type" name="ot_type" required>
+                            <select class="form-select @error('ot_type') is-invalid @enderror" id="ot_type" name="ot_type"
+                                required>
                                 <option value="">Select OT Type</option>
                                 <option value="regular" {{ isset($plan) && $plan->ot_type == 'regular' ? 'selected' : '' }}>
                                     Regular</option>
@@ -68,8 +61,8 @@
                     <div class="row">
                         <div class="col-md-12 mb-3">
                             <label for="description" class="form-label fw-semibold">Description</label>
-                            <textarea class="form-control" id="description" name="description" rows="3"
-                                placeholder="Enter plan description...">{{ isset($plan) ? $plan->description : old('description') }}</textarea>
+                            <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description"
+                                rows="3" placeholder="Enter plan description...">{{ isset($plan) ? $plan->description : old('description') }}</textarea>
                             @error('description')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -94,16 +87,16 @@
                             </label>
                             <div class="d-flex gap-4">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="ot_config_type"
-                                        id="ot_config_salary" value="Salary Based"
+                                    <input class="form-check-input @error('ot_config_type') is-invalid @enderror"
+                                        type="radio" name="ot_config_type" id="ot_config_salary" value="Salary Based"
                                         {{ !isset($plan) || (isset($plan) && $plan->ot_config_type != 'Salary Based') ? 'checked' : '' }}>
                                     <label class="form-check-label" for="ot_config_salary">
                                         Based on Salary
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="ot_config_type"
-                                        id="ot_config_custom" value="Custom"
+                                    <input class="form-check-input @error('ot_config_type') is-invalid @enderror"
+                                        type="radio" name="ot_config_type" id="ot_config_custom" value="Custom"
                                         {{ isset($plan) && $plan->ot_config_type == 'Custom' ? 'checked' : '' }}>
                                     <label class="form-check-label" for="ot_config_custom">
                                         Custom Rate
@@ -178,7 +171,8 @@
                                     Amount Per Hour <span class="text-danger">*</span>
                                 </label>
                                 <div class="input-group">
-                                    <span class="input-group-text">{{\App\HelperClass::getGeneralSetting()->currency ?? '৳'}}</span>
+                                    <span
+                                        class="input-group-text">{{ \App\HelperClass::getGeneralSetting()->currency ?? '৳' }}</span>
                                     <input type="number" step="0.01" class="form-control" id="custom_overtime_rate"
                                         name="custom_overtime_rate" placeholder="Enter amount per hour"
                                         value="{{ isset($plan) ? $plan->custom_overtime_rate : old('custom_overtime_rate') }}">
