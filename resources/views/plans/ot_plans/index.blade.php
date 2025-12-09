@@ -89,26 +89,3 @@
         });
     </script>
 @endsection
-
-@push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        $(document).on('submit', 'form[action*="ot_plans/delete"]', function(e) {
-            e.preventDefault();
-            const form = this;
-            Swal.fire({
-                title: 'Are you sure?',
-                text: 'This action cannot be undone!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
-                }
-            });
-        });
-    </script>
-@endpush
