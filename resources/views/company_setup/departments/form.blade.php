@@ -94,17 +94,6 @@
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
-                                    <div class="col-md-3 mb-2">
-                                        <label for="job_number_code" class="form-label">Job Number Code <span
-                                                class="text-danger">*</span></label>
-                                        <input type="text" id="job_number_code" class="form-control"
-                                            name="job_number_code" placeholder="Enter Job Number Code"
-                                            value="{{ isset($department) ? $department->job_number_code : old('job_number_code') }}"
-                                            required maxlength="20">
-                                        @error('job_number_code')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
-                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 mb-2">
