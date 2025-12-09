@@ -23,7 +23,7 @@
                         </label>
                         <input
                             type="text"
-                            class="form-control @error('name') is-invalid @enderror"
+                            class="form-control"
                             id="name"
                             name="name"
                             placeholder="E.g., Friday Off-Day Plan"
@@ -31,7 +31,7 @@
                             required
                         >
                         @error('name')
-                            <span class="text-danger">{{ $message }}</span>
+                            <small class="text-danger">{{ $message }}</small>
                         @enderror
                     </div>
                     <div class="col-md-6 mb-3">
@@ -40,7 +40,7 @@
                         </label>
                         <input
                             type="text"
-                            class="form-control @error('short_name') is-invalid @enderror"
+                            class="form-control"
                             id="short_name"
                             name="short_name"
                             placeholder="E.g., FRI-OFF"
@@ -48,7 +48,7 @@
                             required
                         >
                         @error('short_name')
-                            <span class="text-danger">{{ $message }}</span>
+                            <small class="text-danger">{{ $message }}</small>
                         @enderror
                     </div>
                 </div>
@@ -70,7 +70,7 @@
                         </label>
                         <input
                             type="time"
-                            class="form-control @error('start_time') is-invalid @enderror"
+                            class="form-control"
                             id="start_time"
                             name="start_time"
                             value="{{ isset($plan) && $plan->start_time ? \Carbon\Carbon::parse($plan->start_time)->format('H:i') : old('start_time') }}"
@@ -78,7 +78,7 @@
                         >
                         <small class="text-muted">{{ __('Time when off-day period begins') }}</small>
                         @error('start_time')
-                            <span class="text-danger">{{ $message }}</span>
+                            <small class="text-danger">{{ $message }}</small>
                         @enderror
                     </div>
                     <div class="col-md-6 mb-3">
@@ -87,7 +87,7 @@
                         </label>
                         <input
                             type="time"
-                            class="form-control @error('end_time') is-invalid @enderror"
+                            class="form-control"
                             id="end_time"
                             name="end_time"
                             value="{{ isset($plan) && $plan->end_time ? \Carbon\Carbon::parse($plan->end_time)->format('H:i') : old('end_time') }}"
@@ -95,7 +95,7 @@
                         >
                         <small class="text-muted">Time when off-day period ends</small>
                         @error('end_time')
-                            <span class="text-danger">{{ $message }}</span>
+                            <small class="text-danger">{{ $message }}</small>
                         @enderror
                     </div>
                 </div>
@@ -118,7 +118,7 @@
                         <input
                             type="number"
                             step="1"
-                            class="form-control @error('grace_time') is-invalid @enderror"
+                            class="form-control"
                             id="grace_time"
                             name="grace_time"
                             placeholder="0"
@@ -127,7 +127,7 @@
                         >
                         <small class="text-muted">Grace period after end time (in minutes)</small>
                         @error('grace_time')
-                        <span class="text-danger">{{ $message }}</span>
+                            <small class="text-danger">{{ $message }}</small>
                         @enderror
                     </div>
 
@@ -138,7 +138,7 @@
                         <input
                             type="number"
                             step="1"
-                            class="form-control @error('grace_time_before') is-invalid @enderror"
+                            class="form-control"
                             id="grace_time_before"
                             name="grace_time_before"
                             placeholder="0"
@@ -147,7 +147,7 @@
                         >
                         <small class="text-muted">Grace period before start time (in minutes)</small>
                         @error('grace_time_before')
-                            <span class="text-danger">{{ $message }}</span>
+                            <small class="text-danger">{{ $message }}</small>
                         @enderror
                     </div>
                 </div>
@@ -172,7 +172,7 @@
                             <input
                                 type="number"
                                 step="0.01"
-                                class="form-control @error('remuneration') is-invalid @enderror"
+                                class="form-control"
                                 id="remuneration"
                                 name="remuneration"
                                 placeholder="Enter remuneration amount"
@@ -182,7 +182,7 @@
                         </div>
                         <small class="text-muted">Fixed amount paid for off-day work</small>
                         @error('remuneration')
-                            <span class="text-danger d-block">{{ $message }}</span>
+                            <small class="text-danger">{{ $message }}</small>
                         @enderror
                     </div>
                     <div class="col-md-6 mb-3">
@@ -195,7 +195,7 @@
                             <option value="inactive" {{ isset($plan) && $plan->status == 'inactive' ? 'selected' : '' }} {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
                         </select>
                         @error('status')
-                        <span class="text-danger small">{{ $message }}</span>
+                            <small class="text-danger">{{ $message }}</small>
                         @enderror
                     </div>
                 </div>

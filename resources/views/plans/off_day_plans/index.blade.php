@@ -78,7 +78,7 @@
                 $('.select2_list').val(null).trigger('change');
 
                 // Reload the page without query string
-                window.location.href = "{{ route('employees.index') }}";
+                window.location.href = "{{ route('plans.off_day_plans.index') }}";
             });
 
             // Handle pagination via AJAX
