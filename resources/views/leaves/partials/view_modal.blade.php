@@ -36,13 +36,13 @@
                             <div class="col-md-4">
                                 <div class="border-start border-info border-3 ps-3">
                                     <small class="text-muted d-block">Employee ID</small>
-                                    <strong id="modalEmployeeId" class="text-dark">-</strong>
+                                    <strong id="modalEmployeeId" class="text-dark">{{$application->getEmployee->applicant_id}}</strong>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="border-start border-success border-3 ps-3">
                                     <small class="text-muted d-block">System ID</small>
-                                    <strong id="modalSystemId" class="text-dark">-</strong>
+                                    <strong id="modalSystemId" class="text-dark">{{$application->getEmployee->system_id}}</strong>
                                 </div>
                             </div>
                         </div>
@@ -61,26 +61,26 @@
                             <div class="col-md-6">
                                 <div class="border-start border-success border-3 ps-3">
                                     <small class="text-muted d-block">Leave Plan</small>
-                                    <strong id="modalLeavePlan" class="text-dark">-</strong>
+                                    <strong id="modalLeavePlan" class="text-dark">{{$application->getPlan->name}}</strong>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="border-start border-warning border-3 ps-3">
                                     <small class="text-muted d-block">Number of Days</small>
-                                    <strong id="modalDays" class="text-dark fs-5">-</strong>
+                                    <strong id="modalDays" class="text-dark fs-5">{{$application->leave_count}}</strong>
                                     <small class="text-muted">days</small>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="border-start border-info border-3 ps-3">
                                     <small class="text-muted d-block">From Date</small>
-                                    <strong id="modalFromDate" class="text-dark">-</strong>
+                                    <strong id="modalFromDate" class="text-dark">{{$application->from}}</strong>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="border-start border-danger border-3 ps-3">
                                     <small class="text-muted d-block">To Date</small>
-                                    <strong id="modalToDate" class="text-dark">-</strong>
+                                    <strong id="modalToDate" class="text-dark">{{$application->to}}</strong>
                                 </div>
                             </div>
                         </div>
@@ -95,7 +95,7 @@
                         </h6>
                     </div>
                     <div class="card-body">
-                        <p id="modalReason" class="mb-0 text-dark">-</p>
+                        <p id="modalReason" class="mb-0 text-dark">{{$application->reason}}</p>
                     </div>
                 </div>
 
@@ -111,15 +111,16 @@
                             <div class="col-md-6">
                                 <div class="border-start border-secondary border-3 ps-3">
                                     <small class="text-muted d-block">Application Date</small>
-                                    <strong id="modalCreatedAt" class="text-dark">-</strong>
+                                    <strong id="modalCreatedAt" class="text-dark">
+                                        {{ \Carbon\Carbon::parse($application->created_at)->format('d-m-Y, h:i A') }}                                    </strong>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            {{--<div class="col-md-6">
                                 <div class="border-start border-primary border-3 ps-3">
                                     <small class="text-muted d-block">Application ID</small>
                                     <strong id="modalApplicationId" class="text-dark">-</strong>
                                 </div>
-                            </div>
+                            </div>--}}
                         </div>
                     </div>
                 </div>
