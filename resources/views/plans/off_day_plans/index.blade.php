@@ -6,7 +6,7 @@
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-header">
-                    <a type="button" class="btn btn-warning btn-sm" href="{{route('plans.off_day_plans.create')}}">
+                    <a type="button" class="btn btn-warning btn-sm" href="{{ route('plans.off_day_plans.create') }}">
                         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                     </a>
                 </div><!-- end card header -->
