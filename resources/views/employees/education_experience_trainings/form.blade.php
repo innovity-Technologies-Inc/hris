@@ -1,11 +1,25 @@
 @extends('structure.master')
 @section('content')
-    @if(Route::currentRouteNamed('employees.education_information.create'))
+    @if (Route::currentRouteNamed('employees.education_information.create'))
         @include('employees.partials.creation_button')
     @endif
     <div class="mt-4">
-        <form id="employeeForm" method="POST" action="{{ isset($employeeData) ? route('employees.education_information.update', $employeeData->employee_id) : route('employees.education_information.store') }}">
-            @if(isset($employeeData))
+        {{-- Display All Validation Errors Summary --}}
+        @if ($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong><i class="mdi mdi-alert-circle me-2"></i>Please fix the following errors:</strong>
+                <ul class="mb-0 mt-2">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        <form id="employeeForm" method="POST"
+            action="{{ isset($employeeData) ? route('employees.education_information.update', $employeeData->employee_id) : route('employees.education_information.store') }}">
+            @if (isset($employeeData))
                 @method('PUT')
             @endif
             @csrf
@@ -22,8 +36,7 @@
                                 <div class="col-lg-6 mb-3">
                                     <label for="employee_id" class="form-label">Employee Name <span
                                             class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" readonly
-                                           value="{{ $employee->full_name }}">
+                                    <input type="text" class="form-control" readonly value="{{ $employee->full_name }}">
 
                                     <input type="hidden" name="employee_id" value="{{ $employee->id }}">
 
@@ -50,85 +63,176 @@
                                     $educations = old('educations', $employeeData->educations ?? []);
                                 @endphp
 
-                                @if(empty($educations))
+                                @if (empty($educations))
                                     <!-- Initial Empty Row for Create -->
                                     <div class="education-row border rounded p-3 mb-3 bg-light" data-row="0">
                                         <div class="row g-3">
                                             <div class="col-md-4">
-                                                <label class="form-label">Education Title <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="educations[0][education_title]" placeholder="e.g., Bachelor of Science">
+                                                <label class="form-label">Education Title</label>
+                                                <input type="text"
+                                                    class="form-control @error('educations.0.education_title') is-invalid @enderror"
+                                                    name="educations[0][education_title]"
+                                                    placeholder="e.g., Bachelor of Science"
+                                                    value="{{ old('educations.0.education_title') }}">
+                                                @error('educations.0.education_title')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                             <div class="col-md-4">
-                                                <label class="form-label">Institute <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="educations[0][institute]" placeholder="e.g., University of Dhaka">
+                                                <label class="form-label">Institute</label>
+                                                <input type="text"
+                                                    class="form-control @error('educations.0.institute') is-invalid @enderror"
+                                                    name="educations[0][institute]" placeholder="e.g., University of Dhaka"
+                                                    value="{{ old('educations.0.institute') }}">
+                                                @error('educations.0.institute')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                             <div class="col-md-4">
                                                 <label class="form-label">Group/Major</label>
-                                                <input type="text" class="form-control" name="educations[0][group_major]" placeholder="e.g., Computer Science">
+                                                <input type="text"
+                                                    class="form-control @error('educations.0.group_major') is-invalid @enderror"
+                                                    name="educations[0][group_major]" placeholder="e.g., Computer Science"
+                                                    value="{{ old('educations.0.group_major') }}">
+                                                @error('educations.0.group_major')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="form-label">Board/University</label>
-                                                <input type="text" class="form-control" name="educations[0][board_university]" placeholder="e.g., Dhaka University">
+                                                <input type="text"
+                                                    class="form-control @error('educations.0.board_university') is-invalid @enderror"
+                                                    name="educations[0][board_university]"
+                                                    placeholder="e.g., Dhaka University"
+                                                    value="{{ old('educations.0.board_university') }}">
+                                                @error('educations.0.board_university')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="form-label">Result/Grade</label>
-                                                <input type="text" class="form-control" name="educations[0][result_grade]" placeholder="e.g., First Class">
+                                                <input type="text"
+                                                    class="form-control @error('educations.0.result_grade') is-invalid @enderror"
+                                                    name="educations[0][result_grade]" placeholder="e.g., First Class"
+                                                    value="{{ old('educations.0.result_grade') }}">
+                                                @error('educations.0.result_grade')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                             <div class="col-md-3">
-                                                <label class="form-label">Passing Year <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="educations[0][passing_year]" placeholder="e.g., 2020">
+                                                <label class="form-label">Passing Year</label>
+                                                <input type="text"
+                                                    class="form-control @error('educations.0.passing_year') is-invalid @enderror"
+                                                    name="educations[0][passing_year]" placeholder="e.g., 2020"
+                                                    value="{{ old('educations.0.passing_year') }}">
+                                                @error('educations.0.passing_year')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="form-label">GPA/CGPA</label>
-                                                <input type="text" class="form-control" name="educations[0][gpa_cgpa]" placeholder="e.g., 3.75">
+                                                <input type="text"
+                                                    class="form-control @error('educations.0.gpa_cgpa') is-invalid @enderror"
+                                                    name="educations[0][gpa_cgpa]" placeholder="e.g., 3.75"
+                                                    value="{{ old('educations.0.gpa_cgpa') }}">
+                                                @error('educations.0.gpa_cgpa')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                         </div>
                                     </div>
                                 @else
                                     <!-- Populated Rows for Edit -->
-                                    @foreach($educations as $index => $education)
-                                        <div class="education-row border rounded p-3 mb-3 bg-light position-relative" data-row="{{ $index }}">
-                                            @if($index > 0)
-                                                <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2" onclick="removeEducationRow(this)">
+                                    @foreach ($educations as $index => $education)
+                                        <div class="education-row border rounded p-3 mb-3 bg-light position-relative"
+                                            data-row="{{ $index }}">
+                                            @if ($index > 0)
+                                                <button type="button"
+                                                    class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2"
+                                                    onclick="removeEducationRow(this)">
                                                     <i class="mdi mdi-delete"></i> Remove
                                                 </button>
-                                                <h6 class="text-success mb-3"><i class="mdi mdi-school-outline me-1"></i>Education {{ $index + 1 }}</h6>
+                                                <h6 class="text-success mb-3"><i
+                                                        class="mdi mdi-school-outline me-1"></i>Education
+                                                    {{ $index + 1 }}</h6>
                                             @endif
                                             <div class="row g-3">
                                                 <div class="col-md-4">
-                                                    <label class="form-label">Education Title <span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" name="educations[{{ $index }}][education_title]"
-                                                           value="{{ $education['education_title'] ?? '' }}" placeholder="e.g., Bachelor of Science">
+                                                    <label class="form-label">Education Title</label>
+                                                    <input type="text"
+                                                        class="form-control @error('educations.' . $index . '.education_title') is-invalid @enderror"
+                                                        name="educations[{{ $index }}][education_title]"
+                                                        value="{{ old('educations.' . $index . '.education_title', $education['education_title'] ?? '') }}"
+                                                        placeholder="e.g., Bachelor of Science">
+                                                    @error('educations.' . $index . '.education_title')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <label class="form-label">Institute <span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" name="educations[{{ $index }}][institute]"
-                                                           value="{{ $education['institute'] ?? '' }}" placeholder="e.g., University of Dhaka">
+                                                    <label class="form-label">Institute</label>
+                                                    <input type="text"
+                                                        class="form-control @error('educations.' . $index . '.institute') is-invalid @enderror"
+                                                        name="educations[{{ $index }}][institute]"
+                                                        value="{{ old('educations.' . $index . '.institute', $education['institute'] ?? '') }}"
+                                                        placeholder="e.g., University of Dhaka">
+                                                    @error('educations.' . $index . '.institute')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label class="form-label">Group/Major</label>
-                                                    <input type="text" class="form-control" name="educations[{{ $index }}][group_major]"
-                                                           value="{{ $education['group_major'] ?? '' }}" placeholder="e.g., Computer Science">
+                                                    <input type="text"
+                                                        class="form-control @error('educations.' . $index . '.group_major') is-invalid @enderror"
+                                                        name="educations[{{ $index }}][group_major]"
+                                                        value="{{ old('educations.' . $index . '.group_major', $education['group_major'] ?? '') }}"
+                                                        placeholder="e.g., Computer Science">
+                                                    @error('educations.' . $index . '.group_major')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                                 <div class="col-md-3">
                                                     <label class="form-label">Board/University</label>
-                                                    <input type="text" class="form-control" name="educations[{{ $index }}][board_university]"
-                                                           value="{{ $education['board_university'] ?? '' }}" placeholder="e.g., Dhaka University">
+                                                    <input type="text"
+                                                        class="form-control @error('educations.' . $index . '.board_university') is-invalid @enderror"
+                                                        name="educations[{{ $index }}][board_university]"
+                                                        value="{{ old('educations.' . $index . '.board_university', $education['board_university'] ?? '') }}"
+                                                        placeholder="e.g., Dhaka University">
+                                                    @error('educations.' . $index . '.board_university')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                                 <div class="col-md-3">
                                                     <label class="form-label">Result/Grade</label>
-                                                    <input type="text" class="form-control" name="educations[{{ $index }}][result_grade]"
-                                                           value="{{ $education['result_grade'] ?? '' }}" placeholder="e.g., First Class">
+                                                    <input type="text"
+                                                        class="form-control @error('educations.' . $index . '.result_grade') is-invalid @enderror"
+                                                        name="educations[{{ $index }}][result_grade]"
+                                                        value="{{ old('educations.' . $index . '.result_grade', $education['result_grade'] ?? '') }}"
+                                                        placeholder="e.g., First Class">
+                                                    @error('educations.' . $index . '.result_grade')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <label class="form-label">Passing Year <span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" name="educations[{{ $index }}][passing_year]"
-                                                           value="{{ $education['passing_year'] ?? '' }}" placeholder="e.g., 2020">
+                                                    <label class="form-label">Passing Year</label>
+                                                    <input type="text"
+                                                        class="form-control @error('educations.' . $index . '.passing_year') is-invalid @enderror"
+                                                        name="educations[{{ $index }}][passing_year]"
+                                                        value="{{ old('educations.' . $index . '.passing_year', $education['passing_year'] ?? '') }}"
+                                                        placeholder="e.g., 2020">
+                                                    @error('educations.' . $index . '.passing_year')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                                 <div class="col-md-3">
                                                     <label class="form-label">GPA/CGPA</label>
-                                                    <input type="text" class="form-control" name="educations[{{ $index }}][gpa_cgpa]"
-                                                           value="{{ $education['gpa_cgpa'] ?? '' }}" placeholder="e.g., 3.75">
+                                                    <input type="text"
+                                                        class="form-control @error('educations.' . $index . '.gpa_cgpa') is-invalid @enderror"
+                                                        name="educations[{{ $index }}][gpa_cgpa]"
+                                                        value="{{ old('educations.' . $index . '.gpa_cgpa', $education['gpa_cgpa'] ?? '') }}"
+                                                        placeholder="e.g., 3.75">
+                                                    @error('educations.' . $index . '.gpa_cgpa')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                             </div>
                                         </div>
@@ -156,84 +260,170 @@
                                     $experiences = old('experiences', $employeeData->experiences ?? []);
                                 @endphp
 
-                                @if(empty($experiences))
+                                @if (empty($experiences))
                                     <!-- Initial Empty Row -->
                                     <div class="experience-row border rounded p-3 mb-3 bg-light" data-row="0">
                                         <div class="row g-3">
                                             <div class="col-md-4">
-                                                <label class="form-label">Company <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="experiences[0][company]" placeholder="e.g., ABC Corporation Ltd">
+                                                <label class="form-label">Company</label>
+                                                <input type="text"
+                                                    class="form-control @error('experiences.0.company') is-invalid @enderror"
+                                                    name="experiences[0][company]" placeholder="e.g., ABC Corporation Ltd"
+                                                    value="{{ old('experiences.0.company') }}">
+                                                @error('experiences.0.company')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                             <div class="col-md-4">
-                                                <label class="form-label">Designation <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="experiences[0][designation]" placeholder="e.g., Senior Software Engineer">
+                                                <label class="form-label">Designation</label>
+                                                <input type="text"
+                                                    class="form-control @error('experiences.0.designation') is-invalid @enderror"
+                                                    name="experiences[0][designation]"
+                                                    placeholder="e.g., Senior Software Engineer"
+                                                    value="{{ old('experiences.0.designation') }}">
+                                                @error('experiences.0.designation')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                             <div class="col-md-4">
                                                 <label class="form-label">Department</label>
-                                                <input type="text" class="form-control" name="experiences[0][department]" placeholder="e.g., IT Department">
+                                                <input type="text"
+                                                    class="form-control @error('experiences.0.department') is-invalid @enderror"
+                                                    name="experiences[0][department]" placeholder="e.g., IT Department"
+                                                    value="{{ old('experiences.0.department') }}">
+                                                @error('experiences.0.department')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                             <div class="col-md-4">
-                                                <label class="form-label">Date From <span class="text-danger">*</span></label>
-                                                <input type="date" class="form-control" name="experiences[0][date_from]">
+                                                <label class="form-label">Date From</label>
+                                                <input type="date"
+                                                    class="form-control @error('experiences.0.date_from') is-invalid @enderror"
+                                                    name="experiences[0][date_from]"
+                                                    value="{{ old('experiences.0.date_from') }}">
+                                                @error('experiences.0.date_from')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                             <div class="col-md-4">
-                                                <label class="form-label">Date To <span class="text-danger">*</span></label>
-                                                <input type="date" class="form-control" name="experiences[0][date_to]">
+                                                <label class="form-label">Date To</label>
+                                                <input type="date"
+                                                    class="form-control @error('experiences.0.date_to') is-invalid @enderror"
+                                                    name="experiences[0][date_to]"
+                                                    value="{{ old('experiences.0.date_to') }}">
+                                                @error('experiences.0.date_to')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                             <div class="col-md-4">
                                                 <label class="form-label">Duration</label>
-                                                <input type="text" class="form-control" name="experiences[0][duration]" placeholder="e.g., 2 years 6 months">
+                                                <input type="text"
+                                                    class="form-control @error('experiences.0.duration') is-invalid @enderror"
+                                                    name="experiences[0][duration]" placeholder="e.g., 2 years 6 months"
+                                                    value="{{ old('experiences.0.duration') }}">
+                                                @error('experiences.0.duration')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                             <div class="col-md-12">
                                                 <label class="form-label">Responsibility</label>
-                                                <textarea class="form-control" name="experiences[0][responsibility]" rows="2" placeholder="Describe your key responsibilities and achievements"></textarea>
+                                                <textarea class="form-control @error('experiences.0.responsibility') is-invalid @enderror"
+                                                    name="experiences[0][responsibility]" rows="2"
+                                                    placeholder="Describe your key responsibilities and achievements">{{ old('experiences.0.responsibility') }}</textarea>
+                                                @error('experiences.0.responsibility')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                         </div>
                                     </div>
                                 @else
                                     <!-- Populated Rows -->
-                                    @foreach($experiences as $index => $experience)
-                                        <div class="experience-row border rounded p-3 mb-3 bg-light position-relative" data-row="{{ $index }}">
-                                            @if($index > 0)
-                                                <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2" onclick="removeExperienceRow(this)">
+                                    @foreach ($experiences as $index => $experience)
+                                        <div class="experience-row border rounded p-3 mb-3 bg-light position-relative"
+                                            data-row="{{ $index }}">
+                                            @if ($index > 0)
+                                                <button type="button"
+                                                    class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2"
+                                                    onclick="removeExperienceRow(this)">
                                                     <i class="mdi mdi-delete"></i> Remove
                                                 </button>
-                                                <h6 class="text-info mb-3"><i class="mdi mdi-briefcase-outline me-1"></i>Experience {{ $index + 1 }}</h6>
+                                                <h6 class="text-info mb-3"><i
+                                                        class="mdi mdi-briefcase-outline me-1"></i>Experience
+                                                    {{ $index + 1 }}</h6>
                                             @endif
                                             <div class="row g-3">
                                                 <div class="col-md-4">
-                                                    <label class="form-label">Company <span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" name="experiences[{{ $index }}][company]"
-                                                           value="{{ $experience['company'] ?? '' }}" placeholder="e.g., ABC Corporation Ltd">
+                                                    <label class="form-label">Company</label>
+                                                    <input type="text"
+                                                        class="form-control @error('experiences.' . $index . '.company') is-invalid @enderror"
+                                                        name="experiences[{{ $index }}][company]"
+                                                        value="{{ old('experiences.' . $index . '.company', $experience['company'] ?? '') }}"
+                                                        placeholder="e.g., ABC Corporation Ltd">
+                                                    @error('experiences.' . $index . '.company')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <label class="form-label">Designation <span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" name="experiences[{{ $index }}][designation]"
-                                                           value="{{ $experience['designation'] ?? '' }}" placeholder="e.g., Senior Software Engineer">
+                                                    <label class="form-label">Designation</label>
+                                                    <input type="text"
+                                                        class="form-control @error('experiences.' . $index . '.designation') is-invalid @enderror"
+                                                        name="experiences[{{ $index }}][designation]"
+                                                        value="{{ old('experiences.' . $index . '.designation', $experience['designation'] ?? '') }}"
+                                                        placeholder="e.g., Senior Software Engineer">
+                                                    @error('experiences.' . $index . '.designation')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label class="form-label">Department</label>
-                                                    <input type="text" class="form-control" name="experiences[{{ $index }}][department]"
-                                                           value="{{ $experience['department'] ?? '' }}" placeholder="e.g., IT Department">
+                                                    <input type="text"
+                                                        class="form-control @error('experiences.' . $index . '.department') is-invalid @enderror"
+                                                        name="experiences[{{ $index }}][department]"
+                                                        value="{{ old('experiences.' . $index . '.department', $experience['department'] ?? '') }}"
+                                                        placeholder="e.g., IT Department">
+                                                    @error('experiences.' . $index . '.department')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <label class="form-label">Date From <span class="text-danger">*</span></label>
-                                                    <input type="date" class="form-control" name="experiences[{{ $index }}][date_from]"
-                                                           value="{{ $experience['date_from'] ?? '' }}">
+                                                    <label class="form-label">Date From</label>
+                                                    <input type="date"
+                                                        class="form-control @error('experiences.' . $index . '.date_from') is-invalid @enderror"
+                                                        name="experiences[{{ $index }}][date_from]"
+                                                        value="{{ old('experiences.' . $index . '.date_from', $experience['date_from'] ?? '') }}">
+                                                    @error('experiences.' . $index . '.date_from')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <label class="form-label">Date To <span class="text-danger">*</span></label>
-                                                    <input type="date" class="form-control" name="experiences[{{ $index }}][date_to]"
-                                                           value="{{ $experience['date_to'] ?? '' }}">
+                                                    <label class="form-label">Date To</label>
+                                                    <input type="date"
+                                                        class="form-control @error('experiences.' . $index . '.date_to') is-invalid @enderror"
+                                                        name="experiences[{{ $index }}][date_to]"
+                                                        value="{{ old('experiences.' . $index . '.date_to', $experience['date_to'] ?? '') }}">
+                                                    @error('experiences.' . $index . '.date_to')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label class="form-label">Duration</label>
-                                                    <input type="text" class="form-control" name="experiences[{{ $index }}][duration]"
-                                                           value="{{ $experience['duration'] ?? '' }}" placeholder="e.g., 2 years 6 months">
+                                                    <input type="text"
+                                                        class="form-control @error('experiences.' . $index . '.duration') is-invalid @enderror"
+                                                        name="experiences[{{ $index }}][duration]"
+                                                        value="{{ old('experiences.' . $index . '.duration', $experience['duration'] ?? '') }}"
+                                                        placeholder="e.g., 2 years 6 months">
+                                                    @error('experiences.' . $index . '.duration')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label class="form-label">Responsibility</label>
-                                                    <textarea class="form-control" name="experiences[{{ $index }}][responsibility]" rows="2" placeholder="Describe your key responsibilities and achievements">{{ $experience['responsibility'] ?? '' }}</textarea>
+                                                    <textarea class="form-control @error('experiences.' . $index . '.responsibility') is-invalid @enderror"
+                                                        name="experiences[{{ $index }}][responsibility]" rows="2"
+                                                        placeholder="Describe your key responsibilities and achievements">{{ old('experiences.' . $index . '.responsibility', $experience['responsibility'] ?? '') }}</textarea>
+                                                    @error('experiences.' . $index . '.responsibility')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                             </div>
                                         </div>
@@ -261,103 +451,216 @@
                                     $trainings = old('trainings', $employeeData->trainings ?? []);
                                 @endphp
 
-                                @if(empty($trainings))
+                                @if (empty($trainings))
                                     <!-- Initial Empty Row -->
                                     <div class="training-row border rounded p-3 mb-3 bg-light" data-row="0">
                                         <div class="row g-3">
                                             <div class="col-md-4">
-                                                <label class="form-label">Training Title <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="trainings[0][training_title]" placeholder="e.g., Advanced Laravel Development">
+                                                <label class="form-label">Training Title</label>
+                                                <input type="text"
+                                                    class="form-control @error('trainings.0.training_title') is-invalid @enderror"
+                                                    name="trainings[0][training_title]"
+                                                    placeholder="e.g., Advanced Laravel Development"
+                                                    value="{{ old('trainings.0.training_title') }}">
+                                                @error('trainings.0.training_title')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                             <div class="col-md-4">
                                                 <label class="form-label">Course Name</label>
-                                                <input type="text" class="form-control" name="trainings[0][course_name]" placeholder="e.g., Web Development Masterclass">
+                                                <input type="text"
+                                                    class="form-control @error('trainings.0.course_name') is-invalid @enderror"
+                                                    name="trainings[0][course_name]"
+                                                    placeholder="e.g., Web Development Masterclass"
+                                                    value="{{ old('trainings.0.course_name') }}">
+                                                @error('trainings.0.course_name')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                             <div class="col-md-4">
                                                 <label class="form-label">Training Code</label>
-                                                <input type="text" class="form-control" name="trainings[0][training_code]" placeholder="e.g., TRN-2025-001">
+                                                <input type="text"
+                                                    class="form-control @error('trainings.0.training_code') is-invalid @enderror"
+                                                    name="trainings[0][training_code]" placeholder="e.g., TRN-2025-001"
+                                                    value="{{ old('trainings.0.training_code') }}">
+                                                @error('trainings.0.training_code')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="form-label">Institute</label>
-                                                <input type="text" class="form-control" name="trainings[0][institute]" placeholder="e.g., Training Center">
+                                                <input type="text"
+                                                    class="form-control @error('trainings.0.institute') is-invalid @enderror"
+                                                    name="trainings[0][institute]" placeholder="e.g., Training Center"
+                                                    value="{{ old('trainings.0.institute') }}">
+                                                @error('trainings.0.institute')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="form-label">Country</label>
-                                                <input type="text" class="form-control" name="trainings[0][country]" placeholder="e.g., Bangladesh">
+                                                <input type="text"
+                                                    class="form-control @error('trainings.0.country') is-invalid @enderror"
+                                                    name="trainings[0][country]" placeholder="e.g., Bangladesh"
+                                                    value="{{ old('trainings.0.country') }}">
+                                                @error('trainings.0.country')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="form-label">Location</label>
-                                                <input type="text" class="form-control" name="trainings[0][location]" placeholder="e.g., Dhaka">
+                                                <input type="text"
+                                                    class="form-control @error('trainings.0.location') is-invalid @enderror"
+                                                    name="trainings[0][location]" placeholder="e.g., Dhaka"
+                                                    value="{{ old('trainings.0.location') }}">
+                                                @error('trainings.0.location')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="form-label">Duration</label>
-                                                <input type="text" class="form-control" name="trainings[0][duration]" placeholder="e.g., 5 days">
+                                                <input type="text"
+                                                    class="form-control @error('trainings.0.duration') is-invalid @enderror"
+                                                    name="trainings[0][duration]" placeholder="e.g., 5 days"
+                                                    value="{{ old('trainings.0.duration') }}">
+                                                @error('trainings.0.duration')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label">From Date <span class="text-danger">*</span></label>
-                                                <input type="date" class="form-control" name="trainings[0][from_date]">
+                                                <label class="form-label">From Date</label>
+                                                <input type="date"
+                                                    class="form-control @error('trainings.0.from_date') is-invalid @enderror"
+                                                    name="trainings[0][from_date]"
+                                                    value="{{ old('trainings.0.from_date') }}">
+                                                @error('trainings.0.from_date')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label">To Date <span class="text-danger">*</span></label>
-                                                <input type="date" class="form-control" name="trainings[0][to_date]">
+                                                <label class="form-label">To Date</label>
+                                                <input type="date"
+                                                    class="form-control @error('trainings.0.to_date') is-invalid @enderror"
+                                                    name="trainings[0][to_date]"
+                                                    value="{{ old('trainings.0.to_date') }}">
+                                                @error('trainings.0.to_date')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                         </div>
                                     </div>
                                 @else
                                     <!-- Populated Rows -->
-                                    @foreach($trainings as $index => $training)
-                                        <div class="training-row border rounded p-3 mb-3 bg-light position-relative" data-row="{{ $index }}">
-                                            @if($index > 0)
-                                                <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2" onclick="removeTrainingRow(this)">
+                                    @foreach ($trainings as $index => $training)
+                                        <div class="training-row border rounded p-3 mb-3 bg-light position-relative"
+                                            data-row="{{ $index }}">
+                                            @if ($index > 0)
+                                                <button type="button"
+                                                    class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2"
+                                                    onclick="removeTrainingRow(this)">
                                                     <i class="mdi mdi-delete"></i> Remove
                                                 </button>
-                                                <h6 class="text-warning mb-3"><i class="mdi mdi-certificate-outline me-1"></i>Training {{ $index + 1 }}</h6>
+                                                <h6 class="text-warning mb-3"><i
+                                                        class="mdi mdi-certificate-outline me-1"></i>Training
+                                                    {{ $index + 1 }}</h6>
                                             @endif
                                             <div class="row g-3">
                                                 <div class="col-md-4">
-                                                    <label class="form-label">Training Title <span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" name="trainings[{{ $index }}][training_title]"
-                                                           value="{{ $training['training_title'] ?? '' }}" placeholder="e.g., Advanced Laravel Development">
+                                                    <label class="form-label">Training Title</label>
+                                                    <input type="text"
+                                                        class="form-control @error('trainings.' . $index . '.training_title') is-invalid @enderror"
+                                                        name="trainings[{{ $index }}][training_title]"
+                                                        value="{{ old('trainings.' . $index . '.training_title', $training['training_title'] ?? '') }}"
+                                                        placeholder="e.g., Advanced Laravel Development">
+                                                    @error('trainings.' . $index . '.training_title')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label class="form-label">Course Name</label>
-                                                    <input type="text" class="form-control" name="trainings[{{ $index }}][course_name]"
-                                                           value="{{ $training['course_name'] ?? '' }}" placeholder="e.g., Web Development Masterclass">
+                                                    <input type="text"
+                                                        class="form-control @error('trainings.' . $index . '.course_name') is-invalid @enderror"
+                                                        name="trainings[{{ $index }}][course_name]"
+                                                        value="{{ old('trainings.' . $index . '.course_name', $training['course_name'] ?? '') }}"
+                                                        placeholder="e.g., Web Development Masterclass">
+                                                    @error('trainings.' . $index . '.course_name')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label class="form-label">Training Code</label>
-                                                    <input type="text" class="form-control" name="trainings[{{ $index }}][training_code]"
-                                                           value="{{ $training['training_code'] ?? '' }}" placeholder="e.g., TRN-2025-001">
+                                                    <input type="text"
+                                                        class="form-control @error('trainings.' . $index . '.training_code') is-invalid @enderror"
+                                                        name="trainings[{{ $index }}][training_code]"
+                                                        value="{{ old('trainings.' . $index . '.training_code', $training['training_code'] ?? '') }}"
+                                                        placeholder="e.g., TRN-2025-001">
+                                                    @error('trainings.' . $index . '.training_code')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                                 <div class="col-md-3">
                                                     <label class="form-label">Institute</label>
-                                                    <input type="text" class="form-control" name="trainings[{{ $index }}][institute]"
-                                                           value="{{ $training['institute'] ?? '' }}" placeholder="e.g., Training Center">
+                                                    <input type="text"
+                                                        class="form-control @error('trainings.' . $index . '.institute') is-invalid @enderror"
+                                                        name="trainings[{{ $index }}][institute]"
+                                                        value="{{ old('trainings.' . $index . '.institute', $training['institute'] ?? '') }}"
+                                                        placeholder="e.g., Training Center">
+                                                    @error('trainings.' . $index . '.institute')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                                 <div class="col-md-3">
                                                     <label class="form-label">Country</label>
-                                                    <input type="text" class="form-control" name="trainings[{{ $index }}][country]"
-                                                           value="{{ $training['country'] ?? '' }}" placeholder="e.g., Bangladesh">
+                                                    <input type="text"
+                                                        class="form-control @error('trainings.' . $index . '.country') is-invalid @enderror"
+                                                        name="trainings[{{ $index }}][country]"
+                                                        value="{{ old('trainings.' . $index . '.country', $training['country'] ?? '') }}"
+                                                        placeholder="e.g., Bangladesh">
+                                                    @error('trainings.' . $index . '.country')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                                 <div class="col-md-3">
                                                     <label class="form-label">Location</label>
-                                                    <input type="text" class="form-control" name="trainings[{{ $index }}][location]"
-                                                           value="{{ $training['location'] ?? '' }}" placeholder="e.g., Dhaka">
+                                                    <input type="text"
+                                                        class="form-control @error('trainings.' . $index . '.location') is-invalid @enderror"
+                                                        name="trainings[{{ $index }}][location]"
+                                                        value="{{ old('trainings.' . $index . '.location', $training['location'] ?? '') }}"
+                                                        placeholder="e.g., Dhaka">
+                                                    @error('trainings.' . $index . '.location')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                                 <div class="col-md-3">
                                                     <label class="form-label">Duration</label>
-                                                    <input type="text" class="form-control" name="trainings[{{ $index }}][duration]"
-                                                           value="{{ $training['duration'] ?? '' }}" placeholder="e.g., 5 days">
+                                                    <input type="text"
+                                                        class="form-control @error('trainings.' . $index . '.duration') is-invalid @enderror"
+                                                        name="trainings[{{ $index }}][duration]"
+                                                        value="{{ old('trainings.' . $index . '.duration', $training['duration'] ?? '') }}"
+                                                        placeholder="e.g., 5 days">
+                                                    @error('trainings.' . $index . '.duration')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <label class="form-label">From Date <span class="text-danger">*</span></label>
-                                                    <input type="date" class="form-control" name="trainings[{{ $index }}][from_date]"
-                                                           value="{{ $training['from_date'] ?? '' }}">
+                                                    <label class="form-label">From Date</label>
+                                                    <input type="date"
+                                                        class="form-control @error('trainings.' . $index . '.from_date') is-invalid @enderror"
+                                                        name="trainings[{{ $index }}][from_date]"
+                                                        value="{{ old('trainings.' . $index . '.from_date', $training['from_date'] ?? '') }}">
+                                                    @error('trainings.' . $index . '.from_date')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <label class="form-label">To Date <span class="text-danger">*</span></label>
-                                                    <input type="date" class="form-control" name="trainings[{{ $index }}][to_date]"
-                                                           value="{{ $training['to_date'] ?? '' }}">
+                                                    <label class="form-label">To Date</label>
+                                                    <input type="date"
+                                                        class="form-control @error('trainings.' . $index . '.to_date') is-invalid @enderror"
+                                                        name="trainings[{{ $index }}][to_date]"
+                                                        value="{{ old('trainings.' . $index . '.to_date', $training['to_date'] ?? '') }}">
+                                                    @error('trainings.' . $index . '.to_date')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                             </div>
                                         </div>
@@ -377,7 +680,8 @@
                             <i class="mdi mdi-arrow-left me-1"></i> Cancel
                         </a>
                         <button type="submit" class="btn btn-primary">
-                            <i class="mdi mdi-content-save me-1"></i> {{ isset($employeeData) ? 'Update Information' : 'Save Information' }}
+                            <i class="mdi mdi-content-save me-1"></i>
+                            {{ isset($employeeData) ? 'Update Information' : 'Save Information' }}
                         </button>
                     </div>
                 </div>
@@ -427,11 +731,11 @@
                     <h6 class="text-success mb-3"><i class="mdi mdi-school-outline me-1"></i>Education ${educationRowCount + 1}</h6>
                     <div class="row g-3">
                         <div class="col-md-4">
-                            <label class="form-label">Education Title <span class="text-danger">*</span></label>
+                            <label class="form-label">Education Title</label>
                             <input type="text" class="form-control" name="educations[${educationRowCount}][education_title]" placeholder="e.g., Bachelor of Science">
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Institute <span class="text-danger">*</span></label>
+                            <label class="form-label">Institute</label>
                             <input type="text" class="form-control" name="educations[${educationRowCount}][institute]" placeholder="e.g., University of Dhaka">
                         </div>
                         <div class="col-md-4">
@@ -447,7 +751,7 @@
                             <input type="text" class="form-control" name="educations[${educationRowCount}][result_grade]" placeholder="e.g., First Class">
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Passing Year <span class="text-danger">*</span></label>
+                            <label class="form-label">Passing Year</label>
                             <input type="text" class="form-control" name="educations[${educationRowCount}][passing_year]" placeholder="e.g., 2020">
                         </div>
                         <div class="col-md-3">
@@ -484,11 +788,11 @@
                     <h6 class="text-info mb-3"><i class="mdi mdi-briefcase-outline me-1"></i>Experience ${experienceRowCount + 1}</h6>
                     <div class="row g-3">
                         <div class="col-md-4">
-                            <label class="form-label">Company <span class="text-danger">*</span></label>
+                            <label class="form-label">Company</label>
                             <input type="text" class="form-control" name="experiences[${experienceRowCount}][company]" placeholder="e.g., ABC Corporation Ltd">
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Designation <span class="text-danger">*</span></label>
+                            <label class="form-label">Designation</label>
                             <input type="text" class="form-control" name="experiences[${experienceRowCount}][designation]" placeholder="e.g., Senior Software Engineer">
                         </div>
                         <div class="col-md-4">
@@ -496,11 +800,11 @@
                             <input type="text" class="form-control" name="experiences[${experienceRowCount}][department]" placeholder="e.g., IT Department">
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Date From <span class="text-danger">*</span></label>
+                            <label class="form-label">Date From</label>
                             <input type="date" class="form-control" name="experiences[${experienceRowCount}][date_from]">
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Date To <span class="text-danger">*</span></label>
+                            <label class="form-label">Date To</label>
                             <input type="date" class="form-control" name="experiences[${experienceRowCount}][date_to]">
                         </div>
                         <div class="col-md-4">
@@ -541,7 +845,7 @@
                     <h6 class="text-warning mb-3"><i class="mdi mdi-certificate-outline me-1"></i>Training ${trainingRowCount + 1}</h6>
                     <div class="row g-3">
                         <div class="col-md-4">
-                            <label class="form-label">Training Title <span class="text-danger">*</span></label>
+                            <label class="form-label">Training Title</label>
                             <input type="text" class="form-control" name="trainings[${trainingRowCount}][training_title]" placeholder="e.g., Advanced Laravel Development">
                         </div>
                         <div class="col-md-4">
@@ -569,11 +873,11 @@
                             <input type="text" class="form-control" name="trainings[${trainingRowCount}][duration]" placeholder="e.g., 5 days">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">From Date <span class="text-danger">*</span></label>
+                            <label class="form-label">From Date</label>
                             <input type="date" class="form-control" name="trainings[${trainingRowCount}][from_date]">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">To Date <span class="text-danger">*</span></label>
+                            <label class="form-label">To Date</label>
                             <input type="date" class="form-control" name="trainings[${trainingRowCount}][to_date]">
                         </div>
                     </div>
