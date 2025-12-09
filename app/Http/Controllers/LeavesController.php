@@ -48,7 +48,7 @@ class LeavesController extends Controller
         $limit = LeavePlan::where('id', $plan_id)->first()->leave_limit;
         $leave_count_data = LeaveCount::where('employee_id', $employee_id)->where('plan_id', $plan_id)->first();
         if ($leave_count_data){
-            $taken = $leave_count_data->taken_leave;
+            $taken = $leave_count_data->leave_taken;
         }else{
             $taken = 0;
         }
@@ -87,7 +87,7 @@ class LeavesController extends Controller
             }
 
             if ($leave) {
-                $remaining_leaves = $leave->getPlan->leave_limit - $leave->taken_leave;
+                $remaining_leaves = $leave->getPlan->leave_limit - $leave->leave_taken;
                 $plan_name = $leave->getPlan->name;
 
                 if ($request->leave_count > $remaining_leaves) {
@@ -112,13 +112,13 @@ class LeavesController extends Controller
 
                     if ($leave) {
                         Log::info('Updating leave count for '.$employee_id);
-                        $leave->increment('taken_leave', $request->leave_count);
+                        $leave->increment('leave_taken', $request->leave_count);
                     }else{
                         Log::info('Creating leave count for '.$employee_id);
                         LeaveCount::create([
                             'employee_id' => $employee_id,
                             'plan_id' => $plan_id,
-                            'taken_leave' => $request->leave_count
+                            'leave_taken' => $request->leave_count
                         ]);
                     }
                 }
@@ -145,7 +145,7 @@ class LeavesController extends Controller
 
         DB::transaction(function () use ($leave, $leave_request) {
             if ($leave && $leave_request->status == 'approved'){
-                $leave->decrement('taken_leave', $leave_request->leave_count);
+                $leave->decrement('leave_taken', $leave_request->leave_count);
             }
             $leave_request->delete();
         });
@@ -156,25 +156,44 @@ class LeavesController extends Controller
         ]);
     }
 
-    public function changeStatus($id, $status){
+    public function changeStatus(Request $request){
+        $id = $request->input('id');
+        $status = $request->input('status');
         $leave_request = Leave::find($id);
 
-        if($status == 'approved') {
-            DB::transaction(function () use ($leave_request) {
-                $leave = LeaveCount::where('employee_id', $leave_request->employee_id)
-                    ->where('plan_id', $leave_request->plan_id)->first();
+        try {
+            if($status == 'approved') {
+                DB::transaction(function () use ($leave_request) {
+                    $leave = LeaveCount::where('employee_id', $leave_request->employee_id)
+                        ->where('plan_id', $leave_request->plan_id)->first();
 
-                if ($leave){
-                    $leave->increment('taken_leave', $leave_request->leave_count);
-                }
+                    if ($leave){
+                        $leave->increment('leave_taken', $leave_request->leave_count);
+                    }else{
+                        LeaveCount::create([
+                            'employee_id' => $leave_request->employee_id,
+                            'plan_id' => $leave_request->plan_id,
+                            'leave_taken' => $leave_request->leave_count
+                        ]);
+                    }
+
+                    $leave_request->status = 'approved';
+                    $leave_request->save();
 
 
-            });
-        }
+                });
+            }
 
-        if($status == 'rejected') {
-            $leave_request->status = 'rejected';
-            $leave_request->save();
+            if($status == 'rejected') {
+                $leave_request->status = 'rejected';
+                $leave_request->save();
+            }
+        }catch (\Exception $e){
+            Log::error($e->getMessage());
+            return redirect()->back()->with([
+                'message' => 'Something went wrong. Please try again later.',
+                'alert-type' => 'error'
+            ]);
         }
 
         return redirect()->back()->with([

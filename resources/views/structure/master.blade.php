@@ -674,6 +674,64 @@
 </script>
 
 <script>
+    $('.confirmApprove').click(function(event) {
+        event.preventDefault();
+        const form = $(this).closest("form");
+
+
+        Swal.fire({
+            title: 'Are you sure you want to approve the leave application?',
+            text: 'You won\'t be able to revert!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Confirm'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+
+
+            } else if (result.isDismissed) {
+                console.log('Deletion canceled');
+            }
+        }).catch((error) => {
+            console.error('Error:', error);
+        });
+    });
+</script>
+
+
+<script>
+    $('.confirmReject').click(function(event) {
+        event.preventDefault();
+        const form = $(this).closest("form");
+
+
+        Swal.fire({
+            title: 'Are you sure you want to reject leave application?',
+            text: 'You won\'t be able to revert!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Confirm'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+
+
+            } else if (result.isDismissed) {
+                console.log('Deletion canceled');
+            }
+        }).catch((error) => {
+            console.error('Error:', error);
+        });
+    });
+</script>
+
+
+<script>
     $('.removeBtn').click(function(event) {
         event.preventDefault();
         const form = $(this).closest("form");

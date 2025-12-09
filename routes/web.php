@@ -415,7 +415,7 @@ Route::prefix('leaves')->group(function () {
         Route::get('/', 'index')->name('leaves.index');
         Route::get('create', 'create')->name('leaves.create');
         Route::post('store', 'store')->name('leaves.store');
-        Route::put('change-status/{id}/{status}}', 'changeStatus')->name('leaves.change_status');
+        Route::put('change-status', 'changeStatus')->name('leaves.change_status');
         Route::delete('{id}/delete', 'destroy')->name('leaves.destroy');
     });
 });

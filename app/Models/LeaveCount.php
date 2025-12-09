@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class LeaveCount extends Model
 {
     protected $table = 'leaves_count';
-    protected $fillable = ['plan_id', 'employee_id', 'taken_leave'];
+    protected $fillable = ['plan_id', 'employee_id', 'leave_taken'];
 
     public function getEmployee()
     {
@@ -15,7 +15,7 @@ class LeaveCount extends Model
     }
     public function getPlan()
     {
-        return $this->belongsTo(OffDayPlan::class, 'plan_id', 'id');
+        return $this->belongsTo(LeavePlan::class, 'plan_id', 'id');
     }
 }
 

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('employee_id');
             $table->bigInteger('plan_id');
-            $table->integer('taken_leaves');
+            $table->integer('leave_taken');
             $table->timestamps();
         });
     }

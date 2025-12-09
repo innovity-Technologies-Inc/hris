@@ -131,79 +131,7 @@
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                     <i class="mdi mdi-close-circle-outline me-1"></i>Close
                 </button>
-                <button type="button" class="btn btn-success" id="modalApproveBtn">
-                    <i class="mdi mdi-check-circle me-1"></i>Approve
-                </button>
-                <button type="button" class="btn btn-danger" id="modalRejectBtn">
-                    <i class="mdi mdi-close-circle me-1"></i>Reject
-                </button>
             </div>
         </div>
     </div>
 </div>
-
-<script>
-    // Handle modal show event to populate data
-    document.getElementById('viewLeaveModal').addEventListener('show.bs.modal', function(event) {
-        const button = event.relatedTarget;
-
-        // Extract data from button attributes
-        const id = button.getAttribute('data-id');
-        const employee = button.getAttribute('data-employee');
-        const employeeId = button.getAttribute('data-employee-id');
-        const systemId = button.getAttribute('data-system-id');
-        const plan = button.getAttribute('data-plan');
-        const days = button.getAttribute('data-days');
-        const fromDate = button.getAttribute('data-from');
-        const toDate = button.getAttribute('data-to');
-        const reason = button.getAttribute('data-reason');
-        const status = button.getAttribute('data-status');
-        const createdAt = button.getAttribute('data-created');
-
-        // Populate modal fields
-        document.getElementById('modalEmployeeName').textContent = employee;
-        document.getElementById('modalEmployeeId').textContent = employeeId;
-        document.getElementById('modalSystemId').textContent = systemId;
-        document.getElementById('modalLeavePlan').textContent = plan;
-        document.getElementById('modalDays').textContent = days;
-        document.getElementById('modalFromDate').textContent = fromDate;
-        document.getElementById('modalToDate').textContent = toDate;
-        document.getElementById('modalReason').textContent = reason;
-        document.getElementById('modalCreatedAt').textContent = createdAt;
-        document.getElementById('modalApplicationId').textContent = 'LA-' + id.toString().padStart(5, '0');
-
-        // Set status badge
-        const statusBadge = document.getElementById('modalStatusBadge');
-        const approveBtn = document.getElementById('modalApproveBtn');
-        const rejectBtn = document.getElementById('modalRejectBtn');
-
-        if (status === 'pending') {
-            statusBadge.className = 'badge bg-warning text-dark fs-6 px-4 py-2';
-            statusBadge.textContent = 'Pending';
-            approveBtn.style.display = 'inline-block';
-            rejectBtn.style.display = 'inline-block';
-        } else if (status === 'approved') {
-            statusBadge.className = 'badge bg-success fs-6 px-4 py-2';
-            statusBadge.textContent = 'Approved';
-            approveBtn.style.display = 'none';
-            rejectBtn.style.display = 'none';
-        } else {
-            statusBadge.className = 'badge bg-danger fs-6 px-4 py-2';
-            statusBadge.textContent = 'Rejected';
-            approveBtn.style.display = 'none';
-            rejectBtn.style.display = 'none';
-        }
-    });
-
-    // Handle approve button click (demo)
-    document.getElementById('modalApproveBtn').addEventListener('click', function() {
-        alert('Leave application approved! (Demo mode)');
-        bootstrap.Modal.getInstance(document.getElementById('viewLeaveModal')).hide();
-    });
-
-    // Handle reject button click (demo)
-    document.getElementById('modalRejectBtn').addEventListener('click', function() {
-        alert('Leave application rejected! (Demo mode)');
-        bootstrap.Modal.getInstance(document.getElementById('viewLeaveModal')).hide();
-    });
-</script>

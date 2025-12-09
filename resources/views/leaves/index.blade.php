@@ -19,13 +19,15 @@
                                     {{-- First Row: Keyword Search --}}
                                     <div class="row mb-2">
                                         <div class="col-12">
-                                            <label for="keywordSearch" class="form-label text-muted small fw-semibold mb-1">
+                                            <label for="keywordSearch"
+                                                   class="form-label text-muted small fw-semibold mb-1">
                                                 Keyword Search
                                             </label>
                                             <div class="input-group input-group-md">
                                                 <input type="text" class="form-control border-end-0" id="keywordSearch"
-                                                    name="keyword" placeholder="Search by employee name, ID, or leave plan"
-                                                    aria-label="Keyword Search" value="{{ request('keyword') }}">
+                                                       name="keyword"
+                                                       placeholder="Search by employee name, ID, or leave plan"
+                                                       aria-label="Keyword Search" value="{{ request('keyword') }}">
                                                 <span class="input-group-text border-start-0 input-group-bg">
                                                     <i class="mdi mdi-magnify text-muted"></i>
                                                 </span>
@@ -37,7 +39,7 @@
                                     <div class="row">
                                         <div class="col-12 text-end">
                                             <button type="button" id="resetFilters"
-                                                class="btn btn-outline-secondary btn-sm">
+                                                    class="btn btn-outline-secondary btn-sm">
                                                 <i class="mdi mdi-refresh"></i> Reset
                                             </button>
                                         </div>
@@ -62,7 +64,7 @@
                             <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                         </a>
                         <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal"
-                            data-bs-target="#bulkUploadModal">
+                                data-bs-target="#bulkUploadModal">
                             <i style="height: 12px; width: 12px" data-feather="upload"></i> Upload Bulk
                         </button>
                     </div>
@@ -73,61 +75,73 @@
                         <div class="table-responsive">
                             <table class="table table-bordered mb-0">
                                 <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Employee Name</th>
-                                        <th scope="col">Plan Name</th>
-                                        <th scope="col">Days</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col" style="width: 180px;">Action</th>
-                                    </tr>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Employee Name</th>
+                                    <th scope="col">Plan Name</th>
+                                    <th scope="col">Days</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col" style="width: 180px;">Action</th>
+                                </tr>
                                 </thead>
                                 <tbody>
-                                    @php $sl = 1; @endphp
-                                    @foreach ($leaves as $application)
-                                        <tr>
-                                            <th scope="row">{{ $sl++ }}</th>
-                                            <td>{{ $application->getEmployee->full_name }}</td>
-                                            <td>{{ $application->getPlan->name }}</td>
-                                            <td>{{ $application->leave_count }}</td>
-                                            <td>
-                                                @if ($application->status == 'pending')
-                                                    <span class="badge bg-warning text-dark">Pending</span>
-                                                @elseif($application->status == 'approved')
-                                                    <span class="badge bg-success">Approved</span>
-                                                @else
-                                                    <span class="badge bg-danger">Rejected</span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <button type="button" class="btn btn-secondary btn-sm" title="View"
-                                                    data-bs-toggle="modal" data-bs-target="#viewLeaveModal"
-                                                    data-id="{{ $application->id }}"
-                                                    data-employee="{{ $application->getEmployee->full_name }}"
-                                                    data-employee-id="{{ $application->getEmployee->applicant_id }}"
-                                                    data-system-id="{{ $application->getEmployee->system_id }}"
-                                                    data-plan="{{ $application->getPlan->name }}"
-                                                    data-days="{{ $application->leave_count }}"
-                                                    data-from="{{ $application->from }}" data-to="{{ $application->to }}"
-                                                    data-reason="{{ $application->reason }}"
-                                                    data-status="{{ $application->status }}"
-                                                    data-created="{{ $application->created_at }}">
-                                                    <i style="height: 12px; width: 12px" data-feather="eye"></i>
+                                @php $sl = 1; @endphp
+                                @foreach ($leaves as $application)
+                                    <tr>
+                                        <th scope="row">{{ $sl++ }}</th>
+                                        <td>{{ $application->getEmployee->full_name }}</td>
+                                        <td>{{ $application->getPlan->name }}</td>
+                                        <td>{{ $application->leave_count }}</td>
+                                        <td>
+                                            @if ($application->status == 'pending')
+                                                <span class="badge bg-warning text-dark">Pending</span>
+                                            @elseif($application->status == 'approved')
+                                                <span class="badge bg-success">Approved</span>
+                                            @else
+                                                <span class="badge bg-danger">Rejected</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-secondary btn-sm" title="View"
+                                                    data-bs-toggle="modal" data-bs-target="#viewLeaveModal">
+                                                <i style="height: 12px; width: 12px" data-feather="eye"></i>
+                                            </button>
+                                            {{-- Include View Modal --}}
+                                            @include('leaves.partials.view_modal')
+                                            @if ($application->status == 'pending')
+                                                <form class="d-inline"
+                                                    action="{{ route('leaves.change_status') }}" method="post">
+                                                    @method('put')
+                                                    @csrf
+                                                    <input type="hidden" name="id" value="{{$application->id}}">
+                                                    <input type="hidden" name="status" value="approved">
+                                                <button type="submit" class="btn btn-success btn-sm confirmApprove" title="Approve">
+                                                    <i style="height: 12px; width: 12px" data-feather="check"></i>
                                                 </button>
-                                                @if ($application->status == 'pending')
-                                                    <button type="button" class="btn btn-success btn-sm" title="Approve">
-                                                        <i style="height: 12px; width: 12px" data-feather="check"></i>
-                                                    </button>
-                                                    <button type="button" class="btn btn-danger btn-sm" title="Reject">
-                                                        <i style="height: 12px; width: 12px" data-feather="x"></i>
-                                                    </button>
-                                                @endif
-                                                <button type="button" class="btn btn-outline-danger btn-sm" title="Delete">
+                                                </form>
+                                                <form class="d-inline" method="post"
+                                                    action="{{ route('leaves.change_status') }}">
+                                                    @method('put')
+                                                    @csrf
+                                                    <input type="hidden" name="id" value="{{$application->id}}">
+                                                    <input type="hidden" name="status" value="rejected">
+                                                <button type="submit" class="btn btn-danger btn-sm confirmReject" title="Reject">
+                                                    <i style="height: 12px; width: 12px" data-feather="x"></i>
+                                                </button>
+                                                </form>
+                                            @endif
+                                            <form action="{{ route('leaves.destroy', $application->id) }}" method="POST"
+                                                  class="d-inline">
+                                                @csrf
+                                                @method('delete')
+                                                <button type="submit" class="btn btn-outline-danger btn-sm confirmDelete"
+                                                        title="Delete">
                                                     <i style="height: 12px; width: 12px" data-feather="trash-2"></i>
                                                 </button>
-                                            </td>
-                                        </tr>
-                                    @endforeach
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -137,8 +151,7 @@
         </div>
     </div>
 
-    {{-- Include View Modal --}}
-    @include('leaves.partials.view_modal')
+
 
     {{-- Include Import Modal --}}
     @include('leaves.partials.import_modal')
@@ -146,9 +159,9 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Reset filters
-            $('#resetFilters').on('click', function() {
+            $('#resetFilters').on('click', function () {
                 $('#filterForm')[0].reset();
                 $('.select2_list').val(null).trigger('change');
             });
