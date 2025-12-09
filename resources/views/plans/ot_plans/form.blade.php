@@ -2,6 +2,15 @@
 @section('content')
     <div class="container-fluid mt-4">
 
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
 
         <form method="POST"
@@ -86,16 +95,16 @@
                             <div class="d-flex gap-4">
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="ot_config_type"
-                                        id="ot_config_salary" value="salary_based"
-                                        {{ !isset($plan) || (isset($plan) && $plan->ot_config_type != 'custom') ? 'checked' : '' }}>
+                                        id="ot_config_salary" value="Salary Based"
+                                        {{ !isset($plan) || (isset($plan) && $plan->ot_config_type != 'Salary Based') ? 'checked' : '' }}>
                                     <label class="form-check-label" for="ot_config_salary">
                                         Based on Salary
                                     </label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="ot_config_type"
-                                        id="ot_config_custom" value="custom"
-                                        {{ isset($plan) && $plan->ot_config_type == 'custom' ? 'checked' : '' }}>
+                                        id="ot_config_custom" value="Custom"
+                                        {{ isset($plan) && $plan->ot_config_type == 'Custom' ? 'checked' : '' }}>
                                     <label class="form-check-label" for="ot_config_custom">
                                         Custom Rate
                                     </label>
@@ -119,16 +128,16 @@
                                 <div class="d-flex gap-4">
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="salary_rate_type"
-                                            id="rate_type_basic" value="basic_rate"
-                                            {{ isset($plan) && $plan->salary_rate_type == 'basic_rate' ? 'checked' : '' }}>
+                                            id="rate_type_basic" value="Basic Rate"
+                                            {{ isset($plan) && $plan->salary_rate_type == 'Basic Rate' ? 'checked' : '' }}>
                                         <label class="form-check-label" for="rate_type_basic">
                                             Basic Rate
                                         </label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="salary_rate_type"
-                                            id="rate_type_multiplier" value="multiplier"
-                                            {{ !isset($plan) || (isset($plan) && $plan->salary_rate_type != 'basic_rate') ? 'checked' : '' }}>
+                                            id="rate_type_multiplier" value="Multiplier"
+                                            {{ !isset($plan) || (isset($plan) && $plan->salary_rate_type == 'Multiplier') ? 'checked' : '' }}>
                                         <label class="form-check-label" for="rate_type_multiplier">
                                             Multiplier
                                         </label>

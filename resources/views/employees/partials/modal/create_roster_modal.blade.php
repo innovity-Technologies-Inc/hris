@@ -131,7 +131,8 @@
 </div>
 
 <script>
-    $('#modal_roster_plan_id').on('change', function () {
+    $(function() {
+    $(document).on('change', '#modal_roster_plan_id', function () {
         let planId = $(this).val();
 
         if (!planId) {
@@ -197,6 +198,7 @@
                 }
             }
         });
+    });
     });
 
 </script>

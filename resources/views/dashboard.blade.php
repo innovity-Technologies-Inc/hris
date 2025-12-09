@@ -212,7 +212,7 @@
         <div class="container-fluid">
             <div class="header-card text-center rounded-3 shadow mb-4 py-3 px-4">
                 <h1 class="header-title h3 fw-bold mb-1">
-                    GenItech HRIS System
+                    {{App\HelperClass::getGeneralSetting()->name}}
                 </h1>
                 <p class="header-subtitle small mb-0">
                     Human Resource Information System Dashboard

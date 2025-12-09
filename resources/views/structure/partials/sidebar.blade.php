@@ -39,7 +39,7 @@
                         aria-expanded="{{ Route::is('employees.*') ? 'true' : 'false' }}"
                         class="@if (Route::is('employees.*')) menuitem-active @endif">
                         <i data-feather="users"></i>
-                        <span> Employees Management </span>
+                        <span> Employees </span>
                         <span class="menu-arrow"></span>
                     </a>
                     <div class="collapse @if (Route::is('employees.*')) show @endif" id="sidebarEmployees">
@@ -62,7 +62,7 @@
                         aria-expanded="{{ Route::is('plans.*') ? 'true' : 'false' }}"
                         class="@if (Route::is('plans.*')) menuitem-active @endif">
                         <i data-feather="layers"></i>
-                        <span> Plans Management </span>
+                        <span> Plans </span>
                         <span class="menu-arrow"></span>
                     </a>
                     <div class="collapse @if (Route::is('plans.*')) show @endif" id="plans">
@@ -113,14 +113,14 @@
                     <a href="#leaves" data-bs-toggle="collapse" aria-expanded="{{ $leavesOpen ? 'true' : 'false' }}"
                         class="@if ($leavesOpen) menuitem-active @endif">
                         <i data-feather="calendar"></i>
-                        <span> Leaves Management </span>
+                        <span> Leaves </span>
                         <span class="menu-arrow"></span>
                     </a>
                     <div class="collapse @if ($leavesOpen) show @endif" id="leaves">
                         <ul class="nav-second-level">
                             <li>
                                 <a class='tp-link @if (request()->is('leaves*')) menuitem-active @endif'
-                                    href='{{ url('leaves') }}'>Leave Information</a>
+                                    href='{{ route('leaves.index') }}'>Leave Information</a>
                             </li>
                         </ul>
                     </div>

@@ -91,7 +91,7 @@
         // ============================
         // 🚀 Show Off Day Plan Details
         // ============================
-        $('#modal_shift_plan_id').on('change', function () {
+        $(document).on('change', '#modal_shift_plan_id', function () {
             let planId = $(this).val();
 
             if (!planId) {
@@ -114,4 +114,5 @@
 
     });
 </script>
+
 

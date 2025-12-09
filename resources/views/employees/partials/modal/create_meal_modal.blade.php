@@ -133,9 +133,6 @@
 </div>
 
 
-<script src="{{asset('assets/libs/jquery/jquery.min.js')}}"></script>
-
-
 <script>
     $(function() {
 
@@ -153,7 +150,7 @@
         }
 
         // --- Change Event ---
-        $('#modal_meal_type').on('change', function() {
+        $(document).on('change', '#modal_meal_type', function() {
             loadMeals($(this).val());
         });
 
@@ -167,30 +164,10 @@
         }
         @endif
 
-    });
-</script>
-
-<script>
-    $(function() {
-
-        function loadMeals(mealType, selectedMeal = null) {
-            if (mealType) {
-                $.get('/get-meal-plans/' + mealType, function(data) {
-                    let $select = $('#modal_meal_plan_id');
-                    $select.html('<option value="">-- Select --</option>');
-
-                    $.each(data, function(key, value) {
-                        let selected = (selectedMeal == value.id) ? 'selected' : '';
-                        $select.append('<option value="'+ value.id +'" '+selected+'>'+ value.name +'</option>');
-                    });
-                });
-            }
-        }
-
         // ============================
         // 🚀 Show Plan Details
         // ============================
-        $('#modal_meal_plan_id').on('change', function() {
+        $(document).on('change', '#modal_meal_plan_id', function() {
             let planId = $(this).val();
 
             if (planId) {
@@ -212,16 +189,6 @@
                 $('#modal-plan-details').hide();
             }
         });
-
-        // Load meals if editing
-        @if(isset($employee_meal_info))
-        let mealType = "{{ old('modal_meal_type', $employee_meal_info->modal_meal_type ?? '') }}";
-        let meals  = "{{ old('modal_meal_plan_id', $employee_meal_info->modal_meal_plan_id ?? '') }}";
-
-        if (mealType) {
-            loadMeals(mealType, meals);
-        }
-        @endif
 
     });
 

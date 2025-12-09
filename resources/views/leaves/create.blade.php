@@ -53,121 +53,20 @@
             font-size: 0.85rem;
             color: #6c757d;
         }
+
+         .placeholder {
+             display: inline-block;
+             background: #e3e3e3;
+             border-radius: 4px;
+             animation: pulse 1.5s infinite ease-in-out;
+         }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
     </style>
-
-    @php
-        // Dummy employee data as objects
-        $dummyEmployees = collect([
-            (object) [
-                'id' => 1,
-                'full_name' => 'John Doe',
-                'applicant_id' => 'EMP001',
-                'system_id' => 'SYS001',
-                'photo_path' => null,
-            ],
-            (object) [
-                'id' => 2,
-                'full_name' => 'Jane Smith',
-                'applicant_id' => 'EMP002',
-                'system_id' => 'SYS002',
-                'photo_path' => null,
-            ],
-            (object) [
-                'id' => 3,
-                'full_name' => 'Mike Johnson',
-                'applicant_id' => 'EMP003',
-                'system_id' => 'SYS003',
-                'photo_path' => null,
-            ],
-            (object) [
-                'id' => 4,
-                'full_name' => 'Sarah Williams',
-                'applicant_id' => 'EMP004',
-                'system_id' => 'SYS004',
-                'photo_path' => null,
-            ],
-            (object) [
-                'id' => 5,
-                'full_name' => 'David Brown',
-                'applicant_id' => 'EMP005',
-                'system_id' => 'SYS005',
-                'photo_path' => null,
-            ],
-        ]);
-
-        // Dummy leave plans as objects with more details for leave card
-        $dummyLeavePlans = collect([
-            (object) [
-                'id' => 1,
-                'name' => 'Annual Leave',
-                'type' => 'Paid',
-                'status' => 'Active',
-                'limit' => 20,
-                'taken' => 8,
-                'remaining' => 12,
-                'badge_color' => 'success',
-            ],
-            (object) [
-                'id' => 2,
-                'name' => 'Sick Leave',
-                'type' => 'Paid',
-                'status' => 'Active',
-                'limit' => 14,
-                'taken' => 5,
-                'remaining' => 9,
-                'badge_color' => 'info',
-            ],
-            (object) [
-                'id' => 3,
-                'name' => 'Casual Leave',
-                'type' => 'Paid',
-                'status' => 'Active',
-                'limit' => 10,
-                'taken' => 7,
-                'remaining' => 3,
-                'badge_color' => 'primary',
-            ],
-            (object) [
-                'id' => 4,
-                'name' => 'Maternity Leave',
-                'type' => 'Paid',
-                'status' => 'Active',
-                'limit' => 120,
-                'taken' => 0,
-                'remaining' => 120,
-                'badge_color' => 'warning',
-            ],
-            (object) [
-                'id' => 5,
-                'name' => 'Paternity Leave',
-                'type' => 'Paid',
-                'status' => 'Active',
-                'limit' => 7,
-                'taken' => 0,
-                'remaining' => 7,
-                'badge_color' => 'secondary',
-            ],
-        ]);
-
-        // Dummy leave application for edit mode (set to null for create mode)
-        // To test edit mode, uncomment the object below
-        $leave = null;
-        /*
-        $leave = (object) [
-            'id' => 1,
-            'plan_id' => 1,
-            'employee_id' => 1,
-            'leave_count' => 5,
-            'from' => '2025-12-05',
-            'to' => '2025-12-10',
-            'reason' => 'Family vacation to visit relatives',
-            'status' => 'pending',
-        ];
-        */
-
-        $isEdit = isset($leave) && $leave !== null;
-    @endphp
-
     {{-- Leave Application Form --}}
     <div class="row">
         <div class="col-lg-12">
@@ -175,15 +74,12 @@
                 <div class="card-header bg-primary text-white">
                     <h5 class="card-title mb-0">
                         <i class="mdi mdi-file-document-edit-outline me-2"></i>
-                        {{ $isEdit ? 'Edit Leave Application' : 'Create Leave Application' }}
+                        Create Leave Application
                     </h5>
                 </div>
                 <div class="card-body p-4">
-                    <form id="leaveApplicationForm" method="POST" action="{{ $isEdit ? '#' : '#' }}">
+                    <form id="leaveApplicationForm" method="POST" action="{{route('leaves.store')}}">
                         @csrf
-                        @if ($isEdit)
-                            @method('PUT')
-                        @endif
 
                         <div class="row g-3">
                             {{-- Select Employee --}}
@@ -194,10 +90,10 @@
                                 </label>
                                 <select id="employee_id" name="employee_id" class="form-select select2_list" required>
                                     <option value="">-- Select Employee --</option>
-                                    @foreach ($dummyEmployees as $employee)
+                                    @foreach ($employees as $employee)
                                         <option value="{{ $employee->id }}"
-                                            {{ ($isEdit && $leave->employee_id == $employee->id) || old('employee_id') == $employee->id ? 'selected' : '' }}>
-                                            {{ $employee->full_name }} ({{ $employee->applicant_id }})
+                                            {{ old('employee_id') == $employee->id ? 'selected' : '' }}>
+                                            {{ $employee->full_name }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -214,15 +110,7 @@
                                 </label>
                                 <select id="plan_id" name="plan_id" class="form-select select2_list" required>
                                     <option value="">-- Select Leave Plan --</option>
-                                    @foreach ($dummyLeavePlans as $plan)
-                                        <option value="{{ $plan->id }}" data-name="{{ $plan->name }}"
-                                            data-type="{{ $plan->type }}" data-status="{{ $plan->status }}"
-                                            data-limit="{{ $plan->limit }}" data-taken="{{ $plan->taken }}"
-                                            data-remaining="{{ $plan->remaining }}" data-badge="{{ $plan->badge_color }}"
-                                            {{ ($isEdit && $leave->plan_id == $plan->id) || old('plan_id') == $plan->id ? 'selected' : '' }}>
-                                            {{ $plan->name }} ({{ $plan->remaining }} days remaining)
-                                        </option>
-                                    @endforeach
+
                                 </select>
                                 @error('plan_id')
                                     <small class="text-danger">{{ $message }}</small>
@@ -230,33 +118,57 @@
                             </div>
 
                             {{-- Leave Plan Card (Hidden by default) --}}
-                            <div class="col-md-12" id="leave-plan-card-container" style="display: none;">
+                            <div class="col-md-12" id="leave-plan-card-container" style="display:none;">
+
                                 <div class="leave-card">
-                                    <div class="leave-card-header">
-                                        <h5 class="mb-0" id="card-plan-name">-</h5>
-                                        <span class="badge leave-type-badge" id="card-plan-type-badge">-</span>
+
+                                    <!-- Skeleton Loader -->
+                                    <div id="leave-plan-skeleton" style="display:none;">
+                                        <div class="placeholder-glow">
+                                            <div class="placeholder col-6 mb-2" style="height:20px;"></div>
+                                            <div class="placeholder col-4 mb-4" style="height:20px;"></div>
+
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <div class="placeholder col-12 mb-2" style="height:40px;"></div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="placeholder col-12 mb-2" style="height:40px;"></div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="placeholder col-12 mb-2" style="height:40px;"></div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
 
-                                    <div class="mb-2">
-                                        <span class="badge" id="card-plan-status-badge">-</span>
+                                    <!-- REAL CONTENT -->
+                                    <div class="leave-card-content" style="display:none;">
+                                        <div class="leave-card-header">
+                                            <h5 class="mb-0" id="card-plan-name">-</h5>
+                                            <span class="badge leave-type-badge" id="card-plan-type-badge">-</span>
+                                        </div>
+
+                                        <div class="leave-stats">
+                                            <div class="stat-item">
+                                                <span class="stat-value text-primary" id="card-plan-limit">0</span>
+                                                <span class="stat-label">Limit</span>
+                                            </div>
+                                            <div class="stat-item">
+                                                <span class="stat-value text-danger" id="card-plan-taken">0</span>
+                                                <span class="stat-label">Taken</span>
+                                            </div>
+                                            <div class="stat-item">
+                                                <span class="stat-value text-success" id="card-plan-remaining">0</span>
+                                                <span class="stat-label">Remaining</span>
+                                            </div>
+                                        </div>
                                     </div>
 
-                                    <div class="leave-stats">
-                                        <div class="stat-item">
-                                            <span class="stat-value text-primary" id="card-plan-limit">0</span>
-                                            <span class="stat-label">Limit</span>
-                                        </div>
-                                        <div class="stat-item">
-                                            <span class="stat-value text-danger" id="card-plan-taken">0</span>
-                                            <span class="stat-label">Taken</span>
-                                        </div>
-                                        <div class="stat-item">
-                                            <span class="stat-value text-success" id="card-plan-remaining">0</span>
-                                            <span class="stat-label">Remaining</span>
-                                        </div>
-                                    </div>
                                 </div>
+
                             </div>
+
 
                             {{-- Leave Count (Days) --}}
                             <div class="col-md-4">
@@ -266,7 +178,7 @@
                                 </label>
                                 <input type="number" id="leave_count" name="leave_count" class="form-control"
                                     placeholder="Enter number of days" min="1"
-                                    value="{{ $isEdit ? $leave->leave_count : old('leave_count') }}" required>
+                                    value="{{ old('leave_count') }}" required>
                                 @error('leave_count')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -279,7 +191,7 @@
                                     From Date <span class="text-danger">*</span>
                                 </label>
                                 <input type="date" id="from" name="from" class="form-control"
-                                    value="{{ $isEdit ? $leave->from : old('from') ?? date('Y-m-d') }}" required>
+                                    value="{{ old('from') ?? date('Y-m-d') }}" required>
                                 @error('from')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -292,7 +204,7 @@
                                     To Date <span class="text-danger">*</span>
                                 </label>
                                 <input type="date" id="to" name="to" class="form-control"
-                                    value="{{ $isEdit ? $leave->to : old('to') }}" required>
+                                    value="{{ old('to') }}" required>
                                 @error('to')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -305,7 +217,7 @@
                                     Reason <span class="text-danger">*</span>
                                 </label>
                                 <textarea id="reason" name="reason" class="form-control" rows="3"
-                                    placeholder="Enter reason for leave application" required>{{ $isEdit ? $leave->reason : old('reason') }}</textarea>
+                                    placeholder="Enter reason for leave application" required>{{ old('reason') }}</textarea>
                                 @error('reason')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -319,13 +231,13 @@
                                 </label>
                                 <select id="status" name="status" class="form-select" required>
                                     <option value="pending"
-                                        {{ ($isEdit && $leave->status == 'pending') || old('status') == 'pending' ? 'selected' : (!$isEdit && !old('status') ? 'selected' : '') }}>
+                                        {{ old('status') == 'pending' ? 'selected' : (!old('status') ? 'selected' : '') }}>
                                         Pending</option>
                                     <option value="approved"
-                                        {{ ($isEdit && $leave->status == 'approved') || old('status') == 'approved' ? 'selected' : '' }}>
+                                        {{ old('status') == 'approved' ? 'selected' : '' }}>
                                         Approved</option>
                                     <option value="rejected"
-                                        {{ ($isEdit && $leave->status == 'rejected') || old('status') == 'rejected' ? 'selected' : '' }}>
+                                        {{ old('status') == 'rejected' ? 'selected' : '' }}>
                                         Rejected</option>
                                 </select>
                                 @error('status')
@@ -339,7 +251,7 @@
                             <div class="col-12">
                                 <hr class="my-3">
                                 <div class="d-flex justify-content-end gap-2">
-                                    <a href="{{ url('leaves') }}" class="btn btn-outline-secondary">
+                                    <a href="{{ route('leaves.index') }}" class="btn btn-outline-secondary">
                                         <i class="mdi mdi-arrow-left me-1"></i> Back to List
                                     </a>
                                     <button type="reset" class="btn btn-secondary">
@@ -347,7 +259,7 @@
                                     </button>
                                     <button type="submit" class="btn btn-primary">
                                         <i class="mdi mdi-check-circle me-1"></i>
-                                        {{ $isEdit ? 'Update Application' : 'Submit Application' }}
+                                        Submit Application
                                     </button>
                                 </div>
                             </div>
@@ -358,92 +270,82 @@
         </div>
     </div>
 
+
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <script>
-        $(document).ready(function() {
-            // Function to update leave card
-            function updateLeaveCard(option) {
-                if (option && option.value) {
-                    var $option = $(option);
-                    var name = $option.data('name');
-                    var type = $option.data('type');
-                    var status = $option.data('status');
-                    var limit = $option.data('limit');
-                    var taken = $option.data('taken');
-                    var remaining = $option.data('remaining');
-                    var badgeColor = $option.data('badge');
+        $(function () {
 
-                    // Update card content
-                    $('#card-plan-name').text(name);
-                    $('#card-plan-type-badge').text(type).removeClass().addClass('badge leave-type-badge bg-' +
-                        badgeColor);
-                    $('#card-plan-status-badge').text(status).removeClass().addClass('badge bg-' + (status ===
-                        'Active' ? 'success' : 'secondary'));
-                    $('#card-plan-limit').text(limit);
-                    $('#card-plan-taken').text(taken);
-                    $('#card-plan-remaining').text(remaining);
+            // Load Leave Plans
+            function loadPlans(employeeId, selectedPlan = null) {
+                if (employeeId) {
+                    $.get('/get-leave-plans/' + employeeId, function (data) {
+                        let $planSelect = $('#plan_id');
+                        $planSelect.html('<option value="">-- Select --</option>');
 
-                    // Show the card
-                    $('#leave-plan-card-container').slideDown();
-                } else {
-                    // Hide the card
-                    $('#leave-plan-card-container').slideUp();
+                        $.each(data, function (key, value) {
+                            let isSelected = (selectedPlan == value.plan_id) ? 'selected' : '';
+                            $planSelect.append('<option value="' + value.plan_id + '" ' + isSelected + '>' +
+                                value.get_plan.name +
+                                '</option>');
+                        });
+                    });
                 }
             }
 
-            // Handle plan selection change
-            $('#plan_id').on('change', function() {
-                var selectedOption = $(this).find('option:selected')[0];
-                updateLeaveCard(selectedOption);
+            $('#employee_id').on('change', function () {
+                loadPlans($(this).val());
             });
 
-            // Initialize card if editing (plan already selected)
-            @if ($isEdit)
-                var selectedOption = $('#plan_id').find('option:selected')[0];
-                updateLeaveCard(selectedOption);
-            @endif
+            let employeeId = "{{ old('employee_id') }}";
+            let planId = "{{ old('plan_id') }}";
 
-            // Auto calculate days based on from and to date
-            $('#from, #to').on('change', function() {
-                var fromDate = new Date($('#from').val());
-                var toDate = new Date($('#to').val());
+            if (employeeId) {
+                loadPlans(employeeId, planId);
+            }
 
-                if (fromDate && toDate && toDate >= fromDate) {
-                    var timeDiff = toDate.getTime() - fromDate.getTime();
-                    var daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1;
-                    $('#leave_count').val(daysDiff);
+            // Load Leave Plan Details
+            $(document).on('change', '#plan_id', function () {
+
+                let planId = $(this).val();
+                let employeeId = $('#employee_id').val();
+
+                if (!planId || !employeeId) {
+                    $('#leave-plan-card-container').hide();
+                    return;
                 }
+
+                // Show card + skeleton only
+                $('#leave-plan-card-container').show();
+                $('#leave-plan-skeleton').show();
+                $('.leave-card-content').hide();
+
+                $.ajax({
+                    url: "/get-leave-details/" + employeeId + "/" + planId,
+                    type: "GET",
+                    success: function (data) {
+
+                        // Hide loader
+                        $('#leave-plan-skeleton').hide();
+
+                        // Show actual content
+                        $('.leave-card-content').show();
+
+                        // Fill content
+                        $('#card-plan-name').text(data.name ?? '-');
+                        $('#card-plan-limit').text(data.limit ?? 0);
+                        $('#card-plan-taken').text(data.taken ?? 0);
+
+                        let remaining = (data.limit ?? 0) - (data.taken ?? 0);
+                        $('#card-plan-remaining').text(remaining >= 0 ? remaining : 0);
+                    }
+                });
+
             });
 
-            // Auto set to date based on days and from date
-            $('#leave_count').on('change', function() {
-                var fromDate = new Date($('#from').val());
-                var days = parseInt($(this).val());
-
-                if (fromDate && days > 0) {
-                    var toDate = new Date(fromDate);
-                    toDate.setDate(toDate.getDate() + days - 1);
-                    $('#to').val(toDate.toISOString().split('T')[0]);
-                }
-            });
-
-            // Reset form handler
-            $('button[type="reset"]').on('click', function() {
-                setTimeout(function() {
-                    $('#leave-plan-card-container').slideUp();
-                    $('.select2_list').val(null).trigger('change');
-                }, 10);
-            });
-
-            // Form submission handler (for demo purposes)
-            $('#leaveApplicationForm').on('submit', function(e) {
-                e.preventDefault();
-                var message =
-                    '{{ $isEdit ? 'Leave application updated successfully!' : 'Leave application submitted successfully!' }}';
-                alert(message + ' (Demo mode)');
-                window.location.href = '{{ url('leaves') }}';
-            });
         });
     </script>
+
+
+
 @endsection

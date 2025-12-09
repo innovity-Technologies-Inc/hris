@@ -167,6 +167,21 @@
                     // Update URL
                     window.history.pushState({}, "", url);
 
+                    // Manually execute scripts
+                    const scripts = wrapper.querySelectorAll("script");
+                    scripts.forEach(script => {
+                        const newScript = document.createElement("script");
+                        if (script.src) {
+                            newScript.src = script.src;
+                            newScript.async = false; // Ensure scripts execute in order
+                            document.body.appendChild(newScript);
+                        } else {
+                            newScript.textContent = script.textContent;
+                            document.body.appendChild(newScript);
+                        }
+                        script.remove(); // Remove the original, non-executed script
+                    });
+
                 } catch (err) {
                     console.error("Error loading tab:", err);
                     skeleton.style.display = "none";

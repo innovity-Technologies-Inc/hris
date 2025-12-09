@@ -126,7 +126,7 @@
         // ============================
         // 🚀 Show Off Day Plan Details
         // ============================
-        $('#modal_ot_plan_id').on('change', function () {
+        $(document).on('change', '#modal_ot_plan_id', function () {
             let planId = $(this).val();
 
             if (!planId) {
@@ -154,4 +154,6 @@
 
     });
 </script>
+
+
 

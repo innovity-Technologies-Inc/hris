@@ -32,7 +32,7 @@ use App\Http\Controllers\OffDayPlansController;
 use App\Http\Controllers\EmployeePlansController;
 use App\Http\Controllers\BonusPlanController;
 use App\Http\Controllers\AllowancePlanController;
-
+use App\Http\Controllers\LeavesController;
 
 
 // Route::get('test', function () {
@@ -410,13 +410,18 @@ Route::prefix('settings')->group(function () {
     });
 });
 
-// Leave Management Routes (Demo - using views directly without controller)
 Route::prefix('leaves')->group(function () {
-    Route::get('/', function () {
-        return view('leaves.index');
-    })->name('leaves.index');
-
-    Route::get('/create', function () {
-        return view('leaves.create');
-    })->name('leaves.create');
+    Route::controller(LeavesController::class)->group(function (){
+        Route::get('/', 'index')->name('leaves.index');
+        Route::get('create', 'create')->name('leaves.create');
+        Route::post('store', 'store')->name('leaves.store');
+        Route::put('change-status/{id}/{status}}', 'changeStatus')->name('leaves.change_status');
+        Route::delete('{id}/delete', 'destroy')->name('leaves.destroy');
+    });
 });
+
+Route::controller(LeavesController::class)->group(function () {
+    Route::get('get-leave-plans/{employee_id}', 'getLeavePlan');
+    Route::get('get-leave-details/{employee_id}/{plan_id}', 'getLeaveDetails');
+});
+

@@ -145,8 +145,8 @@ class PlanService
             'ot_type' => 'required|in:regular,holiday,night_shift,weekend,other',
 
             // Configuration fields
-            'ot_config_type' => 'required|in:salary_based,custom',
-            'salary_rate_type' => 'required_if:ot_config_type,salary_based|nullable|in:basic_rate,multiplier',
+            'ot_config_type' => 'required|in:Salary Based,Custom',
+            'salary_rate_type' => 'required_if:ot_config_type,Salary Based|nullable|in:Basic Rate,Multiplier',
             'overtime_multiplier' => 'nullable|numeric|min:0',
             'custom_overtime_rate' => 'nullable|numeric|min:0',
 

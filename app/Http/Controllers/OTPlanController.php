@@ -47,7 +47,7 @@ class OTPlanController extends Controller
     public function store(Request $request)
     {
         $validated = $this->planServices->otPlanValidation($request);
-
+        Log::info($validated);
         try {
             $this->planServices->planSave($validated, OTPlan::class);
         } catch (\Exception $e) {

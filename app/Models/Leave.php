@@ -15,6 +15,6 @@ class Leave extends Model
     }
     public function getPlan()
     {
-        return $this->belongsTo(OffDayPlan::class, 'plan_id', 'id');
+        return $this->belongsTo(LeavePlan::class, 'plan_id', 'id');
     }
 }

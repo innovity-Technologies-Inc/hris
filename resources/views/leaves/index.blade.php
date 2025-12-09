@@ -1,149 +1,6 @@
 @extends('structure.master')
 
 @section('content')
-    @php
-        // Dummy employee data as objects
-        $dummyEmployees = collect([
-            (object) [
-                'id' => 1,
-                'full_name' => 'John Doe',
-                'applicant_id' => 'EMP001',
-                'system_id' => 'SYS001',
-                'photo_path' => null,
-            ],
-            (object) [
-                'id' => 2,
-                'full_name' => 'Jane Smith',
-                'applicant_id' => 'EMP002',
-                'system_id' => 'SYS002',
-                'photo_path' => null,
-            ],
-            (object) [
-                'id' => 3,
-                'full_name' => 'Mike Johnson',
-                'applicant_id' => 'EMP003',
-                'system_id' => 'SYS003',
-                'photo_path' => null,
-            ],
-            (object) [
-                'id' => 4,
-                'full_name' => 'Sarah Williams',
-                'applicant_id' => 'EMP004',
-                'system_id' => 'SYS004',
-                'photo_path' => null,
-            ],
-            (object) [
-                'id' => 5,
-                'full_name' => 'David Brown',
-                'applicant_id' => 'EMP005',
-                'system_id' => 'SYS005',
-                'photo_path' => null,
-            ],
-        ]);
-
-        // Dummy leave plans as objects
-        $dummyLeavePlans = collect([
-            (object) ['id' => 1, 'name' => 'Annual Leave', 'days' => 20],
-            (object) ['id' => 2, 'name' => 'Sick Leave', 'days' => 14],
-            (object) ['id' => 3, 'name' => 'Casual Leave', 'days' => 10],
-            (object) ['id' => 4, 'name' => 'Maternity Leave', 'days' => 120],
-            (object) ['id' => 5, 'name' => 'Paternity Leave', 'days' => 7],
-        ]);
-
-        // Dummy leave applications as objects (using field names from migration)
-        $dummyLeaveApplications = collect([
-            (object) [
-                'id' => 1,
-                'employee_id' => 1,
-                'plan_id' => 1,
-                'getEmployee' => (object) [
-                    'id' => 1,
-                    'full_name' => 'John Doe',
-                    'applicant_id' => 'EMP001',
-                    'system_id' => 'SYS001',
-                ],
-                'getPlan' => (object) ['id' => 1, 'name' => 'Annual Leave'],
-                'leave_count' => 5,
-                'from' => '2025-12-05',
-                'to' => '2025-12-10',
-                'reason' => 'Family vacation to visit relatives',
-                'status' => 'pending',
-                'created_at' => '2025-12-01',
-            ],
-            (object) [
-                'id' => 2,
-                'employee_id' => 2,
-                'plan_id' => 2,
-                'getEmployee' => (object) [
-                    'id' => 2,
-                    'full_name' => 'Jane Smith',
-                    'applicant_id' => 'EMP002',
-                    'system_id' => 'SYS002',
-                ],
-                'getPlan' => (object) ['id' => 2, 'name' => 'Sick Leave'],
-                'leave_count' => 3,
-                'from' => '2025-12-02',
-                'to' => '2025-12-04',
-                'reason' => 'Medical appointment and recovery',
-                'status' => 'approved',
-                'created_at' => '2025-12-01',
-            ],
-            (object) [
-                'id' => 3,
-                'employee_id' => 3,
-                'plan_id' => 3,
-                'getEmployee' => (object) [
-                    'id' => 3,
-                    'full_name' => 'Mike Johnson',
-                    'applicant_id' => 'EMP003',
-                    'system_id' => 'SYS003',
-                ],
-                'getPlan' => (object) ['id' => 3, 'name' => 'Casual Leave'],
-                'leave_count' => 1,
-                'from' => '2025-12-03',
-                'to' => '2025-12-03',
-                'reason' => 'Personal work',
-                'status' => 'rejected',
-                'created_at' => '2025-12-01',
-            ],
-            (object) [
-                'id' => 4,
-                'employee_id' => 4,
-                'plan_id' => 1,
-                'getEmployee' => (object) [
-                    'id' => 4,
-                    'full_name' => 'Sarah Williams',
-                    'applicant_id' => 'EMP004',
-                    'system_id' => 'SYS004',
-                ],
-                'getPlan' => (object) ['id' => 1, 'name' => 'Annual Leave'],
-                'leave_count' => 10,
-                'from' => '2025-12-15',
-                'to' => '2025-12-25',
-                'reason' => 'Year-end vacation',
-                'status' => 'pending',
-                'created_at' => '2025-12-02',
-            ],
-            (object) [
-                'id' => 5,
-                'employee_id' => 5,
-                'plan_id' => 5,
-                'getEmployee' => (object) [
-                    'id' => 5,
-                    'full_name' => 'David Brown',
-                    'applicant_id' => 'EMP005',
-                    'system_id' => 'SYS005',
-                ],
-                'getPlan' => (object) ['id' => 5, 'name' => 'Paternity Leave'],
-                'leave_count' => 7,
-                'from' => '2025-12-10',
-                'to' => '2025-12-17',
-                'reason' => 'Birth of child',
-                'status' => 'approved',
-                'created_at' => '2025-12-02',
-            ],
-        ]);
-    @endphp
 
     {{-- Leave Applications List --}}
     <div class="row">
@@ -201,8 +58,7 @@
                 <div class="card-body">
                     {{-- Action Buttons --}}
                     <div class="d-flex justify-content-between mb-3">
-                        <a type="button" class="btn btn-warning btn-sm" href="#"
-                            onclick="window.location.href='{{ url('leaves/create') }}'">
+                        <a type="button" class="btn btn-warning btn-sm" href="{{ route('leaves.create') }}">
                             <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                         </a>
                         <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal"
@@ -211,7 +67,7 @@
                         </button>
                     </div>
 
-                    @if ($dummyLeaveApplications->isEmpty())
+                    @if ($leaves->isEmpty())
                         <div class="text-center py-4 text-muted">No leave applications found.</div>
                     @else
                         <div class="table-responsive">
@@ -228,7 +84,7 @@
                                 </thead>
                                 <tbody>
                                     @php $sl = 1; @endphp
-                                    @foreach ($dummyLeaveApplications as $application)
+                                    @foreach ($leaves as $application)
                                         <tr>
                                             <th scope="row">{{ $sl++ }}</th>
                                             <td>{{ $application->getEmployee->full_name }}</td>
