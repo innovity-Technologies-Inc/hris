@@ -2,16 +2,6 @@
 @section('content')
     {{--    Form --}}
 
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -35,7 +25,8 @@
                                     <div class="col-lg-12 mb-2">
                                         <label for="company_id" class="form-label">Company <span
                                                 class="text-danger">*</span></label>
-                                        <select class="form-select select2_list" name="company_id" id="company_id" required>
+                                        <select class="form-select select2_list @error('company_id') is-invalid @enderror"
+                                            name="company_id" id="company_id" required>
                                             <option value="">Choose Company</option>
                                             @foreach ($companies as $item)
                                                 <option value="{{ $item->id }}"
@@ -52,7 +43,8 @@
                                     <div class="col-lg-12 mb-2">
                                         <label for="name" class="form-label">Branch Name <span
                                                 class="text-danger">*</span></label>
-                                        <input type="text" id="name" class="form-control" name="name"
+                                        <input type="text" id="name"
+                                            class="form-control @error('name') is-invalid @enderror" name="name"
                                             placeholder="Enter Branch Name"
                                             value="{{ isset($company_location) ? $company_location->name : old('name') }}"
                                             required maxlength="255">
@@ -64,7 +56,8 @@
                                     <div class="col-lg-12 mb-2">
                                         <label for="location_address" class="form-label">Location Address <span
                                                 class="text-danger">*</span></label>
-                                        <input type="text" id="location_address" class="form-control"
+                                        <input type="text" id="location_address"
+                                            class="form-control @error('location_address') is-invalid @enderror"
                                             name="location_address" placeholder="Enter Location Address"
                                             value="{{ isset($company_location) ? $company_location->location_address : old('location_address') }}"
                                             required maxlength="255">
@@ -75,7 +68,8 @@
 
                                     <div class="col-lg-6 mb-2">
                                         <label for="state" class="form-label">State</label>
-                                        <input type="text" id="state" class="form-control" name="state"
+                                        <input type="text" id="state"
+                                            class="form-control @error('state') is-invalid @enderror" name="state"
                                             placeholder="Enter State"
                                             value="{{ isset($company_location) ? $company_location->state : old('state') }}"
                                             maxlength="255">
@@ -86,7 +80,8 @@
 
                                     <div class="col-lg-6 mb-2">
                                         <label for="division" class="form-label">Division</label>
-                                        <input type="text" id="division" class="form-control" name="division"
+                                        <input type="text" id="division"
+                                            class="form-control @error('division') is-invalid @enderror" name="division"
                                             placeholder="Enter Division"
                                             value="{{ isset($company_location) ? $company_location->division : old('division') }}"
                                             maxlength="255">
@@ -97,7 +92,8 @@
 
                                     <div class="col-lg-6 mb-2">
                                         <label for="city" class="form-label">City</label>
-                                        <input type="text" id="city" class="form-control" name="city"
+                                        <input type="text" id="city"
+                                            class="form-control @error('city') is-invalid @enderror" name="city"
                                             placeholder="Enter City"
                                             value="{{ isset($company_location) ? $company_location->city : old('city') }}"
                                             maxlength="255">
@@ -108,7 +104,8 @@
 
                                     <div class="col-lg-6 mb-2">
                                         <label for="country" class="form-label">Country</label>
-                                        <input type="text" id="country" class="form-control" name="country"
+                                        <input type="text" id="country"
+                                            class="form-control @error('country') is-invalid @enderror" name="country"
                                             placeholder="Enter Country"
                                             value="{{ isset($company_location) ? $company_location->country : old('country') }}"
                                             maxlength="255">

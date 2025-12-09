@@ -75,7 +75,7 @@ class CompanyLocationController extends Controller
         $request->validate(
             [
                 'company_id' => 'required|exists:companies,id',
-                'unit_name' => 'required|string|max:255',
+                'name' => 'required|string|max:255',
                 'location_address' => 'required|string|max:255',
                 'state' => 'nullable|string|max:255',
                 'division' => 'nullable|string|max:255',
@@ -85,7 +85,7 @@ class CompanyLocationController extends Controller
             ],
             [
                 'company_id.required' => 'Please select a company.',
-                'unit_name.required' => 'Please enter a unit name.',
+                'name.required' => 'Please enter a branch name.',
                 'location_address.required' => 'Please enter a location address.',
                 'status.required' => 'Please select a status.',
             ]
