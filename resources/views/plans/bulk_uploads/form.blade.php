@@ -45,7 +45,7 @@
                                 <h6 class="text-uppercase text-secondary fw-semibold mb-0 small letter-spacing">
                                     Import Plan Information
                                 </h6>
-                                <span class="badge bg-secondary">3 Sections</span>
+                                <span class="badge bg-secondary">8 Sections</span>
                             </div>
                         </div>
 
@@ -100,7 +100,7 @@
                                             data-bs-target="#bulkUploadModal" data-section="shift-plan"
                                             data-section-name="Shift Plan" data-section-number="2"
                                             data-form-action="{{ route('plans.shift_plans.import') }}"
-                                            data-excel-link="{{ asset('assets/excel/shift_plans.xlsx') }}"
+                                            data-excel-link="{{ asset('assets/excel/shift_plans_bulk.xlsx') }}"
                                             data-csv-link="{{ asset('assets/csv/shift_plans.csv') }}">
                                             <i class="bi bi-upload me-2"></i>Upload
                                         </button>
@@ -184,7 +184,7 @@
                                             data-bs-target="#bulkUploadModal" data-section="roster-plan"
                                             data-section-name="Overtime Plan" data-section-number="3"
                                             data-form-action="{{ route('plans.roster_plans.import') }}"
-                                            data-excel-link="{{ asset('assets/excel/roster_plans.xlsx') }}"
+                                            data-excel-link="{{ asset('assets/excel/roster_plans_bulk.xlsx') }}"
                                             data-csv-link="{{ asset('assets/csv/roster_plans.csv') }}">
                                             <i class="bi bi-upload me-2"></i>Upload
                                         </button>
@@ -248,7 +248,7 @@
                                 </div>
                             </div>
 
-                            <!-- Section 7 - Allowance Plan -->
+                            <!-- Section 8 - Allowance Plan -->
                             <div class="col-md-4">
                                 <div class="card h-100 border shadow-sm professional-card">
                                     <div class="card-body p-4">

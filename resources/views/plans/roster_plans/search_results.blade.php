@@ -31,14 +31,14 @@
                         <span class="badge text-bg-info">{{ $item->swapping }} Days</span>
                     </td>
                     <td>
-                        @if ($item->getFirstShift->name)
+                        @if ($item->getFirstShift && $item->getFirstShift->name)
                             <span class="badge text-bg-primary">{{ $item->getFirstShift->name }}</span>
                         @else
                             <span class="text-muted">-</span>
                         @endif
                     </td>
                     <td>
-                        @if ($item->getSecondShift->name)
+                        @if ($item->getSecondShift && $item->getSecondShift->name)
                             <span class="badge text-bg-success">{{ $item->getSecondShift->name }}</span>
                         @else
                             <span class="text-muted">-</span>
