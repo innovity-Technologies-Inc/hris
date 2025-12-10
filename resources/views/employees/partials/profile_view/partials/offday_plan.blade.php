@@ -51,11 +51,10 @@
                     <div class="position-absolute top-0 end-0 mt-2 me-3">
                         <form
                             action="{{ route('employees.profile.plans.remove', ['id' => $activeOffDayPLan->id, 'type' => 'offday-plans']) }}"
-                            method="post"
-                            onsubmit="return confirm('Are you sure you want to remove this off day plan?');">
+                            method="post">
                             @csrf
                             @method('put')
-                            <button type="submit" class="btn btn-sm btn-outline-danger shadow-sm">
+                            <button type="submit" class="btn btn-sm btn-outline-danger shadow-sm removeBtn">
                                 <i class="mdi mdi-close-circle"></i> Remove
                             </button>
                         </form>
