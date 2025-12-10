@@ -45,7 +45,7 @@
                                 <h6 class="text-uppercase text-secondary fw-semibold mb-0 small letter-spacing">
                                     Import Plan Information
                                 </h6>
-                                <span class="badge bg-secondary">3 Sections</span>
+                                <span class="badge bg-secondary">8 Sections</span>
                             </div>
                         </div>
 
@@ -70,11 +70,13 @@
                                             class="btn btn-outline-dark btn-sm w-100 text-uppercase fw-semibold"
                                             style="font-size: 0.75rem; letter-spacing: 0.5px;" data-bs-toggle="modal"
                                             data-bs-target="#bulkUploadModal" data-section="meal-plan"
-                                            data-section-name="Meal Plan" data-section-number="1" data-form-action="{{route('plans.meal_plans.import')}}"
-                                            data-excel-link="{{asset('assets/excel/meal_plans.xlsx')}}"
-                                            data-csv-link="{{asset('assets/csv/meal_plans.csv')}}">
-                                        <i class="bi bi-upload me-2"></i>Upload
-                                    </button>
+                                            data-section-name="Meal Plan" data-section-number="1"
+                                            data-form-action="{{ route('plans.meal_plans.import') }}"
+                                            data-excel-link="{{ asset('assets/excel/meal_plans.xlsx') }}"
+                                            data-csv-link="{{ asset('assets/csv/meal_plans.csv') }}">
+                                            <i class="bi bi-upload me-2"></i>Upload
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
 
@@ -98,7 +100,7 @@
                                             data-bs-target="#bulkUploadModal" data-section="shift-plan"
                                             data-section-name="Shift Plan" data-section-number="2"
                                             data-form-action="{{ route('plans.shift_plans.import') }}"
-                                            data-excel-link="{{ asset('assets/excel/shift_plans.xlsx') }}"
+                                            data-excel-link="{{ asset('assets/excel/shift_plans_bulk.xlsx') }}"
                                             data-csv-link="{{ asset('assets/csv/shift_plans.csv') }}">
                                             <i class="bi bi-upload me-2"></i>Upload
                                         </button>
@@ -182,7 +184,7 @@
                                             data-bs-target="#bulkUploadModal" data-section="roster-plan"
                                             data-section-name="Overtime Plan" data-section-number="3"
                                             data-form-action="{{ route('plans.roster_plans.import') }}"
-                                            data-excel-link="{{ asset('assets/excel/roster_plans.xlsx') }}"
+                                            data-excel-link="{{ asset('assets/excel/roster_plans_bulk.xlsx') }}"
                                             data-csv-link="{{ asset('assets/csv/roster_plans.csv') }}">
                                             <i class="bi bi-upload me-2"></i>Upload
                                         </button>
@@ -246,33 +248,33 @@
                                 </div>
                             </div>
 
-                                <!-- Section 7 - Allowance Plan -->
-                                <div class="col-md-4">
-                                    <div class="card h-100 border shadow-sm professional-card">
-                                        <div class="card-body p-4">
-                                            <div class="d-flex align-items-start mb-3">
+                            <!-- Section 8 - Allowance Plan -->
+                            <div class="col-md-4">
+                                <div class="card h-100 border shadow-sm professional-card">
+                                    <div class="card-body p-4">
+                                        <div class="d-flex align-items-start mb-3">
                                             <span
                                                 class="badge bg-dark text-white rounded-circle me-3 d-flex align-items-center justify-content-center fw-bold"
                                                 style="width: 36px; height: 36px; font-size: 14px;">8</span>
-                                                <div class="flex-grow-1">
-                                                    <h6 class="mb-1 fw-semibold text-dark">Allowance Plans</h6>
-                                                    <p class="text-muted small mb-0" style="font-size: 0.813rem;">Allowance
-                                                        plan details</p>
-                                                </div>
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1 fw-semibold text-dark">Allowance Plans</h6>
+                                                <p class="text-muted small mb-0" style="font-size: 0.813rem;">Allowance
+                                                    plan details</p>
                                             </div>
-                                            <button type="button"
-                                                    class="btn btn-outline-dark btn-sm w-100 text-uppercase fw-semibold"
-                                                    style="font-size: 0.75rem; letter-spacing: 0.5px;" data-bs-toggle="modal"
-                                                    data-bs-target="#bulkUploadModal" data-section="allowance-plan"
-                                                    data-section-name="Allowance Plan" data-section-number="8"
-                                                    data-form-action="{{ route('plans.allowance_plans.import') }}"
-                                                    data-excel-link="{{ asset('assets/excel/allowance_plans.xlsx') }}"
-                                                    data-csv-link="{{ asset('assets/csv/allowance_plans.csv') }}">
-                                                <i class="bi bi-upload me-2"></i>Upload
-                                            </button>
                                         </div>
+                                        <button type="button"
+                                            class="btn btn-outline-dark btn-sm w-100 text-uppercase fw-semibold"
+                                            style="font-size: 0.75rem; letter-spacing: 0.5px;" data-bs-toggle="modal"
+                                            data-bs-target="#bulkUploadModal" data-section="allowance-plan"
+                                            data-section-name="Allowance Plan" data-section-number="8"
+                                            data-form-action="{{ route('plans.allowance_plans.import') }}"
+                                            data-excel-link="{{ asset('assets/excel/allowance_plans.xlsx') }}"
+                                            data-csv-link="{{ asset('assets/csv/allowance_plans.csv') }}">
+                                            <i class="bi bi-upload me-2"></i>Upload
+                                        </button>
                                     </div>
                                 </div>
+                            </div>
 
                         </div>
 
