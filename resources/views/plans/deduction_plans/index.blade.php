@@ -28,54 +28,111 @@
                                         </h5>
                                     </div>
                                     <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-md-3 mb-3">
-                                                <label class="form-label fw-semibold text-muted">Late Deduction</label>
+                                        <!-- Late Deduction -->
+                                        <div class="row mb-4">
+                                            <div class="col-12">
+                                                <h6 class="fw-bold text-primary mb-3">Late Deduction</h6>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label fw-semibold text-muted">Late Deduction Days</label>
                                                 <div class="fs-5 fw-bold text-primary">
-                                                    {{ \App\HelperClass::getGeneralSetting()->currency ?? 'Tk' }}
-                                                    {{ number_format($plan->late_deduction, 2) }}
+                                                    {{ $plan->late_deduction_days }} day(s)
                                                 </div>
-                                                <small class="text-muted">Amount deducted for late arrival</small>
+                                                <small class="text-muted">Number of days to deduct for late arrival</small>
                                             </div>
-                                            <div class="col-md-3 mb-3">
-                                                <label class="form-label fw-semibold text-muted">Early Out Deduction</label>
-                                                <div class="fs-5 fw-bold text-warning">
-                                                    {{ \App\HelperClass::getGeneralSetting()->currency ?? 'Tk' }}
-                                                    {{ number_format($plan->early_out_deduction, 2) }}
-                                                </div>
-                                                <small class="text-muted">Amount deducted for leaving early</small>
-                                            </div>
-                                            <div class="col-md-3 mb-3">
-                                                <label class="form-label fw-semibold text-muted">Excessive Late
-                                                    Deduction</label>
-                                                <div class="fs-5 fw-bold text-danger">
-                                                    {{ \App\HelperClass::getGeneralSetting()->currency ?? 'Tk' }}
-                                                    {{ number_format($plan->excessive_late_deduction, 2) }}
-                                                </div>
-                                                <small class="text-muted">Amount for excessive lateness</small>
-                                            </div>
-                                            <div class="col-md-3 mb-3">
-                                                <label class="form-label fw-semibold text-muted">Status</label>
-                                                <div>
-                                                    <span
-                                                        class="badge bg-{{ $plan->status == 'active' ? 'success' : 'danger' }} fs-6">
-                                                        {{ ucfirst($plan->status) }}
-                                                    </span>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label fw-semibold text-muted">Late Salary Deduction
+                                                    Rate</label>
+                                                <div class="fs-5 fw-bold text-primary">
+                                                    {{ number_format($plan->late_salary_deduction_rate, 2) }} Day(s) Salary
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row mt-3">
-                                            <div class="col-md-6">
-                                                <label class="form-label fw-semibold text-muted">Created At</label>
-                                                <div class="text-secondary">
-                                                    {{ $plan->created_at->format('d M Y, h:i A') }}
+
+                                        <!-- Early Out Deduction -->
+                                        <div class="row mb-4">
+                                            <div class="col-12">
+                                                <h6 class="fw-bold text-warning mb-3">Early Out Deduction</h6>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label fw-semibold text-muted">Early Out Deduction
+                                                    Days</label>
+                                                <div class="fs-5 fw-bold text-warning">
+                                                    {{ $plan->early_out_deduction_days }} day(s)
+                                                </div>
+                                                <small class="text-muted">Number of days to deduct for leaving early</small>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label fw-semibold text-muted">Early Out Salary Deduction
+                                                    Rate</label>
+                                                <div class="fs-5 fw-bold text-warning">
+                                                    {{ number_format($plan->early_out_salary_deduction_rate, 2) }} Day(s)
+                                                    Salary
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label fw-semibold text-muted">Last Updated</label>
-                                                <div class="text-secondary">
-                                                    {{ $plan->updated_at->format('d M Y, h:i A') }}
+                                        </div>
+
+                                        <!-- Excessive Late Deduction -->
+                                        <div class="row mb-4">
+                                            <div class="col-12">
+                                                <h6 class="fw-bold text-danger mb-3">Excessive Late Deduction</h6>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label fw-semibold text-muted">Excessive Late Deduction
+                                                    Days</label>
+                                                <div class="fs-5 fw-bold text-danger">
+                                                    {{ $plan->excessive_late_deduction_days }} day(s)
                                                 </div>
+                                                <small class="text-muted">Number of days to deduct for excessive
+                                                    lateness</small>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label fw-semibold text-muted">Excessive Late Salary
+                                                    Deduction Rate</label>
+                                                <div class="fs-5 fw-bold text-danger">
+                                                    {{ number_format($plan->excessive_late_salary_deduction_rate, 2) }}
+                                                    Day(s) Salary
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Absent Deduction -->
+                                        <div class="row mb-4">
+                                            <div class="col-12">
+                                                <h6 class="fw-bold text-secondary mb-3">Absent Deduction</h6>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label fw-semibold text-muted">Absent Deduction
+                                                    Days</label>
+                                                <div class="fs-5 fw-bold text-secondary">
+                                                    {{ $plan->absent_deduction_days }} day(s)
+                                                </div>
+                                                <small class="text-muted">Number of days to deduct for absence</small>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label fw-semibold text-muted">Absent Salary
+                                                    Deduction Rate</label>
+                                                <div class="fs-5 fw-bold text-secondary">
+                                                    {{ number_format($plan->absent_salary_deduction_rate, 2) }} Day(s)
+                                                    Salary
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Calculation Type -->
+                                        <div class="row mb-4">
+                                            <div class="col-12">
+                                                <h6 class="fw-bold text-info mb-3">Calculation Settings</h6>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label fw-semibold text-muted">Calculation Type</label>
+                                                <div>
+                                                    <span class="badge bg-info fs-6">
+                                                        {{ ucwords(str_replace('_', ' ', $plan->calculation_type)) }}
+                                                    </span>
+                                                </div>
+                                                <small class="text-muted">Base salary type for deduction
+                                                    calculations</small>
                                             </div>
                                         </div>
                                     </div>
