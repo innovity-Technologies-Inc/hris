@@ -30,7 +30,7 @@
                             <div class="col-md-4">
                                 <div class="border-start border-primary border-3 ps-3">
                                     <small class="text-muted d-block">Employee Name</small>
-                                    <strong id="modalEmployeeName" class="text-dark">-</strong>
+                                    <strong id="modalEmployeeName" class="text-dark">{{$application->getEmployee->full_name}}</strong>
                                 </div>
                             </div>
                             <div class="col-md-4">

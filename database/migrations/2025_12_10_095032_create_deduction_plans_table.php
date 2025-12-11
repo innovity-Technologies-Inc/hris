@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('employee_deduction_plans', function (Blueprint $table) {
+        Schema::create('deduction_plans', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('employee_id')->index();
             $table->decimal('late_deduction', 8, 2)->default(0.00);
             $table->decimal('early_out_deduction', 8, 2)->default(0.00);
             $table->decimal('excessive_late_deduction', 8, 2)->default(0.00);
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('employee_deduction_plans');
+        Schema::dropIfExists('deduction_plans');
     }
 };

@@ -33,6 +33,7 @@ use App\Http\Controllers\EmployeePlansController;
 use App\Http\Controllers\BonusPlanController;
 use App\Http\Controllers\AllowancePlanController;
 use App\Http\Controllers\LeavesController;
+use App\Http\Controllers\DeductionPlanController;
 
 
 Route::get('test', function () {
@@ -374,6 +375,16 @@ Route::prefix('plans')->group(function () {
             Route::put('update/{id}', 'update')->name('plans.allowance_plans.update');
             Route::delete('delete/{id}', 'delete')->name('plans.allowance_plans.delete');
             Route::post('import', 'import')->name('plans.allowance_plans.import');
+        });
+    });
+
+    Route::prefix('deduction-plans')->group(function () {
+        Route::controller(DeductionPlanController::class)->group(function(){
+            Route::get('/', 'index')->name('plans.deduction_plans.index');
+            Route::get('create', 'create')->name('plans.deduction_plans.create');
+            Route::post('store', 'store')->name('plans.deduction_plans.store');
+            Route::get('edit', 'edit')->name('plans.deduction_plans.edit');
+            Route::put('update', 'update')->name('plans.deduction_plans.update');
         });
     });
 

@@ -2,17 +2,7 @@
 
 @section('content')
     @php
-        // Dummy object for form - replace with actual $plan when using controller
-        $plan =
-            $plan ??
-            (object) [
-                'id' => null,
-                'late_deduction' => old('late_deduction', ''),
-                'early_out_deduction' => old('early_out_deduction', ''),
-                'excessive_late_deduction' => old('excessive_late_deduction', ''),
-                'status' => old('status', 'active'),
-            ];
-        $isEdit = isset($plan->id) && $plan->id !== null;
+        $isEdit = isset($plan) && $plan !== null;
     @endphp
 
     <div class="row">
@@ -34,7 +24,9 @@
                         </div>
                     @endif
 
-                    <form action="#" method="POST" enctype="multipart/form-data">
+                    <form
+                        action="{{ $isEdit ? route('plans.deduction_plans.update') : route('plans.deduction_plans.store') }}"
+                        method="POST" enctype="multipart/form-data">
                         @csrf
                         @if ($isEdit)
                             @method('PUT')
@@ -53,9 +45,11 @@
                                         <label for="late_deduction" class="form-label fw-semibold">Late Deduction
                                             ({{ \App\HelperClass::getGeneralSetting()->currency ?? 'Tk' }}) <span
                                                 class="text-danger">*</span></label>
-                                        <input type="number" class="form-control" id="late_deduction" name="late_deduction"
-                                            placeholder="E.g., 50.00" step="0.01" min="0"
-                                            value="{{ $plan->late_deduction }}" required>
+                                        <input type="number"
+                                            class="form-control @error('late_deduction') is-invalid @enderror"
+                                            id="late_deduction" name="late_deduction" placeholder="E.g., 50.00"
+                                            step="0.01" min="0"
+                                            value="{{ old('late_deduction', $plan->late_deduction ?? '') }}" required>
                                         <small class="text-muted">Amount deducted for late arrival</small>
                                         @error('late_deduction')
                                             <span class="text-danger d-block">{{ $message }}</span>
@@ -66,9 +60,12 @@
                                         <label for="early_out_deduction" class="form-label fw-semibold">Early Out Deduction
                                             ({{ \App\HelperClass::getGeneralSetting()->currency ?? 'Tk' }}) <span
                                                 class="text-danger">*</span></label>
-                                        <input type="number" class="form-control" id="early_out_deduction"
-                                            name="early_out_deduction" placeholder="E.g., 40.00" step="0.01"
-                                            min="0" value="{{ $plan->early_out_deduction }}" required>
+                                        <input type="number"
+                                            class="form-control @error('early_out_deduction') is-invalid @enderror"
+                                            id="early_out_deduction" name="early_out_deduction" placeholder="E.g., 40.00"
+                                            step="0.01" min="0"
+                                            value="{{ old('early_out_deduction', $plan->early_out_deduction ?? '') }}"
+                                            required>
                                         <small class="text-muted">Amount deducted for leaving early</small>
                                         @error('early_out_deduction')
                                             <span class="text-danger d-block">{{ $message }}</span>
@@ -80,9 +77,12 @@
                                             Deduction
                                             ({{ \App\HelperClass::getGeneralSetting()->currency ?? 'Tk' }}) <span
                                                 class="text-danger">*</span></label>
-                                        <input type="number" class="form-control" id="excessive_late_deduction"
-                                            name="excessive_late_deduction" placeholder="E.g., 100.00" step="0.01"
-                                            min="0" value="{{ $plan->excessive_late_deduction }}" required>
+                                        <input type="number"
+                                            class="form-control @error('excessive_late_deduction') is-invalid @enderror"
+                                            id="excessive_late_deduction" name="excessive_late_deduction"
+                                            placeholder="E.g., 100.00" step="0.01" min="0"
+                                            value="{{ old('excessive_late_deduction', $plan->excessive_late_deduction ?? '') }}"
+                                            required>
                                         <small class="text-muted">Amount deducted for excessive lateness (multiple late
                                             arrivals)</small>
                                         @error('excessive_late_deduction')
@@ -94,11 +94,14 @@
                                     <div class="col-md-4 mb-3">
                                         <label for="status" class="form-label fw-semibold">Status <span
                                                 class="text-danger">*</span></label>
-                                        <select class="form-select" id="status" name="status" required>
+                                        <select class="form-select @error('status') is-invalid @enderror" id="status"
+                                            name="status" required>
                                             <option value="">Select Status</option>
-                                            <option value="active" {{ $plan->status == 'active' ? 'selected' : '' }}>
+                                            <option value="active"
+                                                {{ old('status', $plan->status ?? 'active') == 'active' ? 'selected' : '' }}>
                                                 Active</option>
-                                            <option value="inactive" {{ $plan->status == 'inactive' ? 'selected' : '' }}>
+                                            <option value="inactive"
+                                                {{ old('status', $plan->status ?? '') == 'inactive' ? 'selected' : '' }}>
                                                 Inactive</option>
                                         </select>
                                         @error('status')
@@ -111,7 +114,7 @@
 
                         <!-- Form Actions -->
                         <div class="d-flex justify-content-end gap-2">
-                            <a href="#" class="btn btn-secondary">
+                            <a href="{{ route('plans.deduction_plans.index') }}" class="btn btn-secondary">
                                 <i class="mdi mdi-arrow-left me-1"></i> Cancel
                             </a>
                             <button type="submit" class="btn btn-primary">

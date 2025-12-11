@@ -372,4 +372,31 @@ class PlanService
         return $validated;
     }
 
+    public function deductionPlanValidation($request)
+    {
+        $validated = $request->validate([
+            'late_deduction' => 'required|numeric|min:0',
+            'early_out_deduction' => 'required|numeric|min:0',
+            'excessive_late_deduction' => 'required|numeric|min:0',
+            'status' => 'required|in:active,inactive',
+        ], [
+            'late_deduction.required' => 'Late deduction amount is required.',
+            'late_deduction.numeric' => 'Late deduction must be a valid number.',
+            'late_deduction.min' => 'Late deduction must be at least 0.',
+
+            'early_out_deduction.required' => 'Early out deduction amount is required.',
+            'early_out_deduction.numeric' => 'Early out deduction must be a valid number.',
+            'early_out_deduction.min' => 'Early out deduction must be at least 0.',
+
+            'excessive_late_deduction.required' => 'Excessive late deduction amount is required.',
+            'excessive_late_deduction.numeric' => 'Excessive late deduction must be a valid number.',
+            'excessive_late_deduction.min' => 'Excessive late deduction must be at least 0.',
+
+            'status.required' => 'Please select the plan status.',
+            'status.in' => 'The selected status is invalid.',
+        ]);
+
+        return $validated;
+    }
+
 }
