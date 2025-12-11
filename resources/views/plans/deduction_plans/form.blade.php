@@ -67,8 +67,7 @@
                                         <div class="input-group w-50">
                                             <input type="number"
                                                 class="form-control @error('late_salary_deduction_rate') is-invalid @enderror"
-                                                id="late_salary_deduction_rate"
-                                                name="late_salary_deduction_rate"
+                                                id="late_salary_deduction_rate" name="late_salary_deduction_rate"
                                                 step="0.01" min="0" max="100"
                                                 value="{{ old('late_salary_deduction_rate', $plan->late_salary_deduction_rate ?? '') }}"
                                                 required>
@@ -108,8 +107,7 @@
                                         <div class="input-group w-50">
                                             <input type="number"
                                                 class="form-control @error('early_out_salary_deduction_rate') is-invalid @enderror"
-                                                id="early_out_salary_deduction_rate"
-                                                name="early_out_salary_deduction_rate"
+                                                id="early_out_salary_deduction_rate" name="early_out_salary_deduction_rate"
                                                 step="0.01" min="0" max="100"
                                                 value="{{ old('early_out_salary_deduction_rate', $plan->early_out_salary_deduction_rate ?? '') }}"
                                                 required>
@@ -151,14 +149,54 @@
                                             <input type="number"
                                                 class="form-control @error('excessive_late_salary_deduction_rate') is-invalid @enderror"
                                                 id="excessive_late_salary_deduction_rate"
-                                                name="excessive_late_salary_deduction_rate"
-                                                step="0.01" min="0" max="100"
+                                                name="excessive_late_salary_deduction_rate" step="0.01" min="0"
+                                                max="100"
                                                 value="{{ old('excessive_late_salary_deduction_rate', $plan->excessive_late_salary_deduction_rate ?? '') }}"
                                                 required>
                                             <span class="input-group-text">Day(s) Salary </span>
                                         </div>
 
                                         @error('excessive_late_salary_deduction_rate')
+                                            <span class="text-danger d-block">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Absent Deduction -->
+                                <div class="row mb-4">
+                                    <div class="col-12">
+                                        <h6 class="fw-bold text-secondary mb-3">Absent Deduction</h6>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="absent_deduction_days" class="form-label fw-semibold">Absent
+                                            Deduction Days <span class="text-danger">*</span></label>
+                                        <input type="number"
+                                            class="form-control @error('absent_deduction_days') is-invalid @enderror"
+                                            id="absent_deduction_days" name="absent_deduction_days" placeholder="E.g., 1"
+                                            min="0"
+                                            value="{{ old('absent_deduction_days', $plan->absent_deduction_days ?? '') }}"
+                                            required>
+                                        <small class="text-muted">Number of days to deduct for absence</small>
+                                        @error('absent_deduction_days')
+                                            <span class="text-danger d-block">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label for="absent_salary_deduction_rate" class="form-label fw-semibold">Absent
+                                            Salary Deduction Rate <span class="text-danger">*</span></label>
+
+                                        <div class="input-group w-50">
+                                            <input type="number"
+                                                class="form-control @error('absent_salary_deduction_rate') is-invalid @enderror"
+                                                id="absent_salary_deduction_rate" name="absent_salary_deduction_rate"
+                                                step="0.01" min="0" max="100"
+                                                value="{{ old('absent_salary_deduction_rate', $plan->absent_salary_deduction_rate ?? '') }}"
+                                                required>
+                                            <span class="input-group-text">Day(s) Salary </span>
+                                        </div>
+
+                                        @error('absent_salary_deduction_rate')
                                             <span class="text-danger d-block">{{ $message }}</span>
                                         @enderror
                                     </div>

@@ -381,6 +381,8 @@ class PlanService
             'early_out_salary_deduction_rate' => 'required|numeric|min:0|max:100',
             'excessive_late_deduction_days' => 'required|integer|min:0',
             'excessive_late_salary_deduction_rate' => 'required|numeric|min:0|max:100',
+            'absent_deduction_days' => 'required|integer|min:0',
+            'absent_salary_deduction_rate' => 'required|numeric|min:0|max:100',
             'calculation_type' => 'required|in:gross_salary,basic_salary',
         ], [
             'late_deduction_days.required' => 'Late deduction days is required.',
@@ -409,6 +411,15 @@ class PlanService
             'excessive_late_salary_deduction_rate.numeric' => 'Excessive late salary deduction rate must be a valid number.',
             'excessive_late_salary_deduction_rate.min' => 'Excessive late salary deduction rate must be at least 0.',
             'excessive_late_salary_deduction_rate.max' => 'Excessive late salary deduction rate cannot exceed 100.',
+
+            'absent_deduction_days.required' => 'Absent deduction days is required.',
+            'absent_deduction_days.integer' => 'Absent deduction days must be a valid number.',
+            'absent_deduction_days.min' => 'Absent deduction days must be at least 0.',
+
+            'absent_salary_deduction_rate.required' => 'Absent salary deduction rate is required.',
+            'absent_salary_deduction_rate.numeric' => 'Absent salary deduction rate must be a valid number.',
+            'absent_salary_deduction_rate.min' => 'Absent salary deduction rate must be at least 0.',
+            'absent_salary_deduction_rate.max' => 'Absent salary deduction rate cannot exceed 100.',
 
             'calculation_type.required' => 'Please select the calculation type.',
             'calculation_type.in' => 'The selected calculation type is invalid.',
