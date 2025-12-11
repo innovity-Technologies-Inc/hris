@@ -123,8 +123,12 @@
                     <div class="collapse @if ($leavesOpen) show @endif" id="leaves">
                         <ul class="nav-second-level">
                             <li>
-                                <a class='tp-link @if (request()->is('leaves*')) menuitem-active @endif'
-                                    href='{{ route('leaves.index') }}'>Leave Information</a>
+                                <a class='tp-link @if (request()->is('leaves.create')) menuitem-active @endif'
+                                   href='{{ route('leaves.create') }}'>Application</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (request()->is('leaves.index')) menuitem-active @endif'
+                                    href='{{ route('leaves.index') }}'>Logs</a>
                             </li>
                         </ul>
                     </div>
