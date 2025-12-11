@@ -12,10 +12,14 @@ class DeductionPlan extends Model
     protected $table = 'deduction_plans';
 
     protected $fillable = [
-        'late_deduction',
-        'early_out_deduction',
-        'excessive_late_deduction',
-        'status',
+        'late_deduction_days',
+        'late_salary_deduction_rate',
+        'early_out_deduction_days',
+        'early_out_salary_deduction_rate',
+        'excessive_late_deduction_days',
+        'excessive_late_salary_deduction_rate',
+        'calculation_type',
     ];
+
 
 }

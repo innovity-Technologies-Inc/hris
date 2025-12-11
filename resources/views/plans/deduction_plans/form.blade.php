@@ -40,72 +40,148 @@
                                 </h5>
                             </div>
                             <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-4 mb-3">
-                                        <label for="late_deduction" class="form-label fw-semibold">Late Deduction
-                                            ({{ \App\HelperClass::getGeneralSetting()->currency ?? 'Tk' }}) <span
-                                                class="text-danger">*</span></label>
+                                <!-- Late Deduction -->
+                                <div class="row mb-4">
+                                    <div class="col-12">
+                                        <h6 class="fw-bold text-primary mb-3">Late Deduction</h6>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="late_deduction_days" class="form-label fw-semibold">Late Deduction Days
+                                            <span class="text-danger">*</span></label>
                                         <input type="number"
-                                            class="form-control @error('late_deduction') is-invalid @enderror"
-                                            id="late_deduction" name="late_deduction" placeholder="E.g., 50.00"
-                                            step="0.01" min="0"
-                                            value="{{ old('late_deduction', $plan->late_deduction ?? '') }}" required>
-                                        <small class="text-muted">Amount deducted for late arrival</small>
-                                        @error('late_deduction')
+                                            class="form-control @error('late_deduction_days') is-invalid @enderror"
+                                            id="late_deduction_days" name="late_deduction_days" placeholder="E.g., 1"
+                                            min="0"
+                                            value="{{ old('late_deduction_days', $plan->late_deduction_days ?? '') }}"
+                                            required>
+                                        <small class="text-muted">Number of days to deduct for late arrival</small>
+                                        @error('late_deduction_days')
                                             <span class="text-danger d-block">{{ $message }}</span>
                                         @enderror
                                     </div>
 
-                                    <div class="col-md-4 mb-3">
-                                        <label for="early_out_deduction" class="form-label fw-semibold">Early Out Deduction
-                                            ({{ \App\HelperClass::getGeneralSetting()->currency ?? 'Tk' }}) <span
-                                                class="text-danger">*</span></label>
-                                        <input type="number"
-                                            class="form-control @error('early_out_deduction') is-invalid @enderror"
-                                            id="early_out_deduction" name="early_out_deduction" placeholder="E.g., 40.00"
-                                            step="0.01" min="0"
-                                            value="{{ old('early_out_deduction', $plan->early_out_deduction ?? '') }}"
-                                            required>
-                                        <small class="text-muted">Amount deducted for leaving early</small>
-                                        @error('early_out_deduction')
-                                            <span class="text-danger d-block">{{ $message }}</span>
-                                        @enderror
-                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="late_salary_deduction_rate" class="form-label fw-semibold">Late Salary
+                                            Deduction Rate <span class="text-danger">*</span></label>
 
-                                    <div class="col-md-4 mb-3">
-                                        <label for="excessive_late_deduction" class="form-label fw-semibold">Excessive Late
-                                            Deduction
-                                            ({{ \App\HelperClass::getGeneralSetting()->currency ?? 'Tk' }}) <span
-                                                class="text-danger">*</span></label>
-                                        <input type="number"
-                                            class="form-control @error('excessive_late_deduction') is-invalid @enderror"
-                                            id="excessive_late_deduction" name="excessive_late_deduction"
-                                            placeholder="E.g., 100.00" step="0.01" min="0"
-                                            value="{{ old('excessive_late_deduction', $plan->excessive_late_deduction ?? '') }}"
-                                            required>
-                                        <small class="text-muted">Amount deducted for excessive lateness (multiple late
-                                            arrivals)</small>
-                                        @error('excessive_late_deduction')
+                                        <div class="input-group w-50">
+                                            <input type="number"
+                                                class="form-control @error('late_salary_deduction_rate') is-invalid @enderror"
+                                                id="late_salary_deduction_rate"
+                                                name="late_salary_deduction_rate"
+                                                step="0.01" min="0" max="100"
+                                                value="{{ old('late_salary_deduction_rate', $plan->late_salary_deduction_rate ?? '') }}"
+                                                required>
+                                            <span class="input-group-text">Day(s) Salary </span>
+                                        </div>
+
+                                        @error('late_salary_deduction_rate')
                                             <span class="text-danger d-block">{{ $message }}</span>
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-4 mb-3">
-                                        <label for="status" class="form-label fw-semibold">Status <span
+
+                                <!-- Early Out Deduction -->
+                                <div class="row mb-4">
+                                    <div class="col-12">
+                                        <h6 class="fw-bold text-warning mb-3">Early Out Deduction</h6>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="early_out_deduction_days" class="form-label fw-semibold">Early Out
+                                            Deduction Days <span class="text-danger">*</span></label>
+                                        <input type="number"
+                                            class="form-control @error('early_out_deduction_days') is-invalid @enderror"
+                                            id="early_out_deduction_days" name="early_out_deduction_days"
+                                            placeholder="E.g., 1" min="0"
+                                            value="{{ old('early_out_deduction_days', $plan->early_out_deduction_days ?? '') }}"
+                                            required>
+                                        <small class="text-muted">Number of days to deduct for leaving early</small>
+                                        @error('early_out_deduction_days')
+                                            <span class="text-danger d-block">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label for="early_out_salary_deduction_rate" class="form-label fw-semibold">Early
+                                            Out Salary Deduction Rate <span class="text-danger">*</span></label>
+
+                                        <div class="input-group w-50">
+                                            <input type="number"
+                                                class="form-control @error('early_out_salary_deduction_rate') is-invalid @enderror"
+                                                id="early_out_salary_deduction_rate"
+                                                name="early_out_salary_deduction_rate"
+                                                step="0.01" min="0" max="100"
+                                                value="{{ old('early_out_salary_deduction_rate', $plan->early_out_salary_deduction_rate ?? '') }}"
+                                                required>
+                                            <span class="input-group-text">Day(s) Salary </span>
+                                        </div>
+
+                                        @error('early_out_salary_deduction_rate')
+                                            <span class="text-danger d-block">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Excessive Late Deduction -->
+                                <div class="row mb-4">
+                                    <div class="col-12">
+                                        <h6 class="fw-bold text-danger mb-3">Excessive Late Deduction</h6>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="excessive_late_deduction_days" class="form-label fw-semibold">Excessive
+                                            Late Deduction Days <span class="text-danger">*</span></label>
+                                        <input type="number"
+                                            class="form-control @error('excessive_late_deduction_days') is-invalid @enderror"
+                                            id="excessive_late_deduction_days" name="excessive_late_deduction_days"
+                                            placeholder="E.g., 2" min="0"
+                                            value="{{ old('excessive_late_deduction_days', $plan->excessive_late_deduction_days ?? '') }}"
+                                            required>
+                                        <small class="text-muted">Number of days to deduct for excessive lateness</small>
+                                        @error('excessive_late_deduction_days')
+                                            <span class="text-danger d-block">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label for="excessive_late_salary_deduction_rate"
+                                            class="form-label fw-semibold">Excessive Late Salary Deduction Rate <span
                                                 class="text-danger">*</span></label>
-                                        <select class="form-select @error('status') is-invalid @enderror" id="status"
-                                            name="status" required>
-                                            <option value="">Select Status</option>
-                                            <option value="active"
-                                                {{ old('status', $plan->status ?? 'active') == 'active' ? 'selected' : '' }}>
-                                                Active</option>
-                                            <option value="inactive"
-                                                {{ old('status', $plan->status ?? '') == 'inactive' ? 'selected' : '' }}>
-                                                Inactive</option>
+
+                                        <div class="input-group w-50">
+                                            <input type="number"
+                                                class="form-control @error('excessive_late_salary_deduction_rate') is-invalid @enderror"
+                                                id="excessive_late_salary_deduction_rate"
+                                                name="excessive_late_salary_deduction_rate"
+                                                step="0.01" min="0" max="100"
+                                                value="{{ old('excessive_late_salary_deduction_rate', $plan->excessive_late_salary_deduction_rate ?? '') }}"
+                                                required>
+                                            <span class="input-group-text">Day(s) Salary </span>
+                                        </div>
+
+                                        @error('excessive_late_salary_deduction_rate')
+                                            <span class="text-danger d-block">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Calculation Type -->
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="calculation_type" class="form-label fw-semibold">Calculation Type
+                                            <span class="text-danger">*</span></label>
+                                        <select class="form-select @error('calculation_type') is-invalid @enderror"
+                                            id="calculation_type" name="calculation_type" required>
+                                            <option value="">Select Calculation Type</option>
+                                            <option value="gross_salary"
+                                                {{ old('calculation_type', $plan->calculation_type ?? 'gross_salary') == 'gross_salary' ? 'selected' : '' }}>
+                                                Gross Salary</option>
+                                            <option value="basic_salary"
+                                                {{ old('calculation_type', $plan->calculation_type ?? '') == 'basic_salary' ? 'selected' : '' }}>
+                                                Basic Salary</option>
                                         </select>
-                                        @error('status')
-                                            <span class="text-danger">{{ $message }}</span>
+                                        <small class="text-muted">Base salary type for deduction calculations</small>
+                                        @error('calculation_type')
+                                            <span class="text-danger d-block">{{ $message }}</span>
                                         @enderror
                                     </div>
                                 </div>
