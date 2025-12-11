@@ -414,11 +414,6 @@ class EmployeeServices
             'ot_plan_to' => 'nullable|date|after_or_equal:ot_plan_from',
             'ot_plan_status' => 'nullable|in:active,inactive',
 
-            // Attendance Bonus Plan
-            'attendance_bonus_plan_from' => 'nullable|date',
-            'attendance_bonus_plan_to' => 'nullable|date|after_or_equal:attendance_bonus_plan_from',
-            'attendance_bonus_plan_status' => 'nullable|in:active,inactive',
-
             // Day Off Work Plan
             'day_off_work_plan_from' => 'nullable|date',
             'day_off_work_plan_to' => 'nullable|date|after_or_equal:day_off_work_plan_from',
@@ -444,65 +439,25 @@ class EmployeeServices
             'late_deduction_plan_to' => 'nullable|date|after_or_equal:late_deduction_plan_from',
             'late_deduction_plan_status' => 'nullable|in:active,inactive',
 
-            // Production Plan
-            'production_plan_from' => 'nullable|date',
-            'production_plan_to' => 'nullable|date|after_or_equal:production_plan_from',
-            'production_plan_status' => 'nullable|in:active,inactive',
-
             // Early Out Deduction Plan
             'early_out_deduction_plan_from' => 'nullable|date',
             'early_out_deduction_plan_to' => 'nullable|date|after_or_equal:early_out_deduction_plan_from',
             'early_out_deduction_plan_status' => 'nullable|in:active,inactive',
-
-            // Salary Breakdown Plan
-            'salary_breakdown_plan_from' => 'nullable|date',
-            'salary_breakdown_plan_to' => 'nullable|date|after_or_equal:salary_breakdown_plan_from',
-            'salary_breakdown_plan_status' => 'nullable|in:active,inactive',
 
             // Medical Plan
             'medical_plan_from' => 'nullable|date',
             'medical_plan_to' => 'nullable|date|after_or_equal:medical_plan_from',
             'medical_plan_status' => 'nullable|in:active,inactive',
 
-            // Night Bill Plan
-            'night_bill_plan_from' => 'nullable|date',
-            'night_bill_plan_to' => 'nullable|date|after_or_equal:night_bill_plan_from',
-            'night_bill_plan_status' => 'nullable|in:active,inactive',
-
-            // Tiffin Plan
-            'tiffin_plan_from' => 'nullable|date',
-            'tiffin_plan_to' => 'nullable|date|after_or_equal:tiffin_plan_from',
-            'tiffin_plan_status' => 'nullable|in:active,inactive',
-
-            // Dinner Plan
-            'dinner_plan_from' => 'nullable|date',
-            'dinner_plan_to' => 'nullable|date|after_or_equal:dinner_plan_from',
-            'dinner_plan_status' => 'nullable|in:active,inactive',
-
-            // Breakfast Plan
-            'breakfast_plan_from' => 'nullable|date',
-            'breakfast_plan_to' => 'nullable|date|after_or_equal:breakfast_plan_from',
-            'breakfast_plan_status' => 'nullable|in:active,inactive',
-
-            // Food Com Plan
-            'food_com_plan_from' => 'nullable|date',
-            'food_com_plan_to' => 'nullable|date|after_or_equal:food_com_plan_from',
-            'food_com_plan_status' => 'nullable|in:active,inactive',
-
             // Excessive Late Plan
             'excessive_late_plan_from' => 'nullable|date',
             'excessive_late_plan_to' => 'nullable|date|after_or_equal:excessive_late_plan_from',
             'excessive_late_plan_status' => 'nullable|in:active,inactive',
 
-            // Lunch Plan
-            'lunch_plan_from' => 'nullable|date',
-            'lunch_plan_to' => 'nullable|date|after_or_equal:lunch_plan_from',
-            'lunch_plan_status' => 'nullable|in:active,inactive',
-
-            // Snacks Plan
-            'snacks_plan_from' => 'nullable|date',
-            'snacks_plan_to' => 'nullable|date|after_or_equal:snacks_plan_from',
-            'snacks_plan_status' => 'nullable|in:active,inactive',
+            // Meal Plan
+            'meal_plan_from' => 'nullable|date',
+            'meal_plan_to' => 'nullable|date|after_or_equal:meal_plan_from',
+            'meal_plan_status' => 'nullable|in:active,inactive',
         ],
             [
                 'employee_id.required' => 'The employee field is required.',
@@ -520,10 +475,6 @@ class EmployeeServices
                 'ot_plan_to.date' => 'The OT plan to date is invalid.',
                 'ot_plan_to.after_or_equal' => 'The OT plan to date must be after or equal to the from date.',
                 'ot_plan_status.in' => 'The OT plan status must be either active or inactive.',
-                'attendance_bonus_plan_from.date' => 'The attendance bonus  plan from date is invalid.',
-                'attendance_bonus_plan_to.date' => 'The attendance bonus plan to date is invalid.',
-                'attendance_bonus_plan_to.after_or_equal' => 'The attendance bonus plan to date must be after or equal to the from date.',
-                'attendance_bonus_plan_status.in' => 'The attendance bonus plan status must be either active or inactive.',
                 'day_off_work_plan_from.date' => 'The day off work plan from date is invalid.',
                 'day_off_work_plan_to.date' => 'The day off work plan to date is invalid.',
                 'day_off_work_plan_to.after_or_equal' => 'The day off work plan to date must be after or equal to the from date.',
@@ -544,18 +495,14 @@ class EmployeeServices
                 'late_deduction_plan_to.date' => 'The late deduction plan to date is invalid.',
                 'late_deduction_plan_to.after_or_equal' => 'The late deduction plan to date must be after or equal to the from date.',
                 'late_deduction_plan_status.in' => 'The late deduction plan status must be either active or inactive.',
-                'production_plan_from.date' => 'The production plan from date is invalid.',
-                'production_plan_to.date' => 'The production plan to date is invalid.',
-                'production_plan_to.after_or_equal' => 'The production plan to date must be after or equal to the from date.',
-                'production_plan_status.in' => 'The production plan status must be either active or inactive.',
                 'early_out_deduction_plan_from.date' => 'The early out deduction plan from date is invalid.',
                 'early_out_deduction_plan_to.date' => 'The early out deduction plan to date is invalid.',
                 'early_out_deduction_plan_to.after_or_equal' => 'The early out deduction plan to date must be after or equal to the from date.',
                 'early_out_deduction_plan_status.in' => 'The early out deduction plan status must be either active or inactive.',
-                'salary_breakdown_plan_from.date' => 'The salary breakdown plan from date is invalid.',
-                'salary_breakdown_plan_to.date' => 'The salary breakdown plan to date is invalid.',
-                'salary_breakdown_plan_to.after_or_equal' => 'The salary breakdown plan to date must be after or equal to the from date.',
-                'salary_breakdown_plan_status.in' => 'The salary breakdown plan status must be either active or inactive.',
+                'meal_plan_from.date' => 'The meal plan from date is invalid.',
+                'meal_plan_to.date' => 'The meal plan to date is invalid.',
+                'meal_plan_to.after_or_equal' => 'The meal plan to date must be after or equal to the from date.',
+                'meal_plan_status.in' => 'The meal plan status must be either active or inactive.',
             ]);
         return $validated;
     }
@@ -577,31 +524,84 @@ class EmployeeServices
         $validated = $request->validate([
             'employee_id' => 'required',
             'educations' => 'nullable|array',
-            'educations.*.education_title' => 'required_with:educations|string',
-            'educations.*.institute' => 'required_with:educations|string',
-            'educations.*.group_major' => 'nullable|string',
-            'educations.*.board_university' => 'nullable|string',
-            'educations.*.result_grade' => 'nullable|string',
-            'educations.*.passing_year' => 'required_with:educations|string',
-            'educations.*.gpa_cgpa' => 'nullable|string',
+            'educations.*.education_title' => 'nullable|string|max:255',
+            'educations.*.institute' => 'nullable|string|max:255',
+            'educations.*.group_major' => 'nullable|string|max:255',
+            'educations.*.board_university' => 'nullable|string|max:255',
+            'educations.*.result_grade' => 'nullable|string|max:100',
+            'educations.*.passing_year' => 'nullable|string|max:10',
+            'educations.*.gpa_cgpa' => 'nullable|string|max:20',
             'experiences' => 'nullable|array',
-            'experiences.*.company' => 'required_with:experiences|string',
-            'experiences.*.designation' => 'required_with:experiences|string',
-            'experiences.*.department' => 'nullable|string',
-            'experiences.*.date_from' => 'required_with:experiences|date',
-            'experiences.*.date_to' => 'required_with:experiences|date',
-            'experiences.*.duration' => 'nullable|string',
-            'experiences.*.responsibility' => 'required_with:experiences|string',
+            'experiences.*.company' => 'nullable|string|max:255',
+            'experiences.*.designation' => 'nullable|string|max:255',
+            'experiences.*.department' => 'nullable|string|max:255',
+            'experiences.*.date_from' => 'nullable|date',
+            'experiences.*.date_to' => 'nullable|date|after_or_equal:experiences.*.date_from',
+            'experiences.*.duration' => 'nullable|string|max:100',
+            'experiences.*.responsibility' => 'nullable|string|max:1000',
             'trainings' => 'nullable|array',
-            'trainings.*.training_title' => 'required_with:trainings|string',
-            'trainings.*.course_name' => 'required_with:trainings|string',
-            'trainings.*.training_code' => 'nullable|string',
-            'trainings.*.institute' => 'required_with:trainings|string',
-            'trainings.*.country' => 'required_with:trainings|string',
-            'trainings.*.location' => 'required_with:trainings|string',
-            'trainings.*.duration' => 'required_with:trainings|string',
-            'trainings.*.from_date' => 'required_with:trainings|date',
-            'trainings.*.to_date' => 'required_with:trainings|date',
+            'trainings.*.training_title' => 'nullable|string|max:255',
+            'trainings.*.course_name' => 'nullable|string|max:255',
+            'trainings.*.training_code' => 'nullable|string|max:100',
+            'trainings.*.institute' => 'nullable|string|max:255',
+            'trainings.*.country' => 'nullable|string|max:100',
+            'trainings.*.location' => 'nullable|string|max:255',
+            'trainings.*.duration' => 'nullable|string|max:100',
+            'trainings.*.from_date' => 'nullable|date',
+            'trainings.*.to_date' => 'nullable|date|after_or_equal:trainings.*.from_date',
+        ], [
+            // Employee ID
+            'employee_id.required' => 'Employee is required.',
+
+            // Education fields
+            'educations.*.education_title.string' => 'Education title must be a valid text.',
+            'educations.*.education_title.max' => 'Education title cannot exceed 255 characters.',
+            'educations.*.institute.string' => 'Institute name must be a valid text.',
+            'educations.*.institute.max' => 'Institute name cannot exceed 255 characters.',
+            'educations.*.group_major.string' => 'Group/Major must be a valid text.',
+            'educations.*.group_major.max' => 'Group/Major cannot exceed 255 characters.',
+            'educations.*.board_university.string' => 'Board/University must be a valid text.',
+            'educations.*.board_university.max' => 'Board/University cannot exceed 255 characters.',
+            'educations.*.result_grade.string' => 'Result/Grade must be a valid text.',
+            'educations.*.result_grade.max' => 'Result/Grade cannot exceed 100 characters.',
+            'educations.*.passing_year.string' => 'Passing year must be a valid text.',
+            'educations.*.passing_year.max' => 'Passing year cannot exceed 10 characters.',
+            'educations.*.gpa_cgpa.string' => 'GPA/CGPA must be a valid text.',
+            'educations.*.gpa_cgpa.max' => 'GPA/CGPA cannot exceed 20 characters.',
+
+            // Experience fields
+            'experiences.*.company.string' => 'Company name must be a valid text.',
+            'experiences.*.company.max' => 'Company name cannot exceed 255 characters.',
+            'experiences.*.designation.string' => 'Designation must be a valid text.',
+            'experiences.*.designation.max' => 'Designation cannot exceed 255 characters.',
+            'experiences.*.department.string' => 'Department must be a valid text.',
+            'experiences.*.department.max' => 'Department cannot exceed 255 characters.',
+            'experiences.*.date_from.date' => 'Start date must be a valid date.',
+            'experiences.*.date_to.date' => 'End date must be a valid date.',
+            'experiences.*.date_to.after_or_equal' => 'End date must be after or equal to start date.',
+            'experiences.*.duration.string' => 'Duration must be a valid text.',
+            'experiences.*.duration.max' => 'Duration cannot exceed 100 characters.',
+            'experiences.*.responsibility.string' => 'Responsibility must be a valid text.',
+            'experiences.*.responsibility.max' => 'Responsibility cannot exceed 1000 characters.',
+
+            // Training fields
+            'trainings.*.training_title.string' => 'Training title must be a valid text.',
+            'trainings.*.training_title.max' => 'Training title cannot exceed 255 characters.',
+            'trainings.*.course_name.string' => 'Course name must be a valid text.',
+            'trainings.*.course_name.max' => 'Course name cannot exceed 255 characters.',
+            'trainings.*.training_code.string' => 'Training code must be a valid text.',
+            'trainings.*.training_code.max' => 'Training code cannot exceed 100 characters.',
+            'trainings.*.institute.string' => 'Institute must be a valid text.',
+            'trainings.*.institute.max' => 'Institute cannot exceed 255 characters.',
+            'trainings.*.country.string' => 'Country must be a valid text.',
+            'trainings.*.country.max' => 'Country cannot exceed 100 characters.',
+            'trainings.*.location.string' => 'Location must be a valid text.',
+            'trainings.*.location.max' => 'Location cannot exceed 255 characters.',
+            'trainings.*.duration.string' => 'Duration must be a valid text.',
+            'trainings.*.duration.max' => 'Duration cannot exceed 100 characters.',
+            'trainings.*.from_date.date' => 'From date must be a valid date.',
+            'trainings.*.to_date.date' => 'To date must be a valid date.',
+            'trainings.*.to_date.after_or_equal' => 'To date must be after or equal to from date.',
         ]);
         return $validated;
     }

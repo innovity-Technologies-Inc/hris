@@ -1,0 +1,6 @@
+Bonus name,Description,Bonus_type,Bonus_config_type,salary_rate_type,overtime_multiplier,custom_overtime_rate,status
+Festival Bonus A,Bonus for Eid,festival,Salary Based,Basic Rate,1.5,,active
+Performance Q1,Quarterly performance bonus,performance,Custom,Multiplier,,250,inactive
+Annual Bonus 2025,Yearly bonus package,annual,Salary Based,Basic Rate,2,,active
+Incentive Sales,Sales incentive program,incentive,Custom,Multiplier,,300,active
+Retention Plan,Employee retention bonus,retention,Salary Based,Basic Rate,1.25,,inactive

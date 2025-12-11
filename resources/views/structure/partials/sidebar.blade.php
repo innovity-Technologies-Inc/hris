@@ -14,8 +14,12 @@
                         <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">
                     </span>
                     <span class="logo-lg">
-                        <img class="logo-img-light" src="{{ isset($generalSettings->logo_dark) ? asset('storage/' . $generalSettings->logo_dark) : asset('assets/images/logo-light.png') }}" alt="" height="24">
-                        <img class="logo-img-dark" src="{{ isset($generalSettings->logo_light) ? asset('storage/' . $generalSettings->logo_light) : asset('assets/images/logo-dark.png') }}" alt="" height="24">
+                        <img class="logo-img-light"
+                            src="{{ isset($generalSettings->logo_dark) ? asset('storage/' . $generalSettings->logo_dark) : asset('assets/images/logo-light.png') }}"
+                            alt="" height="24">
+                        <img class="logo-img-dark"
+                            src="{{ isset($generalSettings->logo_light) ? asset('storage/' . $generalSettings->logo_light) : asset('assets/images/logo-dark.png') }}"
+                            alt="" height="24">
                     </span>
                 </a>
             </div>
@@ -31,7 +35,8 @@
                 </li>
                 <!-- Add Employees Information Menu -->
                 <li>
-                    <a href="#sidebarEmployees" data-bs-toggle="collapse" aria-expanded="{{ Route::is('employees.*') ? 'true' : 'false' }}"
+                    <a href="#sidebarEmployees" data-bs-toggle="collapse"
+                        aria-expanded="{{ Route::is('employees.*') ? 'true' : 'false' }}"
                         class="@if (Route::is('employees.*')) menuitem-active @endif">
                         <i data-feather="users"></i>
                         <span> Employees </span>
@@ -53,7 +58,8 @@
 
                 <!-- Add Plans -->
                 <li>
-                    <a href="#plans" data-bs-toggle="collapse" aria-expanded="{{ Route::is('plans.*') ? 'true' : 'false' }}"
+                    <a href="#plans" data-bs-toggle="collapse"
+                        aria-expanded="{{ Route::is('plans.*') ? 'true' : 'false' }}"
                         class="@if (Route::is('plans.*')) menuitem-active @endif">
                         <i data-feather="layers"></i>
                         <span> Plans </span>
@@ -79,11 +85,19 @@
                             </li>
                             <li>
                                 <a class='tp-link @if (Route::is('plans.roster_plans.*')) menuitem-active @endif'
-                                   href='{{ route('plans.roster_plans.index') }}'>Roster Plans</a>
+                                    href='{{ route('plans.roster_plans.index') }}'>Roster Plans</a>
                             </li>
                             <li>
                                 <a class='tp-link @if (Route::is('plans.off_day_plans.*')) menuitem-active @endif'
-                                   href='{{ route('plans.off_day_plans.index') }}'>Off-Day Work Plans</a>
+                                    href='{{ route('plans.off_day_plans.index') }}'>Off-Day Work Plans</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('plans.bonus_plans.*')) menuitem-active @endif'
+                                    href='{{ route('plans.bonus_plans.index') }}'>Bonus Plans</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('plans.allowance_plans.*')) menuitem-active @endif'
+                                    href='{{ route('plans.allowance_plans.index') }}'>Allowance Plans</a>
                             </li>
                             <li>
                                 <a class='tp-link @if (Route::is('plans.bulk_upload')) menuitem-active @endif'
@@ -92,22 +106,42 @@
                         </ul>
                     </div>
                 </li>
-
-                <!-- Company Info Menu -->
                 @php
-                    $companyOpen = Route::is('groups.*') ||
-                                   Route::is('companies.*') ||
-                                   Route::is('company_types.*') ||
-                                   Route::is('company_locations.*') ||
-                                   Route::is('banks.*') ||
-                                   Route::is('branches.*') ||
-                                   Route::is('tofsils.*') ||
-                                   Route::is('salary_grades.*') ||
-                                   Route::is('gazette_locations.*') ||
-                                   Route::is('company_setup.bulk_upload');
+                    $leavesOpen = request()->is('leaves*');
                 @endphp
                 <li>
-                    <a href="#sidebarCompany" data-bs-toggle="collapse" aria-expanded="{{ $companyOpen ? 'true' : 'false' }}"
+                    <a href="#leaves" data-bs-toggle="collapse" aria-expanded="{{ $leavesOpen ? 'true' : 'false' }}"
+                        class="@if ($leavesOpen) menuitem-active @endif">
+                        <i data-feather="calendar"></i>
+                        <span> Leaves </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse @if ($leavesOpen) show @endif" id="leaves">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link @if (request()->is('leaves*')) menuitem-active @endif'
+                                    href='{{ route('leaves.index') }}'>Leave Information</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!-- Company Info Menu -->
+                @php
+                    $companyOpen =
+                        Route::is('groups.*') ||
+                        Route::is('companies.*') ||
+                        Route::is('company_types.*') ||
+                        Route::is('company_locations.*') ||
+                        Route::is('banks.*') ||
+                        Route::is('branches.*') ||
+                        Route::is('tofsils.*') ||
+                        Route::is('salary_grades.*') ||
+                        Route::is('gazette_locations.*') ||
+                        Route::is('company_setup.bulk_upload');
+                @endphp
+                <li>
+                    <a href="#sidebarCompany" data-bs-toggle="collapse"
+                        aria-expanded="{{ $companyOpen ? 'true' : 'false' }}"
                         class="@if ($companyOpen) menuitem-active @endif ">
                         <i data-feather="box"></i>
                         <span> Company Info </span>
@@ -128,30 +162,30 @@
                                 <a class='tp-link @if (Route::is('companies.*')) menuitem-active @endif'
                                     href='{{ route('companies.index') }}'>Companies</a>
                             </li>
-                            @if(isset($generalSettings->branch_status) && $generalSettings->branch_status == 1)
+                            @if (isset($generalSettings->branch_status) && $generalSettings->branch_status == 1)
                                 <li>
                                     <a class='tp-link @if (Route::is('company_locations.*')) menuitem-active @endif'
-                                       href='{{ route('company_locations.index') }}'>Company Branches</a>
+                                        href='{{ route('company_locations.index') }}'>Company Branches</a>
                                 </li>
                             @endif
-                            @if(isset($generalSettings->division_status) && $generalSettings->division_status == 1)
-                            <li>
-                                <a class='tp-link @if (Route::is('divisions.*')) menuitem-active @endif'
-                                    href='{{ route('divisions.index') }}'>Divisions</a>
-                            </li>
+                            @if (isset($generalSettings->division_status) && $generalSettings->division_status == 1)
+                                <li>
+                                    <a class='tp-link @if (Route::is('divisions.*')) menuitem-active @endif'
+                                        href='{{ route('divisions.index') }}'>Divisions</a>
+                                </li>
                             @endif
-                            @if(isset($generalSettings->department_status) && $generalSettings->department_status == 1)
-                            <li>
-                                <a class='tp-link @if (Route::is('departments.*')) menuitem-active @endif'
-                                    href='{{ route('departments.index') }}'>Departments</a>
-                            </li>
+                            @if (isset($generalSettings->department_status) && $generalSettings->department_status == 1)
+                                <li>
+                                    <a class='tp-link @if (Route::is('departments.*')) menuitem-active @endif'
+                                        href='{{ route('departments.index') }}'>Departments</a>
+                                </li>
                             @endif
-                            @if(isset($generalSettings->section_status) && $generalSettings->section_status == 1)
-                            <li>
-                                <a class='tp-link @if (Route::is('sections.*')) menuitem-active @endif'
-                                    href='{{ route('sections.index') }}'>Sections</a>
+                            @if (isset($generalSettings->section_status) && $generalSettings->section_status == 1)
+                                <li>
+                                    <a class='tp-link @if (Route::is('sections.*')) menuitem-active @endif'
+                                        href='{{ route('sections.index') }}'>Sections</a>
 
-                            </li>
+                                </li>
                             @endif
                             <li>
                                 <a class='tp-link @if (Route::is('designations.*')) menuitem-active @endif'
@@ -213,8 +247,9 @@
 
                 <!-- Add Plans -->
                 <li>
-                    <a href="#settings" data-bs-toggle="collapse" aria-expanded="{{ Route::is('settings.*') ? 'true' : 'false' }}"
-                       class="@if (Route::is('settings.*')) menuitem-active @endif">
+                    <a href="#settings" data-bs-toggle="collapse"
+                        aria-expanded="{{ Route::is('settings.*') ? 'true' : 'false' }}"
+                        class="@if (Route::is('settings.*')) menuitem-active @endif">
                         <i data-feather="settings"></i>
                         <span> Settings </span>
                         <span class="menu-arrow"></span>
@@ -223,7 +258,7 @@
                         <ul class="nav-second-level">
                             <li>
                                 <a class='tp-link @if (Route::is('settings.general_settings.*')) menuitem-active @endif'
-                                   href='{{ route('settings.general_settings') }}'>General</a>
+                                    href='{{ route('settings.general_settings') }}'>General</a>
                             </li>
 
                         </ul>

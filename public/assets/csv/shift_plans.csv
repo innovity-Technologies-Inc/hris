@@ -1,6 +1,6 @@
-Name,Clock_in_time,Clock_out_time,Treat_as_full_day_minutes,Treat_as_half_day_minutes,Grace_time,Late_after_minutes,Excessive_late_after_minutes,Early_out_grace_minutes,Breakfast_status,Breakfast_start_time,Breakfast_end_time,Lunch_status,Lunch_start_time,Lunch_end_time,Snacks_status,Snacks_start_time,Snacks_end_time,Dinner_status,Dinner_start_time,Dinner_end_time,Status
-Morning 1,9.30 AM,6.00 PM,480,240,10,15,30,5,active,10.15 AM,11.00 AM,active,1.15 PM,1.45 PM,inactive,,,inactive,,,active
-Morning 2,10.30 AM,6.00 PM,480,240,10,15,30,5,active,10.15 AM,11.00 AM,active,1.15 PM,1.45 PM,active,4.15 PM,4.30 PM,inactive,,,inactive
-Morning 3,8.30 AM,6.00 PM,480,240,10,15,30,5,active,10.15 AM,11.00 AM,active,1.15 PM,1.45 PM,inactive,,,active,8.15 PM,8.45 PM,active
-Morning 4,7.30 AM,6.00 PM,480,240,10,15,30,5,active,10.15 AM,11.00 AM,active,1.15 PM,1.45 PM,inactive,,,active,8.15 PM,8.45 PM,active
-Morning 5,7.30 AM,6.00 PM,480,240,10,15,30,5,active,10.15 AM,11.00 AM,inactive,,,inactive,,,inactive,,,active
+Name,Clock_in_time,Clock_out_time,Treat_as_full_day_minutes,Treat_as_half_day_minutes,Grace_time,Late_after_minutes,Excessive_late_after_minutes,Early_out_grace_minutes,Early_out_before,Breakfast_status,Breakfast_start_time,Breakfast_end_time,Lunch_status,Lunch_start_time,Lunch_end_time,Snacks_status,Snacks_start_time,Snacks_end_time,Dinner_status,Dinner_start_time,Dinner_end_time,Status
+Morning 1,9.30 AM,6.00 PM,480,240,10,15,30,5,5.30 PM,active,10.15 AM,11.00 AM,active,1.15 PM,1.45 PM,inactive,,,inactive,,,active
+Morning 2,10.30 AM,6.00 PM,480,240,10,15,30,5,5.30 PM,active,10.15 AM,11.00 AM,active,1.15 PM,1.45 PM,active,4.15 PM,4.30 PM,inactive,,,inactive
+Morning 3,8.30 AM,6.00 PM,480,240,10,15,30,5,5.30 PM,active,10.15 AM,11.00 AM,active,1.15 PM,1.45 PM,inactive,,,active,8.15 PM,8.45 PM,active
+Morning 4,7.30 AM,6.00 PM,480,240,10,15,30,5,5.30 PM,active,10.15 AM,11.00 AM,active,1.15 PM,1.45 PM,inactive,,,active,8.15 PM,8.45 PM,active
+Morning 5,7.30 AM,6.00 PM,480,240,10,15,30,5,5.30 PM,active,10.15 AM,11.00 AM,inactive,,,inactive,,,inactive,,,active

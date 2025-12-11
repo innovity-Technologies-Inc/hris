@@ -18,10 +18,10 @@ return new class extends Migration
             $table->tinyInteger('type_id');
             $table->tinyInteger('group_id');
             $table->longText('address');
-            $table->string('fax');
-            $table->string('telephone');
-            $table->string('email');
-            $table->string('logo');
+            $table->string('fax')->nullable();
+            $table->string('telephone')->nullable();
+            $table->string('email')->nullable();
+            $table->string('logo')->nullable();
             $table->enum('status', ['active', 'inactive']);
             $table->timestamps();
         });

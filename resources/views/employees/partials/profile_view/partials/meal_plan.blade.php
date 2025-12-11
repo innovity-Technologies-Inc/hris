@@ -37,49 +37,57 @@
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead class="table-light">
-                            <tr>
-                                <th>SL</th>
-                                <th>Meal Type</th>
-                                <th>Plan Name</th>
-                                <th>Daily Cost</th>
-                                <th>Effective From</th>
-                                <th>Effective To</th>
-                                <th>Status</th>
-                                <th class="text-center">Actions</th>
-                            </tr>
+                                <tr>
+                                    <th>SL</th>
+                                    <th>Meal Type</th>
+                                    <th>Plan Name</th>
+                                    <th>Daily Cost</th>
+                                    <th>Effective From</th>
+                                    <th>Effective To</th>
+                                    <th>Status</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            @php($sl=1)
-                            @foreach ($activeMealPlans as $plan)
-                                <tr>
-                                    <td><span
-                                            class="badge bg-secondary-subtle text-secondary">#{{ $sl++ }}</span>
-                                    </td>
-                                    <td>
+                                @php
+                                    $sl = 1;
+                                @endphp
+                                @foreach ($activeMealPlans as $plan)
+                                    <tr>
+                                        <td><span
+                                                class="badge bg-secondary-subtle text-secondary">#{{ $sl++ }}</span>
+                                        </td>
+                                        <td>
                                             <span class="badge bg-light text-secondary">
                                                 <i
                                                     class="mdi mdi-silverware-fork-knife me-1"></i>{{ $plan->getPlan->type }}
                                             </span>
-                                    </td>
-                                    <td><strong>{{ $plan->getPlan->name }}</strong></td>
-                                    <td><span
-                                            class="text-success fw-semibold">৳{{ number_format($plan->getPlan->cost ?? 0) }}</span>
-                                    </td>
-                                    <td>{{ \Carbon\Carbon::parse($plan->from)->format('jS F Y') }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($plan->from)->format('jS F Y') }}</td>
-                                    <td>
+                                        </td>
+                                        <td><strong>{{ $plan->getPlan->name }}</strong></td>
+                                        <td><span class="text-success fw-semibold">{{ \App\HelperClass::getCurrency() }}
+                                                {{ number_format($plan->getPlan->cost ?? 0) }}</span>
+                                        </td>
+                                        <td>{{ \Carbon\Carbon::parse($plan->from)->format('jS F Y') }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($plan->to)->format('jS F Y') }}</td>
+                                        <td>
                                             <span class="badge bg-success">
                                                 <i class="mdi mdi-check-circle me-1"></i>{{ $plan->status }}
                                             </span>
-                                    </td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-sm btn-warning"
-                                                title="Edit Assignment">
-                                            <i class="mdi mdi-close"></i> Remove
-                                        </button>
-                                    </td>
-                                </tr>
-                            @endforeach
+                                        </td>
+                                        <td class="text-center">
+                                            <form
+                                                action="{{ route('employees.profile.plans.remove', ['id' => $plan->id, 'type' => 'meal-plans']) }}"
+                                                method="post">
+                                                @csrf
+                                                @method('put')
+                                                <button type="submit"
+                                                    class="btn btn-sm btn-outline-danger shadow-sm removeBtn">
+                                                    <i class="mdi mdi-close-circle"></i> Remove
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -112,55 +120,64 @@
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead class="table-light">
-                            <tr>
-                                <th>SL</th>
-                                <th>Meal Type</th>
-                                <th>Plan Name</th>
-                                <th>Daily Cost</th>
-                                <th>Effective From</th>
-                                <th>Effective To</th>
-                                <th>Status</th>
-                                <th class="text-center">Actions</th>
-                            </tr>
+                                <tr>
+                                    <th>SL</th>
+                                    <th>Meal Type</th>
+                                    <th>Plan Name</th>
+                                    <th>Daily Cost</th>
+                                    <th>Effective From</th>
+                                    <th>Effective To</th>
+                                    <th>Status</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            @foreach ($previousMealPlans as $plan)
-                                <tr class="text-muted">
-                                    <td><span
-                                            class="badge bg-secondary-subtle text-secondary">#{{$sl++ }}</span>
-                                    </td>
-                                    <td>
+                                @php
+                                    $sl = 1;
+                                @endphp
+                                @foreach ($previousMealPlans as $plan)
+                                    <tr class="text-muted">
+                                        <td><span
+                                                class="badge bg-secondary-subtle text-secondary">#{{ $sl++ }}</span>
+                                        </td>
+                                        <td>
                                             <span class="badge bg-light text-secondary">
                                                 <i
-                                                    class="mdi mdi-silverware-fork-knife me-1"></i>{{ $plan->type }}
+                                                    class="mdi mdi-silverware-fork-knife me-1"></i>{{ $plan->getPlan->type }}
                                             </span>
-                                    </td>
-                                    <td>{{ $plan->getPlan->name }}</td>
-                                    <td><span
-                                            class="text-success fw-semibold">৳{{ number_format($plan->daily_cost ?? 0) }}</span>
-                                    </td>
-                                    <td>{{ \Carbon\Carbon::parse($plan->from)->format('jS F Y') }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($plan->from)->format('jS F Y') }}</td>
-                                    <td>
-                                        @if ($plan->status == 'Expired')
-                                            <span class="badge bg-warning-subtle text-warning">
-                                                    <i
-                                                        class="mdi mdi-clock-alert-outline me-1"></i>{{ $plan->status }}
+                                        </td>
+                                        <td>{{ $plan->getPlan->name }}</td>
+                                        <td><span
+                                                class="text-success fw-semibold">{{ \App\HelperClass::getCurrency() }}
+                                                {{ number_format($plan->getPlan->cost ?? 0) }}</span>
+                                        </td>
+                                        <td>{{ \Carbon\Carbon::parse($plan->from)->format('jS F Y') }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($plan->to)->format('jS F Y') }}</td>
+                                        <td>
+                                            @if ($plan->status == 'inactive')
+                                                <span class="badge bg-warning-subtle text-warning">
+                                                    <i class="mdi mdi-clock-alert-outline me-1"></i>{{ $plan->status }}
                                                 </span>
-                                        @else
-                                            <span class="badge bg-danger-subtle text-danger">
+                                            @else
+                                                <span class="badge bg-danger-subtle text-danger">
                                                     <i class="mdi mdi-close-circle me-1"></i>{{ $plan->status }}
                                                 </span>
-                                        @endif
-                                    </td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-sm btn-danger" title="Delete Record"
-                                                onclick="confirmDelete({{ $plan->id }})">
-                                            <i class="mdi mdi-delete"></i> Delete
-                                        </button>
-                                    </td>
-                                </tr>
-                            @endforeach
+                                            @endif
+                                        </td>
+                                        <td class="text-center">
+                                            <form
+                                                action="{{ route('employees.profile.plans.delete', ['type' => 'meal-plans', 'id' => $plan->id]) }}"
+                                                method="post">
+                                                @csrf
+                                                @method('delete')
+                                                <button type="submit" class="btn btn-sm btn-danger confirmDelete"
+                                                    title="Delete Record">
+                                                    <i class="mdi mdi-delete"></i> Delete
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -177,4 +194,3 @@
 
 {{-- Include the Create Modal --}}
 @include('employees.partials.modal.create_meal_modal')
-

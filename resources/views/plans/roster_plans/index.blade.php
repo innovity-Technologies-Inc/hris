@@ -6,7 +6,7 @@
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-header">
-                    <a type="button" class="btn btn-warning btn-sm" href="{{route('plans.roster_plans.create')}}">
+                    <a type="button" class="btn btn-warning btn-sm" href="{{ route('plans.roster_plans.create') }}">
                         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                     </a>
                 </div><!-- end card header -->
@@ -28,13 +28,13 @@
 
                 <div class="card-body" id="search-result">
                     @include('plans.roster_plans.search_results')
-                    
+
                 </div>
             </div>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-     <script>
+    <script>
         $(document).ready(function() {
             // Function to perform AJAX search
             function fetchData(url = "{{ route('plans.roster_plans.index') }}") {

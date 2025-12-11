@@ -11,11 +11,12 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-
+            <form id="createMealPlanForm" method="POST" action="{{route('employees.profile.plans.store', 'meal-plans')}}">
+                @csrf
+                <input type="hidden" name="employee_id" value="{{ $employee->id }}">
             {{-- Modal Body --}}
             <div class="modal-body">
-                <form id="createMealPlanForm" method="POST" action="{{route('employees.profile.plans.store', 'meal-plans')}}">
-                    @csrf
+
 
                     <div class="row g-3">
                         <input type="hidden" name="employee_id" value="{{ $employee->id }}">
@@ -114,7 +115,6 @@
                         </div>
                     </div>
 
-                </form>
             </div>
 
             {{-- Modal Footer --}}
@@ -122,16 +122,15 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     <i class="mdi mdi-close me-1"></i> Cancel
                 </button>
-                <button type="submit" class="btn btn-primary" onclick="submitModalForm()">
+                <button type="submit" class="btn btn-primary">
                     <i class="mdi mdi-check-circle me-1"></i> Add
                 </button>
             </div>
+            </form>
+
         </div>
     </div>
 </div>
-
-
-<script src="{{asset('assets/libs/jquery/jquery.min.js')}}"></script>
 
 
 <script>
@@ -151,7 +150,7 @@
         }
 
         // --- Change Event ---
-        $('#modal_meal_type').on('change', function() {
+        $(document).on('change', '#modal_meal_type', function() {
             loadMeals($(this).val());
         });
 
@@ -165,30 +164,10 @@
         }
         @endif
 
-    });
-</script>
-
-<script>
-    $(function() {
-
-        function loadMeals(mealType, selectedMeal = null) {
-            if (mealType) {
-                $.get('/get-meal-plans/' + mealType, function(data) {
-                    let $select = $('#modal_meal_plan_id');
-                    $select.html('<option value="">-- Select --</option>');
-
-                    $.each(data, function(key, value) {
-                        let selected = (selectedMeal == value.id) ? 'selected' : '';
-                        $select.append('<option value="'+ value.id +'" '+selected+'>'+ value.name +'</option>');
-                    });
-                });
-            }
-        }
-
         // ============================
         // 🚀 Show Plan Details
         // ============================
-        $('#modal_meal_plan_id').on('change', function() {
+        $(document).on('change', '#modal_meal_plan_id', function() {
             let planId = $(this).val();
 
             if (planId) {
@@ -210,16 +189,6 @@
                 $('#modal-plan-details').hide();
             }
         });
-
-        // Load meals if editing
-        @if(isset($employee_meal_info))
-        let mealType = "{{ old('modal_meal_type', $employee_meal_info->modal_meal_type ?? '') }}";
-        let meals  = "{{ old('modal_meal_plan_id', $employee_meal_info->modal_meal_plan_id ?? '') }}";
-
-        if (mealType) {
-            loadMeals(mealType, meals);
-        }
-        @endif
 
     });
 
