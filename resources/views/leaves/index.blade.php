@@ -24,7 +24,7 @@
                                             </label>
                                             <div class="input-group input-group-md">
                                                 <input type="text" class="form-control border-end-0" id="keywordSearch"
-                                                    name="keyword" placeholder="Search by employee name, ID, or leave plan"
+                                                    name="keyword" placeholder="Search by employee name, leave plan, plan type and days"
                                                     aria-label="Keyword Search" value="{{ request('keyword') }}">
                                                 <span class="input-group-text border-start-0 input-group-bg">
                                                     <i class="mdi mdi-magnify text-muted"></i>
@@ -89,82 +89,8 @@
                     @if ($leaves->isEmpty())
                         <div class="text-center py-4 text-muted">No leave applications found.</div>
                     @else
-                        <div class="table-responsive">
-                            <table class="table table-bordered mb-0">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Employee Name</th>
-                                        <th scope="col">Plan Name</th>
-                                        <th scope="col">Days</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col" style="width: 180px;">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @php $sl = 1; @endphp
-                                    @foreach ($leaves as $application)
-                                        <tr>
-                                            <th scope="row">{{ $sl++ }}</th>
-                                            <td>{{ $application->getEmployee->full_name }}</td>
-                                            <td>{{ $application->getPlan->name }}</td>
-                                            <td>{{ $application->leave_count }}</td>
-                                            <td>
-                                                @if ($application->status == 'pending')
-                                                    <span class="badge bg-warning text-dark">Pending</span>
-                                                @elseif($application->status == 'approved')
-                                                    <span class="badge bg-success">Approved</span>
-                                                @else
-                                                    <span class="badge bg-danger">Rejected</span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <button type="button" class="btn btn-secondary btn-sm" title="View"
-                                                    data-bs-toggle="modal" data-bs-target="#viewLeaveModal">
-                                                    <i style="height: 12px; width: 12px" data-feather="eye"></i>
-                                                </button>
-                                                {{-- Include View Modal --}}
-                                                @include('leaves.partials.view_modal')
-                                                @if ($application->status == 'pending')
-                                                    <form class="d-inline" action="{{ route('leaves.change_status') }}"
-                                                        method="post">
-                                                        @method('put')
-                                                        @csrf
-                                                        <input type="hidden" name="id" value="{{ $application->id }}">
-                                                        <input type="hidden" name="status" value="approved">
-                                                        <button type="submit" class="btn btn-success btn-sm confirmApprove"
-                                                            title="Approve">
-                                                            <i style="height: 12px; width: 12px" data-feather="check"></i>
-                                                        </button>
-                                                    </form>
-                                                    <form class="d-inline" method="post"
-                                                        action="{{ route('leaves.change_status') }}">
-                                                        @method('put')
-                                                        @csrf
-                                                        <input type="hidden" name="id"
-                                                            value="{{ $application->id }}">
-                                                        <input type="hidden" name="status" value="rejected">
-                                                        <button type="submit" class="btn btn-danger btn-sm confirmReject"
-                                                            title="Reject">
-                                                            <i style="height: 12px; width: 12px" data-feather="x"></i>
-                                                        </button>
-                                                    </form>
-                                                @endif
-                                                <form action="{{ route('leaves.destroy', $application->id) }}"
-                                                    method="POST" class="d-inline">
-                                                    @csrf
-                                                    @method('delete')
-                                                    <button type="submit"
-                                                        class="btn btn-outline-danger btn-sm confirmDelete"
-                                                        title="Delete">
-                                                        <i style="height: 12px; width: 12px" data-feather="trash-2"></i>
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                        <div class="table-responsive" id="search-result">
+                            @include('leaves.search_results')
                         </div>
                     @endif
                 </div>
@@ -178,13 +104,59 @@
     @include('leaves.partials.import_modal')
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
     <script>
         $(document).ready(function() {
-            // Reset filters
+            // Function to perform AJAX search
+            function fetchData(url = "{{ route('leaves.index') }}") {
+                const queryString = $('#filterForm').serialize();
+
+                $.ajax({
+                    url: url,
+                    method: "GET",
+                    data: queryString,
+                    beforeSend: function() {
+                        $('#search-result').html(
+                            '<div class="text-center py-4 text-muted">Loading Data...</div>');
+                    },
+                    success: function(response) {
+                        $('#search-result').html(response);
+                        // Reinitialize Feather icons if used in results
+                        if (typeof feather !== 'undefined') {
+                            feather.replace();
+                        }
+                        // Update URL without page param
+                        const newUrl = '?' + queryString;
+                        window.history.pushState(null, '', newUrl || location.pathname);
+                    },
+                    error: function(xhr) {
+                        console.error('AJAX Error:', xhr.responseText);
+                    }
+                });
+            }
+
+            // Trigger search on input or change
+            $('#filterForm').on('input change', function(e) {
+                e.preventDefault();
+                fetchData();
+            });
+
+            // Reset filters: clear form and reload base URL
             $('#resetFilters').on('click', function() {
+                // Clear all form fields
                 $('#filterForm')[0].reset();
+
+                // If using Select2, you may need to trigger change
                 $('.select2_list').val(null).trigger('change');
+
+                // Reload the page without query string
+                window.location.href = "{{ route('leaves.index') }}";
+            });
+
+            // Handle pagination via AJAX
+            $(document).on('click', '#search-result .pagination a', function(e) {
+                e.preventDefault();
+                const url = $(this).attr('href');
+                fetchData(url);
             });
         });
     </script>

@@ -247,11 +247,7 @@ Route::prefix('employees')->group(function () {
 
     });
 
-    // Leave Info Route
-    Route::get('profile/{id}/leave-info', function ($id) {
-        $employee = \App\Models\Employee::findOrFail($id);
-        return view('employees.profile', compact('employee'));
-    })->name('employees.profile.leave_info');
+    Route::get('profile/{id}/leave-info', [LeavesController::class, 'showLeaveInfo'])->name('employees.profile.leave_info');
 
 });
 
@@ -309,7 +305,6 @@ Route::prefix('plans')->group(function () {
             Route::put('update/{id}', 'update')->name('plans.leave_plans.update');
             Route::delete('delete/{id}', 'delete')->name('plans.leave_plans.delete');
             Route::post('import', 'import')->name('plans.leave_plans.import');
-
         });
     });
 

@@ -23,10 +23,4 @@ class LeavePlan extends Model
         'off_day_include',
         'active_ind',
     ];
-
-    protected $casts = [
-        'leave_limit' => 'integer',
-        'max_no_of_days' => 'integer',
-        'display_serial' => 'integer',
-    ];
 }
