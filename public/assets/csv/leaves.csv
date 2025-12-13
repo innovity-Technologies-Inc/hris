@@ -1,0 +1,4 @@
+employee_id,plan_name,from_date,to_date,leave_count,reason,status
+Sys3266,Annual Leave,2025-12-20,2025-12-22,3,Family wedding ceremony,pending
+Sys3266,Annual Leave,2025-12-28,2025-12-30,3,Year-end family gathering,pending
+Sys3266,Annual Leave,2026-01-15,2026-01-17,3,Personal vacation,pending

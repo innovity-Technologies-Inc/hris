@@ -10,7 +10,8 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <form id="bulkUploadForm" action="#" enctype="multipart/form-data" method="POST">
+            <form id="bulkUploadForm" action="{{ route('leaves.import') }}" enctype="multipart/form-data"
+                method="POST">
                 @csrf
 
                 {{-- Modal Body --}}
@@ -35,14 +36,18 @@
                         <div>
                             <h6 class="alert-heading fw-bold mb-2">Important Instructions</h6>
                             <p class="mb-2">Please follow the bulk leave application upload format carefully to ensure
-                                successful
-                                data import.</p>
+                                successful data import.</p>
                             <ul class="mb-0 ps-3">
-                                <li>Download the format template before uploading</li>
-                                <li>Do not modify column headers</li>
-                                <li>Ensure all required fields are filled</li>
-                                <li>Use valid Employee IDs from the system</li>
-                                <li>Date format should be YYYY-MM-DD</li>
+                                <li>Download the CSV or Excel template before uploading</li>
+                                <li>Do not modify column headers (employee_id, plan_name, from_date, to_date,
+                                    leave_count, reason, status)</li>
+                                <li>Ensure all required fields are filled correctly</li>
+                                <li>Use valid Employee System IDs or Applicant IDs from the system</li>
+                                <li>Use valid Leave Plan names (e.g., "Annual Leave", "Sick Leave")</li>
+                                <li>Date format must be YYYY-MM-DD (e.g., 2025-12-20)</li>
+                                <li>Leave count must be within plan's max consecutive days limit</li>
+                                <li>Status must be: pending, approved, or rejected</li>
+                                <li>Ensure employees have active leave plans assigned</li>
                             </ul>
                         </div>
                     </div>
@@ -56,15 +61,18 @@
                                         <i class="mdi mdi-download-circle-outline text-primary me-2"></i>Download Upload
                                         Format
                                     </h6>
-                                    <p class="text-muted small mb-0">Get the official template to fill leave application
-                                        information</p>
+                                    <p class="text-muted small mb-0">Get the official template with sample data to fill
+                                        leave application information</p>
                                 </div>
                                 <div class="d-flex gap-2">
-                                    <a href="#" class="btn btn-success text-decoration-none" id="downloadExcel">
+                                    <a href="{{ asset('samples/leaves_import_template.html') }}"
+                                        class="btn btn-success text-decoration-none"
+                                        download="leaves_import_template.html">
                                         <i class="mdi mdi-file-excel me-1"></i> Excel Format
                                     </a>
-                                    <a href="#" class="btn btn-info text-white text-decoration-none"
-                                        id="downloadCsv">
+                                    <a href="{{ asset('assets/csv/leaves.csv') }}"
+                                        class="btn btn-info text-white text-decoration-none"
+                                        download="leaves_import_template.csv">
                                         <i class="mdi mdi-file-delimited me-1"></i> CSV Format
                                     </a>
                                 </div>
@@ -80,10 +88,11 @@
                         <div class="border border-2 border-dashed rounded-3 p-4 text-center bg-light">
                             <i class="mdi mdi-cloud-upload-outline text-primary mb-3" style="font-size: 3rem;"></i>
                             <h6 class="fw-semibold mb-2">Drag and drop your file here</h6>
-                            <p class="text-muted small mb-3">or click to browse</p>
+                            <p class="text-muted small mb-3">or click to browse from your computer</p>
                             <input type="file" class="form-control w-auto mx-auto" id="fileUpload"
                                 accept=".csv,.xlsx,.xls" name="file" required>
-                            <p class="text-muted small mt-3 mb-0">Supported formats: Excel (.xlsx, .xls) and CSV (.csv)
+                            <p class="text-muted small mt-3 mb-0">Supported formats: Excel (.xlsx, .xls) and CSV (.csv).
+                                Max file size: 5MB
                             </p>
                         </div>
                         @error('file')
@@ -145,12 +154,5 @@
     document.getElementById('bulkUploadModal').addEventListener('hidden.bs.modal', function() {
         document.getElementById('fileUpload').value = '';
         document.getElementById('fileInfo').classList.add('d-none');
-    });
-
-    // Handle form submission (demo)
-    document.getElementById('bulkUploadForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        alert('File uploaded successfully! (Demo mode)');
-        bootstrap.Modal.getInstance(document.getElementById('bulkUploadModal')).hide();
     });
 </script>
