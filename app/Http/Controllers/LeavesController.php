@@ -51,7 +51,7 @@ class LeavesController extends Controller
         $eligibility = EmployeeEligiblePlan::where('employee_id', $employee_id)->first();
         if (isset($eligibility)){
             if ($eligibility->leave_plan_status == 'active'){
-                if ($eligibility->leave_plan_from >= Carbon::today()){
+                if ($eligibility->leave_plan_from <= Carbon::today()){
                     $plans = EmployeeLeavePlan::with('getPlan')
                         ->where('employee_id', $employee_id)->get();
                     return response()->json($plans);
@@ -222,25 +222,27 @@ class LeavesController extends Controller
         ]);
     }
 
-    public function import(Request $request){
+    public function import(Request $request)
+    {
         $request->validate([
             'file' => 'required|mimes:xlsx,xls,csv,txt',
         ]);
 
-        try{
+        try {
             Excel::import(new LeavesImport(), $request->file('file'));
 
             return redirect()->back()->with([
                 'message' => 'Leave requests imported successfully',
                 'alert-type' => 'success'
             ]);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             Log::error('Leave Import Error: ' . $e->getMessage());
             return redirect()->back()->with([
                 'message' => 'Import failed: ' . $e->getMessage(),
                 'alert-type' => 'error'
             ]);
         }
+    }
     public function showLeaveInfo($id){
         $title = 'Employee Leave Information';
         $section = 'Employees';
