@@ -11,6 +11,7 @@ use App\Models\Leave;
 use App\Models\LeaveCount;
 use App\Models\LeavePlan;
 use Carbon\Carbon;
+use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -19,11 +20,28 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class LeavesController extends Controller
 {
-    public function index(){
-        $leaves = Leave::all();
-        return view('leaves.index', compact('leaves'));
+    public function index(FlexSearch $flexsearch, Request $request){
+//        dd($request->all());
+        $query = Leave::with('getEmployee', 'getPlan');
+        $searchableColumns = ['getEmployee.full_name', 'getPlan.name', 'getPlan.leave_type', 'leave_count'];
+        $keyword = $request->input('keyword');
+        $filters = [];
 
+        if ($request->filled('from')) {
+            $filters['from<='] = $request->input('from');
+        }
+
+        if ($request->filled('to')) {
+            $filters['to>='] = $request->input('to');
+        }
+
+        $leaves = $flexsearch->apply($query, $filters, $keyword, $searchableColumns)->paginate(10);
+        if($request->ajax()){
+            return view('leaves.search_results', compact('leaves'))->render();
+        }
+        return view('leaves.index', compact('leaves'));
     }
+
     public function create(){
         $employees = Employee::all();
         return view('leaves.create', compact('employees'));
@@ -223,5 +241,15 @@ class LeavesController extends Controller
                 'alert-type' => 'error'
             ]);
         }
+    public function showLeaveInfo($id){
+        $title = 'Employee Leave Information';
+        $section = 'Employees';
+        $sub_section = 'Profile - Leave Information';
+        $section_url = route('employees.index');
+        $employee = Employee::find($id);
+        $leaveDetails = EmployeeLeavePlan::with( 'leaveCount')->where('employee_id', $id)->get();
+        $leaveHistory = Leave::where('employee_id', $id)->orderBy('id', 'desc')->get();
+        return view('employees.profile', compact('title', 'section', 'sub_section', 'employee', 'leaveDetails', 'leaveHistory', 'section_url'));
+
     }
 }

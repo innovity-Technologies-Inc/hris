@@ -116,94 +116,41 @@
                     <div class="tab-pane fade show active" id="leave-details" role="tabpanel"
                         aria-labelledby="details-tab">
                         <div class="row g-4">
-                            @php
-                                // Dummy data for leave details as objects
-                                $leaveDetails = [
-                                    (object) [
-                                        'name' => 'Annual Leave',
-                                        'type' => 'Paid',
-                                        'status' => 'Active',
-                                        'limit' => 20,
-                                        'taken' => 8,
-                                        'remaining' => 12,
-                                        'badge_color' => 'success',
-                                    ],
-                                    (object) [
-                                        'name' => 'Sick Leave',
-                                        'type' => 'Paid',
-                                        'status' => 'Active',
-                                        'limit' => 15,
-                                        'taken' => 5,
-                                        'remaining' => 10,
-                                        'badge_color' => 'info',
-                                    ],
-                                    (object) [
-                                        'name' => 'Casual Leave',
-                                        'type' => 'Paid',
-                                        'status' => 'Active',
-                                        'limit' => 10,
-                                        'taken' => 7,
-                                        'remaining' => 3,
-                                        'badge_color' => 'primary',
-                                    ],
-                                    (object) [
-                                        'name' => 'Maternity Leave',
-                                        'type' => 'Paid',
-                                        'status' => 'Inactive',
-                                        'limit' => 90,
-                                        'taken' => 0,
-                                        'remaining' => 90,
-                                        'badge_color' => 'warning',
-                                    ],
-                                    (object) [
-                                        'name' => 'Unpaid Leave',
-                                        'type' => 'Unpaid',
-                                        'status' => 'Active',
-                                        'limit' => 30,
-                                        'taken' => 2,
-                                        'remaining' => 28,
-                                        'badge_color' => 'secondary',
-                                    ],
-                                    (object) [
-                                        'name' => 'Study Leave',
-                                        'type' => 'Paid',
-                                        'status' => 'Active',
-                                        'limit' => 5,
-                                        'taken' => 0,
-                                        'remaining' => 5,
-                                        'badge_color' => 'dark',
-                                    ],
-                                ];
-                            @endphp
-
                             @forelse($leaveDetails as $leave)
                                 <div class="col-md-6 col-lg-4">
                                     <div class="leave-card">
                                         <div class="leave-card-header">
-                                            <h5 class="mb-0">{{ $leave->name }}</h5>
-                                            <span class="badge bg-{{ $leave->badge_color }} leave-type-badge">
-                                                {{ $leave->type }}
+                                            <h5 class="mb-0">{{ $leave->getPlan->name }}</h5>
+                                            <span class="badge bg-success">
+                                                {{ $leave->getPlan->leave_type }}
                                             </span>
                                         </div>
 
                                         <div class="mb-2">
                                             <span
-                                                class="badge bg-{{ $leave->status == 'Active' ? 'success' : 'secondary' }}">
-                                                {{ $leave->status }}
+                                                class="badge bg-success">
+                                                Active
                                             </span>
                                         </div>
 
                                         <div class="leave-stats">
                                             <div class="stat-item">
-                                                <span class="stat-value text-primary">{{ $leave->limit }}</span>
+                                                <span class="stat-value text-primary">{{ $leave->getPlan->leave_limit }}</span>
                                                 <span class="stat-label">Limit</span>
                                             </div>
+                                            @php
+                                                if(!empty($leave->leaveCount->leave_taken)) {
+                                                    $taken = $leave->leaveCount->leave_taken;
+                                                }else{
+                                                    $taken = 0;
+                                                }
+                                            @endphp
                                             <div class="stat-item">
-                                                <span class="stat-value text-danger">{{ $leave->taken }}</span>
+                                                <span class="stat-value text-danger">{{ $taken }}</span>
                                                 <span class="stat-label">Taken</span>
                                             </div>
                                             <div class="stat-item">
-                                                <span class="stat-value text-success">{{ $leave->remaining }}</span>
+                                                <span class="stat-value text-success">{{$leave->getPlan->leave_limit - $taken }}</span>
                                                 <span class="stat-label">Remaining</span>
                                             </div>
                                         </div>
@@ -222,75 +169,6 @@
 
                     {{-- Leave History Tab --}}
                     <div class="tab-pane fade" id="leave-history" role="tabpanel" aria-labelledby="history-tab">
-                        @php
-                            // Dummy data for leave history as objects
-                            $leaveHistory = [
-                                (object) [
-                                    'leave_name' => 'Annual Leave',
-                                    'type' => 'Paid',
-                                    'leave_days' => 3,
-                                    'start_date' => '2024-11-15',
-                                    'end_date' => '2024-11-17',
-                                    'status' => 'Approved',
-                                ],
-                                (object) [
-                                    'leave_name' => 'Sick Leave',
-                                    'type' => 'Paid',
-                                    'leave_days' => 2,
-                                    'start_date' => '2024-10-20',
-                                    'end_date' => '2024-10-21',
-                                    'status' => 'Approved',
-                                ],
-                                (object) [
-                                    'leave_name' => 'Casual Leave',
-                                    'type' => 'Paid',
-                                    'leave_days' => 1,
-                                    'start_date' => '2024-10-05',
-                                    'end_date' => '2024-10-05',
-                                    'status' => 'Approved',
-                                ],
-                                (object) [
-                                    'leave_name' => 'Annual Leave',
-                                    'type' => 'Paid',
-                                    'leave_days' => 5,
-                                    'start_date' => '2024-09-10',
-                                    'end_date' => '2024-09-14',
-                                    'status' => 'Approved',
-                                ],
-                                (object) [
-                                    'leave_name' => 'Casual Leave',
-                                    'type' => 'Paid',
-                                    'leave_days' => 2,
-                                    'start_date' => '2024-08-22',
-                                    'end_date' => '2024-08-23',
-                                    'status' => 'Approved',
-                                ],
-                                (object) [
-                                    'leave_name' => 'Sick Leave',
-                                    'type' => 'Paid',
-                                    'leave_days' => 3,
-                                    'start_date' => '2024-07-15',
-                                    'end_date' => '2024-07-17',
-                                    'status' => 'Approved',
-                                ],
-                                (object) [
-                                    'leave_name' => 'Unpaid Leave',
-                                    'type' => 'Unpaid',
-                                    'leave_days' => 2,
-                                    'start_date' => '2024-06-05',
-                                    'end_date' => '2024-06-06',
-                                    'status' => 'Approved',
-                                ],
-                                (object) [
-                                    'leave_name' => 'Casual Leave',
-                                    'type' => 'Paid',
-                                    'leave_days' => 4,
-                                    'start_date' => '2024-05-20',
-                                    'end_date' => '2024-05-23',
-                                    'status' => 'Approved',
-                                ],
-                            ];
-                        @endphp
 
                         <div class="table-responsive">
                             <table class="table table-hover history-table">
@@ -306,30 +184,40 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse($leaveHistory as $index => $history)
+                                @php($sl = 1)
+                                    @forelse($leaveHistory as $item)
                                         <tr>
-                                            <td>{{ $index + 1 }}</td>
+                                            <td>{{ $sl++ }}</td>
                                             <td>
-                                                <strong>{{ $history->leave_name }}</strong>
+                                                <strong>{{ $item->getPlan->name }}</strong>
                                             </td>
                                             <td>
                                                 <span
-                                                    class="badge bg-{{ $history->type == 'Paid' ? 'success' : 'secondary' }}">
-                                                    {{ $history->type }}
+                                                    class="badge bg-success">
+                                                    {{ $item->getPlan->leave_type }}
                                                 </span>
                                             </td>
-                                            <td>{{ date('M d, Y', strtotime($history->start_date)) }}</td>
-                                            <td>{{ date('M d, Y', strtotime($history->end_date)) }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($item->from)->format('jS F, Y') }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($item->to)->format('jS F, Y') }}</td>
                                             <td>
                                                 <span class="badge bg-primary rounded-pill">
-                                                    {{ $history->leave_days }}
-                                                    {{ $history->leave_days > 1 ? 'days' : 'day' }}
+                                                    {{ $item->leave_count }} days
                                                 </span>
                                             </td>
                                             <td>
-                                                <span class="badge bg-success">
-                                                    {{ $history->status }}
+                                                @if($item->status == 'pending')
+                                                <span class="badge bg-warning">
+                                                    {{ ucwords($item->status) }}
                                                 </span>
+                                                @elseif($item->staus == 'approved')
+                                                    <span class="badge bg-success">
+                                                    {{ ucwords($item->status) }}
+                                                </span>
+                                                @elseif($item->staus == 'rejected')
+                                                    <span class="badge bg-danger">
+                                                    {{ ucwords($item->status) }}
+                                                </span>
+                                                    @endif
                                             </td>
                                         </tr>
                                     @empty

@@ -19,4 +19,9 @@ class EmployeeLeavePlan extends Model
     {
         return $this->belongsTo(LeavePlan::class, 'plan_id', 'id');
     }
+    public function leaveCount()
+    {
+        return $this->hasOne(LeaveCount::class, 'plan_id', 'plan_id')
+            ->whereColumn('employee_id', 'employee_id');
+    }
 }

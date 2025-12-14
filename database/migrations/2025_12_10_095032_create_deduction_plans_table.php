@@ -13,10 +13,15 @@ return new class extends Migration
     {
         Schema::create('deduction_plans', function (Blueprint $table) {
             $table->id();
-            $table->decimal('late_deduction', 8, 2)->default(0.00);
-            $table->decimal('early_out_deduction', 8, 2)->default(0.00);
-            $table->decimal('excessive_late_deduction', 8, 2)->default(0.00);
-            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->integer('late_deduction_days')->default(0);
+            $table->decimal('late_salary_deduction_rate', 8, 2)->default(0.00);
+            $table->integer('early_out_deduction_days')->default(0);
+            $table->decimal('early_out_salary_deduction_rate', 8, 2)->default(0.00);
+            $table->integer('excessive_late_deduction_days')->default(0);
+            $table->decimal('excessive_late_salary_deduction_rate', 8, 2)->default(0.00);
+            $table->integer('absent_deduction_days')->default(0);
+            $table->decimal('absent_salary_deduction_rate', 8, 2)->default(0.00);
+            $table->enum('calculation_type', ['gross_salary', 'basic_salary'])->default('gross_salary');
             $table->timestamps();
         });
     }

@@ -375,25 +375,54 @@ class PlanService
     public function deductionPlanValidation($request)
     {
         $validated = $request->validate([
-            'late_deduction' => 'required|numeric|min:0',
-            'early_out_deduction' => 'required|numeric|min:0',
-            'excessive_late_deduction' => 'required|numeric|min:0',
-            'status' => 'required|in:active,inactive',
+            'late_deduction_days' => 'required|integer|min:0',
+            'late_salary_deduction_rate' => 'required|numeric|min:0|max:100',
+            'early_out_deduction_days' => 'required|integer|min:0',
+            'early_out_salary_deduction_rate' => 'required|numeric|min:0|max:100',
+            'excessive_late_deduction_days' => 'required|integer|min:0',
+            'excessive_late_salary_deduction_rate' => 'required|numeric|min:0|max:100',
+            'absent_deduction_days' => 'required|integer|min:0',
+            'absent_salary_deduction_rate' => 'required|numeric|min:0|max:100',
+            'calculation_type' => 'required|in:gross_salary,basic_salary',
         ], [
-            'late_deduction.required' => 'Late deduction amount is required.',
-            'late_deduction.numeric' => 'Late deduction must be a valid number.',
-            'late_deduction.min' => 'Late deduction must be at least 0.',
+            'late_deduction_days.required' => 'Late deduction days is required.',
+            'late_deduction_days.integer' => 'Late deduction days must be a valid number.',
+            'late_deduction_days.min' => 'Late deduction days must be at least 0.',
 
-            'early_out_deduction.required' => 'Early out deduction amount is required.',
-            'early_out_deduction.numeric' => 'Early out deduction must be a valid number.',
-            'early_out_deduction.min' => 'Early out deduction must be at least 0.',
+            'late_salary_deduction_rate.required' => 'Late salary deduction rate is required.',
+            'late_salary_deduction_rate.numeric' => 'Late salary deduction rate must be a valid number.',
+            'late_salary_deduction_rate.min' => 'Late salary deduction rate must be at least 0.',
+            'late_salary_deduction_rate.max' => 'Late salary deduction rate cannot exceed 100.',
 
-            'excessive_late_deduction.required' => 'Excessive late deduction amount is required.',
-            'excessive_late_deduction.numeric' => 'Excessive late deduction must be a valid number.',
-            'excessive_late_deduction.min' => 'Excessive late deduction must be at least 0.',
+            'early_out_deduction_days.required' => 'Early out deduction days is required.',
+            'early_out_deduction_days.integer' => 'Early out deduction days must be a valid number.',
+            'early_out_deduction_days.min' => 'Early out deduction days must be at least 0.',
 
-            'status.required' => 'Please select the plan status.',
-            'status.in' => 'The selected status is invalid.',
+            'early_out_salary_deduction_rate.required' => 'Early out salary deduction rate is required.',
+            'early_out_salary_deduction_rate.numeric' => 'Early out salary deduction rate must be a valid number.',
+            'early_out_salary_deduction_rate.min' => 'Early out salary deduction rate must be at least 0.',
+            'early_out_salary_deduction_rate.max' => 'Early out salary deduction rate cannot exceed 100.',
+
+            'excessive_late_deduction_days.required' => 'Excessive late deduction days is required.',
+            'excessive_late_deduction_days.integer' => 'Excessive late deduction days must be a valid number.',
+            'excessive_late_deduction_days.min' => 'Excessive late deduction days must be at least 0.',
+
+            'excessive_late_salary_deduction_rate.required' => 'Excessive late salary deduction rate is required.',
+            'excessive_late_salary_deduction_rate.numeric' => 'Excessive late salary deduction rate must be a valid number.',
+            'excessive_late_salary_deduction_rate.min' => 'Excessive late salary deduction rate must be at least 0.',
+            'excessive_late_salary_deduction_rate.max' => 'Excessive late salary deduction rate cannot exceed 100.',
+
+            'absent_deduction_days.required' => 'Absent deduction days is required.',
+            'absent_deduction_days.integer' => 'Absent deduction days must be a valid number.',
+            'absent_deduction_days.min' => 'Absent deduction days must be at least 0.',
+
+            'absent_salary_deduction_rate.required' => 'Absent salary deduction rate is required.',
+            'absent_salary_deduction_rate.numeric' => 'Absent salary deduction rate must be a valid number.',
+            'absent_salary_deduction_rate.min' => 'Absent salary deduction rate must be at least 0.',
+            'absent_salary_deduction_rate.max' => 'Absent salary deduction rate cannot exceed 100.',
+
+            'calculation_type.required' => 'Please select the calculation type.',
+            'calculation_type.in' => 'The selected calculation type is invalid.',
         ]);
 
         return $validated;
