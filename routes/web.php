@@ -423,6 +423,7 @@ Route::prefix('leaves')->group(function () {
         Route::post('store', 'store')->name('leaves.store');
         Route::put('change-status', 'changeStatus')->name('leaves.change_status');
         Route::delete('{id}/delete', 'destroy')->name('leaves.destroy');
+        Route::post('import', 'import')->name('leaves.import');
     });
 });
 

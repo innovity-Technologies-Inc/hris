@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Imports\EmployeeEligiblePlanImport;
+use App\Imports\LeavesImport;
 use App\Models\Employee;
 use App\Models\EmployeeEligiblePlan;
 use App\Models\EmployeeLeavePlan;
@@ -15,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 
 class LeavesController extends Controller
 {
@@ -220,6 +222,25 @@ class LeavesController extends Controller
         ]);
     }
 
+    public function import(Request $request){
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv,txt',
+        ]);
+
+        try{
+            Excel::import(new LeavesImport(), $request->file('file'));
+
+            return redirect()->back()->with([
+                'message' => 'Leave requests imported successfully',
+                'alert-type' => 'success'
+            ]);
+        }catch (\Exception $e){
+            Log::error('Leave Import Error: ' . $e->getMessage());
+            return redirect()->back()->with([
+                'message' => 'Import failed: ' . $e->getMessage(),
+                'alert-type' => 'error'
+            ]);
+        }
     public function showLeaveInfo($id){
         $title = 'Employee Leave Information';
         $section = 'Employees';
