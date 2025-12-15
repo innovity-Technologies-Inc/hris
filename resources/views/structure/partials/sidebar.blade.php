@@ -124,7 +124,7 @@
                         <ul class="nav-second-level">
                             <li>
                                 <a class='tp-link @if (request()->is('leaves.create')) menuitem-active @endif'
-                                   href='{{ route('leaves.create') }}'>Application</a>
+                                    href='{{ route('leaves.create') }}'>Application</a>
                             </li>
                             <li>
                                 <a class='tp-link @if (request()->is('leaves.index')) menuitem-active @endif'
@@ -223,6 +223,11 @@
                             <li>
                                 <a class='tp-link @if (Route::is('bank_accounts.*')) menuitem-active @endif'
                                     href='{{ route('bank_accounts.index') }}'>Bank Accounts</a>
+                            </li>
+
+                            <li>
+                                <a class='tp-link @if (Route::is('holidays.*')) menuitem-active @endif'
+                                    href='{{ route('holidays.index') }}'>Holidays</a>
                             </li>
 
                             <li>

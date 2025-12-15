@@ -34,6 +34,7 @@ use App\Http\Controllers\BonusPlanController;
 use App\Http\Controllers\AllowancePlanController;
 use App\Http\Controllers\LeavesController;
 use App\Http\Controllers\DeductionPlanController;
+use App\Http\Controllers\HolidayController;
 
 
 Route::get('test', function () {
@@ -169,6 +170,17 @@ Route::prefix('company-setup')->group(function () {
         Route::get('bank-accounts/{id}/edit', 'edit')->name('bank_accounts.edit');
         Route::put('bank-accounts/{id}', 'update')->name('bank_accounts.update');
         Route::delete('bank-accounts/{id}', 'delete')->name('bank_accounts.delete');
+    });
+
+    Route::controller(HolidayController::class)->group(function () {
+        Route::get('holidays', 'index')->name('holidays.index');
+        Route::get('holidays/create', 'create')->name('holidays.create');
+        Route::post('holidays', 'store')->name('holidays.store');
+        Route::get('holidays/{id}/edit', 'edit')->name('holidays.edit');
+        Route::put('holidays/{id}', 'update')->name('holidays.update');
+        Route::delete('holidays/{id}', 'destroy')->name('holidays.delete');
+        Route::get('holidays/calendar', 'calendar')->name('holidays.calendar');
+        Route::get('holidays/get-holidays', 'getHolidays')->name('holidays.get_holidays');
     });
 });
 
