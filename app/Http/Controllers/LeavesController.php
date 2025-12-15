@@ -47,38 +47,6 @@ class LeavesController extends Controller
         return view('leaves.create', compact('employees'));
     }
 
-    public function getLeavePlan($employee_id){
-        $eligibility = EmployeeEligiblePlan::where('employee_id', $employee_id)->first();
-        if (isset($eligibility)){
-            if ($eligibility->leave_plan_status == 'active'){
-                if ($eligibility->leave_plan_from <= Carbon::today()){
-                    $plans = EmployeeLeavePlan::with('getPlan')
-                        ->where('employee_id', $employee_id)->get();
-                    return response()->json($plans);
-                    }
-                return response()->json(['error' => 'Leave Plan is not active yet']);
-            }
-            return response()->json(['error' => 'Leave Plan is not active yet']);
-        }
-        return response()->json(['error' => 'No Plans Found']);
-    }
-
-    public function getLeaveDetails($employee_id, $plan_id){
-        $plan_name = LeavePlan::where('id', $plan_id)->first()->name;
-        $limit = LeavePlan::where('id', $plan_id)->first()->leave_limit;
-        $leave_count_data = LeaveCount::where('employee_id', $employee_id)->where('plan_id', $plan_id)->first();
-        if ($leave_count_data){
-            $taken = $leave_count_data->leave_taken;
-        }else{
-            $taken = 0;
-        }
-        return response()->json([
-            'name' => $plan_name,
-            'limit' => $limit,
-            'taken' => $taken
-        ]);
-    }
-
     public function store(Request $request){
         $employee_id = $request->input('employee_id');
         $plan_id = $request->input('plan_id');

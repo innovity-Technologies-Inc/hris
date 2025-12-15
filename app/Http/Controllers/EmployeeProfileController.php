@@ -235,46 +235,12 @@ class EmployeeProfileController extends Controller
 
     }
 
-
     public function bulkEmployeeImportSections(){
         $title = 'Import Employee Information';
         $section = 'Employees';
         $sub_section = 'Import';
         $section_url = route('employees.index');
         return view('employees.bulk_uploads.form', compact('title', 'section', 'sub_section', 'section_url'));
-    }
-
-
-
-    public function getUnit($company_id){
-        $units = $this->empServices->getUnit($company_id);
-        return response()->json($units);
-
-    }
-
-    public function getDivision($company_id, $location_id){
-        $divisions = $this->empServices->getDivision($company_id, $location_id);
-        return response()->json($divisions);
-    }
-
-    public function getDepartment($company_id, $location_id, $division_id){
-        $departments = $this->empServices->getDepartment($company_id, $location_id, $division_id);
-        return response()->json($departments);
-    }
-
-    public function getSection($company_id, $location_id, $division_id, $department_id){
-        $sections = $this->empServices->getSection($company_id, $location_id, $division_id, $department_id);
-        return response()->json($sections);
-    }
-
-    public function getGradeByAct($tofsil_id){
-        $grades = $this->empServices->getGradeByAct($tofsil_id);
-        return response()->json($grades);
-    }
-
-    public function getBranchesByBank($bank_id){
-        $branches= $this->empServices->getBranchesByBank($bank_id);
-        return response()->json($branches);
     }
 
 }

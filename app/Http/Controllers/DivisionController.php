@@ -15,21 +15,19 @@ class DivisionController extends Controller
         $section = 'Division Setup';
         $sub_section = 'Company Divisions';
         $divisions = Division::latest()->paginate(10);
-        $companies = Company::all();
-        $locations = CompanyLocation::all();
-        return view('company_setup.divisions.index', compact('title', 'section', 'sub_section', 'divisions', 'companies', 'locations'));
+        return view('company_setup.divisions.index', compact('title', 'section', 'sub_section', 'divisions'));
     }
     public function create()
     {
         $companies = Company::all();
-        $locations = CompanyLocation::all();
-        return view('company_setup.divisions.form', compact('companies', 'locations'));
+        return view('company_setup.divisions.form', compact('companies'));
     }
     public function store(Request $request)
     {
         $validatedData = $request->validate(
             [
                 'company_id' => 'required',
+                'location_id' => 'nullable|string|max:255',
                 'name' => 'required|string|max:255',
                 'short_name' => 'required|string|max:50',
                 'status' => 'required|in:active,inactive',
@@ -64,6 +62,7 @@ class DivisionController extends Controller
         $request->validate(
             [
                 'company_id' => 'required',
+                'location_id' => 'nullable|string|max:255',
                 'name' => 'required|string|max:255',
                 'short_name' => 'required|string|max:50',
                 'status' => 'required',

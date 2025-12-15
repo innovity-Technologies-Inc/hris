@@ -84,7 +84,6 @@ class LeavesImport implements ToCollection
         // Find employee
         $employee = Employee::where('system_id', $employeeIdentifier)
             ->orWhere('applicant_id', $employeeIdentifier)
-            ->orWhere('id', $employeeIdentifier)
             ->first();
 
         if (!$employee) {
@@ -115,7 +114,7 @@ class LeavesImport implements ToCollection
             throw new \Exception("Leave plan is not active for employee {$employee->system_id}");
         }
 
-        if ($eligibility->leave_plan_from > Carbon::today()) {
+        if ($eligibility->leave_plan_from <= Carbon::today()) {
             throw new \Exception("Leave plan has not started yet for employee {$employee->system_id}");
         }
 

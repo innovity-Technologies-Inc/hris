@@ -34,7 +34,7 @@ use App\Http\Controllers\BonusPlanController;
 use App\Http\Controllers\AllowancePlanController;
 use App\Http\Controllers\LeavesController;
 use App\Http\Controllers\DeductionPlanController;
-
+use App\Http\Controllers\DataController;
 
 Route::get('test', function () {
    return view('plans.deduction_plans.form');
@@ -46,6 +46,7 @@ Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
 
 Route::prefix('company-setup')->group(function () {
+
     Route::get('bulk-upload', function () {
         return view('company_setup.bulk_uploads.form');
     })->name('company_setup.bulk_upload');
@@ -251,19 +252,6 @@ Route::prefix('employees')->group(function () {
 
 });
 
-Route::controller(EmployeePlansController::class)->group(function (){
-    Route::get('get-meal-plans/{type}', 'getMealPlanByType');
-    Route::get('get-meal-plan-details/{id}', 'getMealPlanDetails');
-    Route::get('get-offday-plan-details/{id}', 'getOffDayPlanDetails');
-    Route::get('get-ot-plan-details/{id}', 'getOtPlanDetails');
-    Route::get('get-shift-plan-details/{id}', 'getShiftPlanDetails');
-    Route::get('get-roster-plan-details/{id}', 'getRosterPlanDetails');
-    Route::get('get-bonus-plan-details/{id}', 'getBonusPlanDetails');
-    Route::get('get-leave-plan-details/{id}', 'getLeavePlanDetails');
-
-
-});
-
 
 Route::prefix('plans')->group(function () {
     Route::get('bulk-upload', function () {
@@ -347,6 +335,7 @@ Route::prefix('plans')->group(function () {
             Route::post('import', 'import')->name('plans.off_day_plans.import');
         });
     });
+
     Route::prefix('bonus-plans')->group(function () {
         Route::controller(BonusPlanController::class)->group(function(){
             Route::get('/', 'index')->name('plans.bonus_plans.index');
@@ -385,20 +374,6 @@ Route::prefix('plans')->group(function () {
 
 });
 
-Route::controller(EmployeeProfileController::class)->group(function () {
-    Route::get('get-grades/{tofsil_id}', 'getGradeByAct');
-    Route::get('get-units/{company_id}', 'getUnit');
-    Route::get('get-divisions/{company_id}/{unit_id}', 'getDivision');
-    Route::get('get-departments/{company_id}/{unit_id}/{division_id}', 'getDepartment');
-    Route::get('get-sections/{company_id}/{unit_id}/{division_id}/{department_id}', 'getSection');
-    Route::get('get-branches/{bank_id}', 'getBranchesByBank');
-});
-
-
-Route::controller(RosterPlansController::class)->group(function () {
-    Route::get('get-shift-details/{shift_id}', 'getShiftDetails');
-});
-
 Route::controller(OrganizationStructureController::class)->group(function () {
     Route::get('organization-structure', 'index')->name('organization-structure.index');
     Route::get('organization-structure/create', 'create')->name('organization-structure.create');
@@ -427,8 +402,30 @@ Route::prefix('leaves')->group(function () {
     });
 });
 
-Route::controller(LeavesController::class)->group(function () {
+Route::controller(DataController::class)->group(function () {
+
+    //company-details
+    Route::get('get-grades/{tofsil_id}', 'getGradeByAct');
+    Route::get('get-units/{company_id}', 'getUnit');
+    Route::get('get-divisions/{company_id}/{unit_id}', 'getDivision');
+    Route::get('get-departments/{company_id}/{unit_id}/{division_id}', 'getDepartment');
+    Route::get('get-sections/{company_id}/{unit_id}/{division_id}/{department_id}', 'getSection');
+    Route::get('get-branches/{bank_id}', 'getBranchesByBank');
+
+    //plan_details
+    Route::get('get-meal-plans/{type}', 'getMealPlanByType');
+    Route::get('get-meal-plan-details/{id}', 'getMealPlanDetails');
+    Route::get('get-offday-plan-details/{id}', 'getOffDayPlanDetails');
+    Route::get('get-ot-plan-details/{id}', 'getOtPlanDetails');
+    Route::get('get-shift-plan-details/{id}', 'getShiftPlanDetails');
+    Route::get('get-roster-plan-details/{id}', 'getRosterPlanDetails');
+    Route::get('get-bonus-plan-details/{id}', 'getBonusPlanDetails');
+    Route::get('get-leave-plan-details/{id}', 'getLeavePlanDetails');
+    Route::get('get-shift-details/{shift_id}', 'getShiftDetails');
+
+    //leave-details
     Route::get('get-leave-plans/{employee_id}', 'getLeavePlan');
     Route::get('get-leave-details/{employee_id}/{plan_id}', 'getLeaveDetails');
+
 });
 
