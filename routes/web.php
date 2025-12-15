@@ -33,7 +33,7 @@ use App\Http\Controllers\EmployeePlansController;
 
 
 Route::get('test', function () {
-   return view('leave');
+   return view('attendance.daily_sheet');
 });
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');

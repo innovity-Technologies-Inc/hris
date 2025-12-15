@@ -812,6 +812,7 @@
         });
     });
 </script>
+@stack('scripts')
 
 </body>
 
