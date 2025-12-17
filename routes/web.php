@@ -400,6 +400,31 @@ Route::prefix('leaves')->group(function () {
         Route::delete('{id}/delete', 'destroy')->name('leaves.destroy');
         Route::post('import', 'import')->name('leaves.import');
     });
+
+    // Employee Movement Routes
+    Route::prefix('movement')->group(function () {
+        Route::get('/', function () {
+            return view('leaves.movement.index');
+        })->name('leaves.movement.index');
+
+        Route::get('create', function () {
+            return view('leaves.movement.create');
+        })->name('leaves.movement.create');
+
+        Route::get('{id}/edit', function ($id) {
+            return view('leaves.movement.create', ['id' => $id]);
+        })->name('leaves.movement.edit');
+
+        Route::delete('{id}/delete', function ($id) {
+            // Delete logic would go here
+            return redirect()->route('leaves.movement.index')->with('success', 'Movement deleted successfully');
+        })->name('leaves.movement.destroy');
+
+        Route::post('import', function () {
+            // Import logic would go here
+            return redirect()->route('leaves.movement.index')->with('success', 'Movement records imported successfully');
+        })->name('leaves.movement.import');
+    });
 });
 
 Route::controller(DataController::class)->group(function () {

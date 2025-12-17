@@ -124,11 +124,15 @@
                         <ul class="nav-second-level">
                             <li>
                                 <a class='tp-link @if (request()->is('leaves.create')) menuitem-active @endif'
-                                   href='{{ route('leaves.create') }}'>Application</a>
+                                    href='{{ route('leaves.create') }}'>Application</a>
                             </li>
                             <li>
                                 <a class='tp-link @if (request()->is('leaves.index')) menuitem-active @endif'
                                     href='{{ route('leaves.index') }}'>Logs</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (request()->is('leaves/movement*')) menuitem-active @endif'
+                                    href='{{ route('leaves.movement.index') }}'>Movement</a>
                             </li>
                         </ul>
                     </div>
