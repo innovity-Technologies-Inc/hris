@@ -130,6 +130,10 @@
                                 <a class='tp-link @if (request()->is('leaves.index')) menuitem-active @endif'
                                     href='{{ route('leaves.index') }}'>Logs</a>
                             </li>
+                            <li>
+                                <a class='tp-link @if (request()->is('leaves/movement*')) menuitem-active @endif'
+                                    href='{{ route('leaves.movement.index') }}'>Movement</a>
+                            </li>
                         </ul>
                     </div>
                 </li>

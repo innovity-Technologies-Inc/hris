@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('remarks')->nullable();
             $table->enum('status', ['active', 'inactive']);
             $table->unsignedBigInteger('company_id');
+            $table->unsignedBigInteger('location_id')->nullable();
             $table->timestamps();
         });
     }

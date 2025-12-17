@@ -62,6 +62,26 @@
                                         @enderror
                                     </div>
 
+                                    @if(\App\HelperClass::getGeneralSetting()->branch_status == 1)
+                                        <div class="col-md-6 mb-2">
+                                            <label for="location_id" class="form-label">Branch <span
+                                                class="text-danger">*</span></label>
+                                            <select class="form-select select2_list" name="location_id" id="location_id">
+                                            <option value="">Choose Branch</option>
+                                                @if(isset($division))
+                                                @foreach ($locations as $item)
+                                                    <option value="{{$item->id}}" {{isset($division) && $division->location_id == $item->id ? 'selected' : ''}}>
+                                                        {{$item->name}}</option>
+                                                @endforeach
+                                                @endif
+                                            </select>
+                                            @error('location_id')
+                                            <small class="text-danger">{{ $message }}</small>
+                                            @enderror
+                                        </div>
+                                    @endif
+
+
 
                                     <div class="col-md-6 mb-2">
                                         <label for="status" class="form-label">Status</label>
@@ -90,4 +110,39 @@
             </div>
         </div>
     </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $('#company_id').on('change', function () {
+                let companyId = $(this).val();
+
+                $('#location_id').html('<option value="">Loading...</option>');
+
+                if (companyId) {
+                    $.ajax({
+                        url: "/get-units/" + companyId,
+                        type: "GET",
+                        success: function (data) {
+                            $('#location_id').empty();
+                            $('#location_id').append('<option value="">Select Location</option>');
+
+                            $.each(data, function (key, value) {
+                                $('#location_id').append(
+                                    '<option value="' + value.id + '">' + value.name + '</option>'
+                                );
+                            });
+                        }
+                    });
+                } else {
+                    $('#location_id').html('<option value="">Select Location</option>');
+                }
+            });
+
+        });
+    </script>
+
 @endsection
