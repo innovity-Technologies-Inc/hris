@@ -372,6 +372,58 @@ class PlanService
         return $validated;
     }
 
+    public function taPlanValidation($request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'short_name' => 'nullable|string|max:100',
+            'remuneration' => 'required|numeric|min:0',
+            'status' => 'required|in:active,inactive',
+        ], [
+            'name.required' => 'TA plan name is required.',
+            'name.string' => 'TA plan name must be a string.',
+            'name.max' => 'TA plan name may not exceed 255 characters.',
+
+            'short_name.string' => 'Short name must be a string.',
+            'short_name.max' => 'Short name may not exceed 100 characters.',
+
+            'remuneration.required' => 'Remuneration per KM is required.',
+            'remuneration.numeric' => 'Remuneration must be a valid number.',
+            'remuneration.min' => 'Remuneration must be at least 0.',
+
+            'status.required' => 'Please select the plan status.',
+            'status.in' => 'The selected status is invalid.',
+        ]);
+
+        return $validated;
+    }
+
+    public function daPlanValidation($request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'short_name' => 'nullable|string|max:100',
+            'remuneration' => 'required|numeric|min:0',
+            'status' => 'required|in:active,inactive',
+        ], [
+            'name.required' => 'DA plan name is required.',
+            'name.string' => 'DA plan name must be a string.',
+            'name.max' => 'DA plan name may not exceed 255 characters.',
+
+            'short_name.string' => 'Short name must be a string.',
+            'short_name.max' => 'Short name may not exceed 100 characters.',
+
+            'remuneration.required' => 'Remuneration per meal is required.',
+            'remuneration.numeric' => 'Remuneration must be a valid number.',
+            'remuneration.min' => 'Remuneration must be at least 0.',
+
+            'status.required' => 'Please select the plan status.',
+            'status.in' => 'The selected status is invalid.',
+        ]);
+
+        return $validated;
+    }
+
     public function deductionPlanValidation($request)
     {
         $validated = $request->validate([

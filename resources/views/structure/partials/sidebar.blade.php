@@ -100,6 +100,14 @@
                                     href='{{ route('plans.allowance_plans.index') }}'>Allowance Plans</a>
                             </li>
                             <li>
+                                <a class='tp-link @if (Route::is('plans.ta_plans.*')) menuitem-active @endif'
+                                    href='{{ route('plans.ta_plans.index') }}'>TA Plans</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('plans.da_plans.*')) menuitem-active @endif'
+                                    href='{{ route('plans.da_plans.index') }}'>DA Plans</a>
+                            </li>
+                            <li>
                                 <a class='tp-link @if (Route::is('plans.deduction_plans.*')) menuitem-active @endif'
                                     href='{{ route('plans.deduction_plans.index') }}'>Deduction Plan</a>
                             </li>

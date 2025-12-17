@@ -276,6 +276,64 @@
                                 </div>
                             </div>
 
+                            <!-- Section 9 - TA Plan -->
+                            <div class="col-md-4">
+                                <div class="card h-100 border shadow-sm professional-card">
+                                    <div class="card-body p-4">
+                                        <div class="d-flex align-items-start mb-3">
+                                            <span
+                                                class="badge bg-dark text-white rounded-circle me-3 d-flex align-items-center justify-content-center fw-bold"
+                                                style="width: 36px; height: 36px; font-size: 14px;">9</span>
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1 fw-semibold text-dark">TA Plans</h6>
+                                                <p class="text-muted small mb-0" style="font-size: 0.813rem;">Transport
+                                                    Allowance
+                                                    plan details</p>
+                                            </div>
+                                        </div>
+                                        <button type="button"
+                                            class="btn btn-outline-dark btn-sm w-100 text-uppercase fw-semibold"
+                                            style="font-size: 0.75rem; letter-spacing: 0.5px;" data-bs-toggle="modal"
+                                            data-bs-target="#bulkUploadModal" data-section="ta-plan"
+                                            data-section-name="TA Plan" data-section-number="9"
+                                            data-form-action="{{ route('plans.ta_plans.import') }}"
+                                            data-excel-link="{{ asset('assets/excel/ta_plans.xlsx') }}"
+                                            data-csv-link="{{ asset('assets/csv/ta_plans.csv') }}">
+                                            <i class="bi bi-upload me-2"></i>Upload
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Section 10 - DA Plan -->
+                            <div class="col-md-4">
+                                <div class="card h-100 border shadow-sm professional-card">
+                                    <div class="card-body p-4">
+                                        <div class="d-flex align-items-start mb-3">
+                                            <span
+                                                class="badge bg-dark text-white rounded-circle me-3 d-flex align-items-center justify-content-center fw-bold"
+                                                style="width: 36px; height: 36px; font-size: 14px;">10</span>
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1 fw-semibold text-dark">DA Plans</h6>
+                                                <p class="text-muted small mb-0" style="font-size: 0.813rem;">Dining
+                                                    Allowance
+                                                    plan details</p>
+                                            </div>
+                                        </div>
+                                        <button type="button"
+                                            class="btn btn-outline-dark btn-sm w-100 text-uppercase fw-semibold"
+                                            style="font-size: 0.75rem; letter-spacing: 0.5px;" data-bs-toggle="modal"
+                                            data-bs-target="#bulkUploadModal" data-section="da-plan"
+                                            data-section-name="DA Plan" data-section-number="10"
+                                            data-form-action="{{ route('plans.da_plans.import') }}"
+                                            data-excel-link="{{ asset('assets/excel/da_plans.xlsx') }}"
+                                            data-csv-link="{{ asset('assets/csv/da_plans.csv') }}">
+                                            <i class="bi bi-upload me-2"></i>Upload
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
 
 
