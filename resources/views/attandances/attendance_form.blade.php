@@ -98,7 +98,7 @@
                             </div>
                             <div>
                                 <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                                    data-bs-target="#bulkUploadModal">
+                                        data-bs-target="#bulkUploadModal">
                                     <i class="bi bi-upload me-2"></i>Bulk Upload
                                 </button>
                             </div>
@@ -122,8 +122,8 @@
                                                     Attendance Record
                                                 </h6>
                                                 <button type="button"
-                                                    class="btn btn-sm btn-outline-danger remove-entry-btn"
-                                                    style="display: none;">
+                                                        class="btn btn-sm btn-outline-danger remove-entry-btn"
+                                                        style="display: none;">
                                                     <i class="bi bi-trash"></i> Remove
                                                 </button>
                                             </div>
@@ -135,13 +135,13 @@
                                                         Employee Name <span class="text-danger">*</span>
                                                     </label>
                                                     <select name="attendance[0][employee_id]" id="employee_id_0"
-                                                        class="form-select select2_list" required>
+                                                            class="form-select select2_list" required>
                                                         <option value="">Select Employee</option>
                                                         @foreach ($employees as $employee)
                                                             <option value="{{ $employee->id }}"
-                                                                data-employee-id="{{ $employee->employee_id }}"
-                                                                data-designation="{{ $employee->designation }}"
-                                                                data-department="{{ $employee->department }}">
+                                                                    data-employee-id="{{ $employee->employee_id }}"
+                                                                    data-designation="{{ $employee->designation }}"
+                                                                    data-department="{{ $employee->department }}">
                                                                 {{ $employee->name }} ({{ $employee->employee_id }})
                                                             </option>
                                                         @endforeach
@@ -155,7 +155,7 @@
                                                         Clock In <span class="text-danger">*</span>
                                                     </label>
                                                     <input type="datetime-local" name="attendance[0][clock_in]"
-                                                        id="clock_in_0" class="form-control" required>
+                                                           id="clock_in_0" class="form-control" required>
                                                     <div class="invalid-feedback">Please enter clock in time.</div>
                                                 </div>
 
@@ -165,7 +165,7 @@
                                                         Clock Out <span class="text-danger">*</span>
                                                     </label>
                                                     <input type="datetime-local" name="attendance[0][clock_out]"
-                                                        id="clock_out_0" class="form-control" required>
+                                                           id="clock_out_0" class="form-control" required>
                                                     <div class="invalid-feedback">Please enter clock out time.</div>
                                                 </div>
                                             </div>
@@ -197,33 +197,32 @@
         </div>
     </div>
     <!-- Bulk Upload Modal -->
-    @include('attendance.partials.bulk_upload_modal', ['employees' => $employees])
+    @include('attandances.partials.bulk_upload_modal', ['employees' => $employees])
 @endsection
 @push('scripts')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             let entryIndex = 0;
             const employeesData = @json($employees);
 
-          
 
             // Add New Entry
-            $('#addEntryBtn').on('click', function() {
+            $('#addEntryBtn').on('click', function () {
                 entryIndex++;
                 addNewEntry(entryIndex);
             });
 
             // Remove Entry
-            $(document).on('click', '.remove-entry-btn', function() {
+            $(document).on('click', '.remove-entry-btn', function () {
                 const entryWrapper = $(this).closest('.attendance-entry-wrapper');
-                entryWrapper.fadeOut(300, function() {
+                entryWrapper.fadeOut(300, function () {
                     $(this).remove();
                     updateEntryNumbers();
                 });
             });
 
             // Form Submission
-            $('#attendanceForm').on('submit', function(e) {
+            $('#attendanceForm').on('submit', function (e) {
                 e.preventDefault();
 
                 if (this.checkValidity()) {
@@ -323,7 +322,7 @@
 
             // Update entry numbers after removal
             function updateEntryNumbers() {
-                $('.attendance-entry-wrapper').each(function(idx) {
+                $('.attendance-entry-wrapper').each(function (idx) {
                     $(this).find('.badge').text(`Entry ${idx + 1}`);
                 });
                 updateRemoveButtons();
@@ -339,7 +338,7 @@
                 }
             }
 
-            
+
         });
     </script>
 @endpush

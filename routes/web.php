@@ -37,7 +37,8 @@ use App\Http\Controllers\DAPlanController;
 use App\Http\Controllers\LeavesController;
 use App\Http\Controllers\DeductionPlanController;
 use App\Http\Controllers\HolidayController;
-
+use App\Http\Controllers\DataController;
+use App\Http\Controllers\AttandancesController;
 
 Route::get('test', function () {
    return view('attendance.daily_sheet');
@@ -491,4 +492,8 @@ Route::controller(DataController::class)->group(function () {
     Route::get('get-leave-details/{employee_id}/{plan_id}', 'getLeaveDetails');
 
 });
+
+    Route::controller(AttandancesController::class)->group(function (){
+       Route::get('attendances', 'index')->name('attendances.index');
+    });
 

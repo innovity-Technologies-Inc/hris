@@ -21,6 +21,9 @@ use Maatwebsite\Excel\Facades\Excel;
 class LeavesController extends Controller
 {
     public function index(FlexSearch $flexsearch, Request $request){
+        $title = 'Leave Logs';
+        $section = 'Leave Management';
+        $sub_section = 'Logs';
 //        dd($request->all());
         $query = Leave::with('getEmployee', 'getPlan');
         $searchableColumns = ['getEmployee.full_name', 'getPlan.name', 'getPlan.leave_type', 'leave_count'];
@@ -39,12 +42,15 @@ class LeavesController extends Controller
         if($request->ajax()){
             return view('leaves.search_results', compact('leaves'))->render();
         }
-        return view('leaves.index', compact('leaves'));
+        return view('leaves.index', compact('leaves', 'title', 'section', 'sub_section'));
     }
 
     public function create(){
+        $title = 'Leave Application';
+        $section = 'Leave Management';
+        $sub_section = 'Application';
         $employees = Employee::all();
-        return view('leaves.create', compact('employees'));
+        return view('leaves.create', compact('employees', 'title', 'section', 'sub_section'));
     }
 
     public function store(Request $request){
