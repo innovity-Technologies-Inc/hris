@@ -230,6 +230,11 @@
                             </li>
 
                             <li>
+                                <a class='tp-link @if (Route::is('holidays.*')) menuitem-active @endif'
+                                    href='{{ route('holidays.index') }}'>Holidays</a>
+                            </li>
+
+                            <li>
                                 <a class='tp-link @if (Route::is('job_creations.*')) menuitem-active @endif'
                                     href='{{ route('job_creations.index') }}'>Job Creations</a>
                             </li>
