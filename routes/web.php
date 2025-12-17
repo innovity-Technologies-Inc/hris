@@ -33,6 +33,7 @@ use App\Http\Controllers\EmployeePlansController;
 use App\Http\Controllers\BonusPlanController;
 use App\Http\Controllers\AllowancePlanController;
 use App\Http\Controllers\TAPlanController;
+use App\Http\Controllers\DAPlanController;
 use App\Http\Controllers\LeavesController;
 use App\Http\Controllers\DeductionPlanController;
 use App\Http\Controllers\DataController;
@@ -372,6 +373,18 @@ Route::prefix('plans')->group(function () {
             Route::put('update/{id}', 'update')->name('plans.ta_plans.update');
             Route::delete('delete/{id}', 'delete')->name('plans.ta_plans.delete');
             Route::post('import', 'import')->name('plans.ta_plans.import');
+        });
+    });
+
+    Route::prefix('da-plans')->group(function () {
+        Route::controller(DAPlanController::class)->group(function(){
+            Route::get('/', 'index')->name('plans.da_plans.index');
+            Route::get('create', 'create')->name('plans.da_plans.create');
+            Route::post('store', 'store')->name('plans.da_plans.store');
+            Route::get('edit/{id}', 'edit')->name('plans.da_plans.edit');
+            Route::put('update/{id}', 'update')->name('plans.da_plans.update');
+            Route::delete('delete/{id}', 'delete')->name('plans.da_plans.delete');
+            Route::post('import', 'import')->name('plans.da_plans.import');
         });
     });
 

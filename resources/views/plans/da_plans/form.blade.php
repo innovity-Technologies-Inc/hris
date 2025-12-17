@@ -5,7 +5,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-title mb-0">{{ isset($plan) ? 'Edit' : 'Add' }} Transport Allowance Plan</h5>
+                    <h5 class="card-title mb-0">{{ isset($plan) ? 'Edit' : 'Add' }} Dining Allowance Plan</h5>
                 </div>
                 <div class="card-body">
                     @if ($errors->any())
@@ -21,7 +21,7 @@
                     @endif
 
                     <form
-                        action="{{ isset($plan) ? route('plans.ta_plans.update', $plan->id) : route('plans.ta_plans.store') }}"
+                        action="{{ isset($plan) ? route('plans.da_plans.update', $plan->id) : route('plans.da_plans.store') }}"
                         method="POST" enctype="multipart/form-data">
                         @csrf
                         @if (isset($plan))
@@ -38,10 +38,10 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label for="name" class="form-label fw-semibold">Transport Allowance Plan Name
-                                            <span class="text-danger">*</span></label>
+                                        <label for="name" class="form-label fw-semibold"> Dining Allowance Plan Name <span
+                                                class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="name" name="name"
-                                            placeholder="E.g., Standard TA, Executive TA"
+                                            placeholder="E.g., Standard DA, Executive DA"
                                             value="{{ isset($plan) ? $plan->name : old('name') }}" required>
 
                                         @error('name')
@@ -51,7 +51,7 @@
                                     <div class="col-md-6 mb-3">
                                         <label for="short_name" class="form-label fw-semibold">Short Name</label>
                                         <input type="text" class="form-control" id="short_name" name="short_name"
-                                            placeholder="E.g., STA, ETA"
+                                            placeholder="E.g., SDA, EDA"
                                             value="{{ isset($plan) ? $plan->short_name : old('short_name') }}">
                                         @error('short_name')
                                             <span class="text-danger">{{ $message }}</span>
@@ -61,13 +61,12 @@
 
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label for="remuneration" class="form-label fw-semibold">Remuneration / KM
+                                        <label for="remuneration" class="form-label fw-semibold">Remuneration
                                             ({{ \App\HelperClass::getGeneralSetting()->currency ?? 'Tk' }}) <span
                                                 class="text-danger">*</span></label>
                                         <input type="number" class="form-control" id="remuneration" name="remuneration"
                                             placeholder="Enter remuneration amount" step="0.01" min="0"
                                             value="{{ isset($plan) ? $plan->remuneration : old('remuneration') }}" required>
-                                        <small class="text-muted">Remuneration per meal</small>
                                         @error('remuneration')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
@@ -95,11 +94,11 @@
 
                         <!-- Form Actions -->
                         <div class="d-flex justify-content-end gap-2">
-                            <a href="{{ route('plans.ta_plans.index') }}" class="btn btn-secondary">
+                            <a href="{{ route('plans.da_plans.index') }}" class="btn btn-secondary">
                                 <i class="mdi mdi-arrow-left me-1"></i> Cancel
                             </a>
                             <button type="submit" class="btn btn-primary">
-                                <i class="mdi mdi-check me-1"></i> {{ isset($plan) ? 'Update' : 'Create' }} TA Plan
+                                <i class="mdi mdi-check me-1"></i> {{ isset($plan) ? 'Update' : 'Create' }} DA Plan
                             </button>
                         </div>
                     </form>

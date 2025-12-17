@@ -3,7 +3,7 @@
         <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">TA Plan Name</th>
+                <th scope="col">Dining Allowance Plan Name</th>
                 <th scope="col">Short Name</th>
                 <th scope="col">Remuneration</th>
                 <th scope="col">Status</th>
@@ -21,7 +21,7 @@
                     </td>
                     <td>
                         <span class="badge bg-success">{{ \App\HelperClass::getGeneralSetting()->currency ?? 'Tk' }}
-                            {{ number_format($item->remuneration, 2) }} / KM</span>
+                            {{ number_format($item->remuneration, 2) }}</span>
                     </td>
                     <td>
                         @if ($item->status == 'active')
@@ -32,11 +32,11 @@
                     </td>
                     <td>
                         <a type="button" class="btn btn-warning btn-sm"
-                            href="{{ route('plans.ta_plans.edit', $item->id) }}" title="Edit">
+                            href="{{ route('plans.da_plans.edit', $item->id) }}" title="Edit">
                             <i style="height: 12px; width: 12px" data-feather="edit"></i>
                         </a>
 
-                        <form action="{{ route('plans.ta_plans.delete', $item->id) }}" method="POST"
+                        <form action="{{ route('plans.da_plans.delete', $item->id) }}" method="POST"
                             style="display: inline-block">
                             @csrf
                             @method('DELETE')
