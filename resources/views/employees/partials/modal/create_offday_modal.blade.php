@@ -7,9 +7,9 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <form method="POST" action="{{route('employees.profile.plans.store', 'offday-plans')}}">
+                @csrf
 
             <div class="modal-body">
-                    @csrf
                     <input type="hidden" name="employee_id" value="{{ $employee->id }}">
                     <div class="row g-3">
                         <div class="col-md-6">
@@ -102,16 +102,13 @@
     </div>
 </div>
 
-<script src="{{asset('assets/libs/jquery/jquery.min.js')}}"></script>
-
-
 <script>
     $(function() {
 
         // ============================
         // 🚀 Show Off Day Plan Details
         // ============================
-        $('#modal_offday_plan_id').on('change', function () {
+        $(document).on('change', '#modal_offday_plan_id', function () {
             let planId = $(this).val();
 
             if (!planId) {

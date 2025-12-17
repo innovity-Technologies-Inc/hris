@@ -18,4 +18,9 @@ class Division extends Model
     {
         return $this->belongsTo(Company::class, 'company_id', 'id');
     }
+
+    public function getLocation()
+    {
+        return $this->belongsTo(CompanyLocation::class, 'location_id', 'id');
+    }
 }

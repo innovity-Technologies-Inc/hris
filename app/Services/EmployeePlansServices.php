@@ -2,7 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\EmployeeMealPlan;
+use App\Models\MealPlan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class EmployeePlansServices
 {
@@ -22,7 +25,40 @@ class EmployeePlansServices
         }
     }
 
-    public function planDelete($modelName, $id)
+    public function multipleActivePlanSave($validated, $modelName)
+    {
+        $validated['status'] = 'active';
+            $plan = $modelName::create($validated);
+            return $plan;
+    }
+
+    public function mealPlanSave($validated, $request)
+    {
+        $validated['status'] = 'active';
+        $meal_type = $request->meal_type;
+        $meal_plan = EmployeeMealPlan::with('getPlan')->where('status', 'active')->
+            whereHas('getPlan', function ($q) use ($meal_type){
+                $q->where('type', $meal_type);
+        })->first();
+        if (empty($meal_plan)) {
+            $meal_plan = EmployeeMealPlan::create($validated);
+            return $meal_plan;
+        }else{
+            DB::transaction(function () use ($validated, $meal_plan) {
+                $meal_plan->update(['status' => 'inactive']);
+                $meal_plan = EmployeeMealPlan::create($validated);
+                return $meal_plan;
+            });
+        }
+    }
+
+    public function planRemove($id, $modelName){
+        $plan = $modelName::findOrFail($id);
+        $plan->update(['status' => 'inactive']);
+        return $plan;
+    }
+
+    public function planDelete($id, $modelName)
     {
         $plan = $modelName::findOrFail($id);
         $plan->delete();

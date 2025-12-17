@@ -24,19 +24,19 @@
                                                 class="badge text-bg-info">{{ ucwords(str_replace('_', ' ', $item->ot_type)) }}</span>
                                         </td>
                                         <td>
-                                            @if ($item->ot_config_type == 'salary_based')
+                                            @if ($item->ot_config_type == 'Salary Based')
                                                 <span class="badge text-bg-primary">Salary Based</span>
                                             @else
                                                 <span class="badge text-bg-success">Custom</span>
                                             @endif
                                         </td>
                                         <td>
-                                            @if ($item->ot_config_type == 'salary_based')
-                                                @if ($item->salary_rate_type == 'multiplier' && $item->overtime_multiplier)
+                                            @if ($item->ot_config_type == 'Salary Based')
+                                                @if ($item->salary_rate_type == 'Multiplier' && $item->overtime_multiplier)
                                                     <span
                                                         class="badge text-bg-secondary">{{ number_format($item->overtime_multiplier, 2) }}x
                                                         Base Rate</span>
-                                                @elseif ($item->salary_rate_type == 'basic_rate')
+                                                @elseif ($item->salary_rate_type == 'Basic Rate')
                                                     <span class="badge text-bg-secondary">Basic Rate</span>
                                                 @else
                                                     <span class="text-muted">-</span>

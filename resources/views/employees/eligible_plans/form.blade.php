@@ -1,7 +1,7 @@
 @extends('structure.master')
 @section('content')
-    @if(Route::currentRouteNamed('employees.eligible_plans.create'))
-    @include('employees.partials.creation_button')
+    @if (Route::currentRouteNamed('employees.eligible_plans.create'))
+        @include('employees.partials.creation_button')
     @endif
     <div class="mt-4">
         <form class="" method="POST" enctype="multipart/form-data"
@@ -25,8 +25,7 @@
                                 <div class="col-lg-6 mb-3">
                                     <label for="employee_id" class="form-label">Employee Name <span
                                             class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" readonly
-                                           value="{{ $employee->full_name }}">
+                                    <input type="text" class="form-control" readonly value="{{ $employee->full_name }}">
 
                                     <input type="hidden" name="employee_id" value="{{ $employee->id }}">
 
@@ -167,13 +166,13 @@
                                     </div>
                                 </div>
 
-                                <!-- Day Off Work Plan -->
+                                <!-- Off Day Work Plan -->
                                 <div class="col-md-6 mb-3">
                                     <div class="card border h-100">
                                         <div
                                             class="card-header bg-light d-flex justify-content-between align-items-center">
                                             <h6 class="mb-0 fw-semibold">
-                                                <i class="mdi mdi-beach text-warning me-2"></i>Day Off Work Plan
+                                                <i class="mdi mdi-beach text-warning me-2"></i>Off Day Work Plan
                                             </h6>
                                             <div class="form-check form-switch mb-0">
                                                 <input type="hidden" name="day_off_work_plan_status" value="inactive">
@@ -334,132 +333,40 @@
                                     </div>
                                 </div>
 
-                                <!-- Attendance Bonus Plan -->
+                                <!-- Meal Plan -->
                                 <div class="col-md-6 mb-3">
                                     <div class="card border h-100">
                                         <div
                                             class="card-header bg-light d-flex justify-content-between align-items-center">
                                             <h6 class="mb-0 fw-semibold">
-                                                <i class="mdi mdi-star text-warning me-2"></i>Attendance Bonus Plan
+                                                <i class="mdi mdi-food text-success me-2"></i>Meal Plan
                                             </h6>
                                             <div class="form-check form-switch mb-0">
-                                                <input type="hidden" name="attendance_bonus_plan_status"
-                                                    value="inactive">
-                                                <input class="form-check-input" type="checkbox"
-                                                    name="attendance_bonus_plan_status" id="attendance_bonus_plan_status"
-                                                    value="active"
-                                                    {{ (isset($employeePlan) && $employeePlan->attendance_bonus_plan_status == 'active') || old('attendance_bonus_plan_status') == 'active' ? 'checked' : '' }}>
-                                                <label class="form-check-label"
-                                                    for="attendance_bonus_plan_status">Active</label>
+                                                <input type="hidden" name="meal_plan_status" value="inactive">
+                                                <input class="form-check-input" type="checkbox" name="meal_plan_status"
+                                                    id="meal_plan_status" value="active"
+                                                    {{ (isset($employeePlan) && $employeePlan->meal_plan_status == 'active') || old('meal_plan_status') == 'active' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="meal_plan_status">Active</label>
                                             </div>
                                         </div>
                                         <div class="card-body">
                                             <div class="mb-3">
-                                                <label for="attendance_bonus_plan_from" class="form-label">From
-                                                    Date</label>
+                                                <label for="meal_plan_from" class="form-label">From Date</label>
                                                 <input type="date"
-                                                    class="form-control @error('attendance_bonus_plan_from') is-invalid @enderror"
-                                                    id="attendance_bonus_plan_from" name="attendance_bonus_plan_from"
-                                                    value="{{ isset($employeePlan) && $employeePlan->attendance_bonus_plan_from ? $employeePlan->attendance_bonus_plan_from->format('Y-m-d') : old('attendance_bonus_plan_from') }}">
-                                                @error('attendance_bonus_plan_from')
+                                                    class="form-control @error('meal_plan_from') is-invalid @enderror"
+                                                    id="meal_plan_from" name="meal_plan_from"
+                                                    value="{{ isset($employeePlan) && $employeePlan->meal_plan_from ? $employeePlan->meal_plan_from->format('Y-m-d') : old('meal_plan_from') }}">
+                                                @error('meal_plan_from')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
                                             <div class="mb-0">
-                                                <label for="attendance_bonus_plan_to" class="form-label">To Date</label>
+                                                <label for="meal_plan_to" class="form-label">To Date</label>
                                                 <input type="date"
-                                                    class="form-control @error('attendance_bonus_plan_to') is-invalid @enderror"
-                                                    id="attendance_bonus_plan_to" name="attendance_bonus_plan_to"
-                                                    value="{{ isset($employeePlan) && $employeePlan->attendance_bonus_plan_to ? $employeePlan->attendance_bonus_plan_to->format('Y-m-d') : old('attendance_bonus_plan_to') }}">
-                                                @error('attendance_bonus_plan_to')
-                                                    <small class="text-danger">{{ $message }}</small>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Production Plan -->
-                                <div class="col-md-6 mb-3">
-                                    <div class="card border h-100">
-                                        <div
-                                            class="card-header bg-light d-flex justify-content-between align-items-center">
-                                            <h6 class="mb-0 fw-semibold">
-                                                <i class="mdi mdi-factory text-danger me-2"></i>Production Plan
-                                            </h6>
-                                            <div class="form-check form-switch mb-0">
-                                                <input type="hidden" name="production_plan_status" value="inactive">
-                                                <input class="form-check-input" type="checkbox"
-                                                    name="production_plan_status" id="production_plan_status"
-                                                    value="active"
-                                                    {{ (isset($employeePlan) && $employeePlan->production_plan_status == 'active') || old('production_plan_status') == 'active' ? 'checked' : '' }}>
-                                                <label class="form-check-label"
-                                                    for="production_plan_status">Active</label>
-                                            </div>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="mb-3">
-                                                <label for="production_plan_from" class="form-label">From Date</label>
-                                                <input type="date"
-                                                    class="form-control @error('production_plan_from') is-invalid @enderror"
-                                                    id="production_plan_from" name="production_plan_from"
-                                                    value="{{ isset($employeePlan) && $employeePlan->production_plan_from ? $employeePlan->production_plan_from->format('Y-m-d') : old('production_plan_from') }}">
-                                                @error('production_plan_from')
-                                                    <small class="text-danger">{{ $message }}</small>
-                                                @enderror
-                                            </div>
-                                            <div class="mb-0">
-                                                <label for="production_plan_to" class="form-label">To Date</label>
-                                                <input type="date"
-                                                    class="form-control @error('production_plan_to') is-invalid @enderror"
-                                                    id="production_plan_to" name="production_plan_to"
-                                                    value="{{ isset($employeePlan) && $employeePlan->production_plan_to ? $employeePlan->production_plan_to->format('Y-m-d') : old('production_plan_to') }}">
-                                                @error('production_plan_to')
-                                                    <small class="text-danger">{{ $message }}</small>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Salary Breakdown Plan -->
-                                <div class="col-md-6 mb-3">
-                                    <div class="card border h-100">
-                                        <div
-                                            class="card-header bg-light d-flex justify-content-between align-items-center">
-                                            <h6 class="mb-0 fw-semibold">
-                                                <i class="mdi mdi-currency-usd text-success me-2"></i>Salary Breakdown Plan
-                                            </h6>
-                                            <div class="form-check form-switch mb-0">
-                                                <input type="hidden" name="salary_breakdown_plan_status"
-                                                    value="inactive">
-                                                <input class="form-check-input" type="checkbox"
-                                                    name="salary_breakdown_plan_status" id="salary_breakdown_plan_status"
-                                                    value="active"
-                                                    {{ (isset($employeePlan) && $employeePlan->salary_breakdown_plan_status == 'active') || old('salary_breakdown_plan_status') == 'active' ? 'checked' : '' }}>
-                                                <label class="form-check-label"
-                                                    for="salary_breakdown_plan_status">Active</label>
-                                            </div>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="mb-3">
-                                                <label for="salary_breakdown_plan_from" class="form-label">From
-                                                    Date</label>
-                                                <input type="date"
-                                                    class="form-control @error('salary_breakdown_plan_from') is-invalid @enderror"
-                                                    id="salary_breakdown_plan_from" name="salary_breakdown_plan_from"
-                                                    value="{{ isset($employeePlan) && $employeePlan->salary_breakdown_plan_from ? $employeePlan->salary_breakdown_plan_from->format('Y-m-d') : old('salary_breakdown_plan_from') }}">
-                                                @error('salary_breakdown_plan_from')
-                                                    <small class="text-danger">{{ $message }}</small>
-                                                @enderror
-                                            </div>
-                                            <div class="mb-0">
-                                                <label for="salary_breakdown_plan_to" class="form-label">To Date</label>
-                                                <input type="date"
-                                                    class="form-control @error('salary_breakdown_plan_to') is-invalid @enderror"
-                                                    id="salary_breakdown_plan_to" name="salary_breakdown_plan_to"
-                                                    value="{{ isset($employeePlan) && $employeePlan->salary_breakdown_plan_to ? $employeePlan->salary_breakdown_plan_to->format('Y-m-d') : old('salary_breakdown_plan_to') }}">
-                                                @error('salary_breakdown_plan_to')
+                                                    class="form-control @error('meal_plan_to') is-invalid @enderror"
+                                                    id="meal_plan_to" name="meal_plan_to"
+                                                    value="{{ isset($employeePlan) && $employeePlan->meal_plan_to ? $employeePlan->meal_plan_to->format('Y-m-d') : old('meal_plan_to') }}">
+                                                @error('meal_plan_to')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
@@ -634,296 +541,6 @@
                                                     id="medical_plan_to" name="medical_plan_to"
                                                     value="{{ isset($employeePlan) && $employeePlan->medical_plan_to ? $employeePlan->medical_plan_to->format('Y-m-d') : old('medical_plan_to') }}">
                                                 @error('medical_plan_to')
-                                                    <small class="text-danger">{{ $message }}</small>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Night Bill Plan -->
-                                <div class="col-md-6 mb-3">
-                                    <div class="card border h-100">
-                                        <div
-                                            class="card-header bg-light d-flex justify-content-between align-items-center">
-                                            <h6 class="mb-0 fw-semibold">
-                                                <i class="mdi mdi-weather-night text-primary me-2"></i>Night Bill Plan
-                                            </h6>
-                                            <div class="form-check form-switch mb-0">
-                                                <input type="hidden" name="night_bill_plan_status" value="inactive">
-                                                <input class="form-check-input" type="checkbox"
-                                                    name="night_bill_plan_status" id="night_bill_plan_status"
-                                                    value="active"
-                                                    {{ (isset($employeePlan) && $employeePlan->night_bill_plan_status == 'active') || old('night_bill_plan_status') == 'active' ? 'checked' : '' }}>
-                                                <label class="form-check-label"
-                                                    for="night_bill_plan_status">Active</label>
-                                            </div>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="mb-3">
-                                                <label for="night_bill_plan_from" class="form-label">From Date</label>
-                                                <input type="date"
-                                                    class="form-control @error('night_bill_plan_from') is-invalid @enderror"
-                                                    id="night_bill_plan_from" name="night_bill_plan_from"
-                                                    value="{{ isset($employeePlan) && $employeePlan->night_bill_plan_from ? $employeePlan->night_bill_plan_from->format('Y-m-d') : old('night_bill_plan_from') }}">
-                                                @error('night_bill_plan_from')
-                                                    <small class="text-danger">{{ $message }}</small>
-                                                @enderror
-                                            </div>
-                                            <div class="mb-0">
-                                                <label for="night_bill_plan_to" class="form-label">To Date</label>
-                                                <input type="date"
-                                                    class="form-control @error('night_bill_plan_to') is-invalid @enderror"
-                                                    id="night_bill_plan_to" name="night_bill_plan_to"
-                                                    value="{{ isset($employeePlan) && $employeePlan->night_bill_plan_to ? $employeePlan->night_bill_plan_to->format('Y-m-d') : old('night_bill_plan_to') }}">
-                                                @error('night_bill_plan_to')
-                                                    <small class="text-danger">{{ $message }}</small>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Breakfast Plan -->
-                                <div class="col-md-6 mb-3">
-                                    <div class="card border h-100">
-                                        <div
-                                            class="card-header bg-light d-flex justify-content-between align-items-center">
-                                            <h6 class="mb-0 fw-semibold">
-                                                <i class="mdi mdi-coffee text-warning me-2"></i>Breakfast Plan
-                                            </h6>
-                                            <div class="form-check form-switch mb-0">
-                                                <input type="hidden" name="breakfast_plan_status" value="inactive">
-                                                <input class="form-check-input" type="checkbox"
-                                                    name="breakfast_plan_status" id="breakfast_plan_status"
-                                                    value="active"
-                                                    {{ (isset($employeePlan) && $employeePlan->breakfast_plan_status == 'active') || old('breakfast_plan_status') == 'active' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="breakfast_plan_status">Active</label>
-                                            </div>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="mb-3">
-                                                <label for="breakfast_plan_from" class="form-label">From Date</label>
-                                                <input type="date"
-                                                    class="form-control @error('breakfast_plan_from') is-invalid @enderror"
-                                                    id="breakfast_plan_from" name="breakfast_plan_from"
-                                                    value="{{ isset($employeePlan) && $employeePlan->breakfast_plan_from ? $employeePlan->breakfast_plan_from->format('Y-m-d') : old('breakfast_plan_from') }}">
-                                                @error('breakfast_plan_from')
-                                                    <small class="text-danger">{{ $message }}</small>
-                                                @enderror
-                                            </div>
-                                            <div class="mb-0">
-                                                <label for="breakfast_plan_to" class="form-label">To Date</label>
-                                                <input type="date"
-                                                    class="form-control @error('breakfast_plan_to') is-invalid @enderror"
-                                                    id="breakfast_plan_to" name="breakfast_plan_to"
-                                                    value="{{ isset($employeePlan) && $employeePlan->breakfast_plan_to ? $employeePlan->breakfast_plan_to->format('Y-m-d') : old('breakfast_plan_to') }}">
-                                                @error('breakfast_plan_to')
-                                                    <small class="text-danger">{{ $message }}</small>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Lunch Plan -->
-                                <div class="col-md-6 mb-3">
-                                    <div class="card border h-100">
-                                        <div
-                                            class="card-header bg-light d-flex justify-content-between align-items-center">
-                                            <h6 class="mb-0 fw-semibold">
-                                                <i class="mdi mdi-food text-success me-2"></i>Lunch Plan
-                                            </h6>
-                                            <div class="form-check form-switch mb-0">
-                                                <input type="hidden" name="lunch_plan_status" value="inactive">
-                                                <input class="form-check-input" type="checkbox" name="lunch_plan_status"
-                                                    id="lunch_plan_status" value="active"
-                                                    {{ (isset($employeePlan) && $employeePlan->lunch_plan_status == 'active') || old('lunch_plan_status') == 'active' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="lunch_plan_status">Active</label>
-                                            </div>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="mb-3">
-                                                <label for="lunch_plan_from" class="form-label">From Date</label>
-                                                <input type="date"
-                                                    class="form-control @error('lunch_plan_from') is-invalid @enderror"
-                                                    id="lunch_plan_from" name="lunch_plan_from"
-                                                    value="{{ isset($employeePlan) && $employeePlan->lunch_plan_from ? $employeePlan->lunch_plan_from->format('Y-m-d') : old('lunch_plan_from') }}">
-                                                @error('lunch_plan_from')
-                                                    <small class="text-danger">{{ $message }}</small>
-                                                @enderror
-                                            </div>
-                                            <div class="mb-0">
-                                                <label for="lunch_plan_to" class="form-label">To Date</label>
-                                                <input type="date"
-                                                    class="form-control @error('lunch_plan_to') is-invalid @enderror"
-                                                    id="lunch_plan_to" name="lunch_plan_to"
-                                                    value="{{ isset($employeePlan) && $employeePlan->lunch_plan_to ? $employeePlan->lunch_plan_to->format('Y-m-d') : old('lunch_plan_to') }}">
-                                                @error('lunch_plan_to')
-                                                    <small class="text-danger">{{ $message }}</small>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Tiffin Plan -->
-                                <div class="col-md-6 mb-3">
-                                    <div class="card border h-100">
-                                        <div
-                                            class="card-header bg-light d-flex justify-content-between align-items-center">
-                                            <h6 class="mb-0 fw-semibold">
-                                                <i class="mdi mdi-food-variant text-info me-2"></i>Tiffin Plan
-                                            </h6>
-                                            <div class="form-check form-switch mb-0">
-                                                <input type="hidden" name="tiffin_plan_status" value="inactive">
-                                                <input class="form-check-input" type="checkbox" name="tiffin_plan_status"
-                                                    id="tiffin_plan_status" value="active"
-                                                    {{ (isset($employeePlan) && $employeePlan->tiffin_plan_status == 'active') || old('tiffin_plan_status') == 'active' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="tiffin_plan_status">Active</label>
-                                            </div>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="mb-3">
-                                                <label for="tiffin_plan_from" class="form-label">From Date</label>
-                                                <input type="date"
-                                                    class="form-control @error('tiffin_plan_from') is-invalid @enderror"
-                                                    id="tiffin_plan_from" name="tiffin_plan_from"
-                                                    value="{{ isset($employeePlan) && $employeePlan->tiffin_plan_from ? $employeePlan->tiffin_plan_from->format('Y-m-d') : old('tiffin_plan_from') }}">
-                                                @error('tiffin_plan_from')
-                                                    <small class="text-danger">{{ $message }}</small>
-                                                @enderror
-                                            </div>
-                                            <div class="mb-0">
-                                                <label for="tiffin_plan_to" class="form-label">To Date</label>
-                                                <input type="date"
-                                                    class="form-control @error('tiffin_plan_to') is-invalid @enderror"
-                                                    id="tiffin_plan_to" name="tiffin_plan_to"
-                                                    value="{{ isset($employeePlan) && $employeePlan->tiffin_plan_to ? $employeePlan->tiffin_plan_to->format('Y-m-d') : old('tiffin_plan_to') }}">
-                                                @error('tiffin_plan_to')
-                                                    <small class="text-danger">{{ $message }}</small>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Dinner Plan -->
-                                <div class="col-md-6 mb-3">
-                                    <div class="card border h-100">
-                                        <div
-                                            class="card-header bg-light d-flex justify-content-between align-items-center">
-                                            <h6 class="mb-0 fw-semibold">
-                                                <i class="mdi mdi-silverware-fork-knife text-primary me-2"></i>Dinner Plan
-                                            </h6>
-                                            <div class="form-check form-switch mb-0">
-                                                <input type="hidden" name="dinner_plan_status" value="inactive">
-                                                <input class="form-check-input" type="checkbox" name="dinner_plan_status"
-                                                    id="dinner_plan_status" value="active"
-                                                    {{ (isset($employeePlan) && $employeePlan->dinner_plan_status == 'active') || old('dinner_plan_status') == 'active' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="dinner_plan_status">Active</label>
-                                            </div>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="mb-3">
-                                                <label for="dinner_plan_from" class="form-label">From Date</label>
-                                                <input type="date"
-                                                    class="form-control @error('dinner_plan_from') is-invalid @enderror"
-                                                    id="dinner_plan_from" name="dinner_plan_from"
-                                                    value="{{ isset($employeePlan) && $employeePlan->dinner_plan_from ? $employeePlan->dinner_plan_from->format('Y-m-d') : old('dinner_plan_from') }}">
-                                                @error('dinner_plan_from')
-                                                    <small class="text-danger">{{ $message }}</small>
-                                                @enderror
-                                            </div>
-                                            <div class="mb-0">
-                                                <label for="dinner_plan_to" class="form-label">To Date</label>
-                                                <input type="date"
-                                                    class="form-control @error('dinner_plan_to') is-invalid @enderror"
-                                                    id="dinner_plan_to" name="dinner_plan_to"
-                                                    value="{{ isset($employeePlan) && $employeePlan->dinner_plan_to ? $employeePlan->dinner_plan_to->format('Y-m-d') : old('dinner_plan_to') }}">
-                                                @error('dinner_plan_to')
-                                                    <small class="text-danger">{{ $message }}</small>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Snacks Plan -->
-                                <div class="col-md-6 mb-3">
-                                    <div class="card border h-100">
-                                        <div
-                                            class="card-header bg-light d-flex justify-content-between align-items-center">
-                                            <h6 class="mb-0 fw-semibold">
-                                                <i class="mdi mdi-cookie text-warning me-2"></i>Snacks Plan
-                                            </h6>
-                                            <div class="form-check form-switch mb-0">
-                                                <input type="hidden" name="snacks_plan_status" value="inactive">
-                                                <input class="form-check-input" type="checkbox" name="snacks_plan_status"
-                                                    id="snacks_plan_status" value="active"
-                                                    {{ (isset($employeePlan) && $employeePlan->snacks_plan_status == 'active') || old('snacks_plan_status') == 'active' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="snacks_plan_status">Active</label>
-                                            </div>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="mb-3">
-                                                <label for="snacks_plan_from" class="form-label">From Date</label>
-                                                <input type="date"
-                                                    class="form-control @error('snacks_plan_from') is-invalid @enderror"
-                                                    id="snacks_plan_from" name="snacks_plan_from"
-                                                    value="{{ isset($employeePlan) && $employeePlan->snacks_plan_from ? $employeePlan->snacks_plan_from->format('Y-m-d') : old('snacks_plan_from') }}">
-                                                @error('snacks_plan_from')
-                                                    <small class="text-danger">{{ $message }}</small>
-                                                @enderror
-                                            </div>
-                                            <div class="mb-0">
-                                                <label for="snacks_plan_to" class="form-label">To Date</label>
-                                                <input type="date"
-                                                    class="form-control @error('snacks_plan_to') is-invalid @enderror"
-                                                    id="snacks_plan_to" name="snacks_plan_to"
-                                                    value="{{ isset($employeePlan) && $employeePlan->snacks_plan_to ? $employeePlan->snacks_plan_to->format('Y-m-d') : old('snacks_plan_to') }}">
-                                                @error('snacks_plan_to')
-                                                    <small class="text-danger">{{ $message }}</small>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Food Com Plan -->
-                                <div class="col-md-6 mb-3">
-                                    <div class="card border h-100">
-                                        <div
-                                            class="card-header bg-light d-flex justify-content-between align-items-center">
-                                            <h6 class="mb-0 fw-semibold">
-                                                <i class="mdi mdi-food-apple text-danger me-2"></i>Food Com Plan
-                                            </h6>
-                                            <div class="form-check form-switch mb-0">
-                                                <input type="hidden" name="food_com_plan_status" value="inactive">
-                                                <input class="form-check-input" type="checkbox"
-                                                    name="food_com_plan_status" id="food_com_plan_status" value="active"
-                                                    {{ (isset($employeePlan) && $employeePlan->food_com_plan_status == 'active') || old('food_com_plan_status') == 'active' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="food_com_plan_status">Active</label>
-                                            </div>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="mb-3">
-                                                <label for="food_com_plan_from" class="form-label">From Date</label>
-                                                <input type="date"
-                                                    class="form-control @error('food_com_plan_from') is-invalid @enderror"
-                                                    id="food_com_plan_from" name="food_com_plan_from"
-                                                    value="{{ isset($employeePlan) && $employeePlan->food_com_plan_from ? $employeePlan->food_com_plan_from->format('Y-m-d') : old('food_com_plan_from') }}">
-                                                @error('food_com_plan_from')
-                                                    <small class="text-danger">{{ $message }}</small>
-                                                @enderror
-                                            </div>
-                                            <div class="mb-0">
-                                                <label for="food_com_plan_to" class="form-label">To Date</label>
-                                                <input type="date"
-                                                    class="form-control @error('food_com_plan_to') is-invalid @enderror"
-                                                    id="food_com_plan_to" name="food_com_plan_to"
-                                                    value="{{ isset($employeePlan) && $employeePlan->food_com_plan_to ? $employeePlan->food_com_plan_to->format('Y-m-d') : old('food_com_plan_to') }}">
-                                                @error('food_com_plan_to')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>

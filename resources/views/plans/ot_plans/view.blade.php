@@ -49,13 +49,13 @@
                         <label class="text-muted small">Configuration Type</label>
                         <p class="fw-semibold mb-0">
                             <span class="badge bg-primary">
-                                {{ $plan->ot_config_type == 'salary_based' ? 'Based on Salary' : 'Custom Rate' }}
+                                {{ $plan->ot_config_type == 'Salary Based' ? 'Based on Salary' : 'Custom Rate' }}
                             </span>
                         </p>
                     </div>
                 </div>
 
-                @if ($plan->ot_config_type == 'salary_based')
+                @if ($plan->ot_config_type == 'Salary Based')
                     <!-- Salary Based Configuration -->
                     <div class="border rounded p-3 bg-light">
                         <h6 class="fw-semibold mb-3 text-primary">
@@ -66,11 +66,11 @@
                                 <label class="text-muted small">Rate Type</label>
                                 <p class="fw-semibold mb-0">
                                     <span class="badge bg-info">
-                                        {{ $plan->salary_rate_type == 'basic_rate' ? 'Basic Rate' : 'Multiplier' }}
+                                        {{ $plan->salary_rate_type == 'Basic Rate' ? 'Basic Rate' : 'Multiplier' }}
                                     </span>
                                 </p>
                             </div>
-                            @if ($plan->salary_rate_type == 'multiplier')
+                            @if ($plan->salary_rate_type == 'Multiplier')
                                 <div class="col-md-6 mb-3">
                                     <label class="text-muted small">Overtime Multiplier</label>
                                     <p class="fw-semibold mb-0">

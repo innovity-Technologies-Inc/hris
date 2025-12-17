@@ -5,31 +5,36 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use App\Models\CompanyLocation;
 use App\Models\Division;
+use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 
 class DivisionController extends Controller
 {
-    public function index()
+    public function index(Request $request, FlexSearch $flexsearch)
     {
         $title = 'Company Divisions';
         $section = 'Division Setup';
         $sub_section = 'Company Divisions';
-        $divisions = Division::latest()->paginate(10);
-        $companies = Company::all();
-        $locations = CompanyLocation::all();
-        return view('company_setup.divisions.index', compact('title', 'section', 'sub_section', 'divisions', 'companies', 'locations'));
+        $query = Division::query()->with(['getCompany', 'getLocation']);
+        $searchTerm = $request->get('keyword');
+        $searchableFields = ['getCompany.name', 'name', 'short_name', 'getLocation.name'];
+        $divisions = $flexsearch->apply( $query, [], $searchTerm, $searchableFields)->orderBy('id', 'desc')->paginate(10);
+        if ($request->ajax()) {
+            return view('company_setup.divisions.search_results', compact('divisions'))->render();
+        }
+        return view('company_setup.divisions.index', compact('title', 'section', 'sub_section', 'divisions'));
     }
     public function create()
     {
         $companies = Company::all();
-        $locations = CompanyLocation::all();
-        return view('company_setup.divisions.form', compact('companies', 'locations'));
+        return view('company_setup.divisions.form', compact('companies'));
     }
     public function store(Request $request)
     {
         $validatedData = $request->validate(
             [
                 'company_id' => 'required',
+                'location_id' => 'nullable|string|max:255',
                 'name' => 'required|string|max:255',
                 'short_name' => 'required|string|max:50',
                 'status' => 'required|in:active,inactive',
@@ -64,6 +69,7 @@ class DivisionController extends Controller
         $request->validate(
             [
                 'company_id' => 'required',
+                'location_id' => 'nullable|string|max:255',
                 'name' => 'required|string|max:255',
                 'short_name' => 'required|string|max:50',
                 'status' => 'required',

@@ -9,8 +9,9 @@ class Department extends Model
     protected $fillable = [
         'department_name',
         'short_name',
-        'job_number_code',
         'division_id',
+        'location_id',
+        'company_id',
         'status',
     ];
 

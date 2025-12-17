@@ -145,8 +145,8 @@ class PlanService
             'ot_type' => 'required|in:regular,holiday,night_shift,weekend,other',
 
             // Configuration fields
-            'ot_config_type' => 'required|in:salary_based,custom',
-            'salary_rate_type' => 'required_if:ot_config_type,salary_based|nullable|in:basic_rate,multiplier',
+            'ot_config_type' => 'required|in:Salary Based,Custom',
+            'salary_rate_type' => 'required_if:ot_config_type,Salary Based|nullable|in:Basic Rate,Multiplier',
             'overtime_multiplier' => 'nullable|numeric|min:0',
             'custom_overtime_rate' => 'nullable|numeric|min:0',
 
@@ -299,6 +299,132 @@ class PlanService
             'remuneration.required' => 'Remuneration amount is required.',
             'remuneration.numeric' => 'Remuneration must be a valid number.',
         ]);
+        return $validated;
+    }
+
+    public function bonusPlanValidation($request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'bonus_type' => 'required|in:festival,performance,annual,incentive,retention,other',
+
+            // Configuration fields
+            'bonus_config_type' => 'required|in:Salary Based,Custom',
+            'salary_rate_type' => 'required_if:bonus_config_type,Salary Based|nullable|in:Basic Rate,Multiplier',
+            'overtime_multiplier' => 'nullable|numeric|min:0',
+            'custom_overtime_rate' => 'nullable|numeric|min:0',
+
+            'status' => 'required|in:active,inactive',
+        ], [
+            'name.required' => 'Bonus plan name is required.',
+            'name.string' => 'Bonus plan name must be a string.',
+            'name.max' => 'Bonus plan name may not exceed 255 characters.',
+
+            'bonus_type.required' => 'Please select a bonus type.',
+            'bonus_type.in' => 'The selected bonus type is invalid.',
+
+            'bonus_config_type.required' => 'Please select a configuration type.',
+            'bonus_config_type.in' => 'The selected configuration type is invalid.',
+
+            'salary_rate_type.required_if' => 'Please select a rate type when using salary-based configuration.',
+            'salary_rate_type.in' => 'The selected rate type is invalid.',
+
+            'overtime_multiplier.numeric' => 'Overtime multiplier must be a number.',
+            'overtime_multiplier.min' => 'Overtime multiplier must be at least 0.',
+
+            'custom_overtime_rate.numeric' => 'Custom overtime rate must be a number.',
+            'custom_overtime_rate.min' => 'Custom overtime rate must be at least 0.',
+
+            'status.required' => 'Please select the plan status.',
+            'status.in' => 'The selected status is invalid.',
+        ]);
+
+        return $validated;
+    }
+
+    public function allowancePlanValidation($request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'short_name' => 'nullable|string|max:100',
+            'amount' => 'required|numeric|min:0',
+            'description' => 'nullable|string',
+            'status' => 'required|in:active,inactive',
+        ], [
+            'name.required' => 'Allowance plan name is required.',
+            'name.string' => 'Allowance plan name must be a string.',
+            'name.max' => 'Allowance plan name may not exceed 255 characters.',
+
+            'short_name.string' => 'Short name must be a string.',
+            'short_name.max' => 'Short name may not exceed 100 characters.',
+
+            'amount.required' => 'Amount is required.',
+            'amount.numeric' => 'Amount must be a valid number.',
+            'amount.min' => 'Amount must be at least 0.',
+
+            'description.string' => 'Description must be a string.',
+
+            'status.required' => 'Please select the plan status.',
+            'status.in' => 'The selected status is invalid.',
+        ]);
+
+        return $validated;
+    }
+
+    public function deductionPlanValidation($request)
+    {
+        $validated = $request->validate([
+            'late_deduction_days' => 'required|integer|min:0',
+            'late_salary_deduction_rate' => 'required|numeric|min:0|max:100',
+            'early_out_deduction_days' => 'required|integer|min:0',
+            'early_out_salary_deduction_rate' => 'required|numeric|min:0|max:100',
+            'excessive_late_deduction_days' => 'required|integer|min:0',
+            'excessive_late_salary_deduction_rate' => 'required|numeric|min:0|max:100',
+            'absent_deduction_days' => 'required|integer|min:0',
+            'absent_salary_deduction_rate' => 'required|numeric|min:0|max:100',
+            'calculation_type' => 'required|in:gross_salary,basic_salary',
+        ], [
+            'late_deduction_days.required' => 'Late deduction days is required.',
+            'late_deduction_days.integer' => 'Late deduction days must be a valid number.',
+            'late_deduction_days.min' => 'Late deduction days must be at least 0.',
+
+            'late_salary_deduction_rate.required' => 'Late salary deduction rate is required.',
+            'late_salary_deduction_rate.numeric' => 'Late salary deduction rate must be a valid number.',
+            'late_salary_deduction_rate.min' => 'Late salary deduction rate must be at least 0.',
+            'late_salary_deduction_rate.max' => 'Late salary deduction rate cannot exceed 100.',
+
+            'early_out_deduction_days.required' => 'Early out deduction days is required.',
+            'early_out_deduction_days.integer' => 'Early out deduction days must be a valid number.',
+            'early_out_deduction_days.min' => 'Early out deduction days must be at least 0.',
+
+            'early_out_salary_deduction_rate.required' => 'Early out salary deduction rate is required.',
+            'early_out_salary_deduction_rate.numeric' => 'Early out salary deduction rate must be a valid number.',
+            'early_out_salary_deduction_rate.min' => 'Early out salary deduction rate must be at least 0.',
+            'early_out_salary_deduction_rate.max' => 'Early out salary deduction rate cannot exceed 100.',
+
+            'excessive_late_deduction_days.required' => 'Excessive late deduction days is required.',
+            'excessive_late_deduction_days.integer' => 'Excessive late deduction days must be a valid number.',
+            'excessive_late_deduction_days.min' => 'Excessive late deduction days must be at least 0.',
+
+            'excessive_late_salary_deduction_rate.required' => 'Excessive late salary deduction rate is required.',
+            'excessive_late_salary_deduction_rate.numeric' => 'Excessive late salary deduction rate must be a valid number.',
+            'excessive_late_salary_deduction_rate.min' => 'Excessive late salary deduction rate must be at least 0.',
+            'excessive_late_salary_deduction_rate.max' => 'Excessive late salary deduction rate cannot exceed 100.',
+
+            'absent_deduction_days.required' => 'Absent deduction days is required.',
+            'absent_deduction_days.integer' => 'Absent deduction days must be a valid number.',
+            'absent_deduction_days.min' => 'Absent deduction days must be at least 0.',
+
+            'absent_salary_deduction_rate.required' => 'Absent salary deduction rate is required.',
+            'absent_salary_deduction_rate.numeric' => 'Absent salary deduction rate must be a valid number.',
+            'absent_salary_deduction_rate.min' => 'Absent salary deduction rate must be at least 0.',
+            'absent_salary_deduction_rate.max' => 'Absent salary deduction rate cannot exceed 100.',
+
+            'calculation_type.required' => 'Please select the calculation type.',
+            'calculation_type.in' => 'The selected calculation type is invalid.',
+        ]);
+
         return $validated;
     }
 

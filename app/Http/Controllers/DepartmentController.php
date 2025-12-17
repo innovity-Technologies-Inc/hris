@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use App\Models\Department;
 use App\Models\Division;
+use App\Models\Company;
+use App\Models\CompanyLocation;
 use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
@@ -20,7 +22,9 @@ class DepartmentController extends Controller
     public function create()
     {
         $divisions = Division::all();
-        return view('company_setup.departments.form', compact('divisions'));
+        $companies = Company::all();
+        $locations = CompanyLocation::all();
+        return view('company_setup.departments.form', compact('divisions', 'companies', 'locations'));
     }
 
 
@@ -31,14 +35,16 @@ class DepartmentController extends Controller
                 'division_id' => 'required|exists:divisions,id',
                 'department_name' => 'required|string|max:255',
                 'short_name' => 'required|string|max:50',
-                'job_number_code' => 'required|string|max:20',
+                'company_id' => 'required|exists:companies,id',
+                'location_id' => 'required|exists:company_locations,id',
                 'status' => 'required|in:active,inactive',
             ],
             [
                 'division_id.required' => 'Please select a division.',
                 'department_name.required' => 'Please enter a department name.',
                 'short_name.required' => 'Please enter a short name.',
-                'job_number_code.required' => 'Please enter a job number code.',
+                'company_id.required' => 'Please select a company.',
+                'location_id.required' => 'Please select a branch.',
                 'status.required' => 'Please select a status.',
             ]
         );
@@ -55,7 +61,9 @@ class DepartmentController extends Controller
     {
         $department = Department::findOrFail($id);
         $divisions = Division::all();
-        return view('company_setup.departments.form', compact('department', 'divisions'));
+        $companies = \App\Models\Company::all();
+        $locations = \App\Models\CompanyLocation::all();
+        return view('company_setup.departments.form', compact('department', 'divisions', 'companies', 'locations'));
     }
     public function update(Request $request, $id)
     {   
@@ -66,21 +74,21 @@ class DepartmentController extends Controller
                 'division_id' => 'required|exists:divisions,id',
                 'department_name' => 'required|string|max:255',
                 'short_name' => 'required|string|max:50',
-                'job_number_code' => 'required|string|max:20',
+                'company_id' => 'required|exists:companies,id',
+                'location_id' => 'required|exists:company_locations,id',
                 'status' => 'required|in:active,inactive',
             ],
             [
                 'division_id.required' => 'Please select a division.',
                 'department_name.required' => 'Please enter a department name.',
                 'short_name.required' => 'Please enter a short name.',
-                'job_number_code.required' => 'Please enter a job number code.',
+                'company_id.required' => 'Please select a company.',
+                'location_id.required' => 'Please select a branch.',
                 'status.required' => 'Please select a status.',
             ]
         );
 
-        $department->update($validatedData);
-
-        return redirect()->route('departments.index')
+        $department->update($validatedData);        return redirect()->route('departments.index')
             ->with([
                 'message' => 'Department Updated Successfully',
                 'alert-type' => 'success'

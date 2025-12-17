@@ -33,7 +33,6 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
     <script>
         $(document).ready(function() {
             // Function to perform AJAX search
@@ -79,7 +78,7 @@
                 $('.select2_list').val(null).trigger('change');
 
                 // Reload the page without query string
-                window.location.href = "{{ route('employees.index') }}";
+                window.location.href = "{{ route('plans.leave_plans.index') }}";
             });
 
             // Handle pagination via AJAX

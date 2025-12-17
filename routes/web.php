@@ -30,7 +30,11 @@ use App\Http\Controllers\LeavePlanController;
 use App\Http\Controllers\RosterPlansController;
 use App\Http\Controllers\OffDayPlansController;
 use App\Http\Controllers\EmployeePlansController;
-
+use App\Http\Controllers\BonusPlanController;
+use App\Http\Controllers\AllowancePlanController;
+use App\Http\Controllers\LeavesController;
+use App\Http\Controllers\DeductionPlanController;
+use App\Http\Controllers\DataController;
 
 Route::get('test', function () {
    return view('attendance.daily_sheet');
@@ -42,6 +46,7 @@ Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
 
 Route::prefix('company-setup')->group(function () {
+
     Route::get('bulk-upload', function () {
         return view('company_setup.bulk_uploads.form');
     })->name('company_setup.bulk_upload');
@@ -238,12 +243,15 @@ Route::prefix('employees')->group(function () {
     Route::controller(EmployeePlansController::class)->group(function () {
         Route::get('profile/{id}/plans/{type}', 'plansView')->name('employees.profile.plans');
         Route::post('profile/plans/{type}/store', 'assignPlan')->name('employees.profile.plans.store');
-        Route::post('profile/plans/{type}/remove/{id}', 'removePlan')->name('employees.profile.plans.remove');
+        Route::put('profile/plans/{type}/remove/{id}', 'removePlan')->name('employees.profile.plans.remove');
         Route::delete('profile/plans/{type}/delete/{id}', 'deletePlan')->name('employees.profile.plans.delete');
 
     });
 
+    Route::get('profile/{id}/leave-info', [LeavesController::class, 'showLeaveInfo'])->name('employees.profile.leave_info');
+
 });
+
 
 Route::prefix('plans')->group(function () {
     Route::get('bulk-upload', function () {
@@ -285,7 +293,6 @@ Route::prefix('plans')->group(function () {
             Route::put('update/{id}', 'update')->name('plans.leave_plans.update');
             Route::delete('delete/{id}', 'delete')->name('plans.leave_plans.delete');
             Route::post('import', 'import')->name('plans.leave_plans.import');
-
         });
     });
 
@@ -329,26 +336,42 @@ Route::prefix('plans')->group(function () {
         });
     });
 
-});
+    Route::prefix('bonus-plans')->group(function () {
+        Route::controller(BonusPlanController::class)->group(function(){
+            Route::get('/', 'index')->name('plans.bonus_plans.index');
+            Route::get('create', 'create')->name('plans.bonus_plans.create');
+            Route::post('store', 'store')->name('plans.bonus_plans.store');
+            Route::get('{id}', 'show')->name('plans.bonus_plans.show');
+            Route::get('edit/{id}', 'edit')->name('plans.bonus_plans.edit');
+            Route::put('update/{id}', 'update')->name('plans.bonus_plans.update');
+            Route::delete('delete/{id}', 'delete')->name('plans.bonus_plans.delete');
+            Route::post('import', 'import')->name('plans.bonus_plans.import');
+        });
+    });
 
-Route::controller(EmployeeProfileController::class)->group(function () {
-    Route::get('get-grades/{tofsil_id}', 'getGradeByAct');
-    Route::get('get-units/{company_id}', 'getUnit');
-    Route::get('get-divisions/{company_id}/{unit_id}', 'getDivision');
-    Route::get('get-departments/{company_id}/{unit_id}/{division_id}', 'getDepartment');
-    Route::get('get-sections/{company_id}/{unit_id}/{division_id}/{department_id}', 'getSection');
-    Route::get('get-branches/{bank_id}', 'getBranchesByBank');
-});
+    Route::prefix('allowance-plans')->group(function () {
+        Route::controller(AllowancePlanController::class)->group(function(){
+            Route::get('/', 'index')->name('plans.allowance_plans.index');
+            Route::get('create', 'create')->name('plans.allowance_plans.create');
+            Route::post('store', 'store')->name('plans.allowance_plans.store');
+            Route::get('{id}', 'show')->name('plans.allowance_plans.show');
+            Route::get('edit/{id}', 'edit')->name('plans.allowance_plans.edit');
+            Route::put('update/{id}', 'update')->name('plans.allowance_plans.update');
+            Route::delete('delete/{id}', 'delete')->name('plans.allowance_plans.delete');
+            Route::post('import', 'import')->name('plans.allowance_plans.import');
+        });
+    });
 
-Route::controller(EmployeePlansController::class)->group(function (){
-    Route::get('get-meal-plans/{type}', 'getMealPlanByType');
-    Route::get('get-meal-plan-details/{id}', 'getMealPlanDetails');
-    Route::get('get-offday-plan-details/{id}', 'getOffDayPlanDetails');
+    Route::prefix('deduction-plans')->group(function () {
+        Route::controller(DeductionPlanController::class)->group(function(){
+            Route::get('/', 'index')->name('plans.deduction_plans.index');
+            Route::get('create', 'create')->name('plans.deduction_plans.create');
+            Route::post('store', 'store')->name('plans.deduction_plans.store');
+            Route::get('edit', 'edit')->name('plans.deduction_plans.edit');
+            Route::put('update', 'update')->name('plans.deduction_plans.update');
+        });
+    });
 
-});
-
-Route::controller(RosterPlansController::class)->group(function () {
-    Route::get('get-shift-details/{shift_id}', 'getShiftDetails');
 });
 
 Route::controller(OrganizationStructureController::class)->group(function () {
@@ -367,3 +390,42 @@ Route::prefix('settings')->group(function () {
 
     });
 });
+
+Route::prefix('leaves')->group(function () {
+    Route::controller(LeavesController::class)->group(function (){
+        Route::get('/', 'index')->name('leaves.index');
+        Route::get('create', 'create')->name('leaves.create');
+        Route::post('store', 'store')->name('leaves.store');
+        Route::put('change-status', 'changeStatus')->name('leaves.change_status');
+        Route::delete('{id}/delete', 'destroy')->name('leaves.destroy');
+        Route::post('import', 'import')->name('leaves.import');
+    });
+});
+
+Route::controller(DataController::class)->group(function () {
+
+    //company-details
+    Route::get('get-grades/{tofsil_id}', 'getGradeByAct');
+    Route::get('get-units/{company_id}', 'getUnit');
+    Route::get('get-divisions/{company_id}/{unit_id}', 'getDivision');
+    Route::get('get-departments/{company_id}/{unit_id}/{division_id}', 'getDepartment');
+    Route::get('get-sections/{company_id}/{unit_id}/{division_id}/{department_id}', 'getSection');
+    Route::get('get-branches/{bank_id}', 'getBranchesByBank');
+
+    //plan_details
+    Route::get('get-meal-plans/{type}', 'getMealPlanByType');
+    Route::get('get-meal-plan-details/{id}', 'getMealPlanDetails');
+    Route::get('get-offday-plan-details/{id}', 'getOffDayPlanDetails');
+    Route::get('get-ot-plan-details/{id}', 'getOtPlanDetails');
+    Route::get('get-shift-plan-details/{id}', 'getShiftPlanDetails');
+    Route::get('get-roster-plan-details/{id}', 'getRosterPlanDetails');
+    Route::get('get-bonus-plan-details/{id}', 'getBonusPlanDetails');
+    Route::get('get-leave-plan-details/{id}', 'getLeavePlanDetails');
+    Route::get('get-shift-details/{shift_id}', 'getShiftDetails');
+
+    //leave-details
+    Route::get('get-leave-plans/{employee_id}', 'getLeavePlan');
+    Route::get('get-leave-details/{employee_id}/{plan_id}', 'getLeaveDetails');
+
+});
+
