@@ -899,6 +899,7 @@
         });
     });
 </script>
+@stack('scripts')
 
 </body>
 

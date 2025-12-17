@@ -37,7 +37,7 @@ use App\Http\Controllers\DeductionPlanController;
 use App\Http\Controllers\DataController;
 
 Route::get('test', function () {
-   return view('plans.deduction_plans.form');
+   return view('attendance.daily_sheet');
 });
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
