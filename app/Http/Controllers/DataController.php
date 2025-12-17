@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\BonusPlan;
+use App\Models\Branch;
+use App\Models\CompanyLocation;
+use App\Models\Department;
+use App\Models\Division;
 use App\Models\EmployeeEligiblePlan;
 use App\Models\EmployeeLeavePlan;
 use App\Models\LeaveCount;
@@ -11,6 +15,8 @@ use App\Models\MealPlan;
 use App\Models\OffDayPlan;
 use App\Models\OTPlan;
 use App\Models\RosterPlan;
+use App\Models\SalaryGrade;
+use App\Models\Section;
 use App\Models\ShiftPlan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -19,33 +25,39 @@ class DataController extends Controller
 {
 
     public function getUnit($company_id){
-        $units = $this->empServices->getUnit($company_id);
+        $units = CompanyLocation::where('company_id', $company_id)->select('id', 'name')->get();
         return response()->json($units);
 
     }
 
     public function getDivision($company_id, $location_id){
-        $divisions = $this->empServices->getDivision($company_id, $location_id);
+        $divisions = Division::where('company_id', $company_id)
+            ->where('location_id', $location_id)->get();
         return response()->json($divisions);
     }
 
     public function getDepartment($company_id, $location_id, $division_id){
-        $departments = $this->empServices->getDepartment($company_id, $location_id, $division_id);
+        $departments = Department::where('company_id', $company_id)
+            ->where('location_id', $location_id)
+            ->where('division_id', $division_id)
+            ->get();
         return response()->json($departments);
     }
 
     public function getSection($company_id, $location_id, $division_id, $department_id){
-        $sections = $this->empServices->getSection($company_id, $location_id, $division_id, $department_id);
+        $sections = Section::where('company_id', $company_id)
+            ->where('location_id', $location_id)
+            ->where('division_id', $division_id)->where('department_id', $department_id)->get();
         return response()->json($sections);
     }
 
     public function getGradeByAct($tofsil_id){
-        $grades = $this->empServices->getGradeByAct($tofsil_id);
+        $grades = SalaryGrade::where('tofsil_id', $tofsil_id)->get();
         return response()->json($grades);
     }
 
     public function getBranchesByBank($bank_id){
-        $branches= $this->empServices->getBranchesByBank($bank_id);
+        $branches = Branch::where('bank_id', $bank_id)->get();
         return response()->json($branches);
     }
 

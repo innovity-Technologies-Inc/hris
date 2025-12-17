@@ -259,47 +259,10 @@ class EmployeeServices
         return $companies;
     }
 
-    public function getUnit($company_id)
-    {
-        $units = CompanyLocation::where('company_id', $company_id)->get();
-        return $units;
-    }
-
-    public function getDivision($company_id, $location_id)
-    {
-        $divisions = Division::where('company_id', $company_id)
-            ->where('location_id', $location_id)->get();
-        return $divisions;
-    }
-
-    public function getDepartment($company_id, $location_id, $division_id)
-    {
-        $departments = Department::where('company_id', $company_id)
-            ->where('location_id', $location_id)
-        ->where('division_id', $division_id)
-
-                ->get();
-        return $departments;
-    }
-
-    public function getSection($company_id, $location_id, $division_id, $department_id)
-    {
-        $sections = Section::where('company_id', $company_id)
-            ->where('location_id', $location_id)
-            ->where('division_id', $division_id)->where('department_id', $department_id)->get();
-        return $sections;
-    }
-
     public function getActs()
     {
         $acts = Tofsil::all();
         return $acts;
-    }
-
-    public function getGradeByAct($tofsil_id)
-    {
-        $grades = SalaryGrade::where('tofsil_id', $tofsil_id)->get();
-        return $grades;
     }
 
     public function getDesignations()
@@ -308,11 +271,6 @@ class EmployeeServices
         return $designations;
     }
 
-    public function getBranchesByBank($bank_id)
-    {
-        $branches = Branch::where('bank_id', $bank_id)->get();
-        return $branches;
-    }
 
     public function employeeOfficeInfoValidation($request)
     {
