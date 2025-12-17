@@ -32,6 +32,7 @@ use App\Http\Controllers\OffDayPlansController;
 use App\Http\Controllers\EmployeePlansController;
 use App\Http\Controllers\BonusPlanController;
 use App\Http\Controllers\AllowancePlanController;
+use App\Http\Controllers\TAPlanController;
 use App\Http\Controllers\LeavesController;
 use App\Http\Controllers\DeductionPlanController;
 use App\Http\Controllers\DataController;
@@ -359,6 +360,18 @@ Route::prefix('plans')->group(function () {
             Route::put('update/{id}', 'update')->name('plans.allowance_plans.update');
             Route::delete('delete/{id}', 'delete')->name('plans.allowance_plans.delete');
             Route::post('import', 'import')->name('plans.allowance_plans.import');
+        });
+    });
+
+    Route::prefix('ta-plans')->group(function () {
+        Route::controller(TAPlanController::class)->group(function(){
+            Route::get('/', 'index')->name('plans.ta_plans.index');
+            Route::get('create', 'create')->name('plans.ta_plans.create');
+            Route::post('store', 'store')->name('plans.ta_plans.store');
+            Route::get('edit/{id}', 'edit')->name('plans.ta_plans.edit');
+            Route::put('update/{id}', 'update')->name('plans.ta_plans.update');
+            Route::delete('delete/{id}', 'delete')->name('plans.ta_plans.delete');
+            Route::post('import', 'import')->name('plans.ta_plans.import');
         });
     });
 

@@ -100,6 +100,10 @@
                                     href='{{ route('plans.allowance_plans.index') }}'>Allowance Plans</a>
                             </li>
                             <li>
+                                <a class='tp-link @if (Route::is('plans.ta_plans.*')) menuitem-active @endif'
+                                    href='{{ route('plans.ta_plans.index') }}'>TA Plans</a>
+                            </li>
+                            <li>
                                 <a class='tp-link @if (Route::is('plans.deduction_plans.*')) menuitem-active @endif'
                                     href='{{ route('plans.deduction_plans.index') }}'>Deduction Plan</a>
                             </li>
@@ -124,7 +128,7 @@
                         <ul class="nav-second-level">
                             <li>
                                 <a class='tp-link @if (request()->is('leaves.create')) menuitem-active @endif'
-                                   href='{{ route('leaves.create') }}'>Application</a>
+                                    href='{{ route('leaves.create') }}'>Application</a>
                             </li>
                             <li>
                                 <a class='tp-link @if (request()->is('leaves.index')) menuitem-active @endif'
