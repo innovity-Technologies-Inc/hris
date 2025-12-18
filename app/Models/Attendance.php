@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Attandance extends Model
+class Attendance extends Model
 {
     protected $table = 'attandances';
     protected $fillable = ['employee_id', 'in_time', 'in_status', 'out_time', 'out_status',

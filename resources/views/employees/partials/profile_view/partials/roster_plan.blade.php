@@ -81,26 +81,7 @@
 
                     <div class="row g-2">
 
-                        {{-- Repetition Days --}}
-                        <div class="col-lg-4 col-md-6">
-                            <div class="p-2 rounded-3 border shadow-sm"
-                                style="background-color: var(--bs-primary-bg-subtle);">
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="d-flex align-items-center justify-content-center rounded-circle shadow-sm"
-                                        style="width: 32px; height: 32px; min-width: 32px; background-color: var(--bs-body-bg);">
-                                        <i class="mdi mdi-calendar-range text-primary"></i>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <p class="text-muted small mb-0 fw-semibold">Repetition Days</p>
-                                        <h6 class="mb-0 fw-bold text-primary">
-                                            {{ $activeRosterPLan->getPlan->repetition_days ?? 'N/A' }} days
-                                        </h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Swapping Status --}}
+                        {{-- Swapping days --}}
                         <div class="col-lg-4 col-md-6">
                             <div class="p-2 rounded-3 border shadow-sm"
                                 style="background-color: var(--bs-info-bg-subtle);">
@@ -110,13 +91,9 @@
                                         <i class="mdi mdi-swap-horizontal text-info"></i>
                                     </div>
                                     <div class="flex-grow-1">
-                                        <p class="text-muted small mb-0 fw-semibold">Shift Swapping</p>
+                                        <p class="text-muted small mb-0 fw-semibold">Shift Swapping (after)</p>
                                         <h6 class="mb-0 fw-bold">
-                                            @if ($activeRosterPLan->getPlan->swapping == 1)
-                                                <span class="badge bg-success">Enabled</span>
-                                            @else
-                                                <span class="badge bg-secondary">Disabled</span>
-                                            @endif
+                                            {{ $activeRosterPLan->getPlan->swapping }} days
                                         </h6>
                                     </div>
                                 </div>

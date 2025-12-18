@@ -59,4 +59,8 @@ class Employee extends Model
         'permanent_address' => 'array',
         'reference_address' => 'array',
     ];
+
+    public function shift(){
+        return $this->hasMany(EmployeeShiftPlan::class, 'employee_id', 'id');
+    }
 }

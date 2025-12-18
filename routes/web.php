@@ -38,7 +38,7 @@ use App\Http\Controllers\LeavesController;
 use App\Http\Controllers\DeductionPlanController;
 use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\DataController;
-use App\Http\Controllers\AttandancesController;
+use App\Http\Controllers\AttendancesController;
 
 Route::get('test', function () {
    return view('attendance.daily_sheet');
@@ -493,7 +493,11 @@ Route::controller(DataController::class)->group(function () {
 
 });
 
-    Route::controller(AttandancesController::class)->group(function (){
-       Route::get('attendances', 'index')->name('attendances.index');
+    Route::controller(AttendancesController::class)->prefix('attendance')->group(function (){
+       Route::get('/', 'index')->name('attendance.index');
+        Route::get('create', 'create')->name('attendance.create');
+        Route::post('store', 'store')->name('attendance.store');
+
+
     });
 
