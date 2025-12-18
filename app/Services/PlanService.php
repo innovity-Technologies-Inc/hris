@@ -260,6 +260,7 @@ class PlanService
             'status' => 'required|in:active,inactive',
             'first_shift_id' => 'required',
             'second_shift_id' => 'required',
+            'third_shift_id' => 'nullable',
         ], [
             'name.required' => 'The name field is required.',
             'status.required' => 'Status is required.',

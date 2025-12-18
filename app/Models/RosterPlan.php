@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class RosterPlan extends Model
 {
     protected $fillable = [
-        'name', 'short_name', 'swapping', 'description', 'status', 'first_shift_id', 'second_shift_id'
+        'name', 'short_name', 'swapping', 'description', 'status', 'first_shift_id', 'second_shift_id', 'third_shift_id'
     ];
 
     public function getFirstShift(){
@@ -16,5 +16,9 @@ class RosterPlan extends Model
 
     public function getSecondShift(){
         return $this->belongsTo(ShiftPlan::class, 'second_shift_id', 'id');
+    }
+
+    public function getThirdShift(){
+        return $this->belongsTo(ShiftPlan::class, 'third_shift_id', 'id');
     }
 }

@@ -184,7 +184,7 @@
                                             data-bs-target="#bulkUploadModal" data-section="roster-plan"
                                             data-section-name="Overtime Plan" data-section-number="3"
                                             data-form-action="{{ route('plans.roster_plans.import') }}"
-                                            data-excel-link="{{ asset('assets/excel/roster_plans_bulk.xlsx') }}"
+                                            data-excel-link="{{ asset('assets/excel/roster_plans.xlsx') }}"
                                             data-csv-link="{{ asset('assets/csv/roster_plans.csv') }}">
                                             <i class="bi bi-upload me-2"></i>Upload
                                         </button>
