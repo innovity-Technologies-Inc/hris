@@ -8,6 +8,7 @@
                 <th scope="col">Repetition Days</th>
                 <th scope="col">Shift 1</th>
                 <th scope="col">Shift 2</th>
+                <th scope="col">Shift 3</th>
                 <th scope="col">Status</th>
                 <th scope="col">Action</th>
             </tr>
@@ -40,6 +41,13 @@
                     <td>
                         @if ($item->getSecondShift && $item->getSecondShift->name)
                             <span class="badge text-bg-success">{{ $item->getSecondShift->name }}</span>
+                        @else
+                            <span class="text-muted">-</span>
+                        @endif
+                    </td>
+                    <td>
+                        @if ($item->getThirdShift && $item->getThirdShift->name)
+                            <span class="badge text-bg-info">{{ $item->getThirdShift->name }}</span>
                         @else
                             <span class="text-muted">-</span>
                         @endif
