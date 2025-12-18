@@ -1,6 +1,7 @@
-Roster name,short_name,swapping,description,status,first_shift_name,second_shift_name
-Roster Plan Alpha,RP-A,yes,Main morning + flexible overlap,active,Morning 1,Morning 2
-Roster Plan Bravo,RP-B,no,Split morning shifts for coverage,active,Morning 2,Morning 3
-Roster Plan Charlie,RP-C,yes,Extended morning rotation,inactive,Morning 3,Morning 4
-Roster Plan Delta,RP-D,no,Half-day + backup,active,Morning 4,Morning 5
-Roster Plan Echo,RP-E,yes,Flexible mix for part-timers,active,Morning 5,Morning 1
+Roster name,short_name,swapping,description,status,first_shift_name,second_shift_name,third_shift_name
+Roster Plan Alpha,RP-A,7,Main morning + flexible overlap,active,Morning 1,Morning 2,
+Roster Plan Bravo,RP-B,10,Split morning shifts for coverage,active,Morning 2,Morning 3,Morning 4
+Roster Plan Charlie,RP-C,15,Extended morning rotation,inactive,Morning 3,Morning 4,Morning 5
+Roster Plan Delta,RP-D,5,Half-day + backup,active,Morning 4,Morning 5,
+Roster Plan Echo,RP-E,7,Flexible mix for part-timers,active,Morning 5,Morning 1,Morning 2
+    

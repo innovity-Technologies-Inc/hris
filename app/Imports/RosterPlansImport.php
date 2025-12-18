@@ -33,6 +33,7 @@ class RosterPlansImport implements ToCollection
                 'status' => strtolower($row[4] ?? 'active'),
                 'first_shift_id' => $this->getId(ShiftPlan::class, $row[5]),
                 'second_shift_id' => $this->getId(ShiftPlan::class, $row[6]),
+                'third_shift_id' => $this->getId(ShiftPlan::class, $row[7] ?? null),
             ]);
         });
     }

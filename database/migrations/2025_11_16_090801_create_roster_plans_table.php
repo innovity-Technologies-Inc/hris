@@ -20,6 +20,7 @@ return new class extends Migration
             $table->enum('status', ['active', 'inactive']);
             $table->unsignedBigInteger('first_shift_id');
             $table->unsignedBigInteger('second_shift_id');
+            $table->unsignedBigInteger('third_shift_id')->nullable();
             $table->timestamps();
         });
     }

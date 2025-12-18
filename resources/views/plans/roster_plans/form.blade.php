@@ -114,7 +114,7 @@
                 <div class="card-body">
                     <div class="row">
                         {{-- Shift 1 Selection --}}
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label for="first_shift_id" class="form-label fw-semibold">
                                 Shift 1 <span class="text-danger">*</span>
                             </label>
@@ -145,7 +145,7 @@
                         </div>
 
                         {{-- Shift 2 Selection --}}
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label for="second_shift_id" class="form-label fw-semibold">
                                 Shift 2
                             </label>
@@ -164,6 +164,37 @@
 
                             {{-- Dynamic Shift 2 Details Container --}}
                             <div id="shift_2_details" class="shift-details mt-3 d-none">
+                                <div class="border rounded p-3 bg-light">
+                                    <h6 class="fw-semibold mb-3 text-primary">
+                                        <i class="mdi mdi-information me-1"></i>Shift Details
+                                    </h6>
+                                    <div class="shift-info">
+                                        {{-- JavaScript will populate this --}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Shift 3 Selection --}}
+                        <div class="col-md-4 mb-3">
+                            <label for="third_shift_id" class="form-label fw-semibold">
+                                Shift 3
+                            </label>
+                            <select class="form-select shift-select @error('third_shift_id') is-invalid @enderror"
+                                id="third_shift_id" name="third_shift_id" data-target="shift_3_details">
+                                <option value="">Select Shift 3</option>
+                                @foreach ($shifts as $item)
+                                    <option value="{{ $item->id }}"
+                                        {{ isset($plan) && $plan->third_shift_id == $item->id ? 'selected' : '' }}>
+                                        {{ $item->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('third_shift_id')
+                                <small class="invalid-feedback d-block">{{ $message }}</small>
+                            @enderror
+
+                            {{-- Dynamic Shift 3 Details Container --}}
+                            <div id="shift_3_details" class="shift-details mt-3 d-none">
                                 <div class="border rounded p-3 bg-light">
                                     <h6 class="fw-semibold mb-3 text-primary">
                                         <i class="mdi mdi-information me-1"></i>Shift Details
@@ -247,6 +278,7 @@
                 // EDIT MODE
                 let shift1 = "{{ old('first_shift_id', $plans->first_shift_id ?? '') }}";
                 let shift2 = "{{ old('second_shift_id', $plans->second_shift_id ?? '') }}";
+                let shift3 = "{{ old('third_shift_id', $plans->third_shift_id ?? '') }}";
 
                 if (shift1) {
                     loadShiftDetails(shift1, 'shift_1_details');
@@ -257,10 +289,16 @@
                     loadShiftDetails(shift2, 'shift_2_details');
                     $('#second_shift_id').val(shift2);
                 }
+
+                if (shift3) {
+                    loadShiftDetails(shift3, 'shift_3_details');
+                    $('#third_shift_id').val(shift3);
+                }
             @else
                 // CREATE MODE WITH OLD VALUES
                 let oldShift1 = "{{ old('first_shift_id') }}";
                 let oldShift2 = "{{ old('second_shift_id') }}";
+                let oldShift3 = "{{ old('third_shift_id') }}";
 
                 if (oldShift1) {
                     loadShiftDetails(oldShift1, 'shift_1_details');
@@ -270,6 +308,11 @@
                 if (oldShift2) {
                     loadShiftDetails(oldShift2, 'shift_2_details');
                     $('#second_shift_id').val(oldShift2);
+                }
+
+                if (oldShift3) {
+                    loadShiftDetails(oldShift3, 'shift_3_details');
+                    $('#third_shift_id').val(oldShift3);
                 }
             @endif
 
