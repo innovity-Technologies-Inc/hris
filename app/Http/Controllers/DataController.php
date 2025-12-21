@@ -129,13 +129,10 @@ class DataController extends Controller
         return response()->json([
             'id' => $plan->id,
             'name' => $plan->name,
-            'type' => $plan->ot_type,
             'config' => $plan->ot_config_type,
             'rate' => $plan->custom_overtime_rate,
             'multiplier' => $plan->overtime_multiplier,
             'salary_type' => $plan->salary_rate_type,
-            'start_time' => Carbon::parse($plan->overtime_start_time)->format('h:i A'),
-            'end_time' => Carbon::parse($plan->overtime_end_time)->format('h:i A'),
         ]);
     }
     public function getShiftPlanDetails($id)

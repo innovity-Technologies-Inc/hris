@@ -6,7 +6,7 @@
                 <h5 class="modal-title"><i class="mdi mdi-clock-plus-outline me-2"></i>Create OT Plan Assignment</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <form method="POST" action="{{route('employees.profile.plans.store', 'ot-plans')}}">
+            <form method="POST" action="{{ route('employees.profile.plans.store', 'ot-plans') }}">
                 @csrf
                 <input type="hidden" name="employee_id" value="{{ $employee->id }}">
 
@@ -31,8 +31,8 @@
                                 <i class="mdi mdi-calendar-start text-success me-1"></i>
                                 Effective From <span class="text-danger">*</span>
                             </label>
-                            <input type="date" id="modal_ot_effective_from" name="from"
-                                class="form-control" value="{{ date('Y-m-d') }}" required>
+                            <input type="date" id="modal_ot_effective_from" name="from" class="form-control"
+                                value="{{ date('Y-m-d') }}" required>
                         </div>
                         <div class="col-md-6">
                             <label for="modal_ot_effective_to" class="form-label fw-semibold">
@@ -52,19 +52,13 @@
                             </div>
                             <div class="card-body">
                                 <div class="row g-3">
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <div class="border-start border-primary border-3 ps-3">
                                             <small class="text-muted d-block">OT Plan</small>
                                             <strong id="modal-ot-detail-name" class="text-dark">-</strong>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="border-start border-info border-3 ps-3">
-                                            <small class="text-muted d-block">OT Type</small>
-                                            <strong id="modal-ot-detail-type" class="text-info">-</strong>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <div class="border-start border-success border-3 ps-3">
                                             <small class="text-muted d-block">Config Type</small>
                                             <strong id="modal-ot-detail-config" class="text-success">-</strong>
@@ -75,7 +69,8 @@
                                     <div class="col-md-4">
                                         <div class="border-start border-warning border-3 ps-3">
                                             <small class="text-muted d-block">Remuneration Type</small>
-                                            <strong id="modal-ot-detail-salary-type" class="text-warning fs-5">-</strong>
+                                            <strong id="modal-ot-detail-salary-type"
+                                                class="text-warning fs-5">-</strong>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -91,31 +86,17 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row g-3 mt-2" id="modal-ot-rate-section">
-                                    <div class="col-md-6">
-                                        <div class="border-start border-info border-3 ps-3">
-                                            <small class="text-muted d-block">Start Time</small>
-                                            <strong id="modal-ot-detail-start" class="text-info">-</strong>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="border-start border-warning border-3 ps-3">
-                                            <small class="text-muted d-block">End Time</small>
-                                            <strong id="modal-ot-detail-end" class="text-warning">-</strong>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i
-                        class="mdi mdi-close me-1"></i> Cancel</button>
-                <button type="submit" class="btn btn-primary"><i
-                        class="mdi mdi-check-circle me-1"></i> Add</button>
-            </div>
-        </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i
+                            class="mdi mdi-close me-1"></i> Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i class="mdi mdi-check-circle me-1"></i>
+                        Add</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -126,7 +107,7 @@
         // ============================
         // 🚀 Show Off Day Plan Details
         // ============================
-        $(document).on('change', '#modal_ot_plan_id', function () {
+        $(document).on('change', '#modal_ot_plan_id', function() {
             let planId = $(this).val();
 
             if (!planId) {
@@ -137,23 +118,17 @@
             $.ajax({
                 url: "/get-ot-plan-details/" + planId,
                 type: "GET",
-                success: function (data) {
+                success: function(data) {
                     console.log(data); // see what is returned
                     $('#modal-ot-plan-details').show();
                     $('#modal-ot-detail-name').text(data.name ?? '-');
-                    $('#modal-ot-detail-type').text(data.type ?? '-');
                     $('#modal-ot-detail-config').text(data.config ?? '-');
                     $('#modal-ot-detail-rate').text(data.rate ?? '-');
                     $('#modal-ot-detail-multiplier').text(data.multiplier ?? '-');
                     $('#modal-ot-detail-salary-type').text(data.salary_type ?? '-');
-                    $('#modal-ot-detail-start').text(data.start_time ?? '-');
-                    $('#modal-ot-detail-end').text(data.end_time ?? '-');
                 }
             });
         });
 
     });
 </script>
-
-
-

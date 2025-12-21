@@ -88,7 +88,7 @@ class EmployeePlansController extends Controller
                 'previousRosterPlans', 'rosterPlans',
                 'totalActiveRosterPlan', 'totalPreviousRosterPlan', 'type'));
         }elseif ($type === 'ot-plans'){
-            $otPlans = OTPlan::where('active_ind', 'active')->get();
+            $otPlans = OTPlan::where('status', 'active')->get();
             $activeOtPLan = EmployeeOtPlan::where('employee_id', $id)->where('status', 'active')->first();
             $totalActiveOtPlan = !empty($activeOtPLan) ? 1 : 0;
             $previousOtPlans = EmployeeOtPlan::where('employee_id', $id)->where('status', 'inactive')->get();

@@ -50,7 +50,7 @@
                     <div class="position-absolute top-0 end-0 mt-2 me-3">
                         <form
                             action="{{ route('employees.profile.plans.remove', ['id' => $activeOtPLan->id, 'type' => 'ot-plans']) }}"
-                            method="post" >
+                            method="post">
                             @csrf
                             @method('put')
                             <button type="submit" class="btn btn-sm btn-outline-danger shadow-sm removeBtn">
@@ -75,25 +75,7 @@
 
                     <div class="row g-2">
 
-                        {{-- OT Type & Config Type --}}
-                        <div class="col-lg-3 col-md-6 col-sm-6">
-                            <div class="p-2 rounded-3 border shadow-sm"
-                                style="background-color: var(--bs-info-bg-subtle);">
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="d-flex align-items-center justify-content-center rounded-circle shadow-sm"
-                                        style="width: 32px; height: 32px; min-width: 32px; background-color: var(--bs-body-bg);">
-                                        <i class="mdi mdi-tag text-info"></i>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <p class="text-muted small mb-0 fw-semibold">OT Type</p>
-                                        <h6 class="mb-0 fw-bold">
-                                            {{ ucwords(str_replace('_', ' ', $activeOtPLan->getPlan->ot_type)) }}
-                                        </h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                        {{-- Config Type --}}
                         <div class="col-lg-3 col-md-6 col-sm-6">
                             <div class="p-2 rounded-3 border shadow-sm"
                                 style="background-color: var(--bs-primary-bg-subtle);">
@@ -172,25 +154,7 @@
                             </div>
                         @endif
 
-                        {{-- Overtime Hours Limits --}}
-                        <div class="col-lg-3 col-md-6 col-sm-6">
-                            <div class="p-2 rounded-3 border shadow-sm"
-                                style="background-color: var(--bs-secondary-bg);">
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="d-flex align-items-center justify-content-center rounded-circle shadow-sm"
-                                        style="width: 32px; height: 32px; min-width: 32px; background-color: var(--bs-tertiary-bg);">
-                                        <i class="mdi mdi-timer-outline text-secondary"></i>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <p class="text-muted small mb-0 fw-semibold">Min OT Hours</p>
-                                        <h6 class="mb-0 fw-bold">
-                                            {{ $activeOtPLan->getPlan->minimum_overtime_hours ?? '0' }} hrs
-                                        </h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                        {{-- Maximum Overtime --}}
                         <div class="col-lg-3 col-md-6 col-sm-6">
                             <div class="p-2 rounded-3 border shadow-sm"
                                 style="background-color: var(--bs-secondary-bg);">
@@ -200,46 +164,9 @@
                                         <i class="mdi mdi-timer text-secondary"></i>
                                     </div>
                                     <div class="flex-grow-1">
-                                        <p class="text-muted small mb-0 fw-semibold">Max OT Hours</p>
+                                        <p class="text-muted small mb-0 fw-semibold">Max Overtime</p>
                                         <h6 class="mb-0 fw-bold">
-                                            {{ $activeOtPLan->getPlan->maximum_overtime_hours ?? '0' }} hrs
-                                        </h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- OT Time Range --}}
-                        <div class="col-lg-3 col-md-6 col-sm-6">
-                            <div class="p-2 rounded-3 border shadow-sm"
-                                style="background-color: var(--bs-success-bg-subtle);">
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="d-flex align-items-center justify-content-center rounded-circle shadow-sm"
-                                        style="width: 32px; height: 32px; min-width: 32px; background-color: var(--bs-body-bg);">
-                                        <i class="mdi mdi-clock-start text-success"></i>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <p class="text-muted small mb-0 fw-semibold">OT Start Time</p>
-                                        <h6 class="mb-0 fw-bold">
-                                            {{ $activeOtPLan->getPlan->overtime_start_time ? date('h:i A', strtotime($activeOtPLan->getPlan->overtime_start_time)) : 'N/A' }}
-                                        </h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-3 col-md-6 col-sm-6">
-                            <div class="p-2 rounded-3 border shadow-sm"
-                                style="background-color: var(--bs-danger-bg-subtle);">
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="d-flex align-items-center justify-content-center rounded-circle shadow-sm"
-                                        style="width: 32px; height: 32px; min-width: 32px; background-color: var(--bs-body-bg);">
-                                        <i class="mdi mdi-clock-end text-danger"></i>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <p class="text-muted small mb-0 fw-semibold">OT End Time</p>
-                                        <h6 class="mb-0 fw-bold">
-                                            {{ $activeOtPLan->getPlan->overtime_end_time ? date('h:i A', strtotime($activeOtPLan->getPlan->overtime_end_time)) : 'N/A' }}
+                                            {{ $activeOtPLan->getPlan->maximum_overtime ?? 'Unlimited' }} hrs
                                         </h6>
                                     </div>
                                 </div>
@@ -346,7 +273,6 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>OT Plan Name</th>
-                                    <th>OT Type</th>
                                     <th>Effective From</th>
                                     <th>Effective To</th>
                                     <th>Status</th>
@@ -361,11 +287,6 @@
                                                 class="badge bg-secondary-subtle text-secondary">#{{ $sl++ }}</span>
                                         </td>
                                         <td>{{ $plan->getPlan->name }}</td>
-                                        <td>
-                                            <span class="badge bg-light text-secondary">
-                                                {{ ucwords(str_replace('_', ' ', $plan->getPlan->ot_type)) }}
-                                            </span>
-                                        </td>
 
                                         <td>{{ date('d M Y', strtotime($plan->from)) }}</td>
                                         <td>{{ date('d M Y', strtotime($plan->to)) }}</td>
