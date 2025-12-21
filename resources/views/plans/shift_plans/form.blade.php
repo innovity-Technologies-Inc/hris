@@ -15,8 +15,10 @@
             </div>
         @endif
 
-        <form method="POST" action="{{isset($plan) ? route('plans.shift_plans.update', $plan->id) :  route('plans.shift_plans.store') }}" enctype="multipart/form-data">
-            @if(isset($plan))
+        <form method="POST"
+            action="{{ isset($plan) ? route('plans.shift_plans.update', $plan->id) : route('plans.shift_plans.store') }}"
+            enctype="multipart/form-data">
+            @if (isset($plan))
                 @method('PUT')
             @endif
             @csrf
@@ -36,7 +38,7 @@
                             </label>
                             <input type="text" class="form-control" id="name" name="name"
                                 placeholder="E.g., Head Office - Check" required
-                                   value="{{isset($plan) ? $plan->name : old('name')}}">
+                                value="{{ isset($plan) ? $plan->name : old('name') }}">
                             @error('name')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -46,14 +48,16 @@
                                 Clock In Time <span class="text-danger">*</span>
                             </label>
                             <input type="time" class="form-control" id="clock_in_time" name="clock_in_time"
-                                   value="{{isset($plan) ? Carbon\Carbon::parse($plan->clock_in_time)->format('H:i') : old('clock_in_time')}}" required>
+                                value="{{ isset($plan) ? Carbon\Carbon::parse($plan->clock_in_time)->format('H:i') : old('clock_in_time') }}"
+                                required>
                         </div>
                         <div class="col-md-3 mb-3">
                             <label for="clock_out_time" class="form-label fw-semibold">
                                 Clock Out Time <span class="text-danger">*</span>
                             </label>
                             <input type="time" class="form-control" id="clock_out_time" name="clock_out_time"
-                                   value="{{isset($plan) ? Carbon\Carbon::parse($plan->clock_out_time)->format('H:i') : old('clock_out_time')}}" required>
+                                value="{{ isset($plan) ? Carbon\Carbon::parse($plan->clock_out_time)->format('H:i') : old('clock_out_time') }}"
+                                required>
                         </div>
                     </div>
 
@@ -61,23 +65,27 @@
                         <div class="col-md-4 mb-3">
                             <label for="treat_as_full_day_minutes" class="form-label fw-semibold">
                                 Treat as Full Day (Minutes)
+                                <small class="text-muted">(Auto-calculated)</small>
                             </label>
                             <input type="number" class="form-control" id="treat_as_full_day_minutes"
-                                name="treat_as_full_day_minutes" placeholder="60"
-                                   value="{{isset($plan) ? $plan->treat_as_full_day_minutes : old('treat_as_full_day_minutes')}}" >
+                                name="treat_as_full_day_minutes" placeholder="Auto-calculated"
+                                value="{{ isset($plan) ? $plan->treat_as_full_day_minutes : old('treat_as_full_day_minutes') }}"
+                                readonly>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="treat_as_half_day_minutes" class="form-label fw-semibold">
                                 Treat as Half Day (Minutes)
+                                <small class="text-muted">(Auto-calculated)</small>
                             </label>
                             <input type="number" class="form-control" id="treat_as_half_day_minutes"
-                                name="treat_as_half_day_minutes" placeholder="400"
-                            value="{{isset($plan) ? $plan->treat_as_half_day_minutes : old('treat_as_half_day_minutes')}}">
+                                name="treat_as_half_day_minutes" placeholder="Auto-calculated"
+                                value="{{ isset($plan) ? $plan->treat_as_half_day_minutes : old('treat_as_half_day_minutes') }}"
+                                readonly>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="grace_time" class="form-label fw-semibold">Grace Time (Minutes)</label>
                             <input type="number" class="form-control" id="grace_time" name="grace_time"
-                            value="{{isset($plan) ? $plan->grace_time : old('grace_time')}}">
+                                value="{{ isset($plan) ? $plan->grace_time : old('grace_time') }}">
                         </div>
                     </div>
                 </div>
@@ -96,7 +104,7 @@
                             <label for="late_after_minutes" class="form-label fw-semibold">Late After (Minutes)</label>
                             <input type="number" class="form-control" id="late_after_minutes" name="late_after_minutes"
                                 placeholder="Enter minutes"
-                            value="{{isset($plan) ? $plan->late_after_minutes : old('late_after_minutes')}}">
+                                value="{{ isset($plan) ? $plan->late_after_minutes : old('late_after_minutes') }}">
                         </div>
                         <div class="col-md-3 mb-3">
                             <label for="excessive_late_after_minutes" class="form-label fw-semibold">
@@ -104,7 +112,7 @@
                             </label>
                             <input type="number" class="form-control" id="excessive_late_after_minutes"
                                 name="excessive_late_after_minutes" placeholder="Enter minutes"
-                                   value="{{isset($plan) ? $plan->excessive_late_after_minutes : old('excessive_late_after_minutes')}}">
+                                value="{{ isset($plan) ? $plan->excessive_late_after_minutes : old('excessive_late_after_minutes') }}">
                         </div>
                         <div class="col-md-3 mb-3">
                             <label for="early_out_grace_minutes" class="form-label fw-semibold">
@@ -112,7 +120,7 @@
                             </label>
                             <input type="number" class="form-control" id="early_out_grace_minutes"
                                 name="early_out_grace_minutes" placeholder="5"
-                            value="{{isset($plan) ? $plan->early_out_grace_minutes : old('early_out_grace_minutes')}}">
+                                value="{{ isset($plan) ? $plan->early_out_grace_minutes : old('early_out_grace_minutes') }}">
                         </div>
 
                     </div>
@@ -131,9 +139,9 @@
                             <div class="form-check form-switch mb-0">
                                 <input type="hidden" name="breakfast_status" value="inactive">
                                 <input class="form-check-input" type="checkbox" name="breakfast_status"
-                                       {{isset($plan) && $plan->breakfast_status == 'active' ? 'checked' : ''}}
-                                           {{old('breakfast_status') == 'active' ? 'checked' : ''}}
-                                    id="breakfast_status" value="active" onchange="toggleBreakSection('breakfast')">
+                                    {{ isset($plan) && $plan->breakfast_status == 'active' ? 'checked' : '' }}
+                                    {{ old('breakfast_status') == 'active' ? 'checked' : '' }} id="breakfast_status"
+                                    value="active" onchange="toggleBreakSection('breakfast')">
                                 <label class="form-check-label" for="breakfast_status">Active</label>
                             </div>
                         </div>
@@ -141,12 +149,14 @@
                             <div class="mb-3">
                                 <label for="breakfast_start_time" class="form-label fw-semibold">Start Time</label>
                                 <input type="time" class="form-control" id="breakfast_start_time"
-                                    name="breakfast_start_time" value="{{isset($plan) ? Carbon\Carbon::parse($plan->breakfast_start_time)->format('H:i') : old('breakfast_start_time')}}">
+                                    name="breakfast_start_time"
+                                    value="{{ isset($plan) ? Carbon\Carbon::parse($plan->breakfast_start_time)->format('H:i') : old('breakfast_start_time') }}">
                             </div>
                             <div class="mb-0">
                                 <label for="breakfast_end_time" class="form-label fw-semibold">End Time</label>
                                 <input type="time" class="form-control" id="breakfast_end_time"
-                                    name="breakfast_end_time" value="{{isset($plan) ? Carbon\Carbon::parse($plan->breakfast_end_time)->format('H:i') : old('breakfast_end_time')}}">
+                                    name="breakfast_end_time"
+                                    value="{{ isset($plan) ? Carbon\Carbon::parse($plan->breakfast_end_time)->format('H:i') : old('breakfast_end_time') }}">
                             </div>
                         </div>
                     </div>
@@ -162,22 +172,22 @@
                             <div class="form-check form-switch mb-0">
                                 <input type="hidden" name="lunch_status" value="inactive">
                                 <input class="form-check-input" type="checkbox" name="lunch_status" id="lunch_status"
-                                       {{isset($plan) && $plan->lunch_status == 'active' ? 'checked' : ''}}
-                                       {{old('lunch_status') == 'active' ? 'checked' : ''}}
-                                    value="active" onchange="toggleBreakSection('lunch')">
+                                    {{ isset($plan) && $plan->lunch_status == 'active' ? 'checked' : '' }}
+                                    {{ old('lunch_status') == 'active' ? 'checked' : '' }} value="active"
+                                    onchange="toggleBreakSection('lunch')">
                                 <label class="form-check-label" for="lunch_status">Active</label>
                             </div>
                         </div>
                         <div class="card-body" id="lunch_section" style="display: none;">
                             <div class="mb-3">
                                 <label for="lunch_start_time" class="form-label fw-semibold">Start Time</label>
-                                <input type="time" class="form-control" id="lunch_start_time"
-                                    name="lunch_start_time" value="{{isset($plan) ? Carbon\Carbon::parse($plan->lunch_start_time)->format('H:i') : old('lunch_start_time')}}">
+                                <input type="time" class="form-control" id="lunch_start_time" name="lunch_start_time"
+                                    value="{{ isset($plan) ? Carbon\Carbon::parse($plan->lunch_start_time)->format('H:i') : old('lunch_start_time') }}">
                             </div>
                             <div class="mb-0">
                                 <label for="lunch_end_time" class="form-label fw-semibold">End Time</label>
                                 <input type="time" class="form-control" id="lunch_end_time" name="lunch_end_time"
-                                value="{{isset($plan) ? Carbon\Carbon::parse($plan->lunch_end_time)->format('H:i') : old('lunch_end_time')}}">
+                                    value="{{ isset($plan) ? Carbon\Carbon::parse($plan->lunch_end_time)->format('H:i') : old('lunch_end_time') }}">
                             </div>
                         </div>
                     </div>
@@ -193,9 +203,9 @@
                             <div class="form-check form-switch mb-0">
                                 <input type="hidden" name="snacks_status" value="inactive">
                                 <input class="form-check-input" type="checkbox" name="snacks_status" id="snacks_status"
-                                       {{isset($plan) && $plan->snacks_status == 'active' ? 'checked' : ''}}
-                                       {{old('snacks_status') == 'active' ? 'checked' : ''}}
-                                    value="active" onchange="toggleBreakSection('snacks')">
+                                    {{ isset($plan) && $plan->snacks_status == 'active' ? 'checked' : '' }}
+                                    {{ old('snacks_status') == 'active' ? 'checked' : '' }} value="active"
+                                    onchange="toggleBreakSection('snacks')">
                                 <label class="form-check-label" for="snacks_status">Active</label>
                             </div>
                         </div>
@@ -203,12 +213,13 @@
                             <div class="mb-3">
                                 <label for="snacks_start_time" class="form-label fw-semibold">Start Time</label>
                                 <input type="time" class="form-control" id="snacks_start_time"
-                                    name="snacks_start_time" value="{{isset($plan) ? Carbon\Carbon::parse($plan->snacks_start_time)->format('H:i') : old('snacks_start_time')}}">
+                                    name="snacks_start_time"
+                                    value="{{ isset($plan) ? Carbon\Carbon::parse($plan->snacks_start_time)->format('H:i') : old('snacks_start_time') }}">
                             </div>
                             <div class="mb-0">
                                 <label for="snacks_end_time" class="form-label fw-semibold">End Time</label>
                                 <input type="time" class="form-control" id="snacks_end_time" name="snacks_end_time"
-                                value="{{isset($plan) ? Carbon\Carbon::parse($plan->snacks_end_time)->format('H:i') : old('snacks_end_time')}}">
+                                    value="{{ isset($plan) ? Carbon\Carbon::parse($plan->snacks_end_time)->format('H:i') : old('snacks_end_time') }}">
 
                             </div>
                         </div>
@@ -226,8 +237,8 @@
                                 <input type="hidden" name="dinner_status" value="inactive">
                                 <input class="form-check-input" type="checkbox" name="dinner_status" id="dinner_status"
                                     value="active" onchange="toggleBreakSection('dinner')"
-                                    {{isset($plan) && $plan->dinner_status == 'active' ? 'checked' : ''}}
-                                    {{old('dinner_status') == 'active' ? 'checked' : ''}}>
+                                    {{ isset($plan) && $plan->dinner_status == 'active' ? 'checked' : '' }}
+                                    {{ old('dinner_status') == 'active' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="dinner_status">Active</label>
                             </div>
                         </div>
@@ -236,12 +247,12 @@
                                 <label for="dinner_start_time" class="form-label fw-semibold">Start Time</label>
                                 <input type="time" class="form-control" id="dinner_start_time"
                                     name="dinner_start_time"
-                                value="{{isset($plan) ? Carbon\Carbon::parse($plan->dinner_start_time)->format('H:i') : old('dinner_start_time')}}">
+                                    value="{{ isset($plan) ? Carbon\Carbon::parse($plan->dinner_start_time)->format('H:i') : old('dinner_start_time') }}">
                             </div>
                             <div class="mb-0">
                                 <label for="dinner_end_time" class="form-label fw-semibold">End Time</label>
                                 <input type="time" class="form-control" id="dinner_end_time" name="dinner_end_time"
-                                value="{{isset($plan) ? Carbon\Carbon::parse($plan->dinner_end_time)->format('H:i') : old('dinner_end_time')}}">>
+                                    value="{{ isset($plan) ? Carbon\Carbon::parse($plan->dinner_end_time)->format('H:i') : old('dinner_end_time') }}">>
                             </div>
                         </div>
                     </div>
@@ -257,9 +268,8 @@
                     <div class="form-check form-switch mb-0">
                         <input type="hidden" name="active_ind" value="inactive">
                         <input class="form-check-input" type="checkbox" name="active_ind" id="active_ind"
-                            value="active" checked
-                            {{isset($plan) && $plan->active_ind == 'active' ? 'checked' : ''}}
-                            {{old('active_ind') == 'active' ? 'checked' : ''}}>
+                            value="active" checked {{ isset($plan) && $plan->active_ind == 'active' ? 'checked' : '' }}
+                            {{ old('active_ind') == 'active' ? 'checked' : '' }}>
                         <label class="form-check-label" for="active_ind">Active</label>
                     </div>
                 </div>
@@ -282,6 +292,87 @@
     </div>
 
     <script>
+        // Calculate working minutes from Clock In and Clock Out times
+        function calculateWorkingMinutes() {
+            const clockInTime = document.getElementById('clock_in_time').value;
+            const clockOutTime = document.getElementById('clock_out_time').value;
+
+            if (!clockInTime || !clockOutTime) {
+                return 0;
+            }
+
+            // Parse times
+            const [inHours, inMinutes] = clockInTime.split(':').map(Number);
+            const [outHours, outMinutes] = clockOutTime.split(':').map(Number);
+
+            // Convert to minutes since midnight
+            const inTotalMinutes = inHours * 60 + inMinutes;
+            let outTotalMinutes = outHours * 60 + outMinutes;
+
+            // If clock out is before clock in, assume it's next day
+            if (outTotalMinutes < inTotalMinutes) {
+                outTotalMinutes += 24 * 60;
+            }
+
+            // Calculate working minutes
+            const workingMinutes = outTotalMinutes - inTotalMinutes;
+            return workingMinutes;
+        }
+
+        // Update full time and half time fields
+        function updateTimeCalculations() {
+            const workingMinutes = calculateWorkingMinutes();
+
+            if (workingMinutes > 0) {
+                // Full day is 100% of working minutes
+                const fullDayMinutes = workingMinutes;
+
+                // Half day is 50% of working minutes
+                const halfDayMinutes = Math.round(workingMinutes / 2);
+
+                // Update the fields
+                document.getElementById('treat_as_full_day_minutes').value = fullDayMinutes;
+                document.getElementById('treat_as_half_day_minutes').value = halfDayMinutes;
+            } else {
+                document.getElementById('treat_as_full_day_minutes').value = '';
+                document.getElementById('treat_as_half_day_minutes').value = '';
+            }
+        }
+
+        // Add event listeners to time inputs
+        document.addEventListener('DOMContentLoaded', function() {
+            const clockInInput = document.getElementById('clock_in_time');
+            const clockOutInput = document.getElementById('clock_out_time');
+
+            if (clockInInput && clockOutInput) {
+                clockInInput.addEventListener('change', updateTimeCalculations);
+                clockOutInput.addEventListener('change', updateTimeCalculations);
+
+                // Calculate on page load if values exist (for edit mode)
+                if (clockInInput.value && clockOutInput.value) {
+                    updateTimeCalculations();
+                }
+            }
+
+            // Ensure correct sections are visible when page loads (edit mode or validation error)
+            ['breakfast', 'lunch', 'snacks', 'dinner'].forEach(function(breakType) {
+                const checkbox = document.getElementById(breakType + '_status');
+                const section = document.getElementById(breakType + '_section');
+                const hiddenInput = document.querySelector('input[name="' + breakType +
+                    '_status"][type="hidden"]');
+
+                if (checkbox && section) {
+                    if (checkbox.checked) {
+                        section.style.display = 'block';
+                        hiddenInput.disabled = true;
+                    } else {
+                        section.style.display = 'none';
+                        hiddenInput.disabled = false;
+                    }
+                }
+            });
+        });
+
         function toggleBreakSection(breakType) {
             const checkbox = document.getElementById(breakType + '_status');
             const section = document.getElementById(breakType + '_section');
@@ -299,33 +390,19 @@
             }
         }
 
-        // Ensure correct sections are visible when page loads (edit mode or validation error)
-        document.addEventListener('DOMContentLoaded', function() {
-            ['breakfast', 'lunch', 'snacks', 'dinner'].forEach(function(breakType) {
-                const checkbox = document.getElementById(breakType + '_status');
-                const section = document.getElementById(breakType + '_section');
-                const hiddenInput = document.querySelector('input[name="' + breakType + '_status"][type="hidden"]');
-
-                if (checkbox && section) {
-                    if (checkbox.checked) {
-                        section.style.display = 'block';
-                        hiddenInput.disabled = true;
-                    } else {
-                        section.style.display = 'none';
-                        hiddenInput.disabled = false;
-                    }
-                }
-            });
-        });
-
         // Handle form reset
         document.querySelector('form').addEventListener('reset', function() {
             setTimeout(function() {
                 ['breakfast', 'lunch', 'snacks', 'dinner'].forEach(function(breakType) {
                     document.getElementById(breakType + '_section').style.display = 'none';
-                    document.querySelector('input[name="' + breakType + '_status"][type="hidden"]').disabled = false;
+                    document.querySelector('input[name="' + breakType + '_status"][type="hidden"]')
+                        .disabled = false;
                 });
                 document.getElementById('active_ind').checked = true;
+
+                // Reset calculated fields
+                document.getElementById('treat_as_full_day_minutes').value = '';
+                document.getElementById('treat_as_half_day_minutes').value = '';
             }, 0);
         });
     </script>
