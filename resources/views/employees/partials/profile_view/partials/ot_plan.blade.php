@@ -39,7 +39,7 @@
             </span>
         </div>
 
-        @if ($totalActiveOtPlan > 0)
+        @if ($totalActiveOtPlan > 0 && $activeOtPLan->getPlan)
             {{-- Active Plan Card --}}
             <div class="card border-0 shadow rounded-3 overflow-hidden">
 
@@ -62,7 +62,7 @@
                     {{-- Plan Name & Status --}}
                     <div class="text-center">
                         <h5 class="mb-2 fw-bold">
-                            <i class="mdi mdi-clock-plus text-info me-2"></i>{{ $activeOtPLan->getPlan->name }}
+                            <i class="mdi mdi-clock-plus text-info me-2"></i>{{ $activeOtPLan->getPlan->name ?? 'N/A' }}
                         </h5>
                         <span class="badge bg-success shadow-sm px-3 py-1 rounded-pill">
                             <i class="mdi mdi-check-circle me-1"></i>{{ ucfirst($activeOtPLan->status) }}
@@ -281,33 +281,36 @@
                             </thead>
                             <tbody>
                                 @foreach ($previousOtPlans as $plan)
-                                    @php($sl = 1)
-                                    <tr class="text-muted">
-                                        <td><span
-                                                class="badge bg-secondary-subtle text-secondary">#{{ $sl++ }}</span>
-                                        </td>
-                                        <td>{{ $plan->getPlan->name }}</td>
+                                    @if ($plan->getPlan)
+                                        @php($sl = 1)
+                                        <tr class="text-muted">
+                                            <td><span
+                                                    class="badge bg-secondary-subtle text-secondary">#{{ $sl++ }}</span>
+                                            </td>
+                                            <td>{{ $plan->getPlan->name ?? 'N/A' }}</td>
 
-                                        <td>{{ date('d M Y', strtotime($plan->from)) }}</td>
-                                        <td>{{ date('d M Y', strtotime($plan->to)) }}</td>
-                                        <td>
-                                            <span class="badge bg-warning-subtle text-warning">
-                                                <i class="mdi mdi-clock-alert-outline me-1"></i>{{ $plan->status }}
-                                            </span>
-                                        </td>
-                                        <td class="text-center">
-                                            <form
-                                                action="{{ route('employees.profile.plans.delete', ['type' => 'ot-plans', 'id' => $plan->id]) }}"
-                                                method="post">
-                                                @csrf
-                                                @method('delete')
-                                                <button type="submit" class="btn btn-sm btn-danger confirmDelete"
-                                                    title="Delete Record">
-                                                    <i class="mdi mdi-delete"></i> Delete
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
+                                            <td>{{ date('d M Y', strtotime($plan->from)) }}</td>
+                                            <td>{{ date('d M Y', strtotime($plan->to)) }}</td>
+                                            <td>
+                                                <span class="badge bg-warning-subtle text-warning">
+                                                    <i
+                                                        class="mdi mdi-clock-alert-outline me-1"></i>{{ $plan->status }}
+                                                </span>
+                                            </td>
+                                            <td class="text-center">
+                                                <form
+                                                    action="{{ route('employees.profile.plans.delete', ['type' => 'ot-plans', 'id' => $plan->id]) }}"
+                                                    method="post">
+                                                    @csrf
+                                                    @method('delete')
+                                                    <button type="submit" class="btn btn-sm btn-danger confirmDelete"
+                                                        title="Delete Record">
+                                                        <i class="mdi mdi-delete"></i> Delete
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @endif
                                 @endforeach
                             </tbody>
                         </table>
