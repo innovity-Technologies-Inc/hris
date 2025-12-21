@@ -1,6 +1,6 @@
-Name,Description,OT_Type,OT_Config_Type,Salary_Rate_Type,Multiplier Value,Custom_Overtime_Rate,Minimum_Overtime_Hours,Maximum_Overtime_Hours,Overtime_Start_Time,Overtime_End_Time,Status
-Regular OT,Standard overtime for weekdays,regular,Salary Based,Basic Rate,,,1,4,10.15 AM,4.00 PM,active
-Weekend OT,Overtime on weekends,weekend,Salary Based,Multiplier,2,,1,8,10.15 AM,4.00 PM,active
-Holiday OT,Overtime on national holidays,holiday,Salary Based,Basic Rate,,250,2,10,10.15 AM,4.00 PM,active
-Night Shift OT,Overtime for night shift employees,night,Salary Based,Basic Rate,,,1.5,6,10.15 AM,4.00 PM,active
-Emergency OT,OT for emergency or special work,other,Custom,Multiplier,1.5,300,0.5,5,10.15 AM,4.00 PM,active
+Name,Description,OT_Config_Type,Salary_Rate_Type,Multiplier Value,Custom_Overtime_Rate,Maximum_Overtime_Hours,Status
+Regular OT,Standard overtime for weekdays,Salary Based,Basic Rate,,,4,active
+Weekend OT,Overtime on weekends,Salary Based,Multiplier,2,,8,active
+Holiday OT,Overtime on national holidays,Salary Based,Basic Rate,,250,10,active
+Night Shift OT,Overtime for night shift employees,Salary Based,Basic Rate,,,6,active
+Emergency OT,OT for emergency or special work,Custom,Multiplier,1.5,300,5,active

@@ -142,7 +142,6 @@ class PlanService
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'ot_type' => 'required|in:regular,holiday,night_shift,weekend,other',
 
             // Configuration fields
             'ot_config_type' => 'required|in:Salary Based,Custom',
@@ -150,18 +149,12 @@ class PlanService
             'overtime_multiplier' => 'nullable|numeric|min:0',
             'custom_overtime_rate' => 'nullable|numeric|min:0',
 
-            'minimum_overtime_hours' => 'nullable|numeric|min:0',
-            'maximum_overtime_hours' => 'nullable|numeric|min:0|gt:minimum_overtime_hours',
-            'overtime_start_time' => 'nullable|date_format:H:i',
-            'overtime_end_time' => 'nullable|date_format:H:i|after:overtime_start_time',
-            'active_ind' => 'required|in:active,inactive',
+            'maximum_overtime_hours' => 'nullable|numeric|min:0',
+            'status' => 'required|in:active,inactive',
         ], [
             'name.required' => 'OT plan name is required.',
             'name.string' => 'OT plan name must be a string.',
             'name.max' => 'OT plan name may not exceed 255 characters.',
-
-            'ot_type.required' => 'Please select an overtime type.',
-            'ot_type.in' => 'The selected overtime type is invalid.',
 
             'ot_config_type.required' => 'Please select a configuration type.',
             'ot_config_type.in' => 'The selected configuration type is invalid.',
@@ -175,19 +168,11 @@ class PlanService
             'custom_overtime_rate.numeric' => 'Custom overtime rate must be a number.',
             'custom_overtime_rate.min' => 'Custom overtime rate must be at least 0.',
 
-            'minimum_overtime_hours.numeric' => 'Minimum hours must be a number.',
-            'minimum_overtime_hours.min' => 'Minimum hours must be at least 0.',
-
             'maximum_overtime_hours.numeric' => 'Maximum hours must be a number.',
             'maximum_overtime_hours.min' => 'Maximum hours must be at least 0.',
-            'maximum_overtime_hours.gt' => 'Maximum hours must be greater than minimum hours.',
 
-            'overtime_start_time.date_format' => 'Start time must be in the format HH:MM.',
-            'overtime_end_time.date_format' => 'End time must be in the format HH:MM.',
-            'overtime_end_time.after' => 'End time must be after start time.',
-
-            'active_ind.required' => 'Please select the plan status.',
-            'active_ind.in' => 'The selected status is invalid.',
+            'status.required' => 'Please select the plan status.',
+            'status.in' => 'The selected status is invalid.',
         ]);
 
         return $validated;

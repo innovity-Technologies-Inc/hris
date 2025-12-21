@@ -5,7 +5,6 @@ namespace App\Imports;
 use App\Models\OTPlan;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use Carbon\Carbon;
 
 class OTPlansImport implements ToCollection
 {
@@ -26,39 +25,19 @@ class OTPlansImport implements ToCollection
                 'name'                       => $row[0],
                 'description'                => $row[1] ?? null,
 
-                // OT Type
-                'ot_type'                    => strtolower($row[2] ?? 'regular'),
-
                 // Configurations
-                'ot_config_type'             => strtolower($row[3] ?? 'salary_based'),
-                'salary_rate_type'           => strtolower($row[4] ?? 'basic_rate'),
-                'overtime_multiplier'        => $this->toDecimal($row[5] ?? null),
-                'custom_overtime_rate'       => $this->toDecimal($row[6] ?? null),
+                'ot_config_type'             => $row[2] ?? 'Salary Based',
+                'salary_rate_type'           => $row[3] ?? 'Basic Rate',
+                'overtime_multiplier'        => $this->toDecimal($row[4] ?? null),
+                'custom_overtime_rate'       => $this->toDecimal($row[5] ?? null),
 
                 // Hours
-                'minimum_overtime_hours'     => $this->toDecimal($row[7] ?? 0.00),
-                'maximum_overtime_hours'     => $this->toDecimal($row[8] ?? null),
-
-                // Time Range
-                'overtime_start_time'        => $this->parseTime($row[9] ?? null),
-                'overtime_end_time'          => $this->parseTime($row[10] ?? null),
+                'maximum_overtime_hours'     => $this->toDecimal($row[6] ?? null),
 
                 // Status
-                'active_ind'                 => strtolower($row[11] ?? 'active'),
+                'status'                     => strtolower($row[7] ?? 'active'),
             ]);
         });
-    }
-
-    /**
-     * Parse time safely
-     */
-    private function parseTime($value)
-    {
-        try {
-            return $value ? Carbon::parse($value)->format('H:i:s') : null;
-        } catch (\Exception $e) {
-            return null;
-        }
     }
 
     /**
