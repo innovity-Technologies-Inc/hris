@@ -20,7 +20,7 @@ class OTPlan extends Model
         'salary_rate_type',
         'overtime_multiplier',
         'custom_overtime_rate',
-        'maximum_overtime_hours',
+        'maximum_overtime',
         'status',
     ];
 }

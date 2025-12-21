@@ -149,7 +149,7 @@ class PlanService
             'overtime_multiplier' => 'nullable|numeric|min:0',
             'custom_overtime_rate' => 'nullable|numeric|min:0',
 
-            'maximum_overtime_hours' => 'nullable|numeric|min:0',
+            'maximum_overtime' => 'nullable|numeric|min:0',
             'status' => 'required|in:active,inactive',
         ], [
             'name.required' => 'OT plan name is required.',
@@ -168,8 +168,8 @@ class PlanService
             'custom_overtime_rate.numeric' => 'Custom overtime rate must be a number.',
             'custom_overtime_rate.min' => 'Custom overtime rate must be at least 0.',
 
-            'maximum_overtime_hours.numeric' => 'Maximum hours must be a number.',
-            'maximum_overtime_hours.min' => 'Maximum hours must be at least 0.',
+            'maximum_overtime.numeric' => 'Maximum overtime must be a number.',
+            'maximum_overtime.min' => 'Maximum overtime must be at least 0.',
 
             'status.required' => 'Please select the plan status.',
             'status.in' => 'The selected status is invalid.',

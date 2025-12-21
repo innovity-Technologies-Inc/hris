@@ -25,7 +25,7 @@ return new class extends Migration
             $table->decimal('custom_overtime_rate', 8, 2)->nullable();
 
             // Hours
-            $table->decimal('maximum_overtime_hours', 6, 2)->nullable();
+            $table->decimal('maximum_overtime', 6, 2)->nullable();
 
             // Status
             $table->enum('status', ['active', 'inactive'])->default('active');

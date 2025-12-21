@@ -106,10 +106,10 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-12 mb-3">
-                        <label class="text-muted small">Maximum Overtime Hours</label>
+                        <label class="text-muted small">Maximum Overtime</label>
                         <p class="fw-semibold mb-0">
-                            @if ($plan->maximum_overtime_hours)
-                                {{ number_format($plan->maximum_overtime_hours, 2) }} hours
+                            @if ($plan->maximum_overtime)
+                                {{ number_format($plan->maximum_overtime, 2) }} hours
                             @else
                                 <span class="text-muted">Unlimited</span>
                             @endif

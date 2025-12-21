@@ -54,7 +54,7 @@
                     <h5 class="mb-0 fw-semibold">
                         <i class="mdi mdi-cash-multiple text-success me-2"></i>Overtime Rate Configuration
                     </h5>
-                    <small class="text-muted"><i class="mdi mdi-information-outline me-1"></i>Note: All overtime
+                    <small class="text-danger"><i class="mdi mdi-information-outline me-1"></i>Note: All overtime
                         calculations are based on hours</small>
                 </div>
                 <div class="card-body">
@@ -176,14 +176,14 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-12 mb-3">
-                            <label for="maximum_overtime_hours" class="form-label fw-semibold">
-                                Maximum Overtime Hours
+                            <label for="maximum_overtime" class="form-label fw-semibold">
+                                Maximum Overtime (Minutes)
                             </label>
-                            <input type="number" step="0.01" class="form-control" id="maximum_overtime_hours"
-                                name="maximum_overtime_hours" placeholder="Leave empty for unlimited"
-                                value="{{ isset($plan) ? $plan->maximum_overtime_hours : old('maximum_overtime_hours') }}">
-                            <small class="text-muted">Maximum OT hours allowed (optional)</small>
-                            @error('maximum_overtime_hours')
+                            <input type="number" step="0.01" class="form-control" id="maximum_overtime"
+                                name="maximum_overtime" placeholder="Leave empty for unlimited"
+                                value="{{ isset($plan) ? $plan->maximum_overtime : old('maximum_overtime') }}">
+                            <small class="text-muted">Maximum OT minutes allowed (optional)</small>
+                            @error('maximum_overtime')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>

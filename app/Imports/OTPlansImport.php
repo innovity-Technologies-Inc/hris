@@ -32,7 +32,7 @@ class OTPlansImport implements ToCollection
                 'custom_overtime_rate'       => $this->toDecimal($row[5] ?? null),
 
                 // Hours
-                'maximum_overtime_hours'     => $this->toDecimal($row[6] ?? null),
+                'maximum_overtime'           => $this->toDecimal($row[6] ?? null),
 
                 // Status
                 'status'                     => strtolower($row[7] ?? 'active'),

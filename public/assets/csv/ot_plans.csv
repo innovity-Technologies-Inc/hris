@@ -1,4 +1,4 @@
-Name,Description,OT_Config_Type,Salary_Rate_Type,Multiplier Value,Custom_Overtime_Rate,Maximum_Overtime_Hours,Status
+Name,Description,OT_Config_Type,Salary_Rate_Type,Multiplier Value,Custom_Overtime_Rate,Maximum_Overtime_(minutes),Status
 Regular OT,Standard overtime for weekdays,Salary Based,Basic Rate,,,4,active
 Weekend OT,Overtime on weekends,Salary Based,Multiplier,2,,8,active
 Holiday OT,Overtime on national holidays,Salary Based,Basic Rate,,250,10,active
