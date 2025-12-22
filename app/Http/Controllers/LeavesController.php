@@ -174,7 +174,6 @@ class LeavesController extends Controller
                     $leave_request->status = 'approved';
                     $leave_request->save();
 
-
                 });
             }
 

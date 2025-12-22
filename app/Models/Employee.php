@@ -61,6 +61,7 @@ class Employee extends Model
     ];
 
     public function shift(){
-        return $this->hasMany(EmployeeShiftPlan::class, 'employee_id', 'id');
+        return $this->hasMany(EmployeeShiftPlan::class, 'employee_id', 'id')
+            ->where('status', '=', 'active');
     }
 }
