@@ -100,7 +100,7 @@
                                             data-bs-target="#bulkUploadModal" data-section="shift-plan"
                                             data-section-name="Shift Plan" data-section-number="2"
                                             data-form-action="{{ route('plans.shift_plans.import') }}"
-                                            data-excel-link="{{ asset('assets/excel/shift_plans_bulk.xlsx') }}"
+                                            data-excel-link="{{ asset('assets/excel/shift_plans.xlsx') }}"
                                             data-csv-link="{{ asset('assets/csv/shift_plans.csv') }}">
                                             <i class="bi bi-upload me-2"></i>Upload
                                         </button>

@@ -24,39 +24,68 @@ class ShiftPlansImport implements ToCollection
                 return;
             }
 
+            // Validate minimum required fields
+            if (empty($row[0]) || empty($row[1]) || empty($row[2])) {
+                return; // Skip rows without name or times
+            }
+
+            // Parse times for calculation
+            $clockInTime = $this->parseTime($row[1] ?? null);
+            $clockOutTime = $this->parseTime($row[2] ?? null);
+
+            // Skip if times are invalid
+            if (!$clockInTime || !$clockOutTime) {
+                return;
+            }
+
+            $graceTime = (int)($row[3] ?? 0);
+            $excessiveLate = (int)($row[4] ?? 0);
+            $earlyOutGrace = (int)($row[5] ?? 5);
+
+            // Calculate treat_as_full_day_minutes and treat_as_half_day_minutes
+            $shiftStart = Carbon::parse($clockInTime);
+            $shiftEnd = Carbon::parse($clockOutTime);
+
+            // If clock out is before clock in, assume next day
+            if ($shiftEnd->lt($shiftStart)) {
+                $shiftEnd->addDay();
+            }
+
+            // Calculate: clock_out - clock_in - (grace_time + early_out_grace_minutes)
+            $treatAsFullDayMinutes = $shiftStart->diffInMinutes($shiftEnd) - ($graceTime + $earlyOutGrace);
+            $treatAsHalfDayMinutes = intdiv($treatAsFullDayMinutes, 2);
+
             ShiftPlan::create([
                 'name' => $row[0],
-                'clock_in_time' => $this->parseTime($row[1] ?? null),
-                'clock_out_time' => $this->parseTime($row[2] ?? null),
-                'treat_as_full_day_minutes' => $row[3] ?? null,
-                'treat_as_half_day_minutes' => $row[4] ?? null,
-                'grace_time' => $row[5] ?? null,
-                'late_after_minutes' => $row[6] ?? null,
-                'excessive_late_after_minutes' => $row[7] ?? null,
-                'early_out_grace_minutes' => $row[8] ?? 5,
-                'early_out_before' => $this->parseTime($row[9] ?? null),
+                'clock_in_time' => $clockInTime,
+                'clock_out_time' => $clockOutTime,
+                'treat_as_full_day_minutes' => $treatAsFullDayMinutes,
+                'treat_as_half_day_minutes' => $treatAsHalfDayMinutes,
+                'grace_time' => $graceTime,
+                'excessive_late_after_minutes' => $excessiveLate,
+                'early_out_grace_minutes' => $earlyOutGrace,
 
                 // Breakfast
-                'breakfast_status' => strtolower($row[10] ?? 'inactive'),
-                'breakfast_start_time' => $this->parseTime($row[11] ?? null),
-                'breakfast_end_time' => $this->parseTime($row[12] ?? null),
+                'breakfast_status' => strtolower($row[6] ?? 'inactive'),
+                'breakfast_start_time' => $this->parseTime($row[7] ?? null),
+                'breakfast_end_time' => $this->parseTime($row[8] ?? null),
 
                 // Lunch
-                'lunch_status' => strtolower($row[13] ?? 'inactive'),
-                'lunch_start_time' => $this->parseTime($row[14] ?? null),
-                'lunch_end_time' => $this->parseTime($row[15] ?? null),
+                'lunch_status' => strtolower($row[9] ?? 'inactive'),
+                'lunch_start_time' => $this->parseTime($row[10] ?? null),
+                'lunch_end_time' => $this->parseTime($row[11] ?? null),
 
                 // Snacks
-                'snacks_status' => strtolower($row[16] ?? 'inactive'),
-                'snacks_start_time' => $this->parseTime($row[17] ?? null),
-                'snacks_end_time' => $this->parseTime($row[18] ?? null),
+                'snacks_status' => strtolower($row[12] ?? 'inactive'),
+                'snacks_start_time' => $this->parseTime($row[13] ?? null),
+                'snacks_end_time' => $this->parseTime($row[14] ?? null),
 
                 // Dinner
-                'dinner_status' => strtolower($row[19] ?? 'inactive'),
-                'dinner_start_time' => $this->parseTime($row[20] ?? null),
-                'dinner_end_time' => $this->parseTime($row[21] ?? null),
+                'dinner_status' => strtolower($row[15] ?? 'inactive'),
+                'dinner_start_time' => $this->parseTime($row[16] ?? null),
+                'dinner_end_time' => $this->parseTime($row[17] ?? null),
 
-                'active_ind' => strtolower($row[22] ?? 'active'),
+                'active_ind' => strtolower($row[18] ?? 'active'),
             ]);
         });
     }

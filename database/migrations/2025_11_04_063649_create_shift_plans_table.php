@@ -19,10 +19,8 @@ return new class extends Migration
             $table->integer('treat_as_full_day_minutes');
             $table->integer('treat_as_half_day_minutes');
             $table->integer('grace_time')->nullable();
-            $table->integer('late_after_minutes')->nullable();
             $table->integer('excessive_late_after_minutes')->nullable();
             $table->integer('early_out_grace_minutes')->default(5);
-            $table->time('early_out_before')->nullable();
 
             //Breakfast fields
             $table->enum('breakfast_status', ['active', 'inactive'])->default('inactive');

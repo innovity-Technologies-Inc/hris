@@ -112,7 +112,7 @@
                             </div>
                         </div>
 
-                        {{-- Grace Time & Late Minutes --}}
+                        {{-- Grace Time --}}
                         <div class="col-lg-3 col-md-6 col-sm-6">
                             <div class="p-2 rounded-3 border shadow-sm"
                                 style="background-color: var(--bs-warning-bg-subtle);">
@@ -137,12 +137,12 @@
                                 <div class="d-flex align-items-center gap-2">
                                     <div class="d-flex align-items-center justify-content-center rounded-circle shadow-sm"
                                         style="width: 32px; height: 32px; min-width: 32px; background-color: var(--bs-body-bg);">
-                                        <i class="mdi mdi-alert-circle text-warning"></i>
+                                        <i class="mdi mdi-exit-run text-warning"></i>
                                     </div>
                                     <div class="flex-grow-1">
-                                        <p class="text-muted small mb-0 fw-semibold">Late After</p>
+                                        <p class="text-muted small mb-0 fw-semibold">Early Out Grace</p>
                                         <h6 class="mb-0 fw-bold">
-                                            {{ $activeShiftPLan->getPlan->late_after_minutes ?? '0' }} min
+                                            {{ $activeShiftPLan->getPlan->early_out_grace_minutes ?? '0' }} min
                                         </h6>
                                     </div>
                                 </div>
@@ -186,7 +186,7 @@
                             </div>
                         </div>
 
-                        {{-- Excessive Late & Early Out --}}
+                        {{-- Excessive Late --}}
                         <div class="col-lg-3 col-md-6 col-sm-6">
                             <div class="p-2 rounded-3 border shadow-sm"
                                 style="background-color: var(--bs-danger-bg-subtle);">
@@ -199,24 +199,6 @@
                                         <p class="text-muted small mb-0 fw-semibold">Excessive Late</p>
                                         <h6 class="mb-0 fw-bold">
                                             {{ $activeShiftPLan->getPlan->excessive_late_after_minutes ?? '0' }} min
-                                        </h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-3 col-md-6 col-sm-6">
-                            <div class="p-2 rounded-3 border shadow-sm"
-                                style="background-color: var(--bs-warning-bg-subtle);">
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="d-flex align-items-center justify-content-center rounded-circle shadow-sm"
-                                        style="width: 32px; height: 32px; min-width: 32px; background-color: var(--bs-body-bg);">
-                                        <i class="mdi mdi-exit-run text-warning"></i>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <p class="text-muted small mb-0 fw-semibold">Early Out Grace</p>
-                                        <h6 class="mb-0 fw-bold">
-                                            {{ $activeShiftPLan->getPlan->early_out_grace_minutes ?? '0' }} min
                                         </h6>
                                     </div>
                                 </div>

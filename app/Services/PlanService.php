@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\MealPlan;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
+use Carbon\Carbon;
 
 class PlanService
 {
@@ -21,6 +22,26 @@ class PlanService
 
     public function planSave($validated, $modelName, $id = null)
     {
+        if (isset($id)) {
+            $plan = $modelName::findOrFail($id);
+            $plan->update($validated);
+        } else {
+            $plan = $modelName::create($validated);
+        }
+        return $plan;
+    }
+    public function shiftPlanSave($validated, $modelName, $id = null)
+    {
+        $shift_start = Carbon::parse($validated['clock_in_time']);
+        $shift_end = Carbon::parse($validated['clock_out_time']);
+         if ($shift_end->lt($shift_start)) {
+            $shift_end->addDay();
+        }
+        $validated['treat_as_full_day_minutes'] = $shift_start->diffInMinutes($shift_end);
+        $validated['treat_as_full_day_minutes'] = $validated['treat_as_full_day_minutes'] - (($validated['grace_time'] ?? 0) + ($validated['early_out_grace_minutes'] ?? 0));
+        $validated['treat_as_half_day_minutes'] = intdiv($validated['treat_as_full_day_minutes'], 2);
+
+        // dd($validated);
         if (isset($id)) {
             $plan = $modelName::findOrFail($id);
             $plan->update($validated);
@@ -98,13 +119,11 @@ class PlanService
             'name' => 'required|string|max:255',
             'clock_in_time' => 'required|date_format:H:i',
             'clock_out_time' => 'required|date_format:H:i',
-            'treat_as_full_day_minutes' => 'nullable|integer|min:0',
-            'treat_as_half_day_minutes' => 'nullable|integer|min:0',
+            // 'treat_as_full_day_minutes' => 'nullable|integer|min:0',
+            // 'treat_as_half_day_minutes' => 'nullable|integer|min:0',
             'grace_time' => 'nullable|integer|min:0',
-            'late_after_minutes' => 'nullable|integer|min:0',
             'excessive_late_after_minutes' => 'nullable|integer|min:0',
             'early_out_grace_minutes' => 'nullable|integer|min:0',
-            'early_out_before' => 'nullable|date_format:H:i',
 
             // Meal fields
             'breakfast_status' => 'required|in:active,inactive',
