@@ -1,131 +1,6 @@
 @extends('structure.master')
 
 @section('content')
-    @php
-        // ========== DUMMY DATA FOR TESTING ==========
-
-        $branches = [
-            (object) ['id' => 1, 'name' => 'Head Office'],
-            (object) ['id' => 2, 'name' => 'Dhaka Branch'],
-            (object) ['id' => 3, 'name' => 'Chittagong Branch'],
-        ];
-
-        $departments = [
-            (object) ['id' => 1, 'name' => 'Engineering'],
-            (object) ['id' => 2, 'name' => 'Human Resources'],
-            (object) ['id' => 3, 'name' => 'Sales & Marketing'],
-            (object) ['id' => 4, 'name' => 'Finance'],
-        ];
-
-        $sections = [
-            (object) ['id' => 1, 'name' => 'Backend Development'],
-            (object) ['id' => 2, 'name' => 'Frontend Development'],
-            (object) ['id' => 3, 'name' => 'Recruitment'],
-            (object) ['id' => 4, 'name' => 'Payroll'],
-        ];
-
-        $attendanceRecords = [
-            (object) [
-                'system_id' => 1001,
-                'employee_id' => 'EMP-2024-001',
-                'employee_name' => 'Mohammad Rahman',
-                'shift' => 'Morning (9:00 AM - 5:00 PM)',
-                'clock_in' => '08:55 AM',
-                'clock_in_status' => 'on-time',
-                'clock_out' => '05:10 PM',
-                'clock_out_status' => 'on-time',
-                'working_hours' => '08:15',
-                'status' => 'full day',
-            ],
-            (object) [
-                'system_id' => 1002,
-                'employee_id' => 'EMP-2024-002',
-                'employee_name' => 'Fatima Khatun',
-                'shift' => 'Morning (9:00 AM - 5:00 PM)',
-                'clock_in' => '09:25 AM',
-                'clock_in_status' => 'late',
-                'clock_out' => '05:05 PM',
-                'clock_out_status' => 'on-time',
-                'working_hours' => '07:40',
-                'status' => 'full day',
-            ],
-            (object) [
-                'system_id' => 1003,
-                'employee_id' => 'EMP-2024-003',
-                'employee_name' => 'Ahmed Hassan',
-                'shift' => 'Morning (9:00 AM - 5:00 PM)',
-                'clock_in' => '09:00 AM',
-                'clock_in_status' => 'on-time',
-                'clock_out' => '01:00 PM',
-                'clock_out_status' => 'early',
-                'working_hours' => '04:00',
-                'status' => 'half day',
-            ],
-            (object) [
-                'system_id' => 1004,
-                'employee_id' => 'EMP-2024-004',
-                'employee_name' => 'Nusrat Jahan',
-                'shift' => 'Morning (9:00 AM - 5:00 PM)',
-                'clock_in' => null,
-                'clock_in_status' => 'missing',
-                'clock_out' => null,
-                'clock_out_status' => 'missing',
-                'working_hours' => '00:00',
-                'status' => 'absent',
-            ],
-            (object) [
-                'system_id' => 1005,
-                'employee_id' => 'EMP-2024-005',
-                'employee_name' => 'Karim Abdullah',
-                'shift' => 'Evening (2:00 PM - 10:00 PM)',
-                'clock_in' => '01:58 PM',
-                'clock_in_status' => 'on-time',
-                'clock_out' => '10:15 PM',
-                'clock_out_status' => 'on-time',
-                'working_hours' => '08:17',
-                'status' => 'full day',
-            ],
-            (object) [
-                'system_id' => 1006,
-                'employee_id' => 'EMP-2024-006',
-                'employee_name' => 'Sabrina Akter',
-                'shift' => 'Morning (9:00 AM - 5:00 PM)',
-                'clock_in' => '09:10 AM',
-                'clock_in_status' => 'late',
-                'clock_out' => '05:00 PM',
-                'clock_out_status' => 'on-time',
-                'working_hours' => '07:50',
-                'status' => 'full day',
-            ],
-            (object) [
-                'system_id' => 1007,
-                'employee_id' => 'EMP-2024-007',
-                'employee_name' => 'Rakib Hossain',
-                'shift' => 'Morning (9:00 AM - 5:00 PM)',
-                'clock_in' => '08:45 AM',
-                'clock_in_status' => 'on-time',
-                'clock_out' => '05:00 PM',
-                'clock_out_status' => 'on-time',
-                'working_hours' => '08:15',
-                'status' => 'full day',
-            ],
-            (object) [
-                'system_id' => 1008,
-                'employee_id' => 'EMP-2024-008',
-                'employee_name' => 'Ayesha Siddiqua',
-                'shift' => 'Morning (9:00 AM - 5:00 PM)',
-                'clock_in' => '09:00 AM',
-                'clock_in_status' => 'on-time',
-                'clock_out' => '04:30 PM',
-                'clock_out_status' => 'early',
-                'working_hours' => '07:30',
-                'status' => 'full day',
-            ],
-        ];
-
-        $showResults = true;
-        $hasResults = count($attendanceRecords) > 0;
-    @endphp
 
     {{-- Page Header --}}
     <div class="border-bottom mb-4" style="background-color: var(--bs-secondary-bg);">
@@ -163,10 +38,10 @@
             </div>
 
             <div class="card-body p-4">
-                <form id="attendanceFilterForm" class="needs-validation" novalidate>
+                <form id="attendanceFilterForm">
                     <div class="row g-4">
 
-                        {{-- Branch Select --}}
+                        {{-- Branch Select --}}{{--
                         <div class="col-md-6 col-xl-3">
                             <label for="branch_id" class="form-label fw-semibold mb-2">
                                 <svg class="me-1" width="14" height="14" fill="currentColor" viewBox="0 0 20 20">
@@ -184,7 +59,7 @@
                             <div class="form-text">Required field</div>
                         </div>
 
-                        {{-- Department Select --}}
+                        --}}{{-- Department Select --}}{{--
                         <div class="col-md-6 col-xl-3">
                             <label for="department_id" class="form-label fw-semibold mb-2">
                                 <svg class="me-1" width="14" height="14" fill="currentColor" viewBox="0 0 20 20">
@@ -201,7 +76,7 @@
                             <div class="form-text">Optional filter</div>
                         </div>
 
-                        {{-- Section Select --}}
+                        --}}{{-- Section Select --}}{{--
                         <div class="col-md-6 col-xl-3">
                             <label for="section_id" class="form-label fw-semibold mb-2">
                                 <svg class="me-1" width="14" height="14" fill="currentColor" viewBox="0 0 20 20">
@@ -217,7 +92,7 @@
                                 @endforeach
                             </select>
                             <div class="form-text">Optional filter</div>
-                        </div>
+                        </div>--}}
 
                         {{-- Date Picker --}}
                         <div class="col-md-6 col-xl-3">
@@ -226,11 +101,10 @@
                                     <path fill-rule="evenodd"
                                         d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" />
                                 </svg>
-                                Attendance Date
+                                From
                             </label>
                             <input type="date" id="attendance_date" name="attendance_date" class="form-control"
                                 value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}" required>
-                            <div class="form-text">Required field</div>
                         </div>
 
                     </div>

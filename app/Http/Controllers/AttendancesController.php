@@ -17,7 +17,7 @@ class AttendancesController extends Controller
     }
     public function index(FlexSearch $flexsearch, Request $request){
 
-        /*$query = Attendance::with('getEmployee');
+        $query = Attendance::with('getEmployee');
         $searchableColumns = ['getEmployee.full_name', ];
         $keyword = $request->input('keyword');
         $filters = [];
@@ -29,12 +29,9 @@ class AttendancesController extends Controller
 
         $attendance = $flexsearch->apply($query, $filters, $keyword, $searchableColumns)->paginate(10);
         if($request->ajax()){
-            return view('attendance.daily_sheet', compact('attendance'))->render();
+            return view('attendance.index', compact('attendance'))->render();
         }
-        return view('attendance.daily_sheet', compact('attendance', 'title', 'section', 'sub_section'));
-    */
-        return view('attendance.daily_sheet');
-
+        return view('attendance.index', compact('attendance', 'title', 'section', 'sub_section'));
     }
 
     public function create(){
