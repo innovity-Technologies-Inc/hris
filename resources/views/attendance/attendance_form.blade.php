@@ -1,7 +1,6 @@
 @extends('structure.master')
 
 @section('content')
-
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
@@ -20,6 +19,11 @@
                                         Record employee attendance
                                     </p>
                                 </div>
+                            </div>
+                            <div>
+                                <a href="{{ route('attendance.bulk-upload') }}" class="btn btn-outline-primary">
+                                    <i class="bi bi-upload me-2"></i>Bulk Upload
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -42,8 +46,8 @@
                                                     Attendance Record
                                                 </h6>
                                                 <button type="button"
-                                                        class="btn btn-sm btn-outline-danger remove-entry-btn"
-                                                        style="display:none">
+                                                    class="btn btn-sm btn-outline-danger remove-entry-btn"
+                                                    style="display:none">
                                                     <i class="bi bi-trash"></i> Remove
                                                 </button>
                                             </div>
@@ -55,8 +59,7 @@
                                                     <label class="form-label fw-semibold">
                                                         Employee <span class="text-danger">*</span>
                                                     </label>
-                                                    <select name="attendance[0][employee_id]"
-                                                            class="form-select" required>
+                                                    <select name="attendance[0][employee_id]" class="form-select" required>
                                                         <option value="">Select Employee</option>
                                                         @foreach ($employees as $employee)
                                                             <option value="{{ $employee->id }}">
@@ -72,9 +75,8 @@
                                                     <label class="form-label fw-semibold">
                                                         Clock In <span class="text-danger">*</span>
                                                     </label>
-                                                    <input type="datetime-local"
-                                                           name="attendance[0][clock_in]"
-                                                           class="form-control">
+                                                    <input type="datetime-local" name="attendance[0][clock_in]"
+                                                        class="form-control">
                                                 </div>
 
                                                 <!-- Clock Out -->
@@ -82,9 +84,8 @@
                                                     <label class="form-label fw-semibold">
                                                         Clock Out <span class="text-danger">*</span>
                                                     </label>
-                                                    <input type="datetime-local"
-                                                           name="attendance[0][clock_out]"
-                                                           class="form-control" required>
+                                                    <input type="datetime-local" name="attendance[0][clock_out]"
+                                                        class="form-control" required>
                                                 </div>
 
                                             </div>
@@ -95,8 +96,7 @@
                             </div>
 
                             <!-- Add Button -->
-                            <button type="button" id="addEntryBtn"
-                                    class="btn btn-outline-primary mb-4">
+                            <button type="button" id="addEntryBtn" class="btn btn-outline-primary mb-4">
                                 <i class="bi bi-plus-circle me-2"></i>
                                 Add Another Entry
                             </button>
@@ -115,21 +115,20 @@
             </div>
         </div>
     </div>
-
 @endsection
 
 @push('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
 
             let index = 0;
             const container = document.getElementById('attendanceEntriesContainer');
 
-            document.getElementById('addEntryBtn').addEventListener('click', function () {
+            document.getElementById('addEntryBtn').addEventListener('click', function() {
                 index++;
 
                 const div = document.createElement('div');
-                div.classList.add('attendance-entry-wrapper','mb-4');
+                div.classList.add('attendance-entry-wrapper', 'mb-4');
 
                 div.innerHTML = `
         <div class="card border-2">
@@ -191,7 +190,7 @@
                 toggleRemove();
             });
 
-            container.addEventListener('click', function (e) {
+            container.addEventListener('click', function(e) {
                 if (e.target.closest('.remove-entry-btn')) {
                     e.target.closest('.attendance-entry-wrapper').remove();
                     toggleRemove();

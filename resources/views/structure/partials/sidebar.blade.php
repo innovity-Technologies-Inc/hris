@@ -145,6 +145,35 @@
                         </ul>
                     </div>
                 </li>
+                <!-- Attendance Menu -->
+                @php
+                    $attendanceOpen = Route::is('attendance.*');
+                @endphp
+                <li>
+                    <a href="#attendance" data-bs-toggle="collapse"
+                        aria-expanded="{{ $attendanceOpen ? 'true' : 'false' }}"
+                        class="@if ($attendanceOpen) menuitem-active @endif">
+                        <i data-feather="clock"></i>
+                        <span> Attendance </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse @if ($attendanceOpen) show @endif" id="attendance">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link @if (Route::is('attendance.create')) menuitem-active @endif'
+                                    href='{{ route('attendance.create') }}'>Create</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('attendance.bulk-upload')) menuitem-active @endif'
+                                    href='{{ route('attendance.bulk-upload') }}'>Bulk Upload</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('attendance.index')) menuitem-active @endif'
+                                    href='{{ route('attendance.index') }}'>Records</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
                 <!-- Company Info Menu -->
                 @php
                     $companyOpen =
