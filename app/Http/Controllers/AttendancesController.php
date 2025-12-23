@@ -43,6 +43,13 @@ class AttendancesController extends Controller
         $employees = Employee::has('shift')->get();
         return view('attendance.attendance_form', compact('title', 'section', 'sub_section', 'employees'));
     }
+
+    public function bulkUpload(){
+        $title = 'Bulk Attendance Upload';
+        $section = 'Employee Attendance';
+        $sub_section = 'Bulk Upload';
+        return view('attendance.bulk_upload', compact('title', 'section', 'sub_section'));
+    }
     public function store(Request $request){
         try{
             $this->attendancesService->attendanceStore($request);

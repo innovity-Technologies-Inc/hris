@@ -164,6 +164,10 @@
                                     href='{{ route('attendance.create') }}'>Create</a>
                             </li>
                             <li>
+                                <a class='tp-link @if (Route::is('attendance.bulk-upload')) menuitem-active @endif'
+                                    href='{{ route('attendance.bulk-upload') }}'>Bulk Upload</a>
+                            </li>
+                            <li>
                                 <a class='tp-link @if (Route::is('attendance.index')) menuitem-active @endif'
                                     href='{{ route('attendance.index') }}'>Records</a>
                             </li>

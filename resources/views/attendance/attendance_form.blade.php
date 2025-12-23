@@ -21,10 +21,9 @@
                                 </div>
                             </div>
                             <div>
-                                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                                    data-bs-target="#bulkAttendanceUploadModal">
+                                <a href="{{ route('attendance.bulk-upload') }}" class="btn btn-outline-primary">
                                     <i class="bi bi-upload me-2"></i>Bulk Upload
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -210,5 +209,3 @@
         });
     </script>
 @endpush
-
-@include('attendance.partials.bulk_upload_modal')
