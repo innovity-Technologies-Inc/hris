@@ -1,6 +1,6 @@
 <!-- Bulk Upload Modal -->
 <div class="modal fade" id="bulkAttendanceUploadModal" tabindex="-1" aria-labelledby="bulkAttendanceUploadModalLabel"
-    aria-hidden="true">
+    aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content border-0 shadow-lg">
             <!-- Modal Header -->
