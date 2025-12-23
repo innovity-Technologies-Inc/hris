@@ -27,11 +27,11 @@ class AttendancesController extends Controller
         $sub_section = 'Records';
 
 
-        $attendance = $flexsearch->apply($query, $filters, $keyword, $searchableColumns)->paginate(10);
+        $attendanceRecords = $flexsearch->apply($query, $filters, $keyword, $searchableColumns)->paginate(10);
         if($request->ajax()){
-            return view('attendance.index', compact('attendance'))->render();
+            return view('attendance.index', compact('attendanceRecords'))->render();
         }
-        return view('attendance.index', compact('attendance', 'title', 'section', 'sub_section'));
+        return view('attendance.index', compact('attendanceRecords', 'title', 'section', 'sub_section'));
     }
 
     public function create(){

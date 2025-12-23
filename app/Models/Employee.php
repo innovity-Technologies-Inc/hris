@@ -64,4 +64,12 @@ class Employee extends Model
         return $this->hasMany(EmployeeShiftPlan::class, 'employee_id', 'id')
             ->where('status', '=', 'active');
     }
+
+    public function roster(){
+        return $this->hasMany(EmployeeRosterPlan::class, 'employee_id', 'id');
+    }
+
+    public function offDayPlan(){
+        return $this->hasMany(EmployeeOffdayPlan::class, 'employee_id', 'id');
+    }
 }
