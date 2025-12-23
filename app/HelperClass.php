@@ -46,6 +46,11 @@ class HelperClass
         $data = GeneralSetting::first();
         return $data;
     }
+    public static function getHoursByMinutes($minutes){
+        $hours = intdiv($minutes, 60);
+        $mins = $minutes % 60;
+        return $hours.':'.$mins;
+    }
 
 
 
