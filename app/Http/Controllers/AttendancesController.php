@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Attendance;
 use App\Models\Employee;
 use App\Services\AttendanceServices;
+use App\Imports\AttendanceImport;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AttendancesController extends Controller
 {
@@ -55,5 +57,25 @@ class AttendancesController extends Controller
                 'message' => 'Attendance Created Successfully',
                 'alert-type' => 'success'
             ]);
+    }
+
+    public function import(Request $request){
+        $request->validate([
+            'file' => 'required|mimes:csv,txt,xlsx,xls',
+        ]);
+
+        try{
+            Excel::import(new AttendanceImport($this->attendancesService), $request->file('file'));
+            return redirect()->route('attendance.index')->with([
+                'message' => 'Attendance Imported Successfully',
+                'alert-type' => 'success'
+            ]);
+        }catch (\Exception $e){
+            Log::error($e->getMessage());
+            return redirect()->back()->with([
+                'message' => 'Something Went Wrong: ' . $e->getMessage(),
+                'alert-type' => 'error'
+            ]);
+        }
     }
 }

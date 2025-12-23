@@ -30,6 +30,7 @@ class AttendanceServices
             $to = Carbon::parse($roster->to)->copy()->endOfDay();
 
             if ($clock_in->between($from, $to) && $roster->status == 'active') {
+                $dataShiftType = "Roster";
                 $dayPassed = (int)$from->diffInDays($clock_in->startOfDay());
                 $repeatDays = (int)$roster->getPlan->swapping;
                 $cycle = intdiv($dayPassed, $repeatDays);
@@ -48,12 +49,17 @@ class AttendanceServices
             } else {
                 $shift = EmployeeShiftPlan::where('employee_id', $employee_id)
                     ->where('status', 'active')->first()->plan_id;
+                    $dataShiftType = "Regular";
             }
         } else {
             $shift = EmployeeShiftPlan::where('employee_id', $employee_id)
                 ->where('status', 'active')->first()->plan_id;
+                $dataShiftType = "Regular";
         }
-        return $shift;
+        return [
+            'shift' => $shift,
+            'shift_type' => $dataShiftType
+        ];
     }
 
     public function getWorkingTime($clock_in, $clock_out)
@@ -171,17 +177,7 @@ class AttendanceServices
             'start' => $shift_start,
             'end' => $shift_end];
     }
-
-    public function attendanceStore($request)
-    {
-        $request->validate([
-            'attendance.*.employee_id' => 'required|exists:employees,id',
-            'attendance.*.clock_in' => 'required|date',
-            'attendance.*.clock_out' => 'required|date|after:attendance.*.clock_in',
-        ]);
-
-        $attendance = $request->attendance;
-        foreach ($attendance as $item) {
+    public function singleAttendanceStore($item){
             $employee_id = $item['employee_id'];
             $clock_in = $item['clock_in'];
             $clock_out = $item['clock_out'];
@@ -195,7 +191,9 @@ class AttendanceServices
             $clock_in = Carbon::parse($clock_in);
             $clock_out = Carbon::parse($clock_out);
 
-            $shift = $this->getTodayShift($employee_id, $clock_in);
+            $shift_data = $this->getTodayShift($employee_id, $clock_in);
+            $shift = $shift_data['shift'];
+            $data['shift_type'] = $shift_data['shift_type'];
             $shift_details = ShiftPlan::findorFail($shift);
             Log::info($shift_details);
 
@@ -231,8 +229,21 @@ class AttendanceServices
             $data['work_type'] = $this->getWorkType($clock_in, $clock_out, $shift_details, $data['overtime']);
             $data['attendance_status'] = $this->getAttendanceStatus($clock_in, $clock_out, $shift_details);
             Log::info($data);
-//            dd($data);
+        //    dd($data);
             Attendance::create($data);
+    }
+
+    public function attendanceStore($request)
+    {
+        $request->validate([
+            'attendance.*.employee_id' => 'required|exists:employees,id',
+            'attendance.*.clock_in' => 'required|date',
+            'attendance.*.clock_out' => 'required|date|after:attendance.*.clock_in',
+        ]);
+
+        $attendance = $request->attendance;
+        foreach ($attendance as $item) {
+            $this->singleAttendanceStore($item);
         }
     }
 }

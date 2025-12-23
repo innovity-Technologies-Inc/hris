@@ -497,6 +497,7 @@ Route::controller(DataController::class)->group(function () {
        Route::get('/', 'index')->name('attendance.index');
         Route::get('create', 'create')->name('attendance.create');
         Route::post('store', 'store')->name('attendance.store');
+        Route::post('import', 'import')->name('attendance.import');
 
 
     });

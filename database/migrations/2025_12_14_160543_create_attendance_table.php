@@ -18,6 +18,7 @@ return new class extends Migration
             $table->enum('in_status', ['On-Time', 'Late', 'Excessive-Late'])->nullable();
             $table->dateTime('out_time')->nullable();
             $table->enum('out_status', ['On-Time', 'Early-Exit'])->nullable();
+            $table->enum('shift_type', ['Regular', 'Roster'])->nullable();
             $table->decimal('working_time', 8, 2)->nullable();
             $table->decimal('late_count', 8, 2)->nullable();
             $table->decimal('early_out_count', 8, 2)->nullable();
