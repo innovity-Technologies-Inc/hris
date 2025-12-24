@@ -52,8 +52,8 @@
                                                     Attendance Record
                                                 </h6>
                                                 <button type="button"
-                                                    class="btn btn-sm btn-outline-danger remove-entry-btn"
-                                                    style="display:none">
+                                                        class="btn btn-sm btn-outline-danger remove-entry-btn"
+                                                        style="display:none">
                                                     <i class="bi bi-trash"></i> Remove
                                                 </button>
                                             </div>
@@ -98,7 +98,7 @@
                                                         Clock In <span class="text-danger">*</span>
                                                     </label>
                                                     <input type="datetime-local" name="attendance[0][clock_in]"
-                                                        class="form-control" required>
+                                                           class="form-control" required>
                                                 </div>
 
 
@@ -108,7 +108,7 @@
                                                         Clock Out <span class="text-danger">*</span>
                                                     </label>
                                                     <input type="datetime-local" name="attendance[0][clock_out]"
-                                                        class="form-control" required>
+                                                           class="form-control" required>
                                                 </div>
 
 
@@ -216,6 +216,19 @@
                         </select>
                     </div>
 
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">
+                    Work Station
+                </label>
+                <select name="attendance[${index}][workstation]"
+                            class="form-select">
+                            <option value="">Select Work Station</option>
+                            <option value="Remote">Remote</option>
+                            <option value="On-Site">On-Site</option>
+                            <option value="Work-From-Home">Work-From-Home</option>
+                        </select>
+                    </div>
+
 
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">
@@ -237,7 +250,7 @@
                     </div>
 
 
-                    
+
 
 
                 </div>

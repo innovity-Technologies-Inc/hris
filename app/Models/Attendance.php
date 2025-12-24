@@ -19,11 +19,27 @@ class Attendance extends Model
         'early_out_count',
         'overtime',
         'work_type',
-        'attendance_status'
+        'attendance_status',
+        'workstation',
+        'shift_id',
+        'ot_id',
+        'offday_id'
     ];
     public function getEmployee()
     {
         return $this->belongsTo(Employee::class, 'employee_id', 'id');
+    }
+    public function getShift()
+    {
+        return $this->belongsTo(ShiftPlan::class, 'shift_id', 'id');
+    }
+    public function getOT()
+    {
+        return $this->belongsTo(OTPlan::class, 'ot_id', 'id');
+    }
+    public function getOffDay()
+    {
+        return $this->belongsTo(OffDayPlan::class, 'offday_id', 'id');
     }
 
 }

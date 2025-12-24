@@ -186,6 +186,7 @@ class AttendanceServices
                 'employee_id' => $employee_id,
                 'in_time' => $clock_in,
                 'out_time' => $clock_out,
+                'workstation' => $item['workstation']
             ];
 
             $clock_in = Carbon::parse($clock_in);
