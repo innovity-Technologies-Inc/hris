@@ -33,8 +33,9 @@
                     <div class="card-body p-0">
                         @if ($vehicleAcquisition->vehicle_image)
                             <img src="{{ asset('storage/' . $vehicleAcquisition->vehicle_image) }}"
-                                alt="{{ $vehicleAcquisition->model_number }}" class="w-100 rounded-top"
-                                style="height: 350px; object-fit: contain; background: var(--bs-body-bg);">
+                                alt="{{ $vehicleAcquisition->model_number }}" class="w-100 rounded-top vehicle-image-thumb"
+                                style="height: 350px; object-fit: contain; background: var(--bs-body-bg); cursor: pointer;"
+                                data-image-url="{{ asset('storage/' . $vehicleAcquisition->vehicle_image) }}">
                         @else
                             <div class="text-center p-5 bg-light rounded-top"
                                 style="height: 350px; display: flex; align-items: center; justify-content: center;">
@@ -337,4 +338,61 @@
             </div>
         </div>
     </div>
+
+    <!-- Fullscreen Image Modal -->
+    <div id="imageFullscreenModal" class="position-fixed w-100 h-100" 
+        style="top: 0; left: 0; background: rgba(0, 0, 0, 0.9); display: none; z-index: 9999; align-items: center; justify-content: center;">
+        <div class="position-relative w-100 h-100 d-flex align-items-center justify-content-center">
+            <img id="fullscreenImage" src="" alt="Full Screen Image" 
+                style="max-width: 90vw; max-height: 90vh; object-fit: contain;">
+            <button id="closeFullscreen" class="position-absolute btn btn-light rounded-circle" 
+                style="top: 20px; right: 20px; width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center; z-index: 10000;">
+                <i data-feather="x" style="width: 24px; height: 24px;"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageThumb = document.querySelector('.vehicle-image-thumb');
+            const fullscreenModal = document.getElementById('imageFullscreenModal');
+            const fullscreenImage = document.getElementById('fullscreenImage');
+            const closeBtn = document.getElementById('closeFullscreen');
+
+            // Open fullscreen when image is clicked
+            if (imageThumb) {
+                imageThumb.addEventListener('click', function() {
+                    fullscreenImage.src = this.getAttribute('data-image-url');
+                    fullscreenModal.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                    feather.replace();
+                });
+            }
+
+            // Close fullscreen when close button is clicked
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    fullscreenModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                });
+            }
+
+            // Close fullscreen when clicking outside the image
+            fullscreenModal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    fullscreenModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+
+            // Close on Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && fullscreenModal.style.display === 'flex') {
+                    fullscreenModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        });
+    </script>
 @endsection

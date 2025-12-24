@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Transport;
 
 use App\Http\Controllers\Controller;
 use App\Models\Transport\VehicleAcquisition;
+use App\HelperClass;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 
 class VehicleAcquisitionController extends Controller
 {
@@ -51,9 +51,9 @@ class VehicleAcquisitionController extends Controller
         $title = 'View Vehicle Acquisition';
         $section = 'Transport';
         $sub_section = 'Vehicle Details';
-        
+
         $vehicleAcquisition = VehicleAcquisition::findOrFail($id);
-        
+
         return view('transport.vehicle_acquisition.view', compact('title', 'section', 'sub_section', 'vehicleAcquisition'));
     }
 
@@ -87,15 +87,15 @@ class VehicleAcquisitionController extends Controller
 
             // Handle file uploads
             if ($request->hasFile('license_document')) {
-                $data['license_document'] = $request->file('license_document')->store('transport/vehicle_acquisitions/license_documents', 'public');
+                $data['license_document'] = HelperClass::file_upload($request->file('license_document'), 'transport/vehicle_acquisitions/license_documents');
             }
 
             if ($request->hasFile('vehicle_image')) {
-                $data['vehicle_image'] = $request->file('vehicle_image')->store('transport/vehicle_acquisitions/vehicle_images', 'public');
+                $data['vehicle_image'] = HelperClass::file_upload($request->file('vehicle_image'), 'transport/vehicle_acquisitions/vehicle_images');
             }
 
             if ($request->hasFile('purchase_document')) {
-                $data['purchase_document'] = $request->file('purchase_document')->store('transport/vehicle_acquisitions/purchase_documents', 'public');
+                $data['purchase_document'] = HelperClass::file_upload($request->file('purchase_document'), 'transport/vehicle_acquisitions/purchase_documents');
             }
 
             VehicleAcquisition::create($data);
@@ -167,25 +167,25 @@ class VehicleAcquisitionController extends Controller
             if ($request->hasFile('license_document')) {
                 // Delete old file if exists
                 if ($vehicleAcquisition->license_document) {
-                    Storage::disk('public')->delete($vehicleAcquisition->license_document);
+                    HelperClass::file_delete($vehicleAcquisition->license_document);
                 }
-                $data['license_document'] = $request->file('license_document')->store('transport/vehicle_acquisitions/license_documents', 'public');
+                $data['license_document'] = HelperClass::file_upload($request->file('license_document'), 'transport/vehicle_acquisitions/license_documents');
             }
 
             if ($request->hasFile('vehicle_image')) {
                 // Delete old file if exists
                 if ($vehicleAcquisition->vehicle_image) {
-                    Storage::disk('public')->delete($vehicleAcquisition->vehicle_image);
+                    HelperClass::file_delete($vehicleAcquisition->vehicle_image);
                 }
-                $data['vehicle_image'] = $request->file('vehicle_image')->store('transport/vehicle_acquisitions/vehicle_images', 'public');
+                $data['vehicle_image'] = HelperClass::file_upload($request->file('vehicle_image'), 'transport/vehicle_acquisitions/vehicle_images');
             }
 
             if ($request->hasFile('purchase_document')) {
                 // Delete old file if exists
                 if ($vehicleAcquisition->purchase_document) {
-                    Storage::disk('public')->delete($vehicleAcquisition->purchase_document);
+                    HelperClass::file_delete($vehicleAcquisition->purchase_document);
                 }
-                $data['purchase_document'] = $request->file('purchase_document')->store('transport/vehicle_acquisitions/purchase_documents', 'public');
+                $data['purchase_document'] = HelperClass::file_upload($request->file('purchase_document'), 'transport/vehicle_acquisitions/purchase_documents');
             }
 
             $vehicleAcquisition->update($data);
@@ -215,13 +215,13 @@ class VehicleAcquisitionController extends Controller
 
             // Delete associated files
             if ($vehicleAcquisition->license_document) {
-                Storage::disk('public')->delete($vehicleAcquisition->license_document);
+                HelperClass::file_delete($vehicleAcquisition->license_document);
             }
             if ($vehicleAcquisition->vehicle_image) {
-                Storage::disk('public')->delete($vehicleAcquisition->vehicle_image);
+                HelperClass::file_delete($vehicleAcquisition->vehicle_image);
             }
             if ($vehicleAcquisition->purchase_document) {
-                Storage::disk('public')->delete($vehicleAcquisition->purchase_document);
+                HelperClass::file_delete($vehicleAcquisition->purchase_document);
             }
 
             $vehicleAcquisition->delete();
