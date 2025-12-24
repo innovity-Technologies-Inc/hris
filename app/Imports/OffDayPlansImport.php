@@ -23,14 +23,20 @@ class OffDayPlansImport implements ToCollection
             }
 
             OffDayPlan::create([
-                'name' => $row[0],
-                'short_name' => $row[1] ?? null,
-                'start_time' => $this->parseTime($row[2] ?? null),
-                'end_time' => $this->parseTime($row[3] ?? null),
-                'grace_time' => $row[4],
-                'grace_time_before' => $row[5] ?? null,
-                'remuneration' => $this->toDecimal($row[6] ?? null),
-                'active_ind' => strtolower($row[7] ?? 'active'),
+                'name'                   => $row[0],
+                'short_name'             => $row[1] ?? null,
+                'start_time'             => $this->parseTime($row[2] ?? null),
+                'end_time'               => $this->parseTime($row[3] ?? null),
+                'grace_time'             => $row[4],
+                'grace_time_before'      => $row[5] ?? null,
+                
+                // Configuration fields (refactored to match OT Plan)
+                'offday_config_type'     => $row[6] ?? 'Custom',
+                'salary_rate_type'       => $row[7] ?? null,
+                'offday_multiplier'      => $this->toDecimal($row[8] ?? null),
+                'custom_offday_rate'     => $this->toDecimal($row[9] ?? null),
+                
+                'status'                 => strtolower($row[10] ?? 'active'),
             ]);
         });
     }

@@ -195,13 +195,26 @@
                             class="form-select" required>
                             <option value="">Select Employee</option>
                             @foreach ($employees as $employee)
-                <option value="{{ $employee->id }}">
+                                <option value="{{ $employee->id }}">
                                     {{ $employee->full_name }}
-                ({{ $employee->applicant_id }})
+                                    ({{ $employee->applicant_id }})
                                 </option>
                             @endforeach
-                </select>
-            </div>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">
+                            Work Station
+                        </label>
+                        <select name="attendance[${index}][workstation]"
+                            class="form-select">
+                            <option value="">Select Work Station</option>
+                            <option value="Remote">Remote</option>
+                            <option value="On-Site">On-Site</option>
+                            <option value="Work-From-Home">Work-From-Home</option>
+                        </select>
+                    </div>
 
             <div class="col-md-4">
                 <label class="form-label fw-semibold">

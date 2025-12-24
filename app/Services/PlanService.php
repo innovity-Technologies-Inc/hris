@@ -291,7 +291,12 @@ class PlanService
             'grace_time' => 'required|integer|min:0',
             'grace_time_before' => 'nullable|integer|min:0',
 
-            'remuneration' => 'required|numeric|min:0|max:99999999.99',
+            // Configuration fields (refactored to match OT Plan)
+            'offday_config_type' => 'required|in:Salary Based,Custom',
+            'salary_rate_type' => 'required_if:offday_config_type,Salary Based|nullable|in:Basic Rate,Multiplier',
+            'offday_multiplier' => 'nullable|numeric|min:0',
+            'custom_offday_rate' => 'nullable|numeric|min:0',
+
             'status' => 'required|in:active,inactive'
         ], [
             'name.required' => 'Name is required.',
@@ -301,8 +306,18 @@ class PlanService
             'grace_time.required' => 'Grace time is required.',
             'grace_time.integer' => 'Grace time must be a number.',
 
-            'remuneration.required' => 'Remuneration amount is required.',
-            'remuneration.numeric' => 'Remuneration must be a valid number.',
+            // Configuration validation messages
+            'offday_config_type.required' => 'Please select a configuration type.',
+            'offday_config_type.in' => 'The selected configuration type is invalid.',
+
+            'salary_rate_type.required_if' => 'Please select a rate type when using salary-based configuration.',
+            'salary_rate_type.in' => 'The selected rate type is invalid.',
+
+            'offday_multiplier.numeric' => 'Offday multiplier must be a number.',
+            'offday_multiplier.min' => 'Offday multiplier must be at least 0.',
+
+            'custom_offday_rate.numeric' => 'Custom offday rate must be a number.',
+            'custom_offday_rate.min' => 'Custom offday rate must be at least 0.',
         ]);
         return $validated;
     }

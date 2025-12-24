@@ -19,7 +19,13 @@ return new class extends Migration
             $table->time('end_time');
             $table->unsignedBigInteger('grace_time');
             $table->unsignedBigInteger('grace_time_before')->nullable();
-            $table->decimal('remuneration', 10, 2);
+            
+            // Configuration fields
+            $table->enum('offday_config_type', ['Salary Based', 'Custom'])->default('Custom');
+            $table->enum('salary_rate_type', ['Basic Rate', 'Multiplier'])->nullable();
+            $table->decimal('offday_multiplier', 8, 2)->nullable();
+            $table->decimal('custom_offday_rate', 10, 2)->nullable();
+            
             $table->enum('status', ['active', 'inactive']);
             $table->timestamps();
         });
