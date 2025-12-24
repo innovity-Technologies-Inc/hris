@@ -117,7 +117,11 @@ class DataController extends Controller
             'id' => $plan->id,
             'name' => $plan->name,
             'short_name' => $plan->short_name,
-            'remuneration' => $plan->remuneration,
+            'config_type' => $plan->offday_config_type,
+            'salary_rate_type' => $plan->salary_rate_type,
+            'offday_multiplier' => $plan->offday_multiplier,
+            'custom_offday_rate' => $plan->custom_offday_rate,
+            'configuration_description' => $plan->getConfigurationDescription(),
             'start_time' => Carbon::parse($plan->start_time)->format('h:i A'),
             'end_time' => Carbon::parse($plan->end_time)->format('h:i A'),
         ]);

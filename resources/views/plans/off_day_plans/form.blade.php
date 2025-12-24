@@ -127,25 +127,126 @@
                     <h5 class="mb-0 fw-semibold">
                         <i class="mdi mdi-cash-multiple text-success me-2"></i> Remuneration Configuration
                     </h5>
+                    <small class="text-danger"><i class="mdi mdi-information-outline me-1"></i>Note: All remuneration
+                        calculations are based on hours</small>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="remuneration" class="form-label fw-semibold">
-                                Remuneration Amount <span class="text-danger">*</span>
+                    <!-- Main Configuration Type Selection -->
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold">
+                                Configuration Type <span class="text-danger">*</span>
                             </label>
-                            <div class="input-group">
-                                <span
-                                    class="input-group-text">{{ \App\HelperClass::getGeneralSetting()->currency ?? '৳' }}</span>
-                                <input type="number" step="0.01" class="form-control" id="remuneration"
-                                    name="remuneration" placeholder="Enter remuneration amount"
-                                    value="{{ isset($plan) ? $plan->remuneration : old('remuneration', 0.0) }}" required>
+                            <div class="d-flex gap-4">
+                                <div class="form-check">
+                                    <input class="form-check-input @error('offday_config_type') is-invalid @enderror"
+                                        type="radio" name="offday_config_type" id="offday_config_salary"
+                                        value="Salary Based"
+                                        {{ isset($plan) && $plan->offday_config_type == 'Salary Based' ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="offday_config_salary">
+                                        Based on Salary
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input @error('offday_config_type') is-invalid @enderror"
+                                        type="radio" name="offday_config_type" id="offday_config_custom"
+                                        value="Custom"
+                                        {{ !isset($plan) || (isset($plan) && $plan->offday_config_type == 'Custom') ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="offday_config_custom">
+                                        Custom Rate
+                                    </label>
+                                </div>
                             </div>
-                            <small class="text-muted">Fixed amount paid for off-day work</small>
-                            @error('remuneration')
+                            @error('offday_config_type')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
+                    </div>
+
+                    <!-- Remuneration Configuration (Based on Salary) -->
+                    <div id="salary_based_section" class="border rounded p-3 mb-3">
+                        <h6 class="fw-semibold mb-3">
+                            <i class="mdi mdi-calculator text-primary me-1"></i>Remuneration Configuration (Based on
+                            Salary)
+                        </h6>
+
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label fw-semibold">
+                                    Rate Type <span class="text-danger">*</span>
+                                </label>
+                                <div class="d-flex gap-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="salary_rate_type"
+                                            id="rate_type_basic" value="Basic Rate"
+                                            {{ isset($plan) && $plan->salary_rate_type == 'Basic Rate' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="rate_type_basic">
+                                            Basic Rate
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="salary_rate_type"
+                                            id="rate_type_multiplier" value="Multiplier"
+                                            {{ !isset($plan) || (isset($plan) && $plan->salary_rate_type == 'Multiplier') ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="rate_type_multiplier">
+                                            Multiplier
+                                        </label>
+                                    </div>
+                                </div>
+                                @error('salary_rate_type')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="row" id="multiplier_field_row">
+                            <div class="col-md-4 mb-3">
+                                <label for="offday_multiplier" class="form-label fw-semibold">
+                                    Offday Rate <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <input type="number" step="0.01" class="form-control form-control-sm"
+                                        id="offday_multiplier" name="offday_multiplier" placeholder="2.0"
+                                        value="{{ isset($plan) ? $plan->offday_multiplier : old('offday_multiplier', '2.0') }}"
+                                        style="max-width: 120px;">
+                                    <span class="input-group-text bg-light">X Base Rate</span>
+                                </div>
+                                <small class="text-muted">Enter fractional number (e.g., 1.5, 2.0, 2.5)</small>
+                                @error('offday_multiplier')
+                                    <span class="text-danger d-block">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Remuneration (Custom) -->
+                    <div id="custom_rate_section" class="border rounded p-3 mb-3">
+                        <h6 class="fw-semibold mb-3">
+                            <i class="mdi mdi-cash text-success me-1"></i>Remuneration (Custom)
+                        </h6>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="custom_offday_rate" class="form-label fw-semibold">
+                                    Amount Per Hour <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span
+                                        class="input-group-text">{{ \App\HelperClass::getGeneralSetting()->currency ?? '৳' }}</span>
+                                    <input type="number" step="0.01" class="form-control" id="custom_offday_rate"
+                                        name="custom_offday_rate" placeholder="Enter amount per hour"
+                                        value="{{ isset($plan) ? $plan->custom_offday_rate : old('custom_offday_rate') }}">
+                                </div>
+                                <small class="text-muted">Fixed amount per offday hour worked</small>
+                                @error('custom_offday_rate')
+                                    <span class="text-danger d-block">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="status" class="form-label fw-semibold">
                                 Status <span class="text-danger">*</span>
@@ -190,7 +291,74 @@
         document.querySelector('form').addEventListener('reset', function() {
             setTimeout(function() {
                 document.getElementById('status').checked = true;
+                document.getElementById('offday_config_custom').checked = true;
+                document.getElementById('rate_type_multiplier').checked = true;
+                toggleOffdayConfigSections();
             }, 0);
+        });
+
+        // Toggle between salary-based and custom offday rate configuration
+        function toggleOffdayConfigSections() {
+            const salaryBased = document.getElementById('offday_config_salary').checked;
+            const salarySection = document.getElementById('salary_based_section');
+            const customSection = document.getElementById('custom_rate_section');
+
+            if (salaryBased) {
+                // Enable salary-based section
+                salarySection.style.opacity = '1';
+                salarySection.style.pointerEvents = 'auto';
+                salarySection.querySelectorAll('input').forEach(input => {
+                    input.disabled = false;
+                });
+
+                // Disable custom section
+                customSection.style.opacity = '0.5';
+                customSection.style.pointerEvents = 'none';
+                customSection.querySelectorAll('input').forEach(input => {
+                    input.disabled = true;
+                });
+            } else {
+                // Disable salary-based section
+                salarySection.style.opacity = '0.5';
+                salarySection.style.pointerEvents = 'none';
+                salarySection.querySelectorAll('input').forEach(input => {
+                    input.disabled = true;
+                });
+
+                // Enable custom section
+                customSection.style.opacity = '1';
+                customSection.style.pointerEvents = 'auto';
+                customSection.querySelectorAll('input').forEach(input => {
+                    input.disabled = false;
+                });
+            }
+        }
+
+        // Toggle multiplier field visibility based on rate type
+        function toggleMultiplierField() {
+            const isMultiplier = document.getElementById('rate_type_multiplier').checked;
+            const multiplierRow = document.getElementById('multiplier_field_row');
+
+            if (isMultiplier) {
+                multiplierRow.style.display = 'flex';
+            } else {
+                multiplierRow.style.display = 'none';
+            }
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize on page load
+            toggleOffdayConfigSections();
+            toggleMultiplierField();
+
+            // Listen for configuration type changes
+            document.getElementById('offday_config_salary').addEventListener('change', toggleOffdayConfigSections);
+            document.getElementById('offday_config_custom').addEventListener('change', toggleOffdayConfigSections);
+
+            // Listen for rate type changes
+            document.getElementById('rate_type_basic').addEventListener('change', toggleMultiplierField);
+            document.getElementById('rate_type_multiplier').addEventListener('change', toggleMultiplierField);
         });
     </script>
 @endsection

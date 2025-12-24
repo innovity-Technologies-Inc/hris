@@ -1,10 +1,12 @@
 @extends('structure.master')
 
+
 @section('content')
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
                 <div class="card shadow-sm border">
+
 
                     <!-- Header -->
                     <div class="card-header border-bottom py-4">
@@ -28,17 +30,21 @@
                         </div>
                     </div>
 
+
                     <!-- Body -->
                     <div class="card-body p-4">
                         <form action="{{ route('attendance.store') }}" method="POST">
                             @csrf
 
+
                             <div id="attendanceEntriesContainer">
+
 
                                 <!-- ENTRY 1 -->
                                 <div class="attendance-entry-wrapper mb-4">
                                     <div class="card border-2">
                                         <div class="card-body p-4">
+
 
                                             <div class="d-flex justify-content-between align-items-center mb-3">
                                                 <h6 class="fw-semibold mb-0">
@@ -52,10 +58,12 @@
                                                 </button>
                                             </div>
 
+
                                             <div class="row g-3">
 
+
                                                 <!-- Employee -->
-                                                <div class="col-12">
+                                                <div class="col-md-8">
                                                     <label class="form-label fw-semibold">
                                                         Employee <span class="text-danger">*</span>
                                                     </label>
@@ -70,14 +78,29 @@
                                                     </select>
                                                 </div>
 
+                                                <!-- Work Station -->
+                                                <div class="col-md-4">
+                                                    <label class="form-label fw-semibold">
+                                                        Work Station
+                                                    </label>
+                                                    <select name="attendance[0][workstation]" class="form-select">
+                                                        <option value="">Select Work Station</option>
+                                                        <option value="Remote">Remote</option>
+                                                        <option value="On-Site">On-Site</option>
+                                                        <option value="Work-From-Home">Work-From-Home</option>
+                                                    </select>
+                                                </div>
+
+
                                                 <!-- Clock In -->
                                                 <div class="col-md-6">
                                                     <label class="form-label fw-semibold">
                                                         Clock In <span class="text-danger">*</span>
                                                     </label>
                                                     <input type="datetime-local" name="attendance[0][clock_in]"
-                                                        class="form-control">
+                                                        class="form-control" required>
                                                 </div>
+
 
                                                 <!-- Clock Out -->
                                                 <div class="col-md-6">
@@ -88,18 +111,25 @@
                                                         class="form-control" required>
                                                 </div>
 
+
+
+
+
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
+
                             </div>
+
 
                             <!-- Add Button -->
                             <button type="button" id="addEntryBtn" class="btn btn-outline-primary mb-4">
                                 <i class="bi bi-plus-circle me-2"></i>
                                 Add Another Entry
                             </button>
+
 
                             <!-- Submit -->
                             <div class="d-flex justify-content-end gap-2 border-top pt-3">
@@ -108,8 +138,10 @@
                                 </button>
                             </div>
 
+
                         </form>
                     </div>
+
 
                 </div>
             </div>
@@ -117,22 +149,28 @@
     </div>
 @endsection
 
+
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
+
             let index = 0;
             const container = document.getElementById('attendanceEntriesContainer');
+
 
             document.getElementById('addEntryBtn').addEventListener('click', function() {
                 index++;
 
+
                 const div = document.createElement('div');
                 div.classList.add('attendance-entry-wrapper', 'mb-4');
+
 
                 div.innerHTML = `
         <div class="card border-2">
             <div class="card-body p-4">
+
 
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h6 class="fw-semibold mb-0">
@@ -145,9 +183,11 @@
                     </button>
                 </div>
 
+
                 <div class="row g-3">
 
-                    <div class="col-12">
+
+                    <div class="col-md-8">
                         <label class="form-label fw-semibold">
                             Employee <span class="text-danger">*</span>
                         </label>
@@ -155,22 +195,37 @@
                             class="form-select" required>
                             <option value="">Select Employee</option>
                             @foreach ($employees as $employee)
-                <option value="{{ $employee->id }}">
+                                <option value="{{ $employee->id }}">
                                     {{ $employee->full_name }}
-                ({{ $employee->applicant_id }})
+                                    ({{ $employee->applicant_id }})
                                 </option>
                             @endforeach
-                </select>
-            </div>
+                        </select>
+                    </div>
 
-            <div class="col-md-6">
-                <label class="form-label fw-semibold">
-                    Clock In <span class="text-danger">*</span>
-                </label>
-                <input type="datetime-local"
-                    name="attendance[${index}][clock_in]"
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">
+                            Work Station
+                        </label>
+                        <select name="attendance[${index}][workstation]"
+                            class="form-select">
+                            <option value="">Select Work Station</option>
+                            <option value="Remote">Remote</option>
+                            <option value="On-Site">On-Site</option>
+                            <option value="Work-From-Home">Work-From-Home</option>
+                        </select>
+                    </div>
+
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">
+                            Clock In <span class="text-danger">*</span>
+                        </label>
+                        <input type="datetime-local"
+                            name="attendance[${index}][clock_in]"
                             class="form-control" required>
                     </div>
+
 
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">
@@ -181,14 +236,20 @@
                             class="form-control" required>
                     </div>
 
+
+                    
+
+
                 </div>
             </div>
         </div>
         `;
 
+
                 container.appendChild(div);
                 toggleRemove();
             });
+
 
             container.addEventListener('click', function(e) {
                 if (e.target.closest('.remove-entry-btn')) {
@@ -196,6 +257,7 @@
                     toggleRemove();
                 }
             });
+
 
             function toggleRemove() {
                 const rows = document.querySelectorAll('.attendance-entry-wrapper');
@@ -205,6 +267,7 @@
                         rows.length > 1 ? 'inline-block' : 'none';
                 });
             }
+
 
         });
     </script>
