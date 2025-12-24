@@ -19,7 +19,8 @@ class Attendance extends Model
         'early_out_count',
         'overtime',
         'work_type',
-        'attendance_status'
+        'attendance_status',
+        'workstation'
     ];
     public function getEmployee()
     {

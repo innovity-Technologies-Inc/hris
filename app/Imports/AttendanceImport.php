@@ -38,6 +38,7 @@ class AttendanceImport implements ToCollection
                 'employee_id' => $row[0],
                 'clock_in' => $this->parseDateTime($row[1]),
                 'clock_out' => $this->parseDateTime($row[2]),
+                'workstation' => $row[3] ?? null,
             ];
 
             $this->attendanceServices->singleAttendanceStore($items);
