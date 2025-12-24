@@ -26,6 +26,7 @@ class VehicleAcquisition extends Model
         'purchase_price',
         'purchase_document',
         'ownership_type',
+        'third_party_name',
         'status',
     ];
 }

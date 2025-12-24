@@ -77,6 +77,7 @@ class VehicleAcquisitionController extends Controller
             'purchase_price' => 'nullable|numeric|min:0',
             'purchase_document' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
             'ownership_type' => 'required|in:Company-owned,Third-party',
+            'third_party_name' => 'nullable|required_if:ownership_type,Third-party|string|max:255',
             'status' => 'required|in:Active,Inactive',
         ]);
 
@@ -154,6 +155,7 @@ class VehicleAcquisitionController extends Controller
             'purchase_price' => 'nullable|numeric|min:0',
             'purchase_document' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
             'ownership_type' => 'required|in:Company-owned,Third-party',
+            'third_party_name' => 'nullable|required_if:ownership_type,Third-party|string|max:255',
             'status' => 'required|in:Active,Inactive',
         ]);
 

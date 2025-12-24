@@ -378,6 +378,19 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
+
+                                <div class="col-md-6" id="third_party_name_wrapper" style="display: none;">
+                                    <label for="third_party_name" class="form-label">
+                                        Third Party Name <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" id="third_party_name"
+                                        class="form-control @error('third_party_name') is-invalid @enderror"
+                                        name="third_party_name" placeholder="Enter third party name"
+                                        value="{{ isset($vehicleAcquisition) ? $vehicleAcquisition->third_party_name : old('third_party_name') }}">
+                                    @error('third_party_name')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
                             </div>
                         </div>
 
@@ -399,4 +412,29 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ownershipTypeSelect = document.getElementById('ownership_type');
+            const thirdPartyNameWrapper = document.getElementById('third_party_name_wrapper');
+            const thirdPartyNameInput = document.getElementById('third_party_name');
+
+            function toggleThirdPartyName() {
+                if (ownershipTypeSelect.value === 'Third-party') {
+                    thirdPartyNameWrapper.style.display = 'block';
+                    thirdPartyNameInput.setAttribute('required', 'required');
+                } else {
+                    thirdPartyNameWrapper.style.display = 'none';
+                    thirdPartyNameInput.removeAttribute('required');
+                    thirdPartyNameInput.value = '';
+                }
+            }
+
+            // Initial check
+            toggleThirdPartyName();
+
+            // Listen for changes
+            ownershipTypeSelect.addEventListener('change', toggleThirdPartyName);
+        });
+    </script>
 @endsection

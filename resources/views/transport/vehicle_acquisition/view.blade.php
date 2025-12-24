@@ -273,6 +273,18 @@
                                                     class="badge bg-warning text-dark">{{ $vehicleAcquisition->ownership_type }}</span>
                                             </td>
                                         </tr>
+                                        @if ($vehicleAcquisition->ownership_type == 'Third-party' && $vehicleAcquisition->third_party_name)
+                                            <tr>
+                                                <td class="text-muted border-0 py-2">
+                                                    <i data-feather="user" class="me-2"
+                                                        style="width: 16px; height: 16px;"></i>
+                                                    Third Party Name
+                                                </td>
+                                                <td class="fw-semibold border-0 py-2">
+                                                    {{ $vehicleAcquisition->third_party_name }}
+                                                </td>
+                                            </tr>
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>
@@ -340,12 +352,12 @@
     </div>
 
     <!-- Fullscreen Image Modal -->
-    <div id="imageFullscreenModal" class="position-fixed w-100 h-100" 
+    <div id="imageFullscreenModal" class="position-fixed w-100 h-100"
         style="top: 0; left: 0; background: rgba(0, 0, 0, 0.9); display: none; z-index: 9999; align-items: center; justify-content: center;">
         <div class="position-relative w-100 h-100 d-flex align-items-center justify-content-center">
-            <img id="fullscreenImage" src="" alt="Full Screen Image" 
+            <img id="fullscreenImage" src="" alt="Full Screen Image"
                 style="max-width: 90vw; max-height: 90vh; object-fit: contain;">
-            <button id="closeFullscreen" class="position-absolute btn btn-light rounded-circle" 
+            <button id="closeFullscreen" class="position-absolute btn btn-light rounded-circle"
                 style="top: 20px; right: 20px; width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center; z-index: 10000;">
                 <i data-feather="x" style="width: 24px; height: 24px;"></i>
             </button>
