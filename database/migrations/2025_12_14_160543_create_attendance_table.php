@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('attendance', function (Blueprint $table) {
-            $table->id();
+            $table->id()->index();
             $table->bigInteger('employee_id');
             $table->dateTime('in_time')->nullable();
             $table->enum('in_status', ['On-Time', 'Late', 'Excessive-Late'])->nullable();
@@ -26,6 +26,9 @@ return new class extends Migration
             $table->enum('work_type', ['Full-Day', 'Half-Day', 'Overtime'])->nullable();
             $table->enum('attendance_status', ['Present', 'Absent'])->nullable();
             $table->enum('workstation', ['Remote', 'On-Site', 'Work-From-Home'])->nullable();
+            $table->bigUnsignedInteger('shift_id')->nullable();
+            $table->bigUnsignedInteger('ot_id')->nullable();
+            $table->bigUnsignedInteger('offday_id')->nullable();
             $table->timestamps();
         });
     }
