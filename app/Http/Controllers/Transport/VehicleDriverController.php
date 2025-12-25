@@ -248,9 +248,14 @@ class VehicleDriverController extends Controller
 
     /**
      * Get eligible drivers (employees with 'Driver' designation).
+     * Excludes drivers that are already assigned with active status.
      */
     private function getEligibleDrivers()
     {
+        // Get employee IDs already assigned to vehicles with active status
+        $assignedDriverIds = VehicleDriver::where('status', 'active')
+            ->pluck('driver_id');
+
         $driverDesignationIds = Designation::where('company_designation', 'like', '%Driver%')->pluck('id');
 
         if ($driverDesignationIds->isEmpty()) return collect();
@@ -258,7 +263,10 @@ class VehicleDriverController extends Controller
         $driverEmployeeIds = EmployeeOfficeInfo::whereIn('current_designation_id', $driverDesignationIds)
             ->pluck('employee_id');
 
-        return Employee::whereIn('id', $driverEmployeeIds)->orderBy('full_name')->get();
+        return Employee::whereIn('id', $driverEmployeeIds)
+            ->whereNotIn('id', $assignedDriverIds)
+            ->orderBy('full_name')
+            ->get();
     }
 
     /**
