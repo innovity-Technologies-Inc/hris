@@ -512,5 +512,16 @@ Route::prefix('transport')->name('transport.')->group(function () {
         Route::put('vehicle-acquisitions/{id}', 'update')->name('vehicle_acquisitions.update');
         Route::delete('vehicle-acquisitions/{id}', 'destroy')->name('vehicle_acquisitions.destroy');
     });
+
+    // Vehicle Driver Assignment Routes
+    Route::controller(\App\Http\Controllers\Transport\VehicleDriverController::class)->group(function () {
+        Route::get('vehicle-drivers', 'index')->name('vehicle_drivers.index');
+        Route::get('vehicle-drivers/create', 'create')->name('vehicle_drivers.create');
+        Route::post('vehicle-drivers', 'store')->name('vehicle_drivers.store');
+        Route::get('vehicle-drivers/{id}', 'show')->name('vehicle_drivers.show');
+        Route::get('vehicle-drivers/{id}/edit', 'edit')->name('vehicle_drivers.edit');
+        Route::put('vehicle-drivers/{id}', 'update')->name('vehicle_drivers.update');
+        Route::delete('vehicle-drivers/{id}', 'destroy')->name('vehicle_drivers.destroy');
+    });
 });
 

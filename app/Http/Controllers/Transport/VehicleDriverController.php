@@ -1,0 +1,308 @@
+<?php
+
+namespace App\Http\Controllers\Transport;
+
+use App\Http\Controllers\Controller;
+use App\Models\Transport\VehicleAcquisition;
+use App\Models\Transport\VehicleDriver;
+use App\Models\Employee;
+use App\Models\EmployeeOfficeInfo;
+use App\Models\Designation;
+use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
+
+class VehicleDriverController extends Controller
+{
+    /**
+     * Display a listing of vehicle driver assignments.
+     */
+    public function index(FlexSearch $flexsearch, Request $request)
+    {
+        $title = 'Assign Driver';
+        $section = 'Transport';
+        $sub_section = 'Assign Driver';
+
+        $query = VehicleDriver::with(['getVehicle', 'getDriver']);
+        $searchableColumns = ['status'];
+        $keyword = $request->input('keyword');
+        $filters = [];
+
+        $vehicleDrivers = $flexsearch->apply($query, $filters, $keyword, $searchableColumns)->latest()->paginate(10);
+
+        if ($request->ajax()) {
+            return view('transport.vehicle_driver.search_results', compact('vehicleDrivers'))->render();
+        }
+
+        return view('transport.vehicle_driver.index', compact('title', 'section', 'sub_section', 'vehicleDrivers'));
+    }
+
+    /**
+     * Show the form for creating a new vehicle driver assignment.
+     */
+    public function create()
+    {
+        $title = 'Assign Driver';
+        $section = 'Assign Driver';
+        $section_url = route('transport.vehicle_drivers.index');
+        $sub_section = 'New Assignment';
+
+        // Get available vehicles (active and not currently assigned to any active driver)
+        $availableVehicles = $this->getAvailableVehicles();
+
+        // Get eligible drivers (employees with 'Driver' designation)
+        $eligibleDrivers = $this->getEligibleDrivers();
+
+        return view('transport.vehicle_driver.form', compact(
+            'title',
+            'section',
+            'sub_section',
+            'section_url',
+            'availableVehicles',
+            'eligibleDrivers'
+        ));
+    }
+
+    /**
+     * Display the specified vehicle driver assignment.
+     */
+    public function show($id)
+    {
+        $title = 'Driver Assignment Details';
+        $section = 'Assign Driver';
+        $section_url = route('transport.vehicle_drivers.index');
+        $sub_section = 'View';
+
+        $vehicleDriver = VehicleDriver::with(['getVehicle', 'getDriver'])->findOrFail($id);
+
+        return view('transport.vehicle_driver.show', compact(
+            'title',
+            'section',
+            'sub_section',
+            'section_url',
+            'vehicleDriver'
+        ));
+    }
+
+    /**
+     * Store a newly created vehicle driver assignment.
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'vehicle_id' => 'required|exists:vehicle_acquisitions,id',
+            'driver_id' => 'required|exists:employees,id',
+            'start_date' => 'required|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'status' => 'required|in:active,inactive',
+        ], [
+            'vehicle_id.required' => 'Please select a vehicle.',
+            'driver_id.required' => 'Please select a driver.',
+            'start_date.required' => 'Start date is required.',
+            'end_date.after_or_equal' => 'End date must be after or equal to start date.',
+        ]);
+
+        try {
+            Log::info('Assigning Driver to Vehicle');
+
+            VehicleDriver::create($request->only([
+                'vehicle_id',
+                'driver_id',
+                'start_date',
+                'end_date',
+                'status',
+            ]));
+
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->back()->withInput()->with([
+                'message' => 'Something Went Wrong',
+                'alert-type' => 'error'
+            ]);
+        }
+
+        Log::info('Driver Assigned Successfully');
+
+        return redirect()->route('transport.vehicle_drivers.index')->with([
+            'message' => 'Driver Assigned Successfully',
+            'alert-type' => 'success'
+        ]);
+    }
+
+    /**
+     * Show the form for editing an existing assignment.
+     */
+    public function edit($id)
+    {
+        $title = 'Edit Driver Assignment';
+        $section = 'Assign Driver';
+        $section_url = route('transport.vehicle_drivers.index');
+        $sub_section = 'Edit';
+
+        $vehicleDriver = VehicleDriver::with(['getVehicle', 'getDriver'])->findOrFail($id);
+
+        // Get available vehicles (include current vehicle)
+        $availableVehicles = $this->getAvailableVehicles($vehicleDriver->vehicle_id);
+
+        // Get eligible drivers
+        $eligibleDrivers = $this->getEligibleDrivers();
+
+        return view('transport.vehicle_driver.form', compact(
+            'title',
+            'section',
+            'sub_section',
+            'section_url',
+            'vehicleDriver',
+            'availableVehicles',
+            'eligibleDrivers'
+        ));
+    }
+
+    /**
+     * Update the specified assignment.
+     */
+    public function update(Request $request, $id)
+    {
+        $vehicleDriver = VehicleDriver::findOrFail($id);
+
+        $request->validate([
+            'vehicle_id' => 'required|exists:vehicle_acquisitions,id',
+            'driver_id' => 'required|exists:employees,id',
+            'start_date' => 'required|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'status' => 'required|in:active,inactive',
+        ]);
+
+        try {
+            Log::info('Updating Vehicle Driver Assignment');
+
+            $vehicleDriver->update($request->only([
+                'vehicle_id',
+                'driver_id',
+                'start_date',
+                'end_date',
+                'status',
+            ]));
+
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->back()->withInput()->with([
+                'message' => 'Something Went Wrong',
+                'alert-type' => 'error'
+            ]);
+        }
+
+        Log::info('Vehicle Driver Assignment Updated Successfully');
+
+        return redirect()->route('transport.vehicle_drivers.index')->with([
+            'message' => 'Assignment Updated Successfully',
+            'alert-type' => 'success'
+        ]);
+    }
+
+    /**
+     * Remove the specified assignment.
+     */
+    public function destroy($id)
+    {
+        try {
+            Log::info('Deleting Vehicle Driver Assignment');
+
+            $vehicleDriver = VehicleDriver::findOrFail($id);
+            $vehicleDriver->delete();
+
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->back()->with([
+                'message' => 'Something Went Wrong',
+                'alert-type' => 'error'
+            ]);
+        }
+
+        Log::info('Vehicle Driver Assignment Deleted Successfully');
+
+        return redirect()->route('transport.vehicle_drivers.index')->with([
+            'message' => 'Assignment Deleted Successfully',
+            'alert-type' => 'success'
+        ]);
+    }
+
+    /**
+     * Get available vehicles for assignment.
+     */
+   private function getAvailableVehicles($includeVehicleId = null)
+{
+    $assignedVehicleIds = VehicleDriver::where('status', 'active')
+        ->pluck('vehicle_id');
+
+    $query = VehicleAcquisition::where('status', 'Active')
+        ->whereNotIn('id', $assignedVehicleIds);
+
+    if ($includeVehicleId) {
+        $query->orWhere('id', $includeVehicleId);
+    }
+
+    return $query->orderBy('model_number')->get();
+}
+
+    /**
+     * Get eligible drivers (employees with 'Driver' designation).
+     */
+    private function getEligibleDrivers()
+    {
+        $driverDesignationIds = Designation::where('company_designation', 'like', '%Driver%')->pluck('id');
+
+        if ($driverDesignationIds->isEmpty()) return collect();
+
+        $driverEmployeeIds = EmployeeOfficeInfo::whereIn('current_designation_id', $driverDesignationIds)
+            ->pluck('employee_id');
+
+        return Employee::whereIn('id', $driverEmployeeIds)->orderBy('full_name')->get();
+    }
+
+    /**
+     * API endpoint to get vehicle details for preview card.
+     */
+    public function getVehicleDetails($id)
+    {
+        $vehicle = VehicleAcquisition::find($id);
+        if (!$vehicle) return response()->json(['error' => 'Vehicle not found'], 404);
+
+        return response()->json([
+            'id' => $vehicle->id,
+            'vehicle_category' => $vehicle->vehicle_category,
+            'model_number' => $vehicle->model_number,
+            'manufacture_year' => $vehicle->manufacture_year,
+            'fuel_type' => $vehicle->fuel_type,
+            'color' => $vehicle->color,
+            'license_number' => $vehicle->license_number,
+            'seating_capacity' => $vehicle->seating_capacity,
+            'status' => $vehicle->status,
+            'vehicle_image' => $vehicle->vehicle_image ? asset('storage/' . $vehicle->vehicle_image) : null,
+        ]);
+    }
+
+    /**
+     * API endpoint to get driver details for preview card.
+     */
+    public function getDriverDetails($id)
+    {
+        $employee = Employee::find($id);
+        if (!$employee) return response()->json(['error' => 'Driver not found'], 404);
+
+        $officeInfo = EmployeeOfficeInfo::with('getCurrentDesignation')->where('employee_id', $id)->first();
+
+        return response()->json([
+            'id' => $employee->id,
+            'full_name' => $employee->full_name,
+            'system_id' => $employee->system_id,
+            'personal_mobile' => $employee->personal_mobile,
+            'work_mobile' => $employee->work_mobile,
+            'work_email' => $employee->work_email,
+            'personal_email' => $employee->personal_email,
+            'photo_path' => $employee->photo_path ? asset('storage/' . $employee->photo_path) : null,
+            'designation' => $officeInfo?->getCurrentDesignation?->company_designation ?? 'N/A',
+        ]);
+    }
+}

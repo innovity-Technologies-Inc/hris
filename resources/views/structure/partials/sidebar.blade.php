@@ -288,6 +288,10 @@
                                 <a class='tp-link @if (Route::is('transport.vehicle_acquisitions.*')) menuitem-active @endif'
                                     href='{{ route('transport.vehicle_acquisitions.index') }}'>Vehicle Acquisition</a>
                             </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('transport.vehicle_drivers.*')) menuitem-active @endif'
+                                    href='{{ route('transport.vehicle_drivers.index') }}'>Assign Driver</a>
+                            </li>
                         </ul>
                     </div>
                 </li>
