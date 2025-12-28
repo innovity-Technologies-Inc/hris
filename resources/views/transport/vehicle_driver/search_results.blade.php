@@ -6,7 +6,6 @@
             <th scope="col">Driver</th>
             <th scope="col" class="text-center">Start Date</th>
             <th scope="col" class="text-center">End Date</th>
-            <th scope="col" class="text-center">Status</th>
             <th scope="col" class="text-center" style="width: 150px;">Action</th>
         </tr>
     </thead>
@@ -68,20 +67,9 @@
                     {{ $item->end_date ? \Carbon\Carbon::parse($item->end_date)->format('d M, Y') : '-' }}
                 </td>
                 <td class="text-center">
-                    @if ($item->status == 'active')
-                        <span class="badge text-bg-success">Active</span>
-                    @else
-                        <span class="badge text-bg-danger">Inactive</span>
-                    @endif
-                </td>
-                <td class="text-center">
                     <a type="button" class="btn btn-info btn-sm"
                         href="{{ route('transport.vehicle_drivers.show', $item->id) }}" title="View">
                         <i style="height: 12px; width: 12px" data-feather="eye"></i>
-                    </a>
-                    <a type="button" class="btn btn-primary btn-sm"
-                        href="{{ route('transport.vehicle_drivers.edit', $item->id) }}" title="Edit">
-                        <i style="height: 12px; width: 12px" data-feather="edit"></i>
                     </a>
 
                     <form action="{{ route('transport.vehicle_drivers.destroy', $item->id) }}" method="POST"

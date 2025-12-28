@@ -24,7 +24,7 @@ class VehicleDriverController extends Controller
         $section = 'Transport';
         $sub_section = 'Assign Driver';
 
-        $query = VehicleDriver::with(['getVehicle', 'getDriver']);
+        $query = VehicleDriver::with(['getVehicle', 'getDriver'])->where('status', 'active');
         $searchableColumns = ['status'];
         $keyword = $request->input('keyword');
         $filters = [];
@@ -95,7 +95,6 @@ class VehicleDriverController extends Controller
             'driver_id' => 'required|exists:employees,id',
             'start_date' => 'required|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
-            'status' => 'required|in:active,inactive',
         ], [
             'vehicle_id.required' => 'Please select a vehicle.',
             'driver_id.required' => 'Please select a driver.',
@@ -106,13 +105,13 @@ class VehicleDriverController extends Controller
         try {
             Log::info('Assigning Driver to Vehicle');
 
-            VehicleDriver::create($request->only([
-                'vehicle_id',
-                'driver_id',
-                'start_date',
-                'end_date',
-                'status',
-            ]));
+            VehicleDriver::create([
+                'vehicle_id' => $request->vehicle_id,
+                'driver_id' => $request->driver_id,
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+                'status' => 'active', // Always set to active by default
+            ]);
 
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -202,15 +201,15 @@ class VehicleDriverController extends Controller
     }
 
     /**
-     * Remove the specified assignment.
+     * Remove the specified assignment (soft delete by setting status to inactive).
      */
     public function destroy($id)
     {
         try {
-            Log::info('Deleting Vehicle Driver Assignment');
+            Log::info('Deactivating Vehicle Driver Assignment');
 
             $vehicleDriver = VehicleDriver::findOrFail($id);
-            $vehicleDriver->delete();
+            $vehicleDriver->update(['status' => 'inactive']);
 
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -220,12 +219,50 @@ class VehicleDriverController extends Controller
             ]);
         }
 
-        Log::info('Vehicle Driver Assignment Deleted Successfully');
+        Log::info('Vehicle Driver Assignment Deactivated Successfully');
 
         return redirect()->route('transport.vehicle_drivers.index')->with([
-            'message' => 'Assignment Deleted Successfully',
+            'message' => 'Assignment Deactivated Successfully',
             'alert-type' => 'success'
         ]);
+    }
+
+    /**
+     * Display history of inactive assignments grouped by date.
+     */
+    public function history(FlexSearch $flexsearch, Request $request)
+    {
+        $title = 'Assignment History';
+        $section = 'Assign Driver';
+        $section_url = route('transport.vehicle_drivers.index');
+        $sub_section = 'History Logs';
+
+        $query = VehicleDriver::with(['getVehicle', 'getDriver'])->where('status', 'inactive');
+        $searchableColumns = ['status'];
+        $keyword = $request->input('keyword');
+        $filters = [];
+
+        $vehicleDrivers = $flexsearch->apply($query, $filters, $keyword, $searchableColumns)
+            ->orderBy('updated_at', 'desc')
+            ->paginate(10);
+
+        // Group by date for display
+        $inactiveAssignments = $vehicleDrivers->getCollection()->groupBy(function($item) {
+            return \Carbon\Carbon::parse($item->updated_at)->format('Y-m-d');
+        });
+
+        if ($request->ajax()) {
+            return view('transport.vehicle_driver.history_results', compact('inactiveAssignments', 'vehicleDrivers'))->render();
+        }
+
+        return view('transport.vehicle_driver.history', compact(
+            'title',
+            'section',
+            'sub_section',
+            'section_url',
+            'inactiveAssignments',
+            'vehicleDrivers'
+        ));
     }
 
     /**

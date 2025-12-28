@@ -13,11 +13,8 @@
                         <p class="text-muted mb-0">View complete assignment information</p>
                     </div>
                     <div class="col-md-4 text-md-end">
-                        <a href="{{ route('transport.vehicle_drivers.index') }}" class="btn btn-secondary me-2">
+                        <a href="{{ route('transport.vehicle_drivers.index') }}" class="btn btn-secondary">
                             <i data-feather="arrow-left" style="width: 16px; height: 16px;"></i> Back
-                        </a>
-                        <a href="{{ route('transport.vehicle_drivers.edit', $vehicleDriver->id) }}" class="btn btn-primary">
-                            <i data-feather="edit" style="width: 16px; height: 16px;"></i> Edit
                         </a>
                     </div>
                 </div>

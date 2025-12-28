@@ -140,23 +140,27 @@
                                                         @enderror
                                                     </div>
 
-                                                    <div>
-                                                        <label for="status" class="form-label fw-semibold">
-                                                            Status <span class="text-danger">*</span>
-                                                        </label>
-                                                        <select class="form-select @error('status') is-invalid @enderror"
-                                                            name="status" id="status" required>
-                                                            @foreach (['active' => 'Active', 'inactive' => 'Inactive'] as $value => $label)
-                                                                <option value="{{ $value }}"
-                                                                    {{ (isset($vehicleDriver) && $vehicleDriver->status == $value) || old('status', 'active') == $value ? 'selected' : '' }}>
-                                                                    {{ $label }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                        @error('status')
-                                                            <div class="invalid-feedback">{{ $message }}</div>
-                                                        @enderror
-                                                    </div>
+                                                    @if (isset($vehicleDriver))
+                                                        {{-- Only show status for editing (though edit is disabled) --}}
+                                                        <div>
+                                                            <label for="status" class="form-label fw-semibold">
+                                                                Status <span class="text-danger">*</span>
+                                                            </label>
+                                                            <select
+                                                                class="form-select @error('status') is-invalid @enderror"
+                                                                name="status" id="status" required>
+                                                                @foreach (['active' => 'Active', 'inactive' => 'Inactive'] as $value => $label)
+                                                                    <option value="{{ $value }}"
+                                                                        {{ (isset($vehicleDriver) && $vehicleDriver->status == $value) || old('status', 'active') == $value ? 'selected' : '' }}>
+                                                                        {{ $label }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                            @error('status')
+                                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                            @enderror
+                                                        </div>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>

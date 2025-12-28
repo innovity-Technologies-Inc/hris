@@ -6,7 +6,7 @@
             <div class="card border-0 shadow-sm rounded">
                 <div class="card-header">
                     <h5 class="card-title mb-0">
-                        <i data-feather="users" class="me-2"></i>Search Driver Assignments
+                        <i data-feather="clock" class="me-2"></i>Search Assignment History
                     </h5>
                 </div>
                 <div class="card-header border-bottom p-4">
@@ -23,7 +23,7 @@
                                             </label>
                                             <div class="input-group input-group-md">
                                                 <input type="text" class="form-control border-end-0" id="keywordSearch"
-                                                    name="keyword" placeholder="Search by vehicle, driver, status..."
+                                                    name="keyword" placeholder="Search by vehicle, driver..."
                                                     aria-label="Keyword Search" value="{{ request('keyword') }}">
                                                 <span class="input-group-text border-start-0 input-group-bg">
                                                     <i class="mdi mdi-magnify text-muted"></i>
@@ -49,36 +49,28 @@
             </div>
         </div>
 
-        {{-- List Section --}}
+        {{-- History List Section --}}
         <div class="col-lg-12 mt-3">
             <div class="card border-0 shadow-sm rounded">
                 <div class="card-header">
-                    <h5 class="card-title mb-0">Driver Assignment List</h5>
-                </div>
-                <div class="card-body">
-                    {{-- Action Buttons --}}
-                    <div class="d-flex justify-content-between mb-3">
-                        <a type="button" class="btn btn-warning btn-sm"
-                            href="{{ route('transport.vehicle_drivers.create') }}">
-                            <i style="height: 12px; width: 12px" data-feather="plus"></i> Assign Driver
-                        </a>
-                        <a type="button" class="btn btn-secondary btn-sm"
-                            href="{{ route('transport.vehicle_drivers.history') }}">
-                            <i style="height: 12px; width: 12px" data-feather="clock"></i> See History Logs
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">
+                            <i data-feather="clock" class="me-2"></i>Assignment History Logs
+                        </h5>
+                        <a href="{{ route('transport.vehicle_drivers.index') }}" class="btn btn-light btn-sm shadow-sm">
+                            <i data-feather="arrow-left"></i> Back to Active List
                         </a>
                     </div>
-
-                    @if ($vehicleDrivers->isEmpty())
+                </div>
+                <div class="card-body">
+                    @if ($inactiveAssignments->isEmpty())
                         <div class="text-center py-4 text-muted">
                             <i data-feather="inbox" style="width: 48px; height: 48px;"></i>
-                            <p class="mt-2 mb-0">No driver assignments found</p>
-                            <a href="{{ route('transport.vehicle_drivers.create') }}" class="btn btn-sm btn-primary mt-2">
-                                <i data-feather="plus" style="width: 14px; height: 14px;"></i> Create First Assignment
-                            </a>
+                            <p class="mt-2 mb-0">No inactive assignment history found</p>
                         </div>
                     @else
-                        <div class="table-responsive" id="search-result">
-                            @include('transport.vehicle_driver.search_results')
+                        <div id="search-result">
+                            @include('transport.vehicle_driver.history_results')
                         </div>
                     @endif
                 </div>
@@ -90,7 +82,7 @@
     <script>
         $(document).ready(function() {
             // Function to perform AJAX search
-            function fetchData(url = "{{ route('transport.vehicle_drivers.index') }}") {
+            function fetchData(url = "{{ route('transport.vehicle_drivers.history') }}") {
                 const queryString = $('#filterForm').serialize();
 
                 $.ajax({
