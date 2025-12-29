@@ -524,9 +524,17 @@ Route::prefix('transport')->name('transport.')->group(function () {
         Route::put('vehicle-drivers/{id}', 'update')->name('vehicle_drivers.update');
         Route::delete('vehicle-drivers/{id}', 'destroy')->name('vehicle_drivers.destroy');
 
-        // API routes for preview functionality
-        Route::get('api/vehicle/{id}', 'getVehicleDetails');
-        Route::get('api/driver/{id}', 'getDriverDetails');
+    });
+
+    // Vehicle Requisition Routes
+    Route::controller(\App\Http\Controllers\Transport\VehicleRequisitionController::class)->group(function () {
+        Route::get('vehicle-requisitions', 'index')->name('vehicle_requisitions.index');
+        Route::get('vehicle-requisitions/create', 'create')->name('vehicle_requisitions.create');
+        Route::post('vehicle-requisitions', 'store')->name('vehicle_requisitions.store');
+        Route::get('vehicle-requisitions/{id}', 'show')->name('vehicle_requisitions.show');
+        Route::get('vehicle-requisitions/{id}/approve', 'approve')->name('vehicle_requisitions.approve');
+        Route::post('vehicle-requisitions/{id}/approve', 'processApproval')->name('vehicle_requisitions.process_approval');
+        Route::post('vehicle-requisitions/{id}/reject', 'reject')->name('vehicle_requisitions.reject');
     });
 });
 
