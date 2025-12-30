@@ -28,15 +28,11 @@ class LeavesController extends Controller
         $query = Leave::with('getEmployee', 'getPlan');
         $searchableColumns = ['getEmployee.full_name', 'getPlan.name', 'getPlan.leave_type', 'leave_count'];
         $keyword = $request->input('keyword');
-        $filters = [];
+        $filters = [
+            'from>=' => $request->input('from'),
+            'from<=' => $request->input('to'),
+        ];
 
-        if ($request->filled('from')) {
-            $filters['from<='] = $request->input('from');
-        }
-
-        if ($request->filled('to')) {
-            $filters['to>='] = $request->input('to');
-        }
 
         $leaves = $flexsearch->apply($query, $filters, $keyword, $searchableColumns)->paginate(10);
         if($request->ajax()){

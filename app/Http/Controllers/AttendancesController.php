@@ -6,6 +6,7 @@ use App\Models\Attendance;
 use App\Models\Employee;
 use App\Services\AttendanceServices;
 use App\Imports\AttendanceImport;
+use Carbon\Carbon;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -17,24 +18,43 @@ class AttendancesController extends Controller
     public function __construct(AttendanceServices $attendancesService){
         $this->attendancesService = $attendancesService;
     }
-    public function index(FlexSearch $flexsearch, Request $request){
-
+    public function index(FlexSearch $flexsearch, Request $request)
+    {
         $query = Attendance::with('getEmployee');
-        $searchableColumns = ['getEmployee.full_name', ];
+
+        $searchableColumns = ['getEmployee.full_name'];
         $keyword = $request->input('keyword');
+
         $filters = [];
+
+        if ($request->filled('from')) {
+            $filters['in_time>='] = Carbon::parse($request->input('from'))->copy()->startOfDay();
+        }
+
+        if ($request->filled('to')) {
+            $filters['in_time<='] = Carbon::parse($request->input('to'))->copy()->endOfDay();
+        }
 
         $title = 'Employee Attendance';
         $section = 'Attendance';
         $sub_section = 'Records';
 
+        $attendanceRecords = $flexsearch
+            ->apply($query, $filters, $keyword, $searchableColumns)
+            ->paginate(10);
 
-        $attendanceRecords = $flexsearch->apply($query, $filters, $keyword, $searchableColumns)->paginate(10);
-        if($request->ajax()){
-            return view('attendance.index', compact('attendanceRecords'))->render();
+        if ($request->ajax()) {
+            return view('attendance.partials.search_results', compact('attendanceRecords'))->render();
         }
-        return view('attendance.index', compact('attendanceRecords', 'title', 'section', 'sub_section'));
+
+        return view('attendance.index', compact(
+            'attendanceRecords',
+            'title',
+            'section',
+            'sub_section'
+        ));
     }
+
 
     public function create(){
         $title = 'Employee Attendance';
@@ -51,15 +71,10 @@ class AttendancesController extends Controller
         return view('attendance.bulk_upload', compact('title', 'section', 'sub_section'));
     }
     public function store(Request $request){
-        try{
+
+
             $this->attendancesService->attendanceStore($request);
-        }catch(\Exception $e){
-            Log::error($e->getMessage());
-            return redirect()->back()->with([
-                'message' => 'Something Went Wrong, Try Again Later',
-                'alert-type' => 'error'
-            ]);
-        }
+
             return redirect()->route('attendance.index')->with([
                 'message' => 'Attendance Created Successfully',
                 'alert-type' => 'success'
