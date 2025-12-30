@@ -285,11 +285,8 @@ class PlanService
             'name' => 'required|string|max:255',
             'short_name' => 'nullable|string|max:255',
 
-            'start_time' => 'required|date_format:H:i',
-            'end_time' => 'required|date_format:H:i|after:start_time',
-
-            'grace_time' => 'required|integer|min:0',
-            'grace_time_before' => 'nullable|integer|min:0',
+            // Shift reference - timing is derived from the selected shift
+            'shift_id' => 'required|exists:shift_plans,id',
 
             // Configuration fields (refactored to match OT Plan)
             'offday_config_type' => 'required|in:Salary Based,Custom',
@@ -300,11 +297,10 @@ class PlanService
             'status' => 'required|in:active,inactive'
         ], [
             'name.required' => 'Name is required.',
-            'start_time.required' => 'Start time is required.',
-            'end_time.after' => 'End time must be after start time.',
 
-            'grace_time.required' => 'Grace time is required.',
-            'grace_time.integer' => 'Grace time must be a number.',
+            // Shift validation messages
+            'shift_id.required' => 'Please select a shift.',
+            'shift_id.exists' => 'The selected shift does not exist.',
 
             // Configuration validation messages
             'offday_config_type.required' => 'Please select a configuration type.',

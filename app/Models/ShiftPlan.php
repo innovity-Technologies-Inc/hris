@@ -45,4 +45,12 @@ class ShiftPlan extends Model
     //     'dinner_start_time' => 'datetime:H:i',
     //     'dinner_end_time' => 'datetime:H:i',
     // ];
+
+    /**
+     * Get the off-day plans associated with this shift.
+     */
+    public function getOffDayPlans()
+    {
+        return $this->hasMany(OffDayPlan::class, 'shift_id', 'id');
+    }
 }

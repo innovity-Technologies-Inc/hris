@@ -66,22 +66,28 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="border-start border-success border-3 ps-3">
-                                            <small class="text-muted d-block">Config Type</small>
-                                            <strong id="modal-offday-detail-config" class="text-success">-</strong>
+                                            <small class="text-muted d-block">Assigned Shift</small>
+                                            <strong id="modal-offday-detail-shift" class="text-success">-</strong>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row g-3 mt-2">
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="border-start border-info border-3 ps-3">
-                                            <small class="text-muted d-block">Start Time</small>
+                                            <small class="text-muted d-block">Clock In Time</small>
                                             <strong id="modal-offday-detail-start" class="text-info">-</strong>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="border-start border-warning border-3 ps-3">
-                                            <small class="text-muted d-block">End Time</small>
+                                            <small class="text-muted d-block">Clock Out Time</small>
                                             <strong id="modal-offday-detail-end" class="text-warning">-</strong>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="border-start border-danger border-3 ps-3">
+                                            <small class="text-muted d-block">Grace Time</small>
+                                            <strong id="modal-offday-detail-grace" class="text-danger">-</strong>
                                         </div>
                                     </div>
                                 </div>
@@ -134,12 +140,13 @@
                     // Fill the details
                     $('#modal-offday-detail-name').text(data.name ?? '-');
                     $('#modal-offday-detail-short').text(data.short_name ?? '-');
-                    $('#modal-offday-detail-config').text(data.config_type ?? '-');
+                    $('#modal-offday-detail-shift').text(data.shift_name ?? '-');
                     $('#modal-offday-detail-description').text(data
                         .configuration_description ?? '-');
 
                     $('#modal-offday-detail-start').text(data.start_time ?? '-');
                     $('#modal-offday-detail-end').text(data.end_time ?? '-');
+                    $('#modal-offday-detail-grace').text((data.grace_time ?? '0') + ' min');
                 }
             });
         });

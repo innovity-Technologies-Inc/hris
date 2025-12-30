@@ -112,7 +112,31 @@ class DataController extends Controller
 
     public function getOffDayPlanDetails($id)
     {
-        $plan = OffDayPlan::find($id);
+        $plan = OffDayPlan::with('getShift')->find($id);
+
+        if (!$plan) {
+            return response()->json(['error' => 'Plan not found'], 404);
+        }
+
+        $shift = $plan->getShift;
+        $startTime = $shift ? Carbon::parse($shift->clock_in_time)->format('h:i A') : 'N/A';
+        $endTime = $shift ? Carbon::parse($shift->clock_out_time)->format('h:i A') : 'N/A';
+        $shiftName = $shift ? $shift->name : 'No shift assigned';
+        $graceTime = $shift ? $shift->grace_time : 0;
+        $earlyOutGrace = $shift ? $shift->early_out_grace_minutes : 0;
+
+        // Build configuration description
+        $configurationDescription = '';
+        if ($plan->offday_config_type === 'Salary Based') {
+            if ($plan->salary_rate_type === 'Basic Rate') {
+                $configurationDescription = 'Salary Based - Basic Rate';
+            } else {
+                $configurationDescription = "Salary Based - {$plan->offday_multiplier}x Multiplier";
+            }
+        } else {
+            $configurationDescription = "Custom Rate - " . number_format($plan->custom_offday_rate ?? 0, 2) . " per hour";
+        }
+
         return response()->json([
             'id' => $plan->id,
             'name' => $plan->name,
@@ -121,9 +145,12 @@ class DataController extends Controller
             'salary_rate_type' => $plan->salary_rate_type,
             'offday_multiplier' => $plan->offday_multiplier,
             'custom_offday_rate' => $plan->custom_offday_rate,
-            'configuration_description' => $plan->getConfigurationDescription(),
-            'start_time' => Carbon::parse($plan->start_time)->format('h:i A'),
-            'end_time' => Carbon::parse($plan->end_time)->format('h:i A'),
+            'configuration_description' => $configurationDescription,
+            'shift_name' => $shiftName,
+            'start_time' => $startTime,
+            'end_time' => $endTime,
+            'grace_time' => $graceTime,
+            'early_out_grace' => $earlyOutGrace,
         ]);
     }
 

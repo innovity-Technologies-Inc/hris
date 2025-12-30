@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Imports\OffDayPlansImport;
 use App\Models\OffDayPlan;
+use App\Models\ShiftPlan;
 use App\Services\PlanService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -39,7 +40,8 @@ class OffDayPlansController extends Controller
         $section = 'Off Day Plans';
         $sub_section = 'Create';
         $section_url = route('plans.off_day_plans.index');
-        return view('plans.off_day_plans.form', compact('title', 'section', 'sub_section', 'section_url'));
+        $shifts = ShiftPlan::where('active_ind', 'active')->get();
+        return view('plans.off_day_plans.form', compact('title', 'section', 'sub_section', 'section_url', 'shifts'));
     }
 
     public function store(Request $request)
@@ -68,7 +70,7 @@ class OffDayPlansController extends Controller
         $section = 'Off Day Plans';
         $sub_section = 'Show';
         $section_url = route('plans.off_day_plans.index');
-        $plan = $this->planServices->getPlanById($id, OffDayPlan::class);
+        $plan = OffDayPlan::with('getShift')->findOrFail($id);
         return view('plans.off_day_plans.view', compact('title', 'section', 'sub_section', 'section_url', 'plan'));
     }
 
@@ -78,8 +80,9 @@ class OffDayPlansController extends Controller
         $section = 'Off Day Plans';
         $sub_section = 'Edit';
         $section_url = route('plans.off_day_plans.index');
-        $plan = $this->planServices->getPlanById($id, OffDayPlan::class);
-        return view('plans.off_day_plans.form', compact('title', 'section', 'sub_section', 'section_url', 'plan'));
+        $plan = OffDayPlan::with('getShift')->findOrFail($id);
+        $shifts = ShiftPlan::where('active_ind', 'active')->get();
+        return view('plans.off_day_plans.form', compact('title', 'section', 'sub_section', 'section_url', 'plan', 'shifts'));
     }
 
     public function update(Request $request, $id)

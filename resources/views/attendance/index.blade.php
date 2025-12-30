@@ -1,7 +1,6 @@
 @extends('structure.master')
 
 @section('content')
-
     {{-- Page Header --}}
     <div class="border-bottom mb-4" style="background-color: var(--bs-secondary-bg);">
         <div class="container-fluid px-4 py-4">
@@ -92,7 +91,7 @@
                                 @endforeach
                             </select>
                             <div class="form-text">Optional filter</div>
-                        </div>--}}
+                        </div> --}}
 
                         {{-- Date Picker --}}
                         <div class="col-md-6 col-xl-3">
@@ -111,12 +110,12 @@
                             <label for="to" class="form-label fw-semibold mb-2">
                                 <svg class="me-1" width="14" height="14" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd"
-                                          d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" />
+                                        d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" />
                                 </svg>
                                 To
                             </label>
                             <input type="date" id="to" name="to" class="form-control"
-                                   value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}">
+                                value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}">
                         </div>
 
                     </div>
@@ -139,243 +138,232 @@
         <div class="card border-0 shadow-sm overflow-hidden">
             <div class="card-header border-bottom py-3">
                 <div class="row align-items-center">
-                        <div class="col-auto">
-                            <div class="btn-group shadow-sm" role="group">
-                                <button type="button" class="btn btn-outline-primary" title="Export to Excel">
-                                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20">
-                                        <path
-                                            d="M3 17a1 1 0 001 1h12a1 1 0 001-1v-5h-2v4H5v-4H3v5zM10 3l-4 4h3v6h2V7h3l-4-4z" />
-                                    </svg>
-                                    <span class="d-none d-md-inline ms-2">Export</span>
-                                </button>
-                                <button type="button" class="btn btn-outline-primary" onclick="window.print()"
-                                    title="Print">
-                                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20">
-                                        <path
-                                            d="M5 4v2h10V4a1 1 0 00-1-1H6a1 1 0 00-1 1zm13 3H2a1 1 0 00-1 1v4a1 1 0 001 1h1v3a1 1 0 001 1h12a1 1 0 001-1v-3h1a1 1 0 001-1V8a1 1 0 00-1-1zm-3 9H5v-4h10v4z" />
-                                    </svg>
-                                    <span class="d-none d-md-inline ms-2">Print</span>
-                                </button>
-                            </div>
+                    <div class="col-auto">
+                        <div class="btn-group shadow-sm" role="group">
+                            <button type="button" class="btn btn-outline-primary" title="Export to Excel">
+                                <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M3 17a1 1 0 001 1h12a1 1 0 001-1v-5h-2v4H5v-4H3v5zM10 3l-4 4h3v6h2V7h3l-4-4z" />
+                                </svg>
+                                <span class="d-none d-md-inline ms-2">Export</span>
+                            </button>
+                            <button type="button" class="btn btn-outline-primary"
+                                onclick="window.open('{{ route('attendance.print') }}', '_blank')" title="Print">
+                                <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M5 4v2h10V4a1 1 0 00-1-1H6a1 1 0 00-1 1zm13 3H2a1 1 0 00-1 1v4a1 1 0 001 1h1v3a1 1 0 001 1h12a1 1 0 001-1v-3h1a1 1 0 001-1V8a1 1 0 00-1-1zm-3 9H5v-4h10v4z" />
+                                </svg>
+                                <span class="d-none d-md-inline ms-2">Print</span>
+                            </button>
                         </div>
+                    </div>
                 </div>
             </div>
 
             <div class="card-body p-0">
 
-                    {{-- Attendance Table --}}
-                    <div class="table-responsive">
-                        <table class="table table-hover table-borderless align-middle mb-0">
-                            <thead class="border-bottom" style="background-color: var(--bs-tertiary-bg);">
-                                <tr class="text-uppercase small fw-semibold text-muted">
-                                    <th scope="col" class="py-3">Employee ID</th>
-                                    <th scope="col" class="py-3">Employee Name</th>
-                                    <th scope="col" class="py-3" >Shift Type</th>
-                                    <th scope="col" class="py-3" style="width: 160px;">Shift</th>
-                                    <th scope="col" class="py-3 d-none d-md-table-cell">Clock In</th>
-                                    <th scope="col" class="py-3 d-none d-md-table-cell text-center">In Status</th>
-                                    <th scope="col" class="py-3 d-none d-md-table-cell">Clock Out</th>
-                                    <th scope="col" class="py-3 d-none d-md-table-cell text-center">Out Status</th>
-                                    <th scope="col" class="py-3 d-none d-lg-table-cell text-center">Working Time</th>
-                                    <th scope="col" class="py-3 d-none d-lg-table-cell text-center">Late Count</th>
-                                    <th scope="col" class="py-3 d-none d-lg-table-cell text-center">Early Out Count</th>
-                                    <th scope="col" class="py-3 d-none d-lg-table-cell text-center">Overtime</th>
-                                    <th scope="col" class="py-3 d-none d-lg-table-cell text-center">Work Type</th>
-                                    <th scope="col" class="py-3 pe-4 text-center">Status</th>
+                {{-- Attendance Table --}}
+                <div class="table-responsive">
+                    <table class="table table-hover table-borderless align-middle mb-0" id="attendanceTable">
+                        <thead class="border-bottom" style="background-color: var(--bs-tertiary-bg);">
+                            <tr class="text-uppercase small fw-semibold text-muted">
+                                <th scope="col" class="py-3 ps-4">
+                                    <i class="bi bi-person-badge me-1"></i>Employee Name
+                                </th>
+                                <th scope="col" class="py-3 text-center">
+                                    <i class="bi bi-calendar-check me-1"></i>Shift Type
+                                </th>
+                                <th scope="col" class="py-3 text-center">
+                                    <i class="bi bi-clock-history me-1"></i>Clock In
+                                </th>
+                                <th scope="col" class="py-3 text-center">
+                                    <i class="bi bi-arrow-down-circle me-1"></i>In Status
+                                </th>
+                                <th scope="col" class="py-3 text-center">
+                                    <i class="bi bi-clock me-1"></i>Clock Out
+                                </th>
+                                <th scope="col" class="py-3 text-center">
+                                    <i class="bi bi-arrow-up-circle me-1"></i>Out Status
+                                </th>
+                                <th scope="col" class="py-3 text-center">
+                                    <i class="bi bi-briefcase me-1"></i>Work Type
+                                </th>
+                                <th scope="col" class="py-3 text-center">
+                                    <i class="bi bi-check-circle me-1"></i>Status
+                                </th>
+                                <th scope="col" class="py-3 pe-4 text-center">
+                                    <i class="bi bi-gear me-1"></i>Action
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($attendanceRecords as $record)
+                                <tr class="border-bottom attendance-row">
+                                    {{-- Employee Name --}}
+                                    <td class="ps-4 py-3">
+                                        <span class="fw-semibold text-dark">{{ $record->getEmployee->full_name }}</span>
+                                    </td>
+
+                                    {{-- Shift Type --}}
+                                    <td class="py-3 text-center">
+                                        <span class="badge bg-info text-white px-2 py-1">
+                                            {{ $record->shift_type }}
+                                        </span>
+                                    </td>
+
+                                    {{-- Clock In --}}
+                                    <td class="py-3 text-center">
+                                        @if ($record->in_time)
+                                            <div class="small text-muted" style="font-size: 0.7rem;">
+                                                {{ \Carbon\Carbon::parse($record->in_time)->format('d M, Y') }}</div>
+                                            <span
+                                                class="fw-semibold">{{ \Carbon\Carbon::parse($record->in_time)->format('h:i A') }}</span>
+                                        @else
+                                            <span class="fw-medium">—</span>
+                                        @endif
+                                    </td>
+
+                                    {{-- Clock In Status --}}
+                                    <td class="py-3 text-center">
+                                        <span
+                                            class="badge rounded-pill
+                                                @if ($record->in_status == 'On-Time') bg-success
+                                                @elseif($record->in_status == 'Excessive-Late') bg-danger
+                                                @elseif($record->in_status == 'Late') bg-warning text-dark
+                                                @else bg-secondary @endif px-2 py-1">
+                                            {{ $record->in_status ?? 'N/A' }}
+                                        </span>
+                                    </td>
+
+                                    {{-- Clock Out --}}
+                                    <td class="py-3 text-center">
+                                        @if ($record->out_time)
+                                            <div class="small text-muted" style="font-size: 0.7rem;">
+                                                {{ \Carbon\Carbon::parse($record->out_time)->format('d M, Y') }}</div>
+                                            <span
+                                                class="fw-semibold">{{ \Carbon\Carbon::parse($record->out_time)->format('h:i A') }}</span>
+                                        @else
+                                            <span class="fw-medium">—</span>
+                                        @endif
+                                    </td>
+
+                                    {{-- Clock Out Status --}}
+                                    <td class="py-3 text-center">
+                                        <span
+                                            class="badge rounded-pill
+                                                @if ($record->out_status == 'On-Time') bg-success
+                                                @elseif($record->out_status == 'Early-Exit') bg-danger
+                                                @else bg-secondary @endif px-2 py-1">
+                                            {{ $record->out_status ?? 'N/A' }}
+                                        </span>
+                                    </td>
+
+                                    {{-- Work Type --}}
+                                    <td class="py-3 text-center">
+                                        <span class="badge bg-primary text-white px-2 py-1">
+                                            {{ $record->work_type }}
+                                        </span>
+                                    </td>
+
+                                    {{-- Status --}}
+                                    <td class="py-3 text-center">
+                                        <span
+                                            class="badge rounded-pill
+                                                @if ($record->attendance_status == 'Present') bg-success
+                                                @elseif($record->attendance_status == 'Absent') bg-danger
+                                                @else bg-secondary @endif px-2 py-1 fw-semibold">
+                                            {{ $record->attendance_status }}
+                                        </span>
+                                    </td>
+
+                                    {{-- Action --}}
+                                    <td class="py-3 pe-4 text-center">
+                                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#viewAttendanceModal{{ $record->id }}"
+                                            title="View Details">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($attendanceRecords as $record)
-                                    <tr class="border-bottom">
-                                        <td class="ps-4 py-3">
-                                            <span class="badge text-muted border fw-normal"
-                                                style="background-color: var(--bs-secondary-bg);">{{ $record->getEmployee->applicant_id }}</span>
-                                        </td>
 
-                                        <td class="py-3">
-                                            <code class="px-2 py-1 rounded small"
-                                                style="background-color: var(--bs-secondary-bg); color: var(--bs-body-color);">{{ $record->getEmployee->full_name }}</code>
-                                        </td>
+                                {{-- Include View Modal --}}
+                                @include('attendance.view_modal', ['record' => $record])
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
 
-                                        <td class="py-3">
-                                            <code class="px-2 py-1 rounded small"
-                                                  style="background-color: var(--bs-secondary-bg); color: var(--bs-body-color);">{{ $record->shift_type }}</code>
-                                        </td>
-
-                                        {{-- Shift (Fixed Width, Two-Line Display) --}}
-                                        <td class="py-3" style="width: 160px;">
-                                            <div class="d-flex align-items-start">
-                                                <svg class="me-2 mt-1 flex-shrink-0 text-primary" width="14"
-                                                    height="14" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd"
-                                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" />
-                                                </svg>
-                                                {{--<div style="line-height: 1.3;">
-                                                    <div class="fw-medium" style="font-size: 0.813rem;">
-                                                        @if($shift_type == 'Regular')
-                                                            {{ $record->getEmployee->shift->getPlan->name }}
-                                                        @elseif($shift_type == 'Roster')
-                                                            {{ $record->getEmployee->roster->getPlan->name }}
-                                                        @endif
-                                                    </div>
-                                                        <div class="text-muted"
-                                                            style="font-size: 0.688rem; white-space: nowrap;">
-                                                            @if($shift_type == 'Regular')
-                                                            {{ \Carbon\Carbon::parse($record->getShift->clock_in_time)->format('h:i A') }} -
-                                                            {{ \Carbon\Carbon::parse($record->getShift->clock_out_time)->format('h:i A') }}
-                                                            @endif
-                                                        </div>
-                                                </div>--}}
-                                            </div>
-                                        </td>
-
-                                        {{-- Clock In --}}
-                                        <td class="py-3 d-none d-md-table-cell">
-                                            <span class="fw-medium">{{ $record->in_time ?? '—' }}</span>
-                                        </td>
-
-                                        {{-- Clock In Status --}}
-                                        <td class="py-3 pe-4 text-center">
-                                                <span
-                                                    class="badge rounded-pill @if($record->in_status == 'On-Time') bg-success @elseif($record->in_status == 'Excessive-Late') bg-danger @elseif($record->in_status == 'Late') bg-warning @endif  text-white px-3 py-2 fw-semibold">
-                                                    {{($record->in_status)}}
-                                                </span>
-                                        </td>
-                                        {{-- Clock Out --}}
-                                        <td class="py-3 d-none d-md-table-cell">
-                                            <span class="fw-medium">{{ $record->out_time ?? '—' }}</span>
-                                        </td>
-
-                                        {{-- Clock Out Status --}}
-                                        <td class="py-3 pe-4 text-center">
-                                                <span
-                                                    class="badge rounded-pill @if($record->out_status == 'On-Time') bg-success @elseif($record->out_status == 'Early-Exit') bg-danger @endif  text-white px-3 py-2 fw-semibold">
-                                                    {{($record->out_status)}}
-                                                </span>
-                                        </td>
-                                        {{-- Working Hours --}}
-                                        <td class="py-3 d-none d-lg-table-cell text-center">
-                                            <span class="fw-semibold text-primary">
-                                                {{ $record->working_time }}
-                                            </span>
-                                        </td>
-
-                                        <td class="py-3 d-none d-lg-table-cell text-center">
-                                            <span class="fw-semibold text-primary">
-                                                {{ $record->late_count }}
-                                            </span>
-                                        </td>
-
-                                        <td class="py-3 d-none d-lg-table-cell text-center">
-                                            <span class="fw-semibold text-primary">
-                                                {{ $record->early_out_count }}
-                                            </span>
-                                        </td>
-
-                                        <td class="py-3 d-none d-lg-table-cell text-center">
-                                            <span class="fw-semibold text-primary">
-                                                {{ $record->overtime }}
-                                            </span>
-                                        </td>
-
-                                        <td class="py-3 d-none d-lg-table-cell text-center">
-                                            <span class="fw-semibold text-primary">
-                                                {{ $record->work_type }}
-                                            </span>
-                                        </td>
-
-
-                                        {{-- Status --}}
-                                        <td class="py-3 pe-4 text-center">
-                                                <span
-                                                    class="badge rounded-pill @if($record->attendance_status == 'Present') bg-success @elseif($record->attendance_status == 'Absent') bg-danger @endif  text-white px-3 py-2 fw-semibold">
-                                                    {{($record->attendance_status)}}
-                                                </span>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-
-                    {{-- Table Footer with Pagination --}}
-                    <div class="border-top p-4" style="background-color: var(--bs-tertiary-bg);">
-                        <div class="row align-items-center g-3">
-                            <div class="col-md-6">
-                                <div class="text-muted small">
-                                    Showing <strong>1</strong> to <strong>{{ count($attendanceRecords) }}</strong> of
-                                    <strong>{{ count($attendanceRecords) }}</strong> total records
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <nav aria-label="Attendance pagination">
-                                    <ul class="pagination pagination-sm justify-content-md-end mb-0">
-                                        <li class="page-item disabled">
-                                            <a class="page-link" href="#" tabindex="-1">
-                                                <svg width="14" height="14" fill="currentColor"
-                                                    viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd"
-                                                        d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" />
-                                                </svg>
-                                            </a>
-                                        </li>
-                                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="#">
-                                                <svg width="14" height="14" fill="currentColor"
-                                                    viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd"
-                                                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" />
-                                                </svg>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </nav>
+                {{-- Table Footer with Pagination --}}
+                <div class="border-top p-4" style="background-color: var(--bs-tertiary-bg);">
+                    <div class="row align-items-center g-3">
+                        <div class="col-md-6">
+                            <div class="text-muted small">
+                                Showing <strong>1</strong> to <strong>{{ count($attendanceRecords) }}</strong> of
+                                <strong>{{ count($attendanceRecords) }}</strong> total records
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <nav aria-label="Attendance pagination">
+                                <ul class="pagination pagination-sm justify-content-md-end mb-0">
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" tabindex="-1">
+                                            <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd"
+                                                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" />
+                                            </svg>
+                                        </a>
+                                    </li>
+                                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#">
+                                            <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd"
+                                                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" />
+                                            </svg>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
                     </div>
+                </div>
             </div>
         </div>
 
     </div>
 
-    {{-- Print Styles --}}
-    <style media="print">
-        /* Hide interactive elements when printing */
-        .btn,
-        .pagination,
-        .border-top.p-4,
-        .card-header .col-auto {
-            display: none !important;
-        }
-
-        /* Adjust card styling for print */
-        .card {
-            box-shadow: none !important;
-            border: 1px solid #dee2e6 !important;
-        }
-
-        /* Optimize table font size */
-        .table {
-            font-size: 9pt;
-        }
-
-        /* Show all columns in print */
-        .d-none.d-md-table-cell,
-        .d-none.d-lg-table-cell {
-            display: table-cell !important;
-        }
-
-        /* Remove page header background */
-        .bg-light {
-            background-color: #fff !important;
-        }
-    </style>
-
     {{-- Additional Dark Theme Support --}}
     <style>
+        /* Table Row Hover Effect */
+        .attendance-row:hover {
+            background-color: var(--bs-tertiary-bg);
+        }
+
+        /* Badge Enhancements */
+        .badge {
+            font-weight: 500;
+            font-size: 0.75rem;
+        }
+
+        /* Compact table layout */
+        #attendanceTable th,
+        #attendanceTable td {
+            white-space: nowrap;
+            padding: 0.75rem 0.5rem !important;
+        }
+
+        #attendanceTable th:first-child,
+        #attendanceTable td:first-child {
+            padding-left: 1rem !important;
+        }
+
+        #attendanceTable th:last-child,
+        #attendanceTable td:last-child {
+            padding-right: 1rem !important;
+        }
+
         /* Ensure Select2 matches form control height */
         .select2-container--bootstrap-5 .select2-selection--single {
             height: calc(1.5em + 0.75rem + 2px) !important;
@@ -411,6 +399,215 @@
         .select2-container--bootstrap-5 .select2-selection--single .select2-selection__placeholder {
             color: var(--bs-secondary-color);
         }
-</style>
 
+        /* Modal Enhancements */
+        .modal-content {
+            border-radius: 1rem;
+        }
+
+        .modal-header {
+            border-radius: 1rem 1rem 0 0;
+        }
+
+        /* Info Item Styling in Modal */
+        .info-item {
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            background-color: var(--bs-light-bg-subtle);
+        }
+
+        /* Print Styles for A4 Paper - Professional Report */
+        @media print {
+
+            /* A4 Paper Setup */
+            @page {
+                size: A4;
+                margin: 15mm 10mm;
+            }
+
+            /* Hide unnecessary elements */
+            .btn,
+            .pagination,
+            .border-top.p-4,
+            .card-header .col-auto,
+            .modal-footer,
+            button,
+            .form-control,
+            .form-select,
+            nav,
+            .sidebar,
+            .navbar,
+            header,
+            footer,
+            .no-print,
+            .btn-group,
+            .shadow,
+            .shadow-sm {
+                display: none !important;
+            }
+
+            /* Reset body and page styles */
+            body {
+                background: white !important;
+                color: black !important;
+                font-size: 10pt;
+                line-height: 1.3;
+            }
+
+            /* Container adjustments */
+            .container-fluid {
+                padding: 0 !important;
+                max-width: 100% !important;
+            }
+
+            /* Remove all colors - black, white, gray only */
+            * {
+                background-color: white !important;
+                color: black !important;
+                border-color: #666 !important;
+                box-shadow: none !important;
+            }
+
+            /* Card styling for print */
+            .card {
+                border: 1px solid #ccc !important;
+                page-break-inside: avoid;
+                margin-bottom: 10px !important;
+            }
+
+            .card-header {
+                background-color: #f5f5f5 !important;
+                border-bottom: 2px solid #333 !important;
+                padding: 8px !important;
+                font-weight: bold;
+            }
+
+            .card-body {
+                padding: 8px !important;
+            }
+
+            /* Page header for report */
+            .border-bottom.mb-4 {
+                border-bottom: 3px solid #333 !important;
+                margin-bottom: 15px !important;
+                padding-bottom: 10px !important;
+                background-color: white !important;
+            }
+
+            .border-bottom.mb-4 h3 {
+                font-size: 18pt !important;
+                font-weight: bold !important;
+                color: black !important;
+            }
+
+            .border-bottom.mb-4 p {
+                font-size: 9pt !important;
+                color: #666 !important;
+            }
+
+            /* Table styling */
+            .table-responsive {
+                overflow: visible !important;
+            }
+
+            #attendanceTable {
+                width: 100% !important;
+                border-collapse: collapse !important;
+                font-size: 8pt !important;
+            }
+
+            #attendanceTable thead {
+                background-color: #e0e0e0 !important;
+                border-bottom: 2px solid #333 !important;
+            }
+
+            #attendanceTable th {
+                padding: 6px 4px !important;
+                font-weight: bold !important;
+                text-align: center !important;
+                border: 1px solid #999 !important;
+                background-color: #e0e0e0 !important;
+                color: black !important;
+                font-size: 8pt !important;
+            }
+
+            #attendanceTable td {
+                padding: 5px 4px !important;
+                border: 1px solid #ccc !important;
+                background-color: white !important;
+                color: black !important;
+                font-size: 8pt !important;
+                vertical-align: middle !important;
+            }
+
+            #attendanceTable tbody tr {
+                page-break-inside: avoid;
+            }
+
+            #attendanceTable tbody tr:nth-child(even) {
+                background-color: #f9f9f9 !important;
+            }
+
+            /* Badge styling for print */
+            .badge {
+                border: 1px solid #666 !important;
+                background-color: white !important;
+                color: black !important;
+                padding: 2px 6px !important;
+                font-size: 7pt !important;
+                font-weight: normal !important;
+            }
+
+            /* Status badges */
+            .bg-success,
+            .badge.bg-success {
+                background-color: #e8e8e8 !important;
+                border-color: #333 !important;
+            }
+
+            .bg-danger,
+            .badge.bg-danger {
+                background-color: #d0d0d0 !important;
+                border-color: #333 !important;
+            }
+
+            .bg-warning,
+            .badge.bg-warning {
+                background-color: #f0f0f0 !important;
+                border-color: #666 !important;
+            }
+
+            .bg-primary,
+            .badge.bg-primary,
+            .bg-info,
+            .badge.bg-info {
+                background-color: #e8e8e8 !important;
+                border-color: #666 !important;
+            }
+
+            /* Icons - hide in print */
+            .bi,
+            svg,
+            i[class*="bi-"] {
+                display: none !important;
+            }
+
+            /* Text adjustments */
+            .text-muted {
+                color: #666 !important;
+            }
+
+            .fw-semibold,
+            .fw-bold {
+                font-weight: bold !important;
+            }
+
+            /* Filter card - hide */
+            .card-header.bg-gradient,
+            .card:first-of-type {
+                display: none !important;
+            }
+        }
+    </style>
+    </style>
 @endsection

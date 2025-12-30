@@ -41,7 +41,7 @@ use App\Http\Controllers\DataController;
 use App\Http\Controllers\AttendancesController;
 
 Route::get('test', function () {
-   return view('attendance.daily_sheet');
+   return view('attendance.attendance_form_1');
 });
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -499,7 +499,7 @@ Route::controller(DataController::class)->group(function () {
         Route::post('store', 'store')->name('attendance.store');
         Route::get('bulk-upload', 'bulkUpload')->name('attendance.bulk-upload');
         Route::post('import', 'import')->name('attendance.import');
-
-
+        Route::get('print', 'printIndex')->name('attendance.print');
+        Route::get('print/{id}', 'printDetail')->name('attendance.print-detail');
     });
 

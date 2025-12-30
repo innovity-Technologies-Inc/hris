@@ -85,4 +85,15 @@ class AttendancesController extends Controller
             ]);
         }
     }
+
+    public function printIndex(Request $request){
+        $query = Attendance::with('getEmployee');
+        $attendanceRecords = $query->get();
+        return view('attendance.print_index', compact('attendanceRecords'));
+    }
+
+    public function printDetail($id){
+        $record = Attendance::with('getEmployee', 'getShift')->findOrFail($id);
+        return view('attendance.print_detail', compact('record'));
+    }
 }
