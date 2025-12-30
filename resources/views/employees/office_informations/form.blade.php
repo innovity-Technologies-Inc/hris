@@ -137,7 +137,7 @@
                                     <select id="joining_business_unit_id"
                                         class="form-select select2_list @error('joining_business_unit_id') is-invalid @enderror"
                                         name="joining_business_unit_id"
-                                        data-placeholder="Select Business Unit" required>
+                                        data-placeholder="Select Business Unit">
                                         <option value="">Select Business Unit</option>
                                     </select>
                                     @error('joining_business_unit_id')

@@ -3,13 +3,18 @@
 namespace App\Services;
 
 use App\Models\Attendance;
+use App\Models\EmployeeOffdayPlan;
+use App\Models\EmployeeOfficeInfo;
 use App\Models\EmployeeOtPlan;
 use App\Models\EmployeeRosterPlan;
 use App\Models\EmployeeShiftPlan;
+use App\Models\Leave;
+use App\Models\OffDayPlan;
 use App\Models\OTPlan;
 use App\Models\ShiftPlan;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class AttendanceServices
 {
@@ -21,15 +26,58 @@ class AttendanceServices
         //
     }
 
+    public function checkLeaveDay($employeeId, $clockIn, $index)
+    {
+        $leaveExists = Leave::where('employee_id', $employeeId)
+            ->whereDate('from', '<=', $clockIn)
+            ->whereDate('to', '>=', $clockIn)
+            ->exists();
+
+        if ($leaveExists) {
+            throw ValidationException::withMessages([
+                "attendance.$index.clock_in" => ['Employee is on leave for this date. Clock-in is not allowed.']
+            ]);
+        }
+    }
+
+    public function checkOffDay($employee_id, $clock_in, $index){
+        $weekends = EmployeeOfficeInfo::find($employee_id)->weekends;
+        $clock_in_day = $clock_in->format('l');
+        if (in_array($clock_in_day, $weekends)) {
+            $offDayPLan = EmployeeOffdayPlan::where('employee_id', $employee_id)->first();
+            if (!$offDayPLan){
+                throw ValidationException::withMessages([
+                    'attendance.$index.clock_in' => ["Off-day clock-in is not allowed without an active off-day plan."]
+                ]);
+            }
+                $from = Carbon::parse($offDayPLan->from)->copy()->startOfDay();
+                $to = Carbon::parse($offDayPLan->to)->copy()->endOfDay();
+
+                if (!$clock_in->between($from, $to)) {
+                    throw ValidationException::withMessages([
+                        'attendance.$index.clock_in' => ["Off-day clock-in is not allowed without an active off-day plan."]
+                    ]);
+                }
+            $dataShiftType = "Off-Day";
+            $shift = $offDayPLan->getPlan->shift_id;
+
+            return [
+                'shift' => $shift,
+                'shift_type' => $dataShiftType
+            ];
+            }
+            return null;
+    }
+
     public function getTodayShift($employee_id, $clock_in)
     {
         $roster = EmployeeRosterPlan::where('employee_id', $employee_id)->where('status', 'active')->first();
         if (!empty($roster)) {
-            $clock_in = Carbon::parse($clock_in);
             $from = Carbon::parse($roster->from)->copy()->startOfDay();
             $to = Carbon::parse($roster->to)->copy()->endOfDay();
 
             if ($clock_in->between($from, $to) && $roster->status == 'active') {
+                Log::info('Roster Active');
                 $dataShiftType = "Roster";
                 $dayPassed = (int)$from->diffInDays($clock_in->startOfDay());
                 $repeatDays = (int)$roster->getPlan->swapping;
@@ -47,11 +95,13 @@ class AttendanceServices
                     $shift = $roster->getPlan->third_shift_id;
                 }
             } else {
+                Log::info('Regular Shift');
                 $shift = EmployeeShiftPlan::where('employee_id', $employee_id)
                     ->where('status', 'active')->first()->plan_id;
                     $dataShiftType = "Regular";
             }
         } else {
+            Log::info('Regular Shift');
             $shift = EmployeeShiftPlan::where('employee_id', $employee_id)
                 ->where('status', 'active')->first()->plan_id;
                 $dataShiftType = "Regular";
@@ -80,7 +130,6 @@ class AttendanceServices
 
     public function getEarlyOutTime($clock_out, $shift_end, $early_out_grace_minutes)
     {
-        $clock_out = Carbon::parse($clock_out);
         $graceperiod = $shift_end->copy()->subMinutes($early_out_grace_minutes);
 
         if ($clock_out >= $graceperiod) {
@@ -177,7 +226,7 @@ class AttendanceServices
             'start' => $shift_start,
             'end' => $shift_end];
     }
-    public function singleAttendanceStore($item){
+    public function singleAttendanceStore($item, $index){
             $employee_id = $item['employee_id'];
             $clock_in = $item['clock_in'];
             $clock_out = $item['clock_out'];
@@ -192,9 +241,21 @@ class AttendanceServices
             $clock_in = Carbon::parse($clock_in);
             $clock_out = Carbon::parse($clock_out);
 
-            $shift_data = $this->getTodayShift($employee_id, $clock_in);
-            $shift = $shift_data['shift'];
-            $data['shift_type'] = $shift_data['shift_type'];
+            $this->checkLeaveDay($employee_id, $clock_in, $index);
+
+            $offDayData = $this->checkOffDay($employee_id, $clock_in, $index);
+
+            if (!empty($offDayData)){
+                Log::info('OFF Day Work Plan Enable');
+                $data['shift_type'] = $offDayData['shift_type'];
+                $shift = $offDayData['shift'];
+            }else{
+                Log::info('Checking Shift');
+                $shift_data = $this->getTodayShift($employee_id, $clock_in);
+                $shift = $shift_data['shift'];
+                $data['shift_type'] = $shift_data['shift_type'];
+            }
+
             $shift_details = ShiftPlan::findorFail($shift);
             Log::info($shift_details);
 
@@ -243,8 +304,8 @@ class AttendanceServices
         ]);
 
         $attendance = $request->attendance;
-        foreach ($attendance as $item) {
-            $this->singleAttendanceStore($item);
+        foreach ($attendance as $index => $item) {
+            $this->singleAttendanceStore($item, $index);
         }
     }
 }
