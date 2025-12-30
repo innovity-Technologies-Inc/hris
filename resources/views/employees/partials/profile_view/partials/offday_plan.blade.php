@@ -77,6 +77,29 @@
 
                     <div class="row g-2">
 
+                        {{-- Shift Information --}}
+                        <div class="col-12 mb-2">
+                            <div class="p-2 rounded-3 border shadow-sm"
+                                style="background-color: var(--bs-primary-bg-subtle);">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="d-flex align-items-center justify-content-center rounded-circle shadow-sm"
+                                        style="width: 32px; height: 32px; min-width: 32px; background-color: var(--bs-body-bg);">
+                                        <i class="mdi mdi-clock-outline text-primary"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <p class="text-muted small mb-0 fw-semibold">Associated Shift</p>
+                                        <h6 class="mb-0 fw-bold">
+                                            @if ($activeOffDayPLan->getPlan->getShift)
+                                                {{ $activeOffDayPLan->getPlan->getShift->name }}
+                                            @else
+                                                <span class="text-muted">No shift assigned</span>
+                                            @endif
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         {{-- Timing Information - 4 Columns with Color --}}
                         <div class="col-lg-3 col-md-6 col-sm-6">
                             <div class="p-2 rounded-3 border shadow-sm"
@@ -87,9 +110,13 @@
                                         <i class="mdi mdi-clock-start text-success"></i>
                                     </div>
                                     <div class="flex-grow-1">
-                                        <p class="text-muted small mb-0 fw-semibold">Start Time</p>
+                                        <p class="text-muted small mb-0 fw-semibold">Clock In</p>
                                         <h6 class="mb-0 fw-bold">
-                                            {{ date('h:i A', strtotime($activeOffDayPLan->getPlan->start_time ?? '00:00:00')) }}
+                                            @if ($activeOffDayPLan->getPlan->getShift)
+                                                {{ date('h:i A', strtotime($activeOffDayPLan->getPlan->getShift->clock_in_time ?? '00:00:00')) }}
+                                            @else
+                                                N/A
+                                            @endif
                                         </h6>
                                     </div>
                                 </div>
@@ -105,9 +132,13 @@
                                         <i class="mdi mdi-clock-end text-danger"></i>
                                     </div>
                                     <div class="flex-grow-1">
-                                        <p class="text-muted small mb-0 fw-semibold">End Time</p>
+                                        <p class="text-muted small mb-0 fw-semibold">Clock Out</p>
                                         <h6 class="mb-0 fw-bold">
-                                            {{ date('h:i A', strtotime($activeOffDayPLan->getPlan->end_time ?? '00:00:00')) }}
+                                            @if ($activeOffDayPLan->getPlan->getShift)
+                                                {{ date('h:i A', strtotime($activeOffDayPLan->getPlan->getShift->clock_out_time ?? '00:00:00')) }}
+                                            @else
+                                                N/A
+                                            @endif
                                         </h6>
                                     </div>
                                 </div>
@@ -125,7 +156,11 @@
                                     <div class="flex-grow-1">
                                         <p class="text-muted small mb-0 fw-semibold">Grace Time</p>
                                         <h6 class="mb-0 fw-bold">
-                                            {{ $activeOffDayPLan->getPlan->grace_time ?? '0' }} min
+                                            @if ($activeOffDayPLan->getPlan->getShift)
+                                                {{ $activeOffDayPLan->getPlan->getShift->grace_time ?? '0' }} min
+                                            @else
+                                                N/A
+                                            @endif
                                         </h6>
                                     </div>
                                 </div>
@@ -141,9 +176,14 @@
                                         <i class="mdi mdi-clock-check text-info"></i>
                                     </div>
                                     <div class="flex-grow-1">
-                                        <p class="text-muted small mb-0 fw-semibold">Grace Before</p>
+                                        <p class="text-muted small mb-0 fw-semibold">Early Out Grace</p>
                                         <h6 class="mb-0 fw-bold">
-                                            {{ $activeOffDayPLan->getPlan->grace_time_before ?? '0' }} min
+                                            @if ($activeOffDayPLan->getPlan->getShift)
+                                                {{ $activeOffDayPLan->getPlan->getShift->early_out_grace_minutes ?? '0' }}
+                                                min
+                                            @else
+                                                N/A
+                                            @endif
                                         </h6>
                                     </div>
                                 </div>
@@ -198,8 +238,23 @@
                                     <div class="flex-grow-1">
                                         <p class="text-muted small mb-0 fw-semibold">Remuneration</p>
                                         <h6 class="mb-0 fw-bold text-success">
-                                            {{ \App\HelperClass::getCurrency() ?? '৳' }}
-                                            {{ number_format($activeOffDayPLan->getPlan->remuneration, 2) }}
+                                            @php
+                                                $plan = $activeOffDayPLan->getPlan;
+                                                if ($plan->offday_config_type === 'Salary Based') {
+                                                    if ($plan->salary_rate_type === 'Basic Rate') {
+                                                        echo 'Salary Based - Basic Rate';
+                                                    } else {
+                                                        echo 'Salary Based - ' .
+                                                            number_format($plan->offday_multiplier, 2) .
+                                                            'x';
+                                                    }
+                                                } else {
+                                                    echo (\App\HelperClass::getCurrency() ?? '৳') .
+                                                        ' ' .
+                                                        number_format($plan->custom_offday_rate ?? 0, 2) .
+                                                        '/hr';
+                                                }
+                                            @endphp
                                         </h6>
                                     </div>
                                 </div>

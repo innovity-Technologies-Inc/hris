@@ -45,77 +45,45 @@
                 </div>
             </div>
 
-            {{-- Time Configuration --}}
+            {{-- Shift Selection (replaces Time Configuration) --}}
             <div class="card border mb-4">
                 <div class="card-header bg-light">
                     <h5 class="mb-0 fw-semibold">
-                        <i class="mdi mdi-clock-outline text-success me-2"></i> Time Configuration
+                        <i class="mdi mdi-clock-outline text-success me-2"></i> Shift Configuration
                     </h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="start_time" class="form-label fw-semibold">
-                                Start Time <span class="text-danger">*</span>
+                            <label for="shift_id" class="form-label fw-semibold">
+                                Select Shift <span class="text-danger">*</span>
                             </label>
-                            <input type="time" class="form-control" id="start_time" name="start_time"
-                                value="{{ isset($plan) && $plan->start_time ? \Carbon\Carbon::parse($plan->start_time)->format('H:i') : old('start_time') }}"
-                                required>
-                            <small class="text-muted">{{ __('Time when off-day period begins') }}</small>
-                            @error('start_time')
-                                <small class="text-danger">{{ $message }}</small>
-                            @enderror
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="end_time" class="form-label fw-semibold">
-                                End Time <span class="text-danger">*</span>
-                            </label>
-                            <input type="time" class="form-control" id="end_time" name="end_time"
-                                value="{{ isset($plan) && $plan->end_time ? \Carbon\Carbon::parse($plan->end_time)->format('H:i') : old('end_time') }}"
-                                required>
-                            <small class="text-muted">Time when off-day period ends</small>
-                            @error('end_time')
+                            <select class="form-select shift-select @error('shift_id') is-invalid @enderror" id="shift_id"
+                                name="shift_id" data-target="shift_details" required>
+                                <option value="">Select a Shift</option>
+                                @foreach ($shifts as $shift)
+                                    <option value="{{ $shift->id }}"
+                                        {{ (isset($plan) && $plan->shift_id == $shift->id) || old('shift_id') == $shift->id ? 'selected' : '' }}>
+                                        {{ $shift->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <small class="text-muted">Timing and grace periods are derived from the selected shift</small>
+                            @error('shift_id')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
                     </div>
-                </div>
-            </div>
 
-            {{-- Grace Time Configuration --}}
-            <div class="card border mb-4">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0 fw-semibold">
-                        <i class="mdi mdi-timer-sand text-warning me-2"></i> Grace Time Configuration
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="grace_time" class="form-label fw-semibold">
-                                Grace Time (Clock In) (minutes) <span class="text-danger">*</span>
-                            </label>
-                            <input type="number" step="1" class="form-control" id="grace_time" name="grace_time"
-                                placeholder="0" value="{{ isset($plan) ? $plan->grace_time : old('grace_time', 0) }}"
-                                required>
-                            <small class="text-muted">Grace period after end time (in minutes)</small>
-                            @error('grace_time')
-                                <small class="text-danger">{{ $message }}</small>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <label for="grace_time_before" class="form-label fw-semibold">
-                                Grace Time (Clock Out) (minutes) <span class="text-danger">*</span>
-                            </label>
-                            <input type="number" step="1" class="form-control" id="grace_time_before"
-                                name="grace_time_before" placeholder="0"
-                                value="{{ isset($plan) ? $plan->grace_time_before : old('grace_time_before', 0) }}"
-                                required>
-                            <small class="text-muted">Grace period before start time (in minutes)</small>
-                            @error('grace_time_before')
-                                <small class="text-danger">{{ $message }}</small>
-                            @enderror
+                    {{-- Dynamic Shift Details Container --}}
+                    <div id="shift_details" class="shift-details mt-3 d-none">
+                        <div class="border rounded p-3 bg-light">
+                            <h6 class="fw-semibold mb-3 text-primary">
+                                <i class="mdi mdi-information me-1"></i>Shift Details
+                            </h6>
+                            <div class="shift-info">
+                                {{-- JavaScript will populate this --}}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -149,8 +117,7 @@
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input @error('offday_config_type') is-invalid @enderror"
-                                        type="radio" name="offday_config_type" id="offday_config_custom"
-                                        value="Custom"
+                                        type="radio" name="offday_config_type" id="offday_config_custom" value="Custom"
                                         {{ !isset($plan) || (isset($plan) && $plan->offday_config_type == 'Custom') ? 'checked' : '' }}>
                                     <label class="form-check-label" for="offday_config_custom">
                                         Custom Rate
@@ -286,13 +253,88 @@
         </form>
     </div>
 
+    <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
     <script>
+        $(function() {
+            // Load shift details dynamically (same pattern as Roster Plans)
+            function loadShiftDetails(shiftId, targetBox) {
+                if (!shiftId) {
+                    $("#" + targetBox).addClass("d-none")
+                        .find(".shift-info").html("");
+                    return;
+                }
+
+                $.get('/get-shift-details/' + shiftId, function(response) {
+                    if (!response || !response.shift) {
+                        console.error("Shift not found");
+                        return;
+                    }
+
+                    let shift = response.shift;
+
+                    let html = `
+                        <div class="row">
+                            <div class="col-md-4 mb-2">
+                                <p class="text-muted mb-1 small">Shift Name</p>
+                                <p class="fw-semibold mb-0">${shift.name}</p>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <p class="text-muted mb-1 small">Clock In Time</p>
+                                <p class="fw-semibold mb-0"><i class="mdi mdi-clock-start text-success me-1"></i>${shift.clock_in_time}</p>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <p class="text-muted mb-1 small">Clock Out Time</p>
+                                <p class="fw-semibold mb-0"><i class="mdi mdi-clock-end text-danger me-1"></i>${shift.clock_out_time}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-2">
+                                <p class="text-muted mb-1 small">Grace Time (Clock In)</p>
+                                <p class="fw-semibold mb-0"><span class="badge bg-warning text-dark">${shift.grace_time || 0} minutes</span></p>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <p class="text-muted mb-1 small">Early Out Grace</p>
+                                <p class="fw-semibold mb-0"><span class="badge bg-info">${shift.early_out_grace_minutes || 0} minutes</span></p>
+                            </div>
+                        </div>
+                    `;
+
+                    $("#" + targetBox)
+                        .removeClass("d-none")
+                        .find(".shift-info")
+                        .html(html);
+                });
+            }
+
+            // Handle dropdown changes
+            $(".shift-select").on("change", function() {
+                let shiftId = $(this).val();
+                let targetBox = $(this).data("target");
+                loadShiftDetails(shiftId, targetBox);
+            });
+
+            // Auto-load shift details on page load (for edit mode or old values)
+            @if (isset($plan))
+                let currentShiftId = "{{ old('shift_id', $plan->shift_id ?? '') }}";
+                if (currentShiftId) {
+                    loadShiftDetails(currentShiftId, 'shift_details');
+                }
+            @else
+                let oldShiftId = "{{ old('shift_id') }}";
+                if (oldShiftId) {
+                    loadShiftDetails(oldShiftId, 'shift_details');
+                }
+            @endif
+        });
+
         // Handle form reset - ensure status checkbox returns to default checked state
         document.querySelector('form').addEventListener('reset', function() {
             setTimeout(function() {
                 document.getElementById('status').checked = true;
                 document.getElementById('offday_config_custom').checked = true;
                 document.getElementById('rate_type_multiplier').checked = true;
+                document.getElementById('shift_id').value = '';
+                document.getElementById('shift_details').classList.add('d-none');
                 toggleOffdayConfigSections();
             }, 0);
         });

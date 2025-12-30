@@ -2,18 +2,26 @@
 @section('content')
 
     @php
-        $start = Carbon\Carbon::parse($plan->start_time);
-        $end = Carbon\Carbon::parse($plan->end_time);
+        // Get timing from the related shift
+        $shift = $plan->getShift;
+        $start = $shift ? Carbon\Carbon::parse($shift->clock_in_time) : null;
+        $end = $shift ? Carbon\Carbon::parse($shift->clock_out_time) : null;
 
-        $diffMinutes = $start->diffInMinutes($end);
+        $formatted_diff = '-';
+        $start_time = '-';
+        $end_time = '-';
 
-        $hours = floor($diffMinutes / 60);
-        $minutes = $diffMinutes % 60;
+        if ($start && $end) {
+            $diffMinutes = $start->diffInMinutes($end);
+            $hours = floor($diffMinutes / 60);
+            $minutes = $diffMinutes % 60;
+            $formatted_diff = $hours . ' : ' . $minutes;
+            $start_time = $start->format('h:i A');
+            $end_time = $end->format('h:i A');
+        }
 
-        $formatted_diff = $hours . ' : ' . $minutes;
-
-        $start_time = $start->format('h:i A');
-        $end_time = $end->format('h:i A');
+        $grace_time = $shift->grace_time ?? 0;
+        $grace_time_before = $shift->early_out_grace_minutes ?? 0;
     @endphp
     <div class="container-fluid mt-4">
         {{-- Page Header --}}
@@ -64,110 +72,121 @@
             </div>
         </div>
 
-        {{-- Time Configuration --}}
+        {{-- Shift Configuration (replaces Time Configuration) --}}
         <div class="card border mb-4">
             <div class="card-header bg-light">
                 <h5 class="mb-0 fw-semibold">
-                    <i class="mdi mdi-clock-outline text-success me-2"></i>Time Configuration
+                    <i class="mdi mdi-clock-outline text-success me-2"></i>Shift Configuration
                 </h5>
             </div>
             <div class="card-body">
-                <div class="border rounded p-3 bg-light">
-                    <h6 class="fw-semibold mb-3 text-primary">
-                        <i class="mdi mdi-calendar-clock me-1"></i>Off-Day Time Period
-                    </h6>
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <label class="text-muted small">Start Time</label>
-                            <p class="fw-semibold mb-0">
-                                <i class="mdi mdi-clock-start text-success me-1"></i>
-                                {{ $start_time }}
-                            </p>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="text-muted small">End Time</label>
-                            <p class="fw-semibold mb-0">
-                                <i class="mdi mdi-clock-end text-danger me-1"></i>
-                                {{ $end_time }}
-                            </p>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="text-muted small">Duration</label>
-                            <p class="fw-semibold mb-0">
-                                <span class="badge bg-secondary fs-6">
-                                    {{ $formatted_diff }} hr
-                                </span>
-                            </p>
+                @if ($shift)
+                    <div class="border rounded p-3 bg-light">
+                        <h6 class="fw-semibold mb-3 text-primary">
+                            <i class="mdi mdi-calendar-clock me-1"></i>{{ $shift->name }}
+                            <a href="{{ route('plans.shift_plans.show', $shift->id) }}"
+                                class="btn btn-sm btn-outline-primary ms-2">
+                                <i class="mdi mdi-eye me-1"></i>View Shift
+                            </a>
+                        </h6>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="text-muted small">Clock In Time</label>
+                                <p class="fw-semibold mb-0">
+                                    <i class="mdi mdi-clock-start text-success me-1"></i>
+                                    {{ $start_time }}
+                                </p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="text-muted small">Clock Out Time</label>
+                                <p class="fw-semibold mb-0">
+                                    <i class="mdi mdi-clock-end text-danger me-1"></i>
+                                    {{ $end_time }}
+                                </p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="text-muted small">Duration</label>
+                                <p class="fw-semibold mb-0">
+                                    <span class="badge bg-secondary fs-6">
+                                        {{ $formatted_diff }} hr
+                                    </span>
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @else
+                    <div class="alert alert-warning mb-0">
+                        <i class="mdi mdi-alert-outline me-2"></i>No shift assigned to this off-day plan.
+                    </div>
+                @endif
             </div>
         </div>
 
-        {{-- Grace Time Configuration --}}
+        {{-- Grace Time Configuration (derived from Shift) --}}
         <div class="card border mb-4">
             <div class="card-header bg-light">
                 <h5 class="mb-0 fw-semibold">
                     <i class="mdi mdi-timer-sand text-warning me-2"></i>Grace Time Configuration
+                    <small class="text-muted ms-2">(from Shift)</small>
                 </h5>
             </div>
             <div class="card-body">
-                <div class="border rounded p-3 bg-light">
-                    <h6 class="fw-semibold mb-3 text-primary">
-                        <i class="mdi mdi-clock-alert me-1"></i>Attendance Grace Periods
-                    </h6>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="text-muted small">Grace Time (Clock In)</label>
-                            <p class="fw-semibold mb-2">
-                                <span class="badge bg-warning text-dark fs-6">
-                                    <i class="mdi mdi-clock-fast me-1"></i>
-                                    {{ $plan->grace_time }} minutes
-                                </span>
-                            </p>
-                            <small class="text-muted">
-                                Employees can clock in until:
-                                <strong>
-                                    @php
-                                        $effectiveStart = \Carbon\Carbon::parse($plan->start_time)->addMinutes(
-                                            $plan->grace_time,
-                                        );
-                                    @endphp
-                                    {{ $effectiveStart->format('h:i A') }}
-                                </strong>
-                            </small>
+                @if ($shift)
+                    <div class="border rounded p-3 bg-light">
+                        <h6 class="fw-semibold mb-3 text-primary">
+                            <i class="mdi mdi-clock-alert me-1"></i>Attendance Grace Periods
+                        </h6>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">Grace Time (Clock In)</label>
+                                <p class="fw-semibold mb-2">
+                                    <span class="badge bg-warning text-dark fs-6">
+                                        <i class="mdi mdi-clock-fast me-1"></i>
+                                        {{ $grace_time }} minutes
+                                    </span>
+                                </p>
+                                @if ($start)
+                                    <small class="text-muted">
+                                        Employees can clock in until:
+                                        <strong>
+                                            {{ $start->copy()->addMinutes($grace_time)->format('h:i A') }}
+                                        </strong>
+                                    </small>
+                                @endif
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">Early Out Grace</label>
+                                <p class="fw-semibold mb-2">
+                                    <span class="badge bg-info fs-6">
+                                        <i class="mdi mdi-clock-plus me-1"></i>
+                                        {{ $grace_time_before }} minutes
+                                    </span>
+                                </p>
+                                @if ($end)
+                                    <small class="text-muted">
+                                        Employees can clock out after:
+                                        <strong>
+                                            {{ $end->copy()->subMinutes($grace_time_before)->format('h:i A') }}
+                                        </strong>
+                                    </small>
+                                @endif
+                            </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="text-muted small">Grace Time (Clock Out)</label>
-                            <p class="fw-semibold mb-2">
-                                <span class="badge bg-info fs-6">
-                                    <i class="mdi mdi-clock-plus me-1"></i>
-                                    {{ $plan->grace_time_before }} minutes
-                                </span>
-                            </p>
-                            <small class="text-muted">
-                                Employees can clock out after:
-                                <strong>
-                                    @php
-                                        $effectiveEnd = \Carbon\Carbon::parse($plan->end_time)->subMinutes(
-                                            $plan->grace_time_before,
-                                        );
-                                    @endphp
-                                    {{ $effectiveEnd->format('h:i A') }}
-                                </strong>
-                            </small>
-                        </div>
-                    </div>
 
-                    <div class="row mt-2">
-                        <div class="col-md-12">
-                            <div class="alert alert-info mb-0">
-                                <i class="mdi mdi-information-outline me-2"></i>
-                                Grace periods allow attendance flexibility without penalty.
+                        <div class="row mt-2">
+                            <div class="col-md-12">
+                                <div class="alert alert-info mb-0">
+                                    <i class="mdi mdi-information-outline me-2"></i>
+                                    Grace periods are inherited from the associated shift configuration.
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @else
+                    <div class="alert alert-warning mb-0">
+                        <i class="mdi mdi-alert-outline me-2"></i>No shift assigned - grace times unavailable.
+                    </div>
+                @endif
             </div>
         </div>
 
