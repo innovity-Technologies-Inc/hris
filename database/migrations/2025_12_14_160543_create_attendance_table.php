@@ -26,9 +26,9 @@ return new class extends Migration
             $table->enum('work_type', ['Full-Day', 'Half-Day', 'Overtime', 'N/A', 'Early-Out'])->nullable();
             $table->enum('attendance_status', ['Present', 'Absent'])->nullable();
             $table->enum('workstation', ['Remote', 'On-Site', 'Work-From-Home'])->nullable();
-            $table->bigUnsignedInteger('shift_id')->nullable();
-            $table->bigUnsignedInteger('ot_id')->nullable();
-            $table->bigUnsignedInteger('offday_id')->nullable();
+            $table->unsignedBigInteger('shift_id')->nullable();
+            $table->unsignedBigInteger('ot_id')->nullable();
+            $table->unsignedBigInteger('offday_id')->nullable();
             $table->timestamps();
         });
     }
