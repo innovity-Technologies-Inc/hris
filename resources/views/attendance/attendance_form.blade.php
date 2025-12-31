@@ -31,7 +31,7 @@
                             <div id="attendanceEntriesContainer">
 
                                 @php
-                                    $entries = old('attendance', [ [] ]);
+                                    $entries = old('attendance', [[]]);
                                 @endphp
 
                                 @foreach ($entries as $index => $entry)
@@ -40,13 +40,13 @@
                                             <div class="card-body p-4">
 
                                                 <div class="d-flex justify-content-between mb-3">
-                                            <span class="badge bg-primary">
-                                                Entry {{ $index + 1 }}
-                                            </span>
+                                                    <span class="badge bg-primary">
+                                                        Entry {{ $index + 1 }}
+                                                    </span>
 
                                                     <button type="button"
-                                                            class="btn btn-sm btn-outline-danger remove-entry-btn"
-                                                            style="{{ $index === 0 ? 'display:none' : '' }}">
+                                                        class="btn btn-sm btn-outline-danger remove-entry-btn"
+                                                        style="{{ $index === 0 ? 'display:none' : '' }}">
                                                         Remove
                                                     </button>
                                                 </div>
@@ -57,7 +57,7 @@
                                                     <div class="col-md-8">
                                                         <label class="form-label fw-semibold">Employee *</label>
                                                         <select name="attendance[{{ $index }}][employee_id]"
-                                                                class="form-select @error("attendance.$index.employee_id") is-invalid @enderror">
+                                                            class="form-select @error("attendance.$index.employee_id") is-invalid @enderror">
                                                             <option value="">Select Employee</option>
                                                             @foreach ($employees as $employee)
                                                                 <option value="{{ $employee->id }}"
@@ -67,7 +67,7 @@
                                                             @endforeach
                                                         </select>
                                                         @error("attendance.$index.employee_id")
-                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                            <div class="invalid-feedback">{{ $message }}</div>
                                                         @enderror
                                                     </div>
 
@@ -75,15 +75,19 @@
                                                     <div class="col-md-4">
                                                         <label class="form-label fw-semibold">Work Station</label>
                                                         <select name="attendance[{{ $index }}][workstation]"
-                                                                class="form-select">
+                                                            class="form-select">
                                                             <option value="">Select</option>
-                                                            <option
-                                                                value="Remote" {{ old("attendance.$index.workstation") == 'Remote' ? 'selected' : '' }}>
+                                                            <option value="Remote"
+                                                                {{ old("attendance.$index.workstation") == 'Remote' ? 'selected' : '' }}>
                                                                 Remote
                                                             </option>
-                                                            <option
-                                                                value="On-Site" {{ old("attendance.$index.workstation") == 'On-Site' ? 'selected' : '' }}>
+                                                            <option value="On-Site"
+                                                                {{ old("attendance.$index.workstation") == 'On-Site' ? 'selected' : '' }}>
                                                                 On-Site
+                                                            </option>
+                                                            <option value="Work-From-Home"
+                                                                {{ old("attendance.$index.workstation") == 'Work-From-Home' ? 'selected' : '' }}>
+                                                                Work From Home
                                                             </option>
                                                         </select>
                                                     </div>
@@ -92,11 +96,11 @@
                                                     <div class="col-md-6">
                                                         <label class="form-label fw-semibold">Clock In *</label>
                                                         <input type="datetime-local"
-                                                               name="attendance[{{ $index }}][clock_in]"
-                                                               value="{{ old("attendance.$index.clock_in") }}"
-                                                               class="form-control @error("attendance.$index.clock_in") is-invalid @enderror">
+                                                            name="attendance[{{ $index }}][clock_in]"
+                                                            value="{{ old("attendance.$index.clock_in") }}"
+                                                            class="form-control @error("attendance.$index.clock_in") is-invalid @enderror">
                                                         @error("attendance.$index.clock_in")
-                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                            <div class="invalid-feedback">{{ $message }}</div>
                                                         @enderror
                                                     </div>
 
@@ -104,11 +108,11 @@
                                                     <div class="col-md-6">
                                                         <label class="form-label fw-semibold">Clock Out *</label>
                                                         <input type="datetime-local"
-                                                               name="attendance[{{ $index }}][clock_out]"
-                                                               value="{{ old("attendance.$index.clock_out") }}"
-                                                               class="form-control @error("attendance.$index.clock_out") is-invalid @enderror">
+                                                            name="attendance[{{ $index }}][clock_out]"
+                                                            value="{{ old("attendance.$index.clock_out") }}"
+                                                            class="form-control @error("attendance.$index.clock_out") is-invalid @enderror">
                                                         @error("attendance.$index.clock_out")
-                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                            <div class="invalid-feedback">{{ $message }}</div>
                                                         @enderror
                                                     </div>
 
@@ -141,9 +145,9 @@
 
 @push('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
 
-            let index = {{ count(old('attendance', [ [] ])) - 1 }};
+            let index = {{ count(old('attendance', [[]])) - 1 }};
             const container = document.getElementById('attendanceEntriesContainer');
 
             document.getElementById('addEntryBtn').addEventListener('click', () => {
@@ -232,5 +236,4 @@
 
         });
     </script>
-
 @endpush

@@ -104,19 +104,19 @@ class EmployeePlansController extends Controller
 
         }elseif ($type === 'offday-plans'){
             $offDayPlans = OffDayPlan::where('status', 'active')->get();
-            $activeOffDayPLan = EmployeeOffdayPlan::where('employee_id', $id)->where('status', 'active')->first();
-            $totalActiveOffDayPlan = !empty($activeOffDayPLan) ? 1 : 0;
+            $activeOffDayPlans = EmployeeOffdayPlan::where('employee_id', $id)->where('status', 'active')->get();
+            $totalActiveOffDayPlan = !empty($activeOffDayPlans) ? $activeOffDayPlans->count() : 0;
             $previousOffDayPlans = EmployeeOffdayPlan::where('employee_id', $id)->where('status', 'inactive')->get();
             $totalPreviousOffDayPlan = !empty($previousOffDayPlans) ? $previousOffDayPlans->count() : 0;
 
             if ($request->ajax()) {
                 return view('employees.partials.profile_view.partials.offday_plan', compact('title', 'section', 'sub_section', 'section_url',
-                    'employee', 'activeOffDayPLan', 'previousOffDayPlans', 'offDayPlans',
+                    'employee', 'activeOffDayPlans', 'previousOffDayPlans', 'offDayPlans',
                     'totalActiveOffDayPlan', 'totalPreviousOffDayPlan', 'type'))->render();
             }
 
             return view('employees.profile', compact('title', 'section', 'sub_section', 'section_url',
-                'employee', 'activeOffDayPLan', 'previousOffDayPlans', 'offDayPlans',
+                'employee', 'activeOffDayPlans', 'previousOffDayPlans', 'offDayPlans',
                 'totalActiveOffDayPlan', 'totalPreviousOffDayPlan', 'type'));
 
         }elseif ($type === 'bonus-plans'){
@@ -163,7 +163,7 @@ class EmployeePlansController extends Controller
                 $this->empPlans->planSave($validated, EmployeeOtPlan::class);
             } elseif ($type === 'offday-plans') {
                 $validated = $this->empPlans->validation($request);
-                $this->empPlans->planSave($validated, EmployeeOffdayPlan::class);
+                $this->empPlans->offdayPlanSave($validated, EmployeeOffdayPlan::class);
             } elseif ($type === 'bonus-plans') {
                 $bonusPlans = EmployeeBonusPlan::where('employee_id', $request->employee_id)->get();
                 if (!empty($bonusPlans)){
