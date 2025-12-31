@@ -52,13 +52,6 @@ class EmployeePlansServices
         }
     }
 
-    public function offdayPlanSave($validated, $modelName)
-    {
-        $validated['status'] = 'active';
-        $plan = $modelName::create($validated);
-        return $plan;
-    }
-
     public function planRemove($id, $modelName){
         $plan = $modelName::findOrFail($id);
         $plan->update(['status' => 'inactive']);

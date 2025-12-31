@@ -163,7 +163,7 @@ class EmployeePlansController extends Controller
                 $this->empPlans->planSave($validated, EmployeeOtPlan::class);
             } elseif ($type === 'offday-plans') {
                 $validated = $this->empPlans->validation($request);
-                $this->empPlans->offdayPlanSave($validated, EmployeeOffdayPlan::class);
+                $this->empPlans->multipleActivePlanSave($validated, EmployeeOffdayPlan::class);
             } elseif ($type === 'bonus-plans') {
                 $bonusPlans = EmployeeBonusPlan::where('employee_id', $request->employee_id)->get();
                 if (!empty($bonusPlans)){
