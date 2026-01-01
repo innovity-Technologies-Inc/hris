@@ -138,13 +138,38 @@
                                 <a class='tp-link @if (request()->is('leaves.index')) menuitem-active @endif'
                                     href='{{ route('leaves.index') }}'>Logs</a>
                             </li>
-                            <li>
-                                <a class='tp-link @if (request()->is('leaves/movement*')) menuitem-active @endif'
-                                    href='{{ route('leaves.movement.index') }}'>Movement</a>
-                            </li>
+
                         </ul>
                     </div>
                 </li>
+
+                @php
+                    $movementOpen = request()->is('leaves*');
+                @endphp
+                <li>
+                    <a href="#movement" data-bs-toggle="collapse" aria-expanded="{{ $movementOpen ? 'true' : 'false' }}"
+                       class="@if ($movementOpen) menuitem-active @endif">
+                        <i data-feather="move"></i>
+                        <span> Movement </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse @if ($movementOpen) show @endif" id="movement">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link @if (request()->is('movement.create')) menuitem-active @endif'
+                                   href='{{ route('movement.create') }}'>Application</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (request()->is('movement.index')) menuitem-active @endif'
+                                   href='{{ route('movement.index') }}'>Logs</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </li>
+
+
+
                 <!-- Attendance Menu -->
                 @php
                     $attendanceOpen = Route::is('attendance.*');

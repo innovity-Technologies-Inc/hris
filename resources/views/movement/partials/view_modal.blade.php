@@ -17,7 +17,7 @@
                 {{-- Status Badge --}}
                 <div class="text-center mb-4">
                     @if ($movement->status == 'pending')
-                        <span class="badge bg-warning text-dark fs-6 px-4 py-2">Pending Approval</span>
+                        <span class="badge bg-warning text-light fs-6 px-4 py-2">Pending Approval</span>
                     @elseif($movement->status == 'approved')
                         <span class="badge bg-success fs-6 px-4 py-2">Approved</span>
                     @elseif($movement->status == 'rejected')
@@ -39,19 +39,19 @@
                             <div class="col-md-4">
                                 <div class="border-start border-primary border-3 ps-3">
                                     <small class="text-muted d-block">Employee Name</small>
-                                    <strong class="text-dark">{{ $movement->employee_name }}</strong>
+                                    <strong class="text-dark">{{ $movement->getEmployee->full_name }}</strong>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="border-start border-info border-3 ps-3">
-                                    <small class="text-muted d-block">Employee Code</small>
-                                    <strong class="text-dark">{{ $movement->employee_code }}</strong>
+                                    <small class="text-muted d-block">Emp ID</small>
+                                    <strong class="text-dark">{{ $movement->getEmployee->applicant_id }}</strong>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="border-start border-success border-3 ps-3">
-                                    <small class="text-muted d-block">Designation</small>
-                                    <strong class="text-dark">{{ $movement->designation }}</strong>
+                                    <small class="text-muted d-block">System ID</small>
+                                    <strong class="text-dark">{{ $movement->getEmployee->system_id }}</strong>
                                 </div>
                             </div>
                         </div>
@@ -138,7 +138,7 @@
                                     <i class="bi bi-speedometer2 me-2 fs-5"></i>
                                     <div>
                                         <strong>Covered Distance:</strong>
-                                        {{ number_format($movement->covered_distance, 2) }} KM
+                                        {{ number_format($movement->distance, 2) }} KM
                                     </div>
                                 </div>
                             </div>
@@ -164,22 +164,22 @@
                                         </h6>
                                         <div class="mb-2">
                                             <small class="text-muted">Plan Name:</small>
-                                            <div class="fw-semibold">{{ $movement->ta_plan }}</div>
+                                            <div class="fw-semibold">{{ $movement->getTaPlan->name }}</div>
                                         </div>
                                         <div class="mb-2">
                                             <small class="text-muted">Rate per KM:</small>
-                                            <div class="fw-semibold">৳{{ number_format($movement->ta_rate, 2) }}</div>
+                                            <div class="fw-semibold">৳{{ number_format($movement->getTaPlan->remuneration, 2) }}</div>
                                         </div>
                                         <div class="mb-2">
                                             <small class="text-muted">Distance:</small>
                                             <div class="fw-semibold">
-                                                {{ number_format($movement->covered_distance, 2) }} KM</div>
+                                                {{ number_format($movement->distance, 2) }} KM</div>
                                         </div>
                                         <hr>
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <strong class="text-muted">TA Amount:</strong>
+                                            <strong class="text-muted">Total TA Amount:</strong>
                                             <h5 class="mb-0 text-success">
-                                                ৳{{ number_format($movement->ta_amount, 2) }}</h5>
+                                                ৳{{ number_format($movement->total_ta, 2) }}</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -194,11 +194,11 @@
                                         </h6>
                                         <div class="mb-2">
                                             <small class="text-muted">Plan Name:</small>
-                                            <div class="fw-semibold">{{ $movement->da_plan }}</div>
+                                            <div class="fw-semibold">{{ $movement->getDaPlan->name }}</div>
                                         </div>
                                         <div class="mb-2">
                                             <small class="text-muted">Rate per Day:</small>
-                                            <div class="fw-semibold">৳{{ number_format($movement->da_rate, 2) }}</div>
+                                            <div class="fw-semibold">৳{{ number_format($movement->getDaPlan->remuneration, 2) }}</div>
                                         </div>
                                         <div class="mb-2">
                                             <small class="text-muted">Total Days:</small>
@@ -209,7 +209,7 @@
                                         <div class="d-flex justify-content-between align-items-center">
                                             <strong class="text-muted">DA Amount:</strong>
                                             <h5 class="mb-0 text-warning">
-                                                ৳{{ number_format($movement->da_amount, 2) }}</h5>
+                                                ৳{{ number_format($movement->total_da, 2) }}</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -259,7 +259,7 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     <i class="bi bi-x-circle me-2"></i>Close
                 </button>
-                <a href="{{ route('leaves.movement.edit', $movement->id) }}" class="btn btn-primary">
+                <a href="{{ route('movement.edit', $movement->id) }}" class="btn btn-primary">
                     <i class="bi bi-pencil-square me-2"></i>Edit Movement
                 </a>
             </div>

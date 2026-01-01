@@ -680,7 +680,7 @@
 
 
         Swal.fire({
-            title: 'Are you sure you want to approve the leave application?',
+            title: 'Are you sure you want to approve the application?',
             text: 'You won\'t be able to revert!',
             icon: 'warning',
             showCancelButton: true,
@@ -709,7 +709,7 @@
 
 
         Swal.fire({
-            title: 'Are you sure you want to reject leave application?',
+            title: 'Are you sure you want to reject the application?',
             text: 'You won\'t be able to revert!',
             icon: 'warning',
             showCancelButton: true,

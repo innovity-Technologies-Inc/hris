@@ -39,6 +39,7 @@ use App\Http\Controllers\DeductionPlanController;
 use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\AttendancesController;
+use App\Http\Controllers\EmployeeMovementsController;
 
 Route::get('test', function () {
    return view('attendance.attendance_form_1');
@@ -439,31 +440,16 @@ Route::prefix('leaves')->group(function () {
         Route::delete('{id}/delete', 'destroy')->name('leaves.destroy');
         Route::post('import', 'import')->name('leaves.import');
     });
+});
 
-    // Employee Movement Routes
-    Route::prefix('movement')->group(function () {
-        Route::get('/', function () {
-            return view('leaves.movement.index');
-        })->name('leaves.movement.index');
-
-        Route::get('create', function () {
-            return view('leaves.movement.create');
-        })->name('leaves.movement.create');
-
-        Route::get('{id}/edit', function ($id) {
-            return view('leaves.movement.create', ['id' => $id]);
-        })->name('leaves.movement.edit');
-
-        Route::delete('{id}/delete', function ($id) {
-            // Delete logic would go here
-            return redirect()->route('leaves.movement.index')->with('success', 'Movement deleted successfully');
-        })->name('leaves.movement.destroy');
-
-        Route::post('import', function () {
-            // Import logic would go here
-            return redirect()->route('leaves.movement.index')->with('success', 'Movement records imported successfully');
-        })->name('leaves.movement.import');
-    });
+Route::controller(EmployeeMovementsController::class)->prefix('movement')->group(function (){
+    Route::get('/', 'index')->name('movement.index');
+    Route::get('create', 'form')->name('movement.create');
+    Route::post('store', 'save')->name('movement.store');
+    Route::get('{id}/edit', 'form')->name('movement.edit');
+    Route::put('{id}/update', 'save')->name('movement.update');
+    Route::put('change-status', 'changeStatus')->name('movement.change_status');
+    Route::delete('{id}/delete', 'destroy')->name('movement.destroy');
 });
 
 Route::controller(DataController::class)->group(function () {
