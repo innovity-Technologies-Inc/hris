@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiKeyController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TofsilsController;
 use Illuminate\Support\Facades\Route;
@@ -428,6 +429,11 @@ Route::prefix('settings')->group(function () {
        Route::get('general-settings', 'generalSettingIndex')->name('settings.general_settings');
        Route::post('general-settings/save', 'generalSettingSave')->name('settings.general_settings.store');
 
+    });
+
+    Route::controller(ApiKeyController::class)->group(function (){
+       Route::get('api-keys', 'index')->name('settings.api_keys');
+       Route::post('api-keys/save', 'save')->name('settings.api_keys.save');
     });
 });
 
