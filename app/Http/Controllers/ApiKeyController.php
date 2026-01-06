@@ -33,11 +33,14 @@ class ApiKeyController extends Controller
                 $apiKey->update([
                     'google_maps_api_key' => $request->google_maps_api_key,
                 ]);
+                cache()->forget('google_maps_api_key');
+
             } else {
                 // Create new record (only once)
                 ApiKey::create([
                     'google_maps_api_key' => $request->google_maps_api_key,
                 ]);
+                cache()->forget('google_maps_api_key');
             }
         } catch(\Exception $e) {
             Log::error($e->getMessage());
