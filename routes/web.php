@@ -457,9 +457,9 @@ Route::controller(DataController::class)->group(function () {
     //company-details
     Route::get('get-grades/{tofsil_id}', 'getGradeByAct');
     Route::get('get-units/{company_id}', 'getUnit');
-    Route::get('get-divisions/{company_id}/{unit_id}', 'getDivision');
-    Route::get('get-departments/{company_id}/{unit_id}/{division_id}', 'getDepartment');
-    Route::get('get-sections/{company_id}/{unit_id}/{division_id}/{department_id}', 'getSection');
+    Route::get('get-divisions/{company_id}/{location_id?}', 'getDivisions');
+    Route::get('/get-departments/{company_id}/{location_id?}/{division_id?}', 'getDepartments');
+    Route::get('/get-sections/{company_id}/{location_id?}/{division_id?}/{department_id?}', 'getSections');
     Route::get('get-branches/{bank_id}', 'getBranchesByBank');
 
     //plan_details

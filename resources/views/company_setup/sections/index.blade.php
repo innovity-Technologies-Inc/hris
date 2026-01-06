@@ -32,9 +32,15 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Company</th>
+                                    @if(App\HelperClass::getGeneralSetting()->branch_status == 1)
                                     <th scope="col">Branch</th>
+                                    @endif
+                                    @if(App\HelperClass::getGeneralSetting()->division_status == 1)
                                     <th scope="col">Division</th>
+                                    @endif
+                                    @if(App\HelperClass::getGeneralSetting()->department_status == 1)
                                     <th scope="col">Department</th>
+                                    @endif
                                     <th scope="col">Section Name</th>
                                     <th scope="col">Short Name</th>
                                     <th scope="col">Action</th>
@@ -47,10 +53,16 @@
                                 @foreach ($sections as $section)
                                     <tr>
                                         <th scope="row">{{ $sl++ }}</th>
-                                        <td>{{ $section->getCompany->name }}</td>
-                                        <td>{{ $section->getLocation->name }}</td>
-                                        <td>{{ $section->getDivision->name }}</td>
-                                        <td>{{ $section->getDepartment->department_name }}</td>
+                                        <td>{{ $section->getCompany->name ?? 'N/A' }}</td>
+                                        @if(App\HelperClass::getGeneralSetting()->branch_status == 1)
+                                        <td>{{ $section->getLocation->name ?? 'N/A' }}</td>
+                                        @endif
+                                        @if(App\HelperClass::getGeneralSetting()->division_status == 1)
+                                        <td>{{ $section->getDivision->name ?? 'N/A' }}</td>
+                                        @endif
+                                        @if(App\HelperClass::getGeneralSetting()->department_status == 1)
+                                        <td>{{ $section->getDepartment->department_name ?? 'N/A' }}</td>
+                                        @endif
                                         <td>{{ $section->name }}</td>
                                         <td>{{ $section->short_name }}</td>
                                         <td>
