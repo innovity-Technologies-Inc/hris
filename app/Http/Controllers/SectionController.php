@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
+use App\Models\CompanyLocation;
 use App\Models\Department;
 use App\Models\Division;
 use App\Models\Section;
@@ -14,31 +16,32 @@ class SectionController extends Controller
         $title = 'Sections';
         $section = 'Section Setup';
         $sections = Section::latest()->paginate(10);
-        $divisions = Division::all();
-        $departments = Department::all();
 
-        return view('company_setup.sections.index', compact('title', 'section', 'sections', 'divisions', 'departments'));
+
+        return view('company_setup.sections.index', compact('title', 'section', 'sections'));
     }
     public function create()
     {
+        $companies = Company::all();
         $divisions = Division::all();
         $departments = Department::all();
-        return view('company_setup.sections.form', compact('divisions', 'departments'));
+        $locations = CompanyLocation::all();
+        return view('company_setup.sections.form', compact('divisions', 'departments', 'companies', 'locations'));
     }
     public function store(Request $request)
     {
         $validatedData = $request->validate(
             [
-                'division_id' => 'required|exists:divisions,id',
-                'department_id' => 'required|exists:departments,id',
-                'section_name' => 'required|string|max:255',
+                'company_id' => 'required|exists:companies,id',
+                'location_id' => 'nullable|exists:company_locations,id',
+                'division_id' => 'nullable|exists:divisions,id',
+                'department_id' => 'nullable|exists:departments,id',
+                'name' => 'required|string|max:255',
                 'short_name' => 'required|string|max:50',
                 'status' => 'required|in:active,inactive',
             ],
             [
-                'division_id.required' => 'Please select a division.',
-                'department_id.required' => 'Please select a department.',
-                'section_name.required' => 'Please enter a section name.',
+                'name.required' => 'Please enter a section name.',
                 'short_name.required' => 'Please enter a short name.',
                 'status.required' => 'Please select a status.',
             ]
@@ -55,25 +58,29 @@ class SectionController extends Controller
     public function edit($id)
     {
         $section = Section::findOrFail($id);
+        $companies = Company::all();
         $divisions = Division::all();
         $departments = Department::all();
-        return view('company_setup.sections.form', compact('section', 'divisions', 'departments'));
+        $locations = CompanyLocation::all();
+        return view('company_setup.sections.form', compact('section', 'divisions', 'departments', 'companies', 'locations'));
     }
     public function update(Request $request, $id)
-    {   
+    {
         $section = Section::findOrFail($id);
         $validatedData = $request->validate(
             [
-                'division_id' => 'required|exists:divisions,id',
-                'department_id' => 'required|exists:departments,id',
-                'section_name' => 'required|string|max:255',
+                'company_id' => 'required|exists:companies,id',
+                'location_id' => 'nullable|exists:company_locations,id',
+                'division_id' => 'nullable|exists:divisions,id',
+                'department_id' => 'nullable|exists:departments,id',
+                'name' => 'required|string|max:255',
                 'short_name' => 'required|string|max:50',
                 'status' => 'required|in:active,inactive',
             ],
             [
                 'division_id.required' => 'Please select a division.',
                 'department_id.required' => 'Please select a department.',
-                'section_name.required' => 'Please enter a section name.',
+                'name.required' => 'Please enter a section name.',
                 'short_name.required' => 'Please enter a short name.',
                 'status.required' => 'Please select a status.',
             ]

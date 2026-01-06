@@ -2,6 +2,16 @@
 @section('content')
     {{--    Form --}}
 
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -62,11 +72,11 @@
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
+                                    @if(\App\HelperClass::getGeneralSetting()->branch_status == '1')
                                     <div class="col-md-3 mb-2">
                                         <label for="location_id" class="form-label">Branch <span
                                                 class="text-danger">*</span></label>
-                                        <select id="location_id" class="form-select select2_list" name="location_id"
-                                            required>
+                                        <select id="location_id" class="form-select select2_list" name="location_id">
                                             <option value="">Select Branch</option>
                                             @foreach ($locations as $location)
                                                 <option value="{{ $location->id }}"
@@ -78,6 +88,8 @@
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
+                                    @endif
+                                    @if(\App\HelperClass::getGeneralSetting()->division_status == '1')
                                     <div class="col-md-3 mb-2">
                                         <label for="division_id" class="form-label">Division <span
                                                 class="text-danger">*</span></label>
@@ -94,6 +106,7 @@
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
+                                    @endif
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 mb-2">
@@ -125,3 +138,97 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        $(document).ready(function () {
+
+            function loading($el, text = 'Loading...') {
+                $el.prop('disabled', true).html(`<option value="">${text}</option>`);
+            }
+
+            function reset($el, text) {
+                $el.prop('disabled', false).html(`<option value="">${text}</option>`);
+            }
+
+            // -------------------------
+            // Load Divisions (reusable)
+            // -------------------------
+            function loadDivisions() {
+                const companyId = $('#company_id').val();
+                if (!companyId) return;
+
+                const locationId = $('#location_id').val() || 'null';
+
+                loading($('#division_id'));
+
+                $.get(`/get-divisions/${companyId}/${locationId}`, function (data) {
+                    reset($('#division_id'), 'Select Division');
+
+                    if (!data.length) {
+                        $('#division_id').html('<option value="">No division found</option>');
+                        return;
+                    }
+
+                    $.each(data, function (_, item) {
+                        $('#division_id').append(`<option value="${item.id}">${item.name}</option>`);
+                    });
+                });
+            }
+
+            // -------------------------
+            // Company Change
+            // -------------------------
+            $('#company_id').on('change', function () {
+                const companyId = $(this).val();
+                if (!companyId) return;
+
+                @if(\App\HelperClass::getGeneralSetting()->branch_status == '1')
+                loading($('#location_id'));
+                reset($('#division_id'), 'Select Division');
+                @else
+                reset($('#division_id'), 'Select Division');
+                @endif
+
+                @if(\App\HelperClass::getGeneralSetting()->branch_status == '1')
+                $.get(`/get-units/${companyId}`, function (data) {
+                    reset($('#location_id'), 'Select Branch');
+
+                    if (!data.length) {
+                        $('#location_id').html('<option value="">No branch found</option>');
+                    } else {
+                        $.each(data, function (_, item) {
+                            $('#location_id').append(`<option value="${item.id}">${item.name}</option>`);
+                        });
+                    }
+
+                    // After branches are loaded → load divisions (no location filter yet)
+                    loadDivisions();
+                });
+                @else
+                // Branch feature disabled → load divisions directly
+                loadDivisions();
+                @endif
+            });
+
+            // -------------------------
+            // Branch Change → Reload Divisions
+            // -------------------------
+            $('#location_id').on('change', function () {
+                loadDivisions();
+            });
+
+            // Optional: Auto-trigger for edit mode (pre-selected values)
+            @if(isset($section) && $section->company_id)
+            $('#company_id').trigger('change');
+
+            @if(\App\HelperClass::getGeneralSetting()->branch_status == '1' && ($section->location_id ?? false))
+            setTimeout(function() {
+                $('#location_id').val('{{ $section->location_id }}').trigger('change');
+            }, 500);
+            @endif
+            @endif
+
+        });
+    </script>
+@endpush

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\HelperClass;
 use App\Models\BonusPlan;
 use App\Models\Branch;
 use App\Models\CompanyLocation;
@@ -30,27 +31,60 @@ class DataController extends Controller
 
     }
 
-    public function getDivision($company_id, $location_id){
-        $divisions = Division::where('company_id', $company_id)
-            ->where('location_id', $location_id)->get();
-        return response()->json($divisions);
+    public function getDivisions($company_id, $location_id = null)
+    {
+        $location_id = ($location_id === 'null') ? null : $location_id;
+
+        $query = Division::where('company_id', $company_id);
+
+        // only filter by location if given
+        if (!is_null($location_id)) {
+            $query->where('location_id', $location_id);
+        }
+
+        return $query->select('id', 'name')->get();
     }
 
-    public function getDepartment($company_id, $location_id, $division_id){
-        $departments = Department::where('company_id', $company_id)
-            ->where('location_id', $location_id)
-            ->where('division_id', $division_id)
-            ->get();
-        return response()->json($departments);
+    public function getDepartments($company_id, $location_id = null, $division_id = null)
+    {
+        $location_id = ($location_id === 'null') ? null : $location_id;
+        $division_id = ($division_id === 'null') ? null : $division_id;
+
+        $query = Department::where('company_id', $company_id);
+
+        if (!is_null($location_id)) {
+            $query->where('location_id', $location_id);
+        }
+
+        if (!is_null($division_id)) {
+            $query->where('division_id', $division_id);
+        }
+
+        return $query->select('id', 'department_name')->get();
     }
 
-    public function getSection($company_id, $location_id, $division_id, $department_id){
-        $sections = Section::where('company_id', $company_id)
-            ->where('location_id', $location_id)
-            ->where('division_id', $division_id)->where('department_id', $department_id)->get();
-        return response()->json($sections);
-    }
 
+
+    public function getSections($company_id, $location_id = null, $division_id = null, $department_id = null)
+    {
+        $location_id = ($location_id === 'null') ? null : $location_id;
+        $division_id = ($division_id === 'null') ? null : $division_id;
+        $department_id = ($department_id === 'null') ? null : $department_id;
+
+        $query = Section::where('company_id', $company_id);
+
+        if ($location_id) {
+            $query->where('location_id', $location_id);
+        }
+        if ($division_id) {
+            $query->where('division_id', $division_id);
+        }
+        if ($department_id) {
+            $query->where('department_id', $department_id);
+        }
+
+        return $query->select('id', 'name')->get();
+    }
     public function getGradeByAct($tofsil_id){
         $grades = SalaryGrade::where('tofsil_id', $tofsil_id)->get();
         return response()->json($grades);
