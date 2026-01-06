@@ -31,6 +31,7 @@ return new class extends Migration
             $table->enum('gender', ['Male', 'Female', 'Other']);
             $table->string('religion');
             $table->string('nationality');
+            $table->enum('blood_group', ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])->nullable();
             $table->unsignedInteger('height_feet')->nullable();
             $table->unsignedInteger('height_inches')->nullable();
             $table->unsignedInteger('children_count')->default(0);

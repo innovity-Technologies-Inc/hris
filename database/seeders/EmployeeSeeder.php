@@ -179,6 +179,7 @@ class EmployeeSeeder extends Seeder
             'gender' => $gender,
             'religion' => $this->faker->randomElement(['Islam', 'Christianity', 'Hinduism', 'Buddhism']),
             'nationality' => 'Bangladeshi',
+            'blood_group' => $this->faker->randomElement(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
             'height_feet' => $this->faker->optional(0.8)->numberBetween(5, 6),
             'height_inches' => $this->faker->optional(0.8)->numberBetween(0, 11),
             'children_count' => $hasSpouse ? $this->faker->numberBetween(0, 3) : 0,

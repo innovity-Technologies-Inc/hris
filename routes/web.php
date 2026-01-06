@@ -41,6 +41,7 @@ use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\AttendancesController;
 use App\Http\Controllers\EmployeeMovementsController;
+use App\Http\Controllers\EmployeeSearchController;
 
 Route::get('test', function () {
    return view('attendance.attendance_form_1');
@@ -188,6 +189,12 @@ Route::prefix('company-setup')->group(function () {
         Route::get('holidays/calendar', 'calendar')->name('holidays.calendar');
         Route::get('holidays/get-holidays', 'getHolidays')->name('holidays.get_holidays');
     });
+});
+
+// Search Employee Routes
+Route::controller(EmployeeSearchController::class)->group(function () {
+    Route::get('search/employee', 'index')->name('search.employee');
+    Route::get('search/employee/export', 'export')->name('search.employee.export');
 });
 
 Route::prefix('employees')->group(function () {

@@ -25,6 +25,7 @@ class Employee extends Model
         'gender',
         'religion',
         'nationality',
+        'blood_group',
         'height_feet',
         'height_inches',
         'children_count',
@@ -71,5 +72,9 @@ class Employee extends Model
 
     public function offDayPlan(){
         return $this->hasMany(EmployeeOffdayPlan::class, 'employee_id', 'id');
+    }
+
+    public function officeInfo(){
+        return $this->hasOne(EmployeeOfficeInfo::class, 'employee_id', 'id');
     }
 }

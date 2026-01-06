@@ -75,6 +75,7 @@ class EmployeeServices
                 'gender' => 'required|in:Male,Female,Other',
                 'religion' => 'required|string|max:255',
                 'nationality' => 'required|string|max:255',
+                'blood_group' => 'nullable|in:A+,A-,B+,B-,AB+,AB-,O+,O-',
                 'height_feet' => 'nullable|integer|min:0',
                 'height_inches' => 'nullable|integer|min:0|max:11',
                 'children_count' => 'nullable|integer|min:0',

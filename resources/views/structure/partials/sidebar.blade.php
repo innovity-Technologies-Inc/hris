@@ -36,17 +36,21 @@
                 <!-- Add Employees Information Menu -->
                 <li>
                     <a href="#sidebarEmployees" data-bs-toggle="collapse"
-                        aria-expanded="{{ Route::is('employees.*') ? 'true' : 'false' }}"
-                        class="@if (Route::is('employees.*')) menuitem-active @endif">
+                        aria-expanded="{{ Route::is('employees.*') || Route::is('search.employee') ? 'true' : 'false' }}"
+                        class="@if (Route::is('employees.*') || Route::is('search.employee')) menuitem-active @endif">
                         <i data-feather="users"></i>
                         <span> Employees </span>
                         <span class="menu-arrow"></span>
                     </a>
-                    <div class="collapse @if (Route::is('employees.*')) show @endif" id="sidebarEmployees">
+                    <div class="collapse @if (Route::is('employees.*') || Route::is('search.employee')) show @endif" id="sidebarEmployees">
                         <ul class="nav-second-level">
                             <li>
                                 <a class='tp-link @if (Route::is('employees.index')) menuitem-active @endif'
                                     href='{{ route('employees.index') }}'>Employee Information</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('search.employee')) menuitem-active @endif'
+                                    href='{{ route('search.employee') }}'>Search Employee</a>
                             </li>
                             <li>
                                 <a class='tp-link @if (Route::is('employees.import')) menuitem-active @endif'
