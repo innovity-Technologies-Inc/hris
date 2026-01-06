@@ -147,8 +147,9 @@
                     $movementOpen = request()->is('leaves*');
                 @endphp
                 <li>
-                    <a href="#movement" data-bs-toggle="collapse" aria-expanded="{{ $movementOpen ? 'true' : 'false' }}"
-                       class="@if ($movementOpen) menuitem-active @endif">
+                    <a href="#movement" data-bs-toggle="collapse"
+                        aria-expanded="{{ $movementOpen ? 'true' : 'false' }}"
+                        class="@if ($movementOpen) menuitem-active @endif">
                         <i data-feather="move"></i>
                         <span> Movement </span>
                         <span class="menu-arrow"></span>
@@ -157,11 +158,11 @@
                         <ul class="nav-second-level">
                             <li>
                                 <a class='tp-link @if (request()->is('movement.create')) menuitem-active @endif'
-                                   href='{{ route('movement.create') }}'>Application</a>
+                                    href='{{ route('movement.create') }}'>Application</a>
                             </li>
                             <li>
                                 <a class='tp-link @if (request()->is('movement.index')) menuitem-active @endif'
-                                   href='{{ route('movement.index') }}'>Logs</a>
+                                    href='{{ route('movement.index') }}'>Logs</a>
                             </li>
 
                         </ul>
@@ -338,6 +339,10 @@
                             <li>
                                 <a class='tp-link @if (Route::is('settings.general_settings.*')) menuitem-active @endif'
                                     href='{{ route('settings.general_settings') }}'>General</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('settings.api_keys')) menuitem-active @endif'
+                                    href='{{ route('settings.api_keys') }}'>API Keys</a>
                             </li>
 
                         </ul>
