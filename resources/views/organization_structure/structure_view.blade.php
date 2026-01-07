@@ -1,6 +1,7 @@
 @extends('structure.master')
 
 @push('styles')
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
         :root {
             --primary: #1e40af;
@@ -26,26 +27,13 @@
             border-radius: 10px;
             margin-bottom: 0.625rem;
             border: 1px solid var(--border);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            animation: fadeInUp 0.4s ease-out;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .tree-item:hover {
             border-color: #94a3b8;
             box-shadow: var(--shadow-lg);
-            transform: translateX(2px);
+            transform: translateX(3px);
         }
 
         /* Tree Header */
@@ -249,17 +237,17 @@
             max-height: 0;
             overflow: hidden;
             opacity: 0;
-            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-                opacity 0.4s ease-out,
-                padding 0.4s ease-out;
+            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.25s ease-out,
+                padding 0.25s ease-out;
         }
 
         .tree-content.show {
             max-height: 10000px;
             opacity: 1;
             padding-bottom: 0.75rem;
-            transition: max-height 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-                opacity 0.5s ease-in;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.3s ease-in;
         }
 
         /* Connecting Lines */
@@ -301,20 +289,7 @@
             background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
             margin-bottom: 0.875rem;
             border: 1px solid var(--border);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            animation: slideIn 0.3s ease-out;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .person-card:hover {
@@ -459,58 +434,51 @@
                     </div>
                 </div>
 
-                <div class="card-body p-0" style="background: var(--bg-main);"">
+                <div class="card-body p-0" style="background: var(--bg-main);">
                     <!-- Tree Structure -->
                     <div class="tree-container">
                         <div class="container-fluid px-3">
                             @foreach ($groups as $group)
                                 <!-- GROUP LEVEL -->
-                                <div class="tree-item">
-                                    <div class="tree-header" data-target="#group{{ $group->id }}">
-                                        <i class="bi bi-chevron-right expand-icon"></i>
-                                        <i class="bi bi-building level-icon icon-group"></i>
-                                        <span class="level-badge badge-group">Group</span>
-                                        <span class="tree-label level-group">{{ $group->name }}</span>
-                                        <span class="count-badge"
-                                            title="Total Employees">{{ $group->companies->sum(fn($c) => $c->employees_count ?? 0) }}</span>
-                                        <span class="count-badge" title="Key Members"
-                                            style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); color: #1e40af; margin-left: 0.25rem;">
-                                            <i class="bi bi-people-fill me-1"></i>{{ $group->key_members_count ?? 0 }}
-                                        </span>
-                                        <button class="key-people-btn" type="button" data-level="group"
-                                            data-id="{{ $group->id }}" data-name="{{ $group->name }}">
-                                            <i class="bi bi-people-fill"></i>
-                                            <span>Key People</span>
-                                        </button>
-                                    </div>
-
+                                <div class="tree-item" data-aos="fade-up" data-aos-duration="400" data-aos-once="true">
+                                    <div class="tree-header" data-target="#group{{ $group->id }}"><i
+                                            class="bi bi-chevron-right expand-icon"></i><i
+                                            class="bi bi-building level-icon icon-group"></i><span
+                                            class="level-badge badge-group">Group</span><span
+                                            class="tree-label level-group">{{ $group->name }}</span><span
+                                            class="count-badge"
+                                            title="Total Employees">{{ $group->companies->sum(fn($c) => $c->employees_count ?? 0) }}</span><span
+                                            class="count-badge" title="Key Members"
+                                            style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); color: #1e40af; margin-left: 0.25rem;"><i
+                                                class="bi bi-people-fill me-1"></i>{{ $group->key_members_count ?? 0 }}
+                                        </span><button class="key-people-btn" type="button" data-level="group"
+                                            data-id="{{ $group->id }}" data-name="{{ $group->name }}"><i
+                                                class="bi bi-people-fill"></i><span>Key People</span></button></div>
                                     <div class="tree-content" id="group{{ $group->id }}">
                                         @foreach ($group->companies as $company)
                                             <!-- COMPANY LEVEL -->
-                                            <div class="tree-item tree-item-nested">
-                                                <div class="tree-header" data-target="#company{{ $company->id }}">
-                                                    <i class="bi bi-chevron-right expand-icon"></i>
-                                                    <i class="bi bi-building-fill level-icon icon-company"></i>
-                                                    <span class="level-badge badge-company">Company</span>
-                                                    <span class="tree-label">{{ $company->name }}</span>
-                                                    <span class="count-badge"
-                                                        title="Total Employees">{{ $company->employees_count ?? 0 }}</span>
-                                                    <span class="count-badge" title="Key Members"
-                                                        style="background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%); color: #7c3aed; margin-left: 0.25rem;">
-                                                        <i
+                                            <div class="tree-item tree-item-nested" data-aos="fade-left"
+                                                data-aos-duration="400" data-aos-once="true">
+                                                <div class="tree-header" data-target="#company{{ $company->id }}"><i
+                                                        class="bi bi-chevron-right expand-icon"></i><i
+                                                        class="bi bi-building-fill level-icon icon-company"></i><span
+                                                        class="level-badge badge-company">Company</span><span
+                                                        class="tree-label">{{ $company->name }}</span><span
+                                                        class="count-badge"
+                                                        title="Total Employees">{{ $company->employees_count ?? 0 }}</span><span
+                                                        class="count-badge" title="Key Members"
+                                                        style="background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%); color: #7c3aed; margin-left: 0.25rem;"><i
                                                             class="bi bi-people-fill me-1"></i>{{ $company->key_members_count ?? 0 }}
-                                                    </span>
-                                                    <button class="key-people-btn" type="button" data-level="company"
-                                                        data-id="{{ $company->id }}" data-name="{{ $company->name }}">
-                                                        <i class="bi bi-people-fill"></i>
-                                                        <span>Key People</span>
-                                                    </button>
+                                                    </span><button class="key-people-btn" type="button"
+                                                        data-level="company" data-id="{{ $company->id }}"
+                                                        data-name="{{ $company->name }}"><i
+                                                            class="bi bi-people-fill"></i><span>Key People</span></button>
                                                 </div>
-
                                                 <div class="tree-content" id="company{{ $company->id }}">
                                                     @foreach ($company->locations as $location)
                                                         <!-- LOCATION LEVEL -->
-                                                        <div class="tree-item tree-item-nested">
+                                                        <div class="tree-item tree-item-nested" data-aos="fade-left"
+                                                            data-aos-duration="400" data-aos-once="true">
                                                             <div class="tree-header"
                                                                 data-target="#location{{ $location->id }}">
                                                                 @if ($location->divisions->count() > 0)
@@ -519,29 +487,28 @@
                                                                     <i class="bi bi-chevron-right expand-icon"
                                                                         style="visibility: hidden;"></i>
                                                                 @endif
-                                                                <i class="bi bi-geo-alt-fill level-icon icon-location"></i>
-                                                                <span class="level-badge badge-location">Branch</span>
-                                                                <span class="tree-label">{{ $location->name }}</span>
-                                                                <span class="count-badge"
-                                                                    title="Total Employees">{{ $location->employees_count ?? 0 }}</span>
-                                                                <span class="count-badge" title="Key Members"
-                                                                    style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); color: #dc2626; margin-left: 0.25rem;">
-                                                                    <i
+                                                                <i class="bi bi-geo-alt-fill level-icon icon-location">
+                                                                </i><span
+                                                                    class="level-badge badge-location">Branch</span><span
+                                                                    class="tree-label">{{ $location->name }}</span><span
+                                                                    class="count-badge"
+                                                                    title="Total Employees">{{ $location->employees_count ?? 0 }}</span><span
+                                                                    class="count-badge" title="Key Members"
+                                                                    style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); color: #dc2626; margin-left: 0.25rem;"><i
                                                                         class="bi bi-people-fill me-1"></i>{{ $location->key_members_count ?? 0 }}
-                                                                </span>
-                                                                <button class="key-people-btn" type="button"
+                                                                </span><button class="key-people-btn" type="button"
                                                                     data-level="location" data-id="{{ $location->id }}"
-                                                                    data-name="{{ $location->name }}">
-                                                                    <i class="bi bi-people-fill"></i>
-                                                                    <span>Key People</span>
-                                                                </button>
+                                                                    data-name="{{ $location->name }}"><i
+                                                                        class="bi bi-people-fill"></i><span>Key
+                                                                        People</span></button>
                                                             </div>
-
                                                             @if ($location->divisions->count() > 0)
                                                                 <div class="tree-content" id="location{{ $location->id }}">
                                                                     @foreach ($location->divisions as $division)
                                                                         <!-- DIVISION LEVEL -->
-                                                                        <div class="tree-item tree-item-nested">
+                                                                        <div class="tree-item tree-item-nested"
+                                                                            data-aos="fade-left" data-aos-duration="400"
+                                                                            data-aos-once="true">
                                                                             <div class="tree-header"
                                                                                 data-target="#division{{ $division->id }}">
                                                                                 @if ($division->departments->count() > 0)
@@ -552,35 +519,32 @@
                                                                                         style="visibility: hidden;"></i>
                                                                                 @endif
                                                                                 <i
-                                                                                    class="bi bi-diagram-3-fill level-icon icon-division"></i>
-                                                                                <span
-                                                                                    class="level-badge badge-division">Division</span>
-                                                                                <span
-                                                                                    class="tree-label">{{ $division->name }}</span>
-                                                                                <span class="count-badge"
-                                                                                    title="Total Employees">{{ $division->employees_count ?? 0 }}</span>
-                                                                                <span class="count-badge"
+                                                                                    class="bi bi-diagram-3-fill level-icon icon-division">
+                                                                                </i><span
+                                                                                    class="level-badge badge-division">Division</span><span
+                                                                                    class="tree-label">{{ $division->name }}</span><span
+                                                                                    class="count-badge"
+                                                                                    title="Total Employees">{{ $division->employees_count ?? 0 }}</span><span
+                                                                                    class="count-badge"
                                                                                     title="Key Members"
-                                                                                    style="background: linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%); color: #ea580c; margin-left: 0.25rem;">
-                                                                                    <i
+                                                                                    style="background: linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%); color: #ea580c; margin-left: 0.25rem;"><i
                                                                                         class="bi bi-people-fill me-1"></i>{{ $division->key_members_count ?? 0 }}
-                                                                                </span>
-                                                                                <button class="key-people-btn"
+                                                                                </span><button class="key-people-btn"
                                                                                     type="button" data-level="division"
                                                                                     data-id="{{ $division->id }}"
-                                                                                    data-name="{{ $division->name }}">
-                                                                                    <i class="bi bi-people-fill"></i>
-                                                                                    <span>Key People</span>
-                                                                                </button>
+                                                                                    data-name="{{ $division->name }}"><i
+                                                                                        class="bi bi-people-fill"></i><span>Key
+                                                                                        People</span></button>
                                                                             </div>
-
                                                                             @if ($division->departments->count() > 0)
                                                                                 <div class="tree-content"
                                                                                     id="division{{ $division->id }}">
                                                                                     @foreach ($division->departments as $department)
                                                                                         <!-- DEPARTMENT LEVEL -->
-                                                                                        <div
-                                                                                            class="tree-item tree-item-nested">
+                                                                                        <div class="tree-item tree-item-nested"
+                                                                                            data-aos="fade-left"
+                                                                                            data-aos-duration="400"
+                                                                                            data-aos-once="true">
                                                                                             <div class="tree-header"
                                                                                                 data-target="#department{{ $department->id }}">
                                                                                                 @if ($department->sections->count() > 0)
@@ -591,69 +555,55 @@
                                                                                                         style="visibility: hidden;"></i>
                                                                                                 @endif
                                                                                                 <i
-                                                                                                    class="bi bi-briefcase-fill level-icon icon-department"></i>
-                                                                                                <span
-                                                                                                    class="level-badge badge-department">Department</span>
-                                                                                                <span
-                                                                                                    class="tree-label">{{ $department->department_name }}</span>
-                                                                                                <span class="count-badge"
-                                                                                                    title="Total Employees">{{ $department->employees_count ?? 0 }}</span>
-                                                                                                <span class="count-badge"
+                                                                                                    class="bi bi-briefcase-fill level-icon icon-department">
+                                                                                                </i><span
+                                                                                                    class="level-badge badge-department">Department</span><span
+                                                                                                    class="tree-label">{{ $department->department_name }}</span><span
+                                                                                                    class="count-badge"
+                                                                                                    title="Total Employees">{{ $department->employees_count ?? 0 }}</span><span
+                                                                                                    class="count-badge"
                                                                                                     title="Key Members"
-                                                                                                    style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); color: #059669; margin-left: 0.25rem;">
-                                                                                                    <i
+                                                                                                    style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); color: #059669; margin-left: 0.25rem;"><i
                                                                                                         class="bi bi-people-fill me-1"></i>{{ $department->key_members_count ?? 0 }}
-                                                                                                </span>
-                                                                                                <button
+                                                                                                </span><button
                                                                                                     class="key-people-btn"
                                                                                                     type="button"
                                                                                                     data-level="department"
                                                                                                     data-id="{{ $department->id }}"
-                                                                                                    data-name="{{ $department->department_name }}">
-                                                                                                    <i
-                                                                                                        class="bi bi-people-fill"></i>
-                                                                                                    <span>Key People</span>
-                                                                                                </button>
+                                                                                                    data-name="{{ $department->department_name }}"><i
+                                                                                                        class="bi bi-people-fill"></i><span>Key
+                                                                                                        People</span></button>
                                                                                             </div>
-
                                                                                             @if ($department->sections->count() > 0)
                                                                                                 <div class="tree-content"
                                                                                                     id="department{{ $department->id }}">
                                                                                                     @foreach ($department->sections as $section)
                                                                                                         <!-- SECTION LEVEL -->
-                                                                                                        <div
-                                                                                                            class="tree-item tree-item-nested">
+                                                                                                        <div class="tree-item tree-item-nested"
+                                                                                                            data-aos="fade-left"
+                                                                                                            data-aos-duration="400"
+                                                                                                            data-aos-once="true">
                                                                                                             <div
                                                                                                                 class="tree-header">
                                                                                                                 <i class="bi bi-chevron-right expand-icon"
-                                                                                                                    style="visibility: hidden;"></i>
-                                                                                                                <i
-                                                                                                                    class="bi bi-file-earmark-text-fill level-icon icon-section"></i>
-                                                                                                                <span
-                                                                                                                    class="level-badge badge-section">Section</span>
-                                                                                                                <span
-                                                                                                                    class="tree-label">{{ $section->name }}</span>
-                                                                                                                <span
+                                                                                                                    style="visibility: hidden;"></i><i
+                                                                                                                    class="bi bi-file-earmark-text-fill level-icon icon-section"></i><span
+                                                                                                                    class="level-badge badge-section">Section</span><span
+                                                                                                                    class="tree-label">{{ $section->name }}</span><span
                                                                                                                     class="count-badge"
-                                                                                                                    title="Total Employees">{{ $section->employees_count ?? 0 }}</span>
-                                                                                                                <span
+                                                                                                                    title="Total Employees">{{ $section->employees_count ?? 0 }}</span><span
                                                                                                                     class="count-badge"
                                                                                                                     title="Key Members"
-                                                                                                                    style="background: linear-gradient(135deg, #cffafe 0%, #a5f3fc 100%); color: #0891b2; margin-left: 0.25rem;">
-                                                                                                                    <i
+                                                                                                                    style="background: linear-gradient(135deg, #cffafe 0%, #a5f3fc 100%); color: #0891b2; margin-left: 0.25rem;"><i
                                                                                                                         class="bi bi-people-fill me-1"></i>{{ $section->key_members_count ?? 0 }}
-                                                                                                                </span>
-                                                                                                                <button
+                                                                                                                </span><button
                                                                                                                     class="key-people-btn"
                                                                                                                     type="button"
                                                                                                                     data-level="section"
                                                                                                                     data-id="{{ $section->id }}"
-                                                                                                                    data-name="{{ $section->name }}">
-                                                                                                                    <i
-                                                                                                                        class="bi bi-people-fill"></i>
-                                                                                                                    <span>Key
-                                                                                                                        People</span>
-                                                                                                                </button>
+                                                                                                                    data-name="{{ $section->name }}"><i
+                                                                                                                        class="bi bi-people-fill"></i><span>Key
+                                                                                                                        People</span></button>
                                                                                                             </div>
                                                                                                         </div>
                                                                                                     @endforeach
@@ -680,32 +630,24 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Key People Modal -->
+    </div><!-- Key People Modal -->
     <div class="modal fade" id="keyPeopleModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title fw-bold" id="keyPeopleModalLabel">
-                        <i class="bi bi-people-fill me-2"></i>
-                        Key People
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <h5 class="modal-title fw-bold" id="keyPeopleModalLabel"><i class="bi bi-people-fill me-2"></i>Key
+                        People </h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body" id="modalContent">
                     <div class="text-center py-4">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
+                        <div class="spinner-border text-primary" role="status"><span
+                                class="visually-hidden">Loading...</span></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-@endsection
-
-@push('scripts')
+    @endsection @push('scripts')
     <script>
         $(document).ready(function() {
             // Tree expand/collapse with smooth animation
@@ -812,22 +754,18 @@
                     data.forEach(function(person, index) {
                         // Display photo if available, otherwise show initials
                         let avatarHtml = '';
-                        if (person.photo_path) {
+                        if (person.photo_path && person.photo_path.trim() !== '') {
                             avatarHtml =
-                                `<img src="/storage/${person.photo_path}" alt="${person.name}" style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">`;
+                                `<img src="/storage/${person.photo_path}" alt="${person.name}" style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                  <div class="person-avatar" style="display: none;">${person.name ? person.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : '??'}</div>`;
                         } else {
                             const initials = person.name ? person.name.split(' ').map(n => n[0]).join('')
                                 .substring(0, 2).toUpperCase() : '??';
                             avatarHtml = `<div class="person-avatar">${initials}</div>`;
                         }
 
-                        // Determine profile link - Board Members go to organization-structure edit, Key Members to employee profile
-                        let profileLink = '';
-                        if (person.member_type === 'Board Member') {
-                            profileLink = `/organization-structure/${person.id}/edit`;
-                        } else if (person.member_type === 'Key Member' && person.employee_id) {
-                            profileLink = `/employees/profile/${person.employee_id}/general-informations`;
-                        }
+                        // Determine profile link - Both Board Members and Key Members go to organization-structure profile
+                        let profileLink = `/organization-structure/${person.id}`;
 
                         html += `
                     <div class="person-card" style="animation-delay: ${index * 0.1}s;">
@@ -837,12 +775,10 @@
                             <p><i class="bi bi-briefcase me-1"></i>${person.position || 'N/A'}</p>
                             <p class="mb-0" style="font-size: 0.7rem;"><span class="badge ${person.member_type === 'Board Member' ? 'bg-primary' : 'bg-success'}">${person.member_type}</span></p>
                         </div>
-                        ${profileLink ? `
-                                <a href="${profileLink}" class="view-profile-btn">
-                                    <i class="bi bi-person-circle"></i>
-                                    View Profile
-                                </a>
-                            ` : ''}
+                        <a href="${profileLink}" class="view-profile-btn">
+                            <i class="bi bi-person-circle"></i>
+                            View Profile
+                        </a>
                     </div>
                 `;
                     });
@@ -870,5 +806,15 @@
     }
 `;
         document.head.appendChild(style);
+    </script><!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 400,
+            easing: 'ease-out',
+            once: true,
+            offset: 50
+        });
     </script>
 @endpush

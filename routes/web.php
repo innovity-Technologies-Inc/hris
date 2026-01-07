@@ -424,10 +424,11 @@ Route::prefix('plans')->group(function () {
 
 Route::controller(OrganizationStructureController::class)->group(function () {
     Route::get('organization-structure', 'index')->name('organization-structure.index');
+    Route::get('organization-structure/create', 'create')->name('organization-structure.create');
     Route::get('organization-structure/view', 'structuralView')->name('organization-structure.view');
     Route::get('organization-structure/key-people/{level}/{id}', 'getKeyPeople')->name('organization-structure.key-people');
-    Route::get('organization-structure/create', 'create')->name('organization-structure.create');
     Route::post('organization-structure', 'store')->name('organization-structure.store');
+    Route::get('organization-structure/{id}', 'show')->name('organization-structure.show');
     Route::get('organization-structure/{id}/edit', 'edit')->name('organization-structure.edit');
     Route::put('organization-structure/{id}', 'update')->name('organization-structure.update');
     Route::delete('organization-structure/{id}', 'destroy')->name('organization-structure.destroy');

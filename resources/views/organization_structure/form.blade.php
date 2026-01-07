@@ -58,6 +58,36 @@
                                 @endif
                                 <input type="hidden" name="member_type" value="Board Member">
 
+                                <!-- Type Section -->
+                                <div class="mb-4">
+                                    <h6 class="text-primary border-bottom pb-2 mb-3">
+                                        <i class="fas fa-tag me-2"></i>Member Type
+                                    </h6>
+                                    <div class="row">
+                                        <!-- Type -->
+                                        <div class="col-md-4 mb-3">
+                                            <label for="boardTypeSelect" class="form-label fw-semibold">
+                                                <i class="fas fa-tag text-info me-1"></i>
+                                                Type <span class="text-danger">*</span>
+                                            </label>
+                                            <select name="type" id="boardTypeSelect" class="form-select select2_list"
+                                                required>
+                                                <option value="">-- Select Type --</option>
+                                                <option value="group"
+                                                    {{ isset($organizationStructure) && $organizationStructure->type_form == 'group' ? 'selected' : '' }}>
+                                                    Group</option>
+                                                <option value="company"
+                                                    {{ isset($organizationStructure) && $organizationStructure->type_form == 'company' ? 'selected' : '' }}>
+                                                    Company</option>
+                                            </select>
+                                            @error('type')
+                                                <small class="text-danger"><i
+                                                        class="fas fa-exclamation-circle me-1"></i>{{ $message }}</small>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <!-- Organization Hierarchy Section -->
                                 <div class="mb-4">
                                     <h6 class="text-primary border-bottom pb-2 mb-3">
@@ -137,8 +167,8 @@
                                                 <i class="fas fa-user text-primary me-1"></i>
                                                 Full Name <span class="text-danger">*</span>
                                             </label>
-                                            <input type="text" name="name" id="boardNameInput" class="form-control"
-                                                placeholder="Enter full name"
+                                            <input type="text" name="name" id="boardNameInput"
+                                                class="form-control" placeholder="Enter full name"
                                                 value="{{ old('name', isset($organizationStructure) ? $organizationStructure->name : '') }}"
                                                 required>
                                             @error('name')
@@ -283,7 +313,42 @@
                                     @method('PUT')
                                 @endif
                                 <input type="hidden" name="member_type" value="Key Member">
-                                <input type="hidden" name="type" id="keyTypeHidden" value="">
+
+                                <!-- Type Section -->
+                                <div class="mb-4">
+                                    <h6 class="text-primary border-bottom pb-2 mb-3">
+                                        <i class="fas fa-tag me-2"></i>Member Type
+                                    </h6>
+                                    <div class="row">
+                                        <!-- Type -->
+                                        <div class="col-md-4 mb-3">
+                                            <label for="keyTypeSelect" class="form-label fw-semibold">
+                                                <i class="fas fa-tag text-info me-1"></i>
+                                                Type <span class="text-danger">*</span>
+                                            </label>
+                                            <select name="type" id="keyTypeSelect" class="form-select select2_list"
+                                                required>
+                                                <option value="">-- Select Type --</option>
+                                                <option value="location"
+                                                    {{ isset($organizationStructure) && $organizationStructure->type_form == 'location' ? 'selected' : '' }}>
+                                                    Location</option>
+                                                <option value="division"
+                                                    {{ isset($organizationStructure) && $organizationStructure->type_form == 'division' ? 'selected' : '' }}>
+                                                    Division</option>
+                                                <option value="department"
+                                                    {{ isset($organizationStructure) && $organizationStructure->type_form == 'department' ? 'selected' : '' }}>
+                                                    Department</option>
+                                                <option value="section"
+                                                    {{ isset($organizationStructure) && $organizationStructure->type_form == 'section' ? 'selected' : '' }}>
+                                                    Section</option>
+                                            </select>
+                                            @error('type')
+                                                <small class="text-danger"><i
+                                                        class="fas fa-exclamation-circle me-1"></i>{{ $message }}</small>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <!-- Organization Hierarchy Section -->
                                 <div class="mb-4">
@@ -506,7 +571,7 @@
                 $('.select2_list').select2({
                     placeholder: function() {
                         return $(this).data('placeholder') || $(this).find('option:first')
-                        .text();
+                            .text();
                     },
                     allowClear: true,
                     width: '100%'
@@ -566,7 +631,7 @@
                                 $.each(data, function(_, item) {
                                     $('#boardCompanySelect').append(
                                         `<option value="${item.id}">${item.name}</option>`
-                                        );
+                                    );
                                 });
                             }
                         }).fail(function(xhr, status, error) {
@@ -627,7 +692,7 @@
                             $.each(data, function(_, item) {
                                 $('#key_department_id').append(
                                     `<option value="${item.id}">${item.department_name}</option>`
-                                    );
+                                );
                             });
                         }
                         // Chain: Load sections after departments
@@ -681,7 +746,7 @@
                                 $.each(data, function(_, item) {
                                     $('#key_business_unit_id').append(
                                         `<option value="${item.id}">${item.name}</option>`
-                                        );
+                                    );
                                 });
                             }
                             // Immediately load the full chain after branches
@@ -744,7 +809,7 @@
                                     setTimeout(function() {
                                         $('#key_business_unit_id').val(
                                             '{{ $organizationStructure->branch_unit_id }}'
-                                            ).trigger('change');
+                                        ).trigger('change');
                                     }, 600);
                                 @endif
 
@@ -752,7 +817,7 @@
                                     setTimeout(function() {
                                         $('#key_division_id').val(
                                             '{{ $organizationStructure->division_id }}'
-                                            ).trigger('change');
+                                        ).trigger('change');
                                     }, 900);
                                 @endif
 
@@ -760,7 +825,7 @@
                                     setTimeout(function() {
                                         $('#key_department_id').val(
                                             '{{ $organizationStructure->department_id }}'
-                                            ).trigger('change');
+                                        ).trigger('change');
                                     }, 1200);
                                 @endif
 

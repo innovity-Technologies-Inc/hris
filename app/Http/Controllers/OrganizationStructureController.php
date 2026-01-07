@@ -21,7 +21,7 @@ class OrganizationStructureController extends Controller
      */
     public function index()
     {
-        $organizationStructures = OrganizationStructure::with([
+        $boardMembers = OrganizationStructure::with([
             'getGroup',
             'getCompany',
             'getBranchUnit',
@@ -29,9 +29,19 @@ class OrganizationStructureController extends Controller
             'getDepartment',
             'getSection',
             'getEmployee'
-        ])->latest()->get();
+        ])->where('member_type', 'Board Member')->latest()->paginate(10, ['*'], 'board_page');
 
-        return view('organization_structure.index', compact('organizationStructures'));
+        $keyMembers = OrganizationStructure::with([
+            'getGroup',
+            'getCompany',
+            'getBranchUnit',
+            'getDivision',
+            'getDepartment',
+            'getSection',
+            'getEmployee'
+        ])->where('member_type', 'Key Member')->latest()->paginate(10, ['*'], 'key_page');
+
+        return view('organization_structure.index', compact('boardMembers', 'keyMembers'));
     }
 
     /**
@@ -194,18 +204,19 @@ class OrganizationStructureController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(OrganizationStructure $organizationStructure)
+    public function show($id)
     {
-        $organizationStructure->load([
+        $member = OrganizationStructure::with([
             'getGroup',
             'getCompany',
             'getBranchUnit',
             'getDivision',
             'getDepartment',
-            'getSection'
-        ]);
+            'getSection',
+            'getEmployee'
+        ])->findOrFail($id);
 
-        return view('organization_structure.show', compact('organizationStructure'));
+        return view('organization_structure.show', compact('member'));
     }
 
     /**
