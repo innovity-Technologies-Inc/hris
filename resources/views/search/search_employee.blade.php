@@ -164,8 +164,9 @@
                                                     class="form-select form-select-sm select2_list"
                                                     data-placeholder="Select section">
                                                     <option value="">Choose One</option>
-                                                    @foreach ($filterOptions['sections'] as $section)
-                                                        <option value="{{ $section->id }}">{{ $section->name }}</option>
+                                                    @foreach ($filterOptions['sections'] as $sectionItem)
+                                                        <option value="{{ $sectionItem->id }}">{{ $sectionItem->name }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
