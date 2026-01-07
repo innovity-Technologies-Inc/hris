@@ -13,7 +13,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             OrganizationSeeder::class,
-            EmployeeSeeder::class,        // Runs second (1000 Employees)
+            EmployeeSeeder::class,
+            OrganizationStructureSeeder::class,  // Seed Board Members and Key Members
         ]);
     }
 }

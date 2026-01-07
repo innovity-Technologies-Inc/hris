@@ -493,4 +493,153 @@ class OrganizationStructureController extends Controller
             ->findOrFail($id);
         return response()->json($employee);
     }
+
+    /**
+     * Display the structural view of the organization
+     */
+    public function structuralView()
+    {
+        // Get all groups with nested relationships
+        $groups = Group::where('status', 'active')
+            ->withCount(['organizationStructures as key_members_count' => function ($q) {
+                $q->where('status', 'Active')
+                  ->where('member_type', 'Board Member') // Only Board Members
+                  ->whereIn('type', ['Group', 'Company']); // Board Members at group/company level
+            }])
+            ->with([
+                'companies' => function ($query) {
+                    $query->where('status', 'active')
+                        ->withCount([
+                            'employeeOfficeInfos as employees_count' => function ($q) {
+                                $q->whereHas('employee');
+                            },
+                            'organizationStructures as key_members_count' => function ($q) {
+                                $q->where('status', 'Active')
+                                  ->where('member_type', 'Board Member') // Only Board Members
+                                  ->where('type', 'Company');
+                            }
+                        ])
+                        ->with([
+                            'locations' => function ($q) {
+                                $q->where('status', 'active')
+                                    ->withCount([
+                                        'employeeOfficeInfos as employees_count' => function ($q2) {
+                                            $q2->whereHas('employee');
+                                        },
+                                        'organizationStructures as key_members_count' => function ($q2) {
+                                            $q2->where('status', 'Active')
+                                              ->where('type', 'Branch Unit');
+                                        }
+                                    ])
+                                    ->with([
+                                        'divisions' => function ($divQ) {
+                                            $divQ->where('status', 'active')
+                                                ->withCount([
+                                                    'employeeOfficeInfos as employees_count' => function ($q2) {
+                                                        $q2->whereHas('employee');
+                                                    },
+                                                    'organizationStructures as key_members_count' => function ($q2) {
+                                                        $q2->where('status', 'Active')
+                                                          ->where('type', 'Division');
+                                                    }
+                                                ])
+                                                ->with([
+                                                    'departments' => function ($deptQ) {
+                                                        $deptQ->where('status', 'active')
+                                                            ->withCount([
+                                                                'employeeOfficeInfos as employees_count' => function ($q2) {
+                                                                    $q2->whereHas('employee');
+                                                                },
+                                                                'organizationStructures as key_members_count' => function ($q2) {
+                                                                    $q2->where('status', 'Active')
+                                                                      ->where('type', 'Department');
+                                                                }
+                                                            ])
+                                                            ->with([
+                                                                'sections' => function ($secQ) {
+                                                                    $secQ->where('status', 'active')
+                                                                        ->withCount([
+                                                                            'employeeOfficeInfos as employees_count' => function ($q2) {
+                                                                                $q2->whereHas('employee');
+                                                                            },
+                                                                            'organizationStructures as key_members_count' => function ($q2) {
+                                                                                $q2->where('status', 'Active')
+                                                                                  ->where('type', 'Section');
+                                                                            }
+                                                                        ]);
+                                                                }
+                                                            ]);
+                                                    }
+                                                ]);
+                                        }
+                                    ]);
+                            }
+                        ]);
+                }
+            ])
+            ->get();
+
+        return view('organization_structure.structure_view', compact('groups'));
+    }
+
+    /**
+     * Get key people for a specific level
+     */
+    public function getKeyPeople($level, $id)
+    {
+        $query = OrganizationStructure::where('status', 'Active');
+
+        // Map level to database field and type
+        $levelMapping = [
+            'group' => ['field' => 'group_id', 'types' => ['Group', 'Company']], // Board Members at group/company level
+            'company' => ['field' => 'company_id', 'types' => ['Company']],
+            'location' => ['field' => 'branch_unit_id', 'types' => ['Branch Unit']],
+            'division' => ['field' => 'division_id', 'types' => ['Division']],
+            'department' => ['field' => 'department_id', 'types' => ['Department']],
+            'section' => ['field' => 'section_id', 'types' => ['Section']],
+        ];
+
+        if (!isset($levelMapping[$level])) {
+            return response()->json([]);
+        }
+
+        $mapping = $levelMapping[$level];
+
+        $query->where($mapping['field'], $id);
+
+        // Filter by type(s)
+        if (isset($mapping['types'])) {
+            $query->whereIn('type', $mapping['types']);
+        }
+
+        // For group and company levels, show only Board Members
+        if (in_array($level, ['group', 'company'])) {
+            $query->where('member_type', 'Board Member');
+        }
+
+        $keyPeople = $query->with('getEmployee')
+            ->get()
+            ->map(function ($member) {
+                // Determine photo path based on member type
+                $photoPath = null;
+                if ($member->member_type === 'Board Member') {
+                    // Board members have photos in organization_structure table
+                    $photoPath = $member->photo_path;
+                } elseif ($member->member_type === 'Key Member' && $member->getEmployee) {
+                    // Key members (employees) have photos in employees table
+                    $photoPath = $member->getEmployee->photo_path;
+                }
+
+                return [
+                    'id' => $member->id,
+                    'name' => $member->name ?? ($member->getEmployee ? $member->getEmployee->full_name : 'N/A'),
+                    'position' => $member->position ?? 'N/A',
+                    'employee_id' => $member->employee_id,
+                    'member_type' => $member->member_type,
+                    'photo_path' => $photoPath,
+                ];
+            });
+
+        return response()->json($keyPeople);
+    }
 }

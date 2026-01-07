@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizational Structure</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #1e40af;
+            --secondary: #475569;
+            --border: #e2e8f0;
+            --bg-main: #f8fafc;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-main);
+            min-height: 100vh;
+            color: #334155;
+        }
+
+        /* Header */
+        .app-header {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* Search */
+        .search-container {
+            background: white;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .search-wrapper {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.625rem 1rem 0.625rem 2.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.875rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+
+        /* Tree Container */
+        .tree-container {
+            padding: 1.5rem 1rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Tree Item */
+        .tree-item {
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .tree-item:hover {
+            border-color: #cbd5e1;
+            box-shadow: var(--shadow);
+        }
+
+        /* Tree Header */
+        .tree-header {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            user-select: none;
+            gap: 0.75rem;
+            transition: background 0.2s;
+        }
+
+        .tree-header:hover {
+            background: #f8fafc;
+        }
+
+        /* Expand Icon */
+        .expand-icon {
+            color: var(--primary);
+            font-size: 1rem;
+            transition: transform 0.2s;
+            min-width: 20px;
+        }
+
+        .expand-icon.rotated {
+            transform: rotate(90deg);
+        }
+
+        /* Level Icons */
+        .level-icon {
+            font-size: 1.5rem;
+            min-width: 32px;
+            text-align: center;
+        }
+
+        .icon-group { color: #1e40af; }
+        .icon-company { color: #7c3aed; }
+        .icon-location { color: #dc2626; }
+        .icon-division { color: #ea580c; }
+        .icon-department { color: #059669; }
+        .icon-section { color: #0891b2; }
+
+        /* Level Badges */
+        .level-badge {
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 0.35rem 0.75rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid;
+        }
+
+        .badge-group {
+            background: #dbeafe;
+            color: #1e40af;
+            border-color: #93c5fd;
+        }
+        .badge-company {
+            background: #ede9fe;
+            color: #7c3aed;
+            border-color: #c4b5fd;
+        }
+        .badge-location {
+            background: #fee2e2;
+            color: #dc2626;
+            border-color: #fecaca;
+        }
+        .badge-division {
+            background: #ffedd5;
+            color: #ea580c;
+            border-color: #fed7aa;
+        }
+        .badge-department {
+            background: #d1fae5;
+            color: #059669;
+            border-color: #a7f3d0;
+        }
+        .badge-section {
+            background: #cffafe;
+            color: #0891b2;
+            border-color: #a5f3fc;
+        }
+
+        /* Tree Label */
+        .tree-label {
+            flex: 1;
+            font-weight: 600;
+            color: #0f172a;
+            font-size: 0.875rem;
+        }
+
+        .tree-label.level-group {
+            font-weight: 700;
+            font-size: 0.9375rem;
+        }
+
+        /* Count Badge */
+        .count-badge {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 0.25rem 0.625rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid var(--border);
+        }
+
+        /* Key People Button */
+        .key-people-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid var(--primary);
+            background: white;
+            color: var(--primary);
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .key-people-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Tree Content */
+        .tree-content {
+            padding: 0 0.75rem 0.5rem 2.5rem;
+            position: relative;
+            display: none;
+        }
+
+        .tree-content.show {
+            display: block;
+        }
+
+        /* Connecting Lines */
+        .tree-content::before {
+            content: '';
+            position: absolute;
+            left: 2rem;
+            top: 0;
+            bottom: 0.5rem;
+            width: 1px;
+            background: #cbd5e1;
+        }
+
+        .tree-item-nested {
+            position: relative;
+            margin-left: 1.25rem;
+            padding-left: 1rem;
+        }
+
+        .tree-item-nested::before {
+            content: '';
+            position: absolute;
+            left: -1.25rem;
+            top: 50%;
+            width: 1.25rem;
+            height: 1px;
+            background: #cbd5e1;
+        }
+
+        /* Modal */
+        .modal-content {
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .modal-header {
+            background: #f8fafc;
+            color: #0f172a;
+            border-bottom: 1px solid var(--border);
+            padding: 1.25rem 1.5rem;
+        }
+
+        .modal-body {
+            padding: 1.25rem;
+        }
+
+        /* Person Card */
+        .person-card {
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+            padding: 0.875rem;
+            border-radius: 6px;
+            background: white;
+            margin-bottom: 0.75rem;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .person-card:hover {
+            border-color: #cbd5e1;
+            box-shadow: var(--shadow);
+        }
+
+        .person-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .person-info {
+            flex: 1;
+        }
+
+        .person-info h6 {
+            margin: 0 0 0.2rem 0;
+            font-weight: 600;
+            color: #0f172a;
+            font-size: 0.875rem;
+        }
+
+        .person-info p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        /* View Profile Button */
+        .view-profile-btn {
+            padding: 0.45rem 0.875rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid var(--primary);
+            background: white;
+            color: var(--primary);
+            transition: all 0.2s;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .view-profile-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .tree-content {
+                padding-left: 2rem;
+            }
+
+            .tree-item-nested {
+                margin-left: 1rem;
+            }
+
+            .key-people-btn span {
+                display: none;
+            }
+
+            .person-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .view-profile-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="container-fluid py-3">
+            <div class="d-flex align-items-center justify-content-between px-3">
+                <button class="btn btn-link text-dark p-0 text-decoration-none" onclick="history.back()">
+                    <i class="bi bi-arrow-left fs-4"></i>
+                </button>
+                <h1 class="h6 fw-bold mb-0">Organizational Structure</h1>
+                <div style="width: 40px;"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Search Bar -->
+    <div class="search-container">
+        <div class="container-fluid py-3 px-3">
+            <div class="search-wrapper">
+                <i class="bi bi-search search-icon"></i>
+                <input type="text" class="search-input" id="searchInput"
+                       placeholder="Search departments, divisions, or locations...">
+            </div>
+        </div>
+    </div>
+
+    <!-- Tree Structure -->
+    <div class="tree-container">
+        <div class="container-fluid px-3">
+
+            <!-- GROUP LEVEL -->
+            <div class="tree-item">
+                <div class="tree-header" data-target="#group1">
+                    <i class="bi bi-chevron-right expand-icon"></i>
+                    <i class="bi bi-building level-icon icon-group"></i>
+                    <span class="level-badge badge-group">Group</span>
+                    <span class="tree-label level-group">Innovate Corp Group</span>
+                    <span class="count-badge">250</span>
+                    <button class="key-people-btn" type="button">
+                        <i class="bi bi-people-fill"></i>
+                        <span>Key People</span>
+                    </button>
+                </div>
+
+                <div class="tree-content" id="group1">
+
+                    <!-- COMPANY LEVEL -->
+                    <div class="tree-item tree-item-nested">
+                        <div class="tree-header" data-target="#company1">
+                            <i class="bi bi-chevron-right expand-icon"></i>
+                            <i class="bi bi-building-fill level-icon icon-company"></i>
+                            <span class="level-badge badge-company">Company</span>
+                            <span class="tree-label">Innovate Corp Company A</span>
+                            <span class="count-badge">180</span>
+                            <button class="key-people-btn" type="button">
+                                <i class="bi bi-people-fill"></i>
+                                <span>Key People</span>
+                            </button>
+                        </div>
+
+                        <div class="tree-content" id="company1">
+
+                            <!-- LOCATION LEVEL -->
+                            <div class="tree-item tree-item-nested">
+                                <div class="tree-header" data-target="#location1">
+                                    <i class="bi bi-chevron-right expand-icon"></i>
+                                    <i class="bi bi-geo-alt-fill level-icon icon-location"></i>
+                                    <span class="level-badge badge-location">Location</span>
+                                    <span class="tree-label">San Francisco Office</span>
+                                    <span class="count-badge">145</span>
+                                    <button class="key-people-btn" type="button">
+                                        <i class="bi bi-people-fill"></i>
+                                        <span>Key People</span>
+                                    </button>
+                                </div>
+
+                                <div class="tree-content" id="location1">
+
+                                    <!-- DIVISION LEVEL -->
+                                    <div class="tree-item tree-item-nested">
+                                        <div class="tree-header" data-target="#division1">
+                                            <i class="bi bi-chevron-right expand-icon"></i>
+                                            <i class="bi bi-diagram-3-fill level-icon icon-division"></i>
+                                            <span class="level-badge badge-division">Division</span>
+                                            <span class="tree-label">Manufacturing Division</span>
+                                            <span class="count-badge">120</span>
+                                            <button class="key-people-btn" type="button">
+                                                <i class="bi bi-people-fill"></i>
+                                                <span>Key People</span>
+                                            </button>
+                                        </div>
+
+                                        <div class="tree-content" id="division1">
+
+                                            <div class="tree-item tree-item-nested">
+                                                <div class="tree-header" data-target="#dept1">
+                                                    <i class="bi bi-chevron-right expand-icon"></i>
+                                                    <i class="bi bi-briefcase-fill level-icon icon-department"></i>
+                                                    <span class="level-badge badge-department">Department</span>
+                                                    <span class="tree-label">Assembly Department</span>
+                                                    <span class="count-badge">45</span>
+                                                    <button class="key-people-btn" type="button">
+                                                        <i class="bi bi-people-fill"></i>
+                                                        <span>Key People</span>
+                                                    </button>
+                                                </div>
+
+                                                <div class="tree-content" id="dept1">
+                                                    <div class="tree-item tree-item-nested">
+                                                        <div class="tree-header">
+                                                            <i class="bi bi-chevron-right expand-icon" style="visibility: hidden;"></i>
+                                                            <i class="bi bi-file-earmark-text-fill level-icon icon-section"></i>
+                                                            <span class="level-badge badge-section">Section</span>
+                                                            <span class="tree-label">Line A Section</span>
+                                                            <span class="count-badge">15</span>
+                                                            <button class="key-people-btn" type="button">
+                                                                <i class="bi bi-people-fill"></i>
+                                                                <span>Key People</span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="tree-item tree-item-nested">
+                                                        <div class="tree-header">
+                                                            <i class="bi bi-chevron-right expand-icon" style="visibility: hidden;"></i>
+                                                            <i class="bi bi-file-earmark-text-fill level-icon icon-section"></i>
+                                                            <span class="level-badge badge-section">Section</span>
+                                                            <span class="tree-label">Line B Section</span>
+                                                            <span class="count-badge">18</span>
+                                                            <button class="key-people-btn" type="button">
+                                                                <i class="bi bi-people-fill"></i>
+                                                                <span>Key People</span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="tree-item tree-item-nested">
+                                                <div class="tree-header">
+                                                    <i class="bi bi-chevron-right expand-icon" style="visibility: hidden;"></i>
+                                                    <i class="bi bi-briefcase-fill level-icon icon-department"></i>
+                                                    <span class="level-badge badge-department">Department</span>
+                                                    <span class="tree-label">Quality Control Department</span>
+                                                    <span class="count-badge">28</span>
+                                                    <button class="key-people-btn" type="button">
+                                                        <i class="bi bi-people-fill"></i>
+                                                        <span>Key People</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <!-- HR DIVISION -->
+                                    <div class="tree-item tree-item-nested">
+                                        <div class="tree-header" data-target="#division2">
+                                            <i class="bi bi-chevron-right expand-icon"></i>
+                                            <i class="bi bi-diagram-3-fill level-icon icon-division"></i>
+                                            <span class="level-badge badge-division">Division</span>
+                                            <span class="tree-label">Human Resources Division</span>
+                                            <span class="count-badge">85</span>
+                                            <button class="key-people-btn" type="button">
+                                                <i class="bi bi-people-fill"></i>
+                                                <span>Key People</span>
+                                            </button>
+                                        </div>
+
+                                        <div class="tree-content" id="division2">
+
+                                            <div class="tree-item tree-item-nested">
+                                                <div class="tree-header" data-target="#dept2">
+                                                    <i class="bi bi-chevron-right expand-icon"></i>
+                                                    <i class="bi bi-briefcase-fill level-icon icon-department"></i>
+                                                    <span class="level-badge badge-department">Department</span>
+                                                    <span class="tree-label">Recruitment Department</span>
+                                                    <span class="count-badge">32</span>
+                                                    <button class="key-people-btn" type="button">
+                                                        <i class="bi bi-people-fill"></i>
+                                                        <span>Key People</span>
+                                                    </button>
+                                                </div>
+
+                                                <div class="tree-content" id="dept2">
+                                                    <div class="tree-item tree-item-nested">
+                                                        <div class="tree-header">
+                                                            <i class="bi bi-chevron-right expand-icon" style="visibility: hidden;"></i>
+                                                            <i class="bi bi-file-earmark-person-fill level-icon icon-section"></i>
+                                                            <span class="level-badge badge-section">Section</span>
+                                                            <span class="tree-label">Campus Hiring Section</span>
+                                                            <span class="count-badge">12</span>
+                                                            <button class="key-people-btn" type="button">
+                                                                <i class="bi bi-people-fill"></i>
+                                                                <span>Key People</span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="tree-item tree-item-nested">
+                                                        <div class="tree-header">
+                                                            <i class="bi bi-chevron-right expand-icon" style="visibility: hidden;"></i>
+                                                            <i class="bi bi-file-earmark-person-fill level-icon icon-section"></i>
+                                                            <span class="level-badge badge-section">Section</span>
+                                                            <span class="tree-label">Executive Search Section</span>
+                                                            <span class="count-badge">10</span>
+                                                            <button class="key-people-btn" type="button">
+                                                                <i class="bi bi-people-fill"></i>
+                                                                <span>Key People</span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="tree-item tree-item-nested">
+                                                <div class="tree-header">
+                                                    <i class="bi bi-chevron-right expand-icon" style="visibility: hidden;"></i>
+                                                    <i class="bi bi-briefcase-fill level-icon icon-department"></i>
+                                                    <span class="level-badge badge-department">Department</span>
+                                                    <span class="tree-label">Training Department</span>
+                                                    <span class="count-badge">25</span>
+                                                    <button class="key-people-btn" type="button">
+                                                        <i class="bi bi-people-fill"></i>
+                                                        <span>Key People</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <!-- SALES DIVISION -->
+                                    <div class="tree-item tree-item-nested">
+                                        <div class="tree-header" data-target="#division3">
+                                            <i class="bi bi-chevron-right expand-icon"></i>
+                                            <i class="bi bi-diagram-3-fill level-icon icon-division"></i>
+                                            <span class="level-badge badge-division">Division</span>
+                                            <span class="tree-label">Sales & Marketing Division</span>
+                                            <span class="count-badge">95</span>
+                                            <button class="key-people-btn" type="button">
+                                                <i class="bi bi-people-fill"></i>
+                                                <span>Key People</span>
+                                            </button>
+                                        </div>
+
+                                        <div class="tree-content" id="division3">
+                                            <div class="tree-item tree-item-nested">
+                                                <div class="tree-header">
+                                                    <i class="bi bi-chevron-right expand-icon" style="visibility: hidden;"></i>
+                                                    <i class="bi bi-briefcase-fill level-icon icon-department"></i>
+                                                    <span class="level-badge badge-department">Department</span>
+                                                    <span class="tree-label">Digital Marketing Department</span>
+                                                    <span class="count-badge">42</span>
+                                                    <button class="key-people-btn" type="button">
+                                                        <i class="bi bi-people-fill"></i>
+                                                        <span>Key People</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!-- LOCATION 2 -->
+                            <div class="tree-item tree-item-nested">
+                                <div class="tree-header" data-target="#location2">
+                                    <i class="bi bi-chevron-right expand-icon"></i>
+                                    <i class="bi bi-geo-alt-fill level-icon icon-location"></i>
+                                    <span class="level-badge badge-location">Location</span>
+                                    <span class="tree-label">New York Office</span>
+                                    <span class="count-badge">35</span>
+                                    <button class="key-people-btn" type="button">
+                                        <i class="bi bi-people-fill"></i>
+                                        <span>Key People</span>
+                                    </button>
+                                </div>
+
+                                <div class="tree-content" id="location2">
+                                    <div class="tree-item tree-item-nested">
+                                        <div class="tree-header">
+                                            <i class="bi bi-chevron-right expand-icon" style="visibility: hidden;"></i>
+                                            <i class="bi bi-diagram-3-fill level-icon icon-division"></i>
+                                            <span class="level-badge badge-division">Division</span>
+                                            <span class="tree-label">Finance Division</span>
+                                            <span class="count-badge">35</span>
+                                            <button class="key-people-btn" type="button">
+                                                <i class="bi bi-people-fill"></i>
+                                                <span>Key People</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- COMPANY 2 -->
+                    <div class="tree-item tree-item-nested">
+                        <div class="tree-header" data-target="#company2">
+                            <i class="bi bi-chevron-right expand-icon"></i>
+                            <i class="bi bi-building-fill level-icon icon-company"></i>
+                            <span class="level-badge badge-company">Company</span>
+                            <span class="tree-label">Innovate Corp Company B</span>
+                            <span class="count-badge">70</span>
+                            <button class="key-people-btn" type="button">
+                                <i class="bi bi-people-fill"></i>
+                                <span>Key People</span>
+                            </button>
+                        </div>
+
+                        <div class="tree-content" id="company2">
+                            <div class="tree-item tree-item-nested">
+                                <div class="tree-header">
+                                    <i class="bi bi-chevron-right expand-icon" style="visibility: hidden;"></i>
+                                    <i class="bi bi-geo-alt-fill level-icon icon-location"></i>
+                                    <span class="level-badge badge-location">Location</span>
+                                    <span class="tree-label">London Office</span>
+                                    <span class="count-badge">70</span>
+                                    <button class="key-people-btn" type="button">
+                                        <i class="bi bi-people-fill"></i>
+                                        <span>Key People</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="keyPeopleModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="keyPeopleModalLabel">
+                        <i class="bi bi-people-fill me-2"></i>
+                        Key People
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="modalContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.tree-header[data-target]').forEach(header => {
+                header.addEventListener('click', function(e) {
+                    if (e.target.closest('.key-people-btn')) return;
+
+                    const target = document.querySelector(this.dataset.target);
+                    const icon = this.querySelector('.expand-icon');
+
+                    if (target) {
+                        target.classList.toggle('show');
+                        if (icon && icon.style.visibility !== 'hidden') {
+                            icon.classList.toggle('rotated');
+                        }
+                    }
+                });
+            });
+
+            document.querySelectorAll('.key-people-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+
+                    const header = this.closest('.tree-header');
+                    const label = header.querySelector('.tree-label');
+                    const badge = header.querySelector('.level-badge');
+
+                    showKeyPeople(badge?.textContent.trim() || 'Unknown', label?.textContent.trim() || 'Unknown');
+                });
+            });
+        });
+
+        function showKeyPeople(level, name) {
+            const peopleData = {
+                'GROUP': [
+                    { id: 1, name: 'John Anderson', role: 'Chief Executive Officer', initials: 'JA' },
+                    { id: 2, name: 'Sarah Mitchell', role: 'Chief Operating Officer', initials: 'SM' },
+                    { id: 3, name: 'Michael Chen', role: 'Chief Financial Officer', initials: 'MC' }
+                ],
+                'COMPANY': [
+                    { id: 4, name: 'Robert Johnson', role: 'Company President', initials: 'RJ' },
+                    { id: 5, name: 'Emily Davis', role: 'Vice President', initials: 'ED' }
+                ],
+                'LOCATION': [
+                    { id: 6, name: 'David Brown', role: 'Site Manager', initials: 'DB' },
+                    { id: 7, name: 'Lisa Wilson', role: 'Operations Lead', initials: 'LW' }
+                ],
+                'DIVISION': [
+                    { id: 8, name: 'James Taylor', role: 'Division Head', initials: 'JT' },
+                    { id: 9, name: 'Jennifer Lee', role: 'Assistant Director', initials: 'JL' }
+                ],
+                'DEPARTMENT': [
+                    { id: 10, name: 'William Garcia', role: 'Department Manager', initials: 'WG' },
+                    { id: 11, name: 'Amanda Martinez', role: 'Team Lead', initials: 'AM' }
+                ],
+                'SECTION': [
+                    { id: 12, name: 'Christopher White', role: 'Section Supervisor', initials: 'CW' },
+                    { id: 13, name: 'Jessica Thompson', role: 'Coordinator', initials: 'JT' }
+                ]
+            };
+
+            const people = peopleData[level.toUpperCase()] || [];
+            document.getElementById('keyPeopleModalLabel').innerHTML =
+                `<i class="bi bi-people-fill me-2"></i>Key People - ${name}`;
+
+            let html = people.length ? people.map(p => `
+                <div class="person-card">
+                    <div class="person-avatar">${p.initials}</div>
+                    <div class="person-info">
+                        <h6>${p.name}</h6>
+                        <p>${p.role}</p>
+                    </div>
+                    <button class="view-profile-btn" onclick="viewProfile(${p.id}, '${p.name}')">
+                        <i class="bi bi-person-circle me-1"></i>
+                        View Profile
+                    </button>
+                </div>
+            `).join('') : '<p class="text-center text-muted">No key people assigned yet.</p>';
+
+            document.getElementById('modalContent').innerHTML = html;
+            new bootstrap.Modal(document.getElementById('keyPeopleModal')).show();
+        }
+
+        function viewProfile(personId, personName) {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('keyPeopleModal'));
+            if (modal) modal.hide();
+
+            console.log(`Viewing profile: ${personName} (ID: ${personId})`);
+            alert(`Opening profile for ${personName}\n\nThis would navigate to a detailed profile page.`);
+        }
+
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            document.querySelectorAll('.tree-item').forEach(item => {
+                const label = item.querySelector('.tree-label');
+                if (label) {
+                    const text = label.textContent.toLowerCase();
+                    item.style.display = text.includes(searchTerm) || searchTerm === '' ? 'block' : 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

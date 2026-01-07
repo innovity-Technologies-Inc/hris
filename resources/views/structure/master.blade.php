@@ -36,7 +36,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
     <!-- App favicon -->
-    <link rel="shortcut icon" href="{{ isset($generalSettings->favicon) ? asset('storage/' . $generalSettings->favicon) : asset('assets/images/favicon.png') }}">
+    <link rel="shortcut icon"
+        href="{{ isset($generalSettings->favicon) ? asset('storage/' . $generalSettings->favicon) : asset('assets/images/favicon.png') }}">
 
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
@@ -387,8 +388,8 @@
         /* Content polish */
         .content-page {
             background: radial-gradient(1200px 400px at 20% -5%, rgba(16, 141, 255, 0.06), transparent 40%),
-            radial-gradient(900px 300px at 110% 10%, rgba(99, 102, 241, 0.05), transparent 35%),
-            var(--bs-body-bg);
+                radial-gradient(900px 300px at 110% 10%, rgba(99, 102, 241, 0.05), transparent 35%),
+                var(--bs-body-bg);
         }
 
         .content-page .content {
@@ -517,389 +518,391 @@
         }
     </style>
 
+    @stack('styles')
+
 </head>
 
 <!-- body start -->
 
 <body data-menu-color="light" data-sidebar="default">
 
-<!-- Begin page -->
-<div id="app-layout">
+    <!-- Begin page -->
+    <div id="app-layout">
 
-    @include('structure.partials.navbar')
-    @include('structure.partials.sidebar')
-
-
-
-    <!-- ============================================================== -->
-    <!-- Start Page Content here -->
-    <!-- ============================================================== -->
-
-    <div class="content-page">
-        <div class="content">
-
-            <!-- Start Content-->
-            <div class="container-fluid">
-
-                @include('structure.partials.breadcrumb')
-
-                @yield('content')
+        @include('structure.partials.navbar')
+        @include('structure.partials.sidebar')
 
 
-            </div> <!-- container-fluid -->
-        </div> <!-- content -->
 
-        @include('structure.partials.footer')
+        <!-- ============================================================== -->
+        <!-- Start Page Content here -->
+        <!-- ============================================================== -->
+
+        <div class="content-page">
+            <div class="content">
+
+                <!-- Start Content-->
+                <div class="container-fluid">
+
+                    @include('structure.partials.breadcrumb')
+
+                    @yield('content')
+
+
+                </div> <!-- container-fluid -->
+            </div> <!-- content -->
+
+            @include('structure.partials.footer')
+
+        </div>
+
 
     </div>
 
+    <!-- Vendor -->
+    <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/simplebar/simplebar.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/node-waves/waves.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/waypoints/lib/jquery.waypoints.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/jquery.counterup/jquery.counterup.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/feather-icons/feather.min.js') }}"></script>
 
-</div>
-
-<!-- Vendor -->
-<script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
-<script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-<script src="{{ asset('assets/libs/simplebar/simplebar.min.js') }}"></script>
-<script src="{{ asset('assets/libs/node-waves/waves.min.js') }}"></script>
-<script src="{{ asset('assets/libs/waypoints/lib/jquery.waypoints.min.js') }}"></script>
-<script src="{{ asset('assets/libs/jquery.counterup/jquery.counterup.min.js') }}"></script>
-<script src="{{ asset('assets/libs/feather-icons/feather.min.js') }}"></script>
-
-{{-- Select 2 Js --}}
-{{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
-<script src="{{ asset('assets/libs/select2/select2.min.js') }}"></script>
+    {{-- Select 2 Js --}}
+    {{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
+    <script src="{{ asset('assets/libs/select2/select2.min.js') }}"></script>
 
 
-<script>
-    $(document).ready(function() {
-        if (window.feather) {
-            window.feather.replace({
-                width: 18,
-                height: 18
+    <script>
+        $(document).ready(function() {
+            if (window.feather) {
+                window.feather.replace({
+                    width: 18,
+                    height: 18
+                });
+            }
+            // Logo visibility is controlled via CSS by html[data-bs-theme]
+
+            // Sidebar color mode now follows global theme (navbar toggle)
+            // basic select2
+            $('.select2_list').select2({
+                width: '100%',
+                theme: 'bootstrap-5',
             });
-        }
-        // Logo visibility is controlled via CSS by html[data-bs-theme]
-
-        // Sidebar color mode now follows global theme (navbar toggle)
-        // basic select2
-        $('.select2_list').select2({
-            width: '100%',
-            theme: 'bootstrap-5',
-        });
 
 
-        // can add tags, select the typed word and press enter to add it to the list
-        $('.list').select2({
-            width: '100%',
-            tags: true, // Allow new entries as tags
-            tokenSeparators: [','],
-            placeholder: "Choose One",
-            theme: 'bootstrap-5',
-        });
-    });
-</script>
-
-<!-- Apexcharts JS -->
-<script src="{{ asset('assets/libs/apexcharts/apexcharts.min.js') }}"></script>
-
-<!-- Widgets Init Js -->
-<script src="{{ asset('assets/js/pages/crm-dashboard.init.js') }}"></script>
-
-<!-- App js-->
-<script src="{{ asset('assets/js/app.js') }}"></script>
-
-{{-- Toastr --}}
-{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script> --}}
-<script src="{{ asset('assets/libs/toastr/toastr.min.js') }}"></script>
-
-<script>
-    @if (Session::has('message'))
-    var type = "{{ Session::get('alert-type', 'info') }}"
-    switch (type) {
-        case 'info':
-            toastr.options.timeOut = 3000;
-            toastr.info("{{ Session::get('message') }}");
-            break;
-
-        case 'success':
-            toastr.options.timeOut = 3000;
-            toastr.success("{{ Session::get('message') }}");
-            break;
-
-        case 'warning':
-            toastr.options.timeOut = 3000;
-            toastr.warning("{{ Session::get('message') }}");
-            break;
-
-        case 'error':
-            toastr.options.timeOut = 3000;
-            toastr.error("{{ Session::get('message') }}");
-            break;
-    }
-    @endif
-</script>
-
-
-{{-- Sweet Alert --}}
-{{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
-<script src="{{ asset('assets/libs/sweetalert/sweetalert2@11.js') }}"></script>
-
-
-<script>
-    $('.confirmDelete').click(function(event) {
-        event.preventDefault();
-        const form = $(this).closest("form");
-
-
-        Swal.fire({
-            title: 'Are you sure you want to delete?',
-            text: 'You won\'t be able to revert!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Confirm'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                form.submit();
-
-
-            } else if (result.isDismissed) {
-                console.log('Deletion canceled');
-            }
-        }).catch((error) => {
-            console.error('Error:', error);
-        });
-    });
-</script>
-
-<script>
-    $('.confirmApprove').click(function(event) {
-        event.preventDefault();
-        const form = $(this).closest("form");
-
-
-        Swal.fire({
-            title: 'Are you sure you want to approve the application?',
-            text: 'You won\'t be able to revert!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Confirm'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                form.submit();
-
-
-            } else if (result.isDismissed) {
-                console.log('Deletion canceled');
-            }
-        }).catch((error) => {
-            console.error('Error:', error);
-        });
-    });
-</script>
-
-
-<script>
-    $('.confirmReject').click(function(event) {
-        event.preventDefault();
-        const form = $(this).closest("form");
-
-
-        Swal.fire({
-            title: 'Are you sure you want to reject the application?',
-            text: 'You won\'t be able to revert!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Confirm'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                form.submit();
-
-
-            } else if (result.isDismissed) {
-                console.log('Deletion canceled');
-            }
-        }).catch((error) => {
-            console.error('Error:', error);
-        });
-    });
-</script>
-
-
-<script>
-    $('.removeBtn').click(function(event) {
-        event.preventDefault();
-        const form = $(this).closest("form");
-
-
-        Swal.fire({
-            title: 'Are you sure you want to remove?',
-            text: 'This Plans will be unassigned from this employee!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Confirm'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                form.submit();
-
-
-            } else if (result.isDismissed) {
-                console.log('Deletion canceled');
-            }
-        }).catch((error) => {
-            console.error('Error:', error);
-        });
-    });
-</script>
-
-
-{{-- Select 2 Js --}}
-{{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
-<script src="{{ asset('assets/libs/select2/select2.min.js') }}"></script>
-
-
-<script>
-    $(document).ready(function() {
-        // basic select2
-        $('.select2_list').select2({
-            width: '100%',
-            theme: 'bootstrap-5',
-        });
-
-        // can add tags, select the typed word and press enter to add it to the list
-        $('.list').select2({
-            width: '100%',
-            tags: true, // Allow new entries as tags
-            tokenSeparators: [','],
-            placeholder: "Choose One",
-            theme: 'bootstrap-5',
-        });
-    });
-</script>
-
-{{-- Filepond Js --}}
-{{-- <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script> --}}
-<script src="{{ asset('assets/libs/filepond/filepond.min.js') }}"></script>
-
-
-{{-- <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script> --}}
-<script src="{{ asset('assets/libs/filepond/filepond-plugin-image-preview.min.js') }}"></script>
-
-<!-- Image Resize -->
-{{-- <script src="https://unpkg.com/filepond-plugin-image-resize/dist/filepond-plugin-image-resize.min.js"></script> --}}
-<script src="{{ asset('assets/libs/filepond/filepond-plugin-image-resize.min.js') }}"></script>
-
-<!-- Image Transform -->
-{{-- <script src="https://unpkg.com/filepond-plugin-image-transform/dist/filepond-plugin-image-transform.min.js"></script> --}}
-<script src="{{ asset('assets/libs/filepond/filepond-plugin-image-transform.min.js') }}"></script>
-
-
-
-<script>
-    // Register needed FilePond plugins globally
-    FilePond.registerPlugin(
-        FilePondPluginImagePreview,
-        FilePondPluginImageResize,
-        FilePondPluginImageTransform,
-    );
-
-
-    // compression version
-    document.querySelectorAll('input.filepond').forEach(input => {
-        if (!input.filePondInstance) {
-            input.filePondInstance = FilePond.create(input, {
-                storeAsFile: true,
-                instantUpload: false,
-                labelIdle: 'Drag & Drop or <span class="filepond--label-action">Browse</span>',
-
-                // ✅ Compression settings
-                imageCompress: true,
-                imageCompressQuality: 0.8, // 0–1 (1 = no compression)
-                imageCompressMaxWidth: 1920,
-                imageCompressMaxHeight: 1080,
-                imageCompressMode: 'automatic', // can be 'manual' or 'automatic'
-                imageResizeMode: 'contain', // keep aspect ratio
-
-
-                // 👇 Force image format
-                /*imageCompressOutputMimeType: 'image/webp', // can be 'image/png', 'image/jpeg', etc.
-                imageCompressOutputQuality: 0.7, // 0–1
-                imageCompressConvertSize: 0 */
+            // can add tags, select the typed word and press enter to add it to the list
+            $('.list').select2({
+                width: '100%',
+                tags: true, // Allow new entries as tags
+                tokenSeparators: [','],
+                placeholder: "Choose One",
+                theme: 'bootstrap-5',
             });
-        }
-    });
+        });
+    </script>
+
+    <!-- Apexcharts JS -->
+    <script src="{{ asset('assets/libs/apexcharts/apexcharts.min.js') }}"></script>
+
+    <!-- Widgets Init Js -->
+    <script src="{{ asset('assets/js/pages/crm-dashboard.init.js') }}"></script>
+
+    <!-- App js-->
+    <script src="{{ asset('assets/js/app.js') }}"></script>
+
+    {{-- Toastr --}}
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script> --}}
+    <script src="{{ asset('assets/libs/toastr/toastr.min.js') }}"></script>
+
+    <script>
+        @if (Session::has('message'))
+            var type = "{{ Session::get('alert-type', 'info') }}"
+            switch (type) {
+                case 'info':
+                    toastr.options.timeOut = 3000;
+                    toastr.info("{{ Session::get('message') }}");
+                    break;
+
+                case 'success':
+                    toastr.options.timeOut = 3000;
+                    toastr.success("{{ Session::get('message') }}");
+                    break;
+
+                case 'warning':
+                    toastr.options.timeOut = 3000;
+                    toastr.warning("{{ Session::get('message') }}");
+                    break;
+
+                case 'error':
+                    toastr.options.timeOut = 3000;
+                    toastr.error("{{ Session::get('message') }}");
+                    break;
+            }
+        @endif
+    </script>
 
 
-    // Init for original version (NO compression)
-    document.querySelectorAll('input.filepond_org').forEach(input => {
-        if (!input.filePondInstance) {
-            input.filePondInstance = FilePond.create(input, {
-                storeAsFile: true,
-                instantUpload: false,
-                labelIdle: 'Drag & Drop or <span class="filepond--label-action">Browse</span>',
-                allowImageTransform: false // ❌ disables compression for this instance
+    {{-- Sweet Alert --}}
+    {{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
+    <script src="{{ asset('assets/libs/sweetalert/sweetalert2@11.js') }}"></script>
+
+
+    <script>
+        $('.confirmDelete').click(function(event) {
+            event.preventDefault();
+            const form = $(this).closest("form");
+
+
+            Swal.fire({
+                title: 'Are you sure you want to delete?',
+                text: 'You won\'t be able to revert!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Confirm'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+
+
+                } else if (result.isDismissed) {
+                    console.log('Deletion canceled');
+                }
+            }).catch((error) => {
+                console.error('Error:', error);
             });
-        }
-    });
-</script>
+        });
+    </script>
 
-{{-- Summernote JS --}}
-{{-- <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script> --}}
-<script src="{{ asset('assets/libs/summernote/summernote-lite.min.js') }}"></script>
+    <script>
+        $('.confirmApprove').click(function(event) {
+            event.preventDefault();
+            const form = $(this).closest("form");
 
-<script>
-    $(document).ready(function() {
-        $('#editor1').summernote({
-            toolbar: [
-                // ['style', ['style']], // optional
-                ['font', ['fontsize', 'bold', 'italic', 'underline', 'clear',
-                    'color'
-                ]], // remove 'fontname',
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['insert', ['link', 'picture', 'video']],
-                ['view', ['codeview']]
-            ],
-            // Optional: Set your desired height
-            height: 200,
+
+            Swal.fire({
+                title: 'Are you sure you want to approve the application?',
+                text: 'You won\'t be able to revert!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Confirm'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+
+
+                } else if (result.isDismissed) {
+                    console.log('Deletion canceled');
+                }
+            }).catch((error) => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+
+
+    <script>
+        $('.confirmReject').click(function(event) {
+            event.preventDefault();
+            const form = $(this).closest("form");
+
+
+            Swal.fire({
+                title: 'Are you sure you want to reject the application?',
+                text: 'You won\'t be able to revert!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Confirm'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+
+
+                } else if (result.isDismissed) {
+                    console.log('Deletion canceled');
+                }
+            }).catch((error) => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+
+
+    <script>
+        $('.removeBtn').click(function(event) {
+            event.preventDefault();
+            const form = $(this).closest("form");
+
+
+            Swal.fire({
+                title: 'Are you sure you want to remove?',
+                text: 'This Plans will be unassigned from this employee!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Confirm'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+
+
+                } else if (result.isDismissed) {
+                    console.log('Deletion canceled');
+                }
+            }).catch((error) => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+
+
+    {{-- Select 2 Js --}}
+    {{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
+    <script src="{{ asset('assets/libs/select2/select2.min.js') }}"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            // basic select2
+            $('.select2_list').select2({
+                width: '100%',
+                theme: 'bootstrap-5',
+            });
+
+            // can add tags, select the typed word and press enter to add it to the list
+            $('.list').select2({
+                width: '100%',
+                tags: true, // Allow new entries as tags
+                tokenSeparators: [','],
+                placeholder: "Choose One",
+                theme: 'bootstrap-5',
+            });
+        });
+    </script>
+
+    {{-- Filepond Js --}}
+    {{-- <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script> --}}
+    <script src="{{ asset('assets/libs/filepond/filepond.min.js') }}"></script>
+
+
+    {{-- <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script> --}}
+    <script src="{{ asset('assets/libs/filepond/filepond-plugin-image-preview.min.js') }}"></script>
+
+    <!-- Image Resize -->
+    {{-- <script src="https://unpkg.com/filepond-plugin-image-resize/dist/filepond-plugin-image-resize.min.js"></script> --}}
+    <script src="{{ asset('assets/libs/filepond/filepond-plugin-image-resize.min.js') }}"></script>
+
+    <!-- Image Transform -->
+    {{-- <script src="https://unpkg.com/filepond-plugin-image-transform/dist/filepond-plugin-image-transform.min.js"></script> --}}
+    <script src="{{ asset('assets/libs/filepond/filepond-plugin-image-transform.min.js') }}"></script>
+
+
+
+    <script>
+        // Register needed FilePond plugins globally
+        FilePond.registerPlugin(
+            FilePondPluginImagePreview,
+            FilePondPluginImageResize,
+            FilePondPluginImageTransform,
+        );
+
+
+        // compression version
+        document.querySelectorAll('input.filepond').forEach(input => {
+            if (!input.filePondInstance) {
+                input.filePondInstance = FilePond.create(input, {
+                    storeAsFile: true,
+                    instantUpload: false,
+                    labelIdle: 'Drag & Drop or <span class="filepond--label-action">Browse</span>',
+
+                    // ✅ Compression settings
+                    imageCompress: true,
+                    imageCompressQuality: 0.8, // 0–1 (1 = no compression)
+                    imageCompressMaxWidth: 1920,
+                    imageCompressMaxHeight: 1080,
+                    imageCompressMode: 'automatic', // can be 'manual' or 'automatic'
+                    imageResizeMode: 'contain', // keep aspect ratio
+
+
+                    // 👇 Force image format
+                    /*imageCompressOutputMimeType: 'image/webp', // can be 'image/png', 'image/jpeg', etc.
+                    imageCompressOutputQuality: 0.7, // 0–1
+                    imageCompressConvertSize: 0 */
+                });
+            }
         });
 
-        $('#editor2').summernote({
-            toolbar: [
-                // ['style', ['style']], // optional
-                ['font', ['fontsize', 'bold', 'italic', 'underline', 'clear',
-                    'color'
-                ]], // remove 'fontname',
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['insert', ['link', 'picture', 'video']],
-                ['view', ['codeview']]
-            ],
-            // Optional: Set your desired height
-            height: 200,
-        });
 
-        $('#editor3').summernote({
-            toolbar: [
-                // ['style', ['style']], // optional
-                ['font', ['fontsize', 'bold', 'italic', 'underline', 'clear',
-                    'color'
-                ]], // remove 'fontname',
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['insert', ['link', 'picture', 'video']],
-                ['view', ['codeview']]
-            ],
-            // Optional: Set your desired height
-            height: 200,
+        // Init for original version (NO compression)
+        document.querySelectorAll('input.filepond_org').forEach(input => {
+            if (!input.filePondInstance) {
+                input.filePondInstance = FilePond.create(input, {
+                    storeAsFile: true,
+                    instantUpload: false,
+                    labelIdle: 'Drag & Drop or <span class="filepond--label-action">Browse</span>',
+                    allowImageTransform: false // ❌ disables compression for this instance
+                });
+            }
         });
-    });
-</script>
-@stack('scripts')
+    </script>
+
+    {{-- Summernote JS --}}
+    {{-- <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script> --}}
+    <script src="{{ asset('assets/libs/summernote/summernote-lite.min.js') }}"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#editor1').summernote({
+                toolbar: [
+                    // ['style', ['style']], // optional
+                    ['font', ['fontsize', 'bold', 'italic', 'underline', 'clear',
+                        'color'
+                    ]], // remove 'fontname',
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['codeview']]
+                ],
+                // Optional: Set your desired height
+                height: 200,
+            });
+
+            $('#editor2').summernote({
+                toolbar: [
+                    // ['style', ['style']], // optional
+                    ['font', ['fontsize', 'bold', 'italic', 'underline', 'clear',
+                        'color'
+                    ]], // remove 'fontname',
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['codeview']]
+                ],
+                // Optional: Set your desired height
+                height: 200,
+            });
+
+            $('#editor3').summernote({
+                toolbar: [
+                    // ['style', ['style']], // optional
+                    ['font', ['fontsize', 'bold', 'italic', 'underline', 'clear',
+                        'color'
+                    ]], // remove 'fontname',
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['codeview']]
+                ],
+                // Optional: Set your desired height
+                height: 200,
+            });
+        });
+    </script>
+    @stack('scripts')
 
 </body>
 
