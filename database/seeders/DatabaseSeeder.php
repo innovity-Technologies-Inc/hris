@@ -12,7 +12,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-//            OrganizationSeeder::class,
+            OrganizationSeeder::class,
             EmployeeSeeder::class,        // Runs second (1000 Employees)
         ]);
     }

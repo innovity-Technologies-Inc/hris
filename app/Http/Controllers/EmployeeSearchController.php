@@ -4,10 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use App\Models\Company;
-use App\Models\CompanyLocation;
-use App\Models\Division;
-use App\Models\Department;
-use App\Models\Section;
 use App\Services\EmployeeServices;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
@@ -204,12 +200,9 @@ class EmployeeSearchController extends Controller
                 'work_email'
             )->get();
 
-        // Get organizational data
+        // Get organizational data - only companies loaded initially
+        // Other dropdowns (branch, division, department, section) are loaded via AJAX based on company selection
         $companies = Company::select('id', 'name')->orderBy('name')->get();
-        $businessUnits = CompanyLocation::select('id', 'name')->orderBy('name')->get();
-        $divisions = Division::select('id', 'name')->orderBy('name')->get();
-        $departments = Department::select('id', 'department_name')->orderBy('department_name')->get();
-        $sections = Section::select('id', 'name')->orderBy('name')->get();
 
         return [
             'employees' => $allEmployees,
@@ -226,10 +219,6 @@ class EmployeeSearchController extends Controller
                 return $emp->permanent_address['country'] ?? null;
             })->filter()->unique()->sort()->values(),
             'companies' => $companies,
-            'business_units' => $businessUnits,
-            'divisions' => $divisions,
-            'departments' => $departments,
-            'sections' => $sections,
         ];
     }
 
