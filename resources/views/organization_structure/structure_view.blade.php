@@ -3,36 +3,27 @@
 @push('styles')
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
-        :root {
-            --primary: #1e40af;
-            --secondary: #475569;
-            --border: #e2e8f0;
-            --bg-main: #f8fafc;
-            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-
         /* Tree Container */
         .tree-container {
             padding: 1.5rem 1rem;
             max-width: 1400px;
             margin: 0 auto;
-            background: var(--bg-main);
+            background: var(--bs-tertiary-bg);
             min-height: calc(100vh - 200px);
         }
 
         /* Tree Item */
         .tree-item {
-            background: white;
+            background: var(--bs-card-bg);
             border-radius: 10px;
             margin-bottom: 0.625rem;
-            border: 1px solid var(--border);
+            border: 1px solid var(--bs-border-color);
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .tree-item:hover {
-            border-color: #94a3b8;
-            box-shadow: var(--shadow-lg);
+            border-color: var(--bs-primary);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             transform: translateX(3px);
         }
 
@@ -49,18 +40,18 @@
         }
 
         .tree-header:hover {
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            background: rgba(var(--bs-primary-rgb), 0.05);
         }
 
         .tree-header.expanded {
-            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-            border-bottom: 1px solid var(--border);
+            background: rgba(var(--bs-primary-rgb), 0.05);
+            border-bottom: 1px solid var(--bs-border-color);
             border-radius: 10px 10px 0 0;
         }
 
         /* Expand Icon */
         .expand-icon {
-            color: var(--primary);
+            color: var(--bs-primary);
             font-size: 1.125rem;
             transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             min-width: 22px;
@@ -86,8 +77,8 @@
         }
 
         .icon-group {
-            color: #1e40af;
-            filter: drop-shadow(0 2px 2px rgba(30, 64, 175, 0.2));
+            color: #108dff;
+            filter: drop-shadow(0 2px 2px rgba(16, 141, 255, 0.2));
         }
 
         .icon-company {
@@ -129,52 +120,52 @@
         }
 
         .badge-group {
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-            color: #1e40af;
-            border-color: #93c5fd;
+            background: rgba(16, 141, 255, 0.15);
+            color: #108dff;
+            border-color: rgba(16, 141, 255, 0.3);
         }
 
         .badge-company {
-            background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+            background: rgba(124, 58, 237, 0.15);
             color: #7c3aed;
-            border-color: #c4b5fd;
+            border-color: rgba(124, 58, 237, 0.3);
         }
 
         .badge-location {
-            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            background: rgba(220, 38, 38, 0.15);
             color: #dc2626;
-            border-color: #fca5a5;
+            border-color: rgba(220, 38, 38, 0.3);
         }
 
         .badge-division {
-            background: linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%);
+            background: rgba(234, 88, 12, 0.15);
             color: #ea580c;
-            border-color: #fdba74;
+            border-color: rgba(234, 88, 12, 0.3);
         }
 
         .badge-department {
-            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            background: rgba(5, 150, 105, 0.15);
             color: #059669;
-            border-color: #6ee7b7;
+            border-color: rgba(5, 150, 105, 0.3);
         }
 
         .badge-section {
-            background: linear-gradient(135deg, #cffafe 0%, #a5f3fc 100%);
+            background: rgba(8, 145, 178, 0.15);
             color: #0891b2;
-            border-color: #67e8f9;
+            border-color: rgba(8, 145, 178, 0.3);
         }
 
         /* Tree Label */
         .tree-label {
             flex: 1;
             font-weight: 600;
-            color: #0f172a;
+            color: var(--bs-body-color);
             font-size: 0.9rem;
             transition: color 0.25s ease;
         }
 
         .tree-header:hover .tree-label {
-            color: var(--primary);
+            color: var(--bs-primary);
         }
 
         .tree-label.level-group {
@@ -184,22 +175,65 @@
 
         /* Count Badge */
         .count-badge {
-            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-            color: #475569;
+            background: var(--bs-card-bg);
+            color: var(--bs-gray-600);
             padding: 0.3rem 0.75rem;
             border-radius: 20px;
             font-size: 0.75rem;
             font-weight: 700;
-            border: 1px solid var(--border);
+            border: 1px solid var(--bs-border-color);
             transition: all 0.25s ease;
             min-width: 40px;
             text-align: center;
         }
 
         .tree-header:hover .count-badge {
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-            color: var(--primary);
-            border-color: #93c5fd;
+            background: rgba(var(--bs-primary-rgb), 0.1);
+            color: var(--bs-primary);
+            border-color: var(--bs-primary);
+        }
+
+        /* Key Member Count Badges */
+        .count-badge.key-members-group {
+            background: rgba(16, 141, 255, 0.15);
+            color: #108dff;
+            border-color: rgba(16, 141, 255, 0.3);
+            margin-left: 0.25rem;
+        }
+
+        .count-badge.key-members-company {
+            background: rgba(124, 58, 237, 0.15);
+            color: #7c3aed;
+            border-color: rgba(124, 58, 237, 0.3);
+            margin-left: 0.25rem;
+        }
+
+        .count-badge.key-members-location {
+            background: rgba(220, 38, 38, 0.15);
+            color: #dc2626;
+            border-color: rgba(220, 38, 38, 0.3);
+            margin-left: 0.25rem;
+        }
+
+        .count-badge.key-members-division {
+            background: rgba(234, 88, 12, 0.15);
+            color: #ea580c;
+            border-color: rgba(234, 88, 12, 0.3);
+            margin-left: 0.25rem;
+        }
+
+        .count-badge.key-members-department {
+            background: rgba(5, 150, 105, 0.15);
+            color: #059669;
+            border-color: rgba(5, 150, 105, 0.3);
+            margin-left: 0.25rem;
+        }
+
+        .count-badge.key-members-section {
+            background: rgba(8, 145, 178, 0.15);
+            color: #0891b2;
+            border-color: rgba(8, 145, 178, 0.3);
+            margin-left: 0.25rem;
         }
 
         /* Key People Button */
@@ -211,19 +245,19 @@
             border-radius: 8px;
             font-size: 0.8rem;
             font-weight: 600;
-            border: 2px solid var(--primary);
-            background: white;
-            color: var(--primary);
+            border: 2px solid var(--bs-primary);
+            background: var(--bs-card-bg);
+            color: var(--bs-primary);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             white-space: nowrap;
-            box-shadow: 0 2px 4px rgba(30, 64, 175, 0.1);
+            box-shadow: 0 2px 4px rgba(var(--bs-primary-rgb), 0.1);
         }
 
         .key-people-btn:hover {
-            background: var(--primary);
+            background: var(--bs-primary);
             color: white;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+            box-shadow: 0 4px 12px rgba(var(--bs-primary-rgb), 0.3);
         }
 
         .key-people-btn:active {
@@ -258,7 +292,7 @@
             top: 0;
             bottom: 0.75rem;
             width: 2px;
-            background: linear-gradient(180deg, #cbd5e1 0%, #e2e8f0 100%);
+            background: var(--bs-border-color);
             border-radius: 1px;
         }
 
@@ -275,7 +309,7 @@
             top: 50%;
             width: 1.5rem;
             height: 2px;
-            background: linear-gradient(90deg, #cbd5e1 0%, #94a3b8 100%);
+            background: var(--bs-border-color);
             border-radius: 1px;
         }
 
@@ -286,24 +320,24 @@
             gap: 1rem;
             padding: 1rem;
             border-radius: 10px;
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            background: var(--bs-card-bg);
             margin-bottom: 0.875rem;
-            border: 1px solid var(--border);
+            border: 1px solid var(--bs-border-color);
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .person-card:hover {
-            border-color: #94a3b8;
-            box-shadow: var(--shadow-lg);
+            border-color: var(--bs-primary);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             transform: translateX(4px);
-            background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%);
+            background: rgba(var(--bs-primary-rgb), 0.05);
         }
 
         .person-avatar {
             width: 52px;
             height: 52px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary) 0%, #3b82f6 100%);
+            background: var(--bs-primary);
             color: white;
             display: flex;
             align-items: center;
@@ -311,7 +345,7 @@
             font-weight: 700;
             font-size: 1.1rem;
             flex-shrink: 0;
-            box-shadow: 0 4px 8px rgba(30, 64, 175, 0.25);
+            box-shadow: 0 4px 8px rgba(var(--bs-primary-rgb), 0.25);
             transition: transform 0.3s ease;
         }
 
@@ -326,14 +360,14 @@
         .person-info h6 {
             margin: 0 0 0.25rem 0;
             font-weight: 600;
-            color: #0f172a;
+            color: var(--bs-body-color);
             font-size: 0.9rem;
         }
 
         .person-info p {
             margin: 0;
             font-size: 0.8rem;
-            color: #64748b;
+            color: var(--bs-gray-600);
         }
 
         /* View Profile Button */
@@ -342,9 +376,9 @@
             border-radius: 8px;
             font-size: 0.75rem;
             font-weight: 600;
-            border: 2px solid var(--primary);
-            background: white;
-            color: var(--primary);
+            border: 2px solid var(--bs-primary);
+            background: var(--bs-card-bg);
+            color: var(--bs-primary);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             white-space: nowrap;
             cursor: pointer;
@@ -355,10 +389,10 @@
         }
 
         .view-profile-btn:hover {
-            background: var(--primary);
+            background: var(--bs-primary);
             color: white;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+            box-shadow: 0 4px 12px rgba(var(--bs-primary-rgb), 0.3);
             text-decoration: none;
         }
 
@@ -367,13 +401,15 @@
             border-radius: 16px;
             border: none;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            background: var(--bs-card-bg);
         }
 
         .modal-header {
-            background: linear-gradient(135deg, var(--primary) 0%, #3b82f6 100%);
+            background: var(--bs-primary);
             color: white;
             border-radius: 16px 16px 0 0;
             padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--bs-border-color);
         }
 
         .modal-header .btn-close {
@@ -387,17 +423,32 @@
 
         .modal-body {
             padding: 1.5rem;
-            background: var(--bg-main);
+            background: var(--bs-tertiary-bg);
         }
 
         /* Responsive */
         @media (max-width: 768px) {
+            .tree-container {
+                padding: 1rem 0.5rem;
+            }
+
+            .tree-header {
+                padding: 0.75rem 0.875rem;
+                gap: 0.5rem;
+                flex-wrap: wrap;
+            }
+
             .tree-content {
-                padding-left: 2rem;
+                padding-left: 1.5rem;
             }
 
             .tree-item-nested {
-                margin-left: 1rem;
+                margin-left: 0.75rem;
+            }
+
+            .key-people-btn {
+                padding: 0.375rem 0.75rem;
+                font-size: 0.75rem;
             }
 
             .key-people-btn span {
@@ -407,10 +458,52 @@
             .person-card {
                 flex-direction: column;
                 align-items: flex-start;
+                padding: 0.875rem;
             }
 
             .view-profile-btn {
                 width: 100%;
+                justify-content: center;
+            }
+
+            .level-icon {
+                font-size: 1.25rem;
+                min-width: 28px;
+            }
+
+            .level-badge {
+                font-size: 0.6rem;
+                padding: 0.3rem 0.65rem;
+            }
+
+            .count-badge {
+                font-size: 0.7rem;
+                padding: 0.25rem 0.5rem;
+                min-width: 32px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .tree-label {
+                font-size: 0.85rem;
+            }
+
+            .tree-label.level-group {
+                font-size: 0.95rem;
+            }
+
+            .person-avatar {
+                width: 44px;
+                height: 44px;
+                font-size: 1rem;
+            }
+
+            .person-info h6 {
+                font-size: 0.85rem;
+            }
+
+            .person-info p {
+                font-size: 0.75rem;
             }
         }
     </style>
@@ -420,9 +513,8 @@
     <div class="row">
         <div class="col-12">
             <div class="card shadow-sm border-0" style="border-radius: 12px; overflow: hidden;">
-                <div class="card-header text-white py-3"
-                    style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);">
-                    <div class="d-flex justify-content-between align-items-center">
+                <div class="card-header text-white py-3 bg-primary">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                         <div class="d-flex align-items-center">
                             <i class="fas fa-sitemap me-2 fa-lg"></i>
                             <h5 class="mb-0 fw-bold">Organizational Structure View</h5>
@@ -434,7 +526,7 @@
                     </div>
                 </div>
 
-                <div class="card-body p-0" style="background: var(--bg-main);">
+                <div class="card-body p-0" style="background: var(--bs-tertiary-bg);">
                     <!-- Tree Structure -->
                     <div class="tree-container">
                         <div class="container-fluid px-3">
@@ -448,8 +540,7 @@
                                             class="tree-label level-group">{{ $group->name }}</span><span
                                             class="count-badge"
                                             title="Total Employees">{{ $group->companies->sum(fn($c) => $c->employees_count ?? 0) }}</span><span
-                                            class="count-badge" title="Key Members"
-                                            style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); color: #1e40af; margin-left: 0.25rem;"><i
+                                            class="count-badge key-members-group" title="Key Members"><i
                                                 class="bi bi-people-fill me-1"></i>{{ $group->key_members_count ?? 0 }}
                                         </span><button class="key-people-btn" type="button" data-level="group"
                                             data-id="{{ $group->id }}" data-name="{{ $group->name }}"><i
@@ -466,8 +557,7 @@
                                                         class="tree-label">{{ $company->name }}</span><span
                                                         class="count-badge"
                                                         title="Total Employees">{{ $company->employees_count ?? 0 }}</span><span
-                                                        class="count-badge" title="Key Members"
-                                                        style="background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%); color: #7c3aed; margin-left: 0.25rem;"><i
+                                                        class="count-badge key-members-company" title="Key Members"><i
                                                             class="bi bi-people-fill me-1"></i>{{ $company->key_members_count ?? 0 }}
                                                     </span><button class="key-people-btn" type="button"
                                                         data-level="company" data-id="{{ $company->id }}"
@@ -493,8 +583,8 @@
                                                                     class="tree-label">{{ $location->name }}</span><span
                                                                     class="count-badge"
                                                                     title="Total Employees">{{ $location->employees_count ?? 0 }}</span><span
-                                                                    class="count-badge" title="Key Members"
-                                                                    style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); color: #dc2626; margin-left: 0.25rem;"><i
+                                                                    class="count-badge key-members-location"
+                                                                    title="Key Members"><i
                                                                         class="bi bi-people-fill me-1"></i>{{ $location->key_members_count ?? 0 }}
                                                                 </span><button class="key-people-btn" type="button"
                                                                     data-level="location" data-id="{{ $location->id }}"
@@ -525,9 +615,8 @@
                                                                                     class="tree-label">{{ $division->name }}</span><span
                                                                                     class="count-badge"
                                                                                     title="Total Employees">{{ $division->employees_count ?? 0 }}</span><span
-                                                                                    class="count-badge"
-                                                                                    title="Key Members"
-                                                                                    style="background: linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%); color: #ea580c; margin-left: 0.25rem;"><i
+                                                                                    class="count-badge key-members-division"
+                                                                                    title="Key Members"><i
                                                                                         class="bi bi-people-fill me-1"></i>{{ $division->key_members_count ?? 0 }}
                                                                                 </span><button class="key-people-btn"
                                                                                     type="button" data-level="division"
@@ -561,9 +650,8 @@
                                                                                                     class="tree-label">{{ $department->department_name }}</span><span
                                                                                                     class="count-badge"
                                                                                                     title="Total Employees">{{ $department->employees_count ?? 0 }}</span><span
-                                                                                                    class="count-badge"
-                                                                                                    title="Key Members"
-                                                                                                    style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); color: #059669; margin-left: 0.25rem;"><i
+                                                                                                    class="count-badge key-members-department"
+                                                                                                    title="Key Members"><i
                                                                                                         class="bi bi-people-fill me-1"></i>{{ $department->key_members_count ?? 0 }}
                                                                                                 </span><button
                                                                                                     class="key-people-btn"
@@ -592,9 +680,8 @@
                                                                                                                     class="tree-label">{{ $section->name }}</span><span
                                                                                                                     class="count-badge"
                                                                                                                     title="Total Employees">{{ $section->employees_count ?? 0 }}</span><span
-                                                                                                                    class="count-badge"
-                                                                                                                    title="Key Members"
-                                                                                                                    style="background: linear-gradient(135deg, #cffafe 0%, #a5f3fc 100%); color: #0891b2; margin-left: 0.25rem;"><i
+                                                                                                                    class="count-badge key-members-section"
+                                                                                                                    title="Key Members"><i
                                                                                                                         class="bi bi-people-fill me-1"></i>{{ $section->key_members_count ?? 0 }}
                                                                                                                 </span><button
                                                                                                                     class="key-people-btn"
@@ -756,7 +843,7 @@
                         let avatarHtml = '';
                         if (person.photo_path && person.photo_path.trim() !== '') {
                             avatarHtml =
-                                `<img src="/storage/${person.photo_path}" alt="${person.name}" style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                `<img src="/storage/${person.photo_path}" alt="${person.name}" style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid var(--bs-primary);" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                                   <div class="person-avatar" style="display: none;">${person.name ? person.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : '??'}</div>`;
                         } else {
                             const initials = person.name ? person.name.split(' ').map(n => n[0]).join('')
