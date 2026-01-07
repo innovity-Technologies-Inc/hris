@@ -369,4 +369,12 @@ class AttendanceServices
             $this->singleAttendanceStore($item, $index);
         }
     }
+
+
+    public function clockOutStore($request)
+    {
+
+
+
+    }
 }

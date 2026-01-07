@@ -490,6 +490,8 @@ Route::controller(DataController::class)->group(function () {
     Route::get('get-leave-plans/{employee_id}', 'getLeavePlan');
     Route::get('get-leave-details/{employee_id}/{plan_id}', 'getLeaveDetails');
 
+    //attendance-details
+    Route::get('get-attendance-details/{employee_id}', 'getAttendanceDetails');
 });
 
     Route::controller(AttendancesController::class)->prefix('attendance')->group(function (){
@@ -500,5 +502,8 @@ Route::controller(DataController::class)->group(function () {
         Route::post('import', 'import')->name('attendance.import');
         Route::get('print', 'printIndex')->name('attendance.print');
         Route::get('print/{id}', 'printDetail')->name('attendance.print-detail');
+        Route::get('clock-in-out', 'clock_in_out')->name('attendance.clock_in_out');
+        Route::post('clock-in-store', 'clockInOutStore')->name('attendance.clock_in_out_store');
+
     });
 

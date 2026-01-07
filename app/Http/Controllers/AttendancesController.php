@@ -64,6 +64,15 @@ class AttendancesController extends Controller
         return view('attendance.attendance_form', compact('title', 'section', 'sub_section', 'employees'));
     }
 
+    public function clock_in_out(){
+        $title = 'Employee Attendance';
+        $section = 'Employee Attendance';
+        $sub_section = 'Register';
+        $employees = Employee::has('shift')->get();
+        return view('attendance.clock_in_out', compact('title', 'section', 'sub_section', 'employees'));
+    }
+
+
     public function bulkUpload(){
         $title = 'Bulk Attendance Upload';
         $section = 'Employee Attendance';
@@ -79,6 +88,36 @@ class AttendancesController extends Controller
                 'message' => 'Attendance Created Successfully',
                 'alert-type' => 'success'
             ]);
+    }
+
+    public function clockInOutStore(Request $request){
+        $request->validate([
+            'employee_id' => 'required|exists:employees,id',
+            'clock_in' => 'required|date',
+            'clock_out' => 'nullable|date|after:clock_in',
+            'workstation' => 'required'
+        ], [
+            'employee_id.required' => 'The employee field is required.',
+            'clock_in.required' => 'The clock-in field is required.',
+            'clock_in.date' => 'The clock-in must be a valid date.',
+            'clock_out.date' => 'The clock-out must be a valid date.',
+            'workstation.required' => 'The workstation field is required.',
+        ]);
+
+        if (empty($request->clock_out)){
+            Attendance::create($request->all());
+            return redirect()->route('attendance.index')->with([
+                'message' => 'Clocked In Successfully',
+                'alert-type' => 'success'
+            ]);
+        }else{
+            return redirect()->route('attendance.index')->with([
+                'message' => 'Clocked Out Successfully',
+                'alert-type' => 'success'
+            ]);
+        }
+
+
     }
 
     public function import(Request $request){

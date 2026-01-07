@@ -60,68 +60,42 @@
                     </div>
                 </li>
 
-                <!-- Add Plans -->
+                <!-- Attendance Menu -->
+                @php
+                    $attendanceOpen = Route::is('attendance.*');
+                @endphp
                 <li>
-                    <a href="#plans" data-bs-toggle="collapse"
-                        aria-expanded="{{ Route::is('plans.*') ? 'true' : 'false' }}"
-                        class="@if (Route::is('plans.*')) menuitem-active @endif">
-                        <i data-feather="layers"></i>
-                        <span> Plans </span>
+                    <a href="#attendance" data-bs-toggle="collapse"
+                       aria-expanded="{{ $attendanceOpen ? 'true' : 'false' }}"
+                       class="@if ($attendanceOpen) menuitem-active @endif">
+                        <i data-feather="clock"></i>
+                        <span> Attendance </span>
                         <span class="menu-arrow"></span>
                     </a>
-                    <div class="collapse @if (Route::is('plans.*')) show @endif" id="plans">
+                    <div class="collapse @if ($attendanceOpen) show @endif" id="attendance">
                         <ul class="nav-second-level">
                             <li>
-                                <a class='tp-link @if (Route::is('plans.meal_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plans.meal_plans.index') }}'>Meal Plans</a>
+                                <a class='tp-link @if (Route::is('attendance.clock_in_out')) menuitem-active @endif'
+                                   href='{{ route('attendance.clock_in_out') }}'>Clock In / Out</a>
+                            </li>
+
+                            <li>
+                                <a class='tp-link @if (Route::is('attendance.create')) menuitem-active @endif'
+                                   href='{{ route('attendance.create') }}'>Create</a>
                             </li>
                             <li>
-                                <a class='tp-link @if (Route::is('plans.shift_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plans.shift_plans.index') }}'>Shift Plans</a>
+                                <a class='tp-link @if (Route::is('attendance.bulk-upload')) menuitem-active @endif'
+                                   href='{{ route('attendance.bulk-upload') }}'>Bulk Upload</a>
                             </li>
                             <li>
-                                <a class='tp-link @if (Route::is('plans.leave_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plans.leave_plans.index') }}'>Leave Plans</a>
-                            </li>
-                            <li>
-                                <a class='tp-link @if (Route::is('plans.ot_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plans.ot_plans.index') }}'>OT Plans</a>
-                            </li>
-                            <li>
-                                <a class='tp-link @if (Route::is('plans.roster_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plans.roster_plans.index') }}'>Roster Plans</a>
-                            </li>
-                            <li>
-                                <a class='tp-link @if (Route::is('plans.off_day_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plans.off_day_plans.index') }}'>Off-Day Work Plans</a>
-                            </li>
-                            <li>
-                                <a class='tp-link @if (Route::is('plans.bonus_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plans.bonus_plans.index') }}'>Bonus Plans</a>
-                            </li>
-                            <li>
-                                <a class='tp-link @if (Route::is('plans.allowance_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plans.allowance_plans.index') }}'>Allowance Plans</a>
-                            </li>
-                            <li>
-                                <a class='tp-link @if (Route::is('plans.ta_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plans.ta_plans.index') }}'>TA Plans</a>
-                            </li>
-                            <li>
-                                <a class='tp-link @if (Route::is('plans.da_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plans.da_plans.index') }}'>DA Plans</a>
-                            </li>
-                            <li>
-                                <a class='tp-link @if (Route::is('plans.deduction_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plans.deduction_plans.index') }}'>Deduction Plan</a>
-                            </li>
-                            <li>
-                                <a class='tp-link @if (Route::is('plans.bulk_upload')) menuitem-active @endif'
-                                    href='{{ route('plans.bulk_upload') }}'>Bulk Upload</a>
+                                <a class='tp-link @if (Route::is('attendance.index')) menuitem-active @endif'
+                                   href='{{ route('attendance.index') }}'>Records</a>
                             </li>
                         </ul>
                     </div>
                 </li>
+
+
                 @php
                     $leavesOpen = request()->is('leaves*');
                 @endphp
@@ -174,36 +148,70 @@
                 </li>
 
 
-
-                <!-- Attendance Menu -->
-                @php
-                    $attendanceOpen = Route::is('attendance.*');
-                @endphp
+                <!-- Add Plans -->
                 <li>
-                    <a href="#attendance" data-bs-toggle="collapse"
-                        aria-expanded="{{ $attendanceOpen ? 'true' : 'false' }}"
-                        class="@if ($attendanceOpen) menuitem-active @endif">
-                        <i data-feather="clock"></i>
-                        <span> Attendance </span>
+                    <a href="#plans" data-bs-toggle="collapse"
+                       aria-expanded="{{ Route::is('plans.*') ? 'true' : 'false' }}"
+                       class="@if (Route::is('plans.*')) menuitem-active @endif">
+                        <i data-feather="layers"></i>
+                        <span> Plans </span>
                         <span class="menu-arrow"></span>
                     </a>
-                    <div class="collapse @if ($attendanceOpen) show @endif" id="attendance">
+                    <div class="collapse @if (Route::is('plans.*')) show @endif" id="plans">
                         <ul class="nav-second-level">
                             <li>
-                                <a class='tp-link @if (Route::is('attendance.create')) menuitem-active @endif'
-                                    href='{{ route('attendance.create') }}'>Create</a>
+                                <a class='tp-link @if (Route::is('plans.meal_plans.*')) menuitem-active @endif'
+                                   href='{{ route('plans.meal_plans.index') }}'>Meal Plans</a>
                             </li>
                             <li>
-                                <a class='tp-link @if (Route::is('attendance.bulk-upload')) menuitem-active @endif'
-                                    href='{{ route('attendance.bulk-upload') }}'>Bulk Upload</a>
+                                <a class='tp-link @if (Route::is('plans.shift_plans.*')) menuitem-active @endif'
+                                   href='{{ route('plans.shift_plans.index') }}'>Shift Plans</a>
                             </li>
                             <li>
-                                <a class='tp-link @if (Route::is('attendance.index')) menuitem-active @endif'
-                                    href='{{ route('attendance.index') }}'>Records</a>
+                                <a class='tp-link @if (Route::is('plans.leave_plans.*')) menuitem-active @endif'
+                                   href='{{ route('plans.leave_plans.index') }}'>Leave Plans</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('plans.ot_plans.*')) menuitem-active @endif'
+                                   href='{{ route('plans.ot_plans.index') }}'>OT Plans</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('plans.roster_plans.*')) menuitem-active @endif'
+                                   href='{{ route('plans.roster_plans.index') }}'>Roster Plans</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('plans.off_day_plans.*')) menuitem-active @endif'
+                                   href='{{ route('plans.off_day_plans.index') }}'>Off-Day Work Plans</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('plans.bonus_plans.*')) menuitem-active @endif'
+                                   href='{{ route('plans.bonus_plans.index') }}'>Bonus Plans</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('plans.allowance_plans.*')) menuitem-active @endif'
+                                   href='{{ route('plans.allowance_plans.index') }}'>Allowance Plans</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('plans.ta_plans.*')) menuitem-active @endif'
+                                   href='{{ route('plans.ta_plans.index') }}'>TA Plans</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('plans.da_plans.*')) menuitem-active @endif'
+                                   href='{{ route('plans.da_plans.index') }}'>DA Plans</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('plans.deduction_plans.*')) menuitem-active @endif'
+                                   href='{{ route('plans.deduction_plans.index') }}'>Deduction Plan</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('plans.bulk_upload')) menuitem-active @endif'
+                                   href='{{ route('plans.bulk_upload') }}'>Bulk Upload</a>
                             </li>
                         </ul>
                     </div>
                 </li>
+
+
                 <!-- Company Info Menu -->
                 @php
                     $companyOpen =

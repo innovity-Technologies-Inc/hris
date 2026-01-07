@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\HelperClass;
+use App\Models\Attendance;
 use App\Models\BonusPlan;
 use App\Models\Branch;
 use App\Models\CompanyLocation;
@@ -242,4 +243,41 @@ class DataController extends Controller
             'shift' => $shift
         ]);
     }
+
+    public function getAttendanceDetails($employee_id)
+    {
+        $today = Carbon::today();
+
+        $record = Attendance::where('employee_id', $employee_id)
+            ->whereDate('in_time', $today)
+            ->first();
+
+
+
+        if (!$record) {
+            return response()->json([
+                'status' => 'clock_in',
+                'time' => $today,
+                'record' => $record
+            ]);
+        }
+
+        if (is_null($record->out_time)) {
+            return response()->json([
+                'status' => 'clock_out',
+                'time' => $today,
+                'record' => $record
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'completed',
+            'time' => $today,
+            'record' => $record
+        ]);
+    }
+
+
+
+
 }
