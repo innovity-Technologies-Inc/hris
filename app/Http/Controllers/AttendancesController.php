@@ -93,14 +93,14 @@ class AttendancesController extends Controller
     public function clockInOutStore(Request $request){
         $request->validate([
             'employee_id' => 'required|exists:employees,id',
-            'clock_in' => 'required|date',
-            'clock_out' => 'nullable|date|after:clock_in',
+            'in_time' => 'required|date',
+            'out_time' => 'nullable|date|after:in_time',
             'workstation' => 'required'
         ], [
             'employee_id.required' => 'The employee field is required.',
-            'clock_in.required' => 'The clock-in field is required.',
-            'clock_in.date' => 'The clock-in must be a valid date.',
-            'clock_out.date' => 'The clock-out must be a valid date.',
+            'in_time.required' => 'The clock-in field is required.',
+            'in_time.date' => 'The clock-in must be a valid date.',
+            'out_time.date' => 'The clock-out must be a valid date.',
             'workstation.required' => 'The workstation field is required.',
         ]);
 
@@ -111,6 +111,7 @@ class AttendancesController extends Controller
                 'alert-type' => 'success'
             ]);
         }else{
+
             return redirect()->route('attendance.index')->with([
                 'message' => 'Clocked Out Successfully',
                 'alert-type' => 'success'

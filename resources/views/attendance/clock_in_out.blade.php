@@ -4,284 +4,336 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
     <style>
-        /* Clock Button Styles */
-        .clock-button {
-            position: relative;
-            width: 260px !important;
-            height: 260px !important;
-            border-radius: 50% !important;
-            border: 4px solid rgba(255, 255, 255, 0.4) !important;
-            cursor: pointer !important;
-            overflow: visible !important;
-            transition: all 0.3s ease !important;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2), 0 8px 20px rgba(0, 0, 0, 0.15) !important;
+        /* Professional Layout Styles */
+        .attendance-container {
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .clock-in-btn {
-            background: #0d6efd !important;
-            position: relative;
+        .form-section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 2rem;
+            height: 100%;
         }
 
-        .clock-in-btn::after {
-            content: '';
-            position: absolute;
-            top: -8px;
-            left: -8px;
-            right: -8px;
-            bottom: -8px;
-            border-radius: 50%;
-            background: #0d6efd;
-            z-index: -1;
-            filter: blur(15px);
-            opacity: 0.5;
+        .clock-section {
+            background: #f8f9fa;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 2rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
-        .clock-out-btn {
-            background: #dc3545 !important;
-            position: relative;
-        }
-
-        .clock-out-btn::after {
-            content: '';
-            position: absolute;
-            top: -8px;
-            left: -8px;
-            right: -8px;
-            bottom: -8px;
-            border-radius: 50%;
-            background: #dc3545;
-            z-index: -1;
-            filter: blur(15px);
-            opacity: 0.5;
-            color: white !important;
-        }
-
-        .icon-wrapper {
-            font-size: 5rem !important;
-            margin-bottom: 0.8rem !important;
-            filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.3));
-            transition: all 0.3s ease !important;
-        }
-
-        /* Entry Animation for Clock In */
-        .clock-in-btn .icon-wrapper {
-            animation: slideInRight 2s ease-in-out infinite;
-        }
-
-        @keyframes slideInRight {
-
-            0%,
-            100% {
-                transform: translateX(-20px);
-                opacity: 0.6;
-            }
-
-            50% {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        /* Exit Animation for Clock Out */
-        .clock-out-btn .icon-wrapper {
-            animation: slideOutLeft 2s ease-in-out infinite;
-        }
-
-        @keyframes slideOutLeft {
-
-            0%,
-            100% {
-                transform: translateX(0);
-                opacity: 1;
-            }
-
-            50% {
-                transform: translateX(-20px);
-                opacity: 0.6;
-            }
-        }
-
-        }
-
-        /* Active/Click Effect */
-        .clock-button:active {
-            transform: scale(0.95) !important;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), inset 0 3px 15px rgba(0, 0, 0, 0.15) !important;
-        }
-
-        /* Select Box Custom Styling */
-        .form-select:focus {
-            border-color: #4facfe !important;
-            box-shadow: 0 0 0 0.25rem rgba(79, 172, 254, 0.25) !important;
+        /* Form Styling */
+        .form-label {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
         }
 
         .form-select {
-            transition: all 0.3s ease !important;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 0.625rem 0.875rem;
+            font-size: 0.938rem;
+            color: #1f2937;
+            transition: all 0.15s ease;
         }
 
-        .form-select:hover {
-            border-color: #4facfe !important;
+        .form-select:focus {
+            border-color: #6b7280;
+            box-shadow: 0 0 0 3px rgba(107, 114, 128, 0.1);
+            outline: none;
         }
 
-        /* Fade In Animation */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        /* Clock Buttons - Rectangular with Small Rounded Corners */
+        .clock-button {
+            width: 100%;
+            max-width: 260px;
+            padding: 1rem 1.5rem;
+            border: 2px solid transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
 
-        .fade-in {
-            animation: fadeIn 0.5s ease-out !important;
+        .clock-in-btn {
+            background: #10b981;
+            color: white;
+            border-color: #059669;
         }
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(50px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+        .clock-in-btn:hover {
+            background: #059669;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
         }
 
-        .slide-in {
-            animation: slideIn 0.5s ease-out !important;
+        .clock-out-btn {
+            background: #ef4444;
+            color: white;
+            border-color: #dc2626;
+        }
+
+        .clock-out-btn:hover {
+            background: #dc2626;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .clock-button:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .button-icon {
+            font-size: 1.25rem;
+            display: inline;
+            margin: 0;
+        }
+
+        .button-text {
+            font-size: 0.875rem;
+            display: inline;
+        }
+
+        /* Time Display */
+        .time-display {
+            background: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            width: 100%;
+            max-width: 320px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .current-time {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            font-family: 'Courier New', monospace;
+            margin: 0.75rem 0;
+            letter-spacing: 2px;
+            white-space: nowrap;
+        }
+
+        .current-date {
+            font-size: 0.875rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .time-label {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        /* Clock In Time Display */
+        .clock-in-time-display {
+            background: #f0fdf4;
+            border: 2px solid #86efac;
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            width: 100%;
+            max-width: 260px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .clock-in-time-display .time-label {
+            font-size: 0.75rem;
+            color: #166534;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .clock-in-time-display .clocked-time {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #15803d;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+        }
+
+        /* Header Styling */
+        .page-header {
+            background: #1f2937;
+            color: white;
+            padding: 1.5rem 2rem;
+            border-radius: 8px 8px 0 0;
+            border-bottom: 3px solid #374151;
+        }
+
+        .page-header h4 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+
+        .page-header small {
+            color: #d1d5db;
+            font-size: 0.875rem;
+        }
+
+        /* Alert Styling */
+        .alert {
+            border-radius: 6px;
+            border: 1px solid;
+            font-size: 0.875rem;
+        }
+
+        .alert-warning {
+            background-color: #fef3c7;
+            border-color: #fbbf24;
+            color: #92400e;
         }
 
         /* Responsive Design */
         @media (max-width: 991px) {
+
+            .form-section,
+            .clock-section {
+                margin-bottom: 1rem;
+            }
+
             .clock-button {
-                width: 220px !important;
-                height: 220px !important;
+                max-width: 100%;
             }
 
-            .icon-wrapper {
-                font-size: 3.5rem !important;
-            }
-
-            .button-text {
-                font-size: 1.5rem !important;
+            .time-display {
+                max-width: 100%;
             }
         }
     </style>
 
 
     <div class="container-fluid p-4">
-        <div class="row">
-            <div class="col-12">
-                <div class="card shadow-lg border-0 rounded-4">
+        <div class="row justify-content-center">
+            <div class="col-12 attendance-container">
+                <div class="card shadow-sm border-0">
 
                     <!-- Header -->
-                    <div class="card-header bg-primary text-white py-4">
-                        <h3 class="fw-bold mb-0">Attendance Clock System</h3>
-                        <small>Mark your attendance easily</small>
+                    <div class="page-header">
+                        <h4 class="mb-1">Attendance Management</h4>
+                        <small>Mark your attendance for the day</small>
                     </div>
 
                     <!-- Body -->
-                    <div class="card-body p-5">
+                    <div class="card-body p-4">
                         <form id="attendanceForm" method="POST" action="{{ route('attendance.clock_in_out_store') }}">
                             @csrf
 
                             <div class="row g-4">
 
-                                <!-- LEFT -->
-                                <div class="col-lg-7">
+                                <!-- LEFT SIDE: Form Section -->
+                                <div class="col-lg-6">
+                                    <div class="form-section">
+                                        <h5 class="mb-4 text-dark fw-semibold">Employee Information</h5>
 
-                                    <!-- Employee -->
-                                    <div class="mb-4">
-                                        <label class="fw-bold mb-2">Select Employee</label>
-                                        <select id="employeeSelect" name="employee_id" class="form-select form-select-lg" required>
-                                            <option value="">-- Choose Employee --</option>
-                                            @foreach($employees as $employee)
-                                                <option value="{{ $employee->id }}">
-                                                    {{ $employee->full_name }} ({{ $employee->applicant_id }})
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                        <!-- Employee -->
+                                        <div class="mb-4">
+                                            <label class="form-label">Employee Name</label>
+                                            <select id="employeeSelect" name="employee_id" class="form-select" required>
+                                                <option value="">Select Employee</option>
+                                                @foreach ($employees as $employee)
+                                                    <option value="{{ $employee->id }}">
+                                                        {{ $employee->full_name }} ({{ $employee->applicant_id }})
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
 
-                                    <!-- Workstation -->
-                                    <div class="mb-4">
-                                        <label class="fw-bold mb-2">Work Station</label>
-                                        <select id="workstationSelect" name="workstation" class="form-select form-select-lg" required>
-                                            <option value="">-- Select Work Station --</option>
-                                            <option value="Remote">Remote</option>
-                                            <option value="On-Site">On-Site</option>
-                                            <option value="Work-From-Home">Work From Home</option>
-                                        </select>
-                                    </div>
+                                        <!-- Workstation -->
+                                        <div class="mb-4">
+                                            <label class="form-label">Work Station</label>
+                                            <select id="workstationSelect" name="workstation" class="form-select" required>
+                                                <option value="">Select Work Station</option>
+                                                <option value="Remote">Remote</option>
+                                                <option value="On-Site">On-Site</option>
+                                                <option value="Work-From-Home">Work From Home</option>
+                                            </select>
+                                        </div>
 
-                                    <!-- Message -->
-                                    <div id="attendanceMessage"
-                                         class="alert alert-warning text-center fw-bold"
-                                         style="display:none;">
-                                    </div>
-
-                                    <!-- Current Time Display -->
-                                    <div class="mb-4">
-                                        <div class="card border-0 shadow-sm"
-                                             style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
-                                            <div class="card-body text-center py-4">
-                                                <p class="text-dark mb-2 fw-semibold"
-                                                   style="font-size: 0.9rem; opacity: 0.8;">
-                                                    <i class="bi bi-clock me-1"></i> Current Time
-                                                </p>
-                                                <h2 id="currentTime" class="mb-2 fw-bold"
-                                                    style="color: #2d3436; font-size: 2.5rem; letter-spacing: 2px;">--:--:--
-                                                </h2>
-                                                <p id="currentDate" class="mb-0"
-                                                   style="color: #636e72; font-size: 0.95rem;">-- -- --</p>
-                                            </div>
+                                        <!-- Message -->
+                                        <div id="attendanceMessage" class="alert alert-warning" style="display:none;">
                                         </div>
                                     </div>
-
                                 </div>
 
-                                <!-- RIGHT -->
-                                <div class="col-lg-5 d-flex align-items-center justify-content-center">
+                                <!-- RIGHT SIDE: Clock Section -->
+                                <div class="col-lg-6">
+                                    <div class="clock-section">
 
-                                    <!-- CLOCK IN -->
-                                    <div id="clockInContainer" style="display:none;">
-                                        <button type="button" id="clockInBtn" class="clock-button clock-in-btn">
-                                            <div class="button-content">
-                                                <div class="icon-wrapper">
+                                        <!-- Current Time Display -->
+                                        <div class="time-display">
+                                            <div class="time-label">
+                                                <i class="bi bi-clock me-1"></i> Current Time
+                                            </div>
+                                            <div id="currentTime" class="current-time">--:--:--</div>
+                                            <div id="currentDate" class="current-date">-- -- --</div>
+                                        </div>
+
+                                        <!-- Clock In Time Display (shows after clocking in) -->
+                                        <div id="clockInTimeDisplay" class="clock-in-time-display" style="display:none;">
+                                            <div class="time-label">
+                                                <i class="bi bi-check-circle me-1"></i> Clocked In At
+                                            </div>
+                                            <div id="clockedInTime" class="clocked-time">--:--:--</div>
+                                        </div>
+
+                                        <!-- CLOCK IN Button -->
+                                        <div id="clockInContainer" style="display:none;">
+                                            <button type="submit" id="clockInBtn" class="clock-button clock-in-btn">
+                                                <span class="button-icon">
                                                     <i class="bi bi-box-arrow-in-right"></i>
-                                                </div>
-                                                <div class="button-text"
-                                                     style="color: white; font-size: 2rem; font-weight: 900; letter-spacing: 5px; text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 2px 5px rgba(255, 255, 255, 0.2); text-transform: uppercase;">
-                                                    CLOCK IN</div>
-                                            </div>
-                                        </button>
-                                    </div>
+                                                </span>
+                                                <span class="button-text">Clock In</span>
+                                            </button>
+                                        </div>
 
-                                    <!-- CLOCK OUT -->
-                                    <div id="clockOutContainer" style="display:none;">
-                                        <button type="button" id="clockOutBtn" class="clock-button clock-out-btn">
-                                            <div class="button-content">
-                                                <div class="icon-wrapper">
+                                        <!-- CLOCK OUT Button -->
+                                        <div id="clockOutContainer" style="display:none;">
+                                            <button type="submit" id="clockOutBtn" class="clock-button clock-out-btn">
+                                                <span class="button-icon">
                                                     <i class="bi bi-box-arrow-left"></i>
-                                                </div>
-                                                <div class="button-text"
-                                                     style="color: white; font-size: 2rem; font-weight: 900; letter-spacing: 5px; text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 2px 5px rgba(255, 255, 255, 0.2); text-transform: uppercase;">
-                                                    CLOCK OUT</div>
-                                            </div>
-                                        </button>
-                                    </div>
+                                                </span>
+                                                <span class="button-text">Clock Out</span>
+                                            </button>
+                                        </div>
 
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- Hidden Inputs -->
-                            <input type="hidden" name="clock_in" id="clockInInput">
-                            <input type="hidden" name="clock_out" id="clockOutInput">
+                            <input type="hidden" name="in_time" id="clockInInput">
+                            <input type="hidden" name="out_time" id="clockOutInput">
 
                         </form>
                     </div>
@@ -292,49 +344,156 @@
 @endsection
 
 @push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
         $(document).ready(function () {
 
+            /* ======================================================
+               HELPERS
+            ====================================================== */
+
+            function getCurrentDateTime() {
+                const now = new Date();
+                return now.getFullYear() + '-' +
+                    String(now.getMonth() + 1).padStart(2, '0') + '-' +
+                    String(now.getDate()).padStart(2, '0') + ' ' +
+                    String(now.getHours()).padStart(2, '0') + ':' +
+                    String(now.getMinutes()).padStart(2, '0') + ':' +
+                    String(now.getSeconds()).padStart(2, '0');
+            }
+
+            function formatTime12Hour(datetime) {
+                const date = new Date(datetime);
+                let hours = date.getHours();
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                const seconds = String(date.getSeconds()).padStart(2, '0');
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12 || 12;
+                return String(hours).padStart(2, '0') + ':' + minutes + ':' + seconds + ' ' + ampm;
+            }
+
+            /* ======================================================
+               LIVE CLOCK
+            ====================================================== */
+
+            function updateTime() {
+                const now = new Date();
+
+                let hours = now.getHours();
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12 || 12;
+
+                $('#currentTime').text(
+                    String(hours).padStart(2, '0') + ':' + minutes + ':' + seconds + ' ' + ampm
+                );
+
+                $('#currentDate').text(
+                    now.toLocaleDateString('en-US', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    })
+                );
+            }
+
+            updateTime();
+            setInterval(updateTime, 1000);
+
+            /* ======================================================
+               CLOCK IN
+            ====================================================== */
+
+            $('#clockInBtn').on('click', function (e) {
+                e.preventDefault();
+
+                if (!$('#employeeSelect').val() || !$('#workstationSelect').val()) {
+                    Swal.fire('Error', 'Please select employee and workstation.', 'error');
+                    return;
+                }
+
+                const clockIn = getCurrentDateTime();
+                $('#clockInInput').val(clockIn);
+
+                $('#clockedInTime').text(formatTime12Hour(clockIn));
+                $('#clockInTimeDisplay').fadeIn();
+
+                $(this).prop('disabled', true);
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Clocked In Successfully',
+                    timer: 1500,
+                    showConfirmButton: false
+                }).then(() => {
+                    $('#attendanceForm').submit();
+                });
+            });
+
+            /* ======================================================
+               CLOCK OUT
+            ====================================================== */
+
+            $('#clockOutBtn').on('click', function (e) {
+                e.preventDefault();
+
+                const clockOut = getCurrentDateTime();
+                $('#clockOutInput').val(clockOut);
+
+                $(this).prop('disabled', true);
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Clocked Out Successfully',
+                    timer: 1500,
+                    showConfirmButton: false
+                }).then(() => {
+                    $('#attendanceForm').submit();
+                });
+            });
+
+            /* ======================================================
+               EMPLOYEE CHANGE → CHECK STATUS
+            ====================================================== */
+
             $('#employeeSelect').on('change', function () {
 
-                let employeeId = $(this).val();
+                const employeeId = $(this).val();
 
-                console.log('Employee selected:', employeeId);
-
-                $('#clockInContainer').hide();
-                $('#clockOutContainer').hide();
+                $('#clockInContainer, #clockOutContainer').hide();
                 $('#attendanceMessage').hide();
+                $('#clockInTimeDisplay').hide();
 
                 if (!employeeId) return;
 
                 $.ajax({
                     url: "{{ url('get-attendance-details') }}/" + employeeId,
-                    type: 'GET',
+                    type: "GET",
                     success: function (res) {
-
-                        console.log('Response:', res);
 
                         if (res.status === 'clock_in') {
                             $('#clockInContainer').fadeIn();
                         }
-                        else if (res.status === 'clock_out') {
+
+                        if (res.status === 'clock_out') {
                             $('#clockOutContainer').fadeIn();
                         }
-                        else if (res.status === 'completed') {
+
+                        if (res.status === 'completed') {
                             $('#attendanceMessage')
                                 .text('⚠️ Employee already clocked out today.')
                                 .fadeIn();
                         }
                     },
-                    error: function (xhr) {
-                        console.error(xhr.responseText);
-                        alert('AJAX error');
+                    error: function () {
+                        Swal.fire('Error', 'Unable to fetch attendance status.', 'error');
                     }
                 });
             });
 
         });
     </script>
-
-
 @endpush
