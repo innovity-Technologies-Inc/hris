@@ -172,6 +172,7 @@ class OrganizationSeeder extends Seeder
             $divisions[] = [
                 'id' => $id,
                 'company_id' => $company_id,
+                'location_id' => $location_id,
                 'name' => $divName . ' - Unit ' . ($i + 1),
                 'short_name' => strtoupper(Str::limit($divName, 3, '') . $i),
                 'remarks' => null,
@@ -198,10 +199,13 @@ class OrganizationSeeder extends Seeder
         for ($i = 0; $i < 40; $i++) {
             $id = 401 + $i;
             $division_id = 301 + ($i % 30);
+            $div_data = DB::table('divisions')->where('id', $division_id)->first();
             $deptName = $deptNames[$i % 8];
             $departments[] = [
                 'id' => $id,
                 'division_id' => $division_id,
+                'location_id' => $div_data ? $div_data->location_id : null,
+                'company_id' => $div_data ? $div_data->company_id : null,
                 'department_name' => $deptName . ' Dept ' . ($i + 1),
                 'short_name' => strtoupper(Str::limit($deptName, 3, '') . $i),
                 'status' => 'active', 'created_at' => now(), 'updated_at' => now()

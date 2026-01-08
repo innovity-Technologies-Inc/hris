@@ -96,10 +96,11 @@
                                         </h6>
                                         <div class="row mb-2">
                                             <div class="col-md-4">
-                                                <label for="company" class="form-label text-muted small fw-semibold mb-1">
+                                                <label for="search_company_id"
+                                                    class="form-label text-muted small fw-semibold mb-1">
                                                     Company
                                                 </label>
-                                                <select id="company" name="company"
+                                                <select id="search_company_id" name="company"
                                                     class="form-select form-select-sm select2_list"
                                                     data-placeholder="Select company">
                                                     <option value="">Choose One</option>
@@ -109,67 +110,63 @@
                                                 </select>
                                             </div>
 
-                                            <div class="col-md-4">
-                                                <label for="business_unit"
-                                                    class="form-label text-muted small fw-semibold mb-1">
-                                                    Business Unit
-                                                </label>
-                                                <select id="business_unit" name="business_unit"
-                                                    class="form-select form-select-sm select2_list"
-                                                    data-placeholder="Select business unit">
-                                                    <option value="">Choose One</option>
-                                                    @foreach ($filterOptions['business_units'] as $unit)
-                                                        <option value="{{ $unit->id }}">{{ $unit->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
+                                            @if (App\HelperClass::getGeneralSetting()->branch_status == 1)
+                                                <div class="col-md-4">
+                                                    <label for="search_business_unit_id"
+                                                        class="form-label text-muted small fw-semibold mb-1">
+                                                        Branch
+                                                    </label>
+                                                    <select id="search_business_unit_id" name="business_unit"
+                                                        class="form-select form-select-sm select2_list"
+                                                        data-placeholder="Select branch">
+                                                        <option value="">Select Branch</option>
+                                                    </select>
+                                                </div>
+                                            @endif
 
-                                            <div class="col-md-4">
-                                                <label for="division" class="form-label text-muted small fw-semibold mb-1">
-                                                    Division
-                                                </label>
-                                                <select id="division" name="division"
-                                                    class="form-select form-select-sm select2_list"
-                                                    data-placeholder="Select division">
-                                                    <option value="">Choose One</option>
-                                                    @foreach ($filterOptions['divisions'] as $division)
-                                                        <option value="{{ $division->id }}">{{ $division->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
+                                            @if (App\HelperClass::getGeneralSetting()->division_status == 1)
+                                                <div class="col-md-4">
+                                                    <label for="search_division_id"
+                                                        class="form-label text-muted small fw-semibold mb-1">
+                                                        Division
+                                                    </label>
+                                                    <select id="search_division_id" name="division"
+                                                        class="form-select form-select-sm select2_list"
+                                                        data-placeholder="Select division">
+                                                        <option value="">Select Division</option>
+                                                    </select>
+                                                </div>
+                                            @endif
                                         </div>
 
                                         <div class="row">
-                                            <div class="col-md-6">
-                                                <label for="department"
-                                                    class="form-label text-muted small fw-semibold mb-1">
-                                                    Department
-                                                </label>
-                                                <select id="department" name="department"
-                                                    class="form-select form-select-sm select2_list"
-                                                    data-placeholder="Select department">
-                                                    <option value="">Choose One</option>
-                                                    @foreach ($filterOptions['departments'] as $dept)
-                                                        <option value="{{ $dept->id }}">{{ $dept->department_name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
+                                            @if (App\HelperClass::getGeneralSetting()->department_status == 1)
+                                                <div class="col-md-6">
+                                                    <label for="search_department_id"
+                                                        class="form-label text-muted small fw-semibold mb-1">
+                                                        Department
+                                                    </label>
+                                                    <select id="search_department_id" name="department"
+                                                        class="form-select form-select-sm select2_list"
+                                                        data-placeholder="Select department">
+                                                        <option value="">Select Department</option>
+                                                    </select>
+                                                </div>
+                                            @endif
 
-                                            <div class="col-md-6">
-                                                <label for="section" class="form-label text-muted small fw-semibold mb-1">
-                                                    Section
-                                                </label>
-                                                <select id="section" name="section"
-                                                    class="form-select form-select-sm select2_list"
-                                                    data-placeholder="Select section">
-                                                    <option value="">Choose One</option>
-                                                    @foreach ($filterOptions['sections'] as $sectionItem)
-                                                        <option value="{{ $sectionItem->id }}">{{ $sectionItem->name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
+                                            @if (App\HelperClass::getGeneralSetting()->section_status == 1)
+                                                <div class="col-md-6">
+                                                    <label for="search_section_id"
+                                                        class="form-label text-muted small fw-semibold mb-1">
+                                                        Section
+                                                    </label>
+                                                    <select id="search_section_id" name="section"
+                                                        class="form-select form-select-sm select2_list"
+                                                        data-placeholder="Select section">
+                                                        <option value="">Select Section</option>
+                                                    </select>
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
 
@@ -582,17 +579,165 @@
                 width: '100%'
             });
 
+            // -------------------------
+            // Organizational Filter Dependencies
+            // -------------------------
+            function loading($el, text = 'Loading...') {
+                $el.prop('disabled', true).html(`<option value="">${text}</option>`);
+            }
+
+            function reset($el, text) {
+                $el.prop('disabled', false).html(`<option value="">${text}</option>`);
+            }
+
+            // -------------------------
+            // Load Divisions + Chain (Department + Section)
+            // -------------------------
+            function loadDivisions() {
+                const companyId = $('#search_company_id').val();
+                if (!companyId) return;
+
+                const locationId = $('#search_business_unit_id').val() || 'null';
+
+                loading($('#search_division_id'));
+                reset($('#search_department_id'), 'Select Department');
+                reset($('#search_section_id'), 'Select Section');
+
+                $.get(`/get-divisions/${companyId}/${locationId}`, function(data) {
+                    reset($('#search_division_id'), 'Select Division');
+                    if (!data.length) {
+                        $('#search_division_id').html('<option value="">No division found</option>');
+                    } else {
+                        $.each(data, function(_, item) {
+                            $('#search_division_id').append(
+                                `<option value="${item.id}">${item.name}</option>`);
+                        });
+                    }
+                    // Chain: Load departments after divisions
+                    loadDepartments();
+                });
+            }
+
+            // -------------------------
+            // Load Departments + Chain (Section)
+            // -------------------------
+            function loadDepartments() {
+                const companyId = $('#search_company_id').val();
+                if (!companyId) return;
+
+                const locationId = $('#search_business_unit_id').val() || 'null';
+                const divisionId = $('#search_division_id').val() || 'null';
+
+                loading($('#search_department_id'));
+                reset($('#search_section_id'), 'Select Section');
+
+                $.get(`/get-departments/${companyId}/${locationId}/${divisionId}`, function(data) {
+                    reset($('#search_department_id'), 'Select Department');
+                    if (!data.length) {
+                        $('#search_department_id').html('<option value="">No department found</option>');
+                    } else {
+                        $.each(data, function(_, item) {
+                            $('#search_department_id').append(
+                                `<option value="${item.id}">${item.department_name}</option>`);
+                        });
+                    }
+                    // Chain: Load sections after departments
+                    loadSections();
+                });
+            }
+
+            // -------------------------
+            // Load Sections
+            // -------------------------
+            function loadSections() {
+                const companyId = $('#search_company_id').val();
+                if (!companyId) return;
+
+                const locationId = $('#search_business_unit_id').val() || 'null';
+                const divisionId = $('#search_division_id').val() || 'null';
+                const departmentId = $('#search_department_id').val() || 'null';
+
+                loading($('#search_section_id'));
+
+                $.get(`/get-sections/${companyId}/${locationId}/${divisionId}/${departmentId}`, function(data) {
+                    reset($('#search_section_id'), 'Select Section');
+                    if (!data.length) {
+                        $('#search_section_id').html('<option value="">No section found</option>');
+                    } else {
+                        $.each(data, function(_, item) {
+                            $('#search_section_id').append(
+                                `<option value="${item.id}">${item.name}</option>`);
+                        });
+                    }
+                });
+            }
+
+            // -------------------------
+            // Company Change → Load Branch + Full Chain
+            // -------------------------
+            $('#search_company_id').on('change', function() {
+                const companyId = $(this).val();
+                if (!companyId) return;
+
+                reset($('#search_division_id'), 'Select Division');
+                reset($('#search_department_id'), 'Select Department');
+                reset($('#search_section_id'), 'Select Section');
+
+                @if (\App\HelperClass::getGeneralSetting()->branch_status == '1')
+                    loading($('#search_business_unit_id'));
+
+                    $.get(`/get-units/${companyId}`, function(data) {
+                        reset($('#search_business_unit_id'), 'Select Branch');
+                        if (!data.length) {
+                            $('#search_business_unit_id').html(
+                                '<option value="">No branch found</option>');
+                        } else {
+                            $.each(data, function(_, item) {
+                                $('#search_business_unit_id').append(
+                                    `<option value="${item.id}">${item.name}</option>`);
+                            });
+                        }
+                        // Immediately load the full chain after branches
+                        loadDivisions();
+                    });
+                @else
+                    // No branch → directly load divisions + chain
+                    loadDivisions();
+                @endif
+            });
+
+            // -------------------------
+            // Branch Change → Reload Full Chain
+            // -------------------------
+            $('#search_business_unit_id').on('change', function() {
+                loadDivisions(); // This will chain to department → section
+            });
+
+            // -------------------------
+            // Division Change → Reload Department + Section
+            // -------------------------
+            $('#search_division_id').on('change', function() {
+                loadDepartments(); // This will chain to section
+            });
+
+            // -------------------------
+            // Department Change → Reload Section
+            // -------------------------
+            $('#search_department_id').on('change', function() {
+                loadSections();
+            });
+
             // Client-side filtering function
             function filterEmployees() {
                 const keyword = $('#keywordSearch').val().toLowerCase();
                 const employeeName = $('#employeeName').val();
                 const employeeId = $('#employeeId').val();
                 const systemId = $('#systemId').val();
-                const company = $('#company').val();
-                const businessUnit = $('#business_unit').val();
-                const division = $('#division').val();
-                const department = $('#department').val();
-                const section = $('#section').val();
+                const company = $('#search_company_id').val();
+                const businessUnit = $('#search_business_unit_id').val();
+                const division = $('#search_division_id').val();
+                const department = $('#search_department_id').val();
+                const section = $('#search_section_id').val();
                 const empType = $('#empType').val();
                 const gender = $('#gender').val();
                 const maritalStatus = $('#maritalStatus').val();
@@ -853,6 +998,13 @@
         function resetAllFilters() {
             $('#employeeSearchForm')[0].reset();
             $('.select2_list').val(null).trigger('change');
+
+            // Reset dependent dropdowns to default state
+            $('#search_business_unit_id').html('<option value="">Select Branch</option>');
+            $('#search_division_id').html('<option value="">Select Division</option>');
+            $('#search_department_id').html('<option value="">Select Department</option>');
+            $('#search_section_id').html('<option value="">Select Section</option>');
+
             filteredEmployees = [];
             $('#statisticalResults').hide();
             $('#noDataMessage').hide();

@@ -17,4 +17,23 @@ class Company extends Model
         return $this->belongsTo(Group::class, 'group_id','id');
     }
 
+    public function locations()
+    {
+        return $this->hasMany(CompanyLocation::class, 'company_id');
+    }
+
+    public function employees()
+    {
+        return $this->hasMany(Employee::class, 'company_id');
+    }
+
+    public function employeeOfficeInfos()
+    {
+        return $this->hasMany(EmployeeOfficeInfo::class, 'current_company_id');
+    }
+
+    public function organizationStructures()
+    {
+        return $this->hasMany(OrganizationStructure::class, 'company_id');
+    }
 }

@@ -32,4 +32,19 @@ class Section extends Model
     {
         return $this->belongsTo(Company::class, 'company_id', 'id');
     }
+
+    public function employees()
+    {
+        return $this->hasMany(Employee::class, 'section_id');
+    }
+
+    public function employeeOfficeInfos()
+    {
+        return $this->hasMany(EmployeeOfficeInfo::class, 'current_section_id');
+    }
+
+    public function organizationStructures()
+    {
+        return $this->hasMany(OrganizationStructure::class, 'section_id');
+    }
 }

@@ -330,11 +330,28 @@
 
                 <!-- Organization Structure Menu -->
                 <li>
-                    <a href="{{ route('organization-structure.index') }}"
+                    <a href="#organization-structure-menu" data-bs-toggle="collapse"
+                        aria-expanded="{{ Route::is('organization-structure.*') ? 'true' : 'false' }}"
                         class="@if (Route::is('organization-structure.*')) menuitem-active @endif">
                         <i data-feather="git-branch"></i>
                         <span> Structure </span>
+                        <span class="menu-arrow"></span>
                     </a>
+                    <div class="collapse @if (Route::is('organization-structure.*')) show @endif"
+                        id="organization-structure-menu">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link @if (Route::is('organization-structure.view')) menuitem-active @endif'
+                                    href='{{ route('organization-structure.view') }}'>Structural View</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('organization-structure.index') ||
+                                        Route::is('organization-structure.create') ||
+                                        Route::is('organization-structure.edit')) menuitem-active @endif'
+                                    href='{{ route('organization-structure.index') }}'>Members</a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
 
                 <!-- Add Plans -->
