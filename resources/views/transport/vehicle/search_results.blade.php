@@ -12,9 +12,9 @@
     </thead>
     <tbody>
         @php
-            $sl = ($vehicleAcquisitions->currentPage() - 1) * $vehicleAcquisitions->perPage() + 1;
+            $sl = ($vehicles->currentPage() - 1) * $vehicles->perPage() + 1;
         @endphp
-        @forelse($vehicleAcquisitions as $item)
+        @forelse($vehicles as $item)
             <tr>
                 <th scope="row" class="text-center">{{ $sl++ }}</th>
                 <td class="text-center">
@@ -43,17 +43,17 @@
                     @endif
                 </td>
                 <td class="text-center">
-                    <a href="{{ route('transport.vehicle_acquisitions.show', $item->id) }}" class="btn btn-info btn-sm"
+                    <a href="{{ route('transport.vehicles.show', $item->id) }}" class="btn btn-info btn-sm"
                         title="View">
                         <i style="height: 12px; width: 12px" data-feather="eye"></i>
                     </a>
 
                     <a type="button" class="btn btn-primary btn-sm"
-                        href="{{ route('transport.vehicle_acquisitions.edit', $item->id) }}" title="Edit">
+                        href="{{ route('transport.vehicles.edit', $item->id) }}" title="Edit">
                         <i style="height: 12px; width: 12px" data-feather="edit"></i>
                     </a>
 
-                    <form action="{{ route('transport.vehicle_acquisitions.destroy', $item->id) }}" method="POST"
+                    <form action="{{ route('transport.vehicles.destroy', $item->id) }}" method="POST"
                         style="display: inline-block">
                         @csrf
                         @method('DELETE')
@@ -77,5 +77,5 @@
 </table>
 
 <div class="mt-3">
-    {{ $vehicleAcquisitions->links() }}
+    {{ $vehicles->links() }}
 </div>

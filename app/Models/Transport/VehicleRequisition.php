@@ -61,7 +61,7 @@ class VehicleRequisition extends Model
      */
     public function getAssignedVehicle(): BelongsTo
     {
-        return $this->belongsTo(VehicleAcquisition::class, 'assigned_vehicle_id', 'id');
+        return $this->belongsTo(Vehicle::class, 'assigned_vehicle_id', 'id');
     }
 
     /**

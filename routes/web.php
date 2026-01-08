@@ -509,14 +509,14 @@ Route::controller(DataController::class)->group(function () {
 
 // Transport Module Routes
 Route::prefix('transport')->name('transport.')->group(function () {
-    Route::controller(\App\Http\Controllers\Transport\VehicleAcquisitionController::class)->group(function () {
-        Route::get('vehicle-acquisitions', 'index')->name('vehicle_acquisitions.index');
-        Route::get('vehicle-acquisitions/create', 'create')->name('vehicle_acquisitions.create');
-        Route::post('vehicle-acquisitions', 'store')->name('vehicle_acquisitions.store');
-        Route::get('vehicle-acquisitions/{id}', 'show')->name('vehicle_acquisitions.show');
-        Route::get('vehicle-acquisitions/{id}/edit', 'edit')->name('vehicle_acquisitions.edit');
-        Route::put('vehicle-acquisitions/{id}', 'update')->name('vehicle_acquisitions.update');
-        Route::delete('vehicle-acquisitions/{id}', 'destroy')->name('vehicle_acquisitions.destroy');
+    Route::controller(\App\Http\Controllers\Transport\VehicleController::class)->group(function () {
+        Route::get('vehicles', 'index')->name('vehicles.index');
+        Route::get('vehicles/create', 'create')->name('vehicles.create');
+        Route::post('vehicles', 'store')->name('vehicles.store');
+        Route::get('vehicles/{id}', 'show')->name('vehicles.show');
+        Route::get('vehicles/{id}/edit', 'edit')->name('vehicles.edit');
+        Route::put('vehicles/{id}', 'update')->name('vehicles.update');
+        Route::delete('vehicles/{id}', 'destroy')->name('vehicles.destroy');
     });
 
     // Vehicle Driver Assignment Routes
@@ -530,6 +530,9 @@ Route::prefix('transport')->name('transport.')->group(function () {
         Route::put('vehicle-drivers/{id}', 'update')->name('vehicle_drivers.update');
         Route::delete('vehicle-drivers/{id}', 'destroy')->name('vehicle_drivers.destroy');
 
+        // API Routes for AJAX
+        Route::get('api/vehicle/{id}', 'getVehicleDetails');
+        Route::get('api/driver/{id}', 'getDriverDetails');
     });
 
     // Vehicle Requisition Routes

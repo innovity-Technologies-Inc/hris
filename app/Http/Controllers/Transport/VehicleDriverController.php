@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Transport;
 
 use App\Http\Controllers\Controller;
-use App\Models\Transport\VehicleAcquisition;
+use App\Models\Transport\Vehicle;
 use App\Models\Transport\VehicleDriver;
 use App\Models\Employee;
 use App\Models\EmployeeOfficeInfo;
@@ -91,7 +91,7 @@ class VehicleDriverController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'vehicle_id' => 'required|exists:vehicle_acquisitions,id',
+            'vehicle_id' => 'required|exists:vehicles,id',
             'driver_id' => 'required|exists:employees,id',
             'start_date' => 'required|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
@@ -166,7 +166,7 @@ class VehicleDriverController extends Controller
         $vehicleDriver = VehicleDriver::findOrFail($id);
 
         $request->validate([
-            'vehicle_id' => 'required|exists:vehicle_acquisitions,id',
+            'vehicle_id' => 'required|exists:vehicles,id',
             'driver_id' => 'required|exists:employees,id',
             'start_date' => 'required|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
@@ -273,7 +273,7 @@ class VehicleDriverController extends Controller
     $assignedVehicleIds = VehicleDriver::where('status', 'active')
         ->pluck('vehicle_id');
 
-    $query = VehicleAcquisition::where('status', 'Active')
+    $query = Vehicle::where('status', 'Active')
         ->whereNotIn('id', $assignedVehicleIds);
 
     if ($includeVehicleId) {
@@ -311,7 +311,7 @@ class VehicleDriverController extends Controller
      */
     public function getVehicleDetails($id)
     {
-        $vehicle = VehicleAcquisition::find($id);
+        $vehicle = Vehicle::find($id);
         if (!$vehicle) return response()->json(['error' => 'Vehicle not found'], 404);
 
         return response()->json([

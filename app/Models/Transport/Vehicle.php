@@ -4,9 +4,9 @@ namespace App\Models\Transport;
 
 use Illuminate\Database\Eloquent\Model;
 
-class VehicleAcquisition extends Model
+class Vehicle extends Model
 {
-    protected $table = 'vehicle_acquisitions';
+    protected $table = 'vehicles';
 
     protected $fillable = [
         'vehicle_category',
@@ -27,6 +27,13 @@ class VehicleAcquisition extends Model
         'purchase_document',
         'ownership_type',
         'third_party_name',
+        'is_allocated',
+        'allocation_purpose',
+        'allocation_type',
         'status',
+    ];
+
+    protected $casts = [
+        'is_allocated' => 'boolean',
     ];
 }

@@ -11,13 +11,13 @@
                             <i data-feather="truck" style="width: 32px; height: 32px;"></i>
                             Vehicle Details
                         </h3>
-                        <p class="text-muted mb-0">Complete information about {{ $vehicleAcquisition->model_number }}</p>
+                        <p class="text-muted mb-0">Complete information about {{ $vehicle->model_number }}</p>
                     </div>
                     <div class="col-md-4 text-md-end">
-                        <a href="{{ route('transport.vehicle_acquisitions.index') }}" class="btn btn-secondary me-2">
+                        <a href="{{ route('transport.vehicles.index') }}" class="btn btn-secondary me-2">
                             <i data-feather="arrow-left" style="width: 16px; height: 16px;"></i> Back
                         </a>
-                        <a href="{{ route('transport.vehicle_acquisitions.edit', $vehicleAcquisition->id) }}"
+                        <a href="{{ route('transport.vehicles.edit', $vehicle->id) }}"
                             class="btn btn-primary">
                             <i data-feather="edit" style="width: 16px; height: 16px;"></i> Edit
                         </a>
@@ -31,11 +31,11 @@
             <div class="col-lg-4 mb-4">
                 <div class="card shadow-sm border-0">
                     <div class="card-body p-0">
-                        @if ($vehicleAcquisition->vehicle_image)
-                            <img src="{{ asset('storage/' . $vehicleAcquisition->vehicle_image) }}"
-                                alt="{{ $vehicleAcquisition->model_number }}" class="w-100 rounded-top vehicle-image-thumb"
+                        @if ($vehicle->vehicle_image)
+                            <img src="{{ asset('storage/' . $vehicle->vehicle_image) }}"
+                                alt="{{ $vehicle->model_number }}" class="w-100 rounded-top vehicle-image-thumb"
                                 style="height: 350px; object-fit: contain; background: var(--bs-body-bg); cursor: pointer;"
-                                data-image-url="{{ asset('storage/' . $vehicleAcquisition->vehicle_image) }}">
+                                data-image-url="{{ asset('storage/' . $vehicle->vehicle_image) }}">
                         @else
                             <div class="text-center p-5 bg-light rounded-top"
                                 style="height: 350px; display: flex; align-items: center; justify-content: center;">
@@ -61,7 +61,7 @@
                                 <div class="p-3 bg-light rounded">
                                     <i data-feather="calendar" class="text-primary mb-2"
                                         style="width: 24px; height: 24px;"></i>
-                                    <h5 class="mb-0 fw-bold">{{ $vehicleAcquisition->manufacture_year }}</h5>
+                                    <h5 class="mb-0 fw-bold">{{ $vehicle->manufacture_year }}</h5>
                                     <small class="text-muted">Year</small>
                                 </div>
                             </div>
@@ -69,7 +69,7 @@
                                 <div class="p-3 bg-light rounded">
                                     <i data-feather="droplet" class="text-success mb-2"
                                         style="width: 24px; height: 24px;"></i>
-                                    <h5 class="mb-0 fw-bold">{{ $vehicleAcquisition->fuel_type }}</h5>
+                                    <h5 class="mb-0 fw-bold">{{ $vehicle->fuel_type }}</h5>
                                     <small class="text-muted">Fuel</small>
                                 </div>
                             </div>
@@ -77,7 +77,7 @@
                                 <div class="p-3 bg-light rounded">
                                     <i data-feather="users" class="text-warning mb-2"
                                         style="width: 24px; height: 24px;"></i>
-                                    <h5 class="mb-0 fw-bold">{{ $vehicleAcquisition->seating_capacity ?? 'N/A' }}</h5>
+                                    <h5 class="mb-0 fw-bold">{{ $vehicle->seating_capacity ?? 'N/A' }}</h5>
                                     <small class="text-muted">Seats</small>
                                 </div>
                             </div>
@@ -85,7 +85,7 @@
                                 <div class="p-3 bg-light rounded">
                                     <i data-feather="activity" class="text-info mb-2"
                                         style="width: 24px; height: 24px;"></i>
-                                    <h5 class="mb-0 fw-bold">{{ $vehicleAcquisition->mileage ?? 'N/A' }}</h5>
+                                    <h5 class="mb-0 fw-bold">{{ $vehicle->mileage ?? 'N/A' }}</h5>
                                     <small class="text-muted">KM/L</small>
                                 </div>
                             </div>
@@ -108,7 +108,7 @@
                                 </div>
                                 <h6 class="text-muted mb-2 small text-uppercase">Category</h6>
                                 <h5 class="fw-bold mb-0">
-                                    <span class="badge bg-primary">{{ $vehicleAcquisition->vehicle_category }}</span>
+                                    <span class="badge bg-primary">{{ $vehicle->vehicle_category }}</span>
                                 </h5>
                             </div>
                         </div>
@@ -123,7 +123,7 @@
                                     <i data-feather="truck" class="text-success" style="width: 28px; height: 28px;"></i>
                                 </div>
                                 <h6 class="text-muted mb-2 small text-uppercase">Model</h6>
-                                <h5 class="fw-bold mb-0">{{ $vehicleAcquisition->model_number }}</h5>
+                                <h5 class="fw-bold mb-0">{{ $vehicle->model_number }}</h5>
                             </div>
                         </div>
                     </div>
@@ -134,7 +134,7 @@
                             <div class="card-body text-center">
                                 <div class="rounded-circle bg-info bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3"
                                     style="width: 60px; height: 60px;">
-                                    @if ($vehicleAcquisition->status == 'Active')
+                                    @if ($vehicle->status == 'Active')
                                         <i data-feather="check-circle" class="text-success"
                                             style="width: 28px; height: 28px;"></i>
                                     @else
@@ -143,12 +143,12 @@
                                     @endif
                                 </div>
                                 <h6 class="text-muted mb-2 small text-uppercase">Status</h6>
-                                @if ($vehicleAcquisition->status == 'Active')
+                                @if ($vehicle->status == 'Active')
                                     <span class="badge bg-success fs-6">Active</span>
                                 @else
                                     <span class="badge bg-danger fs-6">Inactive</span>
                                 @endif
-                                <br><small class="text-muted">{{ $vehicleAcquisition->ownership_type }}</small>
+                                <br><small class="text-muted">{{ $vehicle->ownership_type }}</small>
                             </div>
                         </div>
                     </div>
@@ -175,7 +175,7 @@
                                                 Body Type
                                             </td>
                                             <td class="fw-semibold border-0 py-2">
-                                                {{ $vehicleAcquisition->body_type ?? 'N/A' }}</td>
+                                                {{ $vehicle->body_type ?? 'N/A' }}</td>
                                         </tr>
                                         <tr>
                                             <td class="text-muted border-0 py-2">
@@ -184,7 +184,7 @@
                                                 Engine Capacity
                                             </td>
                                             <td class="fw-semibold border-0 py-2">
-                                                {{ $vehicleAcquisition->engine_capacity ?? 'N/A' }}</td>
+                                                {{ $vehicle->engine_capacity ?? 'N/A' }}</td>
                                         </tr>
                                         <tr>
                                             <td class="text-muted border-0 py-2">
@@ -194,7 +194,7 @@
                                             </td>
                                             <td class="fw-semibold border-0 py-2">
                                                 <span
-                                                    class="badge bg-secondary">{{ $vehicleAcquisition->color ?? 'N/A' }}</span>
+                                                    class="badge bg-secondary">{{ $vehicle->color ?? 'N/A' }}</span>
                                             </td>
                                         </tr>
                                         <tr>
@@ -204,7 +204,7 @@
                                                 License Number
                                             </td>
                                             <td class="fw-semibold border-0 py-2">
-                                                {{ $vehicleAcquisition->license_number ?? 'N/A' }}</td>
+                                                {{ $vehicle->license_number ?? 'N/A' }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -231,10 +231,10 @@
                                                 Purchase Price
                                             </td>
                                             <td class="fw-semibold border-0 py-2">
-                                                @if ($vehicleAcquisition->purchase_price)
+                                                @if ($vehicle->purchase_price)
                                                     <span class="text-success fw-bold">
                                                         {{ \App\HelperClass::getGeneralSetting()->currency ?? 'Tk' }}
-                                                        {{ number_format($vehicleAcquisition->purchase_price, 2) }}
+                                                        {{ number_format($vehicle->purchase_price, 2) }}
                                                     </span>
                                                 @else
                                                     <span class="text-muted">N/A</span>
@@ -248,7 +248,7 @@
                                                 Purchase Date
                                             </td>
                                             <td class="fw-semibold border-0 py-2">
-                                                {{ $vehicleAcquisition->purchase_date ? \Carbon\Carbon::parse($vehicleAcquisition->purchase_date)->format('d M Y') : 'N/A' }}
+                                                {{ $vehicle->purchase_date ? \Carbon\Carbon::parse($vehicle->purchase_date)->format('d M Y') : 'N/A' }}
                                             </td>
                                         </tr>
                                         <tr>
@@ -259,7 +259,7 @@
                                             </td>
                                             <td class="fw-semibold border-0 py-2">
                                                 <span
-                                                    class="badge bg-info">{{ $vehicleAcquisition->purchase_type }}</span>
+                                                    class="badge bg-info">{{ $vehicle->purchase_type }}</span>
                                             </td>
                                         </tr>
                                         <tr>
@@ -270,10 +270,10 @@
                                             </td>
                                             <td class="fw-semibold border-0 py-2">
                                                 <span
-                                                    class="badge bg-warning text-dark">{{ $vehicleAcquisition->ownership_type }}</span>
+                                                    class="badge bg-warning text-dark">{{ $vehicle->ownership_type }}</span>
                                             </td>
                                         </tr>
-                                        @if ($vehicleAcquisition->ownership_type == 'Third-party' && $vehicleAcquisition->third_party_name)
+                                        @if ($vehicle->ownership_type == 'Third-party' && $vehicle->third_party_name)
                                             <tr>
                                                 <td class="text-muted border-0 py-2">
                                                     <i data-feather="user" class="me-2"
@@ -281,7 +281,7 @@
                                                     Third Party Name
                                                 </td>
                                                 <td class="fw-semibold border-0 py-2">
-                                                    {{ $vehicleAcquisition->third_party_name }}
+                                                    {{ $vehicle->third_party_name }}
                                                 </td>
                                             </tr>
                                         @endif
@@ -310,8 +310,8 @@
                                                         style="width: 20px; height: 20px;"></i>
                                                     <strong>License Document</strong>
                                                 </div>
-                                                @if ($vehicleAcquisition->license_document)
-                                                    <a href="{{ asset('storage/' . $vehicleAcquisition->license_document) }}"
+                                                @if ($vehicle->license_document)
+                                                    <a href="{{ asset('storage/' . $vehicle->license_document) }}"
                                                         target="_blank" class="btn btn-sm btn-success">
                                                         <i data-feather="download" style="width: 14px; height: 14px;"></i>
                                                         Download
@@ -330,8 +330,8 @@
                                                         style="width: 20px; height: 20px;"></i>
                                                     <strong>Purchase Invoice</strong>
                                                 </div>
-                                                @if ($vehicleAcquisition->purchase_document)
-                                                    <a href="{{ asset('storage/' . $vehicleAcquisition->purchase_document) }}"
+                                                @if ($vehicle->purchase_document)
+                                                    <a href="{{ asset('storage/' . $vehicle->purchase_document) }}"
                                                         target="_blank" class="btn btn-sm btn-primary">
                                                         <i data-feather="download" style="width: 14px; height: 14px;"></i>
                                                         Download

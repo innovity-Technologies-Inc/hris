@@ -340,7 +340,7 @@
                                                     {{ $vehicleRequisition->getAssignedVehicle->license_number ?? '-' }}
                                                 </small>
                                                 <br>
-                                                <a href="{{ route('transport.vehicle_acquisitions.show', $vehicleRequisition->getAssignedVehicle->id) }}"
+                                                <a href="{{ route('transport.vehicles.show', $vehicleRequisition->getAssignedVehicle->id) }}"
                                                     class="btn btn-outline-success btn-sm mt-2">
                                                     <i data-feather="eye" style="width: 12px; height: 12px;"></i> View
                                                     Details

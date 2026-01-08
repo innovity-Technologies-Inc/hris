@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Transport;
 
 use App\Http\Controllers\Controller;
+use App\Models\Transport\Vehicle;
 use App\Models\Transport\VehicleRequisition;
-use App\Models\Transport\VehicleAcquisition;
 use App\Models\Transport\VehicleDriver;
 use App\Models\Employee;
 use App\Models\Department;
@@ -164,7 +164,7 @@ class VehicleRequisitionController extends Controller
         $vehicleRequisition = VehicleRequisition::with(['getEmployee', 'getDepartment'])->findOrFail($id);
 
         // Get available vehicles
-        $availableVehicles = VehicleAcquisition::where('status', 'Active')
+        $availableVehicles = Vehicle::where('status', 'Active')
             ->orderBy('model_number')
             ->get();
 
@@ -185,7 +185,7 @@ class VehicleRequisitionController extends Controller
     {
         $request->validate([
             'approval_remarks' => 'nullable|string|max:1000',
-            'assigned_vehicle_id' => 'required|exists:vehicle_acquisitions,id',
+            'assigned_vehicle_id' => 'required|exists:vehicles,id',
             'dispatch_time' => 'nullable|date_format:H:i',
             'expected_return_time' => 'nullable|date_format:H:i',
         ], [
@@ -257,7 +257,7 @@ class VehicleRequisitionController extends Controller
      */
     public function getVehicleDetails($id)
     {
-        $vehicle = VehicleAcquisition::find($id);
+        $vehicle = Vehicle::find($id);
         if (!$vehicle) return response()->json(['error' => 'Vehicle not found'], 404);
 
         // Check if vehicle has an assigned driver

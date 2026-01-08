@@ -23,7 +23,7 @@ class VehicleDriver extends Model
      */
     public function getVehicle(): BelongsTo
     {
-        return $this->belongsTo(VehicleAcquisition::class, 'vehicle_id', 'id');
+        return $this->belongsTo(Vehicle::class, 'vehicle_id', 'id');
     }
 
     /**

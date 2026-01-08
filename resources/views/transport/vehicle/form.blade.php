@@ -64,9 +64,9 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <h5 class="card-title mb-0 text-white">
                             <i data-feather="truck" class="me-2"></i>
-                            {{ isset($vehicleAcquisition) ? 'Edit' : 'New' }} Vehicle Acquisition Request
+                            {{ isset($vehicle) ? 'Edit' : 'New' }} Vehicle Acquisition Request
                         </h5>
-                        <a href="{{ route('transport.vehicle_acquisitions.index') }}" class="btn btn-light btn-sm">
+                        <a href="{{ route('transport.vehicles.index') }}" class="btn btn-light btn-sm">
                             <i data-feather="arrow-left" style="width: 14px; height: 14px;"></i> Back to List
                         </a>
                     </div>
@@ -74,10 +74,10 @@
 
                 <div class="card-body p-4">
                     <form
-                        action="{{ isset($vehicleAcquisition) ? route('transport.vehicle_acquisitions.update', $vehicleAcquisition->id) : route('transport.vehicle_acquisitions.store') }}"
+                        action="{{ isset($vehicle) ? route('transport.vehicles.update', $vehicle->id) : route('transport.vehicles.store') }}"
                         method="post" enctype="multipart/form-data">
                         @csrf
-                        @if (isset($vehicleAcquisition))
+                        @if (isset($vehicle))
                             @method('PUT')
                         @endif
 
@@ -99,7 +99,7 @@
                                         <option value="">Select Category</option>
                                         @foreach (['Car', 'Bus', 'Micro Bus', 'Truck', 'Bike', 'Van', 'Airplane', 'Ship'] as $category)
                                             <option value="{{ $category }}"
-                                                {{ (isset($vehicleAcquisition) && $vehicleAcquisition->vehicle_category == $category) || old('vehicle_category') == $category ? 'selected' : '' }}>
+                                                {{ (isset($vehicle) && $vehicle->vehicle_category == $category) || old('vehicle_category') == $category ? 'selected' : '' }}>
                                                 {{ $category }}
                                             </option>
                                         @endforeach
@@ -116,7 +116,7 @@
                                     <input type="text" id="model_number"
                                         class="form-control @error('model_number') is-invalid @enderror" name="model_number"
                                         placeholder="e.g., Toyota Corolla 2023"
-                                        value="{{ isset($vehicleAcquisition) ? $vehicleAcquisition->model_number : old('model_number') }}"
+                                        value="{{ isset($vehicle) ? $vehicle->model_number : old('model_number') }}"
                                         required>
                                     @error('model_number')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -131,7 +131,7 @@
                                         class="form-control @error('manufacture_year') is-invalid @enderror"
                                         name="manufacture_year" placeholder="e.g., 2023" min="1900"
                                         max="{{ date('Y') + 1 }}"
-                                        value="{{ isset($vehicleAcquisition) ? $vehicleAcquisition->manufacture_year : old('manufacture_year') }}"
+                                        value="{{ isset($vehicle) ? $vehicle->manufacture_year : old('manufacture_year') }}"
                                         required>
                                     @error('manufacture_year')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -143,7 +143,7 @@
                                     <input type="text" id="body_type"
                                         class="form-control @error('body_type') is-invalid @enderror" name="body_type"
                                         placeholder="e.g., Sedan, SUV"
-                                        value="{{ isset($vehicleAcquisition) ? $vehicleAcquisition->body_type : old('body_type') }}">
+                                        value="{{ isset($vehicle) ? $vehicle->body_type : old('body_type') }}">
                                     @error('body_type')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -158,7 +158,7 @@
                                         <option value="">Select Fuel Type</option>
                                         @foreach (['Petrol', 'Diesel', 'CNG', 'Electric'] as $fuel)
                                             <option value="{{ $fuel }}"
-                                                {{ (isset($vehicleAcquisition) && $vehicleAcquisition->fuel_type == $fuel) || old('fuel_type') == $fuel ? 'selected' : '' }}>
+                                                {{ (isset($vehicle) && $vehicle->fuel_type == $fuel) || old('fuel_type') == $fuel ? 'selected' : '' }}>
                                                 {{ $fuel }}
                                             </option>
                                         @endforeach
@@ -173,7 +173,7 @@
                                     <input type="text" id="engine_capacity"
                                         class="form-control @error('engine_capacity') is-invalid @enderror"
                                         name="engine_capacity" placeholder="e.g., 1500 CC"
-                                        value="{{ isset($vehicleAcquisition) ? $vehicleAcquisition->engine_capacity : old('engine_capacity') }}">
+                                        value="{{ isset($vehicle) ? $vehicle->engine_capacity : old('engine_capacity') }}">
                                     @error('engine_capacity')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -184,7 +184,7 @@
                                     <input type="number" id="seating_capacity"
                                         class="form-control @error('seating_capacity') is-invalid @enderror"
                                         name="seating_capacity" placeholder="e.g., 5" min="1" max="500"
-                                        value="{{ isset($vehicleAcquisition) ? $vehicleAcquisition->seating_capacity : old('seating_capacity') }}">
+                                        value="{{ isset($vehicle) ? $vehicle->seating_capacity : old('seating_capacity') }}">
                                     @error('seating_capacity')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -195,7 +195,7 @@
                                     <input type="text" id="color"
                                         class="form-control @error('color') is-invalid @enderror" name="color"
                                         placeholder="e.g., White, Black"
-                                        value="{{ isset($vehicleAcquisition) ? $vehicleAcquisition->color : old('color') }}">
+                                        value="{{ isset($vehicle) ? $vehicle->color : old('color') }}">
                                     @error('color')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -206,7 +206,7 @@
                                     <input type="number" step="0.01" id="mileage"
                                         class="form-control @error('mileage') is-invalid @enderror" name="mileage"
                                         placeholder="e.g., 15.5" min="0"
-                                        value="{{ isset($vehicleAcquisition) ? $vehicleAcquisition->mileage : old('mileage') }}">
+                                        value="{{ isset($vehicle) ? $vehicle->mileage : old('mileage') }}">
                                     @error('mileage')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -220,7 +220,7 @@
                                         id="status" required>
                                         @foreach (['Active', 'Inactive'] as $status)
                                             <option value="{{ $status }}"
-                                                {{ (isset($vehicleAcquisition) && $vehicleAcquisition->status == $status) || old('status') == $status || (!isset($vehicleAcquisition) && $status == 'Active') ? 'selected' : '' }}>
+                                                {{ (isset($vehicle) && $vehicle->status == $status) || old('status') == $status || (!isset($vehicle) && $status == 'Active') ? 'selected' : '' }}>
                                                 {{ $status }}
                                             </option>
                                         @endforeach
@@ -246,7 +246,7 @@
                                     <input type="text" id="license_number"
                                         class="form-control @error('license_number') is-invalid @enderror"
                                         name="license_number" placeholder="e.g., DHAKA-1234-XY"
-                                        value="{{ isset($vehicleAcquisition) ? $vehicleAcquisition->license_number : old('license_number') }}">
+                                        value="{{ isset($vehicle) ? $vehicle->license_number : old('license_number') }}">
                                     @error('license_number')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -258,9 +258,9 @@
                                         class="form-control @error('license_document') is-invalid @enderror"
                                         name="license_document" accept=".pdf,.jpg,.jpeg,.png">
                                     <small class="text-muted">PDF, JPG, PNG (Max: 5MB)</small>
-                                    @if (isset($vehicleAcquisition) && $vehicleAcquisition->license_document)
+                                    @if (isset($vehicle) && $vehicle->license_document)
                                         <div class="file-preview">
-                                            <a href="{{ asset('storage/' . $vehicleAcquisition->license_document) }}"
+                                            <a href="{{ asset('storage/' . $vehicle->license_document) }}"
                                                 target="_blank" class="btn btn-sm btn-outline-info">
                                                 <i data-feather="eye" style="width: 14px; height: 14px;"></i> View Current
                                             </a>
@@ -277,9 +277,9 @@
                                         class="form-control @error('vehicle_image') is-invalid @enderror"
                                         name="vehicle_image" accept="image/*">
                                     <small class="text-muted">JPG, PNG, GIF (Max: 5MB)</small>
-                                    @if (isset($vehicleAcquisition) && $vehicleAcquisition->vehicle_image)
+                                    @if (isset($vehicle) && $vehicle->vehicle_image)
                                         <div class="file-preview">
-                                            <img src="{{ asset('storage/' . $vehicleAcquisition->vehicle_image) }}"
+                                            <img src="{{ asset('storage/' . $vehicle->vehicle_image) }}"
                                                 alt="Vehicle" class="rounded" style="max-height: 60px;">
                                         </div>
                                     @endif
@@ -308,7 +308,7 @@
                                         <option value="">Select Purchase Type</option>
                                         @foreach (['Purchase', 'Lease', 'Rent'] as $type)
                                             <option value="{{ $type }}"
-                                                {{ (isset($vehicleAcquisition) && $vehicleAcquisition->purchase_type == $type) || old('purchase_type') == $type ? 'selected' : '' }}>
+                                                {{ (isset($vehicle) && $vehicle->purchase_type == $type) || old('purchase_type') == $type ? 'selected' : '' }}>
                                                 {{ $type }}
                                             </option>
                                         @endforeach
@@ -323,7 +323,7 @@
                                     <input type="date" id="purchase_date"
                                         class="form-control @error('purchase_date') is-invalid @enderror"
                                         name="purchase_date"
-                                        value="{{ isset($vehicleAcquisition) && $vehicleAcquisition->purchase_date ? \Carbon\Carbon::parse($vehicleAcquisition->purchase_date)->format('Y-m-d') : old('purchase_date') }}">
+                                        value="{{ isset($vehicle) && $vehicle->purchase_date ? \Carbon\Carbon::parse($vehicle->purchase_date)->format('Y-m-d') : old('purchase_date') }}">
                                     @error('purchase_date')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -336,7 +336,7 @@
                                     <input type="number" step="0.01" id="purchase_price"
                                         class="form-control @error('purchase_price') is-invalid @enderror"
                                         name="purchase_price" placeholder="e.g., 2500000" min="0"
-                                        value="{{ isset($vehicleAcquisition) ? $vehicleAcquisition->purchase_price : old('purchase_price') }}">
+                                        value="{{ isset($vehicle) ? $vehicle->purchase_price : old('purchase_price') }}">
                                     @error('purchase_price')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -347,9 +347,9 @@
                                         class="form-control @error('purchase_document') is-invalid @enderror"
                                         name="purchase_document" accept=".pdf,.jpg,.jpeg,.png">
                                     <small class="text-muted">PDF, JPG, PNG (Max: 5MB)</small>
-                                    @if (isset($vehicleAcquisition) && $vehicleAcquisition->purchase_document)
+                                    @if (isset($vehicle) && $vehicle->purchase_document)
                                         <div class="file-preview">
-                                            <a href="{{ asset('storage/' . $vehicleAcquisition->purchase_document) }}"
+                                            <a href="{{ asset('storage/' . $vehicle->purchase_document) }}"
                                                 target="_blank" class="btn btn-sm btn-outline-info">
                                                 <i data-feather="eye" style="width: 14px; height: 14px;"></i> View Current
                                             </a>
@@ -369,7 +369,7 @@
                                         <option value="">Select Ownership Type</option>
                                         @foreach (['Company-owned', 'Third-party'] as $ownership)
                                             <option value="{{ $ownership }}"
-                                                {{ (isset($vehicleAcquisition) && $vehicleAcquisition->ownership_type == $ownership) || old('ownership_type') == $ownership ? 'selected' : '' }}>
+                                                {{ (isset($vehicle) && $vehicle->ownership_type == $ownership) || old('ownership_type') == $ownership ? 'selected' : '' }}>
                                                 {{ $ownership }}
                                             </option>
                                         @endforeach
@@ -386,7 +386,7 @@
                                     <input type="text" id="third_party_name"
                                         class="form-control @error('third_party_name') is-invalid @enderror"
                                         name="third_party_name" placeholder="Enter third party name"
-                                        value="{{ isset($vehicleAcquisition) ? $vehicleAcquisition->third_party_name : old('third_party_name') }}">
+                                        value="{{ isset($vehicle) ? $vehicle->third_party_name : old('third_party_name') }}">
                                     @error('third_party_name')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -397,12 +397,12 @@
                         {{-- Submit Section --}}
                         <div class="submit-section">
                             <div class="d-flex justify-content-end gap-2">
-                                <a href="{{ route('transport.vehicle_acquisitions.index') }}" class="btn btn-secondary">
+                                <a href="{{ route('transport.vehicles.index') }}" class="btn btn-secondary">
                                     <i data-feather="x" style="width: 14px; height: 14px;"></i> Cancel
                                 </a>
                                 <button type="submit" class="btn btn-primary">
                                     <i data-feather="save" style="width: 14px; height: 14px;"></i>
-                                    {{ isset($vehicleAcquisition) ? 'Update' : 'Submit' }} Acquisition
+                                    {{ isset($vehicle) ? 'Update' : 'Submit' }} Acquisition
                                 </button>
                             </div>
                         </div>

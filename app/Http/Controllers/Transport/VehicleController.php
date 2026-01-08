@@ -3,42 +3,42 @@
 namespace App\Http\Controllers\Transport;
 
 use App\Http\Controllers\Controller;
-use App\Models\Transport\VehicleAcquisition;
+use App\Models\Transport\Vehicle;
 use App\HelperClass;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-class VehicleAcquisitionController extends Controller
+class VehicleController extends Controller
 {
     public function index(FlexSearch $flexsearch, Request $request)
     {
-        $title = 'Vehicle Acquisition';
+        $title = 'Vehicles';
         $section = 'Transport';
-        $sub_section = 'Vehicle Acquisition';
+        $sub_section = 'Vehicles';
 
-        $query = VehicleAcquisition::query();
+        $query = Vehicle::query();
         $searchableColumns = ['vehicle_category', 'model_number', 'ownership_type', 'status'];
         $keyword = $request->input('keyword');
         $filters = [];
 
-        $vehicleAcquisitions = $flexsearch->apply($query, $filters, $keyword, $searchableColumns)->latest()->paginate(10);
+        $vehicles = $flexsearch->apply($query, $filters, $keyword, $searchableColumns)->latest()->paginate(10);
 
         if ($request->ajax()) {
-            return view('transport.vehicle_acquisition.search_results', compact('vehicleAcquisitions'))->render();
+            return view('transport.vehicle.search_results', compact('vehicles'))->render();
         }
 
-        return view('transport.vehicle_acquisition.index', compact('title', 'section', 'sub_section', 'vehicleAcquisitions'));
+        return view('transport.vehicle.index', compact('title', 'section', 'sub_section', 'vehicles'));
     }
 
     public function create()
     {
-        $title = 'Add Vehicle Acquisition';
-        $section = 'Vehicle Acquisition';
-        $section_url = route('transport.vehicle_acquisitions.index');
+        $title = 'Add Vehicle';
+        $section = 'Vehicles';
+        $section_url = route('transport.vehicles.index');
         $sub_section = 'Add';
 
-        return view('transport.vehicle_acquisition.form', compact(
+        return view('transport.vehicle.form', compact(
             'title',
             'section',
             'sub_section',
@@ -48,13 +48,13 @@ class VehicleAcquisitionController extends Controller
 
     public function show($id)
     {
-        $title = 'View Vehicle Acquisition';
+        $title = 'View Vehicle';
         $section = 'Transport';
         $sub_section = 'Vehicle Details';
 
-        $vehicleAcquisition = VehicleAcquisition::findOrFail($id);
+        $vehicle = Vehicle::findOrFail($id);
 
-        return view('transport.vehicle_acquisition.view', compact('title', 'section', 'sub_section', 'vehicleAcquisition'));
+        return view('transport.vehicle.view', compact('title', 'section', 'sub_section', 'vehicle'));
     }
 
     public function store(Request $request)
@@ -78,28 +78,32 @@ class VehicleAcquisitionController extends Controller
             'purchase_document' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
             'ownership_type' => 'required|in:Company-owned,Third-party',
             'third_party_name' => 'nullable|required_if:ownership_type,Third-party|string|max:255',
+            'is_allocated' => 'nullable|boolean',
+            'allocation_purpose' => 'nullable|string|max:255',
+            'allocation_type' => 'nullable|in:trip,transport',
             'status' => 'required|in:Active,Inactive',
         ]);
 
         try {
-            Log::info('Adding Vehicle Acquisition');
+            Log::info('Adding Vehicle');
 
             $data = $request->except(['license_document', 'vehicle_image', 'purchase_document']);
+            $data['is_allocated'] = $request->has('is_allocated') ? 1 : 0;
 
             // Handle file uploads
             if ($request->hasFile('license_document')) {
-                $data['license_document'] = HelperClass::file_upload($request->file('license_document'), 'transport/vehicle_acquisitions/license_documents');
+                $data['license_document'] = HelperClass::file_upload($request->file('license_document'), 'transport/vehicles/license_documents');
             }
 
             if ($request->hasFile('vehicle_image')) {
-                $data['vehicle_image'] = HelperClass::file_upload($request->file('vehicle_image'), 'transport/vehicle_acquisitions/vehicle_images');
+                $data['vehicle_image'] = HelperClass::file_upload($request->file('vehicle_image'), 'transport/vehicles/vehicle_images');
             }
 
             if ($request->hasFile('purchase_document')) {
-                $data['purchase_document'] = HelperClass::file_upload($request->file('purchase_document'), 'transport/vehicle_acquisitions/purchase_documents');
+                $data['purchase_document'] = HelperClass::file_upload($request->file('purchase_document'), 'transport/vehicles/purchase_documents');
             }
 
-            VehicleAcquisition::create($data);
+            Vehicle::create($data);
 
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -109,29 +113,29 @@ class VehicleAcquisitionController extends Controller
             ]);
         }
 
-        Log::info('Vehicle Acquisition Added Successfully');
+        Log::info('Vehicle Added Successfully');
 
-        return redirect()->route('transport.vehicle_acquisitions.index')->with([
-            'message' => 'Vehicle Acquisition Added Successfully',
+        return redirect()->route('transport.vehicles.index')->with([
+            'message' => 'Vehicle Added Successfully',
             'alert-type' => 'success'
         ]);
     }
 
     public function edit($id)
     {
-        $title = 'Edit Vehicle Acquisition';
-        $section = 'Vehicle Acquisition';
-        $section_url = route('transport.vehicle_acquisitions.index');
+        $title = 'Edit Vehicle';
+        $section = 'Vehicles';
+        $section_url = route('transport.vehicles.index');
         $sub_section = 'Edit';
 
-        $vehicleAcquisition = VehicleAcquisition::findOrFail($id);
+        $vehicle = Vehicle::findOrFail($id);
 
-        return view('transport.vehicle_acquisition.form', compact(
+        return view('transport.vehicle.form', compact(
             'title',
             'section',
             'sub_section',
             'section_url',
-            'vehicleAcquisition'
+            'vehicle'
         ));
     }
 
@@ -156,41 +160,45 @@ class VehicleAcquisitionController extends Controller
             'purchase_document' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
             'ownership_type' => 'required|in:Company-owned,Third-party',
             'third_party_name' => 'nullable|required_if:ownership_type,Third-party|string|max:255',
+            'is_allocated' => 'nullable|boolean',
+            'allocation_purpose' => 'nullable|string|max:255',
+            'allocation_type' => 'nullable|in:trip,transport',
             'status' => 'required|in:Active,Inactive',
         ]);
 
         try {
-            Log::info('Updating Vehicle Acquisition');
+            Log::info('Updating Vehicle');
 
-            $vehicleAcquisition = VehicleAcquisition::findOrFail($id);
+            $vehicle = Vehicle::findOrFail($id);
             $data = $request->except(['license_document', 'vehicle_image', 'purchase_document']);
+            $data['is_allocated'] = $request->has('is_allocated') ? 1 : 0;
 
             // Handle file uploads
             if ($request->hasFile('license_document')) {
                 // Delete old file if exists
-                if ($vehicleAcquisition->license_document) {
-                    HelperClass::file_delete($vehicleAcquisition->license_document);
+                if ($vehicle->license_document) {
+                    HelperClass::file_delete($vehicle->license_document);
                 }
-                $data['license_document'] = HelperClass::file_upload($request->file('license_document'), 'transport/vehicle_acquisitions/license_documents');
+                $data['license_document'] = HelperClass::file_upload($request->file('license_document'), 'transport/vehicles/license_documents');
             }
 
             if ($request->hasFile('vehicle_image')) {
                 // Delete old file if exists
-                if ($vehicleAcquisition->vehicle_image) {
-                    HelperClass::file_delete($vehicleAcquisition->vehicle_image);
+                if ($vehicle->vehicle_image) {
+                    HelperClass::file_delete($vehicle->vehicle_image);
                 }
-                $data['vehicle_image'] = HelperClass::file_upload($request->file('vehicle_image'), 'transport/vehicle_acquisitions/vehicle_images');
+                $data['vehicle_image'] = HelperClass::file_upload($request->file('vehicle_image'), 'transport/vehicles/vehicle_images');
             }
 
             if ($request->hasFile('purchase_document')) {
                 // Delete old file if exists
-                if ($vehicleAcquisition->purchase_document) {
-                    HelperClass::file_delete($vehicleAcquisition->purchase_document);
+                if ($vehicle->purchase_document) {
+                    HelperClass::file_delete($vehicle->purchase_document);
                 }
-                $data['purchase_document'] = HelperClass::file_upload($request->file('purchase_document'), 'transport/vehicle_acquisitions/purchase_documents');
+                $data['purchase_document'] = HelperClass::file_upload($request->file('purchase_document'), 'transport/vehicles/purchase_documents');
             }
 
-            $vehicleAcquisition->update($data);
+            $vehicle->update($data);
 
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -200,10 +208,10 @@ class VehicleAcquisitionController extends Controller
             ]);
         }
 
-        Log::info('Vehicle Acquisition Updated Successfully');
+        Log::info('Vehicle Updated Successfully');
 
-        return redirect()->route('transport.vehicle_acquisitions.index')->with([
-            'message' => 'Vehicle Acquisition Updated Successfully',
+        return redirect()->route('transport.vehicles.index')->with([
+            'message' => 'Vehicle Updated Successfully',
             'alert-type' => 'success'
         ]);
     }
@@ -211,22 +219,22 @@ class VehicleAcquisitionController extends Controller
     public function destroy($id)
     {
         try {
-            Log::info('Deleting Vehicle Acquisition');
+            Log::info('Deleting Vehicle');
 
-            $vehicleAcquisition = VehicleAcquisition::findOrFail($id);
+            $vehicle = Vehicle::findOrFail($id);
 
             // Delete associated files
-            if ($vehicleAcquisition->license_document) {
-                HelperClass::file_delete($vehicleAcquisition->license_document);
+            if ($vehicle->license_document) {
+                HelperClass::file_delete($vehicle->license_document);
             }
-            if ($vehicleAcquisition->vehicle_image) {
-                HelperClass::file_delete($vehicleAcquisition->vehicle_image);
+            if ($vehicle->vehicle_image) {
+                HelperClass::file_delete($vehicle->vehicle_image);
             }
-            if ($vehicleAcquisition->purchase_document) {
-                HelperClass::file_delete($vehicleAcquisition->purchase_document);
+            if ($vehicle->purchase_document) {
+                HelperClass::file_delete($vehicle->purchase_document);
             }
 
-            $vehicleAcquisition->delete();
+            $vehicle->delete();
 
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -236,10 +244,10 @@ class VehicleAcquisitionController extends Controller
             ]);
         }
 
-        Log::info('Vehicle Acquisition Deleted Successfully');
+        Log::info('Vehicle Deleted Successfully');
 
-        return redirect()->route('transport.vehicle_acquisitions.index')->with([
-            'message' => 'Vehicle Acquisition Deleted Successfully',
+        return redirect()->route('transport.vehicles.index')->with([
+            'message' => 'Vehicle Deleted Successfully',
             'alert-type' => 'success'
         ]);
     }

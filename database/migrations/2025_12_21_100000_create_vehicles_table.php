@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('vehicle_acquisitions', function (Blueprint $table) {
+        Schema::create('vehicles', function (Blueprint $table) {
             $table->id();
             $table->enum('vehicle_category', ['Car', 'Bus', 'Micro Bus', 'Truck', 'Bike', 'Van', 'Airplane', 'Ship']);
             $table->string('model_number');
@@ -30,6 +30,10 @@ return new class extends Migration
             $table->decimal('purchase_price', 15, 2)->nullable();
             $table->string('purchase_document')->nullable(); // invoice/purchase document file path
             $table->enum('ownership_type', ['Company-owned', 'Third-party']);
+            $table->string('third_party_name')->nullable();
+            $table->boolean('is_allocated')->default(0); // 0 = not allocated, 1 = allocated
+            $table->string('allocation_purpose')->nullable(); // purpose of allocation
+            $table->enum('allocation_type', ['trip', 'transport'])->nullable(); // Type of allocation
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->timestamps();
         });
@@ -40,6 +44,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('vehicle_acquisitions');
+        Schema::dropIfExists('vehicles');
     }
 };

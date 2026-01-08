@@ -60,23 +60,23 @@
                     {{-- Action Buttons --}}
                     <div class="d-flex justify-content-between mb-3">
                         <a type="button" class="btn btn-warning btn-sm"
-                            href="{{ route('transport.vehicle_acquisitions.create') }}">
+                            href="{{ route('transport.vehicles.create') }}">
                             <i style="height: 12px; width: 12px" data-feather="plus"></i> Create New
                         </a>
                     </div>
 
-                    @if ($vehicleAcquisitions->isEmpty())
+                    @if ($vehicles->isEmpty())
                         <div class="text-center py-4 text-muted">
                             <i data-feather="inbox" style="width: 48px; height: 48px;"></i>
                             <p class="mt-2 mb-0">No vehicle acquisitions found</p>
-                            <a href="{{ route('transport.vehicle_acquisitions.create') }}"
+                            <a href="{{ route('transport.vehicles.create') }}"
                                 class="btn btn-sm btn-primary mt-2">
                                 <i data-feather="plus" style="width: 14px; height: 14px;"></i> Add First Vehicle
                             </a>
                         </div>
                     @else
                         <div class="table-responsive" id="search-result">
-                            @include('transport.vehicle_acquisition.search_results')
+                            @include('transport.vehicle.search_results')
                         </div>
                     @endif
                 </div>
@@ -88,7 +88,7 @@
     <script>
         $(document).ready(function() {
             // Function to perform AJAX search
-            function fetchData(url = "{{ route('transport.vehicle_acquisitions.index') }}") {
+            function fetchData(url = "{{ route('transport.vehicles.index') }}") {
                 const queryString = $('#filterForm').serialize();
 
                 $.ajax({

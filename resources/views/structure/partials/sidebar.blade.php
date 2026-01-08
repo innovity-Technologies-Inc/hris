@@ -285,8 +285,8 @@
                     <div class="collapse @if ($transportOpen) show @endif" id="sidebarTransport">
                         <ul class="nav-second-level">
                             <li>
-                                <a class='tp-link @if (Route::is('transport.vehicle_acquisitions.*')) menuitem-active @endif'
-                                    href='{{ route('transport.vehicle_acquisitions.index') }}'>Vehicle Acquisition</a>
+                                <a class='tp-link @if (Route::is('transport.vehicles.*')) menuitem-active @endif'
+                                    href='{{ route('transport.vehicles.index') }}'>Vehicles</a>
                             </li>
                             <li>
                                 <a class='tp-link @if (Route::is('transport.vehicle_drivers.*')) menuitem-active @endif'
