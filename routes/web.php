@@ -515,6 +515,7 @@ Route::prefix('transport')->name('transport.')->group(function () {
         Route::post('vehicles', 'store')->name('vehicles.store');
         Route::get('vehicles/{id}', 'show')->name('vehicles.show');
         Route::get('vehicles/{id}/edit', 'edit')->name('vehicles.edit');
+        Route::get('vehicles/{id}/history', 'history')->name('vehicles.history');
         Route::put('vehicles/{id}', 'update')->name('vehicles.update');
         Route::delete('vehicles/{id}', 'destroy')->name('vehicles.destroy');
     });
@@ -544,6 +545,39 @@ Route::prefix('transport')->name('transport.')->group(function () {
         Route::get('vehicle-requisitions/{id}/approve', 'approve')->name('vehicle_requisitions.approve');
         Route::post('vehicle-requisitions/{id}/approve', 'processApproval')->name('vehicle_requisitions.process_approval');
         Route::post('vehicle-requisitions/{id}/reject', 'reject')->name('vehicle_requisitions.reject');
+    });
+
+    // Employee Transport Routes
+    Route::controller(\App\Http\Controllers\Transport\EmployeeTransportController::class)->group(function () {
+        Route::get('employee-transports', 'index')->name('employee_transports.index');
+        Route::get('employee-transports/search', 'search')->name('employee_transports.search');
+        Route::get('employee-transports/create', 'create')->name('employee_transports.create');
+        Route::post('employee-transports', 'store')->name('employee_transports.store');
+        Route::get('employee-transports/{id}', 'show')->name('employee_transports.show');
+        Route::get('employee-transports/{id}/edit', 'edit')->name('employee_transports.edit');
+        Route::put('employee-transports/{id}', 'update')->name('employee_transports.update');
+        Route::patch('employee-transports/{id}/approve', 'approve')->name('employee_transports.approve');
+        Route::patch('employee-transports/{id}/reject', 'reject')->name('employee_transports.reject');
+        Route::patch('employee-transports/{id}/cancel', 'cancel')->name('employee_transports.cancel');
+        Route::delete('employee-transports/{id}', 'destroy')->name('employee_transports.destroy');
+    });
+
+    // Vehicle Allocation Routes
+    Route::controller(\App\Http\Controllers\Transport\VehicleAllocationController::class)->group(function () {
+        Route::get('vehicle-allocations', 'dashboard')->name('vehicle_allocations.dashboard');
+        Route::get('vehicle-allocations/history', 'history')->name('vehicle_allocations.history');
+        Route::get('vehicle-allocations/create', 'create')->name('vehicle_allocations.create');
+        Route::post('vehicle-allocations/step2', 'step2')->name('vehicle_allocations.step2');
+        Route::get('vehicle-allocations/step2', 'step2')->name('vehicle_allocations.step2.get');
+        Route::post('vehicle-allocations/step3', 'step3')->name('vehicle_allocations.step3');
+        Route::get('vehicle-allocations/step3', 'step3')->name('vehicle_allocations.step3.get');
+        Route::post('vehicle-allocations', 'store')->name('vehicle_allocations.store');
+        Route::get('vehicle-allocations/{id}', 'show')->name('vehicle_allocations.show');
+        Route::patch('vehicle-allocations/{id}/release', 'release')->name('vehicle_allocations.release');
+        Route::patch('vehicle-allocations/{id}/extend', 'extend')->name('vehicle_allocations.extend');
+
+        // AJAX Routes
+        Route::get('api/application-details', 'getApplicationDetails')->name('vehicle_allocations.application_details');
     });
 });
 

@@ -33,7 +33,7 @@ return new class extends Migration
             $table->string('third_party_name')->nullable();
             $table->boolean('is_allocated')->default(0); // 0 = not allocated, 1 = allocated
             $table->string('allocation_purpose')->nullable(); // purpose of allocation
-            $table->enum('allocation_type', ['trip', 'transport'])->nullable(); // Type of allocation
+            $table->enum('allocation_type', ['employee_transport', 'trip_based'])->nullable(); // Type of allocation
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->timestamps();
         });

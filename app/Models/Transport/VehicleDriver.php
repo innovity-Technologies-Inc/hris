@@ -21,17 +21,32 @@ class VehicleDriver extends Model
     /**
      * Get the vehicle associated with this assignment.
      */
-    public function getVehicle(): BelongsTo
+    public function vehicle(): BelongsTo
     {
         return $this->belongsTo(Vehicle::class, 'vehicle_id', 'id');
     }
 
     /**
+     * Get the vehicle associated with this assignment (alias for compatibility).
+     */
+    public function getVehicle(): BelongsTo
+    {
+        return $this->vehicle();
+    }
+
+    /**
      * Get the driver (employee) associated with this assignment.
      */
-    public function getDriver(): BelongsTo
+    public function driver(): BelongsTo
     {
         return $this->belongsTo(Employee::class, 'driver_id', 'id');
     }
 
+    /**
+     * Get the driver (employee) associated with this assignment (alias for compatibility).
+     */
+    public function getDriver(): BelongsTo
+    {
+        return $this->driver();
+    }
 }

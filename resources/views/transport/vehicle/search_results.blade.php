@@ -48,6 +48,11 @@
                         <i style="height: 12px; width: 12px" data-feather="eye"></i>
                     </a>
 
+                    <a href="{{ route('transport.vehicles.history', $item->id) }}" class="btn btn-success btn-sm"
+                        title="See History">
+                        <i style="height: 12px; width: 12px" data-feather="clock"></i>
+                    </a>
+
                     <a type="button" class="btn btn-primary btn-sm"
                         href="{{ route('transport.vehicles.edit', $item->id) }}" title="Edit">
                         <i style="height: 12px; width: 12px" data-feather="edit"></i>

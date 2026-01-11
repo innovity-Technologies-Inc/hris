@@ -400,12 +400,8 @@
                         <a href="{{ route('transport.vehicle_requisitions.index') }}" class="btn btn-secondary">
                             <i data-feather="arrow-left" style="width: 14px; height: 14px;"></i> Back to List
                         </a>
-                        @if ($vehicleRequisition->approval_status === 'Pending')
+                        @if ($vehicleRequisition->approval_status === 'Pending' || $vehicleRequisition->approval_status === 'Approved')
                             <div>
-                                <a href="{{ route('transport.vehicle_requisitions.approve', $vehicleRequisition->id) }}"
-                                    class="btn btn-success me-2">
-                                    <i data-feather="check-circle" style="width: 14px; height: 14px;"></i> Approve
-                                </a>
                                 <form
                                     action="{{ route('transport.vehicle_requisitions.reject', $vehicleRequisition->id) }}"
                                     method="POST" class="d-inline">

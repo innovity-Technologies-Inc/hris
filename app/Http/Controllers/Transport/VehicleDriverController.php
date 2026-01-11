@@ -8,6 +8,7 @@ use App\Models\Transport\VehicleDriver;
 use App\Models\Employee;
 use App\Models\EmployeeOfficeInfo;
 use App\Models\Designation;
+use App\Services\TransportService;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -15,6 +16,12 @@ use Illuminate\Validation\Rule;
 
 class VehicleDriverController extends Controller
 {
+    protected $transportService;
+
+    public function __construct(TransportService $transportService)
+    {
+        $this->transportService = $transportService;
+    }
     /**
      * Display a listing of vehicle driver assignments.
      */
@@ -49,10 +56,10 @@ class VehicleDriverController extends Controller
         $sub_section = 'New Assignment';
 
         // Get available vehicles (active and not currently assigned to any active driver)
-        $availableVehicles = $this->getAvailableVehicles();
+        $availableVehicles = $this->transportService->getAvailableVehicles();
 
         // Get eligible drivers (employees with 'Driver' designation)
-        $eligibleDrivers = $this->getEligibleDrivers();
+        $eligibleDrivers = $this->transportService->getEligibleDrivers();
 
         return view('transport.vehicle_driver.form', compact(
             'title',
@@ -142,10 +149,10 @@ class VehicleDriverController extends Controller
         $vehicleDriver = VehicleDriver::with(['getVehicle', 'getDriver'])->findOrFail($id);
 
         // Get available vehicles (include current vehicle)
-        $availableVehicles = $this->getAvailableVehicles($vehicleDriver->vehicle_id);
+        $availableVehicles = $this->transportService->getAvailableVehicles($vehicleDriver->vehicle_id);
 
         // Get eligible drivers
-        $eligibleDrivers = $this->getEligibleDrivers();
+        $eligibleDrivers = $this->transportService->getEligibleDrivers();
 
         return view('transport.vehicle_driver.form', compact(
             'title',
@@ -263,47 +270,6 @@ class VehicleDriverController extends Controller
             'inactiveAssignments',
             'vehicleDrivers'
         ));
-    }
-
-    /**
-     * Get available vehicles for assignment.
-     */
-   private function getAvailableVehicles($includeVehicleId = null)
-{
-    $assignedVehicleIds = VehicleDriver::where('status', 'active')
-        ->pluck('vehicle_id');
-
-    $query = Vehicle::where('status', 'Active')
-        ->whereNotIn('id', $assignedVehicleIds);
-
-    if ($includeVehicleId) {
-        $query->orWhere('id', $includeVehicleId);
-    }
-
-    return $query->orderBy('model_number')->get();
-}
-
-    /**
-     * Get eligible drivers (employees with 'Driver' designation).
-     * Excludes drivers that are already assigned with active status.
-     */
-    private function getEligibleDrivers()
-    {
-        // Get employee IDs already assigned to vehicles with active status
-        $assignedDriverIds = VehicleDriver::where('status', 'active')
-            ->pluck('driver_id');
-
-        $driverDesignationIds = Designation::where('company_designation', 'like', '%Driver%')->pluck('id');
-
-        if ($driverDesignationIds->isEmpty()) return collect();
-
-        $driverEmployeeIds = EmployeeOfficeInfo::whereIn('current_designation_id', $driverDesignationIds)
-            ->pluck('employee_id');
-
-        return Employee::whereIn('id', $driverEmployeeIds)
-            ->whereNotIn('id', $assignedDriverIds)
-            ->orderBy('full_name')
-            ->get();
     }
 
     /**

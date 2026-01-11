@@ -63,26 +63,8 @@
                         <i style="height: 12px; width: 12px" data-feather="eye"></i>
                     </a>
 
-                    @if ($item->approval_status === 'Pending')
-                        {{-- Approve Button --}}
-                        <a href="{{ route('transport.vehicle_requisitions.approve', $item->id) }}"
-                            class="btn btn-success btn-sm" title="Approve">
-                            <i style="height: 12px; width: 12px" data-feather="check-circle"></i>
-                        </a>
-
+                    @if ($item->approval_status === 'Pending' || $item->approval_status === 'Approved')
                         {{-- Reject Button --}}
-                        <button type="button" class="btn btn-danger btn-sm rejectBtn" data-id="{{ $item->id }}"
-                            title="Reject">
-                            <i style="height: 12px; width: 12px" data-feather="x-circle"></i>
-                        </button>
-                    @elseif($item->approval_status === 'Rejected')
-                        {{-- Approve Button for Rejected --}}
-                        <a href="{{ route('transport.vehicle_requisitions.approve', $item->id) }}"
-                            class="btn btn-success btn-sm" title="Approve">
-                            <i style="height: 12px; width: 12px" data-feather="check-circle"></i>
-                        </a>
-                    @elseif($item->approval_status === 'Approved')
-                        {{-- Reject Button for Approved --}}
                         <button type="button" class="btn btn-danger btn-sm rejectBtn" data-id="{{ $item->id }}"
                             title="Reject">
                             <i style="height: 12px; width: 12px" data-feather="x-circle"></i>

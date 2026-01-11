@@ -296,6 +296,17 @@
                                 <a class='tp-link @if (Route::is('transport.vehicle_requisitions.*')) menuitem-active @endif'
                                     href='{{ route('transport.vehicle_requisitions.index') }}'>Vehicle Requisition</a>
                             </li>
+                            <!-- Employee Transport Submenu -->
+                            <li>
+                                <a class='tp-link @if (Route::is('transport.employee_transports.*')) menuitem-active @endif'
+                                    href='{{ route('transport.employee_transports.index') }}'>Employee Transport</a>
+                            </li>
+                            <!-- Vehicle Allocation Submenu -->
+                            <li>
+                                <a class='tp-link @if (Route::is('transport.vehicle_allocations.*')) menuitem-active @endif'
+                                    href='{{ route('transport.vehicle_allocations.dashboard') }}'>Vehicle
+                                    Allocation</a>
+                            </li>
                         </ul>
                     </div>
                 </li>

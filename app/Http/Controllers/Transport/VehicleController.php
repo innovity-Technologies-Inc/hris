@@ -5,12 +5,19 @@ namespace App\Http\Controllers\Transport;
 use App\Http\Controllers\Controller;
 use App\Models\Transport\Vehicle;
 use App\HelperClass;
+use App\Services\TransportService;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class VehicleController extends Controller
 {
+    protected TransportService $transportService;
+
+    public function __construct(TransportService $transportService)
+    {
+        $this->transportService = $transportService;
+    }
     public function index(FlexSearch $flexsearch, Request $request)
     {
         $title = 'Vehicles';
@@ -250,5 +257,32 @@ class VehicleController extends Controller
             'message' => 'Vehicle Deleted Successfully',
             'alert-type' => 'success'
         ]);
+    }
+
+    /**
+     * Display vehicle history including creation, drivers, allocations, and current status.
+     */
+    public function history($id)
+    {
+        $title = 'Vehicle History';
+        $section = 'Transport';
+        $sub_section = 'Vehicle History';
+
+        try {
+            $historyData = $this->transportService->getVehicleHistory($id);
+
+            return view('transport.vehicle.history', compact(
+                'title',
+                'section',
+                'sub_section',
+                'historyData'
+            ));
+        } catch (\Exception $e) {
+            Log::error('Error fetching vehicle history: ' . $e->getMessage());
+            return redirect()->route('transport.vehicles.index')->with([
+                'message' => 'Error loading vehicle history',
+                'alert-type' => 'error'
+            ]);
+        }
     }
 }

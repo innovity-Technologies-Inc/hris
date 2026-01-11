@@ -153,73 +153,77 @@ class VehicleRequisitionController extends Controller
 
     /**
      * Show the approval form for the specified vehicle requisition.
+     * NOTE: Approval is now handled through Vehicle Allocation.
+     * When a vehicle is allocated to this requisition, it will be automatically approved.
      */
-    public function approve($id)
-    {
-        $title = 'Approve Vehicle Requisition';
-        $section = 'Vehicle Requisition';
-        $section_url = route('transport.vehicle_requisitions.index');
-        $sub_section = 'Approval';
+    // public function approve($id)
+    // {
+    //     $title = 'Approve Vehicle Requisition';
+    //     $section = 'Vehicle Requisition';
+    //     $section_url = route('transport.vehicle_requisitions.index');
+    //     $sub_section = 'Approval';
 
-        $vehicleRequisition = VehicleRequisition::with(['getEmployee', 'getDepartment'])->findOrFail($id);
+    //     $vehicleRequisition = VehicleRequisition::with(['getEmployee', 'getDepartment'])->findOrFail($id);
 
-        // Get available vehicles
-        $availableVehicles = Vehicle::where('status', 'Active')
-            ->orderBy('model_number')
-            ->get();
+    //     // Get available vehicles
+    //     $availableVehicles = Vehicle::where('status', 'Active')
+    //         ->orderBy('model_number')
+    //         ->get();
 
-        return view('transport.vehicle_requisition.approve', compact(
-            'title',
-            'section',
-            'sub_section',
-            'section_url',
-            'vehicleRequisition',
-            'availableVehicles'
-        ));
-    }
+    //     return view('transport.vehicle_requisition.approve', compact(
+    //         'title',
+    //         'section',
+    //         'sub_section',
+    //         'section_url',
+    //         'vehicleRequisition',
+    //         'availableVehicles'
+    //     ));
+    // }
 
     /**
      * Process the approval of the vehicle requisition.
+     * NOTE: Approval is now handled through Vehicle Allocation.
+     * When a vehicle is allocated to this requisition, it will be automatically approved.
      */
-    public function processApproval(Request $request, $id)
-    {
-        $request->validate([
-            'approval_remarks' => 'nullable|string|max:1000',
-            'assigned_vehicle_id' => 'required|exists:vehicles,id',
-            'dispatch_time' => 'nullable|date_format:H:i',
-            'expected_return_time' => 'nullable|date_format:H:i',
-        ], [
-            'assigned_vehicle_id.required' => 'Please select a vehicle to assign.',
-        ]);
+    // public function processApproval(Request $request, $id)
+    // {
+    //     $request->validate([
+    //         'approval_remarks' => 'nullable|string|max:1000',
+    //         'assigned_vehicle_id' => 'required|exists:vehicles,id',
+    //         'dispatch_time' => 'nullable|date_format:H:i',
+    //         'expected_return_time' => 'nullable|date_format:H:i',
+    //     ], [
+    //         'assigned_vehicle_id.required' => 'Please select a vehicle to assign.',
+    //     ]);
 
-        try {
-            Log::info('Approving Vehicle Requisition');
+    //     try {
+    //         Log::info('Approving Vehicle Requisition');
 
-            $vehicleRequisition = VehicleRequisition::findOrFail($id);
+    //         $vehicleRequisition = VehicleRequisition::findOrFail($id);
 
-            $vehicleRequisition->update([
-                'approval_status' => 'Approved',
-                'approval_remarks' => $request->approval_remarks,
-                'assigned_vehicle_id' => $request->assigned_vehicle_id,
-                'dispatch_time' => $request->dispatch_time,
-                'expected_return_time' => $request->expected_return_time,
-            ]);
+    //         $vehicleRequisition->update([
+    //             'approval_status' => 'Approved',
+    //             'approval_remarks' => $request->approval_remarks,
+    //             'assigned_vehicle_id' => $request->assigned_vehicle_id,
+    //             'dispatch_time' => $request->dispatch_time,
+    //             'expected_return_time' => $request->expected_return_time,
+    //         ]);
 
-        } catch (\Exception $e) {
-            Log::error('Vehicle Requisition Approval Error: ' . $e->getMessage());
-            return redirect()->back()->withInput()->with([
-                'message' => 'Something Went Wrong',
-                'alert-type' => 'error'
-            ]);
-        }
+    //     } catch (\Exception $e) {
+    //         Log::error('Vehicle Requisition Approval Error: ' . $e->getMessage());
+    //         return redirect()->back()->withInput()->with([
+    //             'message' => 'Something Went Wrong',
+    //             'alert-type' => 'error'
+    //         ]);
+    //     }
 
-        Log::info('Vehicle Requisition Approved Successfully');
+    //     Log::info('Vehicle Requisition Approved Successfully');
 
-        return redirect()->route('transport.vehicle_requisitions.index')->with([
-            'message' => 'Vehicle Requisition Approved Successfully',
-            'alert-type' => 'success'
-        ]);
-    }
+    //     return redirect()->route('transport.vehicle_requisitions.index')->with([
+    //         'message' => 'Vehicle Requisition Approved Successfully',
+    //         'alert-type' => 'success'
+    //     ]);
+    // }
 
     /**
      * Reject the specified vehicle requisition.
