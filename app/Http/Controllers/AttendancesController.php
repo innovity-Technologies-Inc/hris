@@ -90,36 +90,57 @@ class AttendancesController extends Controller
             ]);
     }
 
-    public function clockInOutStore(Request $request){
-        $request->validate([
-            'employee_id' => 'required|exists:employees,id',
-            'in_time' => 'required|date',
-            'out_time' => 'nullable|date|after:in_time',
-            'workstation' => 'required'
-        ], [
-            'employee_id.required' => 'The employee field is required.',
-            'in_time.required' => 'The clock-in field is required.',
-            'in_time.date' => 'The clock-in must be a valid date.',
-            'out_time.date' => 'The clock-out must be a valid date.',
-            'workstation.required' => 'The workstation field is required.',
-        ]);
+    public function clockInOutStore(Request $request)
+    {
+        try {
+            $isClockIn = $request->filled('in_time') && !$request->filled('out_time');
+            $isClockOut = $request->filled('out_time');
 
-        if (empty($request->clock_out)){
-            Attendance::create($request->all());
-            return redirect()->route('attendance.index')->with([
-                'message' => 'Clocked In Successfully',
-                'alert-type' => 'success'
-            ]);
-        }else{
+            if ($isClockIn) {
+                $validated = $request->validate([
+                    'employee_id' => 'required|exists:employees,id',
+                    'in_time' => 'required|date',
+                    'workstation' => 'required|string',
+                ]);
 
-            return redirect()->route('attendance.index')->with([
-                'message' => 'Clocked Out Successfully',
-                'alert-type' => 'success'
-            ]);
+                $attendance = Attendance::create($validated);
+
+                return response()->json([
+                    'status' => 'clocked_in',
+                    'message' => 'Clocked In Successfully',
+                    'attendance_id' => $attendance->id,
+                    'in_time' => $attendance->in_time
+                ]);
+            }
+
+            if ($isClockOut) {
+                $request->validate([
+                    'employee_id' => 'required|exists:employees,id',
+                    'out_time' => 'required|date',
+                ]);
+
+                $this->attendancesService->clockOutStore($request);
+
+                return response()->json([
+                    'status' => 'clocked_out',
+                    'message' => 'Clocked Out Successfully'
+                ]);
+            }
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid attendance request'
+            ], 422);
+
+        } catch(\Exception $e){
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 500);
         }
-
-
     }
+
+
 
     public function import(Request $request){
         $request->validate([

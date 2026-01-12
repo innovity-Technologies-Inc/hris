@@ -18,7 +18,6 @@ class Attendance extends Model
         'late_count',
         'early_out_count',
         'overtime',
-        'work_type',
         'attendance_status',
         'workstation',
         'shift_id',

@@ -20,11 +20,17 @@ use App\Models\RosterPlan;
 use App\Models\SalaryGrade;
 use App\Models\Section;
 use App\Models\ShiftPlan;
+use App\Services\AttendanceServices;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DataController extends Controller
 {
+
+    protected $attendancesService;
+    public function __construct(AttendanceServices $attendancesService){
+        $this->attendancesService = $attendancesService;
+    }
 
     public function getUnit($company_id){
         $units = CompanyLocation::where('company_id', $company_id)->select('id', 'name')->get();
@@ -248,11 +254,37 @@ class DataController extends Controller
     {
         $today = Carbon::today();
 
+        $leaveFlag = $this->attendancesService->isLeaveDay($employee_id, $today);
+        if ($leaveFlag){
+
+            return response()->json([
+                'status' => 'leave_day',
+                'time' => $today,
+                'leave_day' => $leaveFlag
+            ]);
+
+        }else{
+
+            $offDay = $this->attendancesService->isOffDay($employee_id, $today);
+//            dd($offDay);
+            if ($offDay == 'off_day'){
+                return response()->json([
+                    'status' => 'off_day',
+                    'time' => $today,
+                    'off_day' => $offDay
+                ]);
+            }else{
+                return $this->attendanceRecords($employee_id, $today);
+            }
+
+        }
+
+    }
+
+    public function attendanceRecords($employee_id, $today){
         $record = Attendance::where('employee_id', $employee_id)
             ->whereDate('in_time', $today)
             ->first();
-
-
 
         if (!$record) {
             return response()->json([
@@ -276,6 +308,8 @@ class DataController extends Controller
             'record' => $record
         ]);
     }
+
+
 
 
 

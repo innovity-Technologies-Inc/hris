@@ -23,8 +23,7 @@ return new class extends Migration
             $table->decimal('late_count', 8, 2)->nullable();
             $table->decimal('early_out_count', 8, 2)->nullable();
             $table->decimal('overtime', 8, 2)->nullable();
-            $table->enum('work_type', ['Full-Day', 'Half-Day', 'Overtime', 'N/A', 'Early-Out'])->nullable();
-            $table->enum('attendance_status', ['Present', 'Absent'])->nullable();
+            $table->string('attendance_status')->nullable();
             $table->enum('workstation', ['Remote', 'On-Site', 'Work-From-Home'])->nullable();
             $table->unsignedBigInteger('shift_id')->nullable();
             $table->unsignedBigInteger('ot_id')->nullable();

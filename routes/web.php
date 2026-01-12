@@ -495,6 +495,8 @@ Route::controller(DataController::class)->group(function () {
 
     //attendance-details
     Route::get('get-attendance-details/{employee_id}', 'getAttendanceDetails');
+    Route::get('get-attendance-records/{employee_id}', 'getAttendanceDetails');
+
 });
 
     Route::controller(AttendancesController::class)->prefix('attendance')->group(function (){
