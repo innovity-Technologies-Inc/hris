@@ -366,7 +366,7 @@ class TransportService
             ->where('status', 'Active')
             ->update(['status' => 'Inactive']);
 
-        // Update vehicle
+        // Update vehicle - set is_allocated to false
         return $vehicle->update([
             'is_allocated' => false,
             'allocation_type' => null,
@@ -655,8 +655,8 @@ class TransportService
             'statistics' => [
                 'total_drivers_assigned' => $driverHistory->count(),
                 'total_allocations' => $allocationHistory->count(),
-                'total_trips' => $allocationHistory->where('allocation_type', 'trip')->count(),
-                'total_transports' => $allocationHistory->where('allocation_type', 'transport')->count(),
+                'total_trips' => $allocationHistory->where('allocation_type', 'trip_based')->count(),
+                'total_transports' => $allocationHistory->where('allocation_type', 'employee_transport')->count(),
                 'active_allocations' => $allocationHistory->where('status', 'Active')->count(),
                 'completed_allocations' => $allocationHistory->where('status', 'Completed')->count(),
             ],

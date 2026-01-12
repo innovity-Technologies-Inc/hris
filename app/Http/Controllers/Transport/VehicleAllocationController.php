@@ -153,27 +153,62 @@ class VehicleAllocationController extends Controller
      */
     public function step2(Request $request)
     {
-        // Store allocation data in session
-        $allocationData = $request->only([
-            'allocation_type', 'reference_type', 'reference_id',
-            'name', 'start_date', 'end_date', 'remarks'
-        ]);
-
-        // If reference is provided, fetch data from it
-        $reference = null;
-        if ($request->filled('reference_id') && $request->filled('reference_type')) {
-            $referenceType = $request->reference_type;
-            if ($referenceType == 'App\\Models\\Transport\\EmployeeTransport') {
-                $reference = EmployeeTransport::find($request->reference_id);
-                if ($reference && empty($allocationData['name'])) {
-                    $allocationData['name'] = $reference->service_name;
-                    $allocationData['start_date'] = $reference->start_date->format('Y-m-d');
-                    $allocationData['end_date'] = $reference->end_date->format('Y-m-d');
+        // Check if coming back from step3 (GET request with session data)
+        if ($request->isMethod('get') && session()->has('allocation_data')) {
+            $allocationData = session('allocation_data', []);
+            
+            // Get reference details
+            $reference = null;
+            if (!empty($allocationData['reference_id']) && !empty($allocationData['reference_type'])) {
+                $referenceType = $allocationData['reference_type'];
+                if ($referenceType == 'App\\Models\\Transport\\EmployeeTransport') {
+                    $reference = EmployeeTransport::find($allocationData['reference_id']);
+                } elseif ($referenceType == 'App\\Models\\Transport\\VehicleRequisition') {
+                    $reference = VehicleRequisition::find($allocationData['reference_id']);
                 }
             }
-        }
+        } else {
+            // Store allocation data from step1 POST
+            $allocationData = $request->only([
+                'allocation_type', 'reference_type', 'reference_id',
+                'name', 'start_date', 'end_date', 'remarks'
+            ]);
 
-        session(['allocation_data' => $allocationData]);
+            // If reference is provided, fetch data from it
+            $reference = null;
+            if ($request->filled('reference_id') && $request->filled('reference_type')) {
+                $referenceType = $request->reference_type;
+                if ($referenceType == 'App\\Models\\Transport\\EmployeeTransport') {
+                    $reference = EmployeeTransport::find($request->reference_id);
+                    if ($reference && empty($allocationData['name'])) {
+                        $allocationData['name'] = $reference->service_name;
+                        $allocationData['start_date'] = $reference->start_date->format('Y-m-d');
+                        $allocationData['end_date'] = $reference->end_date->format('Y-m-d');
+                    }
+                }
+            }
+
+            // Handle Trip Requisition reference
+            if ($request->filled('requisition_id')) {
+                $reference = VehicleRequisition::find($request->requisition_id);
+                if ($reference) {
+                    $allocationData['reference_type'] = 'App\\Models\\Transport\\VehicleRequisition';
+                    $allocationData['reference_id'] = $reference->id;
+                    if (empty($allocationData['name'])) {
+                        $allocationData['name'] = 'Trip: ' . ($reference->purpose_of_travel ?? 'Requisition #' . $reference->id);
+                    }
+                    // Set dates from trip requisition
+                    if ($reference->start_date_time) {
+                        $allocationData['start_date'] = $reference->start_date_time->format('Y-m-d');
+                    }
+                    if ($reference->end_date_time) {
+                        $allocationData['end_date'] = $reference->end_date_time->format('Y-m-d');
+                    }
+                }
+            }
+
+            session(['allocation_data' => $allocationData]);
+        }
 
         $title = 'New Vehicle Allocation';
         $section = 'Vehicle Allocation';
@@ -229,8 +264,18 @@ class VehicleAllocationController extends Controller
                 $referenceType = $allocationData['reference_type'];
                 if ($referenceType == 'App\\Models\\Transport\\EmployeeTransport') {
                     $reference = EmployeeTransport::find($allocationData['reference_id']);
+                    // Auto-populate dates from reference if not set
+                    if ($reference && empty($allocationData['start_date'])) {
+                        $allocationData['start_date'] = $reference->start_date?->format('Y-m-d');
+                        $allocationData['end_date'] = $reference->end_date?->format('Y-m-d');
+                    }
                 } elseif ($referenceType == 'App\\Models\\Transport\\VehicleRequisition') {
                     $reference = VehicleRequisition::find($allocationData['reference_id']);
+                    // Auto-populate dates from trip requisition if not set
+                    if ($reference && empty($allocationData['start_date'])) {
+                        $allocationData['start_date'] = $reference->start_date_time?->format('Y-m-d');
+                        $allocationData['end_date'] = $reference->end_date_time?->format('Y-m-d');
+                    }
                 }
             }
 
@@ -278,8 +323,18 @@ class VehicleAllocationController extends Controller
             $referenceType = $allocationData['reference_type'];
             if ($referenceType == 'App\\Models\\Transport\\EmployeeTransport') {
                 $reference = EmployeeTransport::find($allocationData['reference_id']);
+                // Auto-populate dates from reference if not set
+                if ($reference && empty($allocationData['start_date'])) {
+                    $allocationData['start_date'] = $reference->start_date?->format('Y-m-d');
+                    $allocationData['end_date'] = $reference->end_date?->format('Y-m-d');
+                }
             } elseif ($referenceType == 'App\\Models\\Transport\\VehicleRequisition') {
                 $reference = VehicleRequisition::find($allocationData['reference_id']);
+                // Auto-populate dates from trip requisition if not set
+                if ($reference && empty($allocationData['start_date'])) {
+                    $allocationData['start_date'] = $reference->start_date_time?->format('Y-m-d');
+                    $allocationData['end_date'] = $reference->end_date_time?->format('Y-m-d');
+                }
             }
         }
 
@@ -315,7 +370,12 @@ class VehicleAllocationController extends Controller
             'reference_id' => 'nullable|integer',
             'route_start' => 'nullable|string|max:255',
             'route_end' => 'nullable|string|max:255',
+            'distance_km' => 'nullable|numeric|min:0',
+            'estimated_duration_minutes' => 'nullable|integer|min:0',
+            'departure_time' => 'nullable|date_format:H:i',
+            'arrival_time' => 'nullable|date_format:H:i',
             'route_description' => 'nullable|string',
+            'special_instructions' => 'nullable|string',
             'remarks' => 'nullable|string|max:1000',
         ]);
 
@@ -374,7 +434,12 @@ class VehicleAllocationController extends Controller
                         'route_name' => $validated['name'] ?? ($allocationPurpose ?? 'Route'),
                         'start_point' => $validated['route_start'] ?? 'N/A',
                         'end_point' => $validated['route_end'] ?? 'N/A',
+                        'distance_km' => $validated['distance_km'] ?? null,
+                        'estimated_duration_minutes' => $validated['estimated_duration_minutes'] ?? null,
+                        'departure_time' => $validated['departure_time'] ?? null,
+                        'arrival_time' => $validated['arrival_time'] ?? null,
                         'route_description' => $validated['route_description'] ?? null,
+                        'special_instructions' => $validated['special_instructions'] ?? null,
                         'status' => 'Active',
                     ]);
                 }
@@ -458,14 +523,32 @@ class VehicleAllocationController extends Controller
             $allocation = VehicleAllocation::findOrFail($id);
             $vehicleId = $allocation->vehicle_id;
 
-            // Update allocation status
+            // Check if allocation is already released/inactive
+            if ($allocation->status === 'Inactive' || $allocation->status === 'Completed') {
+                return redirect()->back()->with([
+                    'message' => 'Vehicle allocation is already released',
+                    'alert-type' => 'info'
+                ]);
+            }
+
+            // Check if allocation is active
+            if ($allocation->status !== 'Active') {
+                return redirect()->back()->with([
+                    'message' => 'Only active vehicles can be released',
+                    'alert-type' => 'warning'
+                ]);
+            }
+
+            // Update allocation with remarks
+            $remarksToAdd = $request->release_remarks ? "\n\nRelease Remarks: " . $request->release_remarks : '';
+            
+            // Update allocation status to Inactive
             $allocation->update([
-                'status' => 'Released',
-                'approval_remarks' => $allocation->approval_remarks .
-                    ($request->release_remarks ? "\n\nRelease Remarks: " . $request->release_remarks : '')
+                'status' => 'Inactive',
+                'approval_remarks' => $allocation->approval_remarks . $remarksToAdd
             ]);
 
-            // Release the vehicle
+            // Release the vehicle (sets is_allocated to false)
             $this->transportService->releaseVehicle($vehicleId);
 
             Log::info('Vehicle Released Successfully');
@@ -477,8 +560,9 @@ class VehicleAllocationController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Release Error: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
             return redirect()->back()->with([
-                'message' => 'Something Went Wrong',
+                'message' => 'Something Went Wrong: ' . $e->getMessage(),
                 'alert-type' => 'error'
             ]);
         }

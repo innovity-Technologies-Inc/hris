@@ -220,11 +220,16 @@
                                 </h6>
                             </div>
                             <div class="card-body">
-                                @if ($allocation->getVehicle->driverAssignment->driver)
+                                @php
+                                    $driver =
+                                        $allocation->getVehicle->driverAssignment->driver ??
+                                        $allocation->getVehicle->driverAssignment->getDriver;
+                                @endphp
+                                @if ($driver)
                                     <div class="d-flex align-items-center mb-3">
-                                        @if ($allocation->getVehicle->driverAssignment->driver->photo_path)
-                                            <img src="{{ asset('storage/' . $allocation->getVehicle->driverAssignment->driver->photo_path) }}"
-                                                alt="Driver" class="rounded-circle me-3"
+                                        @if ($driver->photo_path)
+                                            <img src="{{ asset('storage/' . $driver->photo_path) }}" alt="Driver"
+                                                class="rounded-circle me-3"
                                                 style="width: 80px; height: 80px; object-fit: cover;">
                                         @else
                                             <div class="bg-warning bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3"
@@ -234,10 +239,10 @@
                                         @endif
                                         <div>
                                             <h5 class="mb-1">
-                                                {{ $allocation->getVehicle->driverAssignment->driver->full_name ?? 'N/A' }}
+                                                {{ $driver->full_name ?? 'N/A' }}
                                             </h5>
                                             <p class="text-muted mb-0">
-                                                <small>{{ $allocation->getVehicle->driverAssignment->driver->system_id ?? '' }}</small>
+                                                <small>{{ $driver->system_id ?? '' }}</small>
                                             </p>
                                         </div>
                                     </div>
@@ -245,29 +250,16 @@
                                         <div class="col-md-6">
                                             <table class="table table-borderless mb-0">
                                                 <tr>
-                                                    <td class="fw-semibold text-muted" style="width: 40%;">License No:</td>
-                                                    <td>{{ $allocation->getVehicle->driverAssignment->driver->license_no ?? 'N/A' }}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="fw-semibold text-muted">Mobile:</td>
-                                                    <td>{{ $allocation->getVehicle->driverAssignment->driver->personal_mobile ?? 'N/A' }}
-                                                    </td>
+                                                    <td class="fw-semibold text-muted" style="width: 40%;">Mobile:</td>
+                                                    <td>{{ $driver->personal_mobile ?? 'N/A' }}</td>
                                                 </tr>
                                             </table>
                                         </div>
                                         <div class="col-md-6">
                                             <table class="table table-borderless mb-0">
                                                 <tr>
-                                                    <td class="fw-semibold text-muted" style="width: 40%;">Work Mobile:
-                                                    </td>
-                                                    <td>{{ $allocation->getVehicle->driverAssignment->driver->work_mobile ?? 'N/A' }}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="fw-semibold text-muted">Email:</td>
-                                                    <td>{{ $allocation->getVehicle->driverAssignment->driver->work_email ?? 'N/A' }}
-                                                    </td>
+                                                    <td class="fw-semibold text-muted" style="width: 40%;">Email:</td>
+                                                    <td>{{ $driver->work_email ?? 'N/A' }}</td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -275,6 +267,17 @@
                                 @else
                                     <p class="text-muted text-center mb-0">No driver assigned to this vehicle</p>
                                 @endif
+                            </div>
+                        </div>
+                    @else
+                        <div class="card border mb-4">
+                            <div class="card-header bg-warning bg-opacity-10">
+                                <h6 class="mb-0 text-warning">
+                                    <i class="fas fa-user me-2"></i>Driver Information
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted text-center mb-0">No driver assigned to this vehicle</p>
                             </div>
                         </div>
                     @endif

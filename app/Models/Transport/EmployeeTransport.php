@@ -98,4 +98,17 @@ class EmployeeTransport extends Model
             ->where('reference_type', self::class);
     }
 
+    /**
+     * Get the status badge CSS class.
+     */
+    public function getStatusBadgeClassAttribute(): string
+    {
+        return match ($this->status) {
+            'Pending' => 'bg-warning text-dark',
+            'Approved' => 'bg-success',
+            'Rejected' => 'bg-danger',
+            'Cancelled' => 'bg-secondary',
+            default => 'bg-secondary',
+        };
+    }
 }

@@ -104,13 +104,19 @@
                                         <td>{{ $allocations->firstItem() + $index }}</td>
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-2">
-                                                    <i class="fas fa-car text-primary"></i>
-                                                </div>
+                                                @if ($allocation->getVehicle && $allocation->getVehicle->vehicle_image)
+                                                    <img src="{{ asset('storage/' . $allocation->getVehicle->vehicle_image) }}"
+                                                        alt="Vehicle" class="rounded-2 me-2"
+                                                        style="width: 40px; height: 40px; object-fit: cover;">
+                                                @else
+                                                    <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-2">
+                                                        <i class="fas fa-car text-primary"></i>
+                                                    </div>
+                                                @endif
                                                 <div>
-                                                    <strong>{{ $allocation->getVehicle->reg_no ?? 'N/A' }}</strong>
+                                                    <strong>{{ $allocation->getVehicle->vehicle_category ?? 'N/A' }}</strong>
                                                     <small class="text-muted d-block">
-                                                        {{ $allocation->getVehicle->brand ?? '' }}
+                                                        {{ $allocation->getVehicle->model_number ?? $allocation->getVehicle->vehicle_category }}
                                                     </small>
                                                 </div>
                                             </div>

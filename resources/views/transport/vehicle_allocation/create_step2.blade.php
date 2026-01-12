@@ -47,17 +47,60 @@
 
                 <div class="card-body p-4">
                     <!-- Allocation Summary -->
-                    <div class="alert alert-info d-flex align-items-center mb-4">
-                        <i class="fas fa-info-circle fa-lg me-3"></i>
-                        <div>
-                            <strong>Allocation Type:</strong>
-                            {{ session('allocation_data.allocation_type') ?? ($allocationData['allocation_type'] ?? 'N/A') }}
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-info bg-opacity-10">
+                            <h6 class="mb-0 text-info">
+                                <i class="fas fa-clipboard-list me-2"></i>Selected Application Details
+                            </h6>
+                        </div>
+                        <div class="card-body">
                             @if (isset($reference))
-                                <br>
-                                <strong>Reference:</strong> {{ $reference->service_name ?? ($reference->purpose ?? 'N/A') }}
-                                @if (isset($reference->estimated_passengers))
-                                    | <strong>Passengers:</strong> ~{{ $reference->estimated_passengers }}
-                                @endif
+                                @php
+                                    $allocType =
+                                        session('allocation_data.allocation_type') ??
+                                        ($allocationData['allocation_type'] ?? 'N/A');
+                                    $displayType =
+                                        $allocType == 'trip_based' ? 'Trip Requisition' : 'Employee Transport';
+                                @endphp
+                                <div class="row g-3">
+                                    <div class="col-md-3">
+                                        <div class="d-flex flex-column">
+                                            <small class="text-muted mb-1">Type</small>
+                                            <span class="badge bg-primary w-fit">{{ $displayType }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="d-flex flex-column">
+                                            <small
+                                                class="text-muted mb-1">{{ $allocType == 'trip_based' ? 'Purpose' : 'Service' }}</small>
+                                            <strong class="text-truncate"
+                                                title="{{ $reference->purpose_of_travel ?? ($reference->service_name ?? 'N/A') }}">
+                                                {{ $reference->purpose_of_travel ?? ($reference->service_name ?? 'N/A') }}
+                                            </strong>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="d-flex flex-column">
+                                            <small class="text-muted mb-1">Passengers</small>
+                                            <span class="badge bg-success w-fit">
+                                                <i
+                                                    class="fas fa-users me-1"></i>{{ $reference->no_of_passengers ?? ($reference->estimated_passengers ?? 0) }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            @else
+                                @php
+                                    $allocType =
+                                        session('allocation_data.allocation_type') ??
+                                        ($allocationData['allocation_type'] ?? 'N/A');
+                                    $displayType =
+                                        $allocType == 'trip_based' ? 'Trip Requisition' : 'Employee Transport';
+                                @endphp
+                                <div class="d-flex align-items-center">
+                                    <small class="text-muted me-2">Type:</small>
+                                    <span class="badge bg-primary">{{ $displayType }}</span>
+                                </div>
                             @endif
                         </div>
                     </div>

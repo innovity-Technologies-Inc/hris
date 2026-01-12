@@ -89,7 +89,8 @@
                                             @if (isset($reference))
                                                 <tr>
                                                     <td class="fw-semibold text-muted">Reference:</td>
-                                                    <td>{{ $reference->service_name ?? ($reference->purpose ?? 'N/A') }}</td>
+                                                    <td>{{ $reference->service_name ?? ($reference->purpose ?? 'N/A') }}
+                                                    </td>
                                                 </tr>
                                             @endif
                                         </table>
@@ -118,6 +119,143 @@
                             </div>
                         </div>
 
+                        <!-- Application Details -->
+                        @if (isset($reference))
+                            <div class="card border-0 shadow-sm mb-4">
+                                <div class="card-header"
+                                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                                    <h6 class="mb-0">
+                                        <i class="fas fa-file-alt me-2"></i>
+                                        {{ $allocationData['allocation_type'] == 'trip_based' ? 'Trip Requisition Details' : 'Employee Transport Details' }}
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    @if ($allocationData['allocation_type'] == 'trip_based')
+                                        <!-- Trip Requisition Details -->
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <table class="table table-borderless mb-0 table-sm">
+                                                    <tr>
+                                                        <td class="fw-semibold text-muted" style="width: 45%;">Purpose:</td>
+                                                        <td>{{ $reference->purpose_of_travel ?? 'N/A' }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-semibold text-muted">Trip Type:</td>
+                                                        <td>
+                                                            <span
+                                                                class="badge bg-info">{{ $reference->trip_type ?? 'N/A' }}</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-semibold text-muted">Trip Mode:</td>
+                                                        <td>{{ $reference->trip_mode ?? 'N/A' }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-semibold text-muted">Passengers:</td>
+                                                        <td>
+                                                            <span class="badge bg-primary">
+                                                                <i
+                                                                    class="fas fa-users me-1"></i>{{ $reference->no_of_passengers ?? 0 }}
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <table class="table table-borderless mb-0 table-sm">
+                                                    <tr>
+                                                        <td class="fw-semibold text-muted" style="width: 45%;">Start
+                                                            Date/Time:</td>
+                                                        <td>
+                                                            @if ($reference->start_date_time)
+                                                                {{ is_object($reference->start_date_time) ? $reference->start_date_time->format('d M Y, H:i') : \Carbon\Carbon::parse($reference->start_date_time)->format('d M Y, H:i') }}
+                                                            @else
+                                                                <span class="text-muted">N/A</span>
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-semibold text-muted">End Date/Time:</td>
+                                                        <td>
+                                                            @if ($reference->end_date_time)
+                                                                {{ is_object($reference->end_date_time) ? $reference->end_date_time->format('d M Y, H:i') : \Carbon\Carbon::parse($reference->end_date_time)->format('d M Y, H:i') }}
+                                                            @else
+                                                                <span class="text-muted">N/A</span>
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-semibold text-muted">From:</td>
+                                                        <td>{{ $reference->pickup_location ?? 'N/A' }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-semibold text-muted">To:</td>
+                                                        <td>{{ $reference->destination ?? 'N/A' }}</td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <!-- Employee Transport Details -->
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <table class="table table-borderless mb-0 table-sm">
+                                                    <tr>
+                                                        <td class="fw-semibold text-muted" style="width: 45%;">Service
+                                                            Name:</td>
+                                                        <td><strong>{{ $reference->service_name ?? 'N/A' }}</strong></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-semibold text-muted">Transport Type:</td>
+                                                        <td>
+                                                            <span
+                                                                class="badge bg-info">{{ $reference->transport_type ?? 'N/A' }}</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-semibold text-muted">Purpose:</td>
+                                                        <td>{{ $reference->purpose ?? 'N/A' }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-semibold text-muted">Est. Passengers:</td>
+                                                        <td>
+                                                            <span class="badge bg-primary">
+                                                                <i
+                                                                    class="fas fa-users me-1"></i>{{ $reference->estimated_passengers ?? 0 }}
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <table class="table table-borderless mb-0 table-sm">
+                                                    <tr>
+                                                        <td class="fw-semibold text-muted" style="width: 45%;">From:</td>
+                                                        <td>{{ $reference->pickup_location ?? 'N/A' }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-semibold text-muted">To:</td>
+                                                        <td>{{ $reference->drop_location ?? 'N/A' }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-semibold text-muted">Operating Days:</td>
+                                                        <td>{{ $reference->operating_days ?? 'N/A' }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-semibold text-muted">Status:</td>
+                                                        <td>
+                                                            <span
+                                                                class="badge bg-success">{{ $reference->status ?? 'N/A' }}</span>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endif
+
                         <!-- Selected Vehicles List -->
                         <div class="card border-0 shadow-sm mb-4">
                             <div class="card-header bg-success bg-opacity-10">
@@ -132,8 +270,8 @@
                                             <tr>
                                                 <th>#</th>
                                                 <th>Image</th>
-                                                <th>Registration No</th>
                                                 <th>Vehicle</th>
+                                                <th>Model</th>
                                                 <th>Type</th>
                                                 <th>Capacity</th>
                                                 <th>Driver</th>
@@ -158,12 +296,10 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <strong>
-                                                            <i class="fas fa-car text-primary me-1"></i>
-                                                            {{ $vehicle->license_number }}
-                                                        </strong>
+                                                        <strong>{{ $vehicle->license_number }}</strong>
                                                     </td>
-                                                    <td>{{ $vehicle->model_number ?? 'N/A' }}</td>
+                                                    <td>{{ $vehicle->model_number ?? ($vehicle->vehicle_category ?? 'N/A') }}
+                                                    </td>
                                                     <td>{{ $vehicle->vehicle_category ?? 'N/A' }}</td>
                                                     <td>
                                                         <span class="badge bg-info">
@@ -172,8 +308,31 @@
                                                         </span>
                                                     </td>
                                                     <td>
-                                                        @if ($vehicle->driverAssignment && $vehicle->driverAssignment->driver)
-                                                            {{ $vehicle->driverAssignment->driver->name ?? 'N/A' }}
+                                                        @php
+                                                            $driver =
+                                                                $vehicle->driverAssignment?->driver ??
+                                                                $vehicle->driverAssignment?->getDriver;
+                                                        @endphp
+                                                        @if ($driver)
+                                                            <div class="d-flex align-items-center">
+                                                                @if ($driver->photo_path)
+                                                                    <img src="{{ asset('storage/' . $driver->photo_path) }}"
+                                                                        alt="Driver" class="rounded-circle me-2"
+                                                                        style="width: 30px; height: 30px; object-fit: cover;">
+                                                                @else
+                                                                    <div class="bg-secondary bg-opacity-10 rounded-circle me-2 d-flex align-items-center justify-content-center"
+                                                                        style="width: 30px; height: 30px;">
+                                                                        <i class="fas fa-user text-secondary"
+                                                                            style="font-size: 12px;"></i>
+                                                                    </div>
+                                                                @endif
+                                                                <div>
+                                                                    <div class="fw-semibold">
+                                                                        {{ $driver->full_name ?? 'N/A' }}</div>
+                                                                    <small
+                                                                        class="text-muted">{{ $driver->system_id ?? '' }}</small>
+                                                                </div>
+                                                            </div>
                                                         @else
                                                             <span class="text-muted">No driver assigned</span>
                                                         @endif
@@ -217,10 +376,35 @@
                                             placeholder="e.g., Industrial Area"
                                             value="{{ $reference->drop_location ?? old('route_end') }}">
                                     </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label class="form-label fw-semibold">Distance (km)</label>
+                                        <input type="number" name="distance_km" class="form-control" step="0.01"
+                                            placeholder="e.g., 50.5" value="{{ old('distance_km') }}">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label class="form-label fw-semibold">Estimated Duration (min)</label>
+                                        <input type="number" name="estimated_duration_minutes" class="form-control"
+                                            placeholder="e.g., 60" value="{{ old('estimated_duration_minutes') }}">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label class="form-label fw-semibold">Departure Time</label>
+                                        <input type="time" name="departure_time" class="form-control"
+                                            value="{{ old('departure_time') }}">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label class="form-label fw-semibold">Arrival Time</label>
+                                        <input type="time" name="arrival_time" class="form-control"
+                                            value="{{ old('arrival_time') }}">
+                                    </div>
                                     <div class="col-md-12 mb-3">
                                         <label class="form-label fw-semibold">Route Description</label>
                                         <textarea name="route_description" class="form-control" rows="2"
-                                            placeholder="Describe the route with stops/waypoints...">{{ $reference->route_details ?? old('route_description') }}</textarea>
+                                            placeholder="Describe the route with stops, highways, important landmarks...">{{ old('route_description') }}</textarea>
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label class="form-label fw-semibold">Special Instructions</label>
+                                        <textarea name="special_instructions" class="form-control" rows="2"
+                                            placeholder="e.g., Avoid rush hour traffic, Use alternate route on Fridays, Contact dispatch on arrival...">{{ old('special_instructions') }}</textarea>
                                     </div>
                                 </div>
                             </div>
