@@ -150,7 +150,7 @@ class AttendanceServices
             if ($clock_in->between($from, $to) && $roster->status == 'active') {
                 Log::info('Roster Active');
                 $dataShiftType = "Roster";
-                $dayPassed = (int)$from->diffInDays($clock_in->startOfDay());
+                $dayPassed = (int)$from->diffInDays($clock_in->copy()->startOfDay());
                 $repeatDays = (int)$roster->getPlan->swapping;
                 $cycle = intdiv($dayPassed, $repeatDays);
                 if ($roster->third_shift_id != null) {
