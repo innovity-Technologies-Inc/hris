@@ -99,6 +99,19 @@ class EmployeeSearchController extends Controller
             ->orderBy('id', 'desc')
             ->paginate(50);
 
+        // Manually load relationships for each employee's office info
+        $employees->each(function($employee) {
+            if ($employee->officeInfo) {
+                $employee->officeInfo->load([
+                    'getCurrentCompany',
+                    'getCurrentBusinessUnit',
+                    'getCurrentDivision',
+                    'getCurrentDepartment',
+                    'getCurrentSection'
+                ]);
+            }
+        });
+
         // Return AJAX response if requested
         if ($request->ajax()) {
             return response()->json([
@@ -182,7 +195,7 @@ class EmployeeSearchController extends Controller
      */
     private function getFilterOptions()
     {
-        // Get all employees for initial load
+        // Get all employees with office info
         $allEmployees = Employee::with('officeInfo')
             ->select(
                 'id',
@@ -199,6 +212,20 @@ class EmployeeSearchController extends Controller
                 'personal_mobile',
                 'work_email'
             )->get();
+
+        // Manually load relationships for each employee's office info
+        $allEmployees->each(function($employee) {
+            if ($employee->officeInfo) {
+                // Load the related models
+                $employee->officeInfo->load([
+                    'getCurrentCompany',
+                    'getCurrentBusinessUnit',
+                    'getCurrentDivision',
+                    'getCurrentDepartment',
+                    'getCurrentSection'
+                ]);
+            }
+        });
 
         // Get organizational data - only companies loaded initially
         // Other dropdowns (branch, division, department, section) are loaded via AJAX based on company selection

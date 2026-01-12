@@ -381,7 +381,7 @@
                                     </h6>
                                 </div>
                                 <div class="card-body">
-                                    <canvas id="companyChart" height="250"></canvas>
+                                    <canvas id="companyChart" height="300"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -393,7 +393,7 @@
                                     </h6>
                                 </div>
                                 <div class="card-body">
-                                    <canvas id="departmentChart" height="250"></canvas>
+                                    <canvas id="departmentChart" height="300"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -409,7 +409,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="col-lg-4 col-md-6 mb-4" id="branchChartContainer">
                             <div class="card border shadow-sm">
                                 <div class="card-header bg-light">
                                     <h6 class="mb-0 text-center">
@@ -417,7 +417,7 @@
                                     </h6>
                                 </div>
                                 <div class="card-body">
-                                    <canvas id="branchChart" height="250"></canvas>
+                                    <canvas id="branchChart" height="300"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -429,7 +429,7 @@
                                     </h6>
                                 </div>
                                 <div class="card-body">
-                                    <canvas id="divisionChart" height="250"></canvas>
+                                    <canvas id="divisionChart" height="300"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -441,7 +441,7 @@
                                     </h6>
                                 </div>
                                 <div class="card-body">
-                                    <canvas id="sectionChart" height="250"></canvas>
+                                    <canvas id="sectionChart" height="300"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -534,12 +534,34 @@
                                 ? \Carbon\Carbon::parse($employee->date_of_birth)->age
                                 : null;
                             $country = $employee->permanent_address['country'] ?? '';
-                            $companyId = $employee->officeInfo->current_company_id ?? '';
-                            $businessUnitId = $employee->officeInfo->current_business_unit_id ?? '';
-                            $divisionId = $employee->officeInfo->current_division_id ?? '';
-                            $departmentId = $employee->officeInfo->current_department_id ?? '';
-                            $sectionId = $employee->officeInfo->current_section_id ?? '';
-                            $empType = $employee->officeInfo->emp_type ?? '';
+
+                            // Get office info
+                            $officeInfo = $employee->officeInfo;
+
+                            // Company
+                            $companyId = optional($officeInfo)->current_company_id ?? '';
+                            $companyName = optional(optional($officeInfo)->getCurrentCompany)->name ?? '';
+
+                            // Branch (Business Unit) - uses name field from company_locations table
+                            $businessUnitId = optional($officeInfo)->current_business_unit_id ?? '';
+                            $businessUnitObj = optional($officeInfo)->getCurrentBusinessUnit;
+                            $businessUnitName = $businessUnitObj ? $businessUnitObj->name : '';
+
+                            // Division
+                            $divisionId = optional($officeInfo)->current_division_id ?? '';
+                            $divisionName = optional(optional($officeInfo)->getCurrentDivision)->name ?? '';
+
+                            // Department
+                            $departmentId = optional($officeInfo)->current_department_id ?? '';
+                            $departmentName =
+                                optional(optional($officeInfo)->getCurrentDepartment)->department_name ?? '';
+
+                            // Section
+                            $sectionId = optional($officeInfo)->current_section_id ?? '';
+                            $sectionName = optional(optional($officeInfo)->getCurrentSection)->name ?? '';
+
+                            // Employee Type
+                            $empType = optional($officeInfo)->emp_type ?? '';
                         @endphp
                         <tr class="employee-row" data-system-id="{{ $employee->system_id }}"
                             data-employee-id="{{ $employee->applicant_id }}"
@@ -548,8 +570,11 @@
                             data-emp-type="{{ $empType }}" data-blood-group="{{ $employee->blood_group }}"
                             data-religion="{{ $employee->religion }}" data-nationality="{{ $employee->nationality }}"
                             data-country="{{ $country }}" data-company-id="{{ $companyId }}"
-                            data-business-unit-id="{{ $businessUnitId }}" data-division-id="{{ $divisionId }}"
-                            data-department-id="{{ $departmentId }}" data-section-id="{{ $sectionId }}"
+                            data-company="{{ $companyName }}" data-business-unit-id="{{ $businessUnitId }}"
+                            data-branch="{{ $businessUnitName }}" data-division-id="{{ $divisionId }}"
+                            data-division="{{ $divisionName }}" data-department-id="{{ $departmentId }}"
+                            data-department="{{ $departmentName }}" data-section-id="{{ $sectionId }}"
+                            data-section="{{ $sectionName }}"
                             data-email="{{ $employee->work_email ?? $employee->personal_email }}"
                             data-phone="{{ $employee->personal_mobile }}" data-full-name="{{ $employee->full_name }}">
                             <td>{{ $index + 1 }}</td>
@@ -760,10 +785,15 @@
                         age: parseInt(row.data('age')),
                         gender: row.data('gender'),
                         companyId: row.data('company-id'),
+                        company: row.data('company'),
                         businessUnitId: row.data('business-unit-id'),
+                        branch: row.data('branch'),
                         divisionId: row.data('division-id'),
+                        division: row.data('division'),
                         departmentId: row.data('department-id'),
+                        department: row.data('department'),
                         sectionId: row.data('section-id'),
+                        section: row.data('section'),
                         employeeType: row.data('emp-type'),
                         maritalStatus: row.data('marital-status'),
                         bloodGroup: row.data('blood-group'),
@@ -858,9 +888,17 @@
 
                 // Branch Distribution
                 const branchData = countByProperty(filteredEmployees, 'branch');
-                chartInstances.branch = createPieChart('branchChart', 'Branch',
-                    Object.keys(branchData), Object.values(branchData),
-                    ['#9966FF', '#FF9F40', '#4BC0C0', '#FF6384', '#36A2EB']);
+                
+                if (Object.keys(branchData).length === 0) {
+                    // No branch data available, hide the container
+                    $('#branchChartContainer').hide();
+                } else {
+                    // Show the container and render the chart
+                    $('#branchChartContainer').show();
+                    chartInstances.branch = createPieChart('branchChart', 'Branch',
+                        Object.keys(branchData), Object.values(branchData),
+                        ['#9966FF', '#FF9F40', '#4BC0C0', '#FF6384', '#36A2EB']);
+                }
 
                 // Division Distribution
                 const divisionData = countByProperty(filteredEmployees, 'division');
@@ -907,7 +945,12 @@
 
             function countByProperty(data, property) {
                 return data.reduce((acc, item) => {
-                    acc[item[property]] = (acc[item[property]] || 0) + 1;
+                    const value = item[property];
+                    // Skip undefined, null, empty strings, and 'N/A' values
+                    if (value && value.toString().trim() !== '' && value !== 'N/A' && value !==
+                        'undefined' && value !== 'null') {
+                        acc[value] = (acc[value] || 0) + 1;
+                    }
                     return acc;
                 }, {});
             }
@@ -924,13 +967,33 @@
 
             function createPieChart(canvasId, title, labels, data, colors) {
                 const ctx = document.getElementById(canvasId).getContext('2d');
+
+                // Handle empty data - show N/A message
+                if (labels.length === 0 || data.length === 0) {
+                    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                    ctx.font = '16px Arial';
+                    ctx.fillStyle = '#999';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('No Data Available', ctx.canvas.width / 2, ctx.canvas.height / 2);
+                    return null;
+                }
+
+                // Generate more colors if needed
+                const colorPalette = [
+                    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40',
+                    '#FF6384', '#C9CBCF', '#4BC0C0', '#FF4560', '#00D9E9', '#775DD0',
+                    '#FEB019', '#FF4560', '#00E396', '#FF9F40', '#546E7A', '#26A69A'
+                ];
+                const finalColors = labels.length > colors.length ? colorPalette : colors;
+
                 return new Chart(ctx, {
                     type: 'pie',
                     data: {
                         labels: labels,
                         datasets: [{
                             data: data,
-                            backgroundColor: colors,
+                            backgroundColor: finalColors,
                             borderWidth: 2,
                             borderColor: '#fff'
                         }]
@@ -942,11 +1005,15 @@
                             legend: {
                                 position: 'bottom',
                                 labels: {
-                                    padding: 15,
+                                    padding: 8,
                                     font: {
-                                        size: 11
-                                    }
-                                }
+                                        size: 10
+                                    },
+                                    boxWidth: 12,
+                                    boxHeight: 12,
+                                    usePointStyle: true
+                                },
+                                maxHeight: 120
                             },
                             tooltip: {
                                 callbacks: {
@@ -1016,6 +1083,20 @@
         function viewDetailedResults() {
             if (filteredEmployees.length === 0) return;
 
+            // Determine which columns to display - show all organizational hierarchy
+            const showCompany = true; // Always show company
+            const showBranch = true; // Always show branch
+            const showDivision = true; // Always show division
+            const showDepartment = true; // Always show department
+            const showSection = true; // Always show section
+
+            // Show/hide table headers
+            $('#headerCompany').toggle(showCompany);
+            $('#headerBranch').toggle(showBranch);
+            $('#headerDivision').toggle(showDivision);
+            $('#headerDepartment').toggle(showDepartment);
+            $('#headerSection').toggle(showSection);
+
             let tableHtml = '';
             filteredEmployees.forEach((emp, index) => {
                 tableHtml += `
@@ -1026,9 +1107,12 @@
                         <td><strong>${emp.fullName}</strong></td>
                         <td>${emp.age}</td>
                         <td>${emp.gender}</td>
-                        <td><span class="badge ${emp.employeeType === 'Permanent' ? 'bg-success' : 'bg-warning'}">${emp.employeeType}</span></td>
-                        <td>${emp.company}</td>
-                        <td>${emp.department}</td>
+                        <td><span class="badge ${emp.employeeType === 'permanent' ? 'bg-success' : 'bg-warning'}">${emp.employeeType}</span></td>
+                        ${showCompany ? `<td>${emp.company}</td>` : ''}
+                        ${showBranch ? `<td>${emp.branch}</td>` : ''}
+                        ${showDivision ? `<td>${emp.division}</td>` : ''}
+                        ${showDepartment ? `<td>${emp.department}</td>` : ''}
+                        ${showSection ? `<td>${emp.section}</td>` : ''}
                         <td><small><i class="mdi mdi-email"></i> ${emp.email}<br><i class="mdi mdi-phone"></i> ${emp.phone}</small></td>
                     </tr>
                 `;
@@ -1045,58 +1129,138 @@
         function printResults() {
             if (filteredEmployees.length === 0) return;
 
+            // Determine which columns to display - show all organizational hierarchy
+            const showCompany = true;
+            const showBranch = true;
+            const showDivision = true;
+            const showDepartment = true;
+            const showSection = true;
+
+            // Build table headers dynamically
+            let headers = `
+                <th style="width: 40px;">#</th>
+                <th>System ID</th>
+                <th>Employee ID</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Type</th>
+            `;
+            if (showCompany) headers += `<th>Company</th>`;
+            if (showBranch) headers += `<th>Branch</th>`;
+            if (showDivision) headers += `<th>Division</th>`;
+            if (showDepartment) headers += `<th>Department</th>`;
+            if (showSection) headers += `<th>Section</th>`;
+            headers += `<th>Contact</th>`;
+
             let printContent = `
                 <html>
                 <head>
                     <title>Employee Search Results</title>
                     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
                     <style>
-                        body { font-family: Arial, sans-serif; padding: 20px; }
-                        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 10px; }
-                        table { width: 100%; font-size: 12px; }
-                        th { background-color: #f8f9fa; }
+                        @page {
+                            size: A4 landscape;
+                            margin: 10mm;
+                        }
+                        body { 
+                            font-family: Arial, sans-serif; 
+                            padding: 10px;
+                            font-size: 10px;
+                        }
+                        .header { 
+                            text-align: center; 
+                            margin-bottom: 15px; 
+                            border-bottom: 2px solid #333; 
+                            padding-bottom: 8px;
+                            page-break-after: avoid;
+                        }
+                        .header h2 {
+                            font-size: 18px;
+                            margin-bottom: 5px;
+                        }
+                        .header p {
+                            font-size: 11px;
+                            margin: 0;
+                        }
+                        table { 
+                            width: 100%; 
+                            font-size: 9px;
+                            border-collapse: collapse;
+                        }
+                        th { 
+                            background-color: #f8f9fa;
+                            font-weight: bold;
+                            padding: 6px 4px;
+                            border: 1px solid #dee2e6;
+                            page-break-inside: avoid;
+                            page-break-after: avoid;
+                        }
+                        td {
+                            padding: 5px 4px;
+                            border: 1px solid #dee2e6;
+                            page-break-inside: avoid;
+                        }
+                        tr {
+                            page-break-inside: avoid;
+                            page-break-after: auto;
+                        }
+                        thead {
+                            display: table-header-group;
+                        }
+                        tbody {
+                            display: table-row-group;
+                        }
+                        .badge {
+                            display: inline-block;
+                            padding: 2px 6px;
+                            font-size: 9px;
+                            border-radius: 3px;
+                        }
+                        .badge.bg-primary { background-color: #0d6efd; color: white; }
+                        .badge.bg-info { background-color: #0dcaf0; color: black; }
+                        .badge.bg-success { background-color: #198754; color: white; }
+                        .badge.bg-warning { background-color: #ffc107; color: black; }
                         @media print {
                             .no-print { display: none; }
+                            body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+                            table { page-break-inside: auto; }
+                            tr { page-break-inside: avoid; page-break-after: auto; }
+                            td { page-break-inside: avoid; page-break-after: auto; }
+                            thead { display: table-header-group; }
                         }
                     </style>
                 </head>
                 <body>
                     <div class="header">
                         <h2>Employee Search Results</h2>
-                        <p>Total Employees: ${filteredEmployees.length} | Date: ${new Date().toLocaleDateString()}</p>
+                        <p>Total Employees: ${filteredEmployees.length} | Date: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</p>
                     </div>
                     <table class="table table-bordered">
                         <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>System ID</th>
-                                <th>Employee ID</th>
-                                <th>Name</th>
-                                <th>Age</th>
-                                <th>Gender</th>
-                                <th>Type</th>
-                                <th>Company</th>
-                                <th>Department</th>
-                                <th>Contact</th>
-                            </tr>
+                            <tr>${headers}</tr>
                         </thead>
                         <tbody>`;
 
             filteredEmployees.forEach((emp, index) => {
-                printContent += `
+                let row = `
                     <tr>
                         <td>${index + 1}</td>
-                        <td>${emp.systemId}</td>
-                        <td>${emp.employeeId}</td>
-                        <td>${emp.fullName}</td>
+                        <td><span class="badge bg-primary">${emp.systemId}</span></td>
+                        <td><span class="badge bg-info">${emp.employeeId}</span></td>
+                        <td><strong>${emp.fullName}</strong></td>
                         <td>${emp.age}</td>
                         <td>${emp.gender}</td>
-                        <td>${emp.employeeType}</td>
-                        <td>${emp.company}</td>
-                        <td>${emp.department}</td>
-                        <td>${emp.email}<br>${emp.phone}</td>
-                    </tr>
+                        <td><span class="badge ${emp.employeeType === 'permanent' ? 'bg-success' : 'bg-warning'}">${emp.employeeType}</span></td>
                 `;
+                if (showCompany) row += `<td>${emp.company}</td>`;
+                if (showBranch) row += `<td>${emp.branch}</td>`;
+                if (showDivision) row += `<td>${emp.division}</td>`;
+                if (showDepartment) row += `<td>${emp.department}</td>`;
+                if (showSection) row += `<td>${emp.section}</td>`;
+                row += `<td style="font-size: 8px;">${emp.email}<br>${emp.phone}</td>`;
+                row += `</tr>`;
+                printContent += row;
             });
 
             printContent += `
@@ -1106,14 +1270,13 @@
                 </html>
             `;
 
-            const printWindow = window.open('', '_blank');
+            const printWindow = window.open('', '_blank', 'width=1200,height=800');
             printWindow.document.write(printContent);
             printWindow.document.close();
             printWindow.focus();
             setTimeout(() => {
                 printWindow.print();
-                printWindow.close();
-            }, 250);
+            }, 500);
         }
     </script>
 @endsection
