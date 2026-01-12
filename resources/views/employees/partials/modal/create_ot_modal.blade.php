@@ -40,7 +40,7 @@
                                 Effective To <span class="text-danger">*</span>
                             </label>
                             <input type="date" id="modal_ot_effective_to" name="to" class="form-control"
-                                required>
+                                value="{{ date('Y-m-d', strtotime('+1 year')) }}" required>
                         </div>
                     </div>
                     <div id="modal-ot-plan-details" class="mt-4" style="display: none;">
@@ -105,7 +105,26 @@
     $(function() {
 
         // ============================
-        // 🚀 Show Off Day Plan Details
+        // 🚀 Set minimum date for "to" field
+        // ============================
+        $(document).on('change', '#modal_ot_effective_from', function() {
+            let fromDate = $(this).val();
+            if (fromDate) {
+                $('#modal_ot_effective_to').attr('min', fromDate);
+                // If to date is empty or less than from date, set it to from date
+                let toDate = $('#modal_ot_effective_to').val();
+                if (!toDate || toDate < fromDate) {
+                    // Set to date to 1 year from the from date
+                    let toDateObj = new Date(fromDate);
+                    toDateObj.setFullYear(toDateObj.getFullYear() + 1);
+                    let toDateString = toDateObj.toISOString().split('T')[0];
+                    $('#modal_ot_effective_to').val(toDateString);
+                }
+            }
+        });
+
+        // ============================
+        // 🚀 Show OT Plan Details
         // ============================
         $(document).on('change', '#modal_ot_plan_id', function() {
             let planId = $(this).val();
