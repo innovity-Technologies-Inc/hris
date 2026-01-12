@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Services\EmployeeServices;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class EmployeeSearchController extends Controller
 {
@@ -32,7 +33,13 @@ class EmployeeSearchController extends Controller
         $sub_section = 'Search';
 
         // Build query with necessary relationships
-        $query = Employee::with('officeInfo');
+        $query = Employee::with([
+            'officeInfo.getCurrentCompany',
+            'officeInfo.getCurrentBusinessUnit',
+            'officeInfo.getCurrentDivision',
+            'officeInfo.getCurrentDepartment',
+            'officeInfo.getCurrentSection'
+        ]);
 
         // Handle country filter separately (JSON field)
         if ($request->filled('country')) {
@@ -98,19 +105,6 @@ class EmployeeSearchController extends Controller
             ->apply($query, $filters, $keyword, $searchableColumns)
             ->orderBy('id', 'desc')
             ->paginate(50);
-
-        // Manually load relationships for each employee's office info
-        $employees->each(function($employee) {
-            if ($employee->officeInfo) {
-                $employee->officeInfo->load([
-                    'getCurrentCompany',
-                    'getCurrentBusinessUnit',
-                    'getCurrentDivision',
-                    'getCurrentDepartment',
-                    'getCurrentSection'
-                ]);
-            }
-        });
 
         // Return AJAX response if requested
         if ($request->ajax()) {
@@ -190,61 +184,65 @@ class EmployeeSearchController extends Controller
 
     /**
      * Get unique filter options from database for dropdown population
+     * Uses efficient queries without caching full collection
      *
      * @return array
      */
     private function getFilterOptions()
     {
-        // Get all employees with office info
-        $allEmployees = Employee::with('officeInfo')
-            ->select(
-                'id',
-                'applicant_id',
-                'system_id',
-                'full_name',
-                'gender',
-                'marital_status',
-                'blood_group',
-                'religion',
-                'nationality',
-                'date_of_birth',
-                'permanent_address',
-                'personal_mobile',
-                'work_email'
-            )->get();
+        // Load employees with relationships using eager loading
+        $employees = Employee::with([
+            'officeInfo.getCurrentCompany',
+            'officeInfo.getCurrentBusinessUnit',
+            'officeInfo.getCurrentDivision',
+            'officeInfo.getCurrentDepartment',
+            'officeInfo.getCurrentSection'
+        ])
+        ->select(
+            'id',
+            'applicant_id',
+            'system_id',
+            'full_name',
+            'gender',
+            'marital_status',
+            'blood_group',
+            'religion',
+            'nationality',
+            'date_of_birth',
+            'permanent_address',
+            'personal_mobile',
+            'work_email'
+        )->get();
 
-        // Manually load relationships for each employee's office info
-        $allEmployees->each(function($employee) {
-            if ($employee->officeInfo) {
-                // Load the related models
-                $employee->officeInfo->load([
-                    'getCurrentCompany',
-                    'getCurrentBusinessUnit',
-                    'getCurrentDivision',
-                    'getCurrentDepartment',
-                    'getCurrentSection'
-                ]);
-            }
+        // Cache only the filter arrays, not the full employee collection
+        $cachedFilters = Cache::remember('employee_search_filters_data', 3600, function() use ($employees) {
+            return [
+                'employee_names' => $employees->pluck('full_name')->unique()->sort()->values()->toArray(),
+                'employee_ids' => $employees->pluck('applicant_id')->unique()->sort()->values()->toArray(),
+                'system_ids' => $employees->pluck('system_id')->unique()->sort()->values()->toArray(),
+                'religions' => $employees->pluck('religion')->filter()->unique()->sort()->values()->toArray(),
+                'nationalities' => $employees->pluck('nationality')->filter()->unique()->sort()->values()->toArray(),
+                'countries' => $employees->map(function($emp) {
+                    return $emp->permanent_address['country'] ?? null;
+                })->filter()->unique()->sort()->values()->toArray(),
+            ];
         });
 
         // Get organizational data - only companies loaded initially
-        // Other dropdowns (branch, division, department, section) are loaded via AJAX based on company selection
         $companies = Company::select('id', 'name')->orderBy('name')->get();
 
         return [
-            'employees' => $allEmployees,
-            'employee_names' => $allEmployees->pluck('full_name', 'full_name')->unique()->sort()->values(),
-            'employee_ids' => $allEmployees->pluck('applicant_id', 'applicant_id')->unique()->sort()->values(),
-            'system_ids' => $allEmployees->pluck('system_id', 'system_id')->unique()->sort()->values(),
+            'employees' => $employees,
+            'employee_names' => collect($cachedFilters['employee_names']),
+            'employee_ids' => collect($cachedFilters['employee_ids']),
+            'system_ids' => collect($cachedFilters['system_ids']),
             'genders' => ['Male', 'Female', 'Other'],
             'marital_statuses' => ['Single', 'Married', 'Divorced', 'Widowed'],
             'employee_types' => ['permanent', 'contractual'],
             'blood_groups' => ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
-            'religions' => $allEmployees->pluck('religion')->filter()->unique()->sort()->values(),
-            'nationalities' => $allEmployees->pluck('nationality')->filter()->unique()->sort()->values(),
-            'countries' => $allEmployees->map(function($emp) {
-                return $emp->permanent_address['country'] ?? null;
-            })->filter()->unique()->sort()->values(),
+            'religions' => collect($cachedFilters['religions']),
+            'nationalities' => collect($cachedFilters['nationalities']),
+            'countries' => collect($cachedFilters['countries']),
             'companies' => $companies,
         ];
     }
