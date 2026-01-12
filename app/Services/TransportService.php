@@ -160,6 +160,7 @@ class TransportService
             ->map(function ($vehicle) use ($now) {
                 $allocation = $vehicle->activeAllocation;
 
+                // Calculate allocation status inline
                 $vehicle->allocation_status_label = $vehicle->is_allocated ? 'Allocated' : 'Free';
                 $vehicle->allocation_status_class = $vehicle->is_allocated ? 'bg-danger' : 'bg-success';
 

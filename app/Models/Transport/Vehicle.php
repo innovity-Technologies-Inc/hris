@@ -41,30 +41,6 @@ class Vehicle extends Model
     ];
 
     /**
-     * Vehicle categories.
-     */
-    public const CATEGORIES = [
-        'Car',
-        'Bus',
-        'Micro Bus',
-        'Truck',
-        'Bike',
-        'Van',
-        'Airplane',
-        'Ship',
-    ];
-
-    /**
-     * Fuel types.
-     */
-    public const FUEL_TYPES = [
-        'Petrol',
-        'Diesel',
-        'CNG',
-        'Electric',
-    ];
-
-    /**
      * Get all allocations for this vehicle.
      */
     public function allocations(): HasMany
@@ -113,46 +89,6 @@ class Vehicle extends Model
     public function isAvailable(): bool
     {
         return $this->status === 'Active' && !$this->is_allocated;
-    }
-
-    /**
-     * Get allocation status label.
-     */
-    public function getAllocationStatusLabelAttribute(): string
-    {
-        return $this->is_allocated ? 'Allocated' : 'Free';
-    }
-
-    /**
-     * Get allocation status badge class.
-     */
-    public function getAllocationStatusClassAttribute(): string
-    {
-        return $this->is_allocated ? 'bg-danger' : 'bg-success';
-    }
-
-    /**
-     * Get display name (category + model).
-     */
-    public function getDisplayNameAttribute(): string
-    {
-        return $this->vehicle_category . ' - ' . $this->model_number;
-    }
-
-    /**
-     * Scope for active vehicles.
-     */
-    public function scopeActive($query)
-    {
-        return $query->where('status', 'Active');
-    }
-
-    /**
-     * Scope for unallocated vehicles.
-     */
-    public function scopeUnallocated($query)
-    {
-        return $query->where('is_allocated', false);
     }
 
     /**
