@@ -102,9 +102,47 @@ class EmployeeSeeder extends Seeder
     {
         // Load necessary IDs from the organization/compensation seeders
         $this->orgData['companies'] = DB::table('companies')->pluck('id')->toArray();
-        $this->orgData['divisions'] = DB::table('divisions')->pluck('id')->toArray();
-        $this->orgData['departments'] = DB::table('departments')->pluck('id')->toArray();
-        $this->orgData['sections'] = DB::table('sections')->pluck('id')->toArray();
+        
+        // Load company_locations grouped by company_id for proper assignment
+        $this->orgData['company_locations_by_company'] = DB::table('company_locations')
+            ->select('id', 'company_id')
+            ->get()
+            ->groupBy('company_id')
+            ->map(function($locations) {
+                return $locations->pluck('id')->toArray();
+            })
+            ->toArray();
+        
+        // Load divisions grouped by location_id (branch)
+        $this->orgData['divisions_by_location'] = DB::table('divisions')
+            ->select('id', 'location_id')
+            ->get()
+            ->groupBy('location_id')
+            ->map(function($divisions) {
+                return $divisions->pluck('id')->toArray();
+            })
+            ->toArray();
+        
+        // Load departments grouped by division_id
+        $this->orgData['departments_by_division'] = DB::table('departments')
+            ->select('id', 'division_id')
+            ->get()
+            ->groupBy('division_id')
+            ->map(function($departments) {
+                return $departments->pluck('id')->toArray();
+            })
+            ->toArray();
+        
+        // Load sections grouped by department_id
+        $this->orgData['sections_by_department'] = DB::table('sections')
+            ->select('id', 'department_id')
+            ->get()
+            ->groupBy('department_id')
+            ->map(function($sections) {
+                return $sections->pluck('id')->toArray();
+            })
+            ->toArray();
+            
         $this->orgData['designations'] = DB::table('designations')->pluck('id')->toArray();
         $this->orgData['tofsils'] = DB::table('tofsils')->pluck('id')->toArray();
         $this->orgData['salary_grades'] = DB::table('salary_grades')->pluck('id')->toArray();
@@ -303,11 +341,39 @@ class EmployeeSeeder extends Seeder
         $joiningDate = $this->faker->dateTimeBetween('-5 years', '-6 months');
         $isPermanent = $this->faker->boolean(70);
 
-        // --- Randomly select linked IDs ---
+        // --- Select organizational IDs following the hierarchy: Company -> Branch -> Division -> Department -> Section ---
+        
+        // 1. Select Company
         $companyId = $this->faker->randomElement($this->orgData['companies']);
-        $divisionId = $this->faker->randomElement($this->orgData['divisions']);
-        $departmentId = $this->faker->randomElement($this->orgData['departments']);
-        $sectionId = $this->faker->randomElement($this->orgData['sections']);
+        
+        // 2. Select a Business Unit (Branch) that belongs to the selected company
+        $businessUnitId = null;
+        if (isset($this->orgData['company_locations_by_company'][$companyId]) && 
+            !empty($this->orgData['company_locations_by_company'][$companyId])) {
+            $businessUnitId = $this->faker->randomElement($this->orgData['company_locations_by_company'][$companyId]);
+        }
+        
+        // 3. Select a Division that belongs to the selected branch
+        $divisionId = null;
+        if ($businessUnitId && isset($this->orgData['divisions_by_location'][$businessUnitId]) && 
+            !empty($this->orgData['divisions_by_location'][$businessUnitId])) {
+            $divisionId = $this->faker->randomElement($this->orgData['divisions_by_location'][$businessUnitId]);
+        }
+        
+        // 4. Select a Department that belongs to the selected division
+        $departmentId = null;
+        if ($divisionId && isset($this->orgData['departments_by_division'][$divisionId]) && 
+            !empty($this->orgData['departments_by_division'][$divisionId])) {
+            $departmentId = $this->faker->randomElement($this->orgData['departments_by_division'][$divisionId]);
+        }
+        
+        // 5. Select a Section that belongs to the selected department
+        $sectionId = null;
+        if ($departmentId && isset($this->orgData['sections_by_department'][$departmentId]) && 
+            !empty($this->orgData['sections_by_department'][$departmentId])) {
+            $sectionId = $this->faker->randomElement($this->orgData['sections_by_department'][$departmentId]);
+        }
+        
         $designationId = $this->faker->randomElement($this->orgData['designations']);
         $tofsilId = $this->faker->randomElement($this->orgData['tofsils']);
         $gradeId = $this->faker->randomElement($this->orgData['salary_grades']);
@@ -332,7 +398,7 @@ class EmployeeSeeder extends Seeder
 
             // Joining Information
             'joining_company_id' => $companyId,
-            'joining_business_unit_id' => $companyId,
+            'joining_business_unit_id' => $businessUnitId,
             'joining_division_id' => $divisionId,
             'joining_department_id' => $departmentId,
             'joining_section_id' => $sectionId,
@@ -341,7 +407,7 @@ class EmployeeSeeder extends Seeder
 
             // Current Posting Information
             'current_company_id' => $companyId,
-            'current_business_unit_id' => $companyId,
+            'current_business_unit_id' => $businessUnitId,
             'current_division_id' => $divisionId,
             'current_department_id' => $departmentId,
             'current_section_id' => $sectionId,

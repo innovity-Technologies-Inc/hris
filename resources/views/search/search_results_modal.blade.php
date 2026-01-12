@@ -21,8 +21,11 @@
                                 <th>Age</th>
                                 <th>Gender</th>
                                 <th>Type</th>
-                                <th>Company</th>
-                                <th>Department</th>
+                                <th id="headerCompany">Company</th>
+                                <th id="headerBranch">Branch</th>
+                                <th id="headerDivision">Division</th>
+                                <th id="headerDepartment">Department</th>
+                                <th id="headerSection">Section</th>
                                 <th style="width: 200px;">Contact</th>
                             </tr>
                         </thead>
