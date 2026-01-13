@@ -252,6 +252,9 @@ class AttendanceServices
             $from = Carbon::parse($overtime_data->from);
             $to = Carbon::parse($overtime_data->to);
             if ($clock_in->between($from, $to)) {
+                Log::info('From: ' . $from);
+                Log::info('To: ' . $to);
+                Log::info('Overtime Active');
                 return $overtime_data->plan_id;
             } else {
                 return null;
@@ -261,14 +264,12 @@ class AttendanceServices
         }
     }
 
-    public function getOverTime($maxOtTime, $fullDayDuration, $clock_in, $clock_out)
+    public function getOverTime($clock_out, $shift_end)
     {
-        $working_time = $this->getWorkingTime($clock_in, $clock_out);
-        $ot_time = $working_time - $fullDayDuration;
-        if ($ot_time >= $maxOtTime) {
-            return $maxOtTime;
-        } else {
-            return $ot_time;
+        if ($clock_out > $shift_end) {
+            return $shift_end->diffInMinutes($clock_out);
+        }else{
+            return 0;
         }
     }
 
@@ -393,7 +394,7 @@ class AttendanceServices
             Log::info($otDetails);
 
             if (!empty($otDetails)) {
-                $data['overtime'] = $this->getOverTime($otDetails->maximum_overtime, $shift_details->treat_as_full_day_minutes, $clock_in, $clock_out);
+                $data['overtime'] = $this->getOverTime($clock_out, $shift_end);
             } else {
                 $data['overtime'] = 0;
             }
@@ -489,7 +490,7 @@ class AttendanceServices
             Log::info($otDetails);
 
             if (!empty($otDetails)) {
-                $data['overtime'] = $this->getOverTime($otDetails->maximum_overtime, $shift_details->treat_as_full_day_minutes, $clock_in, $clock_out);
+                $data['overtime'] = $this->getOverTime($clock_out, $shift_end);
             } else {
                 $data['overtime'] = 0;
             }
