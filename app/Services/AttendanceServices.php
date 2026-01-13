@@ -105,10 +105,12 @@ class AttendanceServices
                 if ($clock_in->between($from, $to)) {
                     $dataShiftType = "Off-Day";
                     $shift = $offDayPlan->getPlan->shift_id;
+                    $offday_id = $offDayPlan->id;
 
                     return [
                         'shift' => $shift,
-                        'shift_type' => $dataShiftType
+                        'shift_type' => $dataShiftType,
+                        'offday_id' => $offday_id
                     ];
                 }
             }
@@ -342,6 +344,7 @@ class AttendanceServices
             Log::info('OFF Day Work Plan Enable');
             $data['shift_type'] = $offDayData['shift_type'];
             $shift = $offDayData['shift'];
+            $data['offday_id'] = $offDayData['offday_id'];
         } else {
             Log::info('Checking Shift');
             $shift_data = $this->getTodayShift($employee_id, $clock_in);
@@ -356,9 +359,12 @@ class AttendanceServices
         Log::info($shift_details);
         Log::info('Clock In SD: ' . $clock_in);
 
+        $data['shift_id'] = $shift;
 
         $shift_start = $shift_details->clock_in_time;
         $shift_end = $shift_details->clock_out_time;
+
+
 
         $grace_time = $shift_details->grace_time;
         $early_out_grace_minutes = $shift_details->early_out_grace_minutes;
@@ -395,6 +401,7 @@ class AttendanceServices
 
             if (!empty($otDetails)) {
                 $data['overtime'] = $this->getOverTime($clock_out, $shift_end);
+                $data['ot_id'] = $otDetails->plan_id;
             } else {
                 $data['overtime'] = 0;
             }
@@ -452,6 +459,7 @@ class AttendanceServices
             Log::info('OFF Day Work Plan Enable');
             $data['shift_type'] = $offDayData['shift_type'];
             $shift = $offDayData['shift'];
+            $data['offday_id'] = $offDayData['offday_id'];
         } else {
             Log::info('Checking Shift');
             $shift_data = $this->getTodayShift($employee_id, $clock_in);
@@ -461,6 +469,8 @@ class AttendanceServices
 
         $shift_details = ShiftPlan::findorFail($shift);
         Log::info($shift_details);
+        $data['shift_id'] = $shift;
+
 
         $shift_start = $shift_details->clock_in_time;
         $shift_end = $shift_details->clock_out_time;
