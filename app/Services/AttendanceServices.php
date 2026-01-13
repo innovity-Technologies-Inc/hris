@@ -41,7 +41,8 @@ class AttendanceServices
         }
     }
 
-    public function getLeaveDays($employeeId){
+    public function getLeaveDays($employeeId)
+    {
         $leaves = Leave::all()->where('employee_id', $employeeId);
 
         $leaveDates = [];
@@ -62,7 +63,8 @@ class AttendanceServices
         return $leaveDates;
     }
 
-    public function getHolidays(){
+    public function getHolidays()
+    {
         $holidays = Holiday::all();
 
         $holidayDates = [];
@@ -82,13 +84,14 @@ class AttendanceServices
         return $holidayDates;
     }
 
-    public function checkOffDay($employee_id, $clock_in, $index=null){
+    public function checkOffDay($employee_id, $clock_in, $index = null)
+    {
         $weekends = EmployeeOfficeInfo::find($employee_id)->weekends;
         $holidays = $this->getHolidays();
         $clock_in_day = $clock_in->copy()->format('l');
         if (in_array($clock_in_day, $weekends) || $holidays->contains($clock_in)) {
             $offDayPlans = EmployeeOffdayPlan::where('employee_id', $employee_id)->where('status', 'active')->get();
-            if (empty($offDayPlans)){
+            if (empty($offDayPlans)) {
                 throw ValidationException::withMessages([
                     "attendance.$index.clock_in" => ["Off-day clock-in is not allowed without an active off-day plan."]
                 ]);
@@ -119,19 +122,20 @@ class AttendanceServices
     }
 
 
-    public function isOffDay($employee_id, $clock_in){
+    public function isOffDay($employee_id, $clock_in)
+    {
         $weekends = EmployeeOfficeInfo::find($employee_id)->weekends;
         $holidays = $this->getHolidays();
         $clock_in_day = $clock_in->format('l');
         if (in_array($clock_in_day, $weekends) || $holidays->contains($clock_in)) {
             $offDayPlans = EmployeeOffdayPlan::where('employee_id', $employee_id)->where('status', 'active')->get();
-            if ($offDayPlans->isEmpty()){
+            if ($offDayPlans->isEmpty()) {
 //                dd('No Off-Day Plan');
                 return 'off_day';
-            }else{
+            } else {
                 return 'active';
             }
-        }else{
+        } else {
             return 'active';
         }
     }
@@ -172,13 +176,13 @@ class AttendanceServices
                 Log::info('Regular Shift');
                 $shift = EmployeeShiftPlan::where('employee_id', $employee_id)
                     ->where('status', 'active')->first()->plan_id;
-                    $dataShiftType = "Regular";
+                $dataShiftType = "Regular";
             }
         } else {
             Log::info('Regular Shift');
             $shift = EmployeeShiftPlan::where('employee_id', $employee_id)
                 ->where('status', 'active')->first()->plan_id;
-                $dataShiftType = "Regular";
+            $dataShiftType = "Regular";
         }
         return [
             'shift' => $shift,
@@ -194,7 +198,7 @@ class AttendanceServices
     public function getLateTime($clock_in, $shift_start, $grace_time)
     {
         $graceperiod = $shift_start->copy()->addMinutes($grace_time);
-        Log::info('Grace Period: '.$graceperiod);
+        Log::info('Grace Period: ' . $graceperiod);
 
         if ($clock_in <= $graceperiod) {
             Log::info('Clock In is within grace period');
@@ -218,12 +222,12 @@ class AttendanceServices
 
     public function getClockInStatus($clock_in, $shift_start, $grace_time, $excessive_late_after_minutes)
     {
-        Log::info('Clock In: '.$clock_in);
-        Log::info('Shift Start: '.$shift_start);
-        Log::info('Grace Time: '.$grace_time);
-        Log::info('Excessive Late After Minutes: '.$excessive_late_after_minutes);
+        Log::info('Clock In: ' . $clock_in);
+        Log::info('Shift Start: ' . $shift_start);
+        Log::info('Grace Time: ' . $grace_time);
+        Log::info('Excessive Late After Minutes: ' . $excessive_late_after_minutes);
         $duration = $this->getLateTime($clock_in, $shift_start, $grace_time);
-        Log::info('Late Duration: '.$duration);
+        Log::info('Late Duration: ' . $duration);
         if ($duration >= $excessive_late_after_minutes) {
             return 'Excessive-Late';
         } elseif ($duration > $grace_time) {
@@ -272,13 +276,13 @@ class AttendanceServices
     {
         $working_time = $this->getWorkingTime($clock_in, $clock_out);
         if ($overtime > 0) {
-            return 'Overtime & '.$in_status;
-        }elseif ($working_time == $shift_details->treat_as_half_day_minutes) {
+            return 'Overtime & ' . $in_status;
+        } elseif ($working_time == $shift_details->treat_as_half_day_minutes) {
             return 'Half-Day';
         } elseif ($working_time >= $shift_details->treat_as_full_day_minutes) {
             return 'Full-Day';
         } else {
-            return 'In: '.$in_status.' & Out: '.$out_status;
+            return 'In: ' . $in_status . ' & Out: ' . $out_status;
         }
     }
 
@@ -308,96 +312,98 @@ class AttendanceServices
             'start' => $shift_start,
             'end' => $shift_end];
     }
-    public function singleAttendanceStore($item, $index){
-            $employee_id = $item['employee_id'];
-            $clock_in = $item['clock_in'];
-            $clock_out = $item['clock_out'];
 
-            $data = [
-                'employee_id' => $employee_id,
-                'in_time' => $clock_in,
-                'out_time' => $clock_out,
-                'workstation' => $item['workstation']
-            ];
+    public function singleAttendanceStore($item, $index)
+    {
+        $employee_id = $item['employee_id'];
+        $clock_in = $item['clock_in'];
+        $clock_out = $item['clock_out'];
 
-            $clock_in = Carbon::parse($clock_in);
-            $clock_out = Carbon::parse($clock_out);
-            Log::info('Clock In: '.$clock_in);
-            Log::info('Clock Out: '.$clock_out);
+        $data = [
+            'employee_id' => $employee_id,
+            'in_time' => $clock_in,
+            'out_time' => $clock_out,
+            'workstation' => $item['workstation']
+        ];
 
-            $this->checkLeaveDay($employee_id, $clock_in, $index);
+        $clock_in = Carbon::parse($clock_in);
+        $clock_out = Carbon::parse($clock_out);
+        Log::info('Clock In: ' . $clock_in);
+        Log::info('Clock Out: ' . $clock_out);
 
-            $offDayData = $this->checkOffDay($employee_id, $clock_in, $index);
+        $this->checkLeaveDay($employee_id, $clock_in, $index);
 
-                        Log::info('Clock In BOD: '.$clock_in);
+        $offDayData = $this->checkOffDay($employee_id, $clock_in, $index);
 
-            if (!empty($offDayData)){
-                Log::info('OFF Day Work Plan Enable');
-                $data['shift_type'] = $offDayData['shift_type'];
-                $shift = $offDayData['shift'];
-            }else{
-                Log::info('Checking Shift');
-                $shift_data = $this->getTodayShift($employee_id, $clock_in);
-                $shift = $shift_data['shift'];
-                $data['shift_type'] = $shift_data['shift_type'];
-            }
+        Log::info('Clock In BOD: ' . $clock_in);
 
-                                    Log::info('Clock In AOD: '.$clock_in);
+        if (!empty($offDayData)) {
+            Log::info('OFF Day Work Plan Enable');
+            $data['shift_type'] = $offDayData['shift_type'];
+            $shift = $offDayData['shift'];
+        } else {
+            Log::info('Checking Shift');
+            $shift_data = $this->getTodayShift($employee_id, $clock_in);
+            $shift = $shift_data['shift'];
+            $data['shift_type'] = $shift_data['shift_type'];
+        }
 
-
-            $shift_details = ShiftPlan::findorFail($shift);
-            Log::info($shift_details);
-            Log::info('Clock In SD: '.$clock_in);
+        Log::info('Clock In AOD: ' . $clock_in);
 
 
-            $shift_start = $shift_details->clock_in_time;
-            $shift_end = $shift_details->clock_out_time;
-
-            $grace_time = $shift_details->grace_time;
-            $early_out_grace_minutes = $shift_details->early_out_grace_minutes;
-            $excessive_late_after_minutes = $shift_details->excessive_late_after_minutes;
-
-            Log::info('Clock In BS: '.$clock_in);
-
-            $shiftTime = $this->buildShiftTime($clock_in, $shift_start, $shift_end);
-
-            Log::info('Clock In ABS: '.$clock_in);
-            $shift_start = $shiftTime['start'];
-            $shift_end = $shiftTime['end'];
+        $shift_details = ShiftPlan::findorFail($shift);
+        Log::info($shift_details);
+        Log::info('Clock In SD: ' . $clock_in);
 
 
-            Log::info('Clock In BW: '.$clock_in);
-            $data['working_time'] = $this->getWorkingTime($clock_in, $clock_out);
-            Log::info('Clock In AW: '.$clock_in);
-            $data['late_count'] = $this->getLateTime($clock_in, $shift_start, $grace_time);
-            Log::info('Clock In LC: '.$clock_in);
+        $shift_start = $shift_details->clock_in_time;
+        $shift_end = $shift_details->clock_out_time;
 
-            $data['early_out_count'] = $this->getEarlyOutTime($clock_out, $shift_end, $early_out_grace_minutes);
+        $grace_time = $shift_details->grace_time;
+        $early_out_grace_minutes = $shift_details->early_out_grace_minutes;
+        $excessive_late_after_minutes = $shift_details->excessive_late_after_minutes;
 
-            $data['in_status'] = $this->getClockInStatus($clock_in, $shift_start, $grace_time, $excessive_late_after_minutes);
-            $data['out_status'] = $this->getClockOutStatus($clock_out, $shift_end, $early_out_grace_minutes);
+        Log::info('Clock In BS: ' . $clock_in);
 
-            $ot = $this->getOverTimeDetails($employee_id, $clock_in);
-            Log::info($ot);
-            if (empty($ot)) {
+        $shiftTime = $this->buildShiftTime($clock_in, $shift_start, $shift_end);
+
+        Log::info('Clock In ABS: ' . $clock_in);
+        $shift_start = $shiftTime['start'];
+        $shift_end = $shiftTime['end'];
+
+
+        Log::info('Clock In BW: ' . $clock_in);
+        $data['working_time'] = $this->getWorkingTime($clock_in, $clock_out);
+        Log::info('Clock In AW: ' . $clock_in);
+        $data['late_count'] = $this->getLateTime($clock_in, $shift_start, $grace_time);
+        Log::info('Clock In LC: ' . $clock_in);
+
+        $data['early_out_count'] = $this->getEarlyOutTime($clock_out, $shift_end, $early_out_grace_minutes);
+
+        $data['in_status'] = $this->getClockInStatus($clock_in, $shift_start, $grace_time, $excessive_late_after_minutes);
+        $data['out_status'] = $this->getClockOutStatus($clock_out, $shift_end, $early_out_grace_minutes);
+
+        $ot = $this->getOverTimeDetails($employee_id, $clock_in);
+        Log::info($ot);
+        if (empty($ot)) {
+            $data['overtime'] = 0;
+        } else {
+            $otDetails = OTPlan::findorFail($ot);
+
+            Log::info($otDetails);
+
+            if (!empty($otDetails)) {
+                $data['overtime'] = $this->getOverTime($otDetails->maximum_overtime, $shift_details->treat_as_full_day_minutes, $clock_in, $clock_out);
+            } else {
                 $data['overtime'] = 0;
-            }else{
-                $otDetails = OTPlan::findorFail($ot);
-
-                Log::info($otDetails);
-
-                if (!empty($otDetails)) {
-                    $data['overtime'] = $this->getOverTime($otDetails->maximum_overtime, $shift_details->treat_as_full_day_minutes, $clock_in, $clock_out);
-                } else {
-                    $data['overtime'] = 0;
-                }
             }
+        }
 
 
-            $data['attendance_status'] = $this->getWorkType($clock_in, $clock_out, $shift_details, $data['overtime'], $data['in_status'], $data['out_status']);
-            Log::info($data);
+        $data['attendance_status'] = $this->getWorkType($clock_in, $clock_out, $shift_details, $data['overtime'], $data['in_status'], $data['out_status']);
+        Log::info($data);
         //    dd($data);
-            Attendance::create($data);
+        Attendance::create($data);
     }
 
     public function attendanceStore($request)
@@ -441,11 +447,11 @@ class AttendanceServices
 
         $offDayData = $this->checkOffDay($employee_id, $clock_in);
 
-        if (!empty($offDayData)){
+        if (!empty($offDayData)) {
             Log::info('OFF Day Work Plan Enable');
             $data['shift_type'] = $offDayData['shift_type'];
             $shift = $offDayData['shift'];
-        }else{
+        } else {
             Log::info('Checking Shift');
             $shift_data = $this->getTodayShift($employee_id, $clock_in);
             $shift = $shift_data['shift'];
@@ -477,7 +483,7 @@ class AttendanceServices
         Log::info($ot);
         if (empty($ot)) {
             $data['overtime'] = 0;
-        }else{
+        } else {
             $otDetails = OTPlan::findorFail($ot);
 
             Log::info($otDetails);

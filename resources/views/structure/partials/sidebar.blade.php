@@ -122,7 +122,7 @@
                 </li>
 
                 @php
-                    $movementOpen = request()->is('leaves*');
+                    $movementOpen = request()->is('movement*');
                 @endphp
                 <li>
                     <a href="#movement" data-bs-toggle="collapse"
