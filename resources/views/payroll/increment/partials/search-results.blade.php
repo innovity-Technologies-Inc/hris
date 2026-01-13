@@ -1,29 +1,27 @@
 {{--
 ================================================
-SEARCH RESULTS PARTIAL - Employee Promotions
+SEARCH RESULTS PARTIAL - Employee Increments
 ================================================
 This partial is loaded via AJAX in index.blade.php
 
 Expected variables from controller:
-- $promotions: LengthAwarePaginator with promotion objects
+- $increments: LengthAwarePaginator with increment objects
 
-Each promotion object should have:
-- getEmployee (object with full_name, applicant_id)
-- getPreviousDesignation (object with company_designation)
-- getNewDesignation (object with company_designation)
-- new_basic_salary
+Each increment object should have:
+- getEmployee (object with full_name, applicant_id, officeInfo)
+- increment_method, increment_amount, increment_base
 - effective_from, effective_to (Carbon instances)
 - status (pending/approved/rejected)
 - getStatusBadgeClass() method
 --}}
 
 <div class="card-body p-0">
-    <a type="button" class="btn btn-warning btn-sm me-3 mb-3" href="{{ route('promotion.create') }}">
-        <i style="height: 12px; width: 12px" data-feather="plus"></i> Create Promotion
+    <a type="button" class="btn btn-warning btn-sm me-3 mb-3" href="{{ route('increment.create') }}">
+        <i style="height: 12px; width: 12px" data-feather="plus"></i> Create Increment
     </a>
 
-    @if ($promotions->isEmpty())
-        <div class="text-center py-4 text-muted">No promotion records found.</div>
+    @if ($increments->isEmpty())
+        <div class="text-center py-4 text-muted">No increment records found.</div>
     @else
         <div class="card-body">
             <div class="table-responsive">
@@ -32,75 +30,90 @@ Each promotion object should have:
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Employee</th>
-                            <th scope="col">Previous Designation</th>
-                            <th scope="col">New Designation</th>
-                            <th scope="col">New Basic Salary</th>
+                            <th scope="col">Current Designation</th>
+                            <th scope="col">Increment Summary</th>
+                            <th scope="col">Effective From</th>
                             <th scope="col">Status</th>
                             <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @php $sl = ($promotions->currentPage() - 1) * $promotions->perPage() + 1; @endphp
-                        @foreach ($promotions as $promotion)
+                        @php $sl = ($increments->currentPage() - 1) * $increments->perPage() + 1; @endphp
+                        @foreach ($increments as $increment)
                             <tr>
                                 <th scope="row">{{ $sl++ }}</th>
                                 <td>
                                     <div class="d-flex align-items-center gap-2">
-                                        @if (isset($promotion->getEmployee->photo_path) && $promotion->getEmployee->photo_path)
-                                            <img src="{{ asset('storage/' . $promotion->getEmployee->photo_path) }}"
+                                        @if (isset($increment->getEmployee->photo_path) && $increment->getEmployee->photo_path)
+                                            <img src="{{ asset('storage/' . $increment->getEmployee->photo_path) }}"
                                                 alt="Profile" class="rounded-circle"
                                                 style="width: 40px; height: 40px; object-fit: cover;">
                                         @else
                                             <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center"
                                                 style="width: 40px; height: 40px; font-size: 14px; font-weight: bold; color: white;">
-                                                {{ strtoupper(substr($promotion->getEmployee->full_name ?? 'U', 0, 1)) }}
+                                                {{ strtoupper(substr($increment->getEmployee->full_name ?? 'U', 0, 1)) }}
                                             </div>
                                         @endif
                                         <div>
-                                            <div class="fw-semibold">{{ $promotion->getEmployee->full_name ?? 'N/A' }}
+                                            <div class="fw-semibold">{{ $increment->getEmployee->full_name ?? 'N/A' }}
                                             </div>
                                             <small
-                                                class="text-muted">{{ $promotion->getEmployee->applicant_id ?? 'N/A' }}</small>
+                                                class="text-muted">{{ $increment->getEmployee->applicant_id ?? 'N/A' }}</small>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <span
-                                        class="text-muted">{{ $promotion->getPreviousDesignation->company_designation ?? 'N/A' }}</span>
-                                </td>
-                                <td>
-                                    <span class="fw-semibold text-success">
-                                        {{ $promotion->getNewDesignation->company_designation ?? 'N/A' }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <div class="fw-semibold text-success fs-6">
-                                        ৳{{ number_format($promotion->new_basic_salary, 2) }}
+                                    <div class="small">
+                                        <span
+                                            class="fw-semibold">{{ $increment->getEmployee->officeInfo->current_designation ?? 'N/A' }}</span>
+                                        <br>
+                                        <small
+                                            class="text-muted">{{ $increment->getEmployee->officeInfo->grade ?? '' }}</small>
                                     </div>
                                 </td>
                                 <td>
-                                    <span class="badge {{ $promotion->status_badge_class }}">
-                                        {{ ucfirst($promotion->status) }}
+                                    <div class="small">
+                                        <span class="badge bg-info mb-1">
+                                            {{ ucfirst($increment->increment_method) }}
+                                        </span>
+                                        <div class="fw-semibold text-primary">
+                                            @if ($increment->increment_method === 'percentage')
+                                                {{ $increment->increment_amount }}%
+                                            @else
+                                                ৳{{ number_format($increment->increment_amount, 2) }}
+                                            @endif
+                                        </div>
+                                        <small class="text-muted">
+                                            on {{ ucfirst(str_replace('_', ' ', $increment->increment_base)) }}
+                                        </small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="small">{{ $increment->effective_from->format('d M Y') }}</span>
+                                </td>
+                                <td>
+                                    <span class="badge {{ $increment->status_badge_class }}">
+                                        {{ ucfirst($increment->status) }}
                                     </span>
                                 </td>
                                 <td>
                                     <div class="d-flex gap-1">
                                         {{-- View Button --}}
-                                        <a href="{{ route('promotion.show', $promotion->id) }}"
+                                        <a href="{{ route('increment.show', $increment->id) }}"
                                             class="btn btn-info btn-sm" title="View Details">
                                             <i style="height: 12px; width: 12px" data-feather="eye"></i>
                                         </a>
 
-                                        @if ($promotion->status == 'pending')
+                                        @if ($increment->status == 'pending')
                                             {{-- Edit Button --}}
-                                            <a href="{{ route('promotion.edit', $promotion->id) }}"
+                                            <a href="{{ route('increment.edit', $increment->id) }}"
                                                 class="btn btn-primary btn-sm" title="Edit">
                                                 <i style="height: 12px; width: 12px" data-feather="edit"></i>
                                             </a>
 
                                             {{-- Approve Button --}}
                                             <form class="d-inline"
-                                                action="{{ route('promotion.approve', $promotion->id) }}"
+                                                action="{{ route('increment.approve', $increment->id) }}"
                                                 method="POST">
                                                 @csrf
                                                 @method('PUT')
@@ -112,7 +125,7 @@ Each promotion object should have:
 
                                             {{-- Reject Button --}}
                                             <form class="d-inline" method="POST"
-                                                action="{{ route('promotion.reject', $promotion->id) }}">
+                                                action="{{ route('increment.reject', $increment->id) }}">
                                                 @csrf
                                                 @method('PUT')
                                                 <button type="submit" class="btn btn-danger btn-sm confirmReject"
@@ -130,9 +143,9 @@ Each promotion object should have:
             </div>
 
             {{-- Pagination --}}
-            @if ($promotions->hasPages())
+            @if ($increments->hasPages())
                 <div class="d-flex justify-content-center mt-3">
-                    {{ $promotions->links() }}
+                    {{ $increments->links() }}
                 </div>
             @endif
 
@@ -140,10 +153,10 @@ Each promotion object should have:
     @endif
 </div>
 <div class="text-muted small">
-    Showing {{ $promotions->firstItem() ?? 0 }} to {{ $promotions->lastItem() ?? 0 }}
-    of {{ $promotions->total() }} entries
+    Showing {{ $increments->firstItem() ?? 0 }} to {{ $increments->lastItem() ?? 0 }}
+    of {{ $increments->total() }} entries
 </div>
 <div>
-    {{ $promotions->links() }}
+    {{ $increments->links() }}
 </div>
 </div>

@@ -13,26 +13,18 @@
         (object)['id' => 3, 'full_name' => 'Mohammad Karim', 'applicant_id' => 'EMP-2024-003'],
     ]);
 
-    $designations = collect([
-        (object)['id' => 1, 'company_designation' => 'Junior Software Engineer'],
-        (object)['id' => 2, 'company_designation' => 'Software Engineer'],
-        (object)['id' => 3, 'company_designation' => 'Senior Software Engineer'],
-    ]);
-
-    $promotions = new \Illuminate\Pagination\LengthAwarePaginator(
+    $increments = new \Illuminate\Pagination\LengthAwarePaginator(
         collect([
             (object)[
                 'id' => 1,
                 'employee_id' => 1,
-                'previous_designation' => 2,
-                'new_designation' => 3,
-                'new_basic_salary' => '50000.00',
-                'effective_from' => now()->subMonths(2),
+                'increment_base' => 'basic_salary',
+                'increment_method' => 'percentage',
+                'increment_amount' => '10.00',
+                'effective_from' => now()->subMonths(3),
                 'effective_to' => null,
                 'status' => 'approved',
                 'getEmployee' => (object)['full_name' => 'Ahmed Rahman', 'applicant_id' => 'EMP-2024-001'],
-                'getPreviousDesignation' => (object)['company_designation' => 'Software Engineer'],
-                'getNewDesignation' => (object)['company_designation' => 'Senior Software Engineer'],
                 'getStatusBadgeClass' => fn() => 'bg-success',
             ],
         ]),
@@ -40,12 +32,12 @@
     );
     --}}
 
-    {{-- Employee Promotion Search --}}
+    {{-- Employee Increment Search --}}
     <div class="row">
         <div class="col-lg-12">
             <div class="card border-0 shadow-sm rounded">
                 <div class="card-header">
-                    <h5 class="card-title mb-0">Search Employee Promotions</h5>
+                    <h5 class="card-title mb-0">Search Employee Increments</h5>
                 </div><!-- end card header -->
                 <div class="card-header border-bottom p-4">
                     <div class="row align-items-start">
@@ -62,7 +54,7 @@
                                             </label>
                                             <div class="input-group input-group-md">
                                                 <input type="text" class="form-control border-end-0" id="keywordSearch"
-                                                    name="keyword" placeholder="Search by employee name or designation"
+                                                    name="keyword" placeholder="Search by employee name"
                                                     aria-label="Keyword Search" value="{{ request('keyword') }}">
                                                 <span class="input-group-text border-start-0 input-group-bg">
                                                     <i class="mdi mdi-magnify text-muted"></i>
@@ -71,7 +63,7 @@
                                         </div>
                                     </div>
 
-                                    {{-- Second Row: Employee, Designation, Status --}}
+                                    {{-- Second Row: Employee, Increment Method, Status --}}
                                     <div class="row mb-2">
                                         <div class="col-md-4">
                                             <label for="employeeName" class="form-label text-muted small fw-semibold mb-1">
@@ -91,20 +83,19 @@
                                         </div>
 
                                         <div class="col-md-4">
-                                            <label for="designationFilter"
+                                            <label for="incrementMethod"
                                                 class="form-label text-muted small fw-semibold mb-1">
-                                                New Designation
+                                                Increment Method
                                             </label>
-                                            <select id="designationFilter" name="new_designation"
-                                                class="form-select form-select-sm select2_list"
-                                                data-placeholder="Select designation">
-                                                <option value="">All Designations</option>
-                                                @foreach ($designations as $designation)
-                                                    <option value="{{ $designation->id }}"
-                                                        {{ request('new_designation') == $designation->id ? 'selected' : '' }}>
-                                                        {{ $designation->company_designation }}
-                                                    </option>
-                                                @endforeach
+                                            <select id="incrementMethod" name="increment_method"
+                                                class="form-select form-select-sm" data-placeholder="Select method">
+                                                <option value="">All Methods</option>
+                                                <option value="fixed"
+                                                    {{ request('increment_method') == 'fixed' ? 'selected' : '' }}>Fixed
+                                                    Amount</option>
+                                                <option value="percentage"
+                                                    {{ request('increment_method') == 'percentage' ? 'selected' : '' }}>
+                                                    Percentage</option>
                                             </select>
                                         </div>
 
@@ -165,11 +156,11 @@
         <div class="col-lg-12 mt-3">
             <div class="card border-0 shadow-sm rounded">
                 <div class="card-header">
-                    <h5 class="card-title mb-0">Employee Promotions List</h5>
+                    <h5 class="card-title mb-0">Employee Increments List</h5>
                 </div>
                 <div class="card-body">
                     <div id="search-result">
-                        @include('payroll.promotion.partials.search-results')
+                        @include('payroll.increment.partials.search-results')
                     </div>
                 </div>
             </div>
@@ -180,7 +171,7 @@
     <script>
         $(document).ready(function() {
             // Function to perform AJAX search
-            function fetchData(url = "{{ route('promotion.index') }}") {
+            function fetchData(url = "{{ route('increment.index') }}") {
                 const queryString = $('#filterForm').serialize();
 
                 $.ajax({

@@ -149,7 +149,7 @@
 
                 <!-- Payroll Menu -->
                 @php
-                    $payrollOpen = request()->is('promotion*');
+                    $payrollOpen = request()->is('promotion*') || request()->is('increment*');
                 @endphp
                 <li>
                     <a href="#payroll" data-bs-toggle="collapse" aria-expanded="{{ $payrollOpen ? 'true' : 'false' }}"
@@ -163,6 +163,10 @@
                             <li>
                                 <a class='tp-link @if (request()->is('promotion') && !request()->is('promotion/create')) menuitem-active @endif'
                                     href='{{ route('promotion.index') }}'>Employee Promotions</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (request()->is('increment') && !request()->is('increment/create')) menuitem-active @endif'
+                                    href='{{ route('increment.index') }}'>Employee Increments</a>
                             </li>
                         </ul>
                     </div>

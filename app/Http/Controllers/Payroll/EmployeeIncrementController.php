@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Payroll;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class EmployeePromotionController extends Controller
+class EmployeeIncrementController extends Controller
 {
     public function index()
     {
@@ -30,24 +31,15 @@ class EmployeePromotionController extends Controller
             ],
         ]);
 
-        $designations = collect([
-            (object)['id' => 1, 'company_designation' => 'Junior Software Engineer'],
-            (object)['id' => 2, 'company_designation' => 'Software Engineer'],
-            (object)['id' => 3, 'company_designation' => 'Senior Software Engineer'],
-            (object)['id' => 4, 'company_designation' => 'Lead Software Engineer'],
-        ]);
-
-        // Create promotion objects with proper relationships
-        $promotionData = collect([
+        // Create increment objects with proper relationships
+        $incrementData = collect([
             (object)[
                 'id' => 1,
                 'employee_id' => 1,
-                'previous_designation' => 2,
-                'new_designation' => 3,
                 'increment_base' => 'basic_salary',
                 'increment_method' => 'percentage',
-                'increment_amount' => 15.00,
-                'effective_from' => now()->subMonths(2),
+                'increment_amount' => 10.00,
+                'effective_from' => now()->subMonths(3),
                 'effective_to' => null,
                 'status' => 'approved',
                 'getEmployee' => (object)[
@@ -55,26 +47,20 @@ class EmployeePromotionController extends Controller
                     'full_name' => 'Ahmed Rahman',
                     'applicant_id' => 'EMP-2024-001',
                     'system_id' => 'SYS-001',
-                ],
-                'getPreviousDesignation' => (object)[
-                    'id' => 2,
-                    'company_designation' => 'Software Engineer',
-                ],
-                'getNewDesignation' => (object)[
-                    'id' => 3,
-                    'company_designation' => 'Senior Software Engineer',
+                    'officeInfo' => (object)[
+                        'current_designation' => 'Software Engineer',
+                        'grade' => 'Grade 5',
+                    ],
                 ],
                 'status_badge_class' => 'bg-success',
             ],
             (object)[
                 'id' => 2,
                 'employee_id' => 2,
-                'previous_designation' => 1,
-                'new_designation' => 2,
                 'increment_base' => 'gross_salary',
                 'increment_method' => 'fixed',
-                'increment_amount' => 8000.00,
-                'effective_from' => now()->addMonth(),
+                'increment_amount' => 5000.00,
+                'effective_from' => now()->addWeeks(2),
                 'effective_to' => null,
                 'status' => 'pending',
                 'getEmployee' => (object)[
@@ -82,28 +68,45 @@ class EmployeePromotionController extends Controller
                     'full_name' => 'Fatima Khatun',
                     'applicant_id' => 'EMP-2024-002',
                     'system_id' => 'SYS-002',
-                ],
-                'getPreviousDesignation' => (object)[
-                    'id' => 1,
-                    'company_designation' => 'Junior Software Engineer',
-                ],
-                'getNewDesignation' => (object)[
-                    'id' => 2,
-                    'company_designation' => 'Software Engineer',
+                    'officeInfo' => (object)[
+                        'current_designation' => 'Junior Software Engineer',
+                        'grade' => 'Grade 4',
+                    ],
                 ],
                 'status_badge_class' => 'bg-warning',
+            ],
+            (object)[
+                'id' => 3,
+                'employee_id' => 3,
+                'increment_base' => 'basic_salary',
+                'increment_method' => 'percentage',
+                'increment_amount' => 12.00,
+                'effective_from' => now()->subMonth(),
+                'effective_to' => null,
+                'status' => 'approved',
+                'getEmployee' => (object)[
+                    'id' => 3,
+                    'full_name' => 'Mohammad Karim',
+                    'applicant_id' => 'EMP-2024-003',
+                    'system_id' => 'SYS-003',
+                    'officeInfo' => (object)[
+                        'current_designation' => 'Senior Software Engineer',
+                        'grade' => 'Grade 6',
+                    ],
+                ],
+                'status_badge_class' => 'bg-success',
             ],
         ]);
 
         // Create paginator for dummy data
-        $promotions = new \Illuminate\Pagination\LengthAwarePaginator(
-            $promotionData,
-            $promotionData->count(),
+        $increments = new \Illuminate\Pagination\LengthAwarePaginator(
+            $incrementData,
+            $incrementData->count(),
             15,
             1
         );
 
-        return view('payroll.promotion.index', compact('promotions', 'employees', 'designations'));
+        return view('payroll.increment.index', compact('increments', 'employees'));
     }
 
     public function create()
@@ -152,66 +155,71 @@ class EmployeePromotionController extends Controller
                     'gross_salary' => 47000.00,
                 ],
             ],
+            (object)[
+                'id' => 3,
+                'full_name' => 'Mohammad Karim',
+                'applicant_id' => 'EMP-2024-003',
+                'system_id' => 'SYS-003',
+                'officeInfo' => (object)[
+                    'current_designation_id' => 3,
+                    'current_designation' => 'Senior Software Engineer',
+                    'grade' => 'Grade 6',
+                    'getCurrentDepartment' => (object)['name' => 'IT Department'],
+                ],
+                'salaryBreakdown' => (object)[
+                    'basic_salary' => 45000.00,
+                    'house_allowance' => 18000.00,
+                    'transport_allowance' => 5000.00,
+                    'food_allowance' => 3000.00,
+                    'medical_allowance' => 4500.00,
+                    'other_earnings' => 0.00,
+                    'gross_salary' => 75500.00,
+                ],
+            ],
         ]);
 
-        $designations = collect([
-            (object)['id' => 1, 'company_designation' => 'Junior Software Engineer'],
-            (object)['id' => 2, 'company_designation' => 'Software Engineer'],
-            (object)['id' => 3, 'company_designation' => 'Senior Software Engineer'],
-            (object)['id' => 4, 'company_designation' => 'Lead Software Engineer'],
-            (object)['id' => 5, 'company_designation' => 'Tech Lead'],
-        ]);
-
-        return view('payroll.promotion.form', compact('employees', 'designations'));
+        return view('payroll.increment.form', compact('employees'));
     }
 
     public function store(Request $request)
     {
-        return redirect()->route('promotion.index')->with('success', 'Promotion created successfully (Dummy Implementation)');
+        return redirect()->route('increment.index')->with('success', 'Increment created successfully (Dummy Implementation)');
     }
 
     public function show($id)
     {
-        // Object-style promotion dummy data
-        $promotion = (object)[
+        // Object-style increment dummy data
+        $increment = (object)[
             'id' => $id,
             'employee_id' => 1,
-            'previous_designation' => 2,
-            'new_designation' => 3,
             'increment_base' => 'basic_salary',
             'increment_method' => 'percentage',
-            'increment_amount' => 15.00,
+            'increment_amount' => 10.00,
             'effective_from' => \Carbon\Carbon::parse('2024-01-01'),
             'effective_to' => null,
             'status' => 'approved',
-            'created_at' => \Carbon\Carbon::parse('2023-12-15 14:30:00'),
+            'created_at' => \Carbon\Carbon::parse('2023-12-20 10:15:00'),
             'getEmployee' => (object)[
                 'id' => 1,
                 'full_name' => 'Ahmed Rahman',
                 'applicant_id' => 'EMP-2024-001',
                 'system_id' => 'SYS-001',
                 'officeInfo' => (object)[
+                    'current_designation' => 'Software Engineer',
+                    'grade' => 'Grade 5',
                     'getCurrentDepartment' => (object)['name' => 'IT Department'],
                 ],
             ],
-            'getPreviousDesignation' => (object)[
-                'id' => 2,
-                'company_designation' => 'Software Engineer',
-            ],
-            'getNewDesignation' => (object)[
-                'id' => 3,
-                'company_designation' => 'Senior Software Engineer',
-            ],
             'status_badge_class' => 'bg-success',
-            'increment_summary' => '15% (Percentage on Basic Salary)',
+            'increment_summary' => '10% (Percentage on Basic Salary)',
         ];
 
-        return view('payroll.promotion.view', compact('promotion'));
+        return view('payroll.increment.view', compact('increment'));
     }
 
     public function edit($id)
     {
-        // Combine create data with existing promotion data
+        // Combine create data with existing increment data
         $employees = collect([
             (object)[
                 'id' => 1,
@@ -235,41 +243,32 @@ class EmployeePromotionController extends Controller
             ],
         ]);
 
-        $designations = collect([
-            (object)['id' => 1, 'company_designation' => 'Junior Software Engineer'],
-            (object)['id' => 2, 'company_designation' => 'Software Engineer'],
-            (object)['id' => 3, 'company_designation' => 'Senior Software Engineer'],
-            (object)['id' => 4, 'company_designation' => 'Lead Software Engineer'],
-        ]);
-
-        $promotion = (object)[
+        $increment = (object)[
             'id' => $id,
             'employee_id' => 1,
-            'previous_designation' => 2,
-            'new_designation' => 3,
             'increment_base' => 'basic_salary',
             'increment_method' => 'percentage',
-            'increment_amount' => 15.00,
+            'increment_amount' => 10.00,
             'effective_from' => '2024-01-01',
             'effective_to' => null,
             'status' => 'pending',
         ];
 
-        return view('payroll.promotion.form', compact('employees', 'designations', 'promotion'));
+        return view('payroll.increment.form', compact('employees', 'increment'));
     }
 
     public function update(Request $request, $id)
     {
-        return redirect()->route('promotion.show', $id)->with('success', 'Promotion updated successfully (Dummy Implementation)');
+        return redirect()->route('increment.show', $id)->with('success', 'Increment updated successfully (Dummy Implementation)');
     }
 
     public function approve($id)
     {
-        return redirect()->route('promotion.show', $id)->with('success', 'Promotion approved successfully (Dummy Implementation)');
+        return redirect()->route('increment.show', $id)->with('success', 'Increment approved successfully (Dummy Implementation)');
     }
 
     public function reject($id)
     {
-        return redirect()->route('promotion.show', $id)->with('error', 'Promotion rejected (Dummy Implementation)');
+        return redirect()->route('increment.show', $id)->with('error', 'Increment rejected (Dummy Implementation)');
     }
 }
