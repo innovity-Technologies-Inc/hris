@@ -41,7 +41,7 @@ class AttendanceImport implements ToCollection
                 'workstation' => $row[3] ?? null,
             ];
 
-            $this->attendanceServices->singleAttendanceStore($items);
+            $this->attendanceServices->singleAttendanceStore($items, $index);
         });
 
     }

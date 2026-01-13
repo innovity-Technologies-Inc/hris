@@ -208,18 +208,6 @@
                                         </div>
                                     </div>
 
-                                    {{-- Work Type --}}
-                                    <div class="col-md-4 col-lg-3">
-                                        <div class="info-item">
-                                            <div class="d-flex align-items-center mb-1">
-                                                <i class="bi bi-briefcase text-primary me-1 small"></i>
-                                                <small class="text-muted text-uppercase fw-semibold"
-                                                    style="font-size: 0.65rem;">Work Type</small>
-                                            </div>
-                                            <p class="mb-0 fw-medium ps-3 small">{{ $record->work_type }}</p>
-                                        </div>
-                                    </div>
-
                                     {{-- Working Time --}}
                                     <div class="col-md-4 col-lg-3">
                                         <div class="info-item">
@@ -228,7 +216,8 @@
                                                 <small class="text-muted text-uppercase fw-semibold"
                                                     style="font-size: 0.65rem;">Working Time</small>
                                             </div>
-                                            <p class="mb-0 fw-medium ps-3 small">{{ $record->working_time ?? '0:00' }}
+                                            <p class="mb-0 fw-medium ps-3 small">
+                                                {{ $record->working_time ? \App\HelperClass::getHoursByMinutes($record->working_time) : '0:00' }}
                                             </p>
                                         </div>
                                     </div>
@@ -241,7 +230,9 @@
                                                 <small class="text-muted text-uppercase fw-semibold"
                                                     style="font-size: 0.65rem;">Overtime</small>
                                             </div>
-                                            <p class="mb-0 fw-medium ps-3 small">{{ $record->overtime ?? '0:00' }}</p>
+                                            <p class="mb-0 fw-medium ps-3 small">
+                                                {{ $record->overtime ? \App\HelperClass::getHoursByMinutes($record->overtime) : '0:00' }}
+                                            </p>
                                         </div>
                                     </div>
 
@@ -253,7 +244,9 @@
                                                 <small class="text-muted text-uppercase fw-semibold"
                                                     style="font-size: 0.65rem;">Late Count</small>
                                             </div>
-                                            <p class="mb-0 fw-medium ps-3 small">{{ $record->late_count ?? '0' }}</p>
+                                            <p class="mb-0 fw-medium ps-3 small">
+                                                {{ $record->late_count ? \App\HelperClass::getHoursByMinutes($record->late_count) : '0:00' }}
+                                            </p>
                                         </div>
                                     </div>
 
@@ -265,7 +258,8 @@
                                                 <small class="text-muted text-uppercase fw-semibold"
                                                     style="font-size: 0.65rem;">Early Out Count</small>
                                             </div>
-                                            <p class="mb-0 fw-medium ps-3 small">{{ $record->early_out_count ?? '0' }}
+                                            <p class="mb-0 fw-medium ps-3 small">
+                                                {{ $record->early_out_count ? \App\HelperClass::getHoursByMinutes($record->early_out_count) : '0:00' }}
                                             </p>
                                         </div>
                                     </div>

@@ -94,23 +94,26 @@ class AttendanceServices
                 ]);
             }
 
+            // Check if clock_in matches ANY of the active off-day plans
             foreach ($offDayPlans as $offDayPlan) {
                 $from = Carbon::parse($offDayPlan->from)->copy()->startOfDay();
                 $to = Carbon::parse($offDayPlan->to)->copy()->endOfDay();
 
-                if (!$clock_in->between($from, $to)) {
-                    throw ValidationException::withMessages([
-                        "attendance.$index.clock_in" => ["Off-day clock-in is not allowed without an active off-day plan."]
-                    ]);
-                }
-                $dataShiftType = "Off-Day";
-                $shift = $offDayPlan->getPlan->shift_id;
+                if ($clock_in->between($from, $to)) {
+                    $dataShiftType = "Off-Day";
+                    $shift = $offDayPlan->getPlan->shift_id;
 
-                return [
-                    'shift' => $shift,
-                    'shift_type' => $dataShiftType
-                ];
+                    return [
+                        'shift' => $shift,
+                        'shift_type' => $dataShiftType
+                    ];
+                }
             }
+
+            // If we reach here, clock_in doesn't match any active off-day plan
+            throw ValidationException::withMessages([
+                "attendance.$index.clock_in" => ["Off-day clock-in is not allowed without an active off-day plan."]
+            ]);
         }
         return null;
     }

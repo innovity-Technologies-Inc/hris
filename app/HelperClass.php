@@ -47,9 +47,12 @@ class HelperClass
         return $data;
     }
     public static function getHoursByMinutes($minutes){
+        $isNegative = $minutes < 0;
+        $minutes = abs($minutes);
         $hours = intdiv($minutes, 60);
         $mins = $minutes % 60;
-        return $hours.':'.$mins;
+        $formatted = $hours . ' hr ' . $mins . ' min';
+        return $isNegative ? '-' . $formatted : $formatted;
     }
 
 
