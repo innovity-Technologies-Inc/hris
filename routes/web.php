@@ -468,6 +468,34 @@ Route::controller(EmployeeMovementsController::class)->prefix('movement')->group
     Route::delete('{id}/delete', 'destroy')->name('movement.destroy');
 });
 
+// Payroll - Employee Promotion Routes
+use App\Http\Controllers\Payroll\EmployeePromotionController;
+
+Route::prefix('promotion')->name('promotion.')->controller(EmployeePromotionController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('/create', 'create')->name('create');
+    Route::post('/', 'store')->name('store');
+    Route::get('/{id}', 'show')->name('show');
+    Route::get('/{id}/edit', 'edit')->name('edit');
+    Route::put('/{id}', 'update')->name('update');
+    Route::put('/{id}/approve', 'approve')->name('approve');
+    Route::put('/{id}/reject', 'reject')->name('reject');
+});
+
+// Payroll - Employee Increment Routes
+use App\Http\Controllers\Payroll\EmployeeIncrementController;
+
+Route::prefix('increment')->name('increment.')->controller(EmployeeIncrementController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('/create', 'create')->name('create');
+    Route::post('/', 'store')->name('store');
+    Route::get('/{id}', 'show')->name('show');
+    Route::get('/{id}/edit', 'edit')->name('edit');
+    Route::put('/{id}', 'update')->name('update');
+    Route::put('/{id}/approve', 'approve')->name('approve');
+    Route::put('/{id}/reject', 'reject')->name('reject');
+});
+
 Route::controller(DataController::class)->group(function () {
 
     //company-details

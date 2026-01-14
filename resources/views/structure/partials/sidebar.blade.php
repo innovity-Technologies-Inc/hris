@@ -66,8 +66,8 @@
                 @endphp
                 <li>
                     <a href="#attendance" data-bs-toggle="collapse"
-                       aria-expanded="{{ $attendanceOpen ? 'true' : 'false' }}"
-                       class="@if ($attendanceOpen) menuitem-active @endif">
+                        aria-expanded="{{ $attendanceOpen ? 'true' : 'false' }}"
+                        class="@if ($attendanceOpen) menuitem-active @endif">
                         <i data-feather="clock"></i>
                         <span> Attendance </span>
                         <span class="menu-arrow"></span>
@@ -76,20 +76,20 @@
                         <ul class="nav-second-level">
                             <li>
                                 <a class='tp-link @if (Route::is('attendance.clock_in_out')) menuitem-active @endif'
-                                   href='{{ route('attendance.clock_in_out') }}'>Clock In / Out</a>
+                                    href='{{ route('attendance.clock_in_out') }}'>Clock In / Out</a>
                             </li>
 
                             <li>
                                 <a class='tp-link @if (Route::is('attendance.create')) menuitem-active @endif'
-                                   href='{{ route('attendance.create') }}'>Create</a>
+                                    href='{{ route('attendance.create') }}'>Create</a>
                             </li>
                             <li>
                                 <a class='tp-link @if (Route::is('attendance.bulk-upload')) menuitem-active @endif'
-                                   href='{{ route('attendance.bulk-upload') }}'>Bulk Upload</a>
+                                    href='{{ route('attendance.bulk-upload') }}'>Bulk Upload</a>
                             </li>
                             <li>
                                 <a class='tp-link @if (Route::is('attendance.index')) menuitem-active @endif'
-                                   href='{{ route('attendance.index') }}'>Records</a>
+                                    href='{{ route('attendance.index') }}'>Records</a>
                             </li>
                         </ul>
                     </div>
@@ -135,14 +135,39 @@
                     <div class="collapse @if ($movementOpen) show @endif" id="movement">
                         <ul class="nav-second-level">
                             <li>
-                                <a class='tp-link @if (request()->is('movement.create')) menuitem-active @endif'
+                                <a class='tp-link @if (request()->is('movement/create')) menuitem-active @endif'
                                     href='{{ route('movement.create') }}'>Application</a>
                             </li>
                             <li>
-                                <a class='tp-link @if (request()->is('movement.index')) menuitem-active @endif'
+                                <a class='tp-link @if (request()->is('movement') && !request()->is('movement/create')) menuitem-active @endif'
                                     href='{{ route('movement.index') }}'>Logs</a>
                             </li>
 
+                        </ul>
+                    </div>
+                </li>
+
+                <!-- Payroll Menu -->
+                @php
+                    $payrollOpen = request()->is('promotion*') || request()->is('increment*');
+                @endphp
+                <li>
+                    <a href="#payroll" data-bs-toggle="collapse" aria-expanded="{{ $payrollOpen ? 'true' : 'false' }}"
+                        class="@if ($payrollOpen) menuitem-active @endif">
+                        <i data-feather="dollar-sign"></i>
+                        <span> Payroll </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse @if ($payrollOpen) show @endif" id="payroll">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link @if (request()->is('promotion') && !request()->is('promotion/create')) menuitem-active @endif'
+                                    href='{{ route('promotion.index') }}'>Employee Promotions</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (request()->is('increment') && !request()->is('increment/create')) menuitem-active @endif'
+                                    href='{{ route('increment.index') }}'>Employee Increments</a>
+                            </li>
                         </ul>
                     </div>
                 </li>
@@ -151,8 +176,8 @@
                 <!-- Add Plans -->
                 <li>
                     <a href="#plans" data-bs-toggle="collapse"
-                       aria-expanded="{{ Route::is('plans.*') ? 'true' : 'false' }}"
-                       class="@if (Route::is('plans.*')) menuitem-active @endif">
+                        aria-expanded="{{ Route::is('plans.*') ? 'true' : 'false' }}"
+                        class="@if (Route::is('plans.*')) menuitem-active @endif">
                         <i data-feather="layers"></i>
                         <span> Plans </span>
                         <span class="menu-arrow"></span>
@@ -161,51 +186,51 @@
                         <ul class="nav-second-level">
                             <li>
                                 <a class='tp-link @if (Route::is('plans.meal_plans.*')) menuitem-active @endif'
-                                   href='{{ route('plans.meal_plans.index') }}'>Meal Plans</a>
+                                    href='{{ route('plans.meal_plans.index') }}'>Meal Plans</a>
                             </li>
                             <li>
                                 <a class='tp-link @if (Route::is('plans.shift_plans.*')) menuitem-active @endif'
-                                   href='{{ route('plans.shift_plans.index') }}'>Shift Plans</a>
+                                    href='{{ route('plans.shift_plans.index') }}'>Shift Plans</a>
                             </li>
                             <li>
                                 <a class='tp-link @if (Route::is('plans.leave_plans.*')) menuitem-active @endif'
-                                   href='{{ route('plans.leave_plans.index') }}'>Leave Plans</a>
+                                    href='{{ route('plans.leave_plans.index') }}'>Leave Plans</a>
                             </li>
                             <li>
                                 <a class='tp-link @if (Route::is('plans.ot_plans.*')) menuitem-active @endif'
-                                   href='{{ route('plans.ot_plans.index') }}'>OT Plans</a>
+                                    href='{{ route('plans.ot_plans.index') }}'>OT Plans</a>
                             </li>
                             <li>
                                 <a class='tp-link @if (Route::is('plans.roster_plans.*')) menuitem-active @endif'
-                                   href='{{ route('plans.roster_plans.index') }}'>Roster Plans</a>
+                                    href='{{ route('plans.roster_plans.index') }}'>Roster Plans</a>
                             </li>
                             <li>
                                 <a class='tp-link @if (Route::is('plans.off_day_plans.*')) menuitem-active @endif'
-                                   href='{{ route('plans.off_day_plans.index') }}'>Off-Day Work Plans</a>
+                                    href='{{ route('plans.off_day_plans.index') }}'>Off-Day Work Plans</a>
                             </li>
                             <li>
                                 <a class='tp-link @if (Route::is('plans.bonus_plans.*')) menuitem-active @endif'
-                                   href='{{ route('plans.bonus_plans.index') }}'>Bonus Plans</a>
+                                    href='{{ route('plans.bonus_plans.index') }}'>Bonus Plans</a>
                             </li>
                             <li>
                                 <a class='tp-link @if (Route::is('plans.allowance_plans.*')) menuitem-active @endif'
-                                   href='{{ route('plans.allowance_plans.index') }}'>Allowance Plans</a>
+                                    href='{{ route('plans.allowance_plans.index') }}'>Allowance Plans</a>
                             </li>
                             <li>
                                 <a class='tp-link @if (Route::is('plans.ta_plans.*')) menuitem-active @endif'
-                                   href='{{ route('plans.ta_plans.index') }}'>TA Plans</a>
+                                    href='{{ route('plans.ta_plans.index') }}'>TA Plans</a>
                             </li>
                             <li>
                                 <a class='tp-link @if (Route::is('plans.da_plans.*')) menuitem-active @endif'
-                                   href='{{ route('plans.da_plans.index') }}'>DA Plans</a>
+                                    href='{{ route('plans.da_plans.index') }}'>DA Plans</a>
                             </li>
                             <li>
                                 <a class='tp-link @if (Route::is('plans.deduction_plans.*')) menuitem-active @endif'
-                                   href='{{ route('plans.deduction_plans.index') }}'>Deduction Plan</a>
+                                    href='{{ route('plans.deduction_plans.index') }}'>Deduction Plan</a>
                             </li>
                             <li>
                                 <a class='tp-link @if (Route::is('plans.bulk_upload')) menuitem-active @endif'
-                                   href='{{ route('plans.bulk_upload') }}'>Bulk Upload</a>
+                                    href='{{ route('plans.bulk_upload') }}'>Bulk Upload</a>
                             </li>
                         </ul>
                     </div>
