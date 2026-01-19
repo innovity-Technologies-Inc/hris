@@ -663,4 +663,123 @@ class TransportService
             ],
         ];
     }
+
+    /**
+     * Get inactive driver assignments for history display.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function getInactiveDriverAssignments()
+    {
+        return VehicleDriver::with(['getVehicle', 'getDriver'])
+            ->where('status', 'inactive')
+            ->orderBy('updated_at', 'desc');
+    }
+
+    /**
+     * Get vehicle details by ID for preview/display purposes.
+     *
+     * @param int $id
+     * @return array|null
+     */
+    public function getVehicleDetailsById(int $id): ?array
+    {
+        $vehicle = Vehicle::find($id);
+
+        if (!$vehicle) {
+            return null;
+        }
+
+        return [
+            'id' => $vehicle->id,
+            'vehicle_category' => $vehicle->vehicle_category,
+            'model_number' => $vehicle->model_number,
+            'manufacture_year' => $vehicle->manufacture_year,
+            'fuel_type' => $vehicle->fuel_type,
+            'color' => $vehicle->color,
+            'license_number' => $vehicle->license_number,
+            'seating_capacity' => $vehicle->seating_capacity,
+            'status' => $vehicle->status,
+            'vehicle_image' => $vehicle->vehicle_image ? asset('storage/' . $vehicle->vehicle_image) : null,
+        ];
+    }
+
+    /**
+     * Get driver (employee) details by ID with office information.
+     *
+     * @param int $id
+     * @return array|null
+     */
+    public function getDriverDetailsById(int $id): ?array
+    {
+        $employee = Employee::find($id);
+
+        if (!$employee) {
+            return null;
+        }
+
+        $officeInfo = EmployeeOfficeInfo::with('getCurrentDesignation')
+            ->where('employee_id', $id)
+            ->first();
+
+        return [
+            'id' => $employee->id,
+            'full_name' => $employee->full_name,
+            'system_id' => $employee->system_id,
+            'personal_mobile' => $employee->personal_mobile,
+            'work_mobile' => $employee->work_mobile,
+            'work_email' => $employee->work_email,
+            'personal_email' => $employee->personal_email,
+            'photo_path' => $employee->photo_path ? asset('storage/' . $employee->photo_path) : null,
+            'designation' => $officeInfo?->getCurrentDesignation?->company_designation ?? 'N/A',
+        ];
+    }
+
+    /**
+     * Get vehicle details with driver information.
+     *
+     * @param int $id
+     * @return array
+     */
+    public function getVehicleDetailsWithDriver(int $id): array
+    {
+        $vehicle = Vehicle::find($id);
+        if (!$vehicle) {
+            return ['error' => 'Vehicle not found'];
+        }
+
+        // Check if vehicle has an assigned driver
+        $vehicleDriver = VehicleDriver::where('vehicle_id', $id)
+            ->where('status', 'active')
+            ->with('getDriver')
+            ->first();
+
+        $driverData = null;
+        if ($vehicleDriver && $vehicleDriver->getDriver) {
+            $driver = $vehicleDriver->getDriver;
+            $driverData = [
+                'id' => $driver->id,
+                'full_name' => $driver->full_name,
+                'system_id' => $driver->system_id,
+                'personal_mobile' => $driver->personal_mobile,
+                'work_mobile' => $driver->work_mobile,
+                'photo_path' => $driver->photo_path ? asset('storage/' . $driver->photo_path) : null,
+            ];
+        }
+
+        return [
+            'id' => $vehicle->id,
+            'vehicle_category' => $vehicle->vehicle_category,
+            'model_number' => $vehicle->model_number,
+            'manufacture_year' => $vehicle->manufacture_year,
+            'fuel_type' => $vehicle->fuel_type,
+            'color' => $vehicle->color,
+            'license_number' => $vehicle->license_number,
+            'seating_capacity' => $vehicle->seating_capacity,
+            'status' => $vehicle->status,
+            'vehicle_image' => $vehicle->vehicle_image ? asset('storage/' . $vehicle->vehicle_image) : null,
+            'has_driver' => $vehicleDriver ? true : false,
+            'driver' => $driverData,
+        ];
+    }
 }

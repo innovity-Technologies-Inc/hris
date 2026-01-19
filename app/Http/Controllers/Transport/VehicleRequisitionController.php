@@ -8,12 +8,20 @@ use App\Models\Transport\VehicleRequisition;
 use App\Models\Transport\VehicleDriver;
 use App\Models\Employee;
 use App\Models\Department;
+use App\Services\TransportService;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class VehicleRequisitionController extends Controller
 {
+    protected $transportService;
+
+    public function __construct(TransportService $transportService)
+    {
+        $this->transportService = $transportService;
+    }
+
     /**
      * Display a listing of vehicle requisitions.
      */
@@ -152,80 +160,6 @@ class VehicleRequisitionController extends Controller
     }
 
     /**
-     * Show the approval form for the specified vehicle requisition.
-     * NOTE: Approval is now handled through Vehicle Allocation.
-     * When a vehicle is allocated to this requisition, it will be automatically approved.
-     */
-    // public function approve($id)
-    // {
-    //     $title = 'Approve Vehicle Requisition';
-    //     $section = 'Vehicle Requisition';
-    //     $section_url = route('transport.vehicle_requisitions.index');
-    //     $sub_section = 'Approval';
-
-    //     $vehicleRequisition = VehicleRequisition::with(['getEmployee', 'getDepartment'])->findOrFail($id);
-
-    //     // Get available vehicles
-    //     $availableVehicles = Vehicle::where('status', 'Active')
-    //         ->orderBy('model_number')
-    //         ->get();
-
-    //     return view('transport.vehicle_requisition.approve', compact(
-    //         'title',
-    //         'section',
-    //         'sub_section',
-    //         'section_url',
-    //         'vehicleRequisition',
-    //         'availableVehicles'
-    //     ));
-    // }
-
-    /**
-     * Process the approval of the vehicle requisition.
-     * NOTE: Approval is now handled through Vehicle Allocation.
-     * When a vehicle is allocated to this requisition, it will be automatically approved.
-     */
-    // public function processApproval(Request $request, $id)
-    // {
-    //     $request->validate([
-    //         'approval_remarks' => 'nullable|string|max:1000',
-    //         'assigned_vehicle_id' => 'required|exists:vehicles,id',
-    //         'dispatch_time' => 'nullable|date_format:H:i',
-    //         'expected_return_time' => 'nullable|date_format:H:i',
-    //     ], [
-    //         'assigned_vehicle_id.required' => 'Please select a vehicle to assign.',
-    //     ]);
-
-    //     try {
-    //         Log::info('Approving Vehicle Requisition');
-
-    //         $vehicleRequisition = VehicleRequisition::findOrFail($id);
-
-    //         $vehicleRequisition->update([
-    //             'approval_status' => 'Approved',
-    //             'approval_remarks' => $request->approval_remarks,
-    //             'assigned_vehicle_id' => $request->assigned_vehicle_id,
-    //             'dispatch_time' => $request->dispatch_time,
-    //             'expected_return_time' => $request->expected_return_time,
-    //         ]);
-
-    //     } catch (\Exception $e) {
-    //         Log::error('Vehicle Requisition Approval Error: ' . $e->getMessage());
-    //         return redirect()->back()->withInput()->with([
-    //             'message' => 'Something Went Wrong',
-    //             'alert-type' => 'error'
-    //         ]);
-    //     }
-
-    //     Log::info('Vehicle Requisition Approved Successfully');
-
-    //     return redirect()->route('transport.vehicle_requisitions.index')->with([
-    //         'message' => 'Vehicle Requisition Approved Successfully',
-    //         'alert-type' => 'success'
-    //     ]);
-    // }
-
-    /**
      * Reject the specified vehicle requisition.
      */
     public function reject(Request $request, $id)
@@ -261,41 +195,12 @@ class VehicleRequisitionController extends Controller
      */
     public function getVehicleDetails($id)
     {
-        $vehicle = Vehicle::find($id);
-        if (!$vehicle) return response()->json(['error' => 'Vehicle not found'], 404);
+        $vehicleDetails = $this->transportService->getVehicleDetailsWithDriver($id);
 
-        // Check if vehicle has an assigned driver
-        $vehicleDriver = VehicleDriver::where('vehicle_id', $id)
-            ->where('status', 'active')
-            ->with('getDriver')
-            ->first();
-
-        $driverData = null;
-        if ($vehicleDriver && $vehicleDriver->getDriver) {
-            $driver = $vehicleDriver->getDriver;
-            $driverData = [
-                'id' => $driver->id,
-                'full_name' => $driver->full_name,
-                'system_id' => $driver->system_id,
-                'personal_mobile' => $driver->personal_mobile,
-                'work_mobile' => $driver->work_mobile,
-                'photo_path' => $driver->photo_path ? asset('storage/' . $driver->photo_path) : null,
-            ];
+        if (isset($vehicleDetails['error'])) {
+            return response()->json($vehicleDetails, 404);
         }
 
-        return response()->json([
-            'id' => $vehicle->id,
-            'vehicle_category' => $vehicle->vehicle_category,
-            'model_number' => $vehicle->model_number,
-            'manufacture_year' => $vehicle->manufacture_year,
-            'fuel_type' => $vehicle->fuel_type,
-            'color' => $vehicle->color,
-            'license_number' => $vehicle->license_number,
-            'seating_capacity' => $vehicle->seating_capacity,
-            'status' => $vehicle->status,
-            'vehicle_image' => $vehicle->vehicle_image ? asset('storage/' . $vehicle->vehicle_image) : null,
-            'has_driver' => $vehicleDriver ? true : false,
-            'driver' => $driverData,
-        ]);
+        return response()->json($vehicleDetails);
     }
 }

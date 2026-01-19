@@ -244,13 +244,12 @@ class VehicleDriverController extends Controller
         $section_url = route('transport.vehicle_drivers.index');
         $sub_section = 'History Logs';
 
-        $query = VehicleDriver::with(['getVehicle', 'getDriver'])->where('status', 'inactive');
+        $query = $this->transportService->getInactiveDriverAssignments();
         $searchableColumns = ['status'];
         $keyword = $request->input('keyword');
         $filters = [];
 
         $vehicleDrivers = $flexsearch->apply($query, $filters, $keyword, $searchableColumns)
-            ->orderBy('updated_at', 'desc')
             ->paginate(10);
 
         // Group by date for display
@@ -277,21 +276,13 @@ class VehicleDriverController extends Controller
      */
     public function getVehicleDetails($id)
     {
-        $vehicle = Vehicle::find($id);
-        if (!$vehicle) return response()->json(['error' => 'Vehicle not found'], 404);
+        $vehicleDetails = $this->transportService->getVehicleDetailsById($id);
 
-        return response()->json([
-            'id' => $vehicle->id,
-            'vehicle_category' => $vehicle->vehicle_category,
-            'model_number' => $vehicle->model_number,
-            'manufacture_year' => $vehicle->manufacture_year,
-            'fuel_type' => $vehicle->fuel_type,
-            'color' => $vehicle->color,
-            'license_number' => $vehicle->license_number,
-            'seating_capacity' => $vehicle->seating_capacity,
-            'status' => $vehicle->status,
-            'vehicle_image' => $vehicle->vehicle_image ? asset('storage/' . $vehicle->vehicle_image) : null,
-        ]);
+        if (!$vehicleDetails) {
+            return response()->json(['error' => 'Vehicle not found'], 404);
+        }
+
+        return response()->json($vehicleDetails);
     }
 
     /**
@@ -299,21 +290,12 @@ class VehicleDriverController extends Controller
      */
     public function getDriverDetails($id)
     {
-        $employee = Employee::find($id);
-        if (!$employee) return response()->json(['error' => 'Driver not found'], 404);
+        $driverDetails = $this->transportService->getDriverDetailsById($id);
 
-        $officeInfo = EmployeeOfficeInfo::with('getCurrentDesignation')->where('employee_id', $id)->first();
+        if (!$driverDetails) {
+            return response()->json(['error' => 'Driver not found'], 404);
+        }
 
-        return response()->json([
-            'id' => $employee->id,
-            'full_name' => $employee->full_name,
-            'system_id' => $employee->system_id,
-            'personal_mobile' => $employee->personal_mobile,
-            'work_mobile' => $employee->work_mobile,
-            'work_email' => $employee->work_email,
-            'personal_email' => $employee->personal_email,
-            'photo_path' => $employee->photo_path ? asset('storage/' . $employee->photo_path) : null,
-            'designation' => $officeInfo?->getCurrentDesignation?->company_designation ?? 'N/A',
-        ]);
+        return response()->json($driverDetails);
     }
 }
