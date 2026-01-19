@@ -6,13 +6,13 @@ use App\Models\Designation;
 use App\Models\Employee;
 use Illuminate\Database\Eloquent\Model;
 
-class EmployeeIncrement extends Model
+class Promotion extends Model
 {
     protected $fillable = [
         'employee_id',
-        'increment_base',
-        'increment_method',
-        'salary_increase_amount',
+        'previous_designation',
+        'new_designation',
+        'new_basic_salary',
         'effective_from',
         'effective_to',
         'status',
@@ -21,17 +21,37 @@ class EmployeeIncrement extends Model
     protected $casts = [
         'effective_from' => 'date',
         'effective_to' => 'date',
-        'salary_increase_amount' => 'decimal:2',
+        'new_basic_salary' => 'decimal:2',
     ];
 
     /**
-     * Get the employee associated with this increment.
+     * Get the employee associated with this promotion.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function getEmployee()
     {
         return $this->belongsTo(Employee::class, 'employee_id', 'id');
+    }
+
+    /**
+     * Get the previous designation.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function getPreviousDesignation()
+    {
+        return $this->belongsTo(Designation::class, 'previous_designation', 'id');
+    }
+
+    /**
+     * Get the new designation.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function getNewDesignation()
+    {
+        return $this->belongsTo(Designation::class, 'new_designation', 'id');
     }
 
     /**
@@ -50,18 +70,12 @@ class EmployeeIncrement extends Model
     }
 
     /**
-     * Get formatted increment summary.
+     * Get formatted promotion summary.
      *
      * @return string
      */
-    public function getIncrementSummary()
+    public function getPromotionSummary()
     {
-        $base = ucfirst(str_replace('_', ' ', $this->increment_base));
-        $method = ucfirst($this->increment_method);
-        $amount = $this->increment_method === 'percentage'
-            ? $this->salary_increase_amount . '%'
-            : '৳' . number_format($this->salary_increase_amount, 2);
-
-        return "{$amount} ({$method} on {$base})";
+        return '৳' . number_format($this->new_basic_salary, 2) . ' (New Basic Salary)';
     }
 }

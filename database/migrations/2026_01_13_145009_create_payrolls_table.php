@@ -13,6 +13,23 @@ return new class extends Migration
     {
         Schema::create('payrolls', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('employee_id');
+            $table->unsignedBigInteger('batch_id');
+            $table->decimal('salary', 15, 2);
+            $table->decimal('deduction_amount', 15, 2);
+            $table->integer('leaves_count');
+            $table->integer('offday_work_count');
+            $table->integer('absent_count');
+            $table->integer('late_count');
+            $table->integer('excessive_late_count');
+            $table->integer('overtime_count');
+            $table->decimal('overtime_amount', 15, 2);
+            $table->decimal('offday_work_salary', 15, 2);
+            $table->decimal('bonus_amount', 15, 2);
+
+
+
+
             $table->timestamps();
         });
     }
