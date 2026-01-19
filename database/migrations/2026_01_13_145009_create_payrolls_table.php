@@ -26,10 +26,6 @@ return new class extends Migration
             $table->decimal('overtime_amount', 15, 2);
             $table->decimal('offday_work_salary', 15, 2);
             $table->decimal('bonus_amount', 15, 2);
-
-
-
-
             $table->timestamps();
         });
     }
