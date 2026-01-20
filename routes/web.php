@@ -438,6 +438,9 @@ Route::prefix('settings')->group(function () {
     Route::controller(SettingsController::class)->group(function (){
        Route::get('general-settings', 'generalSettingIndex')->name('settings.general_settings');
        Route::post('general-settings/save', 'generalSettingSave')->name('settings.general_settings.store');
+       Route::get('mail-settings', 'mailSettingIndex')->name('settings.mail_settings');
+       Route::post('mail-settings/save', 'mailSettingSave')->name('settings.mail_settings.save');
+       Route::post('mail-settings/test', 'sendTestMail')->name('settings.mail_settings.test');
 
     });
 

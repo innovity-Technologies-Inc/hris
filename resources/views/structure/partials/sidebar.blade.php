@@ -398,6 +398,10 @@
                                 <a class='tp-link @if (Route::is('settings.api_keys')) menuitem-active @endif'
                                     href='{{ route('settings.api_keys') }}'>API Keys</a>
                             </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('settings.mail_settings.*')) menuitem-active @endif'
+                                    href='{{ route('settings.mail_settings') }}'>Mail Settings</a>
+                            </li>
 
                         </ul>
                     </div>
