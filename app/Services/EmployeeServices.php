@@ -754,4 +754,16 @@ class EmployeeServices
         }
     }
 
+    /**
+     * Toggle employee status between active and inactive
+     */
+    public function toggleEmployeeStatus($employeeId, $status)
+    {
+        $employee = Employee::findOrFail($employeeId);
+        $employee->status = $status;
+        $employee->save();
+
+        return $employee;
+    }
+
 }

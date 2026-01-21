@@ -243,4 +243,41 @@ class EmployeeProfileController extends Controller
         return view('employees.bulk_uploads.form', compact('title', 'section', 'sub_section', 'section_url'));
     }
 
+    /**
+     * Toggle employee status between active and inactive
+     */
+    public function toggleStatus(Request $request, $id)
+    {
+        try {
+            $validated = $request->validate([
+                'status' => 'required|in:active,inactive'
+            ]);
+
+            $employee = $this->empServices->toggleEmployeeStatus($id, $validated['status']);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Employee status updated successfully',
+                'status' => $employee->status
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation error: ' . implode(', ', $e->validator->errors()->all())
+            ], 422);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Employee not found'
+            ], 404);
+        } catch (\Exception $e) {
+            Log::error('Error toggling employee status: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update employee status: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
 }
