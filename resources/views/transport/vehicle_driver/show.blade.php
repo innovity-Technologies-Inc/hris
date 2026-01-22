@@ -149,16 +149,12 @@
                     <div class="card-body">
                         @if ($vehicleDriver->getDriver)
                             <div class="text-center mb-3">
-                                @if ($vehicleDriver->getDriver->photo_path)
-                                    <img src="{{ asset('storage/' . $vehicleDriver->getDriver->photo_path) }}"
-                                        alt="{{ $vehicleDriver->getDriver->full_name }}" class="rounded-circle"
-                                        style="width: 150px; height: 150px; object-fit: cover;">
-                                @else
-                                    <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center"
-                                        style="width: 150px; height: 150px;">
-                                        <i data-feather="user" class="text-muted" style="width: 60px; height: 60px;"></i>
-                                    </div>
-                                @endif
+                                {!! \App\HelperClass::generateAvatar(
+                                    $vehicleDriver->getDriver->photo_path ?? null,
+                                    $vehicleDriver->getDriver->full_name ?? 'N/A',
+                                    150,
+                                    '#974063',
+                                ) !!}
                             </div>
                             <table class="table table-sm">
                                 <tbody>

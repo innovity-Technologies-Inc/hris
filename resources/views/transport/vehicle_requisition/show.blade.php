@@ -115,9 +115,20 @@
                                         <div class="col-5 detail-label">Employee</div>
                                         <div class="col-7 detail-value">
                                             @if ($vehicleRequisition->getEmployee)
-                                                {{ $vehicleRequisition->getEmployee->full_name }}
-                                                <br><small
-                                                    class="text-muted">{{ $vehicleRequisition->getEmployee->system_id }}</small>
+                                                <div class="d-flex align-items-center">
+                                                    {!! \App\HelperClass::generateAvatar(
+                                                        null,
+                                                        $vehicleRequisition->getEmployee->full_name ?? 'N/A',
+                                                        40,
+                                                        '#974063',
+                                                        'me-2',
+                                                    ) !!}
+                                                    <div>
+                                                        {{ $vehicleRequisition->getEmployee->full_name }}
+                                                        <br><small class="text-muted">ID:
+                                                            {{ $vehicleRequisition->getEmployee->system_id }}</small>
+                                                    </div>
+                                                </div>
                                             @else
                                                 <span class="text-muted">-</span>
                                             @endif
@@ -362,18 +373,13 @@
                                         <div class="card-body p-3">
                                             <div class="d-flex align-items-start">
                                                 <div class="me-3">
-                                                    @if ($assignedDriver->photo_path)
-                                                        <img src="{{ asset('storage/' . $assignedDriver->photo_path) }}"
-                                                            alt="Driver"
-                                                            class="rounded-circle border border-primary border-2"
-                                                            width="80" height="80" style="object-fit: cover;">
-                                                    @else
-                                                        <div class="border border-primary border-2 rounded-circle bg-light d-flex align-items-center justify-content-center"
-                                                            style="width: 80px; height: 80px;">
-                                                            <i data-feather="user" class="text-primary"
-                                                                style="width: 30px; height: 30px;"></i>
-                                                        </div>
-                                                    @endif
+                                                    {!! \App\HelperClass::generateAvatar(
+                                                        $assignedDriver->photo_path ?? null,
+                                                        $assignedDriver->full_name ?? 'N/A',
+                                                        80,
+                                                        '#974063',
+                                                        'border border-2',
+                                                    ) !!}
                                                 </div>
                                                 <div class="flex-grow-1">
                                                     <h6 class="mb-1 fw-bold text-primary">{{ $assignedDriver->full_name }}

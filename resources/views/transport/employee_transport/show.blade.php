@@ -273,16 +273,13 @@
                                                 <td>
                                                     @if ($allocation->assigned_driver)
                                                         <div class="d-flex align-items-center">
-                                                            @if ($allocation->assigned_driver->photo_path)
-                                                                <img src="{{ asset('storage/' . $allocation->assigned_driver->photo_path) }}"
-                                                                    alt="Driver" class="rounded-circle me-2"
-                                                                    style="width: 50px; height: 50px; object-fit: cover;">
-                                                            @else
-                                                                <div class="bg-info rounded-circle me-2 d-flex align-items-center justify-content-center"
-                                                                    style="width: 50px; height: 50px;">
-                                                                    <i class="fas fa-user text-white"></i>
-                                                                </div>
-                                                            @endif
+                                                            {!! \App\HelperClass::generateAvatar(
+                                                                $allocation->assigned_driver->photo_path ?? null,
+                                                                $allocation->assigned_driver->full_name ?? ($allocation->assigned_driver->name ?? 'N/A'),
+                                                                50,
+                                                                '#974063',
+                                                                'me-2',
+                                                            ) !!}
                                                             <div>
                                                                 <strong
                                                                     class="d-block">{{ $allocation->assigned_driver->full_name ?? $allocation->assigned_driver->name }}</strong>

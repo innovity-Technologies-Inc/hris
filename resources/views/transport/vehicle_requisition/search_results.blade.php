@@ -20,8 +20,13 @@
                 <th scope="row" class="text-center">{{ $sl++ }}</th>
                 <td>
                     @if ($item->getEmployee)
-                        <strong>{{ $item->getEmployee->full_name }}</strong>
-                        <br><small class="text-muted">{{ $item->getEmployee->system_id }}</small>
+                        <div class="d-flex align-items-center">
+                            {!! \App\HelperClass::generateAvatar(null, $item->getEmployee->full_name ?? 'N/A', 40, '#974063', 'me-2') !!}
+                            <div>
+                                <strong>{{ $item->getEmployee->full_name }}</strong>
+                                <br><small class="text-muted">ID: {{ $item->getEmployee->system_id }}</small>
+                            </div>
+                        </div>
                     @else
                         <span class="text-muted">-</span>
                     @endif
@@ -63,7 +68,7 @@
                         <i style="height: 12px; width: 12px" data-feather="eye"></i>
                     </a>
 
-                    @if ($item->approval_status === 'Pending' || $item->approval_status === 'Approved')
+                    @if ($item->approval_status === 'Pending')
                         {{-- Reject Button --}}
                         <button type="button" class="btn btn-danger btn-sm rejectBtn" data-id="{{ $item->id }}"
                             title="Reject">

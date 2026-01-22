@@ -56,18 +56,13 @@
                             </td>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    @if ($item->getDriver && $item->getDriver->photo_path)
-                                        <img src="{{ asset('storage/' . $item->getDriver->photo_path) }}"
-                                            alt="{{ $item->getDriver->full_name ?? 'Driver' }}"
-                                            class="rounded-circle me-2"
-                                            style="width: 45px; height: 45px; object-fit: cover;">
-                                    @else
-                                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-2"
-                                            style="width: 45px; height: 45px;">
-                                            <i data-feather="user" class="text-muted"
-                                                style="width: 20px; height: 20px;"></i>
-                                        </div>
-                                    @endif
+                                    {!! \App\HelperClass::generateAvatar(
+                                        $item->getDriver->photo_path ?? null,
+                                        $item->getDriver->full_name ?? 'N/A',
+                                        45,
+                                        '#974063',
+                                        'me-2',
+                                    ) !!}
                                     <div>
                                         <strong>{{ $item->getDriver->full_name ?? 'N/A' }}</strong>
                                         <br>

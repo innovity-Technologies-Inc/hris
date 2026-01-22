@@ -227,16 +227,13 @@
                                 @endphp
                                 @if ($driver)
                                     <div class="d-flex align-items-center mb-3">
-                                        @if ($driver->photo_path)
-                                            <img src="{{ asset('storage/' . $driver->photo_path) }}" alt="Driver"
-                                                class="rounded-circle me-3"
-                                                style="width: 80px; height: 80px; object-fit: cover;">
-                                        @else
-                                            <div class="bg-warning bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3"
-                                                style="width: 80px; height: 80px;">
-                                                <i class="fas fa-user fa-2x text-warning"></i>
-                                            </div>
-                                        @endif
+                                        {!! \App\HelperClass::generateAvatar(
+                                            $driver->photo_path ?? null,
+                                            $driver->full_name ?? 'N/A',
+                                            80,
+                                            '#974063',
+                                            'me-3',
+                                        ) !!}
                                         <div>
                                             <h5 class="mb-1">
                                                 {{ $driver->full_name ?? 'N/A' }}

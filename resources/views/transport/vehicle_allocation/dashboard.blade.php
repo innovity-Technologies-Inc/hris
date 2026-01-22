@@ -170,10 +170,17 @@
                                                 </a>
                                             </td>
                                             <td>
-                                                {{ $requisition->getEmployee->full_name ?? 'N/A' }}
                                                 @if ($requisition->getEmployee)
-                                                    <small
-                                                        class="text-muted d-block">{{ $requisition->getEmployee->system_id }}</small>
+                                                    <div class="d-flex align-items-center">
+                                                        {!! \App\HelperClass::generateAvatar(null, $requisition->getEmployee->full_name ?? 'N/A', 35, '#974063', 'me-2') !!}
+                                                        <div>
+                                                            {{ $requisition->getEmployee->full_name }}
+                                                            <small class="text-muted d-block">ID:
+                                                                {{ $requisition->getEmployee->system_id }}</small>
+                                                        </div>
+                                                    </div>
+                                                @else
+                                                    N/A
                                                 @endif
                                             </td>
                                             <td>

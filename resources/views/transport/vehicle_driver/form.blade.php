@@ -257,10 +257,10 @@
                                                     class="rounded-circle border border-success border-3 shadow-sm d-none"
                                                     id="driverImage" width="100" height="100"
                                                     style="object-fit: cover;">
-                                                <div class="border border-success border-3 rounded-circle bg-body-secondary d-flex align-items-center justify-content-center shadow-sm d-none"
-                                                    id="driverImagePlaceholder" style="width: 100px; height: 100px;">
-                                                    <i data-feather="user" class="text-success"
-                                                        style="width: 40px; height: 40px;"></i>
+                                                <div class="border-3 rounded-circle d-flex align-items-center justify-content-center shadow-sm text-white fw-bold d-none"
+                                                    id="driverImagePlaceholder"
+                                                    style="width: 100px; height: 100px; font-size: 40px; background-color: #974063; border-color: #974063;">
+                                                    <span id="driverInitials"></span>
                                                 </div>
                                             </div>
                                             <div class="flex-grow-1">
@@ -401,6 +401,17 @@
                                 'd-none');
                             $('#driverImagePlaceholder').addClass('d-none');
                         } else {
+                            // Generate initials (first + last name)
+                            const fullName = data.full_name || 'N/A';
+                            let initials = 'NA';
+                            if (fullName !== 'N/A' && fullName.trim() !== '') {
+                                const names = fullName.trim().split(' ');
+                                initials = names[0].charAt(0).toUpperCase();
+                                if (names.length > 1) {
+                                    initials += names[names.length - 1].charAt(0).toUpperCase();
+                                }
+                            }
+                            $('#driverInitials').text(initials);
                             $('#driverImage').addClass('d-none');
                             $('#driverImagePlaceholder').removeClass('d-none');
                         }
