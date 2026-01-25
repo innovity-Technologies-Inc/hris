@@ -826,6 +826,18 @@
 
             new bootstrap.Modal(document.getElementById('keyPeopleModal')).show();
 
+            // Helper function to generate avatar HTML (mimics HelperClass::generateAvatar)
+            function generateAvatarHtml(photoPath, fullName, size = 52) {
+                if (photoPath && photoPath.trim() !== '') {
+                    return `<img src="/storage/${photoPath}" alt="${fullName}" style="width: ${size}px; height: ${size}px; border-radius: 50%; object-fit: cover; border: 2px solid var(--bs-primary);">`;
+                } else {
+                    const initials = fullName ? fullName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() :
+                        '??';
+                    const fontSize = Math.floor(size * 0.4);
+                    return `<div class="person-avatar" style="width: ${size}px; height: ${size}px; background-color: #974063; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: ${fontSize}px; border: 2px solid var(--bs-primary);">${initials}</div>`;
+                }
+            }
+
             // Fetch key people via AJAX
             $.get(`/organization-structure/key-people/${level}/${id}`, function(data) {
                 let html = '';
@@ -839,17 +851,8 @@
             `;
                 } else {
                     data.forEach(function(person, index) {
-                        // Display photo if available, otherwise show initials
-                        let avatarHtml = '';
-                        if (person.photo_path && person.photo_path.trim() !== '') {
-                            avatarHtml =
-                                `<img src="/storage/${person.photo_path}" alt="${person.name}" style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid var(--bs-primary);" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                  <div class="person-avatar" style="display: none;">${person.name ? person.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : '??'}</div>`;
-                        } else {
-                            const initials = person.name ? person.name.split(' ').map(n => n[0]).join('')
-                                .substring(0, 2).toUpperCase() : '??';
-                            avatarHtml = `<div class="person-avatar">${initials}</div>`;
-                        }
+                        // Generate avatar using consistent helper function
+                        const avatarHtml = generateAvatarHtml(person.photo_path, person.name, 52);
 
                         // Determine profile link - Both Board Members and Key Members go to organization-structure profile
                         let profileLink = `/organization-structure/${person.id}`;

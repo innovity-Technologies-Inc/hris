@@ -20,22 +20,15 @@
                         <!-- Profile Image Section -->
                         <div class="col-md-12 mb-4 text-center">
                             @php($isKey = ($member->member_type ?? '') === 'Key Member')
-                            @if ($isKey && $member->getEmployee && $member->getEmployee->photo_path)
-                                <img src="{{ asset('storage/' . $member->getEmployee->photo_path) }}"
-                                    class="rounded-circle border-3 border-primary shadow-sm"
-                                    style="width: 150px; height: 150px; object-fit: cover; border: 3px solid;"
-                                    alt="Profile Image">
-                            @elseif ($member->photo_path)
-                                <img src="{{ asset('storage/' . $member->photo_path) }}"
-                                    class="rounded-circle border-3 border-primary shadow-sm"
-                                    style="width: 150px; height: 150px; object-fit: cover; border: 3px solid;"
-                                    alt="Profile Image">
-                            @else
-                                <div class="rounded-circle bg-secondary d-inline-flex align-items-center justify-content-center text-white shadow"
-                                    style="width: 150px; height: 150px; font-size: 64px; font-weight: bold;">
-                                    {{ strtoupper(substr($member->name, 0, 1)) }}
-                                </div>
-                            @endif
+                            @php($displayName = $isKey && $member->getEmployee ? $member->getEmployee->full_name : $member->name)
+                            @php($photoPath = $isKey && $member->getEmployee ? $member->getEmployee->photo_path : $member->photo_path)
+                            {!! \App\HelperClass::generateAvatar(
+                                $photoPath ?? null,
+                                $displayName,
+                                150,
+                                '#974063',
+                                'border border-3 border-primary shadow-sm',
+                            ) !!}
                         </div>
 
                         <!-- Organization Information Section -->

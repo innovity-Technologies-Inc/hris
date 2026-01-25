@@ -6,17 +6,13 @@
                 <div class="align-items-center">
                     <div class="hando-main-sections">
                         <div class="hando-profile-main">
-                            @if (!empty($employee->photo_path))
-                                <img src="{{ asset('storage/' . $employee->photo_path) }}"
-                                    class="rounded-circle img-fluid avatar-xxl img-thumbnail float-start"
-                                    alt="profile photo">
-                            @else
-                                <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center"
-                                    style="width: 100px; height: 100px; font-size: 48px; color: white;">
-                                    {{ strtoupper(substr($employee->full_name, 0, 1)) }}
-                                </div>
-                            @endif
-
+                            {!! \App\HelperClass::generateAvatar(
+                                $employee->photo_path ?? null,
+                                $employee->full_name,
+                                100,
+                                '#974063',
+                                'rounded-circle img-fluid avatar-xxl img-thumbnail float-start',
+                            ) !!}
                         </div>
                         <div class="overflow-hidden ms-md-4 ms-0">
                             <h4 class="m-0 text-dark fs-20 mt-2 mt-md-0">{{ $employee->first_name }}

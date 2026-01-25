@@ -48,16 +48,13 @@
                     <div class="row">
                         {{-- Profile Image --}}
                         <div class="col-md-12 mb-3 text-center">
-                            @if (isset($increment->getEmployee->photo_path) && $increment->getEmployee->photo_path)
-                                <img src="{{ asset('storage/' . $increment->getEmployee->photo_path) }}" alt="Profile"
-                                    class="rounded-circle border border-3 border-primary"
-                                    style="width: 120px; height: 120px; object-fit: cover;">
-                            @else
-                                <div class="bg-secondary rounded-circle d-inline-flex align-items-center justify-content-center border border-3 border-primary"
-                                    style="width: 120px; height: 120px; font-size: 48px; font-weight: bold; color: white;">
-                                    {{ strtoupper(substr($increment->getEmployee->full_name ?? 'U', 0, 1)) }}
-                                </div>
-                            @endif
+                            {!! \App\HelperClass::generateAvatar(
+                                $increment->getEmployee->photo_path ?? null,
+                                $increment->getEmployee->full_name ?? 'N/A',
+                                120,
+                                '#974063',
+                                'border border-3 border-primary',
+                            ) !!}
                         </div>
 
                         <div class="col-md-6 mb-2">

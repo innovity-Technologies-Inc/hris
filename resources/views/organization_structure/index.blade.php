@@ -53,17 +53,7 @@
                                             <tr>
                                                 <th scope="row">{{ $i++ }}</th>
                                                 <td>
-                                                    @if ($member->photo_path)
-                                                        <img src="{{ asset('storage/' . $member->photo_path) }}"
-                                                            class="rounded-circle"
-                                                            style="width: 32px; height: 32px; object-fit: cover;"
-                                                            alt="Profile">
-                                                    @else
-                                                        <div class="rounded-circle bg-secondary d-inline-flex align-items-center justify-content-center text-white"
-                                                            style="width: 32px; height: 32px; font-size: 14px;">
-                                                            {{ strtoupper(substr($member->name, 0, 1)) }}
-                                                        </div>
-                                                    @endif
+                                                    {!! \App\HelperClass::generateAvatar($member->photo_path ?? null, $member->name, 32, '#974063', '') !!}
                                                 </td>
                                                 <td>
                                                     <span
@@ -158,22 +148,9 @@
                                             <tr>
                                                 <th scope="row">{{ $i++ }}</th>
                                                 <td>
-                                                    @if ($member->getEmployee && $member->getEmployee->photo_path)
-                                                        <img src="{{ asset('storage/' . $member->getEmployee->photo_path) }}"
-                                                            class="rounded-circle"
-                                                            style="width: 32px; height: 32px; object-fit: cover;"
-                                                            alt="Profile">
-                                                    @elseif ($member->photo_path)
-                                                        <img src="{{ asset('storage/' . $member->photo_path) }}"
-                                                            class="rounded-circle"
-                                                            style="width: 32px; height: 32px; object-fit: cover;"
-                                                            alt="Profile">
-                                                    @else
-                                                        <div class="rounded-circle bg-secondary d-inline-flex align-items-center justify-content-center text-white"
-                                                            style="width: 32px; height: 32px; font-size: 14px;">
-                                                            {{ strtoupper(substr($member->name, 0, 1)) }}
-                                                        </div>
-                                                    @endif
+                                                    @php($displayName = $member->getEmployee ? $member->getEmployee->full_name : $member->name)
+                                                    @php($photoPath = $member->getEmployee ? $member->getEmployee->photo_path : $member->photo_path)
+                                                    {!! \App\HelperClass::generateAvatar($photoPath ?? null, $displayName, 32, '#974063', '') !!}
                                                 </td>
                                                 <td>
                                                     <span
