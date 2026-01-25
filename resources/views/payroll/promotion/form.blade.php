@@ -1,7 +1,6 @@
 @extends('structure.master')
 
 @section('content')
-
     {{-- Add back button following project pattern --}}
     <div class="row mb-3">
         <div class="col-12">
@@ -117,8 +116,13 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            {{-- Hidden field for previous designation --}}
-                            <input type="hidden" name="previous_designation" id="previous_designation">
+                            {{-- Hidden fields for previous salary information --}}
+                            <input type="hidden" name="previous_designation" id="previous_designation"
+                                value="{{ old('previous_designation', $promotionData->previous_designation ?? '') }}">
+                            <input type="hidden" name="previous_basic_salary" id="previous_basic_salary"
+                                value="{{ old('previous_basic_salary', $promotionData->previous_basic_salary ?? '') }}">
+                            <input type="hidden" name="previous_gross_salary" id="previous_gross_salary"
+                                value="{{ old('previous_gross_salary', $promotionData->previous_gross_salary ?? '') }}">
 
                             {{-- New Designation --}}
                             <div class="col-md-6 mb-3">
@@ -137,6 +141,62 @@
                                 @error('new_designation')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
+                            </div>
+
+                            {{-- Increment Base --}}
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Promotion Base <span class="text-danger">*</span></label>
+                                <select name="increment_base" id="increment_base"
+                                    class="form-select @error('increment_base') is-invalid @enderror" required>
+                                    <option value="">Select Base</option>
+                                    <option value="basic_salary"
+                                        {{ old('increment_base', $promotionData->increment_base ?? '') == 'basic_salary' ? 'selected' : '' }}>
+                                        Basic Salary
+                                    </option>
+                                    <option value="gross_salary"
+                                        {{ old('increment_base', $promotionData->increment_base ?? '') == 'gross_salary' ? 'selected' : '' }}>
+                                        Gross Salary
+                                    </option>
+                                </select>
+                                @error('increment_base')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                                <small class="text-muted">Choose whether increment applies to basic or gross salary</small>
+                            </div>
+
+                            {{-- Increment Method --}}
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Promotion Method <span class="text-danger">*</span></label>
+                                <select name="increment_method" id="increment_method"
+                                    class="form-select @error('increment_method') is-invalid @enderror" required>
+                                    <option value="">Select Method</option>
+                                    <option value="fixed"
+                                        {{ old('increment_method', $promotionData->increment_method ?? '') == 'fixed' ? 'selected' : '' }}>
+                                        Fixed Amount
+                                    </option>
+                                    <option value="percentage"
+                                        {{ old('increment_method', $promotionData->increment_method ?? '') == 'percentage' ? 'selected' : '' }}>
+                                        Percentage
+                                    </option>
+                                </select>
+                                @error('increment_method')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+
+                            {{-- Salary Increase Amount --}}
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Promotion Increase Amount <span
+                                        class="text-danger">*</span></label>
+                                <input type="number" name="salary_increase_amount" id="salary_increase_amount"
+                                    value="{{ old('salary_increase_amount', $promotionData->salary_increase_amount ?? '') }}"
+                                    class="form-control @error('salary_increase_amount') is-invalid @enderror"
+                                    step="0.01" min="0" required placeholder="Enter amount or percentage">
+                                @error('salary_increase_amount')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                                <small class="text-muted" id="increment-hint">Enter fixed amount in BDT or percentage
+                                    value</small>
                             </div>
 
                             {{-- New Basic Salary --}}
@@ -225,30 +285,101 @@
                 const officeInfo = selectedOption.data('office-info');
                 const salaryBreakdown = selectedOption.data('salary-breakdown');
 
-                if (officeInfo && salaryBreakdown) {
+                console.log('Office Info:', officeInfo);
+                console.log('Salary Breakdown:', salaryBreakdown);
+
+                if (officeInfo) {
                     // Display current designation
                     displayCurrentDesignation(officeInfo);
 
+                    // Set previous designation
+                    $('#previous_designation').val(officeInfo.current_designation_id || '');
+
+                    // Show designation section
+                    $('#current-designation-section').show();
+                } else {
+                    $('#current-designation-section').hide();
+                    $('#previous_designation').val('');
+                }
+
+                if (salaryBreakdown) {
                     // Display salary breakdown
                     displaySalaryBreakdown(salaryBreakdown);
 
-                    // Set previous designation as hidden field
-                    $('#previous_designation').val(officeInfo.current_designation_id);
+                    // Set previous salary as hidden fields
+                    $('#previous_basic_salary').val(salaryBreakdown.basic_salary || 0);
+                    $('#previous_gross_salary').val(salaryBreakdown.gross_salary || 0);
 
                     // Store salary data
                     $('#employeePromotionForm').data('basic-salary', salaryBreakdown.basic_salary || 0);
                     $('#employeePromotionForm').data('gross-salary', salaryBreakdown.gross_salary || 0);
 
-                    // Show sections
-                    $('#current-designation-section').show();
+                    // Show salary breakdown section
                     $('#salary-breakdown-section').show();
                 } else {
-                    // Hide sections if no data
-                    $('#current-designation-section').hide();
+                    // Hide section and show warning
                     $('#salary-breakdown-section').hide();
-                    $('#previous_designation').val('');
+                    $('#previous_basic_salary').val('0');
+                    $('#previous_gross_salary').val('0');
+
+                    if (officeInfo) {
+                        alert(
+                            'Warning: No salary breakdown found for this employee. Please add salary information first.');
+                    }
                 }
             });
+
+            // Update increment hint based on method
+            $('#increment_method').on('change', function() {
+                const method = $(this).val();
+                if (method === 'percentage') {
+                    $('#increment-hint').text('Enter percentage value (e.g., 10 for 10%)');
+                    $('#salary_increase_amount').attr('placeholder', 'Enter percentage (e.g., 10)');
+                } else if (method === 'fixed') {
+                    $('#increment-hint').text('Enter fixed amount in BDT');
+                    $('#salary_increase_amount').attr('placeholder', 'Enter amount in BDT');
+                } else {
+                    $('#increment-hint').text('Enter fixed amount in BDT or percentage value');
+                    $('#salary_increase_amount').attr('placeholder', 'Enter amount or percentage');
+                }
+            });
+
+            // Auto-calculate new basic salary when increment details change
+            $('#increment_base, #increment_method, #salary_increase_amount').on('change input', function() {
+                calculateNewSalary();
+            });
+
+            function calculateNewSalary() {
+                const incrementBase = $('#increment_base').val();
+                const incrementMethod = $('#increment_method').val();
+                const salaryIncreaseAmount = parseFloat($('#salary_increase_amount').val()) || 0;
+                const previousBasicSalary = parseFloat($('#previous_basic_salary').val()) || 0;
+                const previousGrossSalary = parseFloat($('#previous_gross_salary').val()) || 0;
+
+                if (!incrementBase || !incrementMethod || salaryIncreaseAmount === 0) {
+                    return;
+                }
+
+                let newBasicSalary = 0;
+
+                if (incrementBase === 'basic_salary') {
+                    if (incrementMethod === 'percentage') {
+                        const incrementValue = previousBasicSalary * (salaryIncreaseAmount / 100);
+                        newBasicSalary = previousBasicSalary + incrementValue;
+                    } else {
+                        newBasicSalary = previousBasicSalary + salaryIncreaseAmount;
+                    }
+                } else if (incrementBase === 'gross_salary') {
+                    if (incrementMethod === 'percentage') {
+                        const incrementValue = previousGrossSalary * (salaryIncreaseAmount / 100);
+                        newBasicSalary = previousBasicSalary + incrementValue;
+                    } else {
+                        newBasicSalary = previousBasicSalary + salaryIncreaseAmount;
+                    }
+                }
+
+                $('#new_basic_salary').val(newBasicSalary.toFixed(2));
+            }
 
             // Function to display current designation
             function displayCurrentDesignation(officeInfo) {
