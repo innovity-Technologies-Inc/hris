@@ -135,7 +135,7 @@
                                         <tbody>
                                         <tr>
                                             <td class="fw-semibold">Section</td>
-                                            <td>{{$employee_office_info->getJoiningSection->section_name ?? 'N/A'}}</td>
+                                            <td>{{$employee_office_info->getJoiningSection->name ?? 'N/A'}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold" style="width: 40%;">Designation</td>
@@ -187,7 +187,7 @@
 
                                         <tr>
                                             <td class="fw-semibold">Section</td>
-                                            <td>{{$employee_office_info->getCurrentSection->section_name ?? 'N/A'}}</td>
+                                            <td>{{$employee_office_info->getCurrentSection->name ?? 'N/A'}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold" style="width: 40%;">Designation</td>

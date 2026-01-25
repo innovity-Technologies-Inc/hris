@@ -1,17 +1,19 @@
 <!-- Bulk Upload Modal -->
-<div class="modal fade" id="bulkUploadModal" tabindex="-1" aria-labelledby="bulkUploadModalLabel" aria-hidden="true">
+<div class="modal fade" id="bulkAttendanceUploadModal" tabindex="-1" aria-labelledby="bulkAttendanceUploadModalLabel"
+    aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content border-0 shadow-lg">
             <!-- Modal Header -->
             <div class="modal-header bg-primary text-white border-0">
-                <h5 class="modal-title fw-semibold" id="bulkUploadModalLabel">
+                <h5 class="modal-title fw-semibold" id="bulkAttendanceUploadModalLabel">
                     <i class="bi bi-file-earmark-arrow-up me-2"></i>Bulk Attendance Upload
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
 
-            <form id="bulkUploadForm" action="#" enctype="multipart/form-data" method="POST">
+            <form id="bulkAttendanceUploadForm" action="{{ route('attendance.import') }}" enctype="multipart/form-data"
+                method="POST">
                 @csrf
 
                 <!-- Modal Body -->
@@ -48,11 +50,11 @@
                                     </p>
                                 </div>
                                 <div class="d-flex gap-2">
-                                    <a href="{{ asset('assets/excel/attendance_bulk_upload_template.xlsx') }}"
+                                    <a href="{{ asset('assets/excel/attendance_bulk.xlsx') }}"
                                         class="btn btn-success text-decoration-none" id="downloadExcel">
                                         <i class="bi bi-file-earmark-excel me-1"></i> Excel Format
                                     </a>
-                                    <a href="{{ asset('assets/csv/attendance_bulk_upload_template.csv') }}"
+                                    <a href="{{ asset('assets/csv/attendance_bulk.csv') }}"
                                         class="btn btn-info text-white text-decoration-none" id="downloadCsv">
                                         <i class="bi bi-file-earmark-text me-1"></i> CSV Format
                                     </a>
@@ -200,39 +202,11 @@
         }
 
         // Reset form when modal is closed
-        const bulkUploadModal = document.getElementById('bulkUploadModal');
+        const bulkUploadModal = document.getElementById('bulkAttendanceUploadModal');
         if (bulkUploadModal) {
             bulkUploadModal.addEventListener('hidden.bs.modal', function() {
-                document.getElementById('bulkUploadForm').reset();
+                document.getElementById('bulkAttendanceUploadForm').reset();
                 fileInfo.classList.add('d-none');
-            });
-        }
-
-        // Handle form submission
-        const bulkUploadForm = document.getElementById('bulkUploadForm');
-        if (bulkUploadForm) {
-            bulkUploadForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-
-                const formData = new FormData(this);
-                console.log('Bulk Upload Form Data:');
-                for (let pair of formData.entries()) {
-                    console.log(pair[0] + ': ' + pair[1]);
-                }
-
-                // Show success message
-                if (typeof toastr !== 'undefined') {
-                    toastr.success('File uploaded successfully! Processing attendance records...',
-                        'Success');
-                }
-
-                // Close modal after submission
-                setTimeout(() => {
-                    const modalInstance = bootstrap.Modal.getInstance(bulkUploadModal);
-                    if (modalInstance) {
-                        modalInstance.hide();
-                    }
-                }, 1500);
             });
         }
     });

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\MealPlan;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
+use Carbon\Carbon;
 
 class PlanService
 {
@@ -21,6 +22,26 @@ class PlanService
 
     public function planSave($validated, $modelName, $id = null)
     {
+        if (isset($id)) {
+            $plan = $modelName::findOrFail($id);
+            $plan->update($validated);
+        } else {
+            $plan = $modelName::create($validated);
+        }
+        return $plan;
+    }
+    public function shiftPlanSave($validated, $modelName, $id = null)
+    {
+        $shift_start = Carbon::parse($validated['clock_in_time']);
+        $shift_end = Carbon::parse($validated['clock_out_time']);
+         if ($shift_end->lt($shift_start)) {
+            $shift_end->addDay();
+        }
+        $validated['treat_as_full_day_minutes'] = $shift_start->diffInMinutes($shift_end);
+        $validated['treat_as_full_day_minutes'] = $validated['treat_as_full_day_minutes'] - (($validated['grace_time'] ?? 0) + ($validated['early_out_grace_minutes'] ?? 0));
+        $validated['treat_as_half_day_minutes'] = intdiv($validated['treat_as_full_day_minutes'], 2);
+
+        // dd($validated);
         if (isset($id)) {
             $plan = $modelName::findOrFail($id);
             $plan->update($validated);
@@ -98,13 +119,11 @@ class PlanService
             'name' => 'required|string|max:255',
             'clock_in_time' => 'required|date_format:H:i',
             'clock_out_time' => 'required|date_format:H:i',
-            'treat_as_full_day_minutes' => 'nullable|integer|min:0',
-            'treat_as_half_day_minutes' => 'nullable|integer|min:0',
+            // 'treat_as_full_day_minutes' => 'nullable|integer|min:0',
+            // 'treat_as_half_day_minutes' => 'nullable|integer|min:0',
             'grace_time' => 'nullable|integer|min:0',
-            'late_after_minutes' => 'nullable|integer|min:0',
             'excessive_late_after_minutes' => 'nullable|integer|min:0',
             'early_out_grace_minutes' => 'nullable|integer|min:0',
-            'early_out_before' => 'nullable|date_format:H:i',
 
             // Meal fields
             'breakfast_status' => 'required|in:active,inactive',
@@ -142,7 +161,6 @@ class PlanService
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'ot_type' => 'required|in:regular,holiday,night_shift,weekend,other',
 
             // Configuration fields
             'ot_config_type' => 'required|in:Salary Based,Custom',
@@ -150,18 +168,12 @@ class PlanService
             'overtime_multiplier' => 'nullable|numeric|min:0',
             'custom_overtime_rate' => 'nullable|numeric|min:0',
 
-            'minimum_overtime_hours' => 'nullable|numeric|min:0',
-            'maximum_overtime_hours' => 'nullable|numeric|min:0|gt:minimum_overtime_hours',
-            'overtime_start_time' => 'nullable|date_format:H:i',
-            'overtime_end_time' => 'nullable|date_format:H:i|after:overtime_start_time',
-            'active_ind' => 'required|in:active,inactive',
+            'maximum_overtime' => 'nullable|numeric|min:0',
+            'status' => 'required|in:active,inactive',
         ], [
             'name.required' => 'OT plan name is required.',
             'name.string' => 'OT plan name must be a string.',
             'name.max' => 'OT plan name may not exceed 255 characters.',
-
-            'ot_type.required' => 'Please select an overtime type.',
-            'ot_type.in' => 'The selected overtime type is invalid.',
 
             'ot_config_type.required' => 'Please select a configuration type.',
             'ot_config_type.in' => 'The selected configuration type is invalid.',
@@ -175,19 +187,11 @@ class PlanService
             'custom_overtime_rate.numeric' => 'Custom overtime rate must be a number.',
             'custom_overtime_rate.min' => 'Custom overtime rate must be at least 0.',
 
-            'minimum_overtime_hours.numeric' => 'Minimum hours must be a number.',
-            'minimum_overtime_hours.min' => 'Minimum hours must be at least 0.',
+            'maximum_overtime.numeric' => 'Maximum overtime must be a number.',
+            'maximum_overtime.min' => 'Maximum overtime must be at least 0.',
 
-            'maximum_overtime_hours.numeric' => 'Maximum hours must be a number.',
-            'maximum_overtime_hours.min' => 'Maximum hours must be at least 0.',
-            'maximum_overtime_hours.gt' => 'Maximum hours must be greater than minimum hours.',
-
-            'overtime_start_time.date_format' => 'Start time must be in the format HH:MM.',
-            'overtime_end_time.date_format' => 'End time must be in the format HH:MM.',
-            'overtime_end_time.after' => 'End time must be after start time.',
-
-            'active_ind.required' => 'Please select the plan status.',
-            'active_ind.in' => 'The selected status is invalid.',
+            'status.required' => 'Please select the plan status.',
+            'status.in' => 'The selected status is invalid.',
         ]);
 
         return $validated;
@@ -281,24 +285,35 @@ class PlanService
             'name' => 'required|string|max:255',
             'short_name' => 'nullable|string|max:255',
 
-            'start_time' => 'required|date_format:H:i',
-            'end_time' => 'required|date_format:H:i|after:start_time',
+            // Shift reference - timing is derived from the selected shift
+            'shift_id' => 'required|exists:shift_plans,id',
 
-            'grace_time' => 'required|integer|min:0',
-            'grace_time_before' => 'nullable|integer|min:0',
+            // Configuration fields (refactored to match OT Plan)
+            'offday_config_type' => 'required|in:Salary Based,Custom',
+            'salary_rate_type' => 'required_if:offday_config_type,Salary Based|nullable|in:Basic Rate,Multiplier',
+            'offday_multiplier' => 'nullable|numeric|min:0',
+            'custom_offday_rate' => 'nullable|numeric|min:0',
 
-            'remuneration' => 'required|numeric|min:0|max:99999999.99',
             'status' => 'required|in:active,inactive'
         ], [
             'name.required' => 'Name is required.',
-            'start_time.required' => 'Start time is required.',
-            'end_time.after' => 'End time must be after start time.',
 
-            'grace_time.required' => 'Grace time is required.',
-            'grace_time.integer' => 'Grace time must be a number.',
+            // Shift validation messages
+            'shift_id.required' => 'Please select a shift.',
+            'shift_id.exists' => 'The selected shift does not exist.',
 
-            'remuneration.required' => 'Remuneration amount is required.',
-            'remuneration.numeric' => 'Remuneration must be a valid number.',
+            // Configuration validation messages
+            'offday_config_type.required' => 'Please select a configuration type.',
+            'offday_config_type.in' => 'The selected configuration type is invalid.',
+
+            'salary_rate_type.required_if' => 'Please select a rate type when using salary-based configuration.',
+            'salary_rate_type.in' => 'The selected rate type is invalid.',
+
+            'offday_multiplier.numeric' => 'Offday multiplier must be a number.',
+            'offday_multiplier.min' => 'Offday multiplier must be at least 0.',
+
+            'custom_offday_rate.numeric' => 'Custom offday rate must be a number.',
+            'custom_offday_rate.min' => 'Custom offday rate must be at least 0.',
         ]);
         return $validated;
     }

@@ -3,9 +3,9 @@
 namespace App\Imports;
 
 use App\Models\OffDayPlan;
+use App\Models\ShiftPlan;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use Carbon\Carbon;
 
 class OffDayPlansImport implements ToCollection
 {
@@ -22,29 +22,50 @@ class OffDayPlansImport implements ToCollection
                 return;
             }
 
+            // Resolve shift_id from shift name or ID
+            $shiftId = $this->resolveShiftId($row[2] ?? null);
+
+            // Skip row if shift not found and shift reference was provided
+            if (($row[2] ?? null) && !$shiftId) {
+                \Log::warning("OffDayPlansImport: Shift not found for row " . ($index + 2) . ": " . ($row[2] ?? 'empty'));
+                return;
+            }
+
             OffDayPlan::create([
-                'name' => $row[0],
-                'short_name' => $row[1] ?? null,
-                'start_time' => $this->parseTime($row[2] ?? null),
-                'end_time' => $this->parseTime($row[3] ?? null),
-                'grace_time' => $row[4],
-                'grace_time_before' => $row[5] ?? null,
-                'remuneration' => $this->toDecimal($row[6] ?? null),
-                'active_ind' => strtolower($row[7] ?? 'active'),
+                'name'                   => $row[0],
+                'short_name'             => $row[1] ?? null,
+                'shift_id'               => $shiftId,
+
+                // Configuration fields (refactored to match OT Plan)
+                'offday_config_type'     => $row[3] ?? 'Custom',
+                'salary_rate_type'       => $row[4] ?? null,
+                'offday_multiplier'      => $this->toDecimal($row[5] ?? null),
+                'custom_offday_rate'     => $this->toDecimal($row[6] ?? null),
+
+                'status'                 => strtolower($row[7] ?? 'active'),
             ]);
         });
     }
 
     /**
-     * Parse time safely
+     * Resolve shift ID from name or ID
+     * Supports both numeric IDs and shift names for flexibility
      */
-    private function parseTime($value)
+    private function resolveShiftId($value)
     {
-        try {
-            return $value ? Carbon::parse($value)->format('H:i:s') : null;
-        } catch (\Exception $e) {
+        if (is_null($value) || $value === '') {
             return null;
         }
+
+        // If numeric, treat as direct ID
+        if (is_numeric($value)) {
+            $shift = ShiftPlan::find((int) $value);
+            return $shift ? $shift->id : null;
+        }
+
+        // Otherwise, search by name
+        $shift = ShiftPlan::where('name', $value)->first();
+        return $shift ? $shift->id : null;
     }
 
     /**

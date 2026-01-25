@@ -11,6 +11,25 @@ class OrganizationSeeder extends Seeder
 {
     private $faker;
 
+    // Bangladesh-specific data arrays
+    private $bdDivisions = ['Dhaka', 'Chittagong', 'Rajshahi', 'Khulna', 'Barishal', 'Sylhet', 'Rangpur', 'Mymensingh'];
+
+    private $bdDistricts = [
+        'Dhaka' => ['Dhaka', 'Gazipur', 'Narayanganj', 'Tangail', 'Munshiganj', 'Manikganj', 'Narsingdi', 'Faridpur'],
+        'Chittagong' => ['Chittagong', 'Comilla', 'Feni', 'Brahmanbaria', "Cox's Bazar", 'Rangamati', 'Noakhali', 'Chandpur'],
+        'Rajshahi' => ['Rajshahi', 'Bogra', 'Pabna', 'Sirajganj', 'Natore', 'Naogaon', 'Chapainawabganj', 'Joypurhat'],
+        'Khulna' => ['Khulna', 'Jessore', 'Satkhira', 'Bagerhat', 'Narail', 'Magura', 'Kushtia', 'Chuadanga'],
+        'Barishal' => ['Barishal', 'Patuakhali', 'Bhola', 'Pirojpur', 'Jhalokati', 'Barguna'],
+        'Sylhet' => ['Sylhet', 'Moulvibazar', 'Habiganj', 'Sunamganj'],
+        'Rangpur' => ['Rangpur', 'Dinajpur', 'Kurigram', 'Gaibandha', 'Nilphamari', 'Lalmonirhat', 'Thakurgaon', 'Panchagarh'],
+        'Mymensingh' => ['Mymensingh', 'Jamalpur', 'Sherpur', 'Netrokona'],
+    ];
+
+    private $bdCities = [
+        'Dhaka', 'Chittagong', 'Khulna', 'Rajshahi', 'Sylhet', 'Rangpur', 'Barishal', 'Comilla',
+        'Gazipur', 'Narayanganj', 'Mymensingh', 'Bogra', 'Jessore', "Cox's Bazar", 'Dinajpur', 'Brahmanbaria'
+    ];
+
     public function __construct()
     {
         $this->faker = Faker::create();
@@ -35,43 +54,53 @@ class OrganizationSeeder extends Seeder
 
     private function seedGroupsAndTypes()
     {
-        // --- GROUPS ---
+        // --- GROUPS (Bangladesh Business Groups) ---
         DB::table('groups')->truncate();
         DB::table('groups')->insert([
-            ['id' => 1, 'name' => 'Global Conglomerate Holdings', 'status' => 'active', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 1, 'name' => 'Bangladesh Corporate Group', 'status' => 'active', 'created_at' => now(), 'updated_at' => now()],
         ]);
 
-        // --- COMPANY TYPES ---
+        // --- COMPANY TYPES (Bangladesh Industry Sectors) ---
         DB::table('company_types')->truncate();
         DB::table('company_types')->insert([
-            ['id' => 1, 'name' => 'Technology Sector', 'short_name' => 'TECH', 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 2, 'name' => 'Financial Services', 'short_name' => 'FIN', 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 3, 'name' => 'Industrial Operations', 'short_name' => 'IND', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 1, 'name' => 'Information Technology', 'short_name' => 'IT', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 2, 'name' => 'Readymade Garments & Textile', 'short_name' => 'RMG', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 3, 'name' => 'Banking & Financial Services', 'short_name' => 'FIN', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 4, 'name' => 'Pharmaceuticals', 'short_name' => 'PHARMA', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 5, 'name' => 'Construction & Real Estate', 'short_name' => 'CONST', 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 
     private function seedOrgStructure()
     {
-        // --- 1. COMPANIES (10 Entries) ---
+        // --- 1. COMPANIES (10 Bangladesh Companies) ---
         DB::table('companies')->truncate();
         $companies = [];
-        $companyNames = [
-            'Tech Innovations Corp', 'Global Logistics Partners', 'Apex Financial Services',
-            'Aurora Energy Solutions', 'Pinnacle Retail Group', 'HealthSphere Medical',
-            'AgriFutures International', 'Urban Development Trust', 'Digital Media Hub', 'Quantum Manufacturing Inc.'
+        $companyData = [
+            ['name' => 'Technosis Software Limited', 'type' => 1],
+            ['name' => 'Grameenphone IT Limited', 'type' => 1],
+            ['name' => 'Beximco Pharmaceuticals Limited', 'type' => 4],
+            ['name' => 'Square Textiles Limited', 'type' => 2],
+            ['name' => 'Walton Hi-Tech Industries Limited', 'type' => 1],
+            ['name' => 'ACI Limited', 'type' => 4],
+            ['name' => 'Bashundhara Group', 'type' => 5],
+            ['name' => 'PRAN-RFL Group', 'type' => 2],
+            ['name' => 'Summit Power Limited', 'type' => 5],
+            ['name' => 'BRAC IT Services Limited', 'type' => 1],
         ];
-        foreach ($companyNames as $i => $name) {
+
+        foreach ($companyData as $i => $data) {
             $id = 101 + $i;
             $companies[] = [
                 'id' => $id,
-                'name' => $name,
-                'short_name' => strtoupper(Str::limit($name, 3, '')),
-                'type_id' => (($i % 3) + 1),
+                'name' => $data['name'],
+                'short_name' => strtoupper(Str::limit(explode(' ', $data['name'])[0], 4, '')),
+                'type_id' => $data['type'],
                 'group_id' => 1,
-                'address' => $this->faker->address,
-                'fax' => $this->faker->numerify('###-###-####'),
-                'telephone' => $this->faker->numerify('###-###-####'),
-                'email' => strtolower(Str::slug($name)) . '@corp.com',
+                'address' => $this->getBangladeshAddress(),
+                'fax' => '+880-2-' . $this->faker->numerify('########'),
+                'telephone' => '+880-2-' . $this->faker->numerify('########'),
+                'email' => strtolower(Str::slug(explode('(', $data['name'])[1] ?? explode(' ', $data['name'])[0], '.')) . '@company.com.bd',
                 'logo' => 'logo_' . $id . '.png',
                 'status' => 'active', 'created_at' => now(), 'updated_at' => now()
             ];
@@ -79,28 +108,62 @@ class OrganizationSeeder extends Seeder
         DB::table('companies')->insert($companies);
 
 
-        // --- 2. COMPANY LOCATIONS (20 Entries) ---
+        // --- 2. COMPANY LOCATIONS (20 Entries - Bangladesh Cities) ---
         DB::table('company_locations')->truncate();
         $locations = [];
+        $bdLocations = [
+            'Head Office, Gulshan, Dhaka',
+            'Motijheel Branch, Dhaka',
+            'Chittagong Office, Chittagong',
+            'Gazipur Factory, Gazipur',
+            'Narayanganj Unit, Narayanganj',
+            'Savar Production Unit, Savar',
+            'Sylhet Branch, Sylhet',
+            'Rajshahi Office, Rajshahi',
+            'Khulna Branch, Khulna',
+            'Comilla Unit, Comilla',
+            'Bogra Branch, Bogra',
+            'Jessore Office, Jessore',
+            'Barishal Branch, Barishal',
+            'Rangpur Branch, Rangpur',
+            'Mymensingh Office, Mymensingh',
+            'Tongi Factory, Tongi',
+            'Uttara Branch, Dhaka',
+            'Banani Office, Dhaka',
+            'Mirpur Unit, Dhaka',
+            'Dhanmondi Branch, Dhaka',
+        ];
+
         for ($i = 0; $i < 20; $i++) {
             $id = 201 + $i;
             $company_id = 101 + ($i % 10);
-            $unit_name = ($i % 2 == 0) ? 'HQ: ' . $this->faker->city : 'Reg: ' . $this->faker->city;
             $locations[] = [
                 'id' => $id,
                 'company_id' => $company_id,
-                'unit_name' => $unit_name,
-                'location_address' => $this->faker->streetAddress . ', ' . $this->faker->city,
+                'name' => $bdLocations[$i],
+                'location_address' => $this->getBangladeshAddress(),
                 'status' => 'active', 'created_at' => now(), 'updated_at' => now()
             ];
         }
         DB::table('company_locations')->insert($locations);
 
 
-        // --- 3. DIVISIONS (30 Entries) ---
+        // --- 3. DIVISIONS (30 Entries - Bangladesh Corporate Divisions) ---
         DB::table('divisions')->truncate();
         $divisions = [];
-        $divNames = ['Platform Engineering', 'Global Product Strategy', 'Corporate Finance', 'Human Resources Ops', 'Supply Chain & Logistics', 'Digital Marketing', 'Enterprise Sales', 'R&D', 'Manufacturing Operations', 'Regulatory Compliance'];
+        $divNames = [
+            'Software Development',
+            'Human Resources',
+            'Finance & Accounts',
+            'Marketing',
+            'Production',
+            'Quality Control',
+            'Supply Chain',
+            'Customer Service',
+            'Research & Development',
+            'Administration',
+        ];
+
         for ($i = 0; $i < 30; $i++) {
             $id = 301 + $i;
             $location_id = 201 + ($i % 20);
@@ -110,7 +173,7 @@ class OrganizationSeeder extends Seeder
                 'id' => $id,
                 'company_id' => $company_id,
                 'location_id' => $location_id,
-                'division_name' => $divName . ' - Unit ' . ($i + 1),
+                'name' => $divName . ' - Unit ' . ($i + 1),
                 'short_name' => strtoupper(Str::limit($divName, 3, '') . $i),
                 'remarks' => null,
                 'status' => 'active', 'created_at' => now(), 'updated_at' => now()
@@ -119,20 +182,32 @@ class OrganizationSeeder extends Seeder
         DB::table('divisions')->insert($divisions);
 
 
-        // --- 4. DEPARTMENTS (40 Entries) ---
+        // --- 4. DEPARTMENTS (40 Entries - Bangladesh Corporate Departments) ---
         DB::table('departments')->truncate();
         $departments = [];
-        $deptNames = ['Software Development', 'Quality Assurance', 'Financial Modeling', 'Internal Audit', 'Talent Acquisition', 'Employee Training', 'Fleet Management', 'Brand Advertising'];
+        $deptNames = [
+            'Backend Development',
+            'Frontend Development',
+            'Recruitment & Training',
+            'Payroll & Benefits',
+            'Audit',
+            'Procurement',
+            'Sales',
+            'Logistics',
+        ];
+
         for ($i = 0; $i < 40; $i++) {
             $id = 401 + $i;
             $division_id = 301 + ($i % 30);
+            $div_data = DB::table('divisions')->where('id', $division_id)->first();
             $deptName = $deptNames[$i % 8];
             $departments[] = [
                 'id' => $id,
                 'division_id' => $division_id,
+                'location_id' => $div_data ? $div_data->location_id : null,
+                'company_id' => $div_data ? $div_data->company_id : null,
                 'department_name' => $deptName . ' Dept ' . ($i + 1),
                 'short_name' => strtoupper(Str::limit($deptName, 3, '') . $i),
-                'job_number_code' => 'JNC-' . $id,
                 'status' => 'active', 'created_at' => now(), 'updated_at' => now()
             ];
         }
@@ -141,27 +216,61 @@ class OrganizationSeeder extends Seeder
         // --- 5. SECTIONS (60 Entries) ---
         DB::table('sections')->truncate();
         $sections = [];
-        $secNames = ['Front-End Team', 'Back-End Team', 'DevOps', 'Client Support', 'Regulatory Filing', 'Data Analytics'];
+        $secNames = [
+            'Project Team-A',
+            'Project Team-B',
+            'Support Team',
+            'Maintenance',
+            'Quality Assurance',
+            'Data Entry',
+        ];
+
         for ($i = 0; $i < 60; $i++) {
             $id = 501 + $i;
             $department_id = 401 + ($i % 40);
+            $dept_data = DB::table('departments')->where('id', $department_id)->first();
+            $secName = $secNames[$i % 6];
 
-            $secName = $secNames[$i % 6] . ' Group';
-            $sections[] = [
-                'id' => $id,
-                'department_id' => $department_id,
-                'section_name' => $secName . ' ' . str_pad($i + 1, 2, '0', STR_PAD_LEFT),
-                'short_name' => strtoupper(Str::limit($secName, 3, '') . ($i % 10)),
-                'status' => 'active', 'created_at' => now(), 'updated_at' => now()
-            ];
+            if ($dept_data) {
+                $div_data = DB::table('divisions')->where('id', $dept_data->division_id)->first();
+                // Use a location from company_locations table
+                $location_id = 201 + ($i % 20);
+                $sections[] = [
+                    'id' => $id,
+                    'department_id' => $department_id,
+                    'division_id' => $dept_data->division_id,
+                    'location_id' => $location_id,
+                    'company_id' => $div_data ? $div_data->company_id : 101,
+                    'name' => $secName . ' ' . str_pad($i + 1, 2, '0', STR_PAD_LEFT),
+                    'short_name' => strtoupper(Str::limit($secName, 3, '') . ($i % 10)),
+                    'status' => 'active', 'created_at' => now(), 'updated_at' => now()
+                ];
+            }
         }
         DB::table('sections')->insert($sections);
 
-        // --- 6. DESIGNATIONS (50 Entries) ---
+        // --- 6. DESIGNATIONS (50 Entries - Bangladesh Corporate Titles) ---
         DB::table('designations')->truncate();
         $designations = [];
-        $titles = ['Software Engineer', 'Project Manager', 'Financial Analyst', 'HR Coordinator', 'Logistics Specialist', 'Marketing Director', 'Sales Associate', 'Research Scientist'];
-        $levels = ['Entry Level', 'Junior', 'Mid', 'Senior', 'Lead', 'VP'];
+        $titles = [
+            'Software Engineer',
+            'Senior Software Engineer',
+            'Project Manager',
+            'HR Officer',
+            'Accountant',
+            'Marketing Officer',
+            'Production Supervisor',
+            'Quality Controller',
+        ];
+        $levels = [
+            'Entry Level',
+            'Junior',
+            'Mid Level',
+            'Senior',
+            'Team Lead',
+            'Manager',
+        ];
+
         for ($i = 0; $i < 50; $i++) {
             $id = 601 + $i;
             $division_id = 301 + ($i % 30);
@@ -170,11 +279,8 @@ class OrganizationSeeder extends Seeder
             if ($division_data) {
                 $designations[] = [
                     'id' => $id,
-                    'company_id' => $division_data->company_id,
-                    'location_id' => $division_data->location_id,
-                    'division_id' => $division_id,
                     'designation_level' => $levels[$i % 6],
-                    'company_designation' => $levels[$i % 6] . ' ' . $titles[$i % 8],
+                    'company_designation' => $levels[$i % 6] . ' - ' . $titles[$i % 8],
                     'status' => 'active', 'created_at' => now(), 'updated_at' => now()
                 ];
             }
@@ -189,7 +295,7 @@ class OrganizationSeeder extends Seeder
             $designation_id = 601 + ($i % 50);
             $department_id = 401 + ($i % 40);
 
-            $dept_code = DB::table('departments')->where('id', $department_id)->value('job_number_code');
+            $dept_code = 'DEPT' . $department_id;  // Generate code since job_number_code doesn't exist
             $designation_title = DB::table('designations')->where('id', $designation_id)->value('company_designation');
 
             $jobCreations[] = [
@@ -197,7 +303,7 @@ class OrganizationSeeder extends Seeder
                 'designation_id' => $designation_id,
                 'department_id' => $department_id,
                 'job_ind' => $dept_code . '-' . str_pad($i + 1, 4, '0', STR_PAD_LEFT),
-                'display_designation' => Str::limit($designation_title, 20),
+                'display_designation' => Str::limit($designation_title, 30),
                 'display_serial' => str_pad($i + 1, 4, '0', STR_PAD_LEFT),
                 'status' => $this->faker->randomElement(['active', 'inactive']),
                 'remarks' => $this->faker->optional(0.2)->sentence(4),
@@ -207,40 +313,83 @@ class OrganizationSeeder extends Seeder
         DB::table('job_creations')->insert($jobCreations);
     }
 
+    private function getBangladeshAddress(): string
+    {
+        $division = $this->faker->randomElement($this->bdDivisions);
+        $district = $this->faker->randomElement($this->bdDistricts[$division]);
+        $areas = ['Mohakhali', 'Gulshan', 'Banani', 'Uttara', 'Mirpur', 'Dhanmondi', 'Motijheel', 'Kakrail', 'Tejgaon', 'Shantinagar'];
+        $roads = ['Road No', 'Street No', 'Lane No', 'Alley No'];
+
+        return $this->faker->randomElement($areas) . ', ' .
+               $this->faker->randomElement($roads) . ' ' . $this->faker->numberBetween(1, 50) . ', ' .
+               'House No ' . $this->faker->numberBetween(1, 500) . ', ' .
+               $district . ', ' . $division . ', Bangladesh';
+    }
+
     private function seedBankingStructure()
     {
-        // --- 8. BANKS (7 Entries) ---
+        // --- 8. BANKS (Bangladesh Banks - Mix of Government, Private, and Foreign) ---
         DB::table('banks')->truncate();
         $banks = [];
-        $bankNames = ['First National Bank', 'Global Finance Corp', 'Regional Trust', 'Capital One Asia', 'Zenith Bank PLC', 'Pacific Reserve', 'EuroFund Bank'];
-        foreach ($bankNames as $i => $name) {
+        $bankData = [
+            ['name' => 'Sonali Bank Limited', 'short' => 'SBL', 'code' => 'SONALI'],
+            ['name' => 'Janata Bank Limited', 'short' => 'JBL', 'code' => 'JANATA'],
+            ['name' => 'Agrani Bank Limited', 'short' => 'ABL', 'code' => 'AGRANI'],
+            ['name' => 'Rupali Bank Limited', 'short' => 'RBL', 'code' => 'RUPALI'],
+            ['name' => 'BRAC Bank Limited', 'short' => 'BBL', 'code' => 'BRAC'],
+            ['name' => 'Dutch-Bangla Bank Limited', 'short' => 'DBBL', 'code' => 'DBBL'],
+            ['name' => 'Islami Bank Bangladesh Limited', 'short' => 'IBBL', 'code' => 'IBBL'],
+            ['name' => 'Prime Bank Limited', 'short' => 'PBL', 'code' => 'PRIME'],
+            ['name' => 'City Bank Limited', 'short' => 'CBL', 'code' => 'CITY'],
+            ['name' => 'Eastern Bank Limited', 'short' => 'EBL', 'code' => 'EBL'],
+        ];
+
+        foreach ($bankData as $i => $data) {
             $id = 801 + $i;
             $banks[] = [
                 'id' => $id,
-                'name' => $name,
-                'short_name' => strtoupper(Str::limit($name, 4, '')),
-                'bank_code' => 'BC' . $id,
-                'contact_no' => $this->faker->phoneNumber,
-                'contact_person' => $this->faker->name,
-                'contact_person_no' => $this->faker->phoneNumber,
+                'name' => $data['name'],
+                'short_name' => $data['short'],
+                'bank_code' => $data['code'],
+                'contact_no' => '+880-2-' . $this->faker->numerify('########'),
+                'contact_person' => $this->getBangladeshiName(),
+                'contact_person_no' => '+880-1' . $this->faker->randomElement(['7', '8', '9', '6', '5']) . $this->faker->numerify('########'),
                 'status' => 'active', 'created_at' => now(), 'updated_at' => now()
             ];
         }
         DB::table('banks')->insert($banks);
 
-        // --- 9. BRANCHES (30 Entries) ---
+        // --- 9. BRANCHES (30 Entries - Bangladesh Bank Branches) ---
         DB::table('branches')->truncate();
         $branches = [];
+        $branchLocations = [
+            'Motijheel Main Branch',
+            'Gulshan Branch',
+            'Uttara Branch',
+            'Mirpur Branch',
+            'Dhanmondi Branch',
+            'Banani Branch',
+            'Chittagong Main Branch',
+            'Khulna Branch',
+            'Rajshahi Branch',
+            'Sylhet Branch',
+            'Barishal Branch',
+            'Rangpur Branch',
+            'Comilla Branch',
+            'Gazipur Branch',
+            'Narayanganj Branch',
+        ];
+
         for ($i = 0; $i < 30; $i++) {
             $id = 901 + $i;
-            $bank_id = 801 + ($i % 7);
+            $bank_id = 801 + ($i % 10);
             $branches[] = [
                 'id' => $id,
                 'bank_id' => $bank_id,
-                'name' => $this->faker->city . ' Branch',
-                'address' => $this->faker->address,
+                'name' => $branchLocations[$i % 15],
+                'address' => $this->getBangladeshAddress(),
                 'routing_no' => $this->faker->numerify('#########'),
-                'swift_code' => strtoupper(Str::random(10)),
+                'swift_code' => strtoupper($this->faker->lexify('????')) . 'BDDH' . strtoupper($this->faker->lexify('???')),
                 'remarks' => null,
                 'status' => 'active', 'created_at' => now(), 'updated_at' => now()
             ];
@@ -260,11 +409,11 @@ class OrganizationSeeder extends Seeder
                 'id' => $id,
                 'bank_id' => $bank_id,
                 'branch_id' => $branch_id,
-                'account_no' => $this->faker->numerify('############'),
-                'holder_name' => $this->faker->company . ' Payroll Acct',
+                'account_no' => $this->faker->numerify('################'),
+                'holder_name' => $this->faker->company . ' Payroll Account',
                 'account_type' => $accountTypes[$i % 3],
-                'contact_person' => $this->faker->name('male'),
-                'contact_person_no' => $this->faker->phoneNumber,
+                'contact_person' => $this->getBangladeshiName(),
+                'contact_person_no' => '+880-1' . $this->faker->randomElement(['7', '8', '9', '6', '5']) . $this->faker->numerify('########'),
                 'email' => $this->faker->companyEmail,
                 'status' => $this->faker->randomElement(['active', 'inactive']),
                 'created_at' => now(), 'updated_at' => now()
@@ -273,28 +422,42 @@ class OrganizationSeeder extends Seeder
         DB::table('bank_accounts')->insert($accounts);
     }
 
+    private function getBangladeshiName(): string
+    {
+        $firstNamesMale = ['Mohammad', 'Abdul', 'Rahman', 'Karim', 'Zahid', 'Tanvir', 'Sakib', 'Rashed', 'Faruk', 'Arif', 'Shahriar', 'Naeem'];
+        $firstNamesFemale = ['Fatema', 'Ayesha', 'Sumaiya', 'Tasnim', 'Nusrat', 'Sabrina', 'Rumana', 'Nazma', 'Sharmin', 'Farzana'];
+        $lastNames = ['Hossain', 'Ahmed', 'Rahman', 'Khan', 'Islam', 'Ali', 'Haque', 'Chowdhury', 'Sarkar', 'Mia', 'Begum', 'Akter'];
+
+        $isMale = $this->faker->boolean(60);
+        $firstName = $isMale ? $this->faker->randomElement($firstNamesMale) : $this->faker->randomElement($firstNamesFemale);
+        $lastName = $this->faker->randomElement($lastNames);
+
+        return $firstName . ' ' . $lastName;
+    }
+
     private function seedCompensationStructure()
     {
-        // --- TOFSILS (Types of Functional Levels/Segments) ---
+        // --- TOFSILS (Bangladesh Employee Categories) ---
         DB::table('tofsils')->truncate();
         $tofsils = [
-            ['id' => 1, 'name' => 'Executive Management', 'description' => 'Top-tier management roles.', 'status' => 'active'],
-            ['id' => 2, 'name' => 'Professional Staff', 'description' => 'Specialized roles requiring degrees/certifications.', 'status' => 'active'],
-            ['id' => 3, 'name' => 'Technical Support', 'description' => 'Skilled trades and support staff.', 'status' => 'active'],
-            ['id' => 4, 'name' => 'Administrative', 'description' => 'General office and clerical roles.', 'status' => 'active'],
+            ['id' => 1, 'name' => 'Executive Level', 'description' => 'Top-tier management roles', 'status' => 'active'],
+            ['id' => 2, 'name' => 'Professional Staff', 'description' => 'Specialized roles requiring degrees/certifications', 'status' => 'active'],
+            ['id' => 3, 'name' => 'Technical Support', 'description' => 'Skilled trades and support staff', 'status' => 'active'],
+            ['id' => 4, 'name' => 'Administrative', 'description' => 'General office and clerical roles', 'status' => 'active'],
+            ['id' => 5, 'name' => 'Worker Level', 'description' => 'Production and general worker roles', 'status' => 'active'],
         ];
         DB::table('tofsils')->insert($tofsils);
 
-        // --- SALARY GRADES (Linked to Tofsils) ---
+        // --- SALARY GRADES (Bangladesh Government Style - Linked to Tofsils) ---
         DB::table('salary_grades')->truncate();
         $salaryGrades = [];
-        $gradeLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-        $tofsilIds = [1, 2, 3, 4];
+        $gradeNumbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+        $tofsilIds = [1, 2, 3, 4, 5];
 
         foreach ($tofsilIds as $tofsil_id) {
-            foreach ($gradeLetters as $grade) {
+            foreach ($gradeNumbers as $index => $grade) {
                 $salaryGrades[] = [
-                    'name' => 'G-' . $tofsil_id . $grade,
+                    'name' => 'Grade-' . $tofsil_id . '-' . ($index + 1),
                     'tofsil_id' => $tofsil_id,
                     'status' => 'active',
                     'created_at' => now(), 'updated_at' => now(),

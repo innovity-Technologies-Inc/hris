@@ -10,7 +10,7 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <form id="bulkUploadForm" action="{{ route('leaves.movement.import') }}" enctype="multipart/form-data"
+            <form id="bulkUploadForm" action="" enctype="multipart/form-data"
                 method="POST">
                 @csrf
 

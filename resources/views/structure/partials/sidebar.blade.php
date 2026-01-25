@@ -36,17 +36,21 @@
                 <!-- Add Employees Information Menu -->
                 <li>
                     <a href="#sidebarEmployees" data-bs-toggle="collapse"
-                        aria-expanded="{{ Route::is('employees.*') ? 'true' : 'false' }}"
-                        class="@if (Route::is('employees.*')) menuitem-active @endif">
+                        aria-expanded="{{ Route::is('employees.*') || Route::is('search.employee') ? 'true' : 'false' }}"
+                        class="@if (Route::is('employees.*') || Route::is('search.employee')) menuitem-active @endif">
                         <i data-feather="users"></i>
                         <span> Employees </span>
                         <span class="menu-arrow"></span>
                     </a>
-                    <div class="collapse @if (Route::is('employees.*')) show @endif" id="sidebarEmployees">
+                    <div class="collapse @if (Route::is('employees.*') || Route::is('search.employee')) show @endif" id="sidebarEmployees">
                         <ul class="nav-second-level">
                             <li>
                                 <a class='tp-link @if (Route::is('employees.index')) menuitem-active @endif'
                                     href='{{ route('employees.index') }}'>Employee Information</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('search.employee')) menuitem-active @endif'
+                                    href='{{ route('search.employee') }}'>Search Employee</a>
                             </li>
                             <li>
                                 <a class='tp-link @if (Route::is('employees.import')) menuitem-active @endif'
@@ -55,6 +59,119 @@
                         </ul>
                     </div>
                 </li>
+
+                <!-- Attendance Menu -->
+                @php
+                    $attendanceOpen = Route::is('attendance.*');
+                @endphp
+                <li>
+                    <a href="#attendance" data-bs-toggle="collapse"
+                        aria-expanded="{{ $attendanceOpen ? 'true' : 'false' }}"
+                        class="@if ($attendanceOpen) menuitem-active @endif">
+                        <i data-feather="clock"></i>
+                        <span> Attendance </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse @if ($attendanceOpen) show @endif" id="attendance">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link @if (Route::is('attendance.clock_in_out')) menuitem-active @endif'
+                                    href='{{ route('attendance.clock_in_out') }}'>Clock In / Out</a>
+                            </li>
+
+                            <li>
+                                <a class='tp-link @if (Route::is('attendance.create')) menuitem-active @endif'
+                                    href='{{ route('attendance.create') }}'>Create</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('attendance.bulk-upload')) menuitem-active @endif'
+                                    href='{{ route('attendance.bulk-upload') }}'>Bulk Upload</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('attendance.index')) menuitem-active @endif'
+                                    href='{{ route('attendance.index') }}'>Records</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+
+                @php
+                    $leavesOpen = request()->is('leaves*');
+                @endphp
+                <li>
+                    <a href="#leaves" data-bs-toggle="collapse" aria-expanded="{{ $leavesOpen ? 'true' : 'false' }}"
+                        class="@if ($leavesOpen) menuitem-active @endif">
+                        <i data-feather="calendar"></i>
+                        <span> Leaves </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse @if ($leavesOpen) show @endif" id="leaves">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link @if (request()->is('leaves.create')) menuitem-active @endif'
+                                    href='{{ route('leaves.create') }}'>Application</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (request()->is('leaves.index')) menuitem-active @endif'
+                                    href='{{ route('leaves.index') }}'>Logs</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </li>
+
+                @php
+                    $movementOpen = request()->is('movement*');
+                @endphp
+                <li>
+                    <a href="#movement" data-bs-toggle="collapse"
+                        aria-expanded="{{ $movementOpen ? 'true' : 'false' }}"
+                        class="@if ($movementOpen) menuitem-active @endif">
+                        <i data-feather="move"></i>
+                        <span> Movement </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse @if ($movementOpen) show @endif" id="movement">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link @if (request()->is('movement/create')) menuitem-active @endif'
+                                    href='{{ route('movement.create') }}'>Application</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (request()->is('movement') && !request()->is('movement/create')) menuitem-active @endif'
+                                    href='{{ route('movement.index') }}'>Logs</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </li>
+
+                <!-- Payroll Menu -->
+                @php
+                    $payrollOpen = request()->is('promotion*') || request()->is('increment*');
+                @endphp
+                <li>
+                    <a href="#payroll" data-bs-toggle="collapse" aria-expanded="{{ $payrollOpen ? 'true' : 'false' }}"
+                        class="@if ($payrollOpen) menuitem-active @endif">
+                        <i data-feather="dollar-sign"></i>
+                        <span> Payroll </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse @if ($payrollOpen) show @endif" id="payroll">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link @if (request()->is('promotion') && !request()->is('promotion/create')) menuitem-active @endif'
+                                    href='{{ route('promotion.index') }}'>Employee Promotions</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (request()->is('increment') && !request()->is('increment/create')) menuitem-active @endif'
+                                    href='{{ route('increment.index') }}'>Employee Increments</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
 
                 <!-- Add Plans -->
                 <li>
@@ -118,33 +235,8 @@
                         </ul>
                     </div>
                 </li>
-                @php
-                    $leavesOpen = request()->is('leaves*');
-                @endphp
-                <li>
-                    <a href="#leaves" data-bs-toggle="collapse" aria-expanded="{{ $leavesOpen ? 'true' : 'false' }}"
-                        class="@if ($leavesOpen) menuitem-active @endif">
-                        <i data-feather="calendar"></i>
-                        <span> Leaves </span>
-                        <span class="menu-arrow"></span>
-                    </a>
-                    <div class="collapse @if ($leavesOpen) show @endif" id="leaves">
-                        <ul class="nav-second-level">
-                            <li>
-                                <a class='tp-link @if (request()->is('leaves.create')) menuitem-active @endif'
-                                    href='{{ route('leaves.create') }}'>Application</a>
-                            </li>
-                            <li>
-                                <a class='tp-link @if (request()->is('leaves.index')) menuitem-active @endif'
-                                    href='{{ route('leaves.index') }}'>Logs</a>
-                            </li>
-                            <li>
-                                <a class='tp-link @if (request()->is('leaves/movement*')) menuitem-active @endif'
-                                    href='{{ route('leaves.movement.index') }}'>Movement</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
+
+
                 <!-- Company Info Menu -->
                 @php
                     $companyOpen =
@@ -263,11 +355,28 @@
 
                 <!-- Organization Structure Menu -->
                 <li>
-                    <a href="{{ route('organization-structure.index') }}"
+                    <a href="#organization-structure-menu" data-bs-toggle="collapse"
+                        aria-expanded="{{ Route::is('organization-structure.*') ? 'true' : 'false' }}"
                         class="@if (Route::is('organization-structure.*')) menuitem-active @endif">
                         <i data-feather="git-branch"></i>
                         <span> Structure </span>
+                        <span class="menu-arrow"></span>
                     </a>
+                    <div class="collapse @if (Route::is('organization-structure.*')) show @endif"
+                        id="organization-structure-menu">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link @if (Route::is('organization-structure.view')) menuitem-active @endif'
+                                    href='{{ route('organization-structure.view') }}'>Structural View</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('organization-structure.index') ||
+                                        Route::is('organization-structure.create') ||
+                                        Route::is('organization-structure.edit')) menuitem-active @endif'
+                                    href='{{ route('organization-structure.index') }}'>Members</a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
 
                 <!-- Transport Module -->
@@ -329,6 +438,10 @@
                             <li>
                                 <a class='tp-link @if (Route::is('settings.api_keys')) menuitem-active @endif'
                                     href='{{ route('settings.api_keys') }}'>API Keys</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('settings.mail_settings.*')) menuitem-active @endif'
+                                    href='{{ route('settings.mail_settings') }}'>SMTP</a>
                             </li>
 
                         </ul>

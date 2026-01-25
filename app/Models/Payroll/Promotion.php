@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Models\Payroll;
+
+use App\Models\Designation;
+use App\Models\Employee;
+use Illuminate\Database\Eloquent\Model;
+
+class Promotion extends Model
+{
+    protected $fillable = [
+        'employee_id',
+        'previous_designation',
+        'new_designation',
+        'increment_base',
+        'increment_method',
+        'salary_increase_amount',
+        'previous_basic_salary',
+        'previous_gross_salary',
+        'new_basic_salary',
+        'effective_from',
+        'effective_to',
+        'status',
+    ];
+
+    public function getEmployee()
+    {
+        return $this->belongsTo(Employee::class, 'employee_id', 'id');
+    }
+
+    public function getPreviousDesignation()
+    {
+        return $this->belongsTo(Designation::class, 'previous_designation', 'id');
+    }
+
+    public function getNewDesignation()
+    {
+        return $this->belongsTo(Designation::class, 'new_designation', 'id');
+    }
+
+}

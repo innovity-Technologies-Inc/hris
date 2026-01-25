@@ -741,6 +741,10 @@
                     <span class="info-value">{{ $employee->nationality }}</span>
                 </div>
                 <div class="info-item">
+                    <span class="info-label">Blood Group:</span>
+                    <span class="info-value">{{ $employee->blood_group ?? 'N/A' }}</span>
+                </div>
+                <div class="info-item">
                     <span class="info-label">Height:</span>
                     <span class="info-value">{{ $employee->height_feet }}' {{ $employee->height_inches }}"</span>
                 </div>

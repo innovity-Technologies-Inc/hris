@@ -24,7 +24,7 @@ class OTPlanController extends Controller
         $section = 'Plans Setup';
         $sub_section = 'OT Plan';
         $term = $request->get('keyword');
-        $columns = ['name', 'ot_type'];
+        $columns = ['name'];
 
 
         $plans = $this->planServices->search(OTPlan::class, $columns, [], [], $term, 20);

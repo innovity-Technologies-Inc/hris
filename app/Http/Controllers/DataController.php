@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\HelperClass;
+use App\Models\Attendance;
 use App\Models\BonusPlan;
 use App\Models\Branch;
 use App\Models\CompanyLocation;
@@ -18,11 +20,17 @@ use App\Models\RosterPlan;
 use App\Models\SalaryGrade;
 use App\Models\Section;
 use App\Models\ShiftPlan;
+use App\Services\AttendanceServices;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DataController extends Controller
 {
+
+    protected $attendancesService;
+    public function __construct(AttendanceServices $attendancesService){
+        $this->attendancesService = $attendancesService;
+    }
 
     public function getUnit($company_id){
         $units = CompanyLocation::where('company_id', $company_id)->select('id', 'name')->get();
@@ -30,27 +38,60 @@ class DataController extends Controller
 
     }
 
-    public function getDivision($company_id, $location_id){
-        $divisions = Division::where('company_id', $company_id)
-            ->where('location_id', $location_id)->get();
-        return response()->json($divisions);
+    public function getDivisions($company_id, $location_id = null)
+    {
+        $location_id = ($location_id === 'null') ? null : $location_id;
+
+        $query = Division::where('company_id', $company_id);
+
+        // only filter by location if given
+        if (!is_null($location_id)) {
+            $query->where('location_id', $location_id);
+        }
+
+        return $query->select('id', 'name')->get();
     }
 
-    public function getDepartment($company_id, $location_id, $division_id){
-        $departments = Department::where('company_id', $company_id)
-            ->where('location_id', $location_id)
-            ->where('division_id', $division_id)
-            ->get();
-        return response()->json($departments);
+    public function getDepartments($company_id, $location_id = null, $division_id = null)
+    {
+        $location_id = ($location_id === 'null') ? null : $location_id;
+        $division_id = ($division_id === 'null') ? null : $division_id;
+
+        $query = Department::where('company_id', $company_id);
+
+        if (!is_null($location_id)) {
+            $query->where('location_id', $location_id);
+        }
+
+        if (!is_null($division_id)) {
+            $query->where('division_id', $division_id);
+        }
+
+        return $query->select('id', 'department_name')->get();
     }
 
-    public function getSection($company_id, $location_id, $division_id, $department_id){
-        $sections = Section::where('company_id', $company_id)
-            ->where('location_id', $location_id)
-            ->where('division_id', $division_id)->where('department_id', $department_id)->get();
-        return response()->json($sections);
-    }
 
+
+    public function getSections($company_id, $location_id = null, $division_id = null, $department_id = null)
+    {
+        $location_id = ($location_id === 'null') ? null : $location_id;
+        $division_id = ($division_id === 'null') ? null : $division_id;
+        $department_id = ($department_id === 'null') ? null : $department_id;
+
+        $query = Section::where('company_id', $company_id);
+
+        if ($location_id) {
+            $query->where('location_id', $location_id);
+        }
+        if ($division_id) {
+            $query->where('division_id', $division_id);
+        }
+        if ($department_id) {
+            $query->where('department_id', $department_id);
+        }
+
+        return $query->select('id', 'name')->get();
+    }
     public function getGradeByAct($tofsil_id){
         $grades = SalaryGrade::where('tofsil_id', $tofsil_id)->get();
         return response()->json($grades);
@@ -112,14 +153,45 @@ class DataController extends Controller
 
     public function getOffDayPlanDetails($id)
     {
-        $plan = OffDayPlan::find($id);
+        $plan = OffDayPlan::with('getShift')->find($id);
+
+        if (!$plan) {
+            return response()->json(['error' => 'Plan not found'], 404);
+        }
+
+        $shift = $plan->getShift;
+        $startTime = $shift ? Carbon::parse($shift->clock_in_time)->format('h:i A') : 'N/A';
+        $endTime = $shift ? Carbon::parse($shift->clock_out_time)->format('h:i A') : 'N/A';
+        $shiftName = $shift ? $shift->name : 'No shift assigned';
+        $graceTime = $shift ? $shift->grace_time : 0;
+        $earlyOutGrace = $shift ? $shift->early_out_grace_minutes : 0;
+
+        // Build configuration description
+        $configurationDescription = '';
+        if ($plan->offday_config_type === 'Salary Based') {
+            if ($plan->salary_rate_type === 'Basic Rate') {
+                $configurationDescription = 'Salary Based - Basic Rate';
+            } else {
+                $configurationDescription = "Salary Based - {$plan->offday_multiplier}x Multiplier";
+            }
+        } else {
+            $configurationDescription = "Custom Rate - " . number_format($plan->custom_offday_rate ?? 0, 2) . " per hour";
+        }
+
         return response()->json([
             'id' => $plan->id,
             'name' => $plan->name,
             'short_name' => $plan->short_name,
-            'remuneration' => $plan->remuneration,
-            'start_time' => Carbon::parse($plan->start_time)->format('h:i A'),
-            'end_time' => Carbon::parse($plan->end_time)->format('h:i A'),
+            'config_type' => $plan->offday_config_type,
+            'salary_rate_type' => $plan->salary_rate_type,
+            'offday_multiplier' => $plan->offday_multiplier,
+            'custom_offday_rate' => $plan->custom_offday_rate,
+            'configuration_description' => $configurationDescription,
+            'shift_name' => $shiftName,
+            'start_time' => $startTime,
+            'end_time' => $endTime,
+            'grace_time' => $graceTime,
+            'early_out_grace' => $earlyOutGrace,
         ]);
     }
 
@@ -129,13 +201,10 @@ class DataController extends Controller
         return response()->json([
             'id' => $plan->id,
             'name' => $plan->name,
-            'type' => $plan->ot_type,
             'config' => $plan->ot_config_type,
             'rate' => $plan->custom_overtime_rate,
             'multiplier' => $plan->overtime_multiplier,
             'salary_type' => $plan->salary_rate_type,
-            'start_time' => Carbon::parse($plan->overtime_start_time)->format('h:i A'),
-            'end_time' => Carbon::parse($plan->overtime_end_time)->format('h:i A'),
         ]);
     }
     public function getShiftPlanDetails($id)
@@ -180,4 +249,69 @@ class DataController extends Controller
             'shift' => $shift
         ]);
     }
+
+    public function getAttendanceDetails($employee_id)
+    {
+        $today = Carbon::today();
+
+        $leaveFlag = $this->attendancesService->isLeaveDay($employee_id, $today);
+        if ($leaveFlag){
+
+            return response()->json([
+                'status' => 'leave_day',
+                'time' => $today,
+                'leave_day' => $leaveFlag
+            ]);
+
+        }else{
+
+            $offDay = $this->attendancesService->isOffDay($employee_id, $today);
+//            dd($offDay);
+            if ($offDay == 'off_day'){
+                return response()->json([
+                    'status' => 'off_day',
+                    'time' => $today,
+                    'off_day' => $offDay
+                ]);
+            }else{
+                return $this->attendanceRecords($employee_id, $today);
+            }
+
+        }
+
+    }
+
+    public function attendanceRecords($employee_id, $today){
+        $record = Attendance::where('employee_id', $employee_id)
+            ->whereDate('in_time', $today)
+            ->first();
+
+        if (!$record) {
+            return response()->json([
+                'status' => 'clock_in',
+                'time' => $today,
+                'record' => $record
+            ]);
+        }
+
+        if (is_null($record->out_time)) {
+            return response()->json([
+                'status' => 'clock_out',
+                'time' => $today,
+                'record' => $record
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'completed',
+            'time' => $today,
+            'record' => $record
+        ]);
+    }
+
+
+
+
+
+
 }

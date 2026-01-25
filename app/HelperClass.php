@@ -46,6 +46,14 @@ class HelperClass
         $data = GeneralSetting::first();
         return $data;
     }
+    public static function getHoursByMinutes($minutes){
+        $isNegative = $minutes < 0;
+        $minutes = abs($minutes);
+        $hours = intdiv($minutes, 60);
+        $mins = $minutes % 60;
+        $formatted = $hours . ' hr ' . $mins . ' min';
+        return $isNegative ? '-' . $formatted : $formatted;
+    }
 
     /**
      * Get initials from a full name (first letter of first name + first letter of last name)

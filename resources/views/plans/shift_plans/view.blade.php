@@ -1,8 +1,7 @@
 @extends('structure.master')
 @section('content')
-
     <div class="container-fluid mt-4">
-       <!-- Basic Shift Information -->
+        <!-- Basic Shift Information -->
         <div class="card border mb-4">
             <div class="card-header bg-light d-flex justify-content-between align-items-center">
                 <h5 class="mb-0 fw-semibold">
@@ -60,19 +59,13 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label class="text-muted small">Late After</label>
-                        <p class="fw-semibold mb-0">
-                            <span class="badge bg-warning text-dark">{{ $plan->late_after_minutes }} Minutes</span>
-                        </p>
-                    </div>
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label class="text-muted small">Excessive Late After</label>
                         <p class="fw-semibold mb-0">
                             <span class="badge bg-danger">{{ $plan->excessive_late_after_minutes }} Minutes</span>
                         </p>
                     </div>
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label class="text-muted small">Early Out Grace</label>
                         <p class="fw-semibold mb-0">
                             <span class="badge bg-info">{{ $plan->early_out_grace_minutes }} Minutes</span>
@@ -96,20 +89,23 @@
                         </span>
                     </div>
                     <div class="card-body">
-                        @if($plan->breakfast_status == 'active')
+                        @if ($plan->breakfast_status == 'active')
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                                     <span class="text-muted">Start Time</span>
-                                    <span class="fw-semibold">{{ date('h:i A', strtotime($plan->breakfast_start_time)) }}</span>
+                                    <span
+                                        class="fw-semibold">{{ date('h:i A', strtotime($plan->breakfast_start_time)) }}</span>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                                     <span class="text-muted">End Time</span>
-                                    <span class="fw-semibold">{{ date('h:i A', strtotime($plan->breakfast_end_time)) }}</span>
+                                    <span
+                                        class="fw-semibold">{{ date('h:i A', strtotime($plan->breakfast_end_time)) }}</span>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                                     <span class="text-muted">Duration</span>
                                     <span class="badge bg-primary">
-                                        {{ (strtotime($plan->breakfast_end_time) - strtotime($plan->breakfast_start_time)) / 60 }} Min
+                                        {{ (strtotime($plan->breakfast_end_time) - strtotime($plan->breakfast_start_time)) / 60 }}
+                                        Min
                                     </span>
                                 </li>
                             </ul>
@@ -132,11 +128,12 @@
                         </span>
                     </div>
                     <div class="card-body">
-                        @if($plan->lunch_status == 'active')
+                        @if ($plan->lunch_status == 'active')
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                                     <span class="text-muted">Start Time</span>
-                                    <span class="fw-semibold">{{ date('h:i A', strtotime($plan->lunch_start_time)) }}</span>
+                                    <span
+                                        class="fw-semibold">{{ date('h:i A', strtotime($plan->lunch_start_time)) }}</span>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                                     <span class="text-muted">End Time</span>
@@ -145,7 +142,8 @@
                                 <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                                     <span class="text-muted">Duration</span>
                                     <span class="badge bg-primary">
-                                        {{ (strtotime($plan->lunch_end_time) - strtotime($plan->lunch_start_time)) / 60 }} Min
+                                        {{ (strtotime($plan->lunch_end_time) - strtotime($plan->lunch_start_time)) / 60 }}
+                                        Min
                                     </span>
                                 </li>
                             </ul>
@@ -168,11 +166,12 @@
                         </span>
                     </div>
                     <div class="card-body">
-                        @if($plan->snacks_status == 'active')
+                        @if ($plan->snacks_status == 'active')
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                                     <span class="text-muted">Start Time</span>
-                                    <span class="fw-semibold">{{ date('h:i A', strtotime($plan->snacks_start_time)) }}</span>
+                                    <span
+                                        class="fw-semibold">{{ date('h:i A', strtotime($plan->snacks_start_time)) }}</span>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                                     <span class="text-muted">End Time</span>
@@ -181,7 +180,8 @@
                                 <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                                     <span class="text-muted">Duration</span>
                                     <span class="badge bg-primary">
-                                        {{ (strtotime($plan->snacks_end_time) - strtotime($plan->snacks_start_time)) / 60 }} Min
+                                        {{ (strtotime($plan->snacks_end_time) - strtotime($plan->snacks_start_time)) / 60 }}
+                                        Min
                                     </span>
                                 </li>
                             </ul>
@@ -204,20 +204,23 @@
                         </span>
                     </div>
                     <div class="card-body">
-                        @if($plan->dinner_status == 'active')
+                        @if ($plan->dinner_status == 'active')
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                                     <span class="text-muted">Start Time</span>
-                                    <span class="fw-semibold">{{ date('h:i A', strtotime($plan->dinner_start_time)) }}</span>
+                                    <span
+                                        class="fw-semibold">{{ date('h:i A', strtotime($plan->dinner_start_time)) }}</span>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                                     <span class="text-muted">End Time</span>
-                                    <span class="fw-semibold">{{ date('h:i A', strtotime($plan->dinner_end_time)) }}</span>
+                                    <span
+                                        class="fw-semibold">{{ date('h:i A', strtotime($plan->dinner_end_time)) }}</span>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                                     <span class="text-muted">Duration</span>
                                     <span class="badge bg-primary">
-                                        {{ (strtotime($plan->dinner_end_time) - strtotime($plan->dinner_start_time)) / 60 }} Min
+                                        {{ (strtotime($plan->dinner_end_time) - strtotime($plan->dinner_start_time)) / 60 }}
+                                        Min
                                     </span>
                                 </li>
                             </ul>
@@ -228,7 +231,7 @@
                 </div>
             </div>
         </div>
-         <!-- Page Header -->
+        <!-- Page Header -->
         <div class="d-flex float-end justify-content-right align-items-center mb-4">
             <div>
                 <a href="{{ route('plans.shift_plans.edit', $plan->id) }}" class="btn btn-primary">

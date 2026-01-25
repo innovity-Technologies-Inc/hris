@@ -16,10 +16,8 @@ class ShiftPlan extends Model
         'treat_as_full_day_minutes',
         'treat_as_half_day_minutes',
         'grace_time',
-        'late_after_minutes',
         'excessive_late_after_minutes',
         'early_out_grace_minutes',
-        'early_out_before',
         'breakfast_status',
         'breakfast_start_time',
         'breakfast_end_time',
@@ -47,4 +45,12 @@ class ShiftPlan extends Model
     //     'dinner_start_time' => 'datetime:H:i',
     //     'dinner_end_time' => 'datetime:H:i',
     // ];
+
+    /**
+     * Get the off-day plans associated with this shift.
+     */
+    public function getOffDayPlans()
+    {
+        return $this->hasMany(OffDayPlan::class, 'shift_id', 'id');
+    }
 }

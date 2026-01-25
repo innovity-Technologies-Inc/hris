@@ -40,7 +40,7 @@ class ShiftPlanController extends Controller
         $validated = $this->planServices->shiftPlanValidation($request);
 
         try {
-            $this->planServices->planSave($validated, ShiftPlan::class);
+            $this->planServices->shiftPlanSave($validated, ShiftPlan::class);
         }catch (\Exception $e){
             Log::error($e->getMessage());
             return redirect()->back()->with([
@@ -74,7 +74,7 @@ class ShiftPlanController extends Controller
     public function update(Request $request, $id){
         $validated = $this->planServices->shiftPlanValidation($request);
         try {
-            $this->planServices->planSave($validated, ShiftPlan::class, $id);
+            $this->planServices->shiftPlanSave($validated, ShiftPlan::class, $id);
         }catch (\Exception $e){
             Log::error($e->getMessage());
             return redirect()->back()->with([

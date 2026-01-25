@@ -12,8 +12,69 @@ class EmployeeSeeder extends Seeder
     private $faker;
     private $orgData = [];
     // --- CHANGE MADE HERE ---
-    private $totalEmployees = 2000;
+    private $totalEmployees = 2000;  // Reduced for testing - change back to 2000 after successful run
     // ------------------------
+
+    // Bangladesh-specific data arrays
+    private $bdDivisions = ['Dhaka', 'Chittagong', 'Rajshahi', 'Khulna', 'Barishal', 'Sylhet', 'Rangpur', 'Mymensingh'];
+
+    private $bdDistricts = [
+        'Dhaka' => ['Dhaka', 'Gazipur', 'Narayanganj', 'Tangail', 'Munshiganj', 'Manikganj', 'Narsingdi', 'Faridpur', 'Kishoreganj', 'Madaripur'],
+        'Chittagong' => ['Chittagong', 'Comilla', 'Feni', 'Brahmanbaria', "Cox's Bazar", 'Rangamati', 'Noakhali', 'Chandpur', 'Lakshmipur', 'Khagrachari'],
+        'Rajshahi' => ['Rajshahi', 'Bogra', 'Pabna', 'Sirajganj', 'Natore', 'Naogaon', 'Chapainawabganj', 'Joypurhat', 'Nawabganj'],
+        'Khulna' => ['Khulna', 'Jessore', 'Satkhira', 'Bagerhat', 'Narail', 'Magura', 'Kushtia', 'Chuadanga', 'Meherpur', 'Jhenaidah'],
+        'Barishal' => ['Barishal', 'Patuakhali', 'Bhola', 'Pirojpur', 'Jhalokati', 'Barguna'],
+        'Sylhet' => ['Sylhet', 'Moulvibazar', 'Habiganj', 'Sunamganj'],
+        'Rangpur' => ['Rangpur', 'Dinajpur', 'Kurigram', 'Gaibandha', 'Nilphamari', 'Lalmonirhat', 'Thakurgaon', 'Panchagarh'],
+        'Mymensingh' => ['Mymensingh', 'Jamalpur', 'Sherpur', 'Netrokona'],
+    ];
+
+    private $bdAreas = ['Mirpur', 'Uttara', 'Gulshan', 'Banani', 'Dhanmondi', 'Mohammadpur', 'Motijheel', 'Kakrail', 'Tejgaon', 'Shantinagar',
+                        'Badda', 'Rampura', 'Khilgaon', 'Mogbazar', 'Shahbag', 'Farmgate', 'Agargaon', 'Paltan', 'New Market', 'Lalbagh'];
+
+    private $bdMaleFirstNames = ['Mohammad', 'Abdul', 'Rahman', 'Karim', 'Zahid', 'Tanvir', 'Sakib', 'Rashed', 'Faruk', 'Arif',
+                                  'Shahriar', 'Naim', 'Mahmud', 'Hasan', 'Hussain', 'Ali', 'Imran', 'Rakib', 'Sadiq', 'Ashraf',
+                                  'Jahangir', 'Shafiq', 'Kamal', 'Jamal', 'Rafiq', 'Sharif', 'Manjur', 'Mostafa', 'Selim', 'Habib'];
+
+    private $bdFemaleFirstNames = ['Fatema', 'Ayesha', 'Sumaiya', 'Tasnim', 'Nusrat', 'Sabrina', 'Rumana', 'Nazma', 'Sharmin', 'Farzana',
+                                    'Tahmina', 'Rehana', 'Salma', 'Halima', 'Rabeya', 'Jasmine', 'Nasrin', 'Parveen', 'Shabnam', 'Munmun',
+                                    'Tania', 'Sumi', 'Rita', 'Mitu', 'Lipi', 'Shilpi', 'Mousumi', 'Nipa', 'Shikha', 'Rupa'];
+
+    private $bdLastNames = ['Hossain', 'Ahmed', 'Rahman', 'Khan', 'Islam', 'Ali', 'Haque', 'Chowdhury', 'Sarkar', 'Mia',
+                            'Begum', 'Akter', 'Sheikh', 'Mallick', 'Pradhan', 'Biswas', 'Das', 'Pal', 'Ghosh', 'Roy',
+                            'Sikder', 'Talukdar', 'Majumdar', 'Siddiqui', 'Alam', 'Uddin', 'Kabir', 'Zaman', 'Howlader', 'Molla'];
+
+    private $bdUniversities = [
+        'University of Dhaka',
+        'Bangladesh University of Engineering & Technology (BUET)',
+        'National University of Bangladesh',
+        'Jahangirnagar University',
+        'University of Rajshahi',
+        'University of Chittagong',
+        'Khulna University',
+        'BRAC University',
+        'North South University',
+        'East West University',
+        'American International University-Bangladesh (AIUB)',
+        'Daffodil International University',
+        'Independent University Bangladesh',
+        'Shahjalal University of Science & Technology (SUST)',
+        'Bangladesh Agricultural University (BAU)',
+    ];
+
+    private $bdEducationBoards = [
+        'Dhaka Board',
+        'Chittagong Board',
+        'Rajshahi Board',
+        'Jessore Board',
+        'Comilla Board',
+        'Sylhet Board',
+        'Dinajpur Board',
+        'Barishal Board',
+        'Mymensingh Board',
+        'Madrasah Board',
+        'Technical Board',
+    ];
 
     public function __construct()
     {
@@ -41,9 +102,47 @@ class EmployeeSeeder extends Seeder
     {
         // Load necessary IDs from the organization/compensation seeders
         $this->orgData['companies'] = DB::table('companies')->pluck('id')->toArray();
-        $this->orgData['divisions'] = DB::table('divisions')->pluck('id')->toArray();
-        $this->orgData['departments'] = DB::table('departments')->pluck('id')->toArray();
-        $this->orgData['sections'] = DB::table('sections')->pluck('id')->toArray();
+        
+        // Load company_locations grouped by company_id for proper assignment
+        $this->orgData['company_locations_by_company'] = DB::table('company_locations')
+            ->select('id', 'company_id')
+            ->get()
+            ->groupBy('company_id')
+            ->map(function($locations) {
+                return $locations->pluck('id')->toArray();
+            })
+            ->toArray();
+        
+        // Load divisions grouped by location_id (branch)
+        $this->orgData['divisions_by_location'] = DB::table('divisions')
+            ->select('id', 'location_id')
+            ->get()
+            ->groupBy('location_id')
+            ->map(function($divisions) {
+                return $divisions->pluck('id')->toArray();
+            })
+            ->toArray();
+        
+        // Load departments grouped by division_id
+        $this->orgData['departments_by_division'] = DB::table('departments')
+            ->select('id', 'division_id')
+            ->get()
+            ->groupBy('division_id')
+            ->map(function($departments) {
+                return $departments->pluck('id')->toArray();
+            })
+            ->toArray();
+        
+        // Load sections grouped by department_id
+        $this->orgData['sections_by_department'] = DB::table('sections')
+            ->select('id', 'department_id')
+            ->get()
+            ->groupBy('department_id')
+            ->map(function($sections) {
+                return $sections->pluck('id')->toArray();
+            })
+            ->toArray();
+            
         $this->orgData['designations'] = DB::table('designations')->pluck('id')->toArray();
         $this->orgData['tofsils'] = DB::table('tofsils')->pluck('id')->toArray();
         $this->orgData['salary_grades'] = DB::table('salary_grades')->pluck('id')->toArray();
@@ -56,111 +155,128 @@ class EmployeeSeeder extends Seeder
 
     private function seedEmployees()
     {
-        // Collect all data into separate arrays
-        $employees = [];
-        $officeInfos = [];
-        $eligiblePlans = [];
-        $eduExpTrainings = [];
-
+        // Process employees in batches to avoid memory exhaustion
+        $batchSize = 100; // Process 100 employees at a time
         $employeeIdCounter = 1;
 
-        for ($i = 0; $i < $this->totalEmployees; $i++) {
-            $employee_id = $employeeIdCounter++;
+        for ($batch = 0; $batch < ceil($this->totalEmployees / $batchSize); $batch++) {
+            $employees = [];
+            $officeInfos = [];
+            $eligiblePlans = [];
+            $eduExpTrainings = [];
 
-            // Determine Role & Gender
-            $gender = $this->faker->randomElement(['Male', 'Female']);
-            $firstName = $this->faker->firstName($gender);
-            $lastName = $this->faker->lastName;
-            $maritalStatus = $this->faker->randomElement(['Single', 'Married', 'Divorced', 'Widowed']);
-            $hasSpouse = $maritalStatus === 'Married';
+            $batchStart = $batch * $batchSize;
+            $batchEnd = min(($batch + 1) * $batchSize, $this->totalEmployees);
 
-            // 1. employees Table
-            $employees[] = $this->generateEmployeeData($employee_id, $firstName, $lastName, $gender, $maritalStatus, $hasSpouse);
+            for ($i = $batchStart; $i < $batchEnd; $i++) {
+                $employee_id = $employeeIdCounter++;
 
-            // 2. employee_office_infos Table
-            $officeInfos[] = $this->generateOfficeInfoData($employee_id);
+                // Determine Role & Gender
+                $gender = $this->faker->randomElement(['Male', 'Female']);
+                $firstName = $gender === 'Male'
+                    ? $this->faker->randomElement($this->bdMaleFirstNames)
+                    : $this->faker->randomElement($this->bdFemaleFirstNames);
+                $lastName = $this->faker->randomElement($this->bdLastNames);
+                $maritalStatus = $this->faker->randomElement(['Single', 'Married', 'Divorced', 'Widowed']);
+                $hasSpouse = $maritalStatus === 'Married';
 
-            // 3. employee_eligible_plans Table (Will be chunked on insertion)
-            $eligiblePlans[] = $this->generateEligiblePlansData($employee_id);
+                // 1. employees Table
+                $employees[] = $this->generateEmployeeData($employee_id, $firstName, $lastName, $gender, $maritalStatus, $hasSpouse);
 
-            // 4. employee_education_experience_training Table
-            $eduExpTrainings[] = $this->generateEducationExperienceTrainingData($employee_id);
+                // 2. employee_office_infos Table
+                $officeInfos[] = $this->generateOfficeInfoData($employee_id);
+
+                // 3. employee_eligible_plans Table
+                $eligiblePlans[] = $this->generateEligiblePlansData($employee_id);
+
+                // 4. employee_education_experience_training Table
+                $eduExpTrainings[] = $this->generateEducationExperienceTrainingData($employee_id);
+            }
+
+            // Insert this batch
+            DB::table('employees')->insert($employees);
+            DB::table('employee_office_infos')->insert($officeInfos);
+            DB::table('employee_eligible_plans')->insert($eligiblePlans);
+            DB::table('employee_education_experience_training')->insert($eduExpTrainings);
+
+            // Clear memory
+            unset($employees, $officeInfos, $eligiblePlans, $eduExpTrainings);
+
+            // Show progress
+            echo "Seeded employees " . ($batchStart + 1) . " to " . $batchEnd . " of " . $this->totalEmployees . "\n";
         }
+    }
 
-        // --- INSERTION LOGIC: Chunking applied to all large tables ---
-        $employeesChunkSize = 1000;
-        $plansChunkSize = 500;
+    private function generateBangladeshAddress(): array
+    {
+        $division = $this->faker->randomElement($this->bdDivisions);
+        $district = $this->faker->randomElement($this->bdDistricts[$division]);
+        $area = $this->faker->randomElement($this->bdAreas);
 
-        // 1. Chunk and Insert employees (FIXED: Required chunking for 2000 rows x 44 columns)
-        collect($employees)->chunk($employeesChunkSize)->each(function ($chunk) {
-            DB::table('employees')->insert($chunk->toArray());
-        });
+        return [
+            'line_1' => 'House ' . $this->faker->numberBetween(1, 500) . ', Road ' . $this->faker->numberBetween(1, 50) . ', ' . $area,
+            'village' => $this->faker->optional(0.4)->randomElement(['East Para', 'West Para', 'North Para', 'South Para', 'Middle Para']),
+            'post_office' => $district . ' Sadar Post Office',
+            'district' => $district,
+            'division' => $division,
+            'zip_code' => $this->faker->numerify('####'),
+            'state' => $division,
+            'country' => 'Bangladesh',
+        ];
+    }
 
+    private function generateBangladeshPhoneNumber(): string
+    {
+        $operators = ['17', '18', '19', '16', '15', '13', '14'];
+        return '+880' . $this->faker->randomElement($operators) . $this->faker->numerify('########');
+    }
 
-        // 2. Insert office infos (40 columns - 2000 rows is 80,000. This must also be chunked.)
-        $officeInfosChunkSize = 1000; // 40 * 1000 = 40,000
-        collect($officeInfos)->chunk($officeInfosChunkSize)->each(function ($chunk) {
-            DB::table('employee_office_infos')->insert($chunk->toArray());
-        });
-
-
-        // 3. Chunk and Insert Eligible Plans (Required due to the very large column count: 67 columns)
-        collect($eligiblePlans)->chunk($plansChunkSize)->each(function ($chunk) {
-            DB::table('employee_eligible_plans')->insert($chunk->toArray());
-        });
-
-        // 4. Insert Education/Experience (Should be safe, only 5 columns, but chunking for consistency is good)
-        $eduExpTrainingsChunkSize = 2000; // 5 * 2000 = 10,000 (Safe)
-        DB::table('employee_education_experience_training')->insert($eduExpTrainings);
+    private function generateNID(): string
+    {
+        // Bangladesh NID can be 10, 13, or 17 digits
+        $format = $this->faker->randomElement(['10', '17']);
+        if ($format === '10') {
+            return $this->faker->numerify('##########');
+        }
+        return $this->faker->numerify('#################');
     }
 
     private function generateEmployeeData($id, $firstName, $lastName, $gender, $maritalStatus, $hasSpouse): array
     {
         $dateOfBirth = $this->faker->dateTimeBetween('-45 years', '-20 years');
-        $middleName = $this->faker->optional(0.3)->firstName($gender);
+        $middleName = $this->faker->optional(0.3)->randomElement($gender === 'Male' ? $this->bdMaleFirstNames : $this->bdFemaleFirstNames);
 
-        $presentAddress = [
-            'line_1' => $this->faker->streetAddress,
-            'village' => $this->faker->optional(0.5)->word . ' Village',
-            'post_office' => $this->faker->word . ' Post Office',
-            'district' => $this->faker->city,
-            'division' => $this->faker->state,
-            'zip_code' => $this->faker->postcode,
-            'state' => $this->faker->state,
-            'country' => 'Bangladesh',
-        ];
+        $presentAddress = $this->generateBangladeshAddress();
 
         // 70% chance permanent address is the same as present, otherwise different
         $isSameAddress = $this->faker->boolean(70);
-        $permanentAddress = $isSameAddress ? $presentAddress : [
-            'line_1' => $this->faker->streetAddress,
-            'village' => $this->faker->optional(0.5)->word . ' Village',
-            'post_office' => $this->faker->word . ' Post Office',
-            'district' => $this->faker->city,
-            'division' => $this->faker->state,
-            'zip_code' => $this->faker->postcode,
-            'state' => $this->faker->state,
-            'country' => 'Bangladesh',
-        ];
+        $permanentAddress = $isSameAddress ? $presentAddress : $this->generateBangladeshAddress();
 
         // Reference address (50% chance of being included)
         $referenceAddress = $this->faker->boolean(50) ? [
             'emp_id' => 'SYS' . $this->faker->unique()->numberBetween(1000, 9999),
-            'reference_name' => $this->faker->name,
-            'reference_designation' => $this->faker->jobTitle,
-            'phone' => $this->faker->phoneNumber,
-            'mobile' => $this->faker->phoneNumber,
-            'email' => $this->faker->safeEmail,
-            'line_1' => $this->faker->streetAddress,
-            'village' => $this->faker->optional(0.5)->word . ' Village',
-            'post_office' => $this->faker->word . ' Post Office',
-            'district' => $this->faker->city,
-            'division' => $this->faker->state,
-            'zip_code' => $this->faker->postcode,
-            'state' => $this->faker->state,
+            'reference_name' => $this->faker->randomElement($this->bdMaleFirstNames) . ' ' . $this->faker->randomElement($this->bdLastNames),
+            'reference_designation' => $this->faker->randomElement(['Manager', 'Senior Officer', 'Project Lead', 'Department Head', 'HR Manager']),
+            'phone' => '+880-2-' . $this->faker->numerify('########'),
+            'mobile' => $this->generateBangladeshPhoneNumber(),
+            'email' => strtolower(Str::slug($this->faker->randomElement($this->bdMaleFirstNames))) . '@company.com.bd',
+            'line_1' => $this->faker->randomElement($this->bdAreas) . ', Road ' . $this->faker->numberBetween(1, 30),
+            'village' => null,
+            'post_office' => 'Dhaka Sadar Post Office',
+            'district' => 'Dhaka',
+            'division' => 'Dhaka',
+            'zip_code' => $this->faker->numerify('####'),
+            'state' => 'Dhaka',
             'country' => 'Bangladesh',
         ] : null;
 
+        // Generate spouse name based on gender
+        $spouseName = null;
+        if ($hasSpouse) {
+            $spouseName = $gender === 'Male'
+                ? $this->faker->randomElement($this->bdFemaleFirstNames) . ' ' . $this->faker->randomElement($this->bdLastNames)
+                : $this->faker->randomElement($this->bdMaleFirstNames) . ' ' . $this->faker->randomElement($this->bdLastNames);
+        }
 
         return [
             'id' => $id,
@@ -172,16 +288,17 @@ class EmployeeSeeder extends Seeder
             'last_name' => $lastName,
             'middle_name' => $middleName,
             'full_name' => trim("$firstName $middleName $lastName"),
-            'father_name' => $this->faker->name('male'),
-            'mother_name' => $this->faker->name('female'),
-            'spouse_name' => $hasSpouse ? $this->faker->name($gender === 'Male' ? 'female' : 'male') : null,
+            'father_name' => $this->faker->randomElement($this->bdMaleFirstNames) . ' ' . $this->faker->randomElement($this->bdLastNames),
+            'mother_name' => $this->faker->randomElement($this->bdFemaleFirstNames) . ' ' . $this->faker->randomElement($this->bdLastNames),
+            'spouse_name' => $spouseName,
             'marital_status' => $maritalStatus,
             'gender' => $gender,
-            'religion' => $this->faker->randomElement(['Islam', 'Christianity', 'Hinduism', 'Buddhism']),
+            'religion' => $this->faker->randomElement(['Islam', 'Hinduism', 'Buddhism', 'Christianity']),
             'nationality' => 'Bangladeshi',
+            'blood_group' => $this->faker->randomElement(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
             'height_feet' => $this->faker->optional(0.8)->numberBetween(5, 6),
             'height_inches' => $this->faker->optional(0.8)->numberBetween(0, 11),
-            'children_count' => $hasSpouse ? $this->faker->numberBetween(0, 3) : 0,
+            'children_count' => $hasSpouse ? $this->faker->numberBetween(0, 4) : 0,
 
             // --- CORRECTED ADDRESS FIELDS ---
             'present_address' => json_encode($presentAddress),
@@ -189,25 +306,25 @@ class EmployeeSeeder extends Seeder
             'reference_address' => $referenceAddress ? json_encode($referenceAddress) : null,
             // ---------------------------------
 
-            'tin' => $this->faker->optional(0.6)->numerify('##############'),
-            'passport_no' => $this->faker->optional(0.4)->bothify('??########'),
-            'passport_expiry' => $this->faker->optional(0.4)->dateTimeBetween('+1 year', '+8 years'),
-            'license_no' => $this->faker->optional(0.5)->bothify('##-##-######'),
-            'license_expiry' => $this->faker->optional(0.5)->dateTimeBetween('+1 year', '+5 years'),
-            'visa_expiry' => $this->faker->optional(0.2)->dateTimeBetween('+1 year', '+5 years'),
-            'work_expiry' => $this->faker->optional(0.2)->dateTimeBetween('+1 year', '+5 years'),
-            'residency_id_number' => $this->faker->optional(0.3)->numerify('###########'),
+            'tin' => $this->faker->optional(0.6)->numerify('############'),
+            'passport_no' => $this->faker->optional(0.3)->bothify('??########'),
+            'passport_expiry' => $this->faker->optional(0.3)->dateTimeBetween('+1 year', '+8 years'),
+            'license_no' => $this->faker->optional(0.4)->numerify('##-##-######'),
+            'license_expiry' => $this->faker->optional(0.4)->dateTimeBetween('+1 year', '+5 years'),
+            'visa_expiry' => $this->faker->optional(0.1)->dateTimeBetween('+1 year', '+5 years'),
+            'work_expiry' => $this->faker->optional(0.1)->dateTimeBetween('+1 year', '+5 years'),
+            'residency_id_number' => $this->generateNID(), // Bangladesh NID
 
             'date_of_birth' => $dateOfBirth->format('Y-m-d'),
-            'birth_country' => $this->faker->country,
+            'birth_country' => 'Bangladesh',
             'birth_reg_no' => $this->faker->optional(0.7)->numerify('################'),
 
-            'personal_mobile' => $this->faker->unique()->phoneNumber,
-            'home_phone' => $this->faker->optional(0.3)->phoneNumber,
-            'work_mobile' => $this->faker->optional(0.7)->phoneNumber,
-            'work_phone' => $this->faker->optional(0.6)->phoneNumber,
-            'work_email' => strtolower(Str::slug($firstName . '.' . $lastName)) . '@corp.com',
-            'personal_email' => $this->faker->unique()->safeEmail,
+            'personal_mobile' => $this->generateBangladeshPhoneNumber(),
+            'home_phone' => $this->faker->optional(0.3)->numerify('+880-2-########'),
+            'work_mobile' => $this->faker->optional(0.7)->numerify('+880-1#-########'),
+            'work_phone' => $this->faker->optional(0.6)->numerify('+880-2-########'),
+            'work_email' => strtolower(Str::slug($firstName . '.' . $lastName)) . '@company.com.bd',
+            'personal_email' => strtolower(Str::slug($firstName . $this->faker->numberBetween(1, 999))) . '@gmail.com',
 
             'photo_path' => 'uploads/photos/' . $id . '.jpg',
             'fingerprint_path' => 'uploads/fingerprints/' . $id . '.dat',
@@ -224,19 +341,48 @@ class EmployeeSeeder extends Seeder
         $joiningDate = $this->faker->dateTimeBetween('-5 years', '-6 months');
         $isPermanent = $this->faker->boolean(70);
 
-        // --- Randomly select linked IDs ---
+        // --- Select organizational IDs following the hierarchy: Company -> Branch -> Division -> Department -> Section ---
+        
+        // 1. Select Company
         $companyId = $this->faker->randomElement($this->orgData['companies']);
-        $divisionId = $this->faker->randomElement($this->orgData['divisions']);
-        $departmentId = $this->faker->randomElement($this->orgData['departments']);
-        $sectionId = $this->faker->randomElement($this->orgData['sections']);
+        
+        // 2. Select a Business Unit (Branch) that belongs to the selected company
+        $businessUnitId = null;
+        if (isset($this->orgData['company_locations_by_company'][$companyId]) && 
+            !empty($this->orgData['company_locations_by_company'][$companyId])) {
+            $businessUnitId = $this->faker->randomElement($this->orgData['company_locations_by_company'][$companyId]);
+        }
+        
+        // 3. Select a Division that belongs to the selected branch
+        $divisionId = null;
+        if ($businessUnitId && isset($this->orgData['divisions_by_location'][$businessUnitId]) && 
+            !empty($this->orgData['divisions_by_location'][$businessUnitId])) {
+            $divisionId = $this->faker->randomElement($this->orgData['divisions_by_location'][$businessUnitId]);
+        }
+        
+        // 4. Select a Department that belongs to the selected division
+        $departmentId = null;
+        if ($divisionId && isset($this->orgData['departments_by_division'][$divisionId]) && 
+            !empty($this->orgData['departments_by_division'][$divisionId])) {
+            $departmentId = $this->faker->randomElement($this->orgData['departments_by_division'][$divisionId]);
+        }
+        
+        // 5. Select a Section that belongs to the selected department
+        $sectionId = null;
+        if ($departmentId && isset($this->orgData['sections_by_department'][$departmentId]) && 
+            !empty($this->orgData['sections_by_department'][$departmentId])) {
+            $sectionId = $this->faker->randomElement($this->orgData['sections_by_department'][$departmentId]);
+        }
+        
         $designationId = $this->faker->randomElement($this->orgData['designations']);
         $tofsilId = $this->faker->randomElement($this->orgData['tofsils']);
         $gradeId = $this->faker->randomElement($this->orgData['salary_grades']);
 
         $promotionDate = (clone $joiningDate)->modify('+' . $this->faker->numberBetween(1, 3) . ' years');
 
-        // Determine alternate day (10% chance of having one)
-        $alternateDay = $this->faker->boolean(10) ? $this->faker->dayOfWeek : null;
+        // Determine alternate day (10% chance of having one) - Bangladesh style (Friday/Saturday)
+        $alternateDays = ['Friday', 'Saturday'];
+        $alternateDay = $this->faker->boolean(10) ? $this->faker->randomElement($alternateDays) : null;
 
         // FIX: Convert alternate day string into a JSON array or null
         $alternateOffDayJson = $alternateDay ? json_encode([$alternateDay]) : null;
@@ -248,11 +394,11 @@ class EmployeeSeeder extends Seeder
             'grade_id' => $gradeId,
             'hr_file_no' => 'HRF' . $this->faker->unique()->numerify('######'),
             'tofsil_id' => $tofsilId,
-            'file_note' => $this->faker->optional(0.1)->sentence(5),
+            'file_note' => $this->faker->optional(0.1)->randomElement(['Regular Employee', 'Probationary', 'Experienced Worker', 'New Hire']),
 
             // Joining Information
             'joining_company_id' => $companyId,
-            'joining_business_unit_id' => $companyId,
+            'joining_business_unit_id' => $businessUnitId,
             'joining_division_id' => $divisionId,
             'joining_department_id' => $departmentId,
             'joining_section_id' => $sectionId,
@@ -261,7 +407,7 @@ class EmployeeSeeder extends Seeder
 
             // Current Posting Information
             'current_company_id' => $companyId,
-            'current_business_unit_id' => $companyId,
+            'current_business_unit_id' => $businessUnitId,
             'current_division_id' => $divisionId,
             'current_department_id' => $departmentId,
             'current_section_id' => $sectionId,
@@ -281,7 +427,7 @@ class EmployeeSeeder extends Seeder
             'promotion_cycle' => 'Annual',
             'increment_cycle' => 'Annual',
 
-            // Attendance & Benefits
+            // Attendance & Benefits - Bangladesh standard (Friday off, some Friday-Saturday)
             'weekends' => $this->faker->randomElement([json_encode(['Friday']), json_encode(['Friday', 'Saturday']), json_encode(['Saturday'])]),
             'alternate_off_day' => $alternateOffDayJson,
             'ot_allowed' => $this->faker->boolean(60) ? 'yes' : 'no',
@@ -308,14 +454,11 @@ class EmployeeSeeder extends Seeder
             'updated_at' => now(),
         ];
 
-        // List of all plan fields to populate
+        // List of all plan fields to populate (matching migration schema)
         $planFields = [
-            'shift_plan', 'leave_plan', 'ot_plan', 'attendance_bonus_plan',
-            'day_off_work_plan', 'roster_plans', 'bonus_plan', 'allowance_plan',
-            'late_deduction_plan', 'production_plan', 'early_out_deduction_plan',
-            'salary_breakdown_plan', 'medical_plan', 'night_bill_plan',
-            'tiffin_plan', 'dinner_plan', 'breakfast_plan', 'food_com_plan',
-            'excessive_late_plan', 'lunch_plan', 'snacks_plan'
+            'shift_plan', 'leave_plan', 'ot_plan', 'day_off_work_plan',
+            'roster_plans', 'bonus_plan', 'allowance_plan', 'late_deduction_plan',
+            'early_out_deduction_plan', 'medical_plan', 'excessive_late_plan', 'meal_plan'
         ];
 
         foreach ($planFields as $field) {
@@ -344,50 +487,148 @@ class EmployeeSeeder extends Seeder
         $experiences = [];
         $trainings = [];
 
-        // Educations (2 to 4 entries)
-        $educationTitles = ['SSC', 'HSC', 'BSc', 'MSc', 'PhD'];
-        for ($i = 0; $i < $this->faker->numberBetween(2, 4); $i++) {
+        // Bangladesh Education System
+        $educationLevels = [
+            ['title' => 'SSC (Secondary School Certificate)', 'group' => ['Science', 'Commerce', 'Humanities']],
+            ['title' => 'HSC (Higher Secondary Certificate)', 'group' => ['Science', 'Commerce', 'Humanities']],
+            ['title' => 'Bachelor Degree', 'group' => ['Computer Science & Engineering (CSE)', 'Business Administration (BBA)', 'English', 'Economics', 'Accounting']],
+            ['title' => 'Masters Degree', 'group' => ['Computer Science & Engineering (CSE)', 'Business Administration (MBA)', 'English', 'Economics', 'Accounting']],
+            ['title' => 'PhD', 'group' => ['Computer Science', 'Business Administration', 'Economics']],
+        ];
+
+        $bdColleges = [
+            'Dhaka College',
+            'Notre Dame College',
+            'Holy Cross College',
+            'RAJUK Uttara Model College',
+            'Viqarunnisa Noon School & College',
+            'St. Joseph Higher Secondary School',
+            'Ideal School & College',
+            'Government Laboratory High School',
+        ];
+
+        $bdResults = ['First Division', 'A+', 'A', 'A-', 'B+', 'Golden A+'];
+
+        // Educations (2 to 4 entries) - Bangladesh Education System
+        $numEducations = $this->faker->numberBetween(2, 4);
+        for ($i = 0; $i < $numEducations; $i++) {
+            $eduLevel = $educationLevels[$i % count($educationLevels)];
+            $isSchool = $i < 2; // SSC/HSC from school/college
+
             $educations[] = [
-                'education_title' => $educationTitles[$i % count($educationTitles)],
-                'institute' => $this->faker->company . ' Institute',
-                'group_major' => $this->faker->randomElement(['Science', 'Business Studies', 'Arts', 'Engineering']),
-                'board_university' => $this->faker->randomElement(['Dhaka University', 'BUET', 'National University']),
-                'result_grade' => $this->faker->randomElement(['First Division', 'A+', 'Distinction']),
-                'passing_year' => $this->faker->year(),
-                'gpa_cgpa' => $this->faker->randomFloat(2, 2.5, 4.0),
+                'education_title' => $eduLevel['title'],
+                'institute' => $isSchool ? $this->faker->randomElement($bdColleges) : $this->faker->randomElement($this->bdUniversities),
+                'group_major' => $this->faker->randomElement($eduLevel['group']),
+                'board_university' => $isSchool ? $this->faker->randomElement($this->bdEducationBoards) : $this->faker->randomElement($this->bdUniversities),
+                'result_grade' => $this->faker->randomElement($bdResults),
+                'passing_year' => $this->faker->numberBetween(2000, 2023),
+                'gpa_cgpa' => $this->faker->randomFloat(2, 3.0, 5.0),
             ];
         }
 
-        // Experiences (0 to 3 entries)
+        // Bangladesh Companies for Experience
+        $bdCompanies = [
+            'Grameenphone Ltd.',
+            'Robi Axiata Ltd.',
+            'Banglalink Digital Communications',
+            'Beximco Group',
+            'Square Group',
+            'Walton Group',
+            'PRAN-RFL Group',
+            'Bashundhara Group',
+            'ACI Limited',
+            'Incepta Pharmaceuticals',
+            'BRAC Bank',
+            'Dutch-Bangla Bank',
+            'Islami Bank Bangladesh',
+        ];
+
+        $bdDesignations = [
+            'Software Engineer',
+            'Senior Software Engineer',
+            'Junior Executive',
+            'Executive',
+            'Senior Executive',
+            'Officer',
+            'Assistant Manager',
+            'Manager',
+            'Senior Manager',
+        ];
+
+        $bdDepartments = [
+            'IT',
+            'HR',
+            'Finance & Accounts',
+            'Marketing',
+            'Sales',
+            'Production',
+            'Quality Control',
+            'Customer Service',
+        ];
+
+        // Experiences (0 to 3 entries) - Bangladesh Companies
         for ($i = 0; $i < $this->faker->numberBetween(0, 3); $i++) {
             $startDate = $this->faker->dateTimeBetween('-10 years', '-2 years');
             $endDate = (clone $startDate)->modify('+' . $this->faker->numberBetween(1, 4) . ' years');
-            $duration = $startDate->diff($endDate)->format('%y years, %m months');
+            $years = $startDate->diff($endDate)->y;
+            $months = $startDate->diff($endDate)->m;
+            $duration = $years . ' years, ' . $months . ' months';
 
             $experiences[] = [
-                'company' => $this->faker->company,
-                'designation' => $this->faker->jobTitle,
-                'department' => $this->faker->randomElement(['Finance', 'IT', 'Marketing', 'HR']),
+                'company' => $this->faker->randomElement($bdCompanies),
+                'designation' => $this->faker->randomElement($bdDesignations),
+                'department' => $this->faker->randomElement($bdDepartments),
                 'date_from' => $startDate->format('Y-m-d'),
                 'date_to' => $endDate->format('Y-m-d'),
                 'duration' => $duration,
-                'responsibility' => $this->faker->paragraph(2),
+                'responsibility' => $this->faker->randomElement([
+                    'Project Development and Maintenance',
+                    'Team Management and Supervision',
+                    'Client Communication and Reporting',
+                    'Data Analysis and Reporting',
+                    'System Design and Implementation',
+                ]),
             ];
         }
 
-        // Trainings (1 to 3 entries)
+        // Bangladesh Training Institutes
+        $bdTrainingInstitutes = [
+            'Bangladesh Institute of Management (BIM)',
+            'BASIS Institute of Technology',
+            'Bangladesh Computer Council (BCC)',
+            'ICT Division',
+            'BRAC Learning Center',
+            'BITAC',
+            'HRDI',
+        ];
+
+        $bdTrainingTitles = [
+            'Professional Software Development',
+            'Project Management',
+            'Digital Marketing',
+            'Financial Management',
+            'Leadership Training',
+            'Communication Skills',
+            'Cyber Security',
+            'Data Analytics',
+            'HR Management',
+            'Agile Methodology',
+        ];
+
+        // Trainings (1 to 3 entries) - Bangladesh Training
         for ($i = 0; $i < $this->faker->numberBetween(1, 3); $i++) {
             $fromDate = $this->faker->dateTimeBetween('-3 years', 'now');
             $toDate = (clone $fromDate)->modify('+' . $this->faker->numberBetween(2, 10) . ' days');
+            $days = $fromDate->diff($toDate)->days;
 
             $trainings[] = [
-                'training_title' => $this->faker->randomElement(['Agile', 'DevOps', 'Cyber Security', 'Leadership', 'Financial Modeling']),
-                'course_name' => $this->faker->word . ' Certification Course',
+                'training_title' => $this->faker->randomElement($bdTrainingTitles),
+                'course_name' => $this->faker->randomElement($bdTrainingTitles) . ' Certification Course',
                 'training_code' => 'TRN' . $this->faker->unique()->numerify('####'),
-                'institute' => $this->faker->company . ' Training Institute',
-                'country' => $this->faker->country,
-                'location' => $this->faker->city,
-                'duration' => $fromDate->diff($toDate)->days . ' days',
+                'institute' => $this->faker->randomElement($bdTrainingInstitutes),
+                'country' => 'Bangladesh',
+                'location' => $this->faker->randomElement(['Dhaka', 'Chittagong', 'Rajshahi', 'Khulna', 'Sylhet']),
+                'duration' => $days . ' days',
                 'from_date' => $fromDate->format('Y-m-d'),
                 'to_date' => $toDate->format('Y-m-d'),
             ];

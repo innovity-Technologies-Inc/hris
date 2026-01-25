@@ -22,7 +22,7 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-12 mb-3">
                             <label for="name" class="form-label fw-semibold">
                                 OT Plan Name <span class="text-danger">*</span>
                             </label>
@@ -30,29 +30,6 @@
                                 name="name" placeholder="E.g., Regular OT - 1.5x"
                                 value="{{ isset($plan) ? $plan->name : old('name') }}" required>
                             @error('name')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="ot_type" class="form-label fw-semibold">
-                                Overtime Type <span class="text-danger">*</span>
-                            </label>
-                            <select class="form-select @error('ot_type') is-invalid @enderror" id="ot_type" name="ot_type"
-                                required>
-                                <option value="">Select OT Type</option>
-                                <option value="regular" {{ isset($plan) && $plan->ot_type == 'regular' ? 'selected' : '' }}>
-                                    Regular</option>
-                                <option value="holiday" {{ isset($plan) && $plan->ot_type == 'holiday' ? 'selected' : '' }}>
-                                    Holiday</option>
-                                <option value="night_shift"
-                                    {{ isset($plan) && $plan->ot_type == 'night_shift' ? 'selected' : '' }}>Night Shift
-                                </option>
-                                <option value="weekend" {{ isset($plan) && $plan->ot_type == 'weekend' ? 'selected' : '' }}>
-                                    Weekend</option>
-                                <option value="other" {{ isset($plan) && $plan->ot_type == 'other' ? 'selected' : '' }}>
-                                    Other</option>
-                            </select>
-                            @error('ot_type')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
@@ -77,6 +54,8 @@
                     <h5 class="mb-0 fw-semibold">
                         <i class="mdi mdi-cash-multiple text-success me-2"></i>Overtime Rate Configuration
                     </h5>
+                    <small class="text-danger"><i class="mdi mdi-information-outline me-1"></i>Note: All overtime
+                        calculations are based on hours</small>
                 </div>
                 <div class="card-body">
                     <!-- Main Configuration Type Selection -->
@@ -196,63 +175,15 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="minimum_overtime_hours" class="form-label fw-semibold">
-                                Minimum Overtime Hours
+                        <div class="col-md-12 mb-3">
+                            <label for="maximum_overtime" class="form-label fw-semibold">
+                                Maximum Overtime (Minutes)
                             </label>
-                            <input type="number" step="0.01" class="form-control" id="minimum_overtime_hours"
-                                name="minimum_overtime_hours" placeholder="0.00"
-                                value="{{ isset($plan) ? $plan->minimum_overtime_hours : old('minimum_overtime_hours', '0.00') }}">
-                            <small class="text-muted">Minimum hours required to qualify for OT</small>
-                            @error('minimum_overtime_hours')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="maximum_overtime_hours" class="form-label fw-semibold">
-                                Maximum Overtime Hours
-                            </label>
-                            <input type="number" step="0.01" class="form-control" id="maximum_overtime_hours"
-                                name="maximum_overtime_hours" placeholder="Leave empty for unlimited"
-                                value="{{ isset($plan) ? $plan->maximum_overtime_hours : old('maximum_overtime_hours') }}">
-                            <small class="text-muted">Maximum OT hours allowed (optional)</small>
-                            @error('maximum_overtime_hours')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Applicable Time Range -->
-            <div class="card border mb-4">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0 fw-semibold">
-                        <i class="mdi mdi-calendar-clock text-warning me-2"></i>Applicable Time Range
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="overtime_start_time" class="form-label fw-semibold">
-                                OT Start Time
-                            </label>
-                            <input type="time" class="form-control" id="overtime_start_time"
-                                name="overtime_start_time"
-                                value="{{ isset($plan) && $plan->overtime_start_time ? Carbon\Carbon::parse($plan->overtime_start_time)->format('H:i') : old('overtime_start_time') }}">
-                            <small class="text-muted">Time when OT period begins (optional)</small>
-                            @error('overtime_start_time')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="overtime_end_time" class="form-label fw-semibold">
-                                OT End Time
-                            </label>
-                            <input type="time" class="form-control" id="overtime_end_time" name="overtime_end_time"
-                                value="{{ isset($plan) && $plan->overtime_end_time ? Carbon\Carbon::parse($plan->overtime_end_time)->format('H:i') : old('overtime_end_time') }}">
-                            <small class="text-muted">Time when OT period ends (optional)</small>
-                            @error('overtime_end_time')
+                            <input type="number" step="0.01" class="form-control" id="maximum_overtime"
+                                name="maximum_overtime" placeholder="Leave empty for unlimited"
+                                value="{{ isset($plan) ? $plan->maximum_overtime : old('maximum_overtime') }}">
+                            <small class="text-muted">Maximum OT minutes allowed (optional)</small>
+                            @error('maximum_overtime')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
@@ -267,13 +198,12 @@
                         <i class="mdi mdi-toggle-switch text-primary me-2"></i>Plan Status
                     </h5>
                     <div class="form-check form-switch mb-0">
-                        <input type="hidden" name="active_ind" value="inactive">
-                        <input class="form-check-input" type="checkbox" name="active_ind" id="active_ind"
-                            value="active"
-                            {{ (isset($plan) && $plan->active_ind == 'active') || old('active_ind', 'active') == 'active' ? 'checked' : '' }}>
-                        <label class="form-check-label" for="active_ind">Active</label>
+                        <input type="hidden" name="status" value="inactive">
+                        <input class="form-check-input" type="checkbox" name="status" id="status" value="active"
+                            {{ (isset($plan) && $plan->status == 'active') || old('status', 'active') == 'active' ? 'checked' : '' }}>
+                        <label class="form-check-label" for="status">Active</label>
                     </div>
-                    @error('active_ind')
+                    @error('status')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
@@ -299,7 +229,7 @@
         // Handle form reset
         document.querySelector('form').addEventListener('reset', function() {
             setTimeout(function() {
-                document.getElementById('active_ind').checked = true;
+                document.getElementById('status').checked = true;
                 document.getElementById('ot_config_salary').checked = true;
                 document.getElementById('rate_type_multiplier').checked = true;
                 toggleOTConfigSections();

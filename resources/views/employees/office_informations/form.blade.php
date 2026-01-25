@@ -131,20 +131,23 @@
                                     @enderror
                                 </div>
 
+                                @if(App\HelperClass::getGeneralSetting()->branch_status == 1)
                                 <div class="col-lg-4 mb-3">
-                                    <label for="joining_business_unit_id" class="form-label">Business Unit <span
+                                    <label for="joining_business_unit_id" class="form-label">Branch <span
                                             class="text-danger">*</span></label>
                                     <select id="joining_business_unit_id"
                                         class="form-select select2_list @error('joining_business_unit_id') is-invalid @enderror"
                                         name="joining_business_unit_id"
-                                        data-placeholder="Select Business Unit" required>
-                                        <option value="">Select Business Unit</option>
+                                        data-placeholder="Select Branch">
+                                        <option value="">Select Branch</option>
                                     </select>
                                     @error('joining_business_unit_id')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
+                                @endif
 
+                                @if(App\HelperClass::getGeneralSetting()->division_status == 1)
                                 <div class="col-lg-4 mb-3">
                                     <label for="joining_division_id" class="form-label">Joining Division</label>
                                     <select class="form-select select2_list @error('joining_division_id') is-invalid @enderror"
@@ -157,9 +160,12 @@
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
+                                @endif
                             </div>
 
                             <div class="row">
+                                @if(App\HelperClass::getGeneralSetting()->department_status == 1)
+
                                 <div class="col-lg-4 mb-3">
                                     <label for="joining_department_id" class="form-label">Joining Department</label>
                                     <select class="form-select select2_list @error('joining_department_id') is-invalid @enderror"
@@ -172,6 +178,8 @@
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
+                                @endif
+                                    @if(App\HelperClass::getGeneralSetting()->section_status == 1)
 
                                 <div class="col-lg-4 mb-3">
                                     <label for="joining_section_id" class="form-label">Joining Section</label>
@@ -185,6 +193,7 @@
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
+                                    @endif
 
                                 <div class="col-lg-4 mb-3">
                                     <label for="joining_designation_id" class="form-label">Joining Designation</label>
@@ -263,18 +272,23 @@
                                     @enderror
                                 </div>
 
+                                @if(App\HelperClass::getGeneralSetting()->branch_status == 1)
+
                                 <div class="col-lg-4 mb-3">
-                                    <label for="current_business_unit_id" class="form-label">Current Business Unit</label>
+                                    <label for="current_business_unit_id" class="form-label">Current Branch</label>
                                     <select class="form-select select2_list @error('current_business_unit_id') is-invalid @enderror"
                                         id="current_business_unit_id" name="current_business_unit_id"
-                                        data-placeholder="Select Business Unit">
-                                        <option value="">Select Business Unit</option>
+                                        data-placeholder="Select Branch">
+                                        <option value="">Select Branch</option>
                                         <!-- Add business unit options dynamically -->
                                     </select>
                                     @error('current_business_unit_id')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
+                                @endif
+
+                                @if(App\HelperClass::getGeneralSetting()->division_status == 1)
 
                                 <div class="col-lg-4 mb-3">
                                     <label for="current_division_id" class="form-label">Current Division</label>
@@ -288,9 +302,11 @@
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
+                                @endif
                             </div>
 
                             <div class="row">
+                                @if(App\HelperClass::getGeneralSetting()->department_status == 1)
                                 <div class="col-lg-4 mb-3">
                                     <label for="current_department_id" class="form-label">Current Department</label>
                                     <select class="form-select select2_list @error('current_department_id') is-invalid @enderror"
@@ -303,8 +319,10 @@
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
+                                @endif
 
-                                <div class="col-lg-4 mb-3">
+                                    @if(App\HelperClass::getGeneralSetting()->section_status == 1)
+                                    <div class="col-lg-4 mb-3">
                                     <label for="current_section_id" class="form-label">Current Section</label>
                                     <select class="form-select select2_list @error('current_section_id') is-invalid @enderror"
                                         id="current_section_id" name="current_section_id"
@@ -316,6 +334,7 @@
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
+                                    @endif
 
                                 <div class="col-lg-4 mb-3">
                                     <label for="current_designation_id" class="form-label">Current Designation</label>
@@ -776,240 +795,197 @@
         });
     </script>
 
-    <script>
-        $(function() {
-
-            // ----------- JOINING INFORMATION -----------
-            function loadUnits(companyId, selectedUnit = null) {
-                if (companyId) {
-                    $.get('/get-units/' + companyId, function(data) {
-                        let $unitSelect = $('#joining_business_unit_id');
-                        $unitSelect.html('<option value="">-- Select --</option>');
-                        $.each(data, function(key, value) {
-                            let selected = (selectedUnit == value.id) ? 'selected' : '';
-                            $unitSelect.append('<option value="'+ value.id +'" '+selected+'>'+ value.unit_name +'</option>');
-                        });
-                    });
-                }
-            }
-
-            function loadDivisions(unitId, selectedDivision = null) {
-                if (unitId) {
-                    $.get('/get-divisions/' + unitId, function(data) {
-                        let $divSelect = $('#joining_division_id');
-                        $divSelect.html('<option value="">-- Select --</option>');
-                        $.each(data, function(key, value) {
-                            let selected = (selectedDivision == value.id) ? 'selected' : '';
-                            $divSelect.append('<option value="'+ value.id +'" '+selected+'>'+ value.division_name +'</option>');
-                        });
-                    });
-                }
-            }
-
-            function loadDepartments(divisionId, selectedDepartment = null) {
-                if (divisionId) {
-                    $.get('/get-departments/' + divisionId, function(data) {
-                        let $deptSelect = $('#joining_department_id');
-                        $deptSelect.html('<option value="">-- Select --</option>');
-                        $.each(data, function(key, value) {
-                            let selected = (selectedDepartment == value.id) ? 'selected' : '';
-                            $deptSelect.append('<option value="'+ value.id +'" '+selected+'>'+ value.department_name +'</option>');
-                        });
-                    });
-                }
-            }
-
-            function loadSections(deptId, selectedSection = null) {
-                if (deptId) {
-                    $.get('/get-sections/' + deptId, function(data) {
-                        let $sectionSelect = $('#joining_section_id');
-                        $sectionSelect.html('<option value="">-- Select --</option>');
-                        $.each(data, function(key, value) {
-                            let selected = (selectedSection == value.id) ? 'selected' : '';
-                            $sectionSelect.append('<option value="'+ value.id +'" '+selected+'>'+ value.section_name +'</option>');
-                        });
-                    });
-                }
-            }
-
-            /*function loadDesignations(divisionId, selectedDesignation = null) {
-                if (divisionId) {
-                    $.get('/get-designations/' + divisionId, function(data) {
-                        let $designationSelect = $('#joining_designation_id');
-                        $designationSelect.html('<option value="">-- Select --</option>');
-                        $.each(data, function(key, value) {
-                            let selected = (selectedDesignation == value.id) ? 'selected' : '';
-                            $designationSelect.append('<option value="'+ value.id +'" '+selected+'>'+ value.company_designation +'</option>');
-                        });
-                    });
-                }
-            }*/
-
-            // --- Change Events ---
-            $('#joining_company_id').on('change', function() {
-                loadUnits($(this).val());
-            });
-
-            $('#joining_business_unit_id').on('change', function() {
-                loadDivisions($(this).val());
-            });
-
-            $('#joining_division_id').on('change', function() {
-                loadDepartments($(this).val());
-            });
-
-            $('#joining_department_id').on('change', function() {
-                loadSections($(this).val());
-            });
-
-            /*$('#joining_division_id').on('change', function() {
-                loadDesignations($(this).val());
-            });*/
-
-            // --- Auto-load existing values from DB when editing ---
-            @if(isset($employee_office_info))
-            let companyId   = "{{ old('joining_company_id', $employee_office_info->joining_company_id ?? '') }}";
-            let unitId      = "{{ old('joining_business_unit_id', $employee_office_info->joining_business_unit_id ?? '') }}";
-            let divisionId  = "{{ old('joining_division_id', $employee_office_info->joining_division_id ?? '') }}";
-            let deptId      = "{{ old('joining_department_id', $employee_office_info->joining_department_id ?? '') }}";
-            let sectionId   = "{{ old('joining_section_id', $employee_office_info->joining_section_id ?? '') }}";
-            {{--let designationId   = "{{ old('joining_designation_id', $employee_office_info->joining_designation_id ?? '') }}";--}}
-
-            if (companyId) {
-                loadUnits(companyId, unitId);
-                if (unitId) {
-                    loadDivisions(unitId, divisionId);
-                    if (divisionId) {
-                        loadDepartments(divisionId, deptId);
-                        // loadDesignations(divisionId, designationId);
-                        if (deptId) {
-                            loadSections(deptId, sectionId);
-                        }
-                    }
-                }
-            }
-            @endif
-
-        });
-    </script>
-
-    <script>
-        $(function() {
-
-            // ----------- JOINING INFORMATION -----------
-            function loadUnits(companyId, selectedUnit = null) {
-                if (companyId) {
-                    $.get('/get-units/' + companyId, function(data) {
-                        let $unitSelect = $('#current_business_unit_id');
-                        $unitSelect.html('<option value="">-- Select --</option>');
-                        $.each(data, function(key, value) {
-                            let selected = (selectedUnit == value.id) ? 'selected' : '';
-                            $unitSelect.append('<option value="'+ value.id +'" '+selected+'>'+ value.unit_name +'</option>');
-                        });
-                    });
-                }
-            }
-
-            function loadDivisions(unitId, selectedDivision = null) {
-                if (unitId) {
-                    $.get('/get-divisions/' + unitId, function(data) {
-                        let $divSelect = $('#current_division_id');
-                        $divSelect.html('<option value="">-- Select --</option>');
-                        $.each(data, function(key, value) {
-                            let selected = (selectedDivision == value.id) ? 'selected' : '';
-                            $divSelect.append('<option value="'+ value.id +'" '+selected+'>'+ value.division_name +'</option>');
-                        });
-                    });
-                }
-            }
-
-            function loadDepartments(divisionId, selectedDepartment = null) {
-                if (divisionId) {
-                    $.get('/get-departments/' + divisionId, function(data) {
-                        let $deptSelect = $('#current_department_id');
-                        $deptSelect.html('<option value="">-- Select --</option>');
-                        $.each(data, function(key, value) {
-                            let selected = (selectedDepartment == value.id) ? 'selected' : '';
-                            $deptSelect.append('<option value="'+ value.id +'" '+selected+'>'+ value.department_name +'</option>');
-                        });
-                    });
-                }
-            }
-
-            function loadSections(deptId, selectedSection = null) {
-                if (deptId) {
-                    $.get('/get-sections/' + deptId, function(data) {
-                        let $sectionSelect = $('#current_section_id');
-                        $sectionSelect.html('<option value="">-- Select --</option>');
-                        $.each(data, function(key, value) {
-                            let selected = (selectedSection == value.id) ? 'selected' : '';
-                            $sectionSelect.append('<option value="'+ value.id +'" '+selected+'>'+ value.section_name +'</option>');
-                        });
-                    });
-                }
-            }
-
-            /*function loadDesignations(divisionId, selectedDesignation = null) {
-                if (divisionId) {
-                    $.get('/get-designations/' + divisionId, function(data) {
-                        let $designationSelect = $('#current_designation_id');
-                        $designationSelect.html('<option value="">-- Select --</option>');
-                        $.each(data, function(key, value) {
-                            let selected = (selectedDesignation == value.id) ? 'selected' : '';
-                            $designationSelect.append('<option value="'+ value.id +'" '+selected+'>'+ value.company_designation +'</option>');
-                        });
-                    });
-                }
-            }*/
-
-            // --- Change Events ---
-            $('#current_company_id').on('change', function() {
-                loadUnits($(this).val());
-            });
-
-            $('#current_business_unit_id').on('change', function() {
-                loadDivisions($(this).val());
-            });
-
-            $('#current_division_id').on('change', function() {
-                loadDepartments($(this).val());
-            });
-
-            $('#current_department_id').on('change', function() {
-                loadSections($(this).val());
-            });
-
-            /*$('#current_division_id').on('change', function() {
-                loadDesignations($(this).val());
-            });*/
-
-            // --- Auto-load existing values from DB when editing ---
-            @if(isset($employee_office_info))
-            let companyId   = "{{ old('current_company_id', $employee_office_info->current_company_id ?? '') }}";
-            let unitId      = "{{ old('current_business_unit_id', $employee_office_info->current_business_unit_id ?? '') }}";
-            let divisionId  = "{{ old('current_division_id', $employee_office_info->current_division_id ?? '') }}";
-            let deptId      = "{{ old('current_department_id', $employee_office_info->current_department_id ?? '') }}";
-            let sectionId   = "{{ old('current_section_id', $employee_office_info->current_section_id ?? '') }}";
-            {{--let designationId   = "{{ old('current_designation_id', $employee_office_info->current_designation_id ?? '') }}";--}}
-
-            if (companyId) {
-                loadUnits(companyId, unitId);
-                if (unitId) {
-                    loadDivisions(unitId, divisionId);
-                    if (divisionId) {
-                        loadDepartments(divisionId, deptId);
-                        // loadDesignations(divisionId, designationId);
-                        if (deptId) {
-                            loadSections(deptId, sectionId);
-                        }
-                    }
-                }
-            }
-            @endif
-
-        });
-    </script>
-
 
 
 @endsection
+
+@push('scripts')
+    <script>
+        $(document).ready(function () {
+
+            function loading($el, text = 'Loading...') {
+                $el.prop('disabled', true).html(`<option value="">${text}</option>`);
+            }
+
+            function reset($el, text) {
+                $el.prop('disabled', false).html(`<option value="">${text}</option>`);
+            }
+
+            // -------------------------
+            // Load Divisions + Chain (Department + Section)
+            // -------------------------
+            function loadDivisions(prefix) {
+                const companyId = $(`#${prefix}_company_id`).val();
+                if (!companyId) return;
+
+                const locationId = $(`#${prefix}_business_unit_id`).val() || 'null';
+
+                loading($(`#${prefix}_division_id`));
+                reset($(`#${prefix}_department_id`), 'Select Department');
+                reset($(`#${prefix}_section_id`), 'Select Section');
+
+                $.get(`/get-divisions/${companyId}/${locationId}`, function (data) {
+                    reset($(`#${prefix}_division_id`), 'Select Division');
+                    if (!data.length) {
+                        $(`#${prefix}_division_id`).html('<option value="">No division found</option>');
+                    } else {
+                        $.each(data, function (_, item) {
+                            $(`#${prefix}_division_id`).append(`<option value="${item.id}">${item.name}</option>`);
+                        });
+                    }
+                    // Chain: Load departments after divisions
+                    loadDepartments(prefix);
+                });
+            }
+
+            // -------------------------
+            // Load Departments + Chain (Section)
+            // -------------------------
+            function loadDepartments(prefix) {
+                const companyId = $(`#${prefix}_company_id`).val();
+                if (!companyId) return;
+
+                const locationId = $(`#${prefix}_business_unit_id`).val() || 'null';
+                const divisionId = $(`#${prefix}_division_id`).val() || 'null';
+
+                loading($(`#${prefix}_department_id`));
+                reset($(`#${prefix}_section_id`), 'Select Section');
+
+                $.get(`/get-departments/${companyId}/${locationId}/${divisionId}`, function (data) {
+                    reset($(`#${prefix}_department_id`), 'Select Department');
+                    if (!data.length) {
+                        $(`#${prefix}_department_id`).html('<option value="">No department found</option>');
+                    } else {
+                        $.each(data, function (_, item) {
+                            $(`#${prefix}_department_id`).append(`<option value="${item.id}">${item.department_name}</option>`);
+                        });
+                    }
+                    // Chain: Load sections after departments
+                    loadSections(prefix);
+                });
+            }
+
+            // -------------------------
+            // Load Sections
+            // -------------------------
+            function loadSections(prefix) {
+                const companyId = $(`#${prefix}_company_id`).val();
+                if (!companyId) return;
+
+                const locationId = $(`#${prefix}_business_unit_id`).val() || 'null';
+                const divisionId = $(`#${prefix}_division_id`).val() || 'null';
+                const departmentId = $(`#${prefix}_department_id`).val() || 'null';
+
+                loading($(`#${prefix}_section_id`));
+
+                $.get(`/get-sections/${companyId}/${locationId}/${divisionId}/${departmentId}`, function (data) {
+                    reset($(`#${prefix}_section_id`), 'Select Section');
+                    if (!data.length) {
+                        $(`#${prefix}_section_id`).html('<option value="">No section found</option>');
+                    } else {
+                        $.each(data, function (_, item) {
+                            $(`#${prefix}_section_id`).append(`<option value="${item.id}">${item.name}</option>`);
+                        });
+                    }
+                });
+            }
+
+            // -------------------------
+            // Company Change → Load Branch + Full Chain
+            // -------------------------
+            $('#joining_company_id, #current_company_id').on('change', function () {
+                const prefix = this.id.replace('_company_id', '');
+
+                const companyId = $(this).val();
+                if (!companyId) return;
+
+                reset($(`#${prefix}_division_id`), 'Select Division');
+                reset($(`#${prefix}_department_id`), 'Select Department');
+                reset($(`#${prefix}_section_id`), 'Select Section');
+
+                @if(\App\HelperClass::getGeneralSetting()->branch_status == '1')
+                loading($(`#${prefix}_business_unit_id`));
+
+                $.get(`/get-units/${companyId}`, function (data) {
+                    reset($(`#${prefix}_business_unit_id`), 'Select Branch');
+                    if (!data.length) {
+                        $(`#${prefix}_business_unit_id`).html('<option value="">No branch found</option>');
+                    } else {
+                        $.each(data, function (_, item) {
+                            $(`#${prefix}_business_unit_id`).append(`<option value="${item.id}">${item.name}</option>`);
+                        });
+                    }
+                    // Immediately load the full chain after branches
+                    loadDivisions(prefix);
+                });
+                @else
+                // No branch → directly load divisions + chain
+                loadDivisions(prefix);
+                @endif
+            });
+
+            // -------------------------
+            // Branch Change → Reload Full Chain
+            // -------------------------
+            $('#joining_business_unit_id, #current_business_unit_id').on('change', function () {
+                const prefix = this.id.replace('_business_unit_id', '');
+                loadDivisions(prefix); // This will chain to department → section
+            });
+
+            // -------------------------
+            // Division Change → Reload Department + Section
+            // -------------------------
+            $('#joining_division_id, #current_division_id').on('change', function () {
+                const prefix = this.id.replace('_division_id', '');
+                loadDepartments(prefix); // This will chain to section
+            });
+
+            // -------------------------
+            // Department Change → Reload Section
+            // -------------------------
+            $('#joining_department_id, #current_department_id').on('change', function () {
+                const prefix = this.id.replace('_department_id', '');
+                loadSections(prefix);
+            });
+
+            // -------------------------
+            // Auto-trigger on edit mode
+            // -------------------------
+            @if(isset($employee_office_info))
+            @if($employee_office_info->joining_company_id || old('joining_company_id'))
+            $('#joining_company_id').trigger('change');
+
+            @if(\App\HelperClass::getGeneralSetting()->branch_status == '1' && ($employee_office_info->joining_business_unit_id || old('joining_business_unit_id')))
+            setTimeout(() => $('#joining_business_unit_id').val('{{ old('joining_business_unit_id', $employee_office_info->joining_business_unit_id) }}').trigger('change'), 600);
+            @endif
+
+            @if($employee_office_info->joining_division_id || old('joining_division_id'))
+            setTimeout(() => $('#joining_division_id').val('{{ old('joining_division_id', $employee_office_info->joining_division_id) }}').trigger('change'), 1000);
+            @endif
+
+            @if($employee_office_info->joining_department_id || old('joining_department_id'))
+            setTimeout(() => $('#joining_department_id').val('{{ old('joining_department_id', $employee_office_info->joining_department_id) }}').trigger('change'), 1400);
+            @endif
+            @endif
+
+            @if($employee_office_info->current_company_id || old('current_company_id'))
+            $('#current_company_id').trigger('change');
+
+            @if(\App\HelperClass::getGeneralSetting()->branch_status == '1' && ($employee_office_info->current_business_unit_id || old('current_business_unit_id')))
+            setTimeout(() => $('#current_business_unit_id').val('{{ old('current_business_unit_id', $employee_office_info->current_business_unit_id) }}').trigger('change'), 600);
+            @endif
+
+            @if($employee_office_info->current_division_id || old('current_division_id'))
+            setTimeout(() => $('#current_division_id').val('{{ old('current_division_id', $employee_office_info->current_division_id) }}').trigger('change'), 1000);
+            @endif
+
+            @if($employee_office_info->current_department_id || old('current_department_id'))
+            setTimeout(() => $('#current_department_id').val('{{ old('current_department_id', $employee_office_info->current_department_id) }}').trigger('change'), 1400);
+            @endif
+            @endif
+            @endif
+
+        });
+    </script>
+@endpush
+

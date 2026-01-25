@@ -5,15 +5,14 @@
             <div class="card-body pt-0">
                 <ul class="nav nav-underline border-bottom pt-2" id="pills-tab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link active p-2" id="personal_info_tab" data-bs-toggle="tab"
-                           href="#personal_info"
-                           role="tab">
+                        <a class="nav-link active p-2" id="personal_info_tab" data-bs-toggle="tab" href="#personal_info"
+                            role="tab">
                             <span class="d-none d-sm-block">Personal Information</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link p-2" id="birth_doc_tab" data-bs-toggle="tab" href="#birth_doc"
-                           role="tab">
+                            role="tab">
                             <span class="d-none d-sm-block">Birth & Documents</span>
                         </a>
                     </li>
@@ -43,44 +42,48 @@
                                 <div class="table-responsive">
                                     <table class="table table-borderless mb-0">
                                         <tbody>
-                                        <tr>
-                                            <td class="fw-semibold" style="width: 40%;">First Name</td>
-                                            <td>{{ $employee->first_name }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fw-semibold">Middle Name</td>
-                                            <td>{{ $employee->middle_name }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fw-semibold">Last Name</td>
-                                            <td>{{ $employee->last_name }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fw-semibold">Gender</td>
-                                            <td>{{ $employee->gender }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fw-semibold">Marital Status</td>
-                                            <td>{{ $employee->marital_status }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fw-semibold">Religion</td>
-                                            <td>{{ $employee->religion }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fw-semibold">Nationality</td>
-                                            <td>{{ $employee->nationality }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fw-semibold">Height</td>
-                                            <td>{{ $employee->height_feet }} Feet {{ $employee->height_inches }}
-                                                Inches
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fw-semibold">Number of Children</td>
-                                            <td>{{ $employee->children_count }}</td>
-                                        </tr>
+                                            <tr>
+                                                <td class="fw-semibold" style="width: 40%;">First Name</td>
+                                                <td>{{ $employee->first_name }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-semibold">Middle Name</td>
+                                                <td>{{ $employee->middle_name }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-semibold">Last Name</td>
+                                                <td>{{ $employee->last_name }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-semibold">Gender</td>
+                                                <td>{{ $employee->gender }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-semibold">Marital Status</td>
+                                                <td>{{ $employee->marital_status }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-semibold">Religion</td>
+                                                <td>{{ $employee->religion }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-semibold">Nationality</td>
+                                                <td>{{ $employee->nationality }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-semibold">Blood Group</td>
+                                                <td>{{ $employee->blood_group ?? 'N/A' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-semibold">Height</td>
+                                                <td>{{ $employee->height_feet }} Feet {{ $employee->height_inches }}
+                                                    Inches
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-semibold">Number of Children</td>
+                                                <td>{{ $employee->children_count }}</td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -91,18 +94,18 @@
                                 <div class="table-responsive">
                                     <table class="table table-borderless mb-0">
                                         <tbody>
-                                        <tr>
-                                            <td class="fw-semibold" style="width: 40%;">Father's Name</td>
-                                            <td>{{ $employee->father_name }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fw-semibold">Mother's Name</td>
-                                            <td>{{ $employee->mother_name }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fw-semibold">Spouse's Name</td>
-                                            <td>{{ $employee->spouse_name }}</td>
-                                        </tr>
+                                            <tr>
+                                                <td class="fw-semibold" style="width: 40%;">Father's Name</td>
+                                                <td>{{ $employee->father_name }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-semibold">Mother's Name</td>
+                                                <td>{{ $employee->mother_name }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-semibold">Spouse's Name</td>
+                                                <td>{{ $employee->spouse_name }}</td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -118,18 +121,18 @@
                                 <div class="table-responsive">
                                     <table class="table table-borderless mb-0">
                                         <tbody>
-                                        <tr>
-                                            <td class="fw-semibold" style="width: 40%;">Date of Birth</td>
-                                            <td>{{ $employee->date_of_birth }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fw-semibold">Birth Country</td>
-                                            <td>{{ $employee->birth_country }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fw-semibold">Birth Registration No</td>
-                                            <td>{{ $employee->birth_reg_no }}</td>
-                                        </tr>
+                                            <tr>
+                                                <td class="fw-semibold" style="width: 40%;">Date of Birth</td>
+                                                <td>{{ $employee->date_of_birth }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-semibold">Birth Country</td>
+                                                <td>{{ $employee->birth_country }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-semibold">Birth Registration No</td>
+                                                <td>{{ $employee->birth_reg_no }}</td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -138,18 +141,18 @@
                                 <div class="table-responsive">
                                     <table class="table table-borderless mb-0">
                                         <tbody>
-                                        <tr>
-                                            <td class="fw-semibold" style="width: 40%;">TIN Number</td>
-                                            <td>{{ $employee->tin }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fw-semibold">BGMEA ID</td>
-                                            <td>{{ $employee->bgmea_id }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fw-semibold">Residency ID</td>
-                                            <td>{{ $employee->residency_id_number }}</td>
-                                        </tr>
+                                            <tr>
+                                                <td class="fw-semibold" style="width: 40%;">TIN Number</td>
+                                                <td>{{ $employee->tin }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-semibold">BGMEA ID</td>
+                                                <td>{{ $employee->bgmea_id }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-semibold">Residency ID</td>
+                                                <td>{{ $employee->residency_id_number }}</td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -160,22 +163,22 @@
                                 <div class="table-responsive">
                                     <table class="table table-borderless mb-0">
                                         <tbody>
-                                        <tr>
-                                            <td class="fw-semibold" style="width: 40%;">Passport Number</td>
-                                            <td>{{ $employee->passport_no }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fw-semibold">Passport Expiry</td>
-                                            <td>{{ $employee->passport_expiry }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fw-semibold">Visa Expiry</td>
-                                            <td>{{ $employee->visa_expiry }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fw-semibold">Work Permit Expiry</td>
-                                            <td>{{ $employee->work_expiry }}</td>
-                                        </tr>
+                                            <tr>
+                                                <td class="fw-semibold" style="width: 40%;">Passport Number</td>
+                                                <td>{{ $employee->passport_no }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-semibold">Passport Expiry</td>
+                                                <td>{{ $employee->passport_expiry }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-semibold">Visa Expiry</td>
+                                                <td>{{ $employee->visa_expiry }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-semibold">Work Permit Expiry</td>
+                                                <td>{{ $employee->work_expiry }}</td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -184,14 +187,14 @@
                                 <div class="table-responsive">
                                     <table class="table table-borderless mb-0">
                                         <tbody>
-                                        <tr>
-                                            <td class="fw-semibold" style="width: 40%;">License Number</td>
-                                            <td>{{ $employee->license_no }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fw-semibold">License Expiry</td>
-                                            <td>{{ $employee->license_expiry }}</td>
-                                        </tr>
+                                            <tr>
+                                                <td class="fw-semibold" style="width: 40%;">License Number</td>
+                                                <td>{{ $employee->license_no }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-semibold">License Expiry</td>
+                                                <td>{{ $employee->license_expiry }}</td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -207,18 +210,18 @@
                                 <div class="table-responsive">
                                     <table class="table table-borderless mb-0">
                                         <tbody>
-                                        <tr>
-                                            <td class="fw-semibold" style="width: 40%;">Personal Mobile</td>
-                                            <td>{{ $employee->personal_mobile }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fw-semibold">Home Phone</td>
-                                            <td>{{ $employee->home_phone }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fw-semibold">Personal Email</td>
-                                            <td>{{ $employee->personal_email }}</td>
-                                        </tr>
+                                            <tr>
+                                                <td class="fw-semibold" style="width: 40%;">Personal Mobile</td>
+                                                <td>{{ $employee->personal_mobile }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-semibold">Home Phone</td>
+                                                <td>{{ $employee->home_phone }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-semibold">Personal Email</td>
+                                                <td>{{ $employee->personal_email }}</td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -229,18 +232,18 @@
                                 <div class="table-responsive">
                                     <table class="table table-borderless mb-0">
                                         <tbody>
-                                        <tr>
-                                            <td class="fw-semibold" style="width: 40%;">Work Mobile</td>
-                                            <td>{{ $employee->work_mobile }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fw-semibold">Work Phone</td>
-                                            <td>{{ $employee->work_phone }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fw-semibold">Work Email</td>
-                                            <td>{{ $employee->work_email }}</td>
-                                        </tr>
+                                            <tr>
+                                                <td class="fw-semibold" style="width: 40%;">Work Mobile</td>
+                                                <td>{{ $employee->work_mobile }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-semibold">Work Phone</td>
+                                                <td>{{ $employee->work_phone }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-semibold">Work Email</td>
+                                                <td>{{ $employee->work_email }}</td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -316,46 +319,51 @@
                                     </div>
                                 </div>
 
-                                @if(!empty($employee->reference_address))
-                                <!-- Reference Address -->
-                                <div class="card border">
-                                    <div class="card-header bg-light">
-                                        <h5 class="card-title mb-0">Reference Information</h5>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <p><strong>Reference Employee ID:</strong>
-                                                    {{ $employee->reference_address['emp_id'] ?? 'N/A' }}</p>
-                                                <p><strong>Reference Name:</strong>
-                                                    {{ $employee->reference_address['reference_name'] ?? 'N/A' }}</p>
-                                                <p><strong>Designation:</strong>
-                                                    {{ $employee->reference_address['reference_designation'] ?? 'N/A' }}</p>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <p><strong>Address:</strong>
-                                                    {{ $employee->reference_address['line_1'] ?? 'N/A' }}</p>
-                                                <p><strong>Village:</strong>
-                                                    {{ $employee->reference_address['village'] ?? 'N/A' }}</p>
-                                                <p>
-                                                    <strong>State:</strong> {{ $employee->reference_address['state'] ?? 'N/A' }}
-                                                </p>
-                                                <p><strong>District:</strong>
-                                                    {{ $employee->reference_address['district'] ?? 'N/A'}}</p>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <p><strong>Zip Code:</strong>
-                                                    {{ $employee->reference_address['zip_code'] ?? 'N/A'}}</p>
-                                                <p>
-                                                    <strong>Phone:</strong> {{ $employee->reference_address['phone'] ?? 'N/A'}}
-                                                </p>
-                                                <p>
-                                                    <strong>Email:</strong> {{ $employee->reference_address['email'] ?? 'N/A'}}
-                                                </p>
+                                @if (!empty($employee->reference_address))
+                                    <!-- Reference Address -->
+                                    <div class="card border">
+                                        <div class="card-header bg-light">
+                                            <h5 class="card-title mb-0">Reference Information</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <p><strong>Reference Employee ID:</strong>
+                                                        {{ $employee->reference_address['emp_id'] ?? 'N/A' }}</p>
+                                                    <p><strong>Reference Name:</strong>
+                                                        {{ $employee->reference_address['reference_name'] ?? 'N/A' }}
+                                                    </p>
+                                                    <p><strong>Designation:</strong>
+                                                        {{ $employee->reference_address['reference_designation'] ?? 'N/A' }}
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <p><strong>Address:</strong>
+                                                        {{ $employee->reference_address['line_1'] ?? 'N/A' }}</p>
+                                                    <p><strong>Village:</strong>
+                                                        {{ $employee->reference_address['village'] ?? 'N/A' }}</p>
+                                                    <p>
+                                                        <strong>State:</strong>
+                                                        {{ $employee->reference_address['state'] ?? 'N/A' }}
+                                                    </p>
+                                                    <p><strong>District:</strong>
+                                                        {{ $employee->reference_address['district'] ?? 'N/A' }}</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <p><strong>Zip Code:</strong>
+                                                        {{ $employee->reference_address['zip_code'] ?? 'N/A' }}</p>
+                                                    <p>
+                                                        <strong>Phone:</strong>
+                                                        {{ $employee->reference_address['phone'] ?? 'N/A' }}
+                                                    </p>
+                                                    <p>
+                                                        <strong>Email:</strong>
+                                                        {{ $employee->reference_address['email'] ?? 'N/A' }}
+                                                    </p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
                                 @endif
                             </div>
                         </div>
@@ -372,9 +380,9 @@
                                         @if (isset($employee->photo_path))
                                             @if (file_exists(public_path('storage/' . $employee->photo_path)))
                                                 <a href="#" class="btn btn-sm btn-primary view-link"
-                                                   data-img="{{ asset('storage/' . $employee->photo_path) }}">View</a>
+                                                    data-img="{{ asset('storage/' . $employee->photo_path) }}">View</a>
                                                 <a href="{{ asset('storage/' . $employee->photo_path) }}"
-                                                   class="btn btn-sm btn-outline-primary" download>Download</a>
+                                                    class="btn btn-sm btn-outline-primary" download>Download</a>
                                             @else
                                                 <p class="text-muted">Photo deleted or moved</p>
                                                 <!-- Show this message if the file doesn't exist -->
@@ -395,14 +403,14 @@
                                         <h6 class="fw-semibold">Fingerprint</h6>
                                         @if (isset($employee->fingerprint_path))
                                             @if (file_exists(public_path('storage/' . $employee->fingerprint_path)))
-                                        <a href="#" class="btn btn-sm btn-success view-link"
-                                           data-img="{{ asset('storage/' . $employee->fingerprint_path) }}">View</a>
-                                        <a href="{{ asset('storage/' . $employee->fingerprint_path) }}"
-                                           class="btn btn-sm btn-outline-success" download>Download</a>
-                                        @else
-                                            <p class="text-muted">Fingerprint may Deleted or moved</p>
-                                            <!-- Show this message if the file doesn't exist -->
-                                        @endif
+                                                <a href="#" class="btn btn-sm btn-success view-link"
+                                                    data-img="{{ asset('storage/' . $employee->fingerprint_path) }}">View</a>
+                                                <a href="{{ asset('storage/' . $employee->fingerprint_path) }}"
+                                                    class="btn btn-sm btn-outline-success" download>Download</a>
+                                            @else
+                                                <p class="text-muted">Fingerprint may Deleted or moved</p>
+                                                <!-- Show this message if the file doesn't exist -->
+                                            @endif
                                         @else
                                             <p class="text-muted">No Fingerprint available</p>
                                         @endif
@@ -418,9 +426,9 @@
                                         @if (isset($employee->signature_path))
                                             @if (file_exists(public_path('storage/' . $employee->signature_path)))
                                                 <a href="#" class="btn btn-sm btn-warning view-link"
-                                                   data-img="{{ asset('storage/' . $employee->signature_path) }}">View</a>
+                                                    data-img="{{ asset('storage/' . $employee->signature_path) }}">View</a>
                                                 <a href="{{ asset('storage/' . $employee->signature_path) }}"
-                                                   class="btn btn-sm btn-outline-warning" download>Download</a>
+                                                    class="btn btn-sm btn-outline-warning" download>Download</a>
                                             @else
                                                 <p class="text-muted">Signature file deleted or moved</p>
                                                 <!-- Show this message if file doesn't exist -->
@@ -441,7 +449,7 @@
                                         @if (isset($employee->experience_attachment_path))
                                             @if (file_exists(public_path('storage/' . $employee->experience_attachment_path)))
                                                 <a href="{{ asset('storage/' . $employee->experience_attachment_path) }}"
-                                                   class="btn btn-sm btn-outline-info" download>Download</a>
+                                                    class="btn btn-sm btn-outline-info" download>Download</a>
                                             @else
                                                 <p class="text-muted">Experience document deleted or moved</p>
                                             @endif
@@ -513,7 +521,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>--}}
+                        </div> --}}
                     </div>
 
                 </div>
@@ -529,7 +537,7 @@
             <div class="card-body">
                 <div class="d-flex justify-content-end gap-2">
                     <a href="{{ route('employees.general_informations.edit', $employee->id) }}"
-                       class="btn btn-primary">
+                        class="btn btn-primary">
                         <i class="mdi mdi-pencil me-1"></i> Edit Profile
                     </a>
                 </div>

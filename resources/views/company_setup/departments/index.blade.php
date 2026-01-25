@@ -32,8 +32,12 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Company</th>
+                                    @if(\App\HelperClass::getGeneralSetting()->branch_status == '1')
                                     <th scope="col">Branch</th>
+                                    @endif
+                                    @if(\App\HelperClass::getGeneralSetting()->division_status == '1')
                                     <th scope="col">Division</th>
+                                    @endif
                                     <th scope="col">Department Name</th>
                                     <th scope="col">Short Name</th>
                                     <th scope="col">Action</th>
@@ -46,10 +50,14 @@
                                 @foreach ($departments as $department)
                                     <tr>
                                         <th scope="row">{{ $sl++ }}</th>
-                                        <td>{{ $department->getCompany->name }}</td>
-                                        <td>{{ $department->getLocation->name }}</td>
-                                        <td>{{ $department->getDivision->name }}</td>
-                                        <td>{{ $department->department_name }}</td>
+                                        <td>{{ $department->getCompany->name ?? 'N/A' }}</td>
+                                        @if(\App\HelperClass::getGeneralSetting()->branch_status == '1')
+                                        <td>{{ $department->getLocation->name ?? 'N/A' }}</td>
+                                        @endif
+                                        @if(\App\HelperClass::getGeneralSetting()->division_status == '1')
+                                        <td>{{ $department->getDivision->name ?? 'N/A' }}</td>
+                                        @endif
+                                        <td>{{ $department->department_name ?? 'N/A' }}</td>
                                         <td>{{ $department->short_name }}</td>
                                         <td>
                                             <a href="{{ route('departments.edit', $department->id) }}"

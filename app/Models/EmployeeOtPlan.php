@@ -21,6 +21,6 @@ class EmployeeOtPlan extends Model
     }
     public function getPlan()
     {
-        return $this->belongsTo(OtPlan::class, 'plan_id', 'id');
+        return $this->belongsTo(OTPlan::class, 'plan_id', 'id');
     }
 }

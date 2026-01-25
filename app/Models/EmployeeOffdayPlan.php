@@ -15,10 +15,12 @@ class EmployeeOffdayPlan extends Model
         'to',
         'status',
     ];
+
     public function getEmployee()
     {
         return $this->belongsTo(Employee::class, 'employee_id', 'id');
     }
+
     public function getPlan()
     {
         return $this->belongsTo(OffDayPlan::class, 'plan_id', 'id');

@@ -25,6 +25,7 @@ class Employee extends Model
         'gender',
         'religion',
         'nationality',
+        'blood_group',
         'height_feet',
         'height_inches',
         'children_count',
@@ -52,6 +53,7 @@ class Employee extends Model
         'present_address',
         'permanent_address',
         'reference_address',
+        'status',
     ];
 
     protected $casts = [
@@ -61,6 +63,19 @@ class Employee extends Model
     ];
 
     public function shift(){
-        return $this->hasMany(EmployeeShiftPlan::class, 'employee_id', 'id');
+        return $this->hasMany(EmployeeShiftPlan::class, 'employee_id', 'id')
+            ->where('status', '=', 'active');
+    }
+
+    public function roster(){
+        return $this->hasMany(EmployeeRosterPlan::class, 'employee_id', 'id');
+    }
+
+    public function offDayPlan(){
+        return $this->hasMany(EmployeeOffdayPlan::class, 'employee_id', 'id');
+    }
+
+    public function officeInfo(){
+        return $this->hasOne(EmployeeOfficeInfo::class, 'employee_id', 'id');
     }
 }

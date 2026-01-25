@@ -1,6 +1,6 @@
-Name,Short Name,Start Time,End Time,Grace Time,Grace Time Before,Remuneration,Active Ind
-Weekly Off,WO,9.15 AM,6.30 PM,15,5,700,active
-Govt Holiday,GH,9.15 AM,6.30 PM,15,5,700,active
-Eid Ul Fitr,EUF,9.15 AM,6.30 PM,12,10,500,active
-Eid Ul Adha,EUA,9.15 AM,6.30 PM,15,5,200,active
-Victory Day,VD,9.15 AM,6.30 PM,20,15,900,active
+Name,Short Name,Start Time,End Time,Grace Time,Grace Time Before,Configuration Type,Salary Rate Type,Offday Multiplier,Custom Offday Rate,Status
+Weekly Off,WO,09:15,18:30,15,5,Custom,,,700,active
+Govt Holiday,GH,09:15,18:30,15,5,Salary Based,Multiplier,2.0,,active
+Eid Ul Fitr,EUF,09:15,18:30,12,10,Salary Based,Basic Rate,,,active
+Eid Ul Adha,EUA,09:15,18:30,15,5,Custom,,,500,active
+Victory Day,VD,09:15,18:30,20,15,Salary Based,Multiplier,2.5,,active

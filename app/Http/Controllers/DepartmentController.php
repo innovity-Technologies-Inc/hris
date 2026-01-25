@@ -32,19 +32,17 @@ class DepartmentController extends Controller
     {
         $validatedData = $request->validate(
             [
-                'division_id' => 'required|exists:divisions,id',
+                'division_id' => 'nullable|exists:divisions,id',
                 'department_name' => 'required|string|max:255',
                 'short_name' => 'required|string|max:50',
                 'company_id' => 'required|exists:companies,id',
-                'location_id' => 'required|exists:company_locations,id',
+                'location_id' => 'nullable|exists:company_locations,id',
                 'status' => 'required|in:active,inactive',
             ],
             [
-                'division_id.required' => 'Please select a division.',
                 'department_name.required' => 'Please enter a department name.',
                 'short_name.required' => 'Please enter a short name.',
                 'company_id.required' => 'Please select a company.',
-                'location_id.required' => 'Please select a branch.',
                 'status.required' => 'Please select a status.',
             ]
         );
@@ -66,16 +64,16 @@ class DepartmentController extends Controller
         return view('company_setup.departments.form', compact('department', 'divisions', 'companies', 'locations'));
     }
     public function update(Request $request, $id)
-    {   
+    {
         $department = Department::findOrFail($id);
 
         $validatedData = $request->validate(
             [
-                'division_id' => 'required|exists:divisions,id',
+                'division_id' => 'nullable|exists:divisions,id',
                 'department_name' => 'required|string|max:255',
                 'short_name' => 'required|string|max:50',
                 'company_id' => 'required|exists:companies,id',
-                'location_id' => 'required|exists:company_locations,id',
+                'location_id' => 'nullable|exists:company_locations,id',
                 'status' => 'required|in:active,inactive',
             ],
             [
@@ -83,12 +81,13 @@ class DepartmentController extends Controller
                 'department_name.required' => 'Please enter a department name.',
                 'short_name.required' => 'Please enter a short name.',
                 'company_id.required' => 'Please select a company.',
-                'location_id.required' => 'Please select a branch.',
                 'status.required' => 'Please select a status.',
             ]
         );
 
-        $department->update($validatedData);        return redirect()->route('departments.index')
+        $department->update($validatedData);
+
+        return redirect()->route('departments.index')
             ->with([
                 'message' => 'Department Updated Successfully',
                 'alert-type' => 'success'

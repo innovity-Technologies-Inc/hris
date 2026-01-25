@@ -60,34 +60,6 @@
                                 required>
                         </div>
                     </div>
-
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <label for="treat_as_full_day_minutes" class="form-label fw-semibold">
-                                Treat as Full Day (Minutes)
-                                <small class="text-muted">(Auto-calculated)</small>
-                            </label>
-                            <input type="number" class="form-control" id="treat_as_full_day_minutes"
-                                name="treat_as_full_day_minutes" placeholder="Auto-calculated"
-                                value="{{ isset($plan) ? $plan->treat_as_full_day_minutes : old('treat_as_full_day_minutes') }}"
-                                readonly>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="treat_as_half_day_minutes" class="form-label fw-semibold">
-                                Treat as Half Day (Minutes)
-                                <small class="text-muted">(Auto-calculated)</small>
-                            </label>
-                            <input type="number" class="form-control" id="treat_as_half_day_minutes"
-                                name="treat_as_half_day_minutes" placeholder="Auto-calculated"
-                                value="{{ isset($plan) ? $plan->treat_as_half_day_minutes : old('treat_as_half_day_minutes') }}"
-                                readonly>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="grace_time" class="form-label fw-semibold">Grace Time (Minutes)</label>
-                            <input type="number" class="form-control" id="grace_time" name="grace_time"
-                                value="{{ isset($plan) ? $plan->grace_time : old('grace_time') }}">
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -100,13 +72,12 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-3 mb-3">
-                            <label for="late_after_minutes" class="form-label fw-semibold">Late After (Minutes)</label>
-                            <input type="number" class="form-control" id="late_after_minutes" name="late_after_minutes"
-                                placeholder="Enter minutes"
-                                value="{{ isset($plan) ? $plan->late_after_minutes : old('late_after_minutes') }}">
+                        <div class="col-md-4 mb-3">
+                            <label for="grace_time" class="form-label fw-semibold">Grace Time (Minutes)</label>
+                            <input type="number" class="form-control" id="grace_time" name="grace_time" placeholder="Enter minutes"
+                                value="{{ isset($plan) ? $plan->grace_time : old('grace_time') }}">
                         </div>
-                        <div class="col-md-3 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label for="excessive_late_after_minutes" class="form-label fw-semibold">
                                 Excessive Late After (Minutes)
                             </label>
@@ -114,7 +85,7 @@
                                 name="excessive_late_after_minutes" placeholder="Enter minutes"
                                 value="{{ isset($plan) ? $plan->excessive_late_after_minutes : old('excessive_late_after_minutes') }}">
                         </div>
-                        <div class="col-md-3 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label for="early_out_grace_minutes" class="form-label fw-semibold">
                                 Early Out Grace (Minutes)
                             </label>
@@ -122,7 +93,6 @@
                                 name="early_out_grace_minutes" placeholder="5"
                                 value="{{ isset($plan) ? $plan->early_out_grace_minutes : old('early_out_grace_minutes') }}">
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -292,61 +262,19 @@
     </div>
 
     <script>
-        // Calculate working minutes from Clock In and Clock Out times
-        function calculateWorkingMinutes() {
-            const clockInTime = document.getElementById('clock_in_time').value;
-            const clockOutTime = document.getElementById('clock_out_time').value;
-
-            if (!clockInTime || !clockOutTime) {
-                return 0;
-            }
-
-            // Parse times
-            const [inHours, inMinutes] = clockInTime.split(':').map(Number);
-            const [outHours, outMinutes] = clockOutTime.split(':').map(Number);
-
-            // Convert to minutes since midnight
-            const inTotalMinutes = inHours * 60 + inMinutes;
-            let outTotalMinutes = outHours * 60 + outMinutes;
-
-            // If clock out is before clock in, assume it's next day
-            if (outTotalMinutes < inTotalMinutes) {
-                outTotalMinutes += 24 * 60;
-            }
-
-            // Calculate working minutes
-            const workingMinutes = outTotalMinutes - inTotalMinutes;
-            return workingMinutes;
-        }
-
-        // Update full time and half time fields
-        function updateTimeCalculations() {
-            const workingMinutes = calculateWorkingMinutes();
-
-            if (workingMinutes > 0) {
-                // Full day is 100% of working minutes
-                const fullDayMinutes = workingMinutes;
-
-                // Half day is 50% of working minutes
-                const halfDayMinutes = Math.round(workingMinutes / 2);
-
-                // Update the fields
-                document.getElementById('treat_as_full_day_minutes').value = fullDayMinutes;
-                document.getElementById('treat_as_half_day_minutes').value = halfDayMinutes;
-            } else {
-                document.getElementById('treat_as_full_day_minutes').value = '';
-                document.getElementById('treat_as_half_day_minutes').value = '';
-            }
-        }
-
         // Add event listeners to time inputs
         document.addEventListener('DOMContentLoaded', function() {
             const clockInInput = document.getElementById('clock_in_time');
             const clockOutInput = document.getElementById('clock_out_time');
+            const graceTimeInput = document.getElementById('grace_time');
+            const earlyOutGraceInput = document.getElementById('early_out_grace_minutes');
 
             if (clockInInput && clockOutInput) {
+                // Add change listeners for all relevant fields
                 clockInInput.addEventListener('change', updateTimeCalculations);
                 clockOutInput.addEventListener('change', updateTimeCalculations);
+                graceTimeInput.addEventListener('input', updateTimeCalculations);
+                earlyOutGraceInput.addEventListener('input', updateTimeCalculations);
 
                 // Calculate on page load if values exist (for edit mode)
                 if (clockInInput.value && clockOutInput.value) {

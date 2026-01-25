@@ -48,7 +48,9 @@
                                             <li>Go to <a href="https://console.cloud.google.com/" target="_blank"
                                                     class="alert-link">Google Cloud Console</a></li>
                                             <li>Create a new project or select an existing one</li>
-                                            <li>Enable the "Maps JavaScript API"</li>
+                                            <li>Enable the "Maps JavaScript API, Directions API ,Distance Matrix API ,
+                                                Places API (New) , Routes API , Places API ,Geolocation API ,Geocoding API ,
+                                                Distance Matrix API"</li>
                                             <li>Navigate to "Credentials" and create an API key</li>
                                             <li>Copy and paste the API key above</li>
                                         </ol>

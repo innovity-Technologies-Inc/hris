@@ -12,8 +12,9 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-//            OrganizationSeeder::class,
-            EmployeeSeeder::class,        // Runs second (1000 Employees)
+            OrganizationSeeder::class,
+            EmployeeSeeder::class,
+            OrganizationStructureSeeder::class,  // Seed Board Members and Key Members
         ]);
     }
 }

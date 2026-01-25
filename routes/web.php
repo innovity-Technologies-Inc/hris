@@ -40,9 +40,14 @@ use App\Http\Controllers\DeductionPlanController;
 use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\AttendancesController;
+use App\Http\Controllers\EmployeeMovementsController;
+use App\Http\Controllers\EmployeeSearchController;
+use App\Http\Controllers\Payroll\PromotionController;
+use App\Http\Controllers\Payroll\IncrementController;
+
 
 Route::get('test', function () {
-   return view('attendance.daily_sheet');
+   return view('attendance.attendance_form_1');
 });
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -189,6 +194,12 @@ Route::prefix('company-setup')->group(function () {
     });
 });
 
+// Search Employee Routes
+Route::controller(EmployeeSearchController::class)->group(function () {
+    Route::get('search/employee', 'index')->name('search.employee');
+    Route::get('search/employee/export', 'export')->name('search.employee.export');
+});
+
 Route::prefix('employees')->group(function () {
 
     Route::controller(EmployeeProfileController::class)->group(function () {
@@ -206,6 +217,7 @@ Route::prefix('employees')->group(function () {
         Route::put('office-informations/{id}/update', 'officeInfoUpdate')->name('employees.office_informations.update');
         Route::post('office-informations/import', 'officeInfoImport')->name('employees.office_informations.import');
         Route::get('profile/{id}/office-informations', 'showOfficeInfo')->name('employees.profile.office_informations');
+        Route::post('{id}/toggle-status', 'toggleStatus')->name('employees.toggle_status');
 
     });
 
@@ -417,7 +429,10 @@ Route::prefix('plans')->group(function () {
 Route::controller(OrganizationStructureController::class)->group(function () {
     Route::get('organization-structure', 'index')->name('organization-structure.index');
     Route::get('organization-structure/create', 'create')->name('organization-structure.create');
+    Route::get('organization-structure/view', 'structuralView')->name('organization-structure.view');
+    Route::get('organization-structure/key-people/{level}/{id}', 'getKeyPeople')->name('organization-structure.key-people');
     Route::post('organization-structure', 'store')->name('organization-structure.store');
+    Route::get('organization-structure/{id}', 'show')->name('organization-structure.show');
     Route::get('organization-structure/{id}/edit', 'edit')->name('organization-structure.edit');
     Route::put('organization-structure/{id}', 'update')->name('organization-structure.update');
     Route::delete('organization-structure/{id}', 'destroy')->name('organization-structure.destroy');
@@ -427,6 +442,9 @@ Route::prefix('settings')->group(function () {
     Route::controller(SettingsController::class)->group(function (){
        Route::get('general-settings', 'generalSettingIndex')->name('settings.general_settings');
        Route::post('general-settings/save', 'generalSettingSave')->name('settings.general_settings.store');
+       Route::get('mail-settings', 'mailSettingIndex')->name('settings.mail_settings');
+       Route::post('mail-settings/save', 'mailSettingSave')->name('settings.mail_settings.save');
+       Route::post('mail-settings/test', 'sendTestMail')->name('settings.mail_settings.test');
 
     });
 
@@ -445,31 +463,42 @@ Route::prefix('leaves')->group(function () {
         Route::delete('{id}/delete', 'destroy')->name('leaves.destroy');
         Route::post('import', 'import')->name('leaves.import');
     });
+});
 
-    // Employee Movement Routes
-    Route::prefix('movement')->group(function () {
-        Route::get('/', function () {
-            return view('leaves.movement.index');
-        })->name('leaves.movement.index');
+Route::controller(EmployeeMovementsController::class)->prefix('movement')->group(function (){
+    Route::get('/', 'index')->name('movement.index');
+    Route::get('create', 'form')->name('movement.create');
+    Route::post('store', 'save')->name('movement.store');
+    Route::get('{id}/edit', 'form')->name('movement.edit');
+    Route::put('{id}/update', 'save')->name('movement.update');
+    Route::put('change-status', 'changeStatus')->name('movement.change_status');
+    Route::delete('{id}/delete', 'destroy')->name('movement.destroy');
+});
 
-        Route::get('create', function () {
-            return view('leaves.movement.create');
-        })->name('leaves.movement.create');
+// Payroll - Employee Promotion Routes
 
-        Route::get('{id}/edit', function ($id) {
-            return view('leaves.movement.create', ['id' => $id]);
-        })->name('leaves.movement.edit');
+Route::prefix('promotion')->name('promotion.')->controller(PromotionController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('/create', 'create')->name('create');
+    Route::post('/', 'save')->name('store');
+    Route::get('/{id}', 'show')->name('show');
+    Route::get('/{id}/edit', 'edit')->name('edit');
+    Route::put('/{id}', 'save')->name('update');
+    Route::put('/{id}/approve', 'approve')->name('approve');
+    Route::put('/{id}/reject', 'reject')->name('reject');
+});
 
-        Route::delete('{id}/delete', function ($id) {
-            // Delete logic would go here
-            return redirect()->route('leaves.movement.index')->with('success', 'Movement deleted successfully');
-        })->name('leaves.movement.destroy');
+// Payroll - Employee Increment Routes
 
-        Route::post('import', function () {
-            // Import logic would go here
-            return redirect()->route('leaves.movement.index')->with('success', 'Movement records imported successfully');
-        })->name('leaves.movement.import');
-    });
+Route::prefix('increment')->name('increment.')->controller(IncrementController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('/create', 'create')->name('create');
+    Route::post('/', 'store')->name('store');
+    Route::get('/{id}', 'show')->name('show');
+    Route::get('/{id}/edit', 'edit')->name('edit');
+    Route::put('/{id}', 'update')->name('update');
+    Route::put('/{id}/approve', 'approve')->name('approve');
+    Route::put('/{id}/reject', 'reject')->name('reject');
 });
 
 Route::controller(DataController::class)->group(function () {
@@ -477,9 +506,9 @@ Route::controller(DataController::class)->group(function () {
     //company-details
     Route::get('get-grades/{tofsil_id}', 'getGradeByAct');
     Route::get('get-units/{company_id}', 'getUnit');
-    Route::get('get-divisions/{company_id}/{unit_id}', 'getDivision');
-    Route::get('get-departments/{company_id}/{unit_id}/{division_id}', 'getDepartment');
-    Route::get('get-sections/{company_id}/{unit_id}/{division_id}/{department_id}', 'getSection');
+    Route::get('get-divisions/{company_id}/{location_id?}', 'getDivisions');
+    Route::get('/get-departments/{company_id}/{location_id?}/{division_id?}', 'getDepartments');
+    Route::get('/get-sections/{company_id}/{location_id?}/{division_id?}/{department_id?}', 'getSections');
     Route::get('get-branches/{bank_id}', 'getBranchesByBank');
 
     //plan_details
@@ -497,13 +526,22 @@ Route::controller(DataController::class)->group(function () {
     Route::get('get-leave-plans/{employee_id}', 'getLeavePlan');
     Route::get('get-leave-details/{employee_id}/{plan_id}', 'getLeaveDetails');
 
+    //attendance-details
+    Route::get('get-attendance-details/{employee_id}', 'getAttendanceDetails');
+    Route::get('get-attendance-records/{employee_id}', 'getAttendanceDetails');
+
 });
 
     Route::controller(AttendancesController::class)->prefix('attendance')->group(function (){
        Route::get('/', 'index')->name('attendance.index');
         Route::get('create', 'create')->name('attendance.create');
         Route::post('store', 'store')->name('attendance.store');
-
+        Route::get('bulk-upload', 'bulkUpload')->name('attendance.bulk-upload');
+        Route::post('import', 'import')->name('attendance.import');
+        Route::get('print', 'printIndex')->name('attendance.print');
+        Route::get('print/{id}', 'printDetail')->name('attendance.print-detail');
+        Route::get('clock-in-out', 'clock_in_out')->name('attendance.clock_in_out');
+        Route::post('clock-in-store', 'clockInOutStore')->name('attendance.clock_in_out_store');
 
     });
 

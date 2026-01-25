@@ -23,4 +23,24 @@ class Division extends Model
     {
         return $this->belongsTo(CompanyLocation::class, 'location_id', 'id');
     }
+
+    public function departments()
+    {
+        return $this->hasMany(Department::class, 'division_id');
+    }
+
+    public function employees()
+    {
+        return $this->hasMany(Employee::class, 'division_id');
+    }
+
+    public function employeeOfficeInfos()
+    {
+        return $this->hasMany(EmployeeOfficeInfo::class, 'current_division_id');
+    }
+
+    public function organizationStructures()
+    {
+        return $this->hasMany(OrganizationStructure::class, 'division_id');
+    }
 }
