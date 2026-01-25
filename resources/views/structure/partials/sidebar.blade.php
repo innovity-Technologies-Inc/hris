@@ -379,6 +379,47 @@
                     </div>
                 </li>
 
+                <!-- Transport Module -->
+                @php
+                    $transportOpen = Route::is('transport.*');
+                @endphp
+                <li>
+                    <a href="#sidebarTransport" data-bs-toggle="collapse"
+                        aria-expanded="{{ $transportOpen ? 'true' : 'false' }}"
+                        class="@if ($transportOpen) menuitem-active @endif">
+                        <i data-feather="truck"></i>
+                        <span> Transport </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse @if ($transportOpen) show @endif" id="sidebarTransport">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link @if (Route::is('transport.vehicles.*')) menuitem-active @endif'
+                                    href='{{ route('transport.vehicles.index') }}'>Vehicles</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('transport.vehicle_drivers.*')) menuitem-active @endif'
+                                    href='{{ route('transport.vehicle_drivers.index') }}'>Assign Driver</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('transport.vehicle_requisitions.*')) menuitem-active @endif'
+                                    href='{{ route('transport.vehicle_requisitions.index') }}'>Vehicle Requisition</a>
+                            </li>
+                            <!-- Employee Transport Submenu -->
+                            <li>
+                                <a class='tp-link @if (Route::is('transport.employee_transports.*')) menuitem-active @endif'
+                                    href='{{ route('transport.employee_transports.index') }}'>Employee Transport</a>
+                            </li>
+                            <!-- Vehicle Allocation Submenu -->
+                            <li>
+                                <a class='tp-link @if (Route::is('transport.vehicle_allocations.*')) menuitem-active @endif'
+                                    href='{{ route('transport.vehicle_allocations.dashboard') }}'>Vehicle
+                                    Allocation</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
                 <!-- Add Plans -->
                 <li>
                     <a href="#settings" data-bs-toggle="collapse"
