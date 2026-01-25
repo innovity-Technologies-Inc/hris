@@ -53,6 +53,7 @@ class Employee extends Model
         'present_address',
         'permanent_address',
         'reference_address',
+        'status',
     ];
 
     protected $casts = [

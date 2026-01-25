@@ -1,19 +1,18 @@
 <div class="row">
     <div class="col-12">
         <div class="card">
-            <img src="{{ asset('assets/images/small/user-image.jpg') }}" class="rounded-top-2 img-fluid"
-                 alt="cover image">
+            <img src="{{ asset('assets/images/small/user-image.jpg') }}" class="rounded-top-2 img-fluid" alt="cover image">
             <div class="card-body">
                 <div class="align-items-center">
                     <div class="hando-main-sections">
                         <div class="hando-profile-main">
                             @if (!empty($employee->photo_path))
-                            <img src="{{ asset('storage/' . $employee->photo_path) }}"
-                                 class="rounded-circle img-fluid avatar-xxl img-thumbnail float-start"
-                                 alt="profile photo">
+                                <img src="{{ asset('storage/' . $employee->photo_path) }}"
+                                    class="rounded-circle img-fluid avatar-xxl img-thumbnail float-start"
+                                    alt="profile photo">
                             @else
                                 <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center"
-                                     style="width: 100px; height: 100px; font-size: 48px; color: white;">
+                                    style="width: 100px; height: 100px; font-size: 48px; color: white;">
                                     {{ strtoupper(substr($employee->full_name, 0, 1)) }}
                                 </div>
                             @endif
@@ -26,11 +25,26 @@
                                 {{--                                        Senior Software Engineer - --}}
                                 Employee ID: {{ $employee->applicant_id }}</p>
                             <span class="fs-15">
-                                    <i class="mdi mdi-phone me-2 align-middle"></i>
-                                    <span>{{ $employee->personal_mobile }}</span>
-                                    <i class="mdi mdi-email ms-3 me-2 align-middle"></i>
-                                    <span>{{ $employee->personal_email }}</span>
-                                </span>
+                                <i class="mdi mdi-phone me-2 align-middle"></i>
+                                <span>{{ $employee->personal_mobile }}</span>
+                                <i class="mdi mdi-email ms-3 me-2 align-middle"></i>
+                                <span>{{ $employee->personal_email }}</span>
+                            </span>
+                        </div>
+                        <div class="ms-auto">
+                            <div class="d-flex align-items-center">
+                                <span class="me-2 fw-semibold">Status:</span>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="employeeStatusToggle"
+                                        {{ $employee->status == 'active' ? 'checked' : '' }}
+                                        style="width: 3rem; height: 1.5rem; cursor: pointer;">
+                                    <label class="form-check-label ms-2 fw-bold" for="employeeStatusToggle"
+                                        id="statusLabel"
+                                        style="color: {{ $employee->status == 'active' ? '#28a745' : '#dc3545' }};">
+                                        {{ ucfirst($employee->status ?? 'active') }}
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

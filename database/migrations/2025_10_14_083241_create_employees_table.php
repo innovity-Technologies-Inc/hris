@@ -71,6 +71,9 @@ return new class extends Migration
             $table->string('signature_path')->nullable();
             $table->string('experience_attachment_path')->nullable();
 
+            // Status
+            $table->enum('status', ['active', 'inactive'])->default('active');
+
             $table->timestamps();
         });
     }

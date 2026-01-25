@@ -217,6 +217,7 @@ Route::prefix('employees')->group(function () {
         Route::put('office-informations/{id}/update', 'officeInfoUpdate')->name('employees.office_informations.update');
         Route::post('office-informations/import', 'officeInfoImport')->name('employees.office_informations.import');
         Route::get('profile/{id}/office-informations', 'showOfficeInfo')->name('employees.profile.office_informations');
+        Route::post('{id}/toggle-status', 'toggleStatus')->name('employees.toggle_status');
 
     });
 
