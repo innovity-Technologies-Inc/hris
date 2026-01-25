@@ -1,36 +1,6 @@
 @extends('structure.master')
 
 @section('content')
-    {{--
-    ================================================
-    DUMMY DATA FOR TESTING (Controller Integration)
-    ================================================
-    Use this object-style dummy data in your controller:
-
-    $employees = collect([
-        (object)['id' => 1, 'full_name' => 'Ahmed Rahman', 'applicant_id' => 'EMP-2024-001'],
-        (object)['id' => 2, 'full_name' => 'Fatima Khatun', 'applicant_id' => 'EMP-2024-002'],
-        (object)['id' => 3, 'full_name' => 'Mohammad Karim', 'applicant_id' => 'EMP-2024-003'],
-    ]);
-
-    $increments = new \Illuminate\Pagination\LengthAwarePaginator(
-        collect([
-            (object)[
-                'id' => 1,
-                'employee_id' => 1,
-                'increment_base' => 'basic_salary',
-                'increment_method' => 'percentage',
-                'increment_amount' => '10.00',
-                'effective_from' => now()->subMonths(3),
-                'effective_to' => null,
-                'status' => 'approved',
-                'getEmployee' => (object)['full_name' => 'Ahmed Rahman', 'applicant_id' => 'EMP-2024-001'],
-                'getStatusBadgeClass' => fn() => 'bg-success',
-            ],
-        ]),
-        1, 15, 1
-    );
-    --}}
 
     {{-- Employee Increment Search --}}
     <div class="row">

@@ -1,44 +1,6 @@
 @extends('structure.master')
 
 @section('content')
-    {{--
-    ================================================
-    DUMMY DATA FOR TESTING (Controller Integration)
-    ================================================
-    Use this object-style dummy data in your controller:
-
-    $employees = collect([
-        (object)['id' => 1, 'full_name' => 'Ahmed Rahman', 'applicant_id' => 'EMP-2024-001'],
-        (object)['id' => 2, 'full_name' => 'Fatima Khatun', 'applicant_id' => 'EMP-2024-002'],
-        (object)['id' => 3, 'full_name' => 'Mohammad Karim', 'applicant_id' => 'EMP-2024-003'],
-    ]);
-
-    $designations = collect([
-        (object)['id' => 1, 'company_designation' => 'Junior Software Engineer'],
-        (object)['id' => 2, 'company_designation' => 'Software Engineer'],
-        (object)['id' => 3, 'company_designation' => 'Senior Software Engineer'],
-    ]);
-
-    $promotions = new \Illuminate\Pagination\LengthAwarePaginator(
-        collect([
-            (object)[
-                'id' => 1,
-                'employee_id' => 1,
-                'previous_designation' => 2,
-                'new_designation' => 3,
-                'new_basic_salary' => '50000.00',
-                'effective_from' => now()->subMonths(2),
-                'effective_to' => null,
-                'status' => 'approved',
-                'getEmployee' => (object)['full_name' => 'Ahmed Rahman', 'applicant_id' => 'EMP-2024-001'],
-                'getPreviousDesignation' => (object)['company_designation' => 'Software Engineer'],
-                'getNewDesignation' => (object)['company_designation' => 'Senior Software Engineer'],
-                'getStatusBadgeClass' => fn() => 'bg-success',
-            ],
-        ]),
-        1, 15, 1
-    );
-    --}}
 
     {{-- Employee Promotion Search --}}
     <div class="row">

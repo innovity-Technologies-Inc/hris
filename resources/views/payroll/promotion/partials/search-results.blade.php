@@ -1,22 +1,3 @@
-{{--
-================================================
-SEARCH RESULTS PARTIAL - Employee Promotions
-================================================
-This partial is loaded via AJAX in index.blade.php
-
-Expected variables from controller:
-- $promotions: LengthAwarePaginator with promotion objects
-
-Each promotion object should have:
-- getEmployee (object with full_name, applicant_id)
-- getPreviousDesignation (object with company_designation)
-- getNewDesignation (object with company_designation)
-- new_basic_salary
-- effective_from, effective_to (Carbon instances)
-- status (pending/approved/rejected)
-- getStatusBadgeClass() method
---}}
-
 <div class="card-body p-0">
     <a type="button" class="btn btn-warning btn-sm me-3 mb-3" href="{{ route('promotion.create') }}">
         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create Promotion
@@ -145,5 +126,4 @@ Each promotion object should have:
 </div>
 <div>
     {{ $promotions->links() }}
-</div>
 </div>

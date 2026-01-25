@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Payroll;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class EmployeeIncrementController extends Controller
+class IncrementController extends Controller
 {
     public function index()
     {

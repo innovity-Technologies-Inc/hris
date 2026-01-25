@@ -12,70 +12,30 @@ class Promotion extends Model
         'employee_id',
         'previous_designation',
         'new_designation',
+        'increment_base',
+        'increment_method',
+        'salary_increase_amount',
+        'previous_basic_salary',
+        'previous_gross_salary',
         'new_basic_salary',
         'effective_from',
         'effective_to',
         'status',
     ];
 
-    protected $casts = [
-        'effective_from' => 'date',
-        'effective_to' => 'date',
-        'new_basic_salary' => 'decimal:2',
-    ];
-
-    /**
-     * Get the employee associated with this promotion.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function getEmployee()
     {
         return $this->belongsTo(Employee::class, 'employee_id', 'id');
     }
 
-    /**
-     * Get the previous designation.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function getPreviousDesignation()
     {
         return $this->belongsTo(Designation::class, 'previous_designation', 'id');
     }
 
-    /**
-     * Get the new designation.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function getNewDesignation()
     {
         return $this->belongsTo(Designation::class, 'new_designation', 'id');
     }
 
-    /**
-     * Get status badge color class.
-     *
-     * @return string
-     */
-    public function getStatusBadgeClass()
-    {
-        return match($this->status) {
-            'pending' => 'bg-warning text-light',
-            'approved' => 'bg-success',
-            'rejected' => 'bg-danger',
-            default => 'bg-secondary'
-        };
-    }
-
-    /**
-     * Get formatted promotion summary.
-     *
-     * @return string
-     */
-    public function getPromotionSummary()
-    {
-        return '৳' . number_format($this->new_basic_salary, 2) . ' (New Basic Salary)';
-    }
 }

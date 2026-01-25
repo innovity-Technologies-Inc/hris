@@ -12,7 +12,7 @@
                                 <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
                                     <i class="bi bi-envelope-fill text-primary fs-5"></i>
                                 </div>
-                                <h4 class="mb-0 fw-bold">Mail Configuration</h4>
+                                <h4 class="mb-0 fw-bold">SMTP Configuration</h4>
                             </div>
                             @if (isset($mailSetting) && $mailSetting)
                                 <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"

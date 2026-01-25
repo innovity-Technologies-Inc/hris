@@ -6,6 +6,7 @@ use App\Models\ApiKey;
 use App\Models\MailSetting;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
@@ -46,7 +47,6 @@ class AppServiceProvider extends ServiceProvider
         if (Schema::hasTable('mail_settings')) {
 
             $mail = MailSetting::first();
-
             if ($mail) {
                 // 2. Map Database columns to Laravel Config keys
                 $data = [

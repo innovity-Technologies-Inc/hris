@@ -1,41 +1,6 @@
 @extends('structure.master')
 
 @section('content')
-    {{--
-    ================================================
-    DUMMY DATA FOR TESTING (Controller Integration)
-    ================================================
-    Use this object-style dummy data in your controller:
-
-    $employees = collect([
-        (object)[
-            'id' => 1,
-            'full_name' => 'Ahmed Rahman',
-            'applicant_id' => 'EMP-2024-001',
-            'officeInfo' => (object)[
-                'current_designation_id' => 3,
-                'current_designation' => 'Senior Software Engineer',
-                'grade' => 'Grade 5',
-            ],
-            'salaryBreakdown' => (object)[
-                'basic_salary' => '45000.00',
-                'house_allowance' => '18000.00',
-                'transport_allowance' => '5000.00',
-                'food_allowance' => '3000.00',
-                'medical_allowance' => '4000.00',
-                'other_earnings' => '0.00',
-                'gross_salary' => '75000.00',
-            ],
-        ],
-    ]);
-
-    $designations = collect([
-        (object)['id' => 1, 'company_designation' => 'Junior Software Engineer'],
-        (object)['id' => 2, 'company_designation' => 'Software Engineer'],
-        (object)['id' => 3, 'company_designation' => 'Senior Software Engineer'],
-        (object)['id' => 4, 'company_designation' => 'Lead Software Engineer'],
-    ]);
-    --}}
 
     {{-- Add back button following project pattern --}}
     <div class="row mb-3">
@@ -47,10 +12,10 @@
     </div>
 
     <form id="employeePromotionForm" method="POST"
-        action="{{ isset($promotion) ? route('promotion.update', $promotion->id) : route('promotion.store') }}">
+        action="{{ isset($promotionData) ? route('promotion.update', $promotionData->id) : route('promotion.store') }}">
 
         @csrf
-        @isset($promotion)
+        @isset($promotionData)
             @method('PUT')
         @endisset
 
@@ -72,7 +37,7 @@
                                         <option value="{{ $employee->id }}"
                                             data-office-info="{{ json_encode($employee->officeInfo ?? null) }}"
                                             data-salary-breakdown="{{ json_encode($employee->salaryBreakdown ?? null) }}"
-                                            {{ old('employee_id', $promotion->employee_id ?? '') == $employee->id ? 'selected' : '' }}>
+                                            {{ old('employee_id', $promotionData->employee_id ?? '') == $employee->id ? 'selected' : '' }}>
                                             {{ $employee->full_name }} ({{ $employee->applicant_id }})
                                         </option>
                                     @endforeach
@@ -164,7 +129,7 @@
                                     <option value="">Select Designation</option>
                                     @foreach ($designations as $designation)
                                         <option value="{{ $designation->id }}"
-                                            {{ old('new_designation', $promotion->new_designation ?? '') == $designation->id ? 'selected' : '' }}>
+                                            {{ old('new_designation', $promotionData->new_designation ?? '') == $designation->id ? 'selected' : '' }}>
                                             {{ $designation->company_designation }}
                                         </option>
                                     @endforeach
@@ -178,7 +143,7 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">New Basic Salary <span class="text-danger">*</span></label>
                                 <input type="number" name="new_basic_salary" id="new_basic_salary"
-                                    value="{{ old('new_basic_salary', $promotion->new_basic_salary ?? '') }}"
+                                    value="{{ old('new_basic_salary', $promotionData->new_basic_salary ?? '') }}"
                                     class="form-control @error('new_basic_salary') is-invalid @enderror" step="0.01"
                                     min="0" required placeholder="Enter new basic salary">
                                 @error('new_basic_salary')
@@ -191,7 +156,7 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Effective From <span class="text-danger">*</span></label>
                                 <input type="date" name="effective_from" id="effective_from"
-                                    value="{{ old('effective_from', isset($promotion) ? $promotion->effective_from : '') }}"
+                                    value="{{ old('effective_from', isset($promotionData) ? $promotionData->effective_from : '') }}"
                                     class="form-control @error('effective_from') is-invalid @enderror" required>
                                 @error('effective_from')
                                     <small class="text-danger">{{ $message }}</small>
@@ -202,7 +167,7 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Effective To <span class="text-muted">(Optional)</span></label>
                                 <input type="date" name="effective_to" id="effective_to"
-                                    value="{{ old('effective_to', isset($promotion) && $promotion->effective_to ? $promotion->effective_to : '') }}"
+                                    value="{{ old('effective_to', isset($promotionData) && $promotionData->effective_to ? $promotionData->effective_to : '') }}"
                                     class="form-control @error('effective_to') is-invalid @enderror">
                                 @error('effective_to')
                                     <small class="text-danger">{{ $message }}</small>
@@ -211,17 +176,17 @@
                             </div>
 
                             {{-- Status (if editing) --}}
-                            @isset($promotion)
+                            @isset($promotionData)
                                 <div class="col-md-12 mb-3">
                                     <label class="form-label">Status</label>
                                     <select name="status" class="form-select @error('status') is-invalid @enderror">
-                                        <option value="pending" {{ $promotion->status == 'pending' ? 'selected' : '' }}>
+                                        <option value="pending" {{ $promotionData->status == 'pending' ? 'selected' : '' }}>
                                             Pending
                                         </option>
-                                        <option value="approved" {{ $promotion->status == 'approved' ? 'selected' : '' }}>
+                                        <option value="approved" {{ $promotionData->status == 'approved' ? 'selected' : '' }}>
                                             Approved
                                         </option>
-                                        <option value="rejected" {{ $promotion->status == 'rejected' ? 'selected' : '' }}>
+                                        <option value="rejected" {{ $promotionData->status == 'rejected' ? 'selected' : '' }}>
                                             Rejected
                                         </option>
                                     </select>
@@ -239,7 +204,7 @@
                                     </a>
                                     <button type="submit" class="btn btn-primary">
                                         <i style="height: 12px; width: 12px" data-feather="save"></i>
-                                        {{ isset($promotion) ? 'Update' : 'Create' }} Promotion
+                                        {{ isset($promotionData) ? 'Update' : 'Create' }} Promotion
                                     </button>
                                 </div>
                             </div>
@@ -351,7 +316,7 @@
             }
 
             // Trigger change on page load if editing
-            @if (isset($promotion))
+            @if (isset($promotionData))
                 $('#employee_id').trigger('change');
             @endif
         });

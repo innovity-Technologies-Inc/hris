@@ -42,6 +42,9 @@ use App\Http\Controllers\DataController;
 use App\Http\Controllers\AttendancesController;
 use App\Http\Controllers\EmployeeMovementsController;
 use App\Http\Controllers\EmployeeSearchController;
+use App\Http\Controllers\Payroll\PromotionController;
+use App\Http\Controllers\Payroll\IncrementController;
+
 
 Route::get('test', function () {
    return view('attendance.attendance_form_1');
@@ -472,23 +475,21 @@ Route::controller(EmployeeMovementsController::class)->prefix('movement')->group
 });
 
 // Payroll - Employee Promotion Routes
-use App\Http\Controllers\Payroll\EmployeePromotionController;
 
-Route::prefix('promotion')->name('promotion.')->controller(EmployeePromotionController::class)->group(function () {
+Route::prefix('promotion')->name('promotion.')->controller(PromotionController::class)->group(function () {
     Route::get('/', 'index')->name('index');
     Route::get('/create', 'create')->name('create');
-    Route::post('/', 'store')->name('store');
+    Route::post('/', 'save')->name('store');
     Route::get('/{id}', 'show')->name('show');
     Route::get('/{id}/edit', 'edit')->name('edit');
-    Route::put('/{id}', 'update')->name('update');
+    Route::put('/{id}', 'save')->name('update');
     Route::put('/{id}/approve', 'approve')->name('approve');
     Route::put('/{id}/reject', 'reject')->name('reject');
 });
 
 // Payroll - Employee Increment Routes
-use App\Http\Controllers\Payroll\EmployeeIncrementController;
 
-Route::prefix('increment')->name('increment.')->controller(EmployeeIncrementController::class)->group(function () {
+Route::prefix('increment')->name('increment.')->controller(IncrementController::class)->group(function () {
     Route::get('/', 'index')->name('index');
     Route::get('/create', 'create')->name('create');
     Route::post('/', 'store')->name('store');

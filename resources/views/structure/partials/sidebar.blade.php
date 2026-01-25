@@ -400,7 +400,7 @@
                             </li>
                             <li>
                                 <a class='tp-link @if (Route::is('settings.mail_settings.*')) menuitem-active @endif'
-                                    href='{{ route('settings.mail_settings') }}'>Mail Settings</a>
+                                    href='{{ route('settings.mail_settings') }}'>SMTP</a>
                             </li>
 
                         </ul>

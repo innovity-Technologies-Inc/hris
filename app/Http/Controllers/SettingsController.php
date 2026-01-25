@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\HelperClass;
+use App\Mail\TestMail;
 use App\Models\GeneralSetting;
 use App\Models\MailSetting;
 use Illuminate\Http\Request;
@@ -190,10 +191,7 @@ class SettingsController extends Controller
             }
 
             // Send test email
-            Mail::raw('This is a test email from ' . $mailSetting->app_name . '. If you receive this email, your SMTP settings are configured correctly!', function ($message) use ($request, $mailSetting) {
-                $message->to($request->recipient_email)
-                        ->subject('Test Email - ' . $mailSetting->app_name);
-            });
+            Mail::to($request->recipient_email)->send(new TestMail());
 
             return response()->json([
                 'success' => true,
