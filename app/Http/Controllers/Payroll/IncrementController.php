@@ -33,7 +33,7 @@ class IncrementController extends Controller
     public function create()
     {
         $title = 'Add Employee Increment';
-        $employees = Employee::all()->where('status', 'active');
+        $employees = Employee::has('salary')->where('status', 'active')->get();
         $section = 'Employee Increment';
         $section_url = route('increment.index');
         $sub_section = 'Add';
@@ -46,7 +46,7 @@ class IncrementController extends Controller
         $title = 'Edit Increment Data';
         $section = 'Employee Increment';
         $section_url = route('increment.index');
-        $employees = Employee::all()->where('status', 'active');
+        $employees = Employee::has('salary')->where('status', 'active')->get();
         $sub_section = 'Edit';
         $incrementData = Increment::find($id);
         return view('payroll.increment.form', compact('title', 'section', 'sub_section',
@@ -57,24 +57,15 @@ class IncrementController extends Controller
     {
         $request->validate([
             'employee_id' => 'required|exists:employees,id',
-            'previous_designation' => 'required|exists:designations,id',
-            'new_designation' => 'required|exists:designations,id|different:previous_designation',
             'increment_base' => 'required|in:basic_salary,gross_salary',
             'increment_method' => 'required|in:fixed,percentage',
             'salary_increase_amount' => 'required|numeric|min:0',
             'effective_from' => 'required|date',
             'effective_to' => 'nullable|date|after_or_equal:effective_from',
-            'status' => 'required|in:pending,approved,rejected',
+            'status' => 'nullable|in:approved,pending,rejected',
         ], [
             'employee_id.required' => 'Please Select An Employee',
             'employee_id.exists' => 'Selected Employee Is Invalid',
-
-            'previous_designation.required' => 'Please Select Previous Designation',
-            'previous_designation.exists' => 'Previous Designation Is Invalid',
-
-            'new_designation.required' => 'Please Select New Designation',
-            'new_designation.exists' => 'New Designation Is Invalid',
-            'new_designation.different' => 'New Designation Must Be Different From Previous Designation',
 
             'increment_base.required' => 'Please Select Increment Base',
             'increment_base.in' => 'Selected Increment Base Is Invalid',
@@ -90,31 +81,21 @@ class IncrementController extends Controller
 
             'effective_to.date' => 'Please Enter A Valid Date',
             'effective_to.after_or_equal' => 'Effective To Date Must Be After Or Equal To Effective From Date',
-
-            'status.required' => 'Please Select Status',
-            'status.in' => 'Selected Status Is Invalid',
         ]);
 
         try {
             Log::info('Adding ');
             $result = $this->payrollService->incrementRequestData($request);
-            $data = $result['data'];
-            $employeeSalary = $result['employee_salary'];
 
-            DB::transaction(function () use ($employeeSalary, $incrementData, $data) {
-                $employeeSalary->update([
-                    'basic_salary' => $data['basic_salary'],
-                    'gross_salary' => $data['gross_salary'],
-                ]);
+            $data = $result['data'];
 
                 if (!empty($incrementData)) {
 
                     $this->payrollService->incrementDataUpdate($incrementData, $data);
                 } else {
-                    $this->payrollService->incrementDataUpdate($incrementData, $data);
+                    $this->payrollService->incrementDataStore($data);
 
                 }
-            });
 
         } catch (\Exception $e) {
             Log::error($e->getMessage());

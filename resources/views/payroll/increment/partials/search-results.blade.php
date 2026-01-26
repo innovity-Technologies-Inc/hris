@@ -65,10 +65,8 @@ Each increment object should have:
                                 <td>
                                     <div class="small">
                                         <span
-                                            class="fw-semibold">{{ $increment->getEmployee->officeInfo->current_designation ?? 'N/A' }}</span>
+                                            class="fw-semibold">{{ $increment->getEmployee->officeInfo->getCurrentDesignation->company_designation ?? 'N/A' }}</span>
                                         <br>
-                                        <small
-                                            class="text-muted">{{ $increment->getEmployee->officeInfo->grade ?? '' }}</small>
                                     </div>
                                 </td>
                                 <td>
@@ -78,9 +76,9 @@ Each increment object should have:
                                         </span>
                                         <div class="fw-semibold text-primary">
                                             @if ($increment->increment_method === 'percentage')
-                                                {{ $increment->increment_amount }}%
+                                                {{ $increment->salary_increase_amount }}%
                                             @else
-                                                ৳{{ number_format($increment->increment_amount, 2) }}
+                                                ৳{{ number_format($increment->salary_increase_amount, 2) }}
                                             @endif
                                         </div>
                                         <small class="text-muted">
@@ -89,10 +87,11 @@ Each increment object should have:
                                     </div>
                                 </td>
                                 <td>
-                                    <span class="small">{{ $increment->effective_from->format('d M Y') }}</span>
+                                    <span class="small">{{ \Carbon\Carbon::parse($increment->effective_from)->format('d M Y') }}</span>
                                 </td>
                                 <td>
-                                    <span class="badge {{ $increment->status_badge_class }}">
+                                    <span class="badge @if($increment->status == 'pending') bg-warning @elseif($increment->status == 'approved') bg-warning
+                                     @else bg-danger @endif">
                                         {{ ucfirst($increment->status) }}
                                     </span>
                                 </td>
@@ -158,5 +157,4 @@ Each increment object should have:
 </div>
 <div>
     {{ $increments->links() }}
-</div>
 </div>

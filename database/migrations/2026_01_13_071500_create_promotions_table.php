@@ -19,9 +19,11 @@ return new class extends Migration
             $table->enum('increment_base', ['basic_salary', 'gross_salary']);
             $table->enum('increment_method', ['fixed', 'percentage']);
             $table->decimal('salary_increase_amount', 10, 2);
+            $table->decimal('increment_amount_value', 10, 2);
             $table->decimal('previous_basic_salary', 10, 2);
             $table->decimal('previous_gross_salary', 10, 2);
             $table->decimal('new_basic_salary', 10, 2);
+            $table->decimal('new_gross_salary', 10, 2);
             $table->date('effective_from');
             $table->date('effective_to')->nullable();
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');

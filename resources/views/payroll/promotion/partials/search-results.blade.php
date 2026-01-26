@@ -16,6 +16,7 @@
                             <th scope="col">Previous Designation</th>
                             <th scope="col">New Designation</th>
                             <th scope="col">New Basic Salary</th>
+                            <th scope="col">New Gross Salary</th>
                             <th scope="col">Status</th>
                             <th scope="col">Action</th>
                         </tr>
@@ -60,7 +61,8 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <span class="badge {{ $promotion->status_badge_class }}">
+                                    <span class="badge @if($promotion->status == 'pending') bg-warning @elseif($promotion->status == 'approved') bg-warning
+                                     @else bg-danger @endif">
                                         {{ ucfirst($promotion->status) }}
                                     </span>
                                 </td>

@@ -64,10 +64,6 @@
                                     <strong>Current Designation:</strong>
                                     <span id="current-designation-display">-</span>
                                 </div>
-                                <div class="col-md-6">
-                                    <strong>Current Grade:</strong>
-                                    <span id="current-grade-display">-</span>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -145,7 +141,7 @@
 
                             {{-- Increment Base --}}
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Promotion Base <span class="text-danger">*</span></label>
+                                <label class="form-label">Promotional Increment Base <span class="text-danger">*</span></label>
                                 <select name="increment_base" id="increment_base"
                                     class="form-select @error('increment_base') is-invalid @enderror" required>
                                     <option value="">Select Base</option>
@@ -166,7 +162,7 @@
 
                             {{-- Increment Method --}}
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Promotion Method <span class="text-danger">*</span></label>
+                                <label class="form-label">Promotional Increment Method <span class="text-danger">*</span></label>
                                 <select name="increment_method" id="increment_method"
                                     class="form-select @error('increment_method') is-invalid @enderror" required>
                                     <option value="">Select Method</option>
@@ -186,7 +182,7 @@
 
                             {{-- Salary Increase Amount --}}
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Promotion Increase Amount <span
+                                <label class="form-label">Promotional Increment Increase Amount <span
                                         class="text-danger">*</span></label>
                                 <input type="number" name="salary_increase_amount" id="salary_increase_amount"
                                     value="{{ old('salary_increase_amount', $promotionData->salary_increase_amount ?? '') }}"
@@ -197,19 +193,6 @@
                                 @enderror
                                 <small class="text-muted" id="increment-hint">Enter fixed amount in BDT or percentage
                                     value</small>
-                            </div>
-
-                            {{-- New Basic Salary --}}
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">New Basic Salary <span class="text-danger">*</span></label>
-                                <input type="number" name="new_basic_salary" id="new_basic_salary"
-                                    value="{{ old('new_basic_salary', $promotionData->new_basic_salary ?? '') }}"
-                                    class="form-control @error('new_basic_salary') is-invalid @enderror" step="0.01"
-                                    min="0" required placeholder="Enter new basic salary">
-                                @error('new_basic_salary')
-                                    <small class="text-danger">{{ $message }}</small>
-                                @enderror
-                                <small class="text-muted">Enter the new basic salary after promotion</small>
                             </div>
 
                             {{-- Effective From --}}
@@ -235,27 +218,6 @@
                                 <small class="text-muted">Leave empty for indefinite period</small>
                             </div>
 
-                            {{-- Status (if editing) --}}
-                            @isset($promotionData)
-                                <div class="col-md-12 mb-3">
-                                    <label class="form-label">Status</label>
-                                    <select name="status" class="form-select @error('status') is-invalid @enderror">
-                                        <option value="pending" {{ $promotionData->status == 'pending' ? 'selected' : '' }}>
-                                            Pending
-                                        </option>
-                                        <option value="approved" {{ $promotionData->status == 'approved' ? 'selected' : '' }}>
-                                            Approved
-                                        </option>
-                                        <option value="rejected" {{ $promotionData->status == 'rejected' ? 'selected' : '' }}>
-                                            Rejected
-                                        </option>
-                                    </select>
-                                    @error('status')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                            @endisset
-
                             {{-- Submit Buttons --}}
                             <div class="col-md-12">
                                 <div class="d-flex justify-content-end gap-2">
@@ -279,166 +241,97 @@
     <script>
         $(document).ready(function() {
 
-            // Employee selection change handler
+            /**
+             * 1. EMPLOYEE SELECTION HANDLER
+             * Fetches data via AJAX to display current state, but performs no calculations.
+             */
             $('#employee_id').on('change', function() {
-                const selectedOption = $(this).find('option:selected');
-                const officeInfo = selectedOption.data('office-info');
-                const salaryBreakdown = selectedOption.data('salary-breakdown');
+                const employeeId = $(this).val();
 
-                console.log('Office Info:', officeInfo);
-                console.log('Salary Breakdown:', salaryBreakdown);
-
-                if (officeInfo) {
-                    // Display current designation
-                    displayCurrentDesignation(officeInfo);
-
-                    // Set previous designation
-                    $('#previous_designation').val(officeInfo.current_designation_id || '');
-
-                    // Show designation section
-                    $('#current-designation-section').show();
-                } else {
-                    $('#current-designation-section').hide();
-                    $('#previous_designation').val('');
-                }
-
-                if (salaryBreakdown) {
-                    // Display salary breakdown
-                    displaySalaryBreakdown(salaryBreakdown);
-
-                    // Set previous salary as hidden fields
-                    $('#previous_basic_salary').val(salaryBreakdown.basic_salary || 0);
-                    $('#previous_gross_salary').val(salaryBreakdown.gross_salary || 0);
-
-                    // Store salary data
-                    $('#employeePromotionForm').data('basic-salary', salaryBreakdown.basic_salary || 0);
-                    $('#employeePromotionForm').data('gross-salary', salaryBreakdown.gross_salary || 0);
-
-                    // Show salary breakdown section
-                    $('#salary-breakdown-section').show();
-                } else {
-                    // Hide section and show warning
-                    $('#salary-breakdown-section').hide();
-                    $('#previous_basic_salary').val('0');
-                    $('#previous_gross_salary').val('0');
-
-                    if (officeInfo) {
-                        alert(
-                            'Warning: No salary breakdown found for this employee. Please add salary information first.');
-                    }
-                }
-            });
-
-            // Update increment hint based on method
-            $('#increment_method').on('change', function() {
-                const method = $(this).val();
-                if (method === 'percentage') {
-                    $('#increment-hint').text('Enter percentage value (e.g., 10 for 10%)');
-                    $('#salary_increase_amount').attr('placeholder', 'Enter percentage (e.g., 10)');
-                } else if (method === 'fixed') {
-                    $('#increment-hint').text('Enter fixed amount in BDT');
-                    $('#salary_increase_amount').attr('placeholder', 'Enter amount in BDT');
-                } else {
-                    $('#increment-hint').text('Enter fixed amount in BDT or percentage value');
-                    $('#salary_increase_amount').attr('placeholder', 'Enter amount or percentage');
-                }
-            });
-
-            // Auto-calculate new basic salary when increment details change
-            $('#increment_base, #increment_method, #salary_increase_amount').on('change input', function() {
-                calculateNewSalary();
-            });
-
-            function calculateNewSalary() {
-                const incrementBase = $('#increment_base').val();
-                const incrementMethod = $('#increment_method').val();
-                const salaryIncreaseAmount = parseFloat($('#salary_increase_amount').val()) || 0;
-                const previousBasicSalary = parseFloat($('#previous_basic_salary').val()) || 0;
-                const previousGrossSalary = parseFloat($('#previous_gross_salary').val()) || 0;
-
-                if (!incrementBase || !incrementMethod || salaryIncreaseAmount === 0) {
+                if (!employeeId) {
+                    $('#current-designation-section, #salary-breakdown-section').hide();
                     return;
                 }
 
-                let newBasicSalary = 0;
+                // A. Fetch Current Designation via AJAX
+                $.ajax({
+                    url: `/get-current-designation/${employeeId}`,
+                    type: 'GET',
+                    success: function(response) {
+                        const officeInfo = response.employee;
+                        if (officeInfo) {
+                            displayCurrentDesignation(officeInfo);
 
-                if (incrementBase === 'basic_salary') {
-                    if (incrementMethod === 'percentage') {
-                        const incrementValue = previousBasicSalary * (salaryIncreaseAmount / 100);
-                        newBasicSalary = previousBasicSalary + incrementValue;
-                    } else {
-                        newBasicSalary = previousBasicSalary + salaryIncreaseAmount;
-                    }
-                } else if (incrementBase === 'gross_salary') {
-                    if (incrementMethod === 'percentage') {
-                        const incrementValue = previousGrossSalary * (salaryIncreaseAmount / 100);
-                        newBasicSalary = previousBasicSalary + incrementValue;
-                    } else {
-                        newBasicSalary = previousBasicSalary + salaryIncreaseAmount;
-                    }
-                }
-
-                $('#new_basic_salary').val(newBasicSalary.toFixed(2));
-            }
-
-            // Function to display current designation
-            function displayCurrentDesignation(officeInfo) {
-                const designation = officeInfo.current_designation || '-';
-                const grade = officeInfo.grade || '-';
-
-                $('#current-designation-display').text(designation);
-                $('#current-grade-display').text(grade);
-            }
-
-            // Function to display salary breakdown
-            function displaySalaryBreakdown(salaryBreakdown) {
-                const tableBody = $('#salary-breakdown-table tbody');
-                tableBody.empty();
-
-                // Build table rows
-                const components = [{
-                        label: 'Basic Salary',
-                        value: salaryBreakdown.basic_salary || 0
-                    },
-                    {
-                        label: 'House Allowance',
-                        value: salaryBreakdown.house_allowance || 0
-                    },
-                    {
-                        label: 'Transport Allowance',
-                        value: salaryBreakdown.transport_allowance || 0
-                    },
-                    {
-                        label: 'Food Allowance',
-                        value: salaryBreakdown.food_allowance || 0
-                    },
-                    {
-                        label: 'Medical Allowance',
-                        value: salaryBreakdown.medical_allowance || 0
-                    },
-                    {
-                        label: 'Other Earnings',
-                        value: salaryBreakdown.other_earnings || 0
-                    }
-                ];
-
-                components.forEach(component => {
-                    if (parseFloat(component.value) > 0) {
-                        tableBody.append(`
-                            <tr>
-                                <td>${component.label}</td>
-                                <td class="text-end">${formatCurrency(component.value)}</td>
-                            </tr>
-                        `);
+                            // Pass current designation ID to the backend for reference
+                            $('#previous_designation').val(officeInfo.current_designation_id || '');
+                            $('#current-designation-section').show();
+                        }
                     }
                 });
 
-                // Display gross salary
-                const grossSalary = salaryBreakdown.gross_salary || 0;
-                $('#gross-salary-display').text(formatCurrency(grossSalary));
+                // B. Fetch Salary Breakdown via AJAX
+                $.ajax({
+                    url: `/get-employee-salary/${employeeId}`,
+                    type: 'GET',
+                    success: function(response) {
+                        const salary = response.employee;
+                        if (salary) {
+                            displaySalaryBreakdown(salary);
+
+                            // Hidden fields only store the existing values to inform the backend
+                            $('#previous_basic_salary').val(salary.basic_salary || 0);
+                            $('#previous_gross_salary').val(salary.gross_salary || 0);
+
+                            $('#salary-breakdown-section').show();
+                        }
+                    }
+                });
+            });
+
+            /**
+             * 2. UI DISPLAY FUNCTIONS
+             * Renders the current database records into the view.
+             */
+            function displayCurrentDesignation(officeInfo) {
+                // Path: employee -> get_current_designation -> company_designation
+                const title = (officeInfo.get_current_designation)
+                    ? officeInfo.get_current_designation.company_designation
+                    : 'Not Assigned';
+
+                $('#current-designation-display').text(title);
             }
 
-            // Currency formatter
+            function displaySalaryBreakdown(salary) {
+                const tableBody = $('#salary-breakdown-table tbody');
+                tableBody.empty();
+
+                const components = [
+                    { label: 'Basic Salary', value: salary.basic_salary },
+                    { label: 'House Allowance', value: salary.house_allowance },
+                    { label: 'Transport Allowance', value: salary.transport_allowance },
+                    { label: 'Food Allowance', value: salary.food_allowance },
+                    { label: 'Medical Allowance', value: salary.medical_allowance },
+                    { label: 'Other Earnings', value: salary.other_earnings }
+                ];
+
+                components.forEach(comp => {
+                    const val = parseFloat(comp.value) || 0;
+                    if (val > 0) {
+                        tableBody.append(`
+                        <tr>
+                            <td>${comp.label}</td>
+                            <td class="text-end">${formatCurrency(val)}</td>
+                        </tr>
+                    `);
+                    }
+                });
+
+                $('#gross-salary-display').text(formatCurrency(salary.gross_salary || 0));
+            }
+
+            /**
+             * 3. UTILITIES & INITIALIZATION
+             */
             function formatCurrency(amount) {
                 return parseFloat(amount).toLocaleString('en-BD', {
                     minimumFractionDigits: 2,
@@ -446,10 +339,17 @@
                 });
             }
 
-            // Trigger change on page load if editing
-            @if (isset($promotionData))
+            // Change hints for the user, but does not trigger calculation
+            $('#increment_method').on('change', function() {
+                const method = $(this).val();
+                const hint = (method === 'percentage') ? 'Enter % (e.g. 10)' : 'Enter Fixed Amount';
+                $('#increment-hint').text(hint);
+            });
+
+            // Initialize data if an employee is already selected (e.g., on page reload or edit)
+            if ($('#employee_id').val()) {
                 $('#employee_id').trigger('change');
-            @endif
+            }
         });
     </script>
 @endsection

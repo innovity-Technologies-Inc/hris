@@ -2,6 +2,8 @@
 
 @section('content')
     {{-- Add back button following project pattern --}}
+
+
     <div class="row mb-3">
         <div class="col-12">
             <a href="{{ route('increment.index') }}" class="btn btn-outline-secondary btn-sm">
@@ -10,11 +12,22 @@
         </div>
     </div>
 
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+
     <form id="employeeIncrementForm" method="POST"
-        action="{{ isset($increment) ? route('increment.update', $increment->id) : route('increment.store') }}">
+        action="{{ isset($incrementData) ? route('increment.update', $incrementData->id) : route('increment.store') }}">
 
         @csrf
-        @isset($increment)
+        @isset($incrementData)
             @method('PUT')
         @endisset
 
@@ -36,7 +49,7 @@
                                         <option value="{{ $employee->id }}"
                                             data-office-info="{{ json_encode($employee->officeInfo ?? null) }}"
                                             data-salary-breakdown="{{ json_encode($employee->salaryBreakdown ?? null) }}"
-                                            {{ old('employee_id', $increment->employee_id ?? '') == $employee->id ? 'selected' : '' }}>
+                                            {{ old('employee_id', $incrementData->employee_id ?? '') == $employee->id ? 'selected' : '' }}>
                                             {{ $employee->full_name }} ({{ $employee->applicant_id }})
                                         </option>
                                     @endforeach
@@ -123,11 +136,11 @@
                                     class="form-select @error('increment_base') is-invalid @enderror" required>
                                     <option value="">Select Base</option>
                                     <option value="basic_salary"
-                                        {{ old('increment_base', $increment->increment_base ?? '') == 'basic_salary' ? 'selected' : '' }}>
+                                        {{ old('increment_base', $incrementData->increment_base ?? '') == 'basic_salary' ? 'selected' : '' }}>
                                         Basic Salary
                                     </option>
                                     <option value="gross_salary"
-                                        {{ old('increment_base', $increment->increment_base ?? '') == 'gross_salary' ? 'selected' : '' }}>
+                                        {{ old('increment_base', $incrementData->increment_base ?? '') == 'gross_salary' ? 'selected' : '' }}>
                                         Gross Salary
                                     </option>
                                 </select>
@@ -144,11 +157,11 @@
                                     class="form-select @error('increment_method') is-invalid @enderror" required>
                                     <option value="">Select Method</option>
                                     <option value="fixed"
-                                        {{ old('increment_method', $increment->increment_method ?? '') == 'fixed' ? 'selected' : '' }}>
+                                        {{ old('increment_method', $incrementData->increment_method ?? '') == 'fixed' ? 'selected' : '' }}>
                                         Fixed Amount
                                     </option>
                                     <option value="percentage"
-                                        {{ old('increment_method', $increment->increment_method ?? '') == 'percentage' ? 'selected' : '' }}>
+                                        {{ old('increment_method', $incrementData->increment_method ?? '') == 'percentage' ? 'selected' : '' }}>
                                         Percentage
                                     </option>
                                 </select>
@@ -160,11 +173,11 @@
                             {{-- Increment Amount --}}
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Increment Amount <span class="text-danger">*</span></label>
-                                <input type="number" name="increment_amount" id="increment_amount"
-                                    value="{{ old('increment_amount', $increment->increment_amount ?? '') }}"
-                                    class="form-control @error('increment_amount') is-invalid @enderror" step="0.01"
+                                <input type="number" name="salary_increase_amount" id="salary_increase_amount"
+                                    value="{{ old('salary_increase_amount', $incrementData->salary_increase_amount ?? '') }}"
+                                    class="form-control @error('salary_increase_amount') is-invalid @enderror" step="0.01"
                                     min="0" required placeholder="Enter amount or percentage">
-                                @error('increment_amount')
+                                @error('salary_increase_amount')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                                 <small class="text-muted" id="increment-hint">Enter fixed amount in BDT or percentage
@@ -175,7 +188,7 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Effective From <span class="text-danger">*</span></label>
                                 <input type="date" name="effective_from" id="effective_from"
-                                    value="{{ old('effective_from', isset($increment) ? $increment->effective_from : '') }}"
+                                    value="{{ old('effective_from', isset($incrementData) ? $incrementData->effective_from : '') }}"
                                     class="form-control @error('effective_from') is-invalid @enderror" required>
                                 @error('effective_from')
                                     <small class="text-danger">{{ $message }}</small>
@@ -186,34 +199,13 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Effective To <span class="text-muted">(Optional)</span></label>
                                 <input type="date" name="effective_to" id="effective_to"
-                                    value="{{ old('effective_to', isset($increment) && $increment->effective_to ? $increment->effective_to : '') }}"
+                                    value="{{ old('effective_to', isset($incrementData) && $incrementData->effective_to ? $incrementData->effective_to : '') }}"
                                     class="form-control @error('effective_to') is-invalid @enderror">
                                 @error('effective_to')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                                 <small class="text-muted">Leave empty for indefinite period</small>
                             </div>
-
-                            {{-- Status (if editing) --}}
-                            @isset($increment)
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Status</label>
-                                    <select name="status" class="form-select @error('status') is-invalid @enderror">
-                                        <option value="pending" {{ $increment->status == 'pending' ? 'selected' : '' }}>
-                                            Pending
-                                        </option>
-                                        <option value="approved" {{ $increment->status == 'approved' ? 'selected' : '' }}>
-                                            Approved
-                                        </option>
-                                        <option value="rejected" {{ $increment->status == 'rejected' ? 'selected' : '' }}>
-                                            Rejected
-                                        </option>
-                                    </select>
-                                    @error('status')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                            @endisset
 
                             {{-- Submit Buttons --}}
                             <div class="col-md-12">
@@ -223,7 +215,7 @@
                                     </a>
                                     <button type="submit" class="btn btn-primary">
                                         <i style="height: 12px; width: 12px" data-feather="save"></i>
-                                        {{ isset($increment) ? 'Update' : 'Create' }} Increment
+                                        {{ isset($incrementData) ? 'Update' : 'Create' }} Increment
                                     </button>
                                 </div>
                             </div>
@@ -238,142 +230,98 @@
     <script>
         $(document).ready(function() {
 
-            // Employee selection change handler
+            // 1. Employee Selection Handler (AJAX)
             $('#employee_id').on('change', function() {
-                const selectedOption = $(this).find('option:selected');
-                const officeInfo = selectedOption.data('office-info');
-                const salaryBreakdown = selectedOption.data('salary-breakdown');
+                const employeeId = $(this).val();
 
-                if (officeInfo && salaryBreakdown) {
-                    // Display current designation
-                    displayCurrentDesignation(officeInfo);
-
-                    // Display salary breakdown
-                    displaySalaryBreakdown(salaryBreakdown);
-
-                    // Store salary data for calculations
-                    $('#employeeIncrementForm').data('basic-salary', salaryBreakdown.basic_salary || 0);
-                    $('#employeeIncrementForm').data('gross-salary', salaryBreakdown.gross_salary || 0);
-
-                    // Show sections
-                    $('#current-designation-section').show();
-                    $('#salary-breakdown-section').show();
-                } else {
-                    // Hide sections if no data
-                    $('#current-designation-section').hide();
-                    $('#salary-breakdown-section').hide();
+                if (!employeeId) {
+                    $('#current-designation-section, #salary-breakdown-section').hide();
+                    return;
                 }
-            });
 
-            // Update increment hint based on method
-            $('#increment_method').on('change', function() {
-                const method = $(this).val();
-                if (method === 'percentage') {
-                    $('#increment-hint').text('Enter percentage value (e.g., 10 for 10%)');
-                    $('#increment_amount').attr('placeholder', 'Enter percentage (e.g., 10)');
-                } else if (method === 'fixed') {
-                    $('#increment-hint').text('Enter fixed amount in BDT');
-                    $('#increment_amount').attr('placeholder', 'Enter amount in BDT');
-                } else {
-                    $('#increment-hint').text('Enter fixed amount in BDT or percentage value');
-                    $('#increment_amount').attr('placeholder', 'Enter amount or percentage');
-                }
-            });
-
-            // Real-time calculation on increment changes
-            $('#increment_amount, #increment_base, #increment_method').on('change input', function() {
-                calculateProjectedIncrement();
-            });
-
-            // Function to display current designation
-            function displayCurrentDesignation(officeInfo) {
-                const designation = officeInfo.current_designation || '-';
-                const grade = officeInfo.grade || '-';
-
-                $('#current-designation-display').text(designation);
-                $('#current-grade-display').text(grade);
-            }
-
-            // Function to display salary breakdown
-            function displaySalaryBreakdown(salaryBreakdown) {
-                const tableBody = $('#salary-breakdown-table tbody');
-                tableBody.empty();
-
-                // Build table rows
-                const components = [{
-                        label: 'Basic Salary',
-                        value: salaryBreakdown.basic_salary || 0
-                    },
-                    {
-                        label: 'House Allowance',
-                        value: salaryBreakdown.house_allowance || 0
-                    },
-                    {
-                        label: 'Transport Allowance',
-                        value: salaryBreakdown.transport_allowance || 0
-                    },
-                    {
-                        label: 'Food Allowance',
-                        value: salaryBreakdown.food_allowance || 0
-                    },
-                    {
-                        label: 'Medical Allowance',
-                        value: salaryBreakdown.medical_allowance || 0
-                    },
-                    {
-                        label: 'Other Earnings',
-                        value: salaryBreakdown.other_earnings || 0
-                    }
-                ];
-
-                components.forEach(component => {
-                    if (parseFloat(component.value) > 0) {
-                        tableBody.append(`
-                            <tr>
-                                <td>${component.label}</td>
-                                <td class="text-end">${formatCurrency(component.value)}</td>
-                            </tr>
-                        `);
+                // A. Fetch Designation Data
+                $.ajax({
+                    url: `/get-current-designation/${employeeId}`,
+                    type: 'GET',
+                    success: function(response) {
+                        const officeInfo = response.employee;
+                        if (officeInfo) {
+                            displayCurrentDesignation(officeInfo);
+                            // Store current designation ID for the backend
+                            $('#previous_designation').val(officeInfo.current_designation_id || '');
+                            $('#current-designation-section').show();
+                        }
                     }
                 });
 
-                // Display gross salary
-                const grossSalary = salaryBreakdown.gross_salary || 0;
-                $('#gross-salary-display').text(formatCurrency(grossSalary));
+                // B. Fetch Salary Data
+                $.ajax({
+                    url: `/get-employee-salary/${employeeId}`,
+                    type: 'GET',
+                    success: function(response) {
+                        const salary = response.employee;
+                        if (salary) {
+                            displaySalaryBreakdown(salary);
+                            // Set hidden fields so the backend knows the starting point
+                            $('#previous_basic_salary').val(salary.basic_salary || 0);
+                            $('#previous_gross_salary').val(salary.gross_salary || 0);
+                            $('#salary-breakdown-section').show();
+                        }
+                    }
+                });
+            });
+
+            // 2. UI Display Functions
+            function displayCurrentDesignation(officeInfo) {
+                // Path: employee -> get_current_designation -> company_designation
+                const title = (officeInfo.get_current_designation)
+                    ? officeInfo.get_current_designation.company_designation
+                    : 'Not Assigned';
+
+                // If you have a grade relationship, access it here
+                const grade = officeInfo.grade_id || '-';
+
+                $('#current-designation-display').text(title);
+                $('#current-grade-display').text(grade);
             }
 
-            // Calculate projected increment
-            function calculateProjectedIncrement() {
-                const form = $('#employeeIncrementForm');
-                const incrementMethod = $('#increment_method').val();
-                const incrementBase = $('#increment_base').val();
-                const incrementAmount = parseFloat($('#increment_amount').val() || 0);
+            function displaySalaryBreakdown(salary) {
+                const tableBody = $('#salary-breakdown-table tbody');
+                tableBody.empty();
 
-                if (!incrementMethod || !incrementBase || incrementAmount <= 0) {
-                    return;
-                }
+                const components = [
+                    { label: 'Basic Salary', value: salary.basic_salary },
+                    { label: 'House Allowance', value: salary.house_allowance },
+                    { label: 'Transport Allowance', value: salary.transport_allowance },
+                    { label: 'Food Allowance', value: salary.food_allowance },
+                    { label: 'Medical Allowance', value: salary.medical_allowance },
+                    { label: 'Other Earnings', value: salary.other_earnings }
+                ];
 
-                const basicSalary = parseFloat(form.data('basic-salary') || 0);
-                const grossSalary = parseFloat(form.data('gross-salary') || 0);
+                components.forEach(comp => {
+                    const val = parseFloat(comp.value) || 0;
+                    if (val > 0) {
+                        tableBody.append(`
+                        <tr>
+                            <td>${comp.label}</td>
+                            <td class="text-end">${formatCurrency(val)}</td>
+                        </tr>
+                    `);
+                    }
+                });
 
-                if (basicSalary === 0 && grossSalary === 0) {
-                    return;
-                }
-
-                let baseAmount = incrementBase === 'basic_salary' ? basicSalary : grossSalary;
-                let incrementValue = 0;
-
-                if (incrementMethod === 'fixed') {
-                    incrementValue = incrementAmount;
-                } else if (incrementMethod === 'percentage') {
-                    incrementValue = (baseAmount * incrementAmount) / 100;
-                }
-
-                // Optional: Display projected increment value
-                console.log('Projected Increment: ৳' + formatCurrency(incrementValue));
+                $('#gross-salary-display').text(formatCurrency(salary.gross_salary || 0));
             }
 
-            // Currency formatter
+            // 3. Increment Hint Logic (No Calculation)
+            $('#increment_method').on('change', function() {
+                const method = $(this).val();
+                const hint = (method === 'percentage') ? 'Enter % (e.g. 10)' : 'Enter Fixed Amount (৳)';
+                $('#increment-hint').text(hint);
+                $('#salary_increase_amount').attr('placeholder', hint);
+            });
+
+            // 4. Utility: Currency Formatter
             function formatCurrency(amount) {
                 return parseFloat(amount).toLocaleString('en-BD', {
                     minimumFractionDigits: 2,
@@ -381,10 +329,9 @@
                 });
             }
 
-            // Trigger change on page load if editing
-            @if (isset($increment))
+            // 5. Page Load Trigger (For Edit Mode)
+            if ($('#employee_id').val()) {
                 $('#employee_id').trigger('change');
-            @endif
+            }
         });
-    </script>
-@endsection
+    </script>@endsection

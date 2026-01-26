@@ -67,6 +67,10 @@ class Employee extends Model
             ->where('status', '=', 'active');
     }
 
+    public function salary(){
+        return $this->hasOne(EmployeeSalaryBreakdown::class, 'employee_id', 'id');
+    }
+
     public function roster(){
         return $this->hasMany(EmployeeRosterPlan::class, 'employee_id', 'id');
     }

@@ -493,10 +493,10 @@ Route::prefix('promotion')->name('promotion.')->controller(PromotionController::
 Route::prefix('increment')->name('increment.')->controller(IncrementController::class)->group(function () {
     Route::get('/', 'index')->name('index');
     Route::get('/create', 'create')->name('create');
-    Route::post('/', 'store')->name('store');
+    Route::post('/', 'save')->name('store');
     Route::get('/{id}', 'show')->name('show');
     Route::get('/{id}/edit', 'edit')->name('edit');
-    Route::put('/{id}', 'update')->name('update');
+    Route::put('/{id}', 'save')->name('update');
     Route::put('/{id}/approve', 'approve')->name('approve');
     Route::put('/{id}/reject', 'reject')->name('reject');
 });
@@ -529,6 +529,11 @@ Route::controller(DataController::class)->group(function () {
     //attendance-details
     Route::get('get-attendance-details/{employee_id}', 'getAttendanceDetails');
     Route::get('get-attendance-records/{employee_id}', 'getAttendanceDetails');
+
+    //employee_details
+    Route::get('get-current-designation/{employee_id}', 'getEmployeeCurrentDesignation');
+    Route::get('get-employee-salary/{employee_id}', 'getEmployeeSalary');
+
 
 });
 

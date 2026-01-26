@@ -9,8 +9,11 @@ use App\Models\Branch;
 use App\Models\CompanyLocation;
 use App\Models\Department;
 use App\Models\Division;
+use App\Models\Employee;
 use App\Models\EmployeeEligiblePlan;
 use App\Models\EmployeeLeavePlan;
+use App\Models\EmployeeOfficeInfo;
+use App\Models\EmployeeSalaryBreakdown;
 use App\Models\LeaveCount;
 use App\Models\LeavePlan;
 use App\Models\MealPlan;
@@ -306,6 +309,23 @@ class DataController extends Controller
             'status' => 'completed',
             'time' => $today,
             'record' => $record
+        ]);
+    }
+
+    public function getEmployeeCurrentDesignation($employee_id){
+        $employee = EmployeeOfficeInfo::with('getCurrentDesignation:id,company_designation')
+            ->where('employee_id', $employee_id)
+            ->select('id','employee_id', 'current_designation_id')
+            ->first();
+        return response()->json([
+            'employee' => $employee,
+        ]);
+    }
+
+    public function getEmployeeSalary($employee_id){
+        $employee = EmployeeSalaryBreakdown::where('employee_id', $employee_id)->first();
+        return response()->json([
+            'employee' => $employee,
         ]);
     }
 

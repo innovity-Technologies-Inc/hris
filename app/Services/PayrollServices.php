@@ -26,23 +26,25 @@ class PayrollServices
             'salary_increase_amount'   => $request->salary_increase_amount,
             'effective_from'           => $request->effective_from,
             'effective_to'             => $request->effective_to,
-            'status'                   => $request->status,
         ];
 
-        $employeeSalary = $this->salaryData($data);
+        $result = $this->salaryData($data);
 
         return [
-            'data' => $data,
-            'employee_salary' => $employeeSalary,
+            'data' => $result['data'],
         ];
     }
 
     public function salaryData($data){
-        $employeeSalary = EmployeeSalaryBreakdown::where($data['employee_id'])->first();
-        $data['new_basic_salary'] = $this->incrementCalculation($data, $employeeSalary);
+        $employeeSalary = EmployeeSalaryBreakdown::where('employee_id', $data['employee_id'])->first();
+        $increment_result = $this->incrementCalculation($data, $employeeSalary);
+        $data['new_basic_salary'] = $increment_result['new_basic'];
+        $data['increment_amount_value'] = $increment_result['increment_value'];
         $data['previous_basic_salary'] = $employeeSalary->basic_salary;
         $data['previous_gross_salary'] = $employeeSalary->gross_salary;
-        return $employeeSalary;
+        return [
+            'data' => $data,
+        ];
     }
 
     public function incrementCalculation($data, $employeeSalary){
@@ -51,11 +53,13 @@ class PayrollServices
         $incrementAmount = $data['salary_increase_amount'];
         if ($incrementBase == 'basic_salary'){
             $basicSalary = $employeeSalary->basic_salary;
+            $grossSalary = $employeeSalary->gross_salary;
             if ($incrementMethod == 'percentage'){
                 $incrementValue    =  $basicSalary * ($incrementAmount / 100);
                 $newSalary = $basicSalary + $incrementValue;
             }else{
-                $newSalary = $basicSalary + $incrementAmount;
+                $incrementValue = $incrementAmount;
+                $newSalary = $basicSalary + $incrementValue;
             }
         }else{
             $salary = $employeeSalary->gross_salary;
@@ -63,10 +67,14 @@ class PayrollServices
                 $incrementValue    =  $salary * ($incrementAmount / 100);
                 $newSalary = $salary + $incrementValue;
             }else{
-                $newSalary = $salary + $incrementAmount;
-            }
+                $incrementValue = $incrementAmount;
+                $newSalary = $salary + $incrementValue;            }
         }
-        return $newSalary;
+
+        return [
+            'new_basic' => $newSalary,
+            'increment_value' => $incrementValue,
+        ];
     }
     public function incrementRequestData($request){
         $data = [
@@ -76,12 +84,14 @@ class PayrollServices
             'salary_increase_amount'   => $request->salary_increase_amount,
             'effective_from'           => $request->effective_from,
             'effective_to'             => $request->effective_to,
-            'status'                   => $request->status,
         ];
 
-        $this->salaryData($data);
+        $result = $this->salaryData($data);
 
-        return $data;
+        return [
+            'data' => $result['data'],
+            'employee_salary' => $result['model'],
+        ];
     }
 
     public function promotionDataStore($data){
@@ -94,6 +104,7 @@ class PayrollServices
     }
 
     public function incrementDataStore($data){
+//        dd($data);
         Increment::create($data);
     }
 
