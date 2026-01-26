@@ -435,18 +435,9 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-1 text-center">
-                                                    @if ($driver['driver_photo'])
-                                                        <div class="timeline-badge bg-warning">
-                                                            <img src="{{ asset('storage/' . $driver['driver_photo']) }}"
-                                                                alt="{{ $driver['driver_name'] }}" class="rounded-circle"
-                                                                style="width: 40px; height: 40px; object-fit: cover; border: 2px solid white;">
-                                                        </div>
-                                                    @else
-                                                        <div class="timeline-badge bg-warning d-flex align-items-center justify-content-center"
-                                                            style="width: 40px; height: 40px; border-radius: 50%; font-weight: bold; color: white; font-size: 14px;">
-                                                            {{ $driver['driver_initials'] }}
-                                                        </div>
-                                                    @endif
+                                                    <div class="timeline-badge bg-warning">
+                                                        {!! \App\HelperClass::generateAvatar($driver['driver_photo'] ?? null, $driver['driver_name'], 40, '#ff9800') !!}
+                                                    </div>
                                                     @if (!$loop->last)
                                                         <div class="timeline-line"></div>
                                                     @endif

@@ -315,17 +315,13 @@
                                                         @endphp
                                                         @if ($driver)
                                                             <div class="d-flex align-items-center">
-                                                                @if ($driver->photo_path)
-                                                                    <img src="{{ asset('storage/' . $driver->photo_path) }}"
-                                                                        alt="Driver" class="rounded-circle me-2"
-                                                                        style="width: 30px; height: 30px; object-fit: cover;">
-                                                                @else
-                                                                    <div class="bg-secondary bg-opacity-10 rounded-circle me-2 d-flex align-items-center justify-content-center"
-                                                                        style="width: 30px; height: 30px;">
-                                                                        <i class="fas fa-user text-secondary"
-                                                                            style="font-size: 12px;"></i>
-                                                                    </div>
-                                                                @endif
+                                                                {!! \App\HelperClass::generateAvatar(
+                                                                    $driver->photo_path ?? null,
+                                                                    $driver->full_name ?? 'N/A',
+                                                                    30,
+                                                                    '#974063',
+                                                                    'me-2',
+                                                                ) !!}
                                                                 <div>
                                                                     <div class="fw-semibold">
                                                                         {{ $driver->full_name ?? 'N/A' }}</div>
