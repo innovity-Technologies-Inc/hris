@@ -665,9 +665,15 @@ class EmployeeServices
             'food_allowance' => 'nullable|numeric|min:0',
             'medical_allowance' => 'nullable|numeric|min:0',
             'other_earnings' => 'nullable|numeric|min:0',
-            'gross_salary' => 'required|numeric|min:0',
 
-            'currency' => 'nullable|string|in:BDT,USD,EUR,INR',
+            'basic_salary_percentage' => 'required|numeric|min:0',
+            'house_allowance_percentage' => 'nullable|numeric|min:0',
+            'transport_allowance_percentage' => 'nullable|numeric|min:0',
+            'food_allowance_percentage' => 'nullable|numeric|min:0',
+            'medical_allowance_percentage' => 'nullable|numeric|min:0',
+            'other_earnings_percentage' => 'nullable|numeric|min:0',
+
+            'gross_salary' => 'required|numeric|min:0',
         ],
             [
                 'employee_id.required' => 'The employee field is required.',
@@ -693,12 +699,29 @@ class EmployeeServices
                 'other_earnings.numeric' => 'The other earnings must be a valid number.',
                 'other_earnings.min' => 'The other earnings must be a positive value.',
 
+                'basic_salary_percentage.required' => 'The basic salary is required.',
+                'basic_salary_percentage.numeric' => 'The basic salary must be a valid number.',
+                'basic_salary_percentage.min' => 'The basic salary must be a positive value.',
+
+                'house_allowance_percentage.numeric' => 'The house allowance must be a valid number.',
+                'house_allowance_percentage.min' => 'The house allowance must be a positive value.',
+
+                'transport_allowance_percentage.numeric' => 'The transport allowance must be a valid number.',
+                'transport_allowance_percentage.min' => 'The transport allowance must be a positive value.',
+
+                'food_allowance_percentage.numeric' => 'The food allowance must be a valid number.',
+                'food_allowance_percentage.min' => 'The food allowance must be a positive value.',
+
+                'medical_allowance_percentage.numeric' => 'The medical allowance must be a valid number.',
+                'medical_allowance_percentage.min' => 'The medical allowance must be a positive value.',
+
+
+                'other_earnings_percentage.numeric' => 'The other earnings must be a valid number.',
+                'other_earnings_percentage.min' => 'The other earnings must be a positive value.',
+
                 'gross_salary.required' => 'The gross salary is required.',
                 'gross_salary.numeric' => 'The gross salary must be a valid number.',
                 'gross_salary.min' => 'The gross salary must be a positive value.',
-
-                'currency.string' => 'The currency must be a valid string.',
-                'currency.in' => 'The currency must be one of the following: BDT, USD, EUR, INR.',
 
             ]);
 

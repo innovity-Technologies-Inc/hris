@@ -49,28 +49,41 @@
                             </h5>
                         </div>
                         <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label fw-bold">Gross Salary<span class="text-danger">*</span></label>
+                                        <input type="number" step="1"
+                                               class="form-control"
+                                               name="gross_salary" id="gross_salary"
+                                               value="{{isset($employeeData) ? $employeeData->basic_salary_percentage : old('gross_salary')}}"
+                                               placeholder="30000" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr class="my-4">
+
                             <!-- Basic Salary & Currency -->
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group mb-3">
-                                        <label class="form-label fw-bold">Basic Salary <span class="text-danger">*</span></label>
-                                        <input type="number" step="0.01"
+                                        <label class="form-label fw-bold">Basic Salary(%) <span class="text-danger">*</span></label>
+                                        <input type="number" step="1"
                                             class="form-control"
-                                            name="basic_salary" id="basic_salary"
-                                            value="{{isset($employeeData) ? $employeeData->basic_salary : old('basic_salary')}}"
-                                            placeholder="0.00" required>
+                                            name="basic_salary_percentage" id="basic_salary_percentage"
+                                            value="{{isset($employeeData) ? $employeeData->basic_salary_percentage : old('basic_salary_percentage')}}"
+                                            placeholder="70" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group mb-3">
-                                        <label class="form-label fw-bold">Currency <span class="text-danger">*</span></label>
-                                        <select class="form-select" name="currency" required>
-                                            <option value="BDT"  {{isset($employeeData) && $employeeData->currency == 'BDT' ? 'selected' : '' }} {{ old('currency') == 'BDT' ? 'selected' : '' }}>BDT - Bangladeshi Taka</option>
-                                            <option value="USD" {{isset($employeeData) && $employeeData->currency == 'USD' ? 'selected' : '' }} {{ old('currency') == 'USD' ? 'selected' : '' }}>USD - US Dollar</option>
-                                            <option value="EUR" {{isset($employeeData) && $employeeData->currency == 'EUR' ? 'selected' : '' }} {{ old('currency') == 'EUR' ? 'selected' : '' }}>EUR - Euro</option>
-                                            <option value="LB" {{isset($employeeData) && $employeeData->currency == 'LB' ? 'selected' : '' }} {{ old('currency') == 'LB' ? 'selected' : '' }}>LB - Pound</option>
-
-                                        </select>
+                                        <label class="form-label fw-bold">Basic Salary <span class="text-danger">*</span></label>
+                                        <input type="number" step="0.01"
+                                               class="form-control"
+                                               name="basic_salary" id="basic_salary"
+                                               value="{{isset($employeeData) ? $employeeData->basic_salary : old('basic_salary')}}"
+                                               placeholder="0.00" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -84,55 +97,108 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group mb-3">
+                                        <label class="form-label">House Allowance(%)</label>
+                                        <input type="number" step="1"
+                                            class="form-control earnings-input"
+                                            name="house_allowance_percentage"
+                                            value="{{isset($employeeData) ? $employeeData->house_allowance_percentage : old('house_allowance_percentage')}}"
+                                            placeholder="5">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
                                         <label class="form-label">House Allowance</label>
-                                        <input type="number" step="0.01"
+                                        <input type="number"
                                             class="form-control earnings-input"
                                             name="house_allowance"
                                             value="{{isset($employeeData) ? $employeeData->house_allowance : old('house_allowance')}}"
-                                            placeholder="0.00">
+                                            placeholder="0.00" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Transport Allowance(%)</label>
+                                        <input type="number" step="1"
+                                            class="form-control earnings-input"
+                                            name="transport_allowance_percentage"
+                                            value="{{isset($employeeData) ? $employeeData->transport_allowance_percentage : old('transport_allowance_percentage')}}"
+                                            placeholder="3">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group mb-3">
                                         <label class="form-label">Transport Allowance</label>
-                                        <input type="number" step="0.01"
+                                        <input type="number"
                                             class="form-control earnings-input"
                                             name="transport_allowance"
                                             value="{{isset($employeeData) ? $employeeData->transport_allowance : old('transport_allowance')}}"
-                                            placeholder="0.00">
+                                            placeholder="0.00" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Food Allowance(%)</label>
+                                        <input type="number" step="1"
+                                            class="form-control earnings-input"
+                                            name="food_allowance_percentage"
+                                            value="{{isset($employeeData) ? $employeeData->food_allowance_percentage : old('food_allowance_percentage')}}"
+                                            placeholder="3">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group mb-3">
                                         <label class="form-label">Food Allowance</label>
-                                        <input type="number" step="0.01"
+                                        <input type="number"
                                             class="form-control earnings-input"
                                             name="food_allowance"
                                             value="{{isset($employeeData) ? $employeeData->food_allowance : old('food_allowance')}}"
-                                            placeholder="0.00">
+                                            placeholder="0.00" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Medical Allowance(%)</label>
+                                        <input type="number" step="1"
+                                            class="form-control earnings-input"
+                                            name="medical_allowance_percentage"
+                                            value="{{isset($employeeData) ? $employeeData->medical_allowance_percentage : old('medical_allowance_percentage')}}"
+                                            placeholder="3">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group mb-3">
                                         <label class="form-label">Medical Allowance</label>
-                                        <input type="number" step="0.01"
+                                        <input type="number"
                                             class="form-control earnings-input"
                                             name="medical_allowance"
                                             value="{{isset($employeeData) ? $employeeData->medical_allowance : old('medical_allowance')}}"
-                                            placeholder="0.00">
+                                            placeholder="0.00" readonly>
                                     </div>
                                 </div>
 
                                 <div class="col-md-12">
                                     <div class="form-group mb-3">
+                                        <label class="form-label">Other Earnings(%)</label>
+                                        <input type="number" step="1"
+                                            class="form-control earnings-input"
+                                            name="other_earnings_percentage"
+                                            value="{{isset($employeeData) ? $employeeData->other_earnings_percentage : old('other_earnings_percentage')}}"
+                                            placeholder="1">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group mb-3">
                                         <label class="form-label">Other Earnings</label>
-                                        <input type="number" step="0.01"
+                                        <input type="number"
                                             class="form-control earnings-input"
                                             name="other_earnings"
                                             value="{{isset($employeeData) ? $employeeData->other_earnings : old('other_earnings')}}"
-                                            placeholder="0.00">
+                                            placeholder="0.00" readonly>
                                     </div>
                                 </div>
+
                             </div>
 
                             <hr class="my-4">
@@ -160,7 +226,6 @@
                                         <div class="card-body text-center">
                                             <h6 class="text-white mb-2">Gross Salary</h6>
                                             <h4 class="text-white fw-bold mb-0" id="gross_salary_display">0.00</h4>
-                                            <input type="hidden" name="gross_salary" id="gross_salary" value="0">
                                         </div>
                                     </div>
                                 </div>
@@ -169,6 +234,15 @@
                     </div>
                 </div>
             </div>
+
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div class="alert {{ isset($employeeData) ? 'alert-light' : 'alert-warning' }} border d-flex justify-content-between align-items-center">
+                                <span><i class="bi bi-info-circle"></i> Note: Total allocation must equal 100%.</span>
+                                <span class="fs-5">Total: <span id="total_pct_display">0%</span></span>
+                            </div>
+                        </div>
+                    </div>
 
             <!-- Form Actions -->
             <div class="row mt-4">
@@ -188,46 +262,101 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Get all input fields
-            const basicSalary = document.getElementById('basic_salary');
-            const earningsInputs = document.querySelectorAll('.earnings-input');
+            const grossInput = document.getElementById('gross_salary');
+            const percentageInputs = document.querySelectorAll('input[name$="_percentage"]');
+            const form = document.querySelector('form');
 
-            // Function to format number with commas
-            function formatNumber(num) {
-                return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            }
+            function validateAndCalculate(event) {
+                const grossSalary = parseFloat(grossInput.value) || 0;
+                let totalAllocated = 0;
 
-            // Function to calculate and update salary totals
-            function calculateSalary() {
-                // Get basic salary
-                let basic = parseFloat(basicSalary.value) || 0;
-
-                // Calculate total benefits (all allowances + bonuses)
-                let totalBenefits = 0;
-                earningsInputs.forEach(input => {
-                    totalBenefits += parseFloat(input.value) || 0;
+                // 1. Calculate sum of other fields
+                percentageInputs.forEach(input => {
+                    if (event && event.target === input) return;
+                    totalAllocated += parseFloat(input.value) || 0;
                 });
 
-                // Calculate gross salary (basic + benefits)
-                let grossSalary = basic + totalBenefits;
+                // 2. Validate the active input with SweetAlert
+                if (event && event.target.name.includes('_percentage')) {
+                    let newVal = parseFloat(event.target.value) || 0;
 
-                // Update display with formatted numbers
-                document.getElementById('basic_salary_display').textContent = formatNumber(basic);
-                document.getElementById('total_benefits_display').textContent = formatNumber(totalBenefits);
-                document.getElementById('gross_salary_display').textContent = formatNumber(grossSalary);
+                    if (totalAllocated + newVal > 100) {
+                        const maxAllowed = 100 - totalAllocated;
+                        event.target.value = maxAllowed > 0 ? maxAllowed : 0;
 
-                // Update hidden input
-                document.getElementById('gross_salary').value = grossSalary.toFixed(2);
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Limit Exceeded',
+                            text: `Total percentage cannot exceed 100%. This field has been capped at ${event.target.value}%`,
+                            confirmButtonColor: '#3085d6'
+                        });
+                    }
+                }
+
+                // 3. Update all dollar amounts
+                let runningTotalPercent = 0;
+                let totalBenefits = 0;
+                let basicAmount = 0;
+
+                percentageInputs.forEach(pInput => {
+                    const percentage = parseFloat(pInput.value) || 0;
+                    runningTotalPercent += percentage;
+
+                    const amount = (grossSalary * percentage) / 100;
+                    const valueInputName = pInput.name.replace('_percentage', '');
+                    const valueInput = document.getElementsByName(valueInputName)[0];
+
+                    if (valueInput) {
+                        valueInput.value = amount.toFixed(2);
+                    }
+
+                    if (valueInputName === 'basic_salary') {
+                        basicAmount = amount;
+                    } else {
+                        totalBenefits += amount;
+                    }
+                });
+
+                updateSummary(basicAmount, totalBenefits, grossSalary, runningTotalPercent);
             }
 
-            // Add event listeners
-            basicSalary.addEventListener('input', calculateSalary);
-            earningsInputs.forEach(input => {
-                input.addEventListener('input', calculateSalary);
+            function updateSummary(basic, benefits, gross, totalPct) {
+                const format = (num) => num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+                document.getElementById('basic_salary_display').textContent = format(basic);
+                document.getElementById('total_benefits_display').textContent = format(benefits);
+                document.getElementById('gross_salary_display').textContent = format(gross);
+
+                const pctDisplay = document.getElementById('total_pct_display');
+                if(pctDisplay) {
+                    pctDisplay.textContent = totalPct + "%";
+                    pctDisplay.className = (totalPct === 100) ? "fw-bold text-success" : "fw-bold text-danger";
+                }
+            }
+
+            // Event Listeners
+            grossInput.addEventListener('input', validateAndCalculate);
+            percentageInputs.forEach(input => {
+                input.addEventListener('input', validateAndCalculate);
             });
 
-            // Initial calculation on page load
-            calculateSalary();
+            // Final Submission Check with SweetAlert
+            form.addEventListener('submit', function(e) {
+                let total = 0;
+                percentageInputs.forEach(i => total += parseFloat(i.value) || 0);
+
+                if (total !== 100) {
+                    e.preventDefault();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Incomplete Breakdown',
+                        text: `The total must be exactly 100%. Currently at ${total}%`,
+                        footer: 'Please adjust your percentages before saving.'
+                    });
+                }
+            });
+
+            validateAndCalculate();
         });
     </script>
 @endsection

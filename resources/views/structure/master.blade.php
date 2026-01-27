@@ -7,6 +7,8 @@
 <head>
 
     <meta charset="utf-8">
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <meta name="theme-color" content="#0d6efd">
     <title>{{ isset($generalSettings->name) ? $generalSettings->name : 'HRMS' }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="HRMS Solution">
@@ -75,7 +77,6 @@
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
 
     {{--    <link href="{{asset('assets/libs/summernote/summernote-lite.min.css')}}" rel="stylesheet" type="text/css"> --}}
-
 
     <style>
         :root {
@@ -516,15 +517,38 @@
         html[data-bs-theme='light'] .app-sidebar-menu .logo-lg img.logo-img-dark {
             display: inline-block !important;
         }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color); /* Use your brand color */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
     </style>
 
     @stack('styles')
 
 </head>
 
+
+
 <!-- body start -->
 
 <body data-menu-color="light" data-sidebar="default">
+
+{{--loading screen--}}
+<div id="loading-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 9999; justify-content: center; align-items: center; flex-direction: column;">
+    <div class="spinner"></div>
+    <p style="margin-top: 10px; font-weight: bold;">Loading, please wait...</p>
+</div>
 
     <!-- Begin page -->
     <div id="app-layout">
@@ -903,6 +927,44 @@
         });
     </script>
     @stack('scripts')
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/serviceworker.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registered: ', registration);
+                    })
+                    .catch(function(error) {
+                        console.log('ServiceWorker registration failed: ', error);
+                    });
+            });
+        }
+    </script>
+
+    <script>
+        const loader = document.getElementById('loading-overlay');
+
+        // 1. Show loader on page unload (clicking links/submitting forms)
+        window.addEventListener('beforeunload', () => {
+            loader.style.display = 'flex';
+        });
+
+        // 2. Hide loader once the page is fully loaded (for initial load)
+        window.addEventListener('load', () => {
+            loader.style.display = 'none';
+        });
+
+        // 3. Optional: Handle Form Submissions specifically
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', () => {
+                loader.style.display = 'flex';
+            });
+        });
+    </script>
+
+
+
 
 </body>
 

@@ -44,7 +44,16 @@ use App\Http\Controllers\EmployeeMovementsController;
 use App\Http\Controllers\EmployeeSearchController;
 use App\Http\Controllers\Payroll\PromotionController;
 use App\Http\Controllers\Payroll\IncrementController;
+use Illuminate\Support\Facades\File;
 
+//get all assets file
+Route::get('/assets-list', function() {
+    $files = collect(File::allFiles(public_path('assets')))
+        ->map(function($file) {
+            return '/assets/' . str_replace(public_path('assets') . DIRECTORY_SEPARATOR, '', $file);
+        });
+    return response()->json($files);
+});
 
 Route::get('test', function () {
    return view('attendance.attendance_form_1');

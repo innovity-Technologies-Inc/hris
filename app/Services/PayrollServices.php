@@ -51,24 +51,24 @@ class PayrollServices
         $incrementBase  = $data['increment_base'];
         $incrementMethod = $data['increment_method'];
         $incrementAmount = $data['salary_increase_amount'];
+        $basicSalary = $employeeSalary->basic_salary;
+        $grossSalary = $employeeSalary->gross_salary;
         if ($incrementBase == 'basic_salary'){
-            $basicSalary = $employeeSalary->basic_salary;
-            $grossSalary = $employeeSalary->gross_salary;
             if ($incrementMethod == 'percentage'){
                 $incrementValue    =  $basicSalary * ($incrementAmount / 100);
-                $newSalary = $basicSalary + $incrementValue;
             }else{
                 $incrementValue = $incrementAmount;
-                $newSalary = $basicSalary + $incrementValue;
             }
+            $newBasicSalary = $basicSalary + $incrementValue;
+            $newGrossSalary = $grossSalary + $incrementValue;
         }else{
-            $salary = $employeeSalary->gross_salary;
             if ($incrementMethod == 'percentage'){
-                $incrementValue    =  $salary * ($incrementAmount / 100);
-                $newSalary = $salary + $incrementValue;
+                $incrementValue    =  $grossSalary * ($incrementAmount / 100);
+                $newSalary = $grossSalary + $incrementValue;
             }else{
                 $incrementValue = $incrementAmount;
-                $newSalary = $salary + $incrementValue;            }
+                $newSalary = $grossSalary + $incrementValue;
+            }
         }
 
         return [

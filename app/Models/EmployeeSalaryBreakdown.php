@@ -14,8 +14,13 @@ class EmployeeSalaryBreakdown extends Model
         'food_allowance',
         'medical_allowance',
         'other_earnings',
+        'basic_salary_percentage',
+        'house_allowance_percentage',
+        'transport_allowance_percentage',
+        'food_allowance_percentage',
+        'medical_allowance_percentage',
+        'other_earnings_percentage',
         'gross_salary',
-        'currency',
     ];
 
     public function getEmployee()

@@ -20,8 +20,13 @@ return new class extends Migration
             $table->string('food_allowance')->nullable();
             $table->string('medical_allowance')->nullable();
             $table->string('other_earnings')->nullable();
+            $table->string('basic_salary_percentage');
+            $table->string('house_allowance_percentage')->nullable();
+            $table->string('transport_allowance_percentage')->nullable();
+            $table->string('food_allowance_percentage')->nullable();
+            $table->string('medical_allowance_percentage')->nullable();
+            $table->string('other_earnings_percentage')->nullable();
             $table->string('gross_salary');
-            $table->string('currency')->default('BDT');
             $table->timestamps();
         });
     }

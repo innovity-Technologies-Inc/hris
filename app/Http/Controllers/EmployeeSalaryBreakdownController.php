@@ -49,7 +49,7 @@ class EmployeeSalaryBreakdownController extends Controller
         $employeeBankDetails = EmployeeBankAccount::where('employee_id', $employee->employee_id)->first();
         if(empty($employeeBankDetails)){
             return redirect()->route('employees.bank_accounts.create', $employee->employee_id)->with([
-                'message' => 'Employee eligible plans added successfully.',
+                'message' => 'Employee Salary Breakdown added successfully.',
                 'alert-type' => 'success'
             ]);
         }
