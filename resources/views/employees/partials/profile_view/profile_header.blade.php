@@ -28,17 +28,23 @@
                             </span>
                         </div>
                         <div class="ms-auto">
-                            <div class="d-flex align-items-center">
-                                <span class="me-2 fw-semibold">Status:</span>
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" id="employeeStatusToggle"
-                                        {{ $employee->status == 'active' ? 'checked' : '' }}
-                                        style="width: 3rem; height: 1.5rem; cursor: pointer;">
-                                    <label class="form-check-label ms-2 fw-bold" for="employeeStatusToggle"
-                                        id="statusLabel"
-                                        style="color: {{ $employee->status == 'active' ? '#28a745' : '#dc3545' }};">
-                                        {{ ucfirst($employee->status ?? 'active') }}
-                                    </label>
+                            <div class="d-flex align-items-center gap-3">
+                                <!-- ID Card Action Button -->
+                                @include('employee.partials.id_card_button', ['employee' => $employee])
+
+                                <!-- Status Toggle -->
+                                <div class="d-flex align-items-center">
+                                    <span class="me-2 fw-semibold">Status:</span>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="employeeStatusToggle"
+                                            {{ $employee->status == 'active' ? 'checked' : '' }}
+                                            style="width: 3rem; height: 1.5rem; cursor: pointer;">
+                                        <label class="form-check-label ms-2 fw-bold" for="employeeStatusToggle"
+                                            id="statusLabel"
+                                            style="color: {{ $employee->status == 'active' ? '#28a745' : '#dc3545' }};">
+                                            {{ ucfirst($employee->status ?? 'active') }}
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>

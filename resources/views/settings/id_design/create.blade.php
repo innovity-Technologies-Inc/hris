@@ -93,29 +93,61 @@
                         </div>
                     </div>
 
-                    <!-- Preview Image Upload -->
+                    <!-- Front Card Preview -->
                     <div class="mb-4">
-                        <label for="preview_image" class="form-label fw-semibold text-dark mb-2">
-                            <i class="bi bi-image text-primary me-2"></i>
-                            Preview Image
+                        <label for="preview_front_card" class="form-label fw-semibold text-dark mb-2">
+                            <i class="bi bi-card-heading text-primary me-2"></i>
+                            Front Card Preview
                             <span class="badge bg-secondary">Optional</span>
                         </label>
-                        <input type="file" class="form-control @error('preview_image') is-invalid @enderror"
-                            id="preview_image" name="preview_image" accept="image/jpeg,image/png,image/jpg,image/gif">
-                        @error('preview_image')
+                        <input type="file" class="form-control @error('preview_front_card') is-invalid @enderror"
+                            id="preview_front_card" name="preview_front_card"
+                            accept="image/jpeg,image/png,image/jpg,image/gif">
+                        @error('preview_front_card')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                         <div class="form-text">
                             <i class="bi bi-info-circle me-1"></i>
-                            Upload a screenshot or mockup of your ID card design (JPEG, PNG, GIF - Max: 2MB)
+                            Upload a screenshot of the front side of your ID card (JPEG, PNG, GIF - Max: 2MB)
                         </div>
 
-                        <!-- Preview Container -->
-                        <div id="imagePreviewContainer" class="mt-3" style="display: none;">
+                        <!-- Front Preview Container -->
+                        <div id="frontPreviewContainer" class="mt-3" style="display: none;">
                             <div class="card border">
                                 <div class="card-body text-center">
-                                    <img id="imagePreview" src="" alt="Preview" class="img-fluid"
-                                        style="max-height: 300px;">
+                                    <span class="badge bg-primary mb-2">Front</span>
+                                    <img id="frontPreview" src="" alt="Front Preview" class="img-fluid"
+                                        style="max-height: 200px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Back Card Preview -->
+                    <div class="mb-4">
+                        <label for="preview_back_card" class="form-label fw-semibold text-dark mb-2">
+                            <i class="bi bi-card-text text-primary me-2"></i>
+                            Back Card Preview
+                            <span class="badge bg-secondary">Optional</span>
+                        </label>
+                        <input type="file" class="form-control @error('preview_back_card') is-invalid @enderror"
+                            id="preview_back_card" name="preview_back_card"
+                            accept="image/jpeg,image/png,image/jpg,image/gif">
+                        @error('preview_back_card')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                        <div class="form-text">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Upload a screenshot of the back side of your ID card (JPEG, PNG, GIF - Max: 2MB)
+                        </div>
+
+                        <!-- Back Preview Container -->
+                        <div id="backPreviewContainer" class="mt-3" style="display: none;">
+                            <div class="card border">
+                                <div class="card-body text-center">
+                                    <span class="badge bg-secondary mb-2">Back</span>
+                                    <img id="backPreview" src="" alt="Back Preview" class="img-fluid"
+                                        style="max-height: 200px;">
                                 </div>
                             </div>
                         </div>
@@ -176,20 +208,26 @@
     </div>
 
     <script>
-        // Image preview functionality
-        document.getElementById('preview_image').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('imagePreview').src = e.target.result;
-                    document.getElementById('imagePreviewContainer').style.display = 'block';
+        // Generic image preview functionality
+        function setupImagePreview(inputId, previewId, containerId) {
+            document.getElementById(inputId).addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById(previewId).src = e.target.result;
+                        document.getElementById(containerId).style.display = 'block';
+                    }
+                    reader.readAsDataURL(file);
+                } else {
+                    document.getElementById(containerId).style.display = 'none';
                 }
-                reader.readAsDataURL(file);
-            } else {
-                document.getElementById('imagePreviewContainer').style.display = 'none';
-            }
-        });
+            });
+        }
+
+        // Setup all image previews
+        setupImagePreview('preview_front_card', 'frontPreview', 'frontPreviewContainer');
+        setupImagePreview('preview_back_card', 'backPreview', 'backPreviewContainer');
 
         // Form validation
         document.getElementById('designForm').addEventListener('submit', function(e) {
@@ -216,6 +254,17 @@
                 e.preventDefault();
                 alert('Design file size must be less than 2MB');
                 return false;
+            }
+
+            // Validate preview images if provided
+            const imageInputs = ['preview_front_card', 'preview_back_card'];
+            for (const inputId of imageInputs) {
+                const input = document.getElementById(inputId);
+                if (input.files.length && input.files[0].size > 2097152) {
+                    e.preventDefault();
+                    alert(`${inputId.replace(/_/g, ' ')} must be less than 2MB`);
+                    return false;
+                }
             }
         });
     </script>

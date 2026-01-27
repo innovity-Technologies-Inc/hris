@@ -231,6 +231,19 @@ Route::prefix('employees')->group(function () {
 
     });
 
+    // Employee ID Card Routes
+    Route::controller(\App\Http\Controllers\EmployeeIdCardController::class)->group(function () {
+        Route::get('id-cards', 'index')->name('employees.id_cards.index');
+        Route::post('{id}/id-card/generate', 'generate')->name('employees.id_card.generate');
+        Route::post('{id}/id-card/regenerate', 'regenerate')->name('employees.id_card.regenerate');
+        Route::get('{id}/id-card/view', 'view')->name('employees.id_card.view');
+        Route::get('{id}/id-card/download', 'download')->name('employees.id_card.download');
+        Route::get('{id}/id-card/preview', 'preview')->name('employees.id_card.preview');
+        Route::post('{id}/id-card/deactivate', 'deactivate')->name('employees.id_card.deactivate');
+        Route::get('id-card/{id}', 'show')->name('employees.id_card.show');
+        Route::get('{id}/id-card/status', 'status')->name('employees.id_card.status');
+    });
+
         Route::controller(EmployeeEligibleController::class)->group(function(){
         // Put the specific routes before the parameterized routes
         Route::get('eligible-plans/create/{id}', 'create')->name('employees.eligible_plans.create');

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class IDCardDesign extends Model
 {
@@ -13,11 +14,20 @@ class IDCardDesign extends Model
         'file_path',
         'status',
         'description',
-        'preview_image'
+        'preview_front_card',
+        'preview_back_card'
     ];
 
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    /**
+     * Get all employee IDs using this design
+     */
+    public function employeeIds(): HasMany
+    {
+        return $this->hasMany(EmployeeId::class, 'id_card_design_id', 'id');
+    }
 }

@@ -76,12 +76,39 @@
                                 @endif
                             </div>
 
-                            <!-- Preview Image -->
-                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center"
-                                style="height: 250px; overflow: hidden;">
-                                @if ($design->preview_image && Storage::disk('public')->exists($design->preview_image))
-                                    <img src="{{ Storage::url($design->preview_image) }}" alt="{{ $design->theme_name }}"
-                                        class="img-fluid" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                            <!-- Preview Image with Flip Animation -->
+                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center flip-card-container"
+                                style="height: 250px; overflow: hidden; perspective: 1000px;">
+                                @if (
+                                    $design->preview_front_card &&
+                                        $design->preview_back_card &&
+                                        Storage::disk('public')->exists($design->preview_front_card) &&
+                                        Storage::disk('public')->exists($design->preview_back_card))
+                                    <!-- Flip Card with Front/Back -->
+                                    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                                        <div class="flip-card-inner">
+                                            <div class="flip-card-front">
+                                                <img src="{{ Storage::url($design->preview_front_card) }}"
+                                                    alt="{{ $design->theme_name }} - Front" class="img-fluid"
+                                                    style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                                                <div class="flip-hint">
+                                                    <i class="bi bi-arrow-repeat"></i> Click to flip
+                                                </div>
+                                            </div>
+                                            <div class="flip-card-back">
+                                                <img src="{{ Storage::url($design->preview_back_card) }}"
+                                                    alt="{{ $design->theme_name }} - Back" class="img-fluid"
+                                                    style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                                                <div class="flip-hint">
+                                                    <i class="bi bi-arrow-repeat"></i> Click to flip
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @elseif ($design->preview_front_card && Storage::disk('public')->exists($design->preview_front_card))
+                                    <img src="{{ Storage::url($design->preview_front_card) }}"
+                                        alt="{{ $design->theme_name }}" class="img-fluid"
+                                        style="max-height: 100%; max-width: 100%; object-fit: contain;">
                                 @else
                                     <div class="text-center text-muted">
                                         <i class="bi bi-card-image fs-1 mb-2"></i>
@@ -191,6 +218,67 @@
 
         .border-3 {
             border-width: 3px !important;
+        }
+
+        /* Flip Card Styles */
+        .flip-card-container {
+            cursor: pointer;
+        }
+
+        .flip-card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front,
+        .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+
+        .flip-hint {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .flip-card:hover .flip-hint {
+            opacity: 1;
+        }
+
+        .flip-card.flipped .flip-hint {
+            opacity: 1;
         }
     </style>
 @endsection

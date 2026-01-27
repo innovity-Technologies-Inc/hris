@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('file_path'); // Path to uploaded blade file
             $table->enum('status', ['active', 'inactive'])->default('inactive');
             $table->text('description')->nullable();
-            $table->string('preview_image')->nullable(); // Optional preview screenshot
+            $table->string('preview_front_card')->nullable(); // Front card preview
+            $table->string('preview_back_card')->nullable(); // Back card preview
             $table->timestamps();
 
             // Index for faster status queries

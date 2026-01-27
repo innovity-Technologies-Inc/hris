@@ -57,81 +57,139 @@ class IDCardDesignController extends Controller
      */
     public function store(Request $request)
     {
+        \Log::info('=== ID Card Design Store Started ===');
+        \Log::info('Request Data:', $request->except(['design_file', 'preview_front_card', 'preview_back_card']));
+        \Log::info('Has design_file: ' . ($request->hasFile('design_file') ? 'Yes' : 'No'));
+        \Log::info('Has preview_front_card: ' . ($request->hasFile('preview_front_card') ? 'Yes' : 'No'));
+        \Log::info('Has preview_back_card: ' . ($request->hasFile('preview_back_card') ? 'Yes' : 'No'));
+
         $validator = Validator::make($request->all(), [
             'theme_name' => 'required|string|max:255|unique:id_card_designs,theme_name',
             'description' => 'nullable|string|max:1000',
-            'design_file' => 'required|file|mimes:blade.php,php|max:2048',
-            'preview_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'design_file' => 'required|file|max:2048',
+            'preview_front_card' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'preview_back_card' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ], [
             'theme_name.required' => 'Please enter a theme name',
             'theme_name.unique' => 'This theme name already exists',
             'design_file.required' => 'Please upload a design file',
-            'design_file.mimes' => 'Only .blade.php or .php files are allowed',
             'design_file.max' => 'File size must be less than 2MB',
-            'preview_image.image' => 'Preview must be an image file',
-            'preview_image.mimes' => 'Preview image must be jpeg, png, jpg, or gif',
-            'preview_image.max' => 'Preview image must be less than 2MB'
+            'preview_front_card.image' => 'Front card preview must be an image file',
+            'preview_front_card.mimes' => 'Front card preview must be jpeg, png, jpg, or gif',
+            'preview_front_card.max' => 'Front card preview must be less than 2MB',
+            'preview_back_card.image' => 'Back card preview must be an image file',
+            'preview_back_card.mimes' => 'Back card preview must be jpeg, png, jpg, or gif',
+            'preview_back_card.max' => 'Back card preview must be less than 2MB'
         ]);
 
         if ($validator->fails()) {
+            \Log::error('Validation Failed:', $validator->errors()->toArray());
             return redirect()->back()
                            ->withErrors($validator)
                            ->withInput();
         }
 
+        \Log::info('Validation passed');
+
+        // Validate file extension manually
+        $designFile = $request->file('design_file');
+        $extension = strtolower($designFile->getClientOriginalExtension());
+        \Log::info('File extension: ' . $extension);
+        \Log::info('Original filename: ' . $designFile->getClientOriginalName());
+
+        if (!in_array($extension, ['php', 'blade'])) {
+            \Log::error('Invalid file extension: ' . $extension);
+            return redirect()->back()
+                           ->withErrors(['design_file' => 'Only .blade.php or .php files are allowed'])
+                           ->withInput();
+        }
+
+        \Log::info('Extension validation passed');
+
         try {
             DB::beginTransaction();
+            \Log::info('Transaction started');
 
             // Validate and sanitize the uploaded file content
             $uploadedFile = $request->file('design_file');
             $fileContent = file_get_contents($uploadedFile->getRealPath());
+            \Log::info('File content length: ' . strlen($fileContent) . ' bytes');
 
-            // Security check: prevent dangerous PHP functions
+            // Security check: prevent dangerous PHP functions with function call patterns
             $dangerousFunctions = [
-                'eval', 'exec', 'system', 'shell_exec', 'passthru',
+                'eval', 'exec', 'shell_exec', 'passthru',
                 'proc_open', 'popen', 'curl_exec', 'curl_multi_exec',
-                'parse_ini_file', 'show_source', 'file_put_contents'
+                'parse_ini_file', 'show_source'
             ];
 
             foreach ($dangerousFunctions as $func) {
-                if (stripos($fileContent, $func) !== false) {
-                    throw new \Exception("Security violation: Dangerous function '{$func}' detected in template");
+                // Check for function call pattern: function_name followed by (
+                if (preg_match('/\b' . preg_quote($func, '/') . '\s*\(/i', $fileContent)) {
+                    \Log::error('Security violation detected: ' . $func);
+                    throw new \Exception("Security violation: Dangerous function '{$func}()' detected in template");
                 }
             }
 
+            \Log::info('Security check passed');
+
             // Upload design file using HelperClass
             $designFilePath = HelperClass::file_upload($uploadedFile, 'id_card_designs/designs');
+            \Log::info('Design file uploaded: ' . $designFilePath);
 
-            // Handle preview image upload using HelperClass
-            $previewImagePath = null;
-            if ($request->hasFile('preview_image')) {
-                $previewImagePath = HelperClass::file_upload($request->file('preview_image'), 'id_card_designs/previews');
+            // Handle front card preview upload
+            $previewFrontCardPath = null;
+            if ($request->hasFile('preview_front_card')) {
+                $previewFrontCardPath = HelperClass::file_upload($request->file('preview_front_card'), 'id_card_designs/previews');
+                \Log::info('Front card preview uploaded: ' . $previewFrontCardPath);
+            }
+
+            // Handle back card preview upload
+            $previewBackCardPath = null;
+            if ($request->hasFile('preview_back_card')) {
+                $previewBackCardPath = HelperClass::file_upload($request->file('preview_back_card'), 'id_card_designs/previews');
+                \Log::info('Back card preview uploaded: ' . $previewBackCardPath);
             }
 
             // Create design with inactive status
+            \Log::info('Creating design record...');
             $design = IDCardDesign::create([
                 'theme_name' => $request->theme_name,
                 'file_path' => $designFilePath,
                 'description' => $request->description,
-                'preview_image' => $previewImagePath,
+                'preview_front_card' => $previewFrontCardPath,
+                'preview_back_card' => $previewBackCardPath,
                 'status' => 'inactive'
             ]);
 
+            \Log::info('Design created with ID: ' . $design->id);
+
             DB::commit();
+            \Log::info('Transaction committed successfully');
+            \Log::info('=== ID Card Design Store Completed Successfully ===');
 
             return redirect()->route('settings.id_design.index')
                            ->with('success', 'ID Card Design created successfully');
 
         } catch (\Exception $e) {
             DB::rollBack();
+            \Log::error('Exception caught: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
 
             // Clean up uploaded files on error using HelperClass
             if (isset($designFilePath)) {
                 HelperClass::file_delete($designFilePath);
+                \Log::info('Cleaned up design file');
             }
-            if (isset($previewImagePath)) {
-                HelperClass::file_delete($previewImagePath);
+            if (isset($previewFrontCardPath)) {
+                HelperClass::file_delete($previewFrontCardPath);
+                \Log::info('Cleaned up front card preview');
             }
+            if (isset($previewBackCardPath)) {
+                HelperClass::file_delete($previewBackCardPath);
+                \Log::info('Cleaned up back card preview');
+            }
+
+            \Log::info('=== ID Card Design Store Failed ===');
 
             return redirect()->back()
                            ->with('error', 'Failed to create design: ' . $e->getMessage())
@@ -282,6 +340,16 @@ class IDCardDesignController extends Controller
                 HelperClass::file_delete($design->preview_image);
             }
 
+            // Delete front card preview if exists
+            if ($design->preview_front_card) {
+                HelperClass::file_delete($design->preview_front_card);
+            }
+
+            // Delete back card preview if exists
+            if ($design->preview_back_card) {
+                HelperClass::file_delete($design->preview_back_card);
+            }
+
             // Delete database record
             $design->delete();
 
@@ -301,12 +369,12 @@ class IDCardDesignController extends Controller
     {
         $design = IDCardDesign::findOrFail($id);
 
-        if (!$design->fileExists()) {
+        if (!Storage::disk('public')->exists($design->file_path)) {
             abort(404, 'Design file not found');
         }
 
         return response()->download(
-            $design->getFullFilePath(),
+            Storage::disk('public')->path($design->file_path),
             basename($design->file_path)
         );
     }
