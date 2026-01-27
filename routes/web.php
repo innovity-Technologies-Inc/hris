@@ -50,6 +50,16 @@ Route::get('test', function () {
    return view('attendance.attendance_form_1');
 });
 
+// QR Code Examples Route
+Route::get('qr-examples', function () {
+    return view('examples.qr_code_examples');
+})->name('qr.examples');
+
+// ID Card Preview with Dummy Data
+Route::get('id-card-preview', function () {
+    return view('settings.id_design.designs.design_1');
+})->name('id.card.preview');
+
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
 
@@ -451,6 +461,19 @@ Route::prefix('settings')->group(function () {
     Route::controller(ApiKeyController::class)->group(function (){
        Route::get('api-keys', 'index')->name('settings.api_keys');
        Route::post('api-keys/save', 'save')->name('settings.api_keys.save');
+    });
+
+    // ID Card Design Routes
+    Route::controller(\App\Http\Controllers\IDCardDesignController::class)->group(function (){
+       Route::get('id-design', 'index')->name('settings.id_design.index');
+       Route::get('id-design/create', 'create')->name('settings.id_design.create');
+       Route::post('id-design/store', 'store')->name('settings.id_design.store');
+       Route::get('id-design/{id}', 'show')->name('settings.id_design.show');
+       Route::post('id-design/{id}/activate', 'activate')->name('settings.id_design.activate');
+       Route::post('id-design/{id}/deactivate', 'deactivate')->name('settings.id_design.deactivate');
+       Route::get('id-design/{id}/preview', 'preview')->name('settings.id_design.preview');
+       Route::get('id-design/{id}/download', 'download')->name('settings.id_design.download');
+       Route::delete('id-design/{id}/delete', 'destroy')->name('settings.id_design.destroy');
     });
 });
 

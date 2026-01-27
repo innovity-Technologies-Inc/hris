@@ -1,0 +1,239 @@
+@extends('structure.master')
+
+@section('content')
+    <div class="py-4" style="max-width: 900px; margin: 0 auto;">
+        <!-- Header -->
+        <div class="mb-4">
+            <a href="{{ route('settings.id_design.index') }}" class="btn btn-outline-secondary btn-sm mb-3">
+                <i class="bi bi-arrow-left me-1"></i> Back to Designs
+            </a>
+            <h2 class="fs-3 fw-bold text-dark mb-1">Create New ID Card Design</h2>
+            <p class="text-muted mb-0">Upload a custom Blade template for employee ID cards</p>
+        </div>
+
+        <!-- Main Card -->
+        <div class="card shadow-lg border-0 rounded-4">
+            <div class="card-body p-4 p-md-5">
+                <!-- Validation Errors -->
+                @if ($errors->any())
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <h6 class="alert-heading fw-bold mb-2">
+                            <i class="bi bi-exclamation-triangle me-2"></i>Validation Errors
+                        </h6>
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+
+                <!-- Form -->
+                <form action="{{ route('settings.id_design.store') }}" method="POST" enctype="multipart/form-data"
+                    id="designForm">
+                    @csrf
+
+                    <!-- Theme Name -->
+                    <div class="mb-4">
+                        <label for="theme_name" class="form-label fw-semibold text-dark mb-2">
+                            <i class="bi bi-tag-fill text-primary me-2"></i>
+                            Theme Name
+                            <span class="badge bg-danger">Required</span>
+                        </label>
+                        <input type="text" class="form-control form-control-lg @error('theme_name') is-invalid @enderror"
+                            id="theme_name" name="theme_name" value="{{ old('theme_name') }}"
+                            placeholder="e.g., Modern Corporate Design" required>
+                        @error('theme_name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                        <small class="form-text text-muted">
+                            Give your design a unique, descriptive name
+                        </small>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-4">
+                        <label for="description" class="form-label fw-semibold text-dark mb-2">
+                            <i class="bi bi-text-left text-primary me-2"></i>
+                            Description
+                            <span class="badge bg-secondary">Optional</span>
+                        </label>
+                        <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description"
+                            rows="3" placeholder="Describe the design features and use cases...">{{ old('description') }}</textarea>
+                        @error('description')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <!-- Design File Upload -->
+                    <div class="mb-4">
+                        <label for="design_file" class="form-label fw-semibold text-dark mb-2">
+                            <i class="bi bi-file-code text-primary me-2"></i>
+                            Design Template File
+                            <span class="badge bg-danger">Required</span>
+                        </label>
+                        <input type="file" class="form-control @error('design_file') is-invalid @enderror"
+                            id="design_file" name="design_file" accept=".php,.blade.php" required>
+                        @error('design_file')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                        <div class="form-text">
+                            <i class="bi bi-info-circle me-1"></i>
+                            <strong>Accepted formats:</strong> .blade.php, .php (Max: 2MB)
+                        </div>
+
+                        <!-- Security Notice -->
+                        <div class="alert alert-warning mt-2 mb-0">
+                            <small>
+                                <i class="bi bi-shield-exclamation me-1"></i>
+                                <strong>Security:</strong> Dangerous PHP functions (eval, exec, system, etc.) are not
+                                allowed and will be rejected.
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- Preview Image Upload -->
+                    <div class="mb-4">
+                        <label for="preview_image" class="form-label fw-semibold text-dark mb-2">
+                            <i class="bi bi-image text-primary me-2"></i>
+                            Preview Image
+                            <span class="badge bg-secondary">Optional</span>
+                        </label>
+                        <input type="file" class="form-control @error('preview_image') is-invalid @enderror"
+                            id="preview_image" name="preview_image" accept="image/jpeg,image/png,image/jpg,image/gif">
+                        @error('preview_image')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                        <div class="form-text">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Upload a screenshot or mockup of your ID card design (JPEG, PNG, GIF - Max: 2MB)
+                        </div>
+
+                        <!-- Preview Container -->
+                        <div id="imagePreviewContainer" class="mt-3" style="display: none;">
+                            <div class="card border">
+                                <div class="card-body text-center">
+                                    <img id="imagePreview" src="" alt="Preview" class="img-fluid"
+                                        style="max-height: 300px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Template Guidelines -->
+                    <div class="card bg-light border-0 mb-4">
+                        <div class="card-body">
+                            <h6 class="fw-bold mb-3">
+                                <i class="bi bi-lightbulb text-warning me-2"></i>
+                                Template Guidelines
+                            </h6>
+                            <ul class="mb-0 small">
+                                <li>Your template should be a valid Blade (.blade.php) file</li>
+                                <li>Use <code>{{ '$employee' }}</code> variable for employee data (full_name, system_id,
+                                    photo_path, etc.)</li>
+                                <li>Use <code>{{ '$company' }}</code> variable for company information</li>
+                                <li>Keep file size under 2MB</li>
+                                <li>Avoid using dangerous PHP functions for security</li>
+                                <li>Test your template thoroughly before activating</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Sample Template -->
+                    <div class="card border-primary mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <i class="bi bi-code-square me-2"></i>
+                            Sample Template Structure
+                        </div>
+                        <div class="card-body">
+                            <pre class="mb-0 small"><code>&lt;div class="id-card"&gt;
+    &lt;div class="header"&gt;
+        &lt;img src="@{{ asset('storage/'.$company - > logo_light) }}" alt="Company Logo"&gt;
+    &lt;/div&gt;
+    &lt;div class="photo"&gt;
+        &lt;img src="@{{ asset('storage/'.$employee - > photo_path) }}" alt="Employee Photo"&gt;
+    &lt;/div&gt;
+    &lt;h3&gt;@{{ $employee - > full_name }}&lt;/h3&gt;
+    &lt;p&gt;ID: @{{ $employee - > system_id }}&lt;/p&gt;
+    &lt;p&gt;@{{ $employee - > designation }}&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex gap-3 justify-content-end">
+                        <a href="{{ route('settings.id_design.index') }}" class="btn btn-outline-secondary px-4">
+                            <i class="bi bi-x-circle me-2"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="bi bi-check-circle me-2"></i>Create Design
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Image preview functionality
+        document.getElementById('preview_image').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('imagePreview').src = e.target.result;
+                    document.getElementById('imagePreviewContainer').style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            } else {
+                document.getElementById('imagePreviewContainer').style.display = 'none';
+            }
+        });
+
+        // Form validation
+        document.getElementById('designForm').addEventListener('submit', function(e) {
+            const themeNameInput = document.getElementById('theme_name');
+            const designFileInput = document.getElementById('design_file');
+
+            if (!themeNameInput.value.trim()) {
+                e.preventDefault();
+                alert('Please enter a theme name');
+                themeNameInput.focus();
+                return false;
+            }
+
+            if (!designFileInput.files.length) {
+                e.preventDefault();
+                alert('Please upload a design template file');
+                designFileInput.focus();
+                return false;
+            }
+
+            // File size validation (2MB = 2097152 bytes)
+            const file = designFileInput.files[0];
+            if (file.size > 2097152) {
+                e.preventDefault();
+                alert('Design file size must be less than 2MB');
+                return false;
+            }
+        });
+    </script>
+
+    <style>
+        code {
+            background-color: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            display: block;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 0.25rem;
+            overflow-x: auto;
+        }
+    </style>
+@endsection
