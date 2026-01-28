@@ -470,6 +470,21 @@ Route::controller(OrganizationStructureController::class)->group(function () {
     Route::delete('organization-structure/{id}', 'destroy')->name('organization-structure.destroy');
 });
 
+Route::get('bonus-entry', function () {
+    return view('trial.bonus-entry', [
+        'companies' => App\Models\Company::all(),
+        'employees' => App\Models\Employee::all(),
+        'bonusPlans' => App\Models\BonusPlan::all(),
+    ]);
+})->name('bonus.entry');
+
+Route::get('salary-process', function () {
+    return view('trial.salary-process', [
+        'companies' => App\Models\Company::all(),
+        'employees' => App\Models\Employee::all(),
+    ]);
+})->name('salary.process');
+
 Route::prefix('settings')->group(function () {
     Route::controller(SettingsController::class)->group(function (){
        Route::get('general-settings', 'generalSettingIndex')->name('settings.general_settings');
