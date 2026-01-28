@@ -89,13 +89,13 @@ class IncrementController extends Controller
 
             $data = $result['data'];
 
-                if (!empty($incrementData)) {
+            if (!empty($incrementData)) {
 
-                    $this->payrollService->incrementDataUpdate($incrementData, $data);
-                } else {
-                    $this->payrollService->incrementDataStore($data);
+                $this->payrollService->incrementDataUpdate($incrementData, $data);
+            } else {
+                $this->payrollService->incrementDataStore($data);
 
-                }
+            }
 
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -112,6 +112,17 @@ class IncrementController extends Controller
             'alert-type' => 'success'
         ]);
 
+    }
+
+    public function show($id)
+    {
+        $title = 'Increment Data';
+        $section = 'Employee Increment';
+        $section_url = route('increment.index');
+        $sub_section = 'View';
+        $incrementData = Increment::find($id);
+        return view('payroll.increment.view', compact('title', 'section', 'sub_section',
+            'section_url', 'incrementData'));
     }
 
     public function delete($id)

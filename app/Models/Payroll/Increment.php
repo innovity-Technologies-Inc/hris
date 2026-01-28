@@ -16,7 +16,6 @@ class Increment extends Model
         'increment_amount_value',
         'previous_basic_salary',
         'previous_gross_salary',
-        'new_basic_salary',
         'new_gross_salary',
         'effective_from',
         'effective_to',
@@ -33,4 +32,5 @@ class Increment extends Model
     {
         return $this->belongsTo(Employee::class, 'employee_id', 'id');
     }
+
 }

@@ -8,12 +8,12 @@
                 <a href="{{ route('increment.index') }}" class="btn btn-outline-secondary btn-sm">
                     <i style="height: 12px; width: 12px" data-feather="arrow-left"></i> Back to List
                 </a>
-                @if ($increment->status == 'pending')
+                @if ($incrementData->status == 'pending')
                     <div class="d-flex gap-2">
-                        <a href="{{ route('increment.edit', $increment->id) }}" class="btn btn-primary btn-sm">
+                        <a href="{{ route('increment.edit', $incrementData->id) }}" class="btn btn-primary btn-sm">
                             <i style="height: 12px; width: 12px" data-feather="edit"></i> Edit
                         </a>
-                        <form class="d-inline" action="{{ route('increment.approve', $increment->id) }}" method="POST">
+                        <form class="d-inline" action="{{ route('increment.approve', $incrementData->id) }}" method="POST">
                             @csrf
                             @method('PUT')
                             <button type="submit" class="btn btn-success btn-sm"
@@ -21,7 +21,7 @@
                                 <i style="height: 12px; width: 12px" data-feather="check"></i> Approve
                             </button>
                         </form>
-                        <form class="d-inline" action="{{ route('increment.reject', $increment->id) }}" method="POST">
+                        <form class="d-inline" action="{{ route('increment.reject', $incrementData->id) }}" method="POST">
                             @csrf
                             @method('PUT')
                             <button type="submit" class="btn btn-danger btn-sm"
@@ -48,40 +48,30 @@
                     <div class="row">
                         {{-- Profile Image --}}
                         <div class="col-md-12 mb-3 text-center">
+                            <a href="{{route('employees.profile.general_informations',$incrementData->employee_id)}}">
                             {!! \App\HelperClass::generateAvatar(
-                                $increment->getEmployee->photo_path ?? null,
-                                $increment->getEmployee->full_name ?? 'N/A',
+                                $incrementData->getEmployee->photo_path ?? null,
+                                $incrementData->getEmployee->full_name ?? 'N/A',
                                 120,
                                 '#974063',
                                 'border border-3 border-primary',
                             ) !!}
+                            </a>
                         </div>
 
                         <div class="col-md-6 mb-2">
                             <strong>Employee Name:</strong>
-                            <span class="ms-2">{{ $increment->getEmployee->full_name ?? 'N/A' }}</span>
+                            <a href="{{route('employees.profile.general_informations',$incrementData->employee_id)}}">
+                            <span class="ms-2">{{ $incrementData->getEmployee->full_name ?? 'N/A' }}</span>
+                            </a>
                         </div>
                         <div class="col-md-6 mb-2">
                             <strong>Employee ID:</strong>
-                            <span class="ms-2">{{ $increment->getEmployee->applicant_id ?? 'N/A' }}</span>
+                            <span class="ms-2">{{ $incrementData->getEmployee->applicant_id ?? 'N/A' }}</span>
                         </div>
                         <div class="col-md-6 mb-2">
                             <strong>System ID:</strong>
-                            <span class="ms-2">{{ $increment->getEmployee->system_id ?? 'N/A' }}</span>
-                        </div>
-                        <div class="col-md-6 mb-2">
-                            <strong>Current Designation:</strong>
-                            <span
-                                class="ms-2">{{ $increment->getEmployee->officeInfo->current_designation ?? 'N/A' }}</span>
-                        </div>
-                        <div class="col-md-6 mb-2">
-                            <strong>Grade:</strong>
-                            <span class="ms-2">{{ $increment->getEmployee->officeInfo->grade ?? 'N/A' }}</span>
-                        </div>
-                        <div class="col-md-6 mb-2">
-                            <strong>Department:</strong>
-                            <span
-                                class="ms-2">{{ $increment->getEmployee->officeInfo->getCurrentDepartment->name ?? 'N/A' }}</span>
+                            <span class="ms-2">{{ $incrementData->getEmployee->system_id ?? 'N/A' }}</span>
                         </div>
                     </div>
                 </div>
@@ -104,7 +94,7 @@
                             <label class="text-muted small">Increment Base</label>
                             <div class="fw-semibold">
                                 <span class="badge bg-info">
-                                    {{ ucfirst(str_replace('_', ' ', $increment->increment_base)) }}
+                                    {{ ucfirst(str_replace('_', ' ', $incrementData->increment_base)) }}
                                 </span>
                             </div>
                         </div>
@@ -112,17 +102,17 @@
                             <label class="text-muted small">Increment Method</label>
                             <div class="fw-semibold">
                                 <span class="badge bg-secondary">
-                                    {{ ucfirst($increment->increment_method) }}
+                                    {{ ucfirst($incrementData->increment_method) }}
                                 </span>
                             </div>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label class="text-muted small">Increment Amount</label>
                             <div class="fw-semibold text-success fs-5">
-                                @if ($increment->increment_method === 'percentage')
-                                    {{ $increment->increment_amount }}%
+                                @if ($incrementData->increment_method === 'percentage')
+                                    {{ $incrementData->salary_increase_amount }}%
                                 @else
-                                    ৳{{ number_format($increment->increment_amount, 2) }}
+                                    ৳{{ number_format($incrementData->salary_increase_amount, 2) }}
                                 @endif
                             </div>
                         </div>
@@ -130,7 +120,7 @@
 
                     <div class="alert alert-primary mb-0 mt-2">
                         <strong>Summary:</strong>
-                        {{ $increment->increment_summary }}
+                        {{ $incrementData->salary_increase_amount }}
                     </div>
                 </div>
             </div>
@@ -151,13 +141,12 @@
                         <div class="col-md-6 mb-2">
                             <label class="text-muted small">Effective From</label>
                             <div class="fw-semibold">
-                                {{ $increment->effective_from->format('d M Y') }}
-                            </div>
+                                {{ \Carbon\Carbon::parse($incrementData->effective_from)->format('d M Y') }}                            </div>
                         </div>
                         <div class="col-md-6 mb-2">
                             <label class="text-muted small">Effective To</label>
                             <div class="fw-semibold">
-                                {{ $increment->effective_to ? $increment->effective_to->format('d M Y') : 'Indefinite' }}
+                                {{ $incrementData->effective_to ? \Carbon\Carbon::parse($increment->effective_to)->format('d M Y')  : 'Indefinite' }}
                             </div>
                         </div>
                     </div>
@@ -180,15 +169,16 @@
                         <div class="col-md-6 mb-2">
                             <label class="text-muted small">Current Status</label>
                             <div>
-                                <span class="badge {{ $increment->status_badge_class }} fs-6 px-3 py-2">
-                                    {{ ucfirst($increment->status) }}
+                                <span class="badge @if($incrementData->status == 'pending') bg-warning @elseif($incrementData->status == 'approved') bg-warning
+                                     @else bg-danger @endif fs-6 px-3 py-2">
+                                    {{ ucfirst($incrementData->status) }}
                                 </span>
                             </div>
                         </div>
                         <div class="col-md-6 mb-2">
                             <label class="text-muted small">Record Created</label>
                             <div class="fw-semibold">
-                                {{ $increment->created_at->format('d M Y, h:i A') }}
+                                {{ \Carbon\Carbon::parse($incrementData->created_at)->format('d M Y') }}
                             </div>
                         </div>
                     </div>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Designation;
 use App\Models\Employee;
 use App\Models\EmployeeOfficeInfo;
+use App\Models\Payroll\Increment;
 use App\Models\Payroll\Promotion;
 use App\Services\PayrollServices;
 use Illuminate\Http\Request;
@@ -119,6 +120,17 @@ class PromotionController extends Controller
             'alert-type' => 'success'
         ]);
 
+    }
+
+    public function show($id)
+    {
+        $title = 'Promotion Data';
+        $section = 'Employee Promotion';
+        $section_url = route('promotion.index');
+        $sub_section = 'View';
+        $promotionData = Promotion::find($id);
+        return view('payroll.promotion.view', compact('title', 'section', 'sub_section',
+            'section_url', 'promotionData'));
     }
 
     public function delete($id){

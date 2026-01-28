@@ -38,7 +38,7 @@ class PayrollServices
     public function salaryData($data){
         $employeeSalary = EmployeeSalaryBreakdown::where('employee_id', $data['employee_id'])->first();
         $increment_result = $this->incrementCalculation($data, $employeeSalary);
-        $data['new_basic_salary'] = $increment_result['new_basic'];
+        $data['new_gross_salary'] = $increment_result['new_gross_salary'];
         $data['increment_amount_value'] = $increment_result['increment_value'];
         $data['previous_basic_salary'] = $employeeSalary->basic_salary;
         $data['previous_gross_salary'] = $employeeSalary->gross_salary;
@@ -59,20 +59,18 @@ class PayrollServices
             }else{
                 $incrementValue = $incrementAmount;
             }
-            $newBasicSalary = $basicSalary + $incrementValue;
-            $newGrossSalary = $grossSalary + $incrementValue;
         }else{
             if ($incrementMethod == 'percentage'){
                 $incrementValue    =  $grossSalary * ($incrementAmount / 100);
-                $newSalary = $grossSalary + $incrementValue;
             }else{
                 $incrementValue = $incrementAmount;
-                $newSalary = $grossSalary + $incrementValue;
             }
         }
 
+        $newGrossSalary = $grossSalary + $incrementValue;
+
         return [
-            'new_basic' => $newSalary,
+            'new_gross_salary' => $newGrossSalary,
             'increment_value' => $incrementValue,
         ];
     }
@@ -90,7 +88,6 @@ class PayrollServices
 
         return [
             'data' => $result['data'],
-            'employee_salary' => $result['model'],
         ];
     }
 

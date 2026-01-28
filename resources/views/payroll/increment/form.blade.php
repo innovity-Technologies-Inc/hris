@@ -73,13 +73,9 @@
                     <div class="card-body">
                         <div class="alert alert-info mb-0">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <strong>Current Designation:</strong>
                                     <span id="current-designation-display">-</span>
-                                </div>
-                                <div class="col-md-6">
-                                    <strong>Current Grade:</strong>
-                                    <span id="current-grade-display">-</span>
                                 </div>
                             </div>
                         </div>

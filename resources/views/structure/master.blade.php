@@ -942,27 +942,52 @@
         }
     </script>
 
-    <script>
-        const loader = document.getElementById('loading-overlay');
+<script>
+    const loader = document.getElementById('loading-overlay');
 
-        // 1. Show loader on page unload (clicking links/submitting forms)
-        window.addEventListener('beforeunload', () => {
-            loader.style.display = 'flex';
-        });
+    // Function to hide loader
+    const hideLoader = () => {
+        if (loader) loader.style.display = 'none';
+    };
 
-        // 2. Hide loader once the page is fully loaded (for initial load)
-        window.addEventListener('load', () => {
-            loader.style.display = 'none';
-        });
+    // Function to show loader
+    const showLoader = () => {
+        if (loader) loader.style.display = 'flex';
+    };
 
-        // 3. Optional: Handle Form Submissions specifically
-        document.querySelectorAll('form').forEach(form => {
-            form.addEventListener('submit', () => {
-                loader.style.display = 'flex';
-            });
-        });
-    </script>
+    // 1. Initial Load
+    window.addEventListener('load', hideLoader);
 
+    // 2. The "BfCache" Fix (Back/Forward Button)
+    window.addEventListener('pageshow', (event) => {
+        hideLoader();
+    });
+
+    // 3. Show on Unload (Links/Redirects)
+    window.addEventListener('beforeunload', () => {
+        showLoader();
+    });
+
+    // 4. THE FALLBACK: In case the user cancels the navigation
+    // or the back button is hit, this "heartbeat" ensures the loader
+    // doesn't stay forever.
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === 'visible') {
+            hideLoader();
+        }
+    });
+
+    // 5. Form Submissions
+    document.addEventListener('submit', (e) => {
+        // Only show loader if the form is actually submitting (not blocked by validation)
+        if (!e.defaultPrevented) {
+            showLoader();
+        }
+    });
+
+    // 6. Handle the "Stop" button in the browser
+    window.addEventListener('pagehide', hideLoader);
+</script>
 
 
 

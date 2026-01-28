@@ -18,7 +18,6 @@ class Promotion extends Model
         'increment_amount_value',
         'previous_basic_salary',
         'previous_gross_salary',
-        'new_basic_salary',
         'new_gross_salary',
         'effective_from',
         'effective_to',
