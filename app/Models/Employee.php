@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Employee extends Model
 {
@@ -85,5 +86,38 @@ class Employee extends Model
 
     public function salaryBreakdown(){
         return $this->hasOne(EmployeeSalaryBreakdown::class, 'employee_id', 'id');
+    }
+
+    /**
+     * Get all ID cards for this employee
+     */
+    public function employeeIdCards(): HasMany
+    {
+        return $this->hasMany(EmployeeId::class, 'employee_id', 'id');
+    }
+
+    /**
+     * Get the active ID card for this employee
+     */
+    public function activeIdCard(): HasOne
+    {
+        return $this->hasOne(EmployeeId::class, 'employee_id', 'id')
+            ->where('status', 'active');
+    }
+
+    /**
+     * Check if employee has an active ID card
+     */
+    public function hasActiveIdCard(): bool
+    {
+        return $this->activeIdCard()->exists();
+    }
+
+    /**
+     * Get the active ID card or null
+     */
+    public function getActiveIdCard(): ?EmployeeId
+    {
+        return $this->activeIdCard()->first();
     }
 }

@@ -436,6 +436,10 @@
                                     href='{{ route('settings.general_settings') }}'>General</a>
                             </li>
                             <li>
+                                <a class='tp-link @if (Route::is('settings.id_design.*')) menuitem-active @endif'
+                                    href='{{ route('settings.id_design.index') }}'>ID Card Design</a>
+                            </li>
+                            <li>
                                 <a class='tp-link @if (Route::is('settings.api_keys')) menuitem-active @endif'
                                     href='{{ route('settings.api_keys') }}'>API Keys</a>
                             </li>
