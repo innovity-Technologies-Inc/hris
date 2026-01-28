@@ -44,6 +44,14 @@ class QrCodeService
      */
     public function generateQR(string $text, ?string $logoPath = null, int $size = 400, int $margin = 10): string
     {
+        Log::info('[QR] Starting QR code generation', [
+            'text_length' => strlen($text),
+            'text_preview' => substr($text, 0, 100),
+            'logoPath_param' => $logoPath,
+            'size' => $size,
+            'margin' => $margin
+        ]);
+
         try {
             // Validate parameters
             $size = max(100, min(1000, $size));
@@ -52,6 +60,9 @@ class QrCodeService
             // Determine logo path
             if ($logoPath === null) {
                 $logoPath = $this->getSystemLogoPath();
+                Log::info('[QR] Using system logo path', ['logoPath' => $logoPath]);
+            } else {
+                Log::info('[QR] Using provided logo path', ['logoPath' => $logoPath]);
             }
 
             // Create QR code
@@ -62,21 +73,44 @@ class QrCodeService
 
             // Add logo if provided and exists
             $logo = null;
-            if (!empty($logoPath) && file_exists($logoPath)) {
-                try {
-                    // Create transparent logo watermark (very small - 50x50px max)
-                    // This ensures QR code remains scannable while showing branding
-                    $logo = $this->createTransparentLogo($logoPath);
-                } catch (Exception $e) {
-                    Log::warning('Failed to add logo to QR code', ['error' => $e->getMessage()]);
-                    $logo = null;
+            if (!empty($logoPath)) {
+                if (file_exists($logoPath)) {
+                    Log::info('[QR] Logo file exists, attempting to process', [
+                        'logoPath' => $logoPath,
+                        'file_size' => filesize($logoPath)
+                    ]);
+                    try {
+                        // Create transparent logo watermark (very small - 50x50px max)
+                        // This ensures QR code remains scannable while showing branding
+                        $logo = $this->createTransparentLogo($logoPath);
+                        if ($logo) {
+                            Log::info('[QR] Logo successfully created and will be embedded');
+                        } else {
+                            Log::warning('[QR] Logo creation returned null');
+                        }
+                    } catch (Exception $e) {
+                        Log::warning('[QR] Failed to add logo to QR code', [
+                            'error' => $e->getMessage(),
+                            'trace' => $e->getTraceAsString()
+                        ]);
+                        $logo = null;
+                    }
+                } else {
+                    Log::warning('[QR] Logo file does not exist', ['logoPath' => $logoPath]);
                 }
+            } else {
+                Log::info('[QR] No logo path provided, generating QR without logo');
             }
 
             // Generate QR code
+            Log::info('[QR] Writing QR code', ['has_logo' => $logo !== null]);
             $result = $writer->write($qrCode, $logo);
+            $qrString = $result->getString();
+            Log::info('[QR] QR code generated successfully', [
+                'output_size_bytes' => strlen($qrString)
+            ]);
 
-            return $result->getString();
+            return $qrString;
         } catch (Exception $e) {
             Log::error('QR Code generation failed', [
                 'error' => $e->getMessage(),
@@ -100,9 +134,19 @@ class QrCodeService
      */
     public function generateQRBase64(string $text, ?string $logoPath = null, int $size = 400, int $margin = 10): string
     {
+        Log::info('[QR] Starting Base64 QR generation', [
+            'text_length' => strlen($text),
+            'logoPath' => $logoPath
+        ]);
+
         try {
             $pngData = $this->generateQR($text, $logoPath, $size, $margin);
-            return 'data:image/png;base64,' . base64_encode($pngData);
+            $base64 = 'data:image/png;base64,' . base64_encode($pngData);
+            Log::info('[QR] Base64 encoding successful', [
+                'base64_length' => strlen($base64),
+                'base64_preview' => substr($base64, 0, 100) . '...'
+            ]);
+            return $base64;
         } catch (Exception $e) {
             Log::error('QR Code Base64 generation failed', [
                 'error' => $e->getMessage(),
@@ -163,29 +207,46 @@ class QrCodeService
      */
     public function getSystemLogoPath(): ?string
     {
+        Log::info('[QR] Getting system logo path');
         try {
             $setting = GeneralSetting::first();
 
             if (!$setting) {
+                Log::warning('[QR] No general settings found in database');
                 return null;
             }
 
             // Check for logo_light first, then logo_dark
             $logoField = $setting->logo_light ?? $setting->logo_dark ?? null;
+            Log::info('[QR] Logo field from settings', [
+                'logo_light' => $setting->logo_light,
+                'logo_dark' => $setting->logo_dark,
+                'selected' => $logoField
+            ]);
 
             if (empty($logoField)) {
+                Log::warning('[QR] No logo field found in settings');
                 return null;
             }
 
             // Build absolute path
             $logoPath = storage_path('app/public/' . $logoField);
+            Log::info('[QR] Constructed logo path', [
+                'logoPath' => $logoPath,
+                'storage_path' => storage_path('app/public'),
+                'exists' => file_exists($logoPath)
+            ]);
 
             // Verify file exists
             if (!file_exists($logoPath)) {
-                Log::warning('System logo file not found', ['path' => $logoPath]);
+                Log::warning('[QR] System logo file not found', [
+                    'path' => $logoPath,
+                    'logoField' => $logoField
+                ]);
                 return null;
             }
 
+            Log::info('[QR] System logo found successfully', ['logoPath' => $logoPath]);
             return $logoPath;
         } catch (Exception $e) {
             Log::error('Failed to get system logo path', ['error' => $e->getMessage()]);
@@ -202,17 +263,24 @@ class QrCodeService
      */
     private function createTransparentLogo(string $logoPath): ?Logo
     {
+        Log::info('[QR] Creating transparent logo', ['originalPath' => $logoPath]);
         try {
             // Process the logo with reduced opacity
             $processedPath = $this->processLogoWithOpacity($logoPath);
+            Log::info('[QR] Logo opacity processing result', [
+                'processedPath' => $processedPath,
+                'exists' => $processedPath ? file_exists($processedPath) : false
+            ]);
 
             if (!$processedPath || !file_exists($processedPath)) {
+                Log::warning('[QR] Processed logo path is invalid or file does not exist');
                 return null;
             }
 
             // Create logo with larger size (60x60 pixels max)
             // This ensures better visibility while maintaining QR code scannability
             $logo = new Logo($processedPath, 60, 60);
+            Log::info('[QR] Logo object created successfully', ['size' => '60x60']);
 
             return $logo;
         } catch (Exception $e) {
@@ -230,18 +298,26 @@ class QrCodeService
      */
     private function processLogoWithOpacity(string $logoPath): ?string
     {
+        Log::info('[QR] Processing logo with opacity', ['logoPath' => $logoPath]);
         try {
             if (!file_exists($logoPath)) {
+                Log::warning('[QR] Logo file does not exist for opacity processing');
                 return null;
             }
 
             // Get image info
             $imageInfo = @getimagesize($logoPath);
             if ($imageInfo === false) {
+                Log::warning('[QR] Cannot get image size info, returning original', ['logoPath' => $logoPath]);
                 return $logoPath; // Return original if we can't get info
             }
 
             $mimeType = $imageInfo['mime'] ?? '';
+            Log::info('[QR] Image info retrieved', [
+                'width' => $imageInfo[0],
+                'height' => $imageInfo[1],
+                'mimeType' => $mimeType
+            ]);
 
             // Load image based on type
             $image = null;
@@ -329,12 +405,28 @@ class QrCodeService
 
             // Save to temp directory
             $tempDir = storage_path('app/temp');
+            Log::info('[QR] Preparing temp directory', ['tempDir' => $tempDir]);
+
             if (!file_exists($tempDir)) {
+                Log::info('[QR] Creating temp directory');
                 mkdir($tempDir, 0755, true);
             }
 
+            if (!is_writable($tempDir)) {
+                Log::error('[QR] Temp directory is not writable', ['tempDir' => $tempDir]);
+                imagedestroy($finalImage);
+                return $logoPath;
+            }
+
             $tempPath = $tempDir . '/logo_' . md5($logoPath) . '_' . time() . '.png';
-            imagepng($finalImage, $tempPath);
+            Log::info('[QR] Saving processed logo', ['tempPath' => $tempPath]);
+
+            $saveResult = imagepng($finalImage, $tempPath);
+            Log::info('[QR] Image save result', [
+                'success' => $saveResult,
+                'file_exists' => file_exists($tempPath),
+                'file_size' => file_exists($tempPath) ? filesize($tempPath) : 0
+            ]);
 
             // Clean up
             imagedestroy($finalImage);
