@@ -128,11 +128,24 @@ class IDCardService
      */
     public function renderIdCardHtml(IDCardDesign $design, Employee $employee): string
     {
+        Log::info('[PDF] Starting ID card HTML rendering', [
+            'design_id' => $design->id,
+            'design_name' => $design->name,
+            'employee_id' => $employee->id,
+            'employee_name' => $employee->full_name,
+            'design_file_path' => $design->file_path
+        ]);
+
         if (!Storage::disk('public')->exists($design->file_path)) {
+            Log::error('[PDF] Design template file not found', [
+                'file_path' => $design->file_path,
+                'full_path' => Storage::disk('public')->path($design->file_path)
+            ]);
             throw new Exception('Design template file not found');
         }
 
         $fullPath = Storage::disk('public')->path($design->file_path);
+        Log::info('[PDF] Design template file found', ['fullPath' => $fullPath]);
 
         // Create a temporary view file
         $tempViewName = 'id_card_' . uniqid();
@@ -180,6 +193,13 @@ class IDCardService
             ];
 
             // Render the blade template
+            Log::info('[PDF] Rendering blade template', [
+                'tempViewName' => $tempViewName,
+                'has_employee' => isset($employee),
+                'has_officeInfo' => isset($officeInfo),
+                'has_generalSettings' => isset($generalSettings)
+            ]);
+
             $html = View::make('temp.' . $tempViewName, compact(
                 'employee',
                 'officeInfo',
@@ -189,6 +209,12 @@ class IDCardService
                 'companyInfo',
                 'generalSettings'
             ))->render();
+
+            Log::info('[PDF] Blade template rendered successfully', [
+                'html_length' => strlen($html),
+                'contains_img_tag' => strpos($html, '<img') !== false,
+                'contains_qr' => strpos($html, 'qrCode') !== false || strpos($html, 'data:image/png;base64') !== false
+            ]);
 
             return $html;
 
@@ -210,13 +236,23 @@ class IDCardService
      */
     public function generatePdfContent(Employee $employee, ?IDCardDesign $design = null): string
     {
+        Log::info('[PDF] Starting PDF generation', [
+            'employee_id' => $employee->id,
+            'employee_name' => $employee->full_name,
+            'design_provided' => $design !== null
+        ]);
+
         $design = $design ?? $this->getActiveDesign();
 
         if (!$design) {
+            Log::error('[PDF] No active ID card design available');
             throw new Exception('No active ID card design available');
         }
 
+        Log::info('[PDF] Using design', ['design_id' => $design->id, 'design_name' => $design->name]);
+
         $html = $this->renderIdCardHtml($design, $employee);
+        Log::info('[PDF] HTML rendered, length: ' . strlen($html));
 
         try {
             // Create a temporary HTML file
@@ -228,8 +264,19 @@ class IDCardService
             }
 
             file_put_contents($tempHtmlPath, $html);
+            Log::info('[PDF] Temporary HTML file created', [
+                'tempHtmlPath' => $tempHtmlPath,
+                'file_size' => filesize($tempHtmlPath)
+            ]);
 
             // Generate PDF using Browsershot
+            Log::info('[PDF] Starting Browsershot PDF generation', [
+                'node_binary' => config('browsershot.node_binary', 'node'),
+                'npm_binary' => config('browsershot.npm_binary', 'npm'),
+                'node_modules_path' => config('browsershot.node_modules_path', base_path('node_modules')),
+                'timeout' => config('browsershot.timeout', 60)
+            ]);
+
             $pdfContent = Browsershot::html($html)
                 ->setNodeBinary(config('browsershot.node_binary', 'node'))
                 ->setNpmBinary(config('browsershot.npm_binary', 'npm'))
@@ -247,6 +294,10 @@ class IDCardService
                 ->timeout(config('browsershot.timeout', 60))
                 ->pdf();
 
+            Log::info('[PDF] PDF generated successfully', [
+                'pdf_size_bytes' => strlen($pdfContent)
+            ]);
+
             // Clean up temporary file
             if (file_exists($tempHtmlPath)) {
                 unlink($tempHtmlPath);
@@ -260,9 +311,11 @@ class IDCardService
                 unlink($tempHtmlPath);
             }
 
-            Log::error('Browsershot PDF generation failed', [
+            Log::error('[PDF] Browsershot PDF generation failed', [
                 'employee_id' => $employee->id,
                 'error' => $e->getMessage(),
+                'error_class' => get_class($e),
+                'trace' => $e->getTraceAsString()
             ]);
 
             throw new Exception('Failed to generate PDF: ' . $e->getMessage());
