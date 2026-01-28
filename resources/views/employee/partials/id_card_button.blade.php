@@ -15,20 +15,14 @@
 
 <div class="id-card-action">
     @if ($hasActiveIdCard && $activeIdCard)
-        {{-- Employee HAS an active ID card - Show View ID Card button --}}
-        <div class="btn-group" role="group">
-            <a href="{{ route('employees.id_card.view', $employee->id) }}" class="btn btn-success" target="_blank"
-                title="View ID Card">
+        {{-- Employee HAS an active ID card - Show View ID Card button with dropdown --}}
+        <div class="btn-group">
+            <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-person-vcard me-2"></i>View ID Card
-            </a>
-            <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                <span class="visually-hidden">Toggle Dropdown</span>
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
                 <li>
-                    <a class="dropdown-item" href="{{ route('employees.id_card.view', $employee->id) }}"
-                        target="_blank">
+                    <a class="dropdown-item" href="{{ route('employees.id_card.view', $employee->id) }}" target="_blank">
                         <i class="bi bi-eye me-2"></i>View PDF
                     </a>
                 </li>
@@ -41,39 +35,41 @@
                     <hr class="dropdown-divider">
                 </li>
                 <li>
+                    <button type="button" class="dropdown-item text-warning"
+                        onclick="confirmRegenerateIdCard({{ $employee->id }}, '{{ $employee->full_name }}')">
+                        <i class="bi bi-arrow-repeat me-2"></i>Regenerate
+                    </button>
                     <form action="{{ route('employees.id_card.regenerate', $employee->id) }}" method="POST"
-                        class="d-inline"
-                        onsubmit="return confirm('Regenerate will invalidate the current ID card and create a new one. Continue?')">
+                        id="regenerateIdCardForm-{{ $employee->id }}" style="display: none;">
                         @csrf
-                        <button type="submit" class="dropdown-item text-warning">
-                            <i class="bi bi-arrow-repeat me-2"></i>Regenerate
-                        </button>
+                    </form>
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li>
+                    <button type="button" class="dropdown-item text-danger"
+                        onclick="confirmCancelIdCard({{ $employee->id }}, '{{ $employee->full_name }}')">
+                        <i class="bi bi-x-circle me-2"></i>Cancel ID
+                    </button>
+                    <form action="{{ route('employees.id_card.deactivate', $employee->id) }}" method="POST"
+                        id="cancelIdCardForm-{{ $employee->id }}" style="display: none;">
+                        @csrf
                     </form>
                 </li>
             </ul>
         </div>
-
-        {{-- Card Status Info --}}
-        @if ($activeIdCard->isExpired())
-            <small class="d-block text-warning mt-1">
-                <i class="bi bi-exclamation-triangle me-1"></i>
-                Card expired on {{ $activeIdCard->expiry_date->format('M d, Y') }}
-            </small>
-        @else
-            <small class="d-block text-muted mt-1">
-                Card #{{ $activeIdCard->card_number }} | Valid until
-                {{ $activeIdCard->expiry_date?->format('M d, Y') ?? 'N/A' }}
-            </small>
-        @endif
     @else
         {{-- Employee does NOT have an active ID card - Show Generate button --}}
         @if ($hasActiveDesign)
-            <form action="{{ route('employees.id_card.generate', $employee->id) }}" method="POST" class="d-inline">
+            <button type="button" class="btn btn-primary" id="generateIdCardBtn-{{ $employee->id }}"
+                onclick="confirmGenerateIdCard({{ $employee->id }}, '{{ $employee->full_name }}')">
+                <i class="bi bi-plus-circle me-2"></i>Generate ID Card
+            </button>
+
+            <form action="{{ route('employees.id_card.generate', $employee->id) }}" method="POST"
+                id="generateIdCardForm-{{ $employee->id }}" style="display: none;">
                 @csrf
-                <button type="submit" class="btn btn-primary"
-                    onclick="return confirm('Generate ID Card for {{ $employee->full_name }}?')">
-                    <i class="bi bi-plus-circle me-2"></i>Generate ID Card
-                </button>
             </form>
         @else
             <button type="button" class="btn btn-secondary" disabled title="No active ID card design available">
@@ -86,3 +82,82 @@
         @endif
     @endif
 </div>
+
+<script>
+    function confirmGenerateIdCard(employeeId, employeeName) {
+        Swal.fire({
+            title: 'Are you sure you want to generate ID card?',
+            text: 'Generate ID card for ' + employeeName + '?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Confirm',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                // Show loading state
+                const btn = document.getElementById('generateIdCardBtn-' + employeeId);
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerHTML =
+                        '<span class="spinner-border spinner-border-sm me-2"></span>Generating...';
+                }
+
+                // Submit the form
+                document.getElementById('generateIdCardForm-' + employeeId).submit();
+
+                // Return promise to keep loading state
+                return new Promise((resolve) => {
+                    // Don't resolve, let page reload handle it
+                });
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        });
+    }
+
+    function confirmRegenerateIdCard(employeeId, employeeName) {
+        Swal.fire({
+            title: 'Are you sure you want to regenerate ID card?',
+            text: 'This will invalidate the current ID card and create a new one for ' + employeeName + '.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Confirm',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                // Submit the form
+                document.getElementById('regenerateIdCardForm-' + employeeId).submit();
+
+                // Return promise to keep loading state
+                return new Promise((resolve) => {
+                    // Don't resolve, let page reload handle it
+                });
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        });
+    }
+
+    function confirmCancelIdCard(employeeId, employeeName) {
+        Swal.fire({
+            title: 'Are you sure you want to cancel ID card?',
+            text: 'This will deactivate the card and make it inactive for ' + employeeName + '.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Confirm',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                // Submit the form
+                document.getElementById('cancelIdCardForm-' + employeeId).submit();
+
+                // Return promise to keep loading state
+                return new Promise((resolve) => {
+                    // Don't resolve, let page reload handle it
+                });
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        });
+    }
+</script>

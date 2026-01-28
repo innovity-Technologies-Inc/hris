@@ -8,13 +8,13 @@ use App\Models\EmployeeId;
 use App\Models\EmployeeOfficeInfo;
 use App\Models\GeneralSetting;
 use App\Models\IDCardDesign;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
+use Spatie\Browsershot\Browsershot;
 
 /**
  * ID Card Service
@@ -22,7 +22,7 @@ use Illuminate\Support\Str;
  * Handles all ID card generation operations including:
  * - Selecting active design
  * - Rendering HTML templates
- * - Generating PDFs via DomPDF
+ * - Generating PDFs via Browsershot (Chrome-based)
  * - Saving files to storage
  * - Managing employee_ids records
  *
@@ -169,9 +169,10 @@ class IDCardService
                 'name' => $currentCompany?->name ?? $generalSettings?->company_name ?? 'Company Name',
                 'logo' => $currentCompany?->logo ?? $generalSettings?->logo_light ?? null,
                 'website' => $generalSettings?->website ?? '',
-                'contact_phone' => $generalSettings?->contact_phone ?? '',
-                'email' => $generalSettings?->email ?? '',
-                'address' => $generalSettings?->address ?? '',
+                'telephone' => $currentCompany?->telephone ?? ($generalSettings?->contact_phone ?? ''),
+                'fax' => $currentCompany?->fax ?? '',
+                'email' => $currentCompany?->email ?? ($generalSettings?->email ?? ''),
+                'address' => $currentCompany?->address ?? ($generalSettings?->address ?? ''),
                 'city' => $generalSettings?->city ?? '',
                 'state' => $generalSettings?->state ?? '',
                 'zip_code' => $generalSettings?->zip_code ?? '',
@@ -217,16 +218,55 @@ class IDCardService
 
         $html = $this->renderIdCardHtml($design, $employee);
 
-        $pdf = Pdf::loadHTML($html)
-            ->setPaper('a4', 'portrait')
-            ->setOptions([
-                'isHtml5ParserEnabled' => true,
-                'isRemoteEnabled' => true,
-                'defaultFont' => 'Arial',
-                'dpi' => 150,
+        try {
+            // Create a temporary HTML file
+            $tempHtmlPath = storage_path('app/temp/' . uniqid('idcard_') . '.html');
+            $tempDir = dirname($tempHtmlPath);
+
+            if (!file_exists($tempDir)) {
+                mkdir($tempDir, 0755, true);
+            }
+
+            file_put_contents($tempHtmlPath, $html);
+
+            // Generate PDF using Browsershot
+            $pdfContent = Browsershot::html($html)
+                ->setNodeBinary(config('browsershot.node_binary', 'node'))
+                ->setNpmBinary(config('browsershot.npm_binary', 'npm'))
+                ->setNodeModulePath(config('browsershot.node_modules_path', base_path('node_modules')))
+                ->addChromiumArguments(config('browsershot.chrome_arguments', [
+                    '--disable-gpu',
+                    '--no-sandbox',
+                    '--disable-dev-shm-usage',
+                ]))
+                ->setOption('landscape', false)
+                ->paperSize(210, 297) // A4 in millimeters
+                ->margins(0, 0, 0, 0)
+                ->showBackground()
+                ->waitUntilNetworkIdle()
+                ->timeout(config('browsershot.timeout', 60))
+                ->pdf();
+
+            // Clean up temporary file
+            if (file_exists($tempHtmlPath)) {
+                unlink($tempHtmlPath);
+            }
+
+            return $pdfContent;
+
+        } catch (\Exception $e) {
+            // Clean up temporary file on error
+            if (isset($tempHtmlPath) && file_exists($tempHtmlPath)) {
+                unlink($tempHtmlPath);
+            }
+
+            Log::error('Browsershot PDF generation failed', [
+                'employee_id' => $employee->id,
+                'error' => $e->getMessage(),
             ]);
 
-        return $pdf->output();
+            throw new Exception('Failed to generate PDF: ' . $e->getMessage());
+        }
     }
 
     /**

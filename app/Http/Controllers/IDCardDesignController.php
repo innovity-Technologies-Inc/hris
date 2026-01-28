@@ -168,7 +168,8 @@ class IDCardDesignController extends Controller
             \Log::info('=== ID Card Design Store Completed Successfully ===');
 
             return redirect()->route('settings.id_design.index')
-                           ->with('success', 'ID Card Design created successfully');
+                           ->with('message', 'ID Card Design created successfully')
+                           ->with('alert-type', 'success');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -192,7 +193,8 @@ class IDCardDesignController extends Controller
             \Log::info('=== ID Card Design Store Failed ===');
 
             return redirect()->back()
-                           ->with('error', 'Failed to create design: ' . $e->getMessage())
+                           ->with('message', 'Failed to create design: ' . $e->getMessage())
+                           ->with('alert-type', 'error')
                            ->withInput();
         }
     }
@@ -226,13 +228,15 @@ class IDCardDesignController extends Controller
 
             if ($design->status === 'active') {
                 return redirect()->back()
-                               ->with('info', 'This design is already active');
+                               ->with('message', 'This design is already active')
+                               ->with('alert-type', 'info');
             }
 
             // Check if file exists before activating
             if (!Storage::disk('public')->exists($design->file_path)) {
                 return redirect()->back()
-                               ->with('error', 'Cannot activate: Design file not found');
+                               ->with('message', 'Cannot activate: Design file not found')
+                               ->with('alert-type', 'error');
             }
 
             // Deactivate all other designs
@@ -244,11 +248,13 @@ class IDCardDesignController extends Controller
             $design->update(['status' => 'active']);
 
             return redirect()->back()
-                           ->with('success', 'Design activated successfully. All other designs have been deactivated.');
+                           ->with('message', 'Design activated successfully. All other designs have been deactivated.')
+                           ->with('alert-type', 'success');
 
         } catch (\Exception $e) {
             return redirect()->back()
-                           ->with('error', 'Failed to activate design: ' . $e->getMessage());
+                           ->with('message', 'Failed to activate design: ' . $e->getMessage())
+                           ->with('alert-type', 'error');
         }
     }
 
@@ -262,17 +268,20 @@ class IDCardDesignController extends Controller
 
             if ($design->status !== 'active') {
                 return redirect()->back()
-                               ->with('info', 'This design is already inactive');
+                               ->with('message', 'This design is already inactive')
+                               ->with('alert-type', 'info');
             }
 
             $design->update(['status' => 'inactive']);
 
             return redirect()->back()
-                           ->with('success', 'Design deactivated successfully');
+                           ->with('message', 'Design deactivated successfully')
+                           ->with('alert-type', 'success');
 
         } catch (\Exception $e) {
             return redirect()->back()
-                           ->with('error', 'Failed to deactivate design: ' . $e->getMessage());
+                           ->with('message', 'Failed to deactivate design: ' . $e->getMessage())
+                           ->with('alert-type', 'error');
         }
     }
 
@@ -327,7 +336,8 @@ class IDCardDesignController extends Controller
             // Prevent deletion of active design
             if ($design->status === 'active') {
                 return redirect()->back()
-                               ->with('error', 'Cannot delete an active design. Please activate another design first.');
+                               ->with('message', 'Cannot delete an active design. Please activate another design first.')
+                               ->with('alert-type', 'error');
             }
 
             // Delete design file using HelperClass
@@ -354,11 +364,13 @@ class IDCardDesignController extends Controller
             $design->delete();
 
             return redirect()->route('settings.id_design.index')
-                           ->with('success', 'Design deleted successfully');
+                           ->with('message', 'Design deleted successfully')
+                           ->with('alert-type', 'success');
 
         } catch (\Exception $e) {
             return redirect()->back()
-                           ->with('error', 'Failed to delete design: ' . $e->getMessage());
+                           ->with('message', 'Failed to delete design: ' . $e->getMessage())
+                           ->with('alert-type', 'error');
         }
     }
 

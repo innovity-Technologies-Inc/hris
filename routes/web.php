@@ -57,7 +57,7 @@ Route::get('qr-examples', function () {
 
 // ID Card Preview with Dummy Data
 Route::get('id-card-preview', function () {
-    return view('settings.id_design.designs.design_1');
+    return view('settings.id_design.designs.design_2');
 })->name('id.card.preview');
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');

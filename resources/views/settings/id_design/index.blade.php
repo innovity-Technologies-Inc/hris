@@ -13,28 +13,6 @@
             </a>
         </div>
 
-        <!-- Success/Error Messages -->
-        @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
-
-        @if (session('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="bi bi-exclamation-triangle me-2"></i>{{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
-
-        @if (session('info'))
-            <div class="alert alert-info alert-dismissible fade show" role="alert">
-                <i class="bi bi-info-circle me-2"></i>{{ session('info') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
-
         <!-- Active Design Notice -->
         @if ($activeDesign)
             <div class="alert alert-success border-0 shadow-sm mb-4">
@@ -64,7 +42,7 @@
                 @foreach ($designs as $design)
                     <div class="col-md-6 col-lg-4">
                         <div
-                            class="card h-100 border-0 shadow-sm {{ $design->status === 'active' ? 'border border-success border-3' : '' }}">
+                            class="card h-100 shadow-sm {{ $design->status === 'active' ? 'border-3 border-success' : 'border-0' }}">
                             <!-- Status Badge -->
                             <div class="position-absolute top-0 end-0 m-3" style="z-index: 10;">
                                 @if ($design->status === 'active')
@@ -84,15 +62,17 @@
                                         $design->preview_back_card &&
                                         Storage::disk('public')->exists($design->preview_front_card) &&
                                         Storage::disk('public')->exists($design->preview_back_card))
-                                    <!-- Flip Card with Front/Back -->
-                                    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                                    <!-- Flip Card with Front/Back - Click to open modal -->
+                                    <div class="flip-card"
+                                        onclick="openPreviewModal('{{ $design->theme_name }}', '{{ Storage::url($design->preview_front_card) }}', '{{ Storage::url($design->preview_back_card) }}')"
+                                        style="cursor: pointer;">
                                         <div class="flip-card-inner">
                                             <div class="flip-card-front">
                                                 <img src="{{ Storage::url($design->preview_front_card) }}"
                                                     alt="{{ $design->theme_name }} - Front" class="img-fluid"
                                                     style="max-height: 100%; max-width: 100%; object-fit: contain;">
                                                 <div class="flip-hint">
-                                                    <i class="bi bi-arrow-repeat"></i> Click to flip
+                                                    <i class="bi bi-search-plus"></i> Click to enlarge
                                                 </div>
                                             </div>
                                             <div class="flip-card-back">
@@ -100,7 +80,7 @@
                                                     alt="{{ $design->theme_name }} - Back" class="img-fluid"
                                                     style="max-height: 100%; max-width: 100%; object-fit: contain;">
                                                 <div class="flip-hint">
-                                                    <i class="bi bi-arrow-repeat"></i> Click to flip
+                                                    <i class="bi bi-search-plus"></i> Click to enlarge
                                                 </div>
                                             </div>
                                         </div>
@@ -132,29 +112,43 @@
                                 <!-- Action Buttons -->
                                 <div class="d-flex gap-2 flex-wrap">
                                     <!-- Preview Button -->
-                                    <a href="{{ route('settings.id_design.preview', $design->id) }}"
-                                        class="btn btn-sm btn-outline-primary" target="_blank" title="Preview Design">
-                                        <i class="bi bi-eye"></i> Preview
-                                    </a>
+                                    @if (
+                                        $design->preview_front_card &&
+                                            $design->preview_back_card &&
+                                            Storage::disk('public')->exists($design->preview_front_card) &&
+                                            Storage::disk('public')->exists($design->preview_back_card))
+                                        <button type="button" class="btn btn-sm btn-outline-primary"
+                                            onclick="openPreviewModal('{{ $design->theme_name }}', '{{ Storage::url($design->preview_front_card) }}', '{{ Storage::url($design->preview_back_card) }}')"
+                                            title="Preview Design">
+                                            <i class="bi bi-eye"></i> Preview
+                                        </button>
+                                    @else
+                                        <a href="{{ route('settings.id_design.preview', $design->id) }}"
+                                            class="btn btn-sm btn-outline-primary" target="_blank" title="Preview Design">
+                                            <i class="bi bi-eye"></i> Preview
+                                        </a>
+                                    @endif
 
                                     <!-- Activate/Deactivate Button -->
                                     @if ($design->status === 'active')
+                                        <button type="button" class="btn btn-sm btn-outline-warning"
+                                            onclick="confirmDeactivate('deactivate-form-{{ $design->id }}')"
+                                            title="Deactivate Design">
+                                            <i class="bi bi-pause-circle"></i> Deactivate
+                                        </button>
                                         <form action="{{ route('settings.id_design.deactivate', $design->id) }}"
-                                            method="POST" class="d-inline">
+                                            method="POST" style="display: none;" id="deactivate-form-{{ $design->id }}">
                                             @csrf
-                                            <button type="submit" class="btn btn-sm btn-outline-warning"
-                                                title="Deactivate Design">
-                                                <i class="bi bi-pause-circle"></i> Deactivate
-                                            </button>
                                         </form>
                                     @else
+                                        <button type="button" class="btn btn-sm btn-success"
+                                            onclick="confirmActivate('activate-form-{{ $design->id }}')"
+                                            title="Activate Design">
+                                            <i class="bi bi-check-circle"></i> Activate
+                                        </button>
                                         <form action="{{ route('settings.id_design.activate', $design->id) }}"
-                                            method="POST" class="d-inline"
-                                            onsubmit="return confirm('This will deactivate all other designs. Continue?')">
+                                            method="POST" style="display: none;" id="activate-form-{{ $design->id }}">
                                             @csrf
-                                            <button type="submit" class="btn btn-sm btn-success" title="Activate Design">
-                                                <i class="bi bi-check-circle"></i> Activate
-                                            </button>
                                         </form>
                                     @endif
 
@@ -167,11 +161,10 @@
                                     <!-- Delete Button -->
                                     @if ($design->status !== 'active')
                                         <form action="{{ route('settings.id_design.destroy', $design->id) }}"
-                                            method="POST" class="d-inline"
-                                            onsubmit="return confirm('Are you sure you want to delete this design? This action cannot be undone.')">
+                                            method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-outline-danger"
+                                            <button type="submit" class="btn btn-sm btn-outline-danger confirmDelete"
                                                 title="Delete Design">
                                                 <i class="bi bi-trash"></i>
                                             </button>
@@ -229,6 +222,11 @@
             width: 100%;
             height: 100%;
             position: relative;
+            transition: transform 0.2s ease;
+        }
+
+        .flip-card:hover {
+            transform: scale(1.02);
         }
 
         .flip-card-inner {
@@ -281,4 +279,46 @@
             opacity: 1;
         }
     </style>
+
+    {{-- Include Preview Modal --}}
+    @include('settings.id_design.partials.preview_modal')
+
+    {{-- SweetAlert for Activate and Deactivate Confirmations --}}
+    <script>
+        // Function to confirm and activate design
+        function confirmActivate(formId) {
+            Swal.fire({
+                title: 'Activate This Design?',
+                text: 'This will deactivate all other designs and set this as the active ID card template.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#198754',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, Activate',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(formId).submit();
+                }
+            });
+        }
+
+        // Function to confirm and deactivate design
+        function confirmDeactivate(formId) {
+            Swal.fire({
+                title: 'Deactivate This Design?',
+                text: 'No ID card design will be active. You can activate another design or this one later.',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#ffc107',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, Deactivate',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(formId).submit();
+                }
+            });
+        }
+    </script>
 @endsection

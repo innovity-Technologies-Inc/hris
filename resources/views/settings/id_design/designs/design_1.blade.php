@@ -7,7 +7,6 @@
             'system_id' => 'EMP-PREVIEW',
             'full_name' => 'John Michael Doe',
             'personal_mobile' => '+880-1712-345678',
-            'work_mobile' => null,
             'work_email' => 'john.doe@company.com',
             'personal_email' => 'john.doe@gmail.com',
             'blood_group' => 'O+',
@@ -21,6 +20,7 @@ $currentDesignation = null;
 $currentDepartment = null;
 $companyLogoPath = null;
 $companyName = null;
+$companyAddress = null;
 $joinDate = 'N/A';
 
 if ($employee && isset($employee->id)) {
@@ -70,7 +70,6 @@ $companyInfo = (object) [
     'country' => $generalSettings?->country ?? '',
 ];
 
-// Prepare employee data for display
 $issueDate = date('d M Y');
 $expiryDate = date('d M Y', strtotime('+2 years'));
 @endphp
@@ -192,8 +191,10 @@ $expiryDate = date('d M Y', strtotime('+2 years'));
             width: 15mm;
             height: 15mm;
             object-fit: contain;
-            background: transparent;
+            background: white;
             flex-shrink: 0;
+            opacity: 1;
+            display: block;
         }
 
         .header-text {
@@ -594,8 +595,13 @@ $expiryDate = date('d M Y', strtotime('+2 years'));
         <!-- FRONT CARD (PORTRAIT/VERTICAL) -->
         <div class="card-face card-front">
             <div class="card-header">
-                <img src="{{ url('storage/' . $companyInfo->logo) }}" alt="Company Logo" class="logo"
-                    onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%220052cc%22 width=%22100%22 height=%22100%22 rx=%2210%22/%3E%3Ctext x=%2250%22 y=%2260%22 font-size=%2235%22 fill=%22white%22 text-anchor=%22middle%22 font-family=%22Arial%22 font-weight=%22bold%22%3EGT%3C/text%3E%3C/svg%3E'">
+                @if ($companyInfo->logo)
+                    <img src="{{ url('storage/' . $companyInfo->logo) }}" alt="Company Logo" class="logo"
+                        onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%22%231e88e5%22 width=%22100%22 height=%22100%22 rx=%2210%22/%3E%3Ctext x=%2250%22 y=%2260%22 font-size=%2235%22 fill=%22white%22 text-anchor=%22middle%22 font-family=%22Arial%22 font-weight=%22bold%22%3EGT%3C/text%3E%3C/svg%3E'">
+                @else
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%231e88e5' width='100' height='100' rx='10'/%3E%3Ctext x='50' y='60' font-size='35' fill='white' text-anchor='middle' font-family='Arial' font-weight='bold'%3EGT%3C/text%3E%3C/svg%3E"
+                        alt="Company Logo" class="logo">
+                @endif
                 <div class="header-text">
                     <div class="card-title">Employee ID Card</div>
                     <div class="company-name">{{ $companyInfo->name }}</div>
@@ -615,7 +621,8 @@ $expiryDate = date('d M Y', strtotime('+2 years'));
 
                 <div class="employee-details">
                     <div class="employee-name" id="employeeName">{{ $employee->full_name }}</div>
-                    <div class="designation-badge" id="employeeDesignation">{{ $employee->designation }}</div>
+                    <div class="designation-badge" id="employeeDesignation">
+                        {{ $currentDesignation?->company_designation ?? 'N/A' }}</div>
 
                     <div class="info-grid">
                         <div class="info-row">
@@ -624,7 +631,8 @@ $expiryDate = date('d M Y', strtotime('+2 years'));
                         </div>
                         <div class="info-row">
                             <span class="info-label">Blood Group:</span>
-                            <span class="info-value" id="employeeBloodGroup">{{ $employee->blood_group }}</span>
+                            <span class="info-value"
+                                id="employeeBloodGroup">{{ $employee->blood_group ?? 'N/A' }}</span>
                         </div>
                         <div class="info-row">
                             <span class="info-label">Joining Date:</span>
@@ -653,8 +661,13 @@ $expiryDate = date('d M Y', strtotime('+2 years'));
         <div class="card-face card-back">
             <div class="card-back-content">
                 <div class="card-header">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%231e88e5' width='100' height='100' rx='10'/%3E%3Ctext x='50' y='60' font-size='35' fill='white' text-anchor='middle' font-family='Arial' font-weight='bold'%3EGT%3C/text%3E%3C/svg%3E"
-                        alt="Company Logo" class="logo">
+                    @if ($companyInfo->logo)
+                        <img src="{{ url('storage/' . $companyInfo->logo) }}" alt="Company Logo" class="logo"
+                            onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%22%231e88e5%22 width=%22100%22 height=%22100%22 rx=%2210%22/%3E%3Ctext x=%2250%22 y=%2260%22 font-size=%2235%22 fill=%22white%22 text-anchor=%22middle%22 font-family=%22Arial%22 font-weight=%22bold%22%3EGT%3C/text%3E%3C/svg%3E'">
+                    @else
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%231e88e5' width='100' height='100' rx='10'/%3E%3Ctext x='50' y='60' font-size='35' fill='white' text-anchor='middle' font-family='Arial' font-weight='bold'%3EGT%3C/text%3E%3C/svg%3E"
+                            alt="Company Logo" class="logo">
+                    @endif
                 </div>
 
                 <div class="back-header">
@@ -664,13 +677,27 @@ $expiryDate = date('d M Y', strtotime('+2 years'));
                 <div class="terms-section">
                     <h3>Corporate Office:</h3>
                     <div class="address-line">{{ $companyInfo->name }}</div>
-                    <div class="address-line">Address Line 1</div>
-                    <div class="address-line">Address Line 2</div>
-                    <div class="address-line">City, Country</div>
-                    <div class="address-line" style="margin-top: 2mm;"><strong>Email:</strong>
-                        {{ $companyInfo->email }}
-                    </div>
+                    @if ($companyInfo->address)
+                        <div class="address-line">{{ $companyInfo->address }}</div>
+                    @endif
+                    @if ($companyInfo->city || $companyInfo->state || $companyInfo->zip_code)
+                        <div class="address-line">
+                            {{ $companyInfo->city }}{{ $companyInfo->state ? ', ' . $companyInfo->state : '' }}{{ $companyInfo->zip_code ? ' ' . $companyInfo->zip_code : '' }}
+                        </div>
+                    @endif
+                    @if ($companyInfo->country)
+                        <div class="address-line">{{ $companyInfo->country }}</div>
+                    @endif
+                </div>
+
+                <div class="emergency-section">
+                    <h3>Contact Information</h3>
+                    <div class="address-line" style="margin-top: 1mm;"><strong>Email:</strong>
+                        {{ $companyInfo->email }}</div>
                     <div class="address-line"><strong>Telephone:</strong> {{ $companyInfo->telephone }}</div>
+                    @if ($companyInfo->fax)
+                        <div class="address-line"><strong>Fax:</strong> {{ $companyInfo->fax }}</div>
+                    @endif
                     <div class="address-line"><strong>Web:</strong> {{ $companyInfo->website }}</div>
                 </div>
 
@@ -702,6 +729,7 @@ $expiryDate = date('d M Y', strtotime('+2 years'));
                 name: "{{ $companyInfo->name }}",
                 website: "{{ $companyInfo->website }}",
                 telephone: "{{ $companyInfo->telephone }}",
+                fax: "{{ $companyInfo->fax }}",
                 email: "{{ $companyInfo->email }}"
             }
         };

@@ -49,18 +49,21 @@ class EmployeeIdCardController extends Controller
             // Check if active design exists
             if (!$this->idCardService->hasActiveDesign()) {
                 return redirect()->back()
-                    ->with('error', 'No active ID card design available. Please activate a design in Settings > ID Card Design first.');
+                    ->with('message', 'No active ID card design available. Please activate a design in Settings > ID Card Design first.')
+                    ->with('alert-type', 'error');
             }
 
             // Generate the ID card
             $employeeIdCard = $this->idCardService->generateIdCard($employee);
 
             return redirect()->back()
-                ->with('success', 'ID Card generated successfully. Card Number: ' . $employeeIdCard->card_number);
+                ->with('message', 'ID Card generated successfully! Card Number: ' . $employeeIdCard->card_number)
+                ->with('alert-type', 'success');
 
         } catch (Exception $e) {
             return redirect()->back()
-                ->with('error', 'Failed to generate ID card: ' . $e->getMessage());
+                ->with('message', 'Failed to generate ID card: ' . $e->getMessage())
+                ->with('alert-type', 'error');
         }
     }
 
@@ -75,18 +78,21 @@ class EmployeeIdCardController extends Controller
             // Check if active design exists
             if (!$this->idCardService->hasActiveDesign()) {
                 return redirect()->back()
-                    ->with('error', 'No active ID card design available. Please activate a design first.');
+                    ->with('message', 'No active ID card design available. Please activate a design first.')
+                    ->with('alert-type', 'error');
             }
 
             // Regenerate the ID card
             $employeeIdCard = $this->idCardService->regenerateIdCard($employee);
 
             return redirect()->back()
-                ->with('success', 'ID Card regenerated successfully. New Card Number: ' . $employeeIdCard->card_number);
+                ->with('message', 'ID Card regenerated successfully! New Card Number: ' . $employeeIdCard->card_number)
+                ->with('alert-type', 'success');
 
         } catch (Exception $e) {
             return redirect()->back()
-                ->with('error', 'Failed to regenerate ID card: ' . $e->getMessage());
+                ->with('message', 'Failed to regenerate ID card: ' . $e->getMessage())
+                ->with('alert-type', 'error');
         }
     }
 
@@ -179,17 +185,20 @@ class EmployeeIdCardController extends Controller
 
             if (!$this->idCardService->hasActiveIdCard($employee)) {
                 return redirect()->back()
-                    ->with('info', 'Employee does not have an active ID card.');
+                    ->with('message', 'Employee does not have an active ID card.')
+                    ->with('alert-type', 'info');
             }
 
             $this->idCardService->deactivateIdCard($employee);
 
             return redirect()->back()
-                ->with('success', 'ID Card deactivated successfully.');
+                ->with('message', 'ID Card deactivated successfully.')
+                ->with('alert-type', 'success');
 
         } catch (Exception $e) {
             return redirect()->back()
-                ->with('error', 'Failed to deactivate ID card: ' . $e->getMessage());
+                ->with('message', 'Failed to deactivate ID card: ' . $e->getMessage())
+                ->with('alert-type', 'error');
         }
     }
 
