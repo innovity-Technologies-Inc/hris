@@ -688,3 +688,8 @@ Route::prefix('transport')->name('transport.')->group(function () {
     });
 });
 
+// Trial Routes - Payroll Process Index
+Route::get('/trial/payroll-process', function() {
+    return view('trial.payroll-process-index');
+})->name('trial.payroll_process.index');
+
