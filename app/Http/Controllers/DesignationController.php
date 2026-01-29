@@ -6,15 +6,22 @@ use App\Models\Company;
 use App\Models\CompanyLocation;
 use App\Models\Designation;
 use App\Models\Division;
+use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 
 class DesignationController extends Controller
 {
-    public function index(){
+    public function index(Request $request, FlexSearch $flexsearch){
         $title = 'Designation';
         $section = 'Company Setup';
         $sub_section = 'Designation';
-        $designations = Designation::orderBy('company_designation')->paginate(10);
+        $query = Designation::query();
+        $searchTerm = $request->get('keyword');
+        $searchableFields = ['designation_level', 'company_designation'];
+        $designations = $flexsearch->apply($query, [], $searchTerm, $searchableFields)->orderBy('company_designation')->paginate(10);
+        if ($request->ajax()) {
+            return view('company_setup.designation.search_results', compact('designations'))->render();
+        }
         return view('company_setup.designation.index', compact('title', 'section', 'sub_section', 'designations'));
     }
     public function create(){

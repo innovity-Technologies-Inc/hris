@@ -5,17 +5,24 @@ namespace App\Http\Controllers;
 use App\Models\Department;
 use App\Models\Designation;
 use App\Models\JobCreation;
+use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 
 class JobCreationController extends Controller
 {
-    public function index(){
+    public function index(Request $request, FlexSearch $flexsearch){
         $title = 'Job Creation';
         $section = 'Company Setup';
         $sub_section = 'Job Creation';
         $designations = Designation::all()->sortBy('company_designation');
         $departments = Department::all()->sortBy('department_name');
-        $job_creations = JobCreation::latest()->paginate(10);
+        $query = JobCreation::query()->with(['getDesignation', 'getDepartment']);
+        $searchTerm = $request->get('keyword');
+        $searchableFields = ['job_ind', 'display_designation', 'display_serial', 'getDesignation.company_designation', 'getDepartment.department_name'];
+        $job_creations = $flexsearch->apply($query, [], $searchTerm, $searchableFields)->orderBy('id', 'desc')->paginate(10);
+        if ($request->ajax()) {
+            return view('company_setup.job_creation.search_results', compact('job_creations'))->render();
+        }
         return view('company_setup.job_creation.index', compact('title', 'section', 'sub_section', 'designations', 'departments', 'job_creations'));
     }
     public function create(){

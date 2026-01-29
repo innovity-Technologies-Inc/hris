@@ -5,17 +5,24 @@ namespace App\Http\Controllers;
 use App\HelperClass;
 use App\Models\CompanyLocation;
 use App\Models\Company;
+use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 
 
 class CompanyLocationController extends Controller
 {
-    public function index()
+    public function index(Request $request, FlexSearch $flexsearch)
     {
         $title = 'Company Branches';
         $section = 'Company Setup';
         $sub_section = 'Company Branches';
-        $locations = CompanyLocation::latest()->paginate(10);
+        $query = CompanyLocation::query()->with(['getCompany']);
+        $searchTerm = $request->get('keyword');
+        $searchableFields = ['name', 'location_address', 'city', 'state', 'division', 'country', 'getCompany.name'];
+        $locations = $flexsearch->apply($query, [], $searchTerm, $searchableFields)->orderBy('id', 'desc')->paginate(10);
+        if ($request->ajax()) {
+            return view('company_setup.company_locations.search_results', compact('locations'))->render();
+        }
         return view('company_setup.company_locations.index', compact('title', 'section', 'sub_section', 'locations'));
     }
 

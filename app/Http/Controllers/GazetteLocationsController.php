@@ -3,16 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\GazetteLocation;
+use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class GazetteLocationsController extends Controller
 {
-    public function index(){
+    public function index(Request $request, FlexSearch $flexsearch){
         $title = 'Gazette Location';
         $section = 'Company Setup';
         $sub_section = 'Gazette Location';
-        $gazette_locations = GazetteLocation::latest()->paginate(10);
+        $query = GazetteLocation::query();
+        $searchTerm = $request->get('keyword');
+        $searchableFields = ['name'];
+        $gazette_locations = $flexsearch->apply($query, [], $searchTerm, $searchableFields)->orderBy('id', 'desc')->paginate(10);
+        if ($request->ajax()) {
+            return view('company_setup.gazette_location.search_results', compact('gazette_locations'))->render();
+        }
         return view('company_setup.gazette_location.index', compact('title', 'section', 'sub_section', 'gazette_locations'));
     }
 

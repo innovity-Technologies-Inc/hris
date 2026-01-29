@@ -4,16 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\Bank;
 use App\Models\Branch;
+use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class BranchesController extends Controller
 {
-    public function index(){
+    public function index(Request $request, FlexSearch $flexsearch){
         $title = 'Branch';
         $section = 'Company Setup';
         $sub_section = 'Branch';
-        $branches = Branch::latest()->paginate(10);
+        $query = Branch::query()->with(['getBank']);
+        $searchTerm = $request->get('keyword');
+        $searchableFields = ['name', 'address', 'routing_no', 'swift_code', 'getBank.name'];
+        $branches = $flexsearch->apply($query, [], $searchTerm, $searchableFields)->orderBy('id', 'desc')->paginate(10);
+        if ($request->ajax()) {
+            return view('company_setup.branch.search_results', compact('branches'))->render();
+        }
         return view('company_setup.branch.index', compact('title', 'section', 'sub_section', 'branches'));
     }
 

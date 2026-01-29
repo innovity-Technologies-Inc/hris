@@ -4,17 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\SalaryGrade;
 use App\Models\Tofsil;
+use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class SalaryGradesController extends Controller
 {
-    public function index()
+    public function index(Request $request, FlexSearch $flexsearch)
     {
         $title = 'Salary Grade';
         $section = 'Company Setup';
         $sub_section = 'SalaryGrade';
-        $salary_grades = SalaryGrade::latest()->paginate(10);
+        $query = SalaryGrade::query()->with(['getTofsil']);
+        $searchTerm = $request->get('keyword');
+        $searchableFields = ['name', 'getTofsil.name'];
+        $salary_grades = $flexsearch->apply($query, [], $searchTerm, $searchableFields)->orderBy('id', 'desc')->paginate(10);
+        if ($request->ajax()) {
+            return view('company_setup.salary_grade.search_results', compact('salary_grades'))->render();
+        }
         return view('company_setup.salary_grade.index', compact('title', 'section', 'sub_section', 'salary_grades'));
     }
 

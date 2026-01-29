@@ -5,16 +5,23 @@ use App\Models\Department;
 use App\Models\Division;
 use App\Models\Company;
 use App\Models\CompanyLocation;
+use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
 {
-    public function index()
+    public function index(Request $request, FlexSearch $flexsearch)
     {
         $title = 'Departments';
         $section = 'Department Setup';
         $sub_section = 'Departments';
-        $departments = Department::latest()->paginate(10);
+        $query = Department::query()->with(['getDivision', 'getCompany', 'getLocation']);
+        $searchTerm = $request->get('keyword');
+        $searchableFields = ['department_name', 'short_name', 'getDivision.name', 'getCompany.name', 'getLocation.name'];
+        $departments = $flexsearch->apply($query, [], $searchTerm, $searchableFields)->orderBy('id', 'desc')->paginate(10);
+        if ($request->ajax()) {
+            return view('company_setup.departments.search_results', compact('departments'))->render();
+        }
         $divisions = Division::all();
         return view('company_setup.departments.index', compact('title', 'section', 'sub_section', 'departments', 'divisions'));
     }

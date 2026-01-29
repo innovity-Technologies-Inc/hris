@@ -3,17 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Models\Holiday;
+use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 class HolidayController extends Controller
 {
-    public function index()
+    public function index(Request $request, FlexSearch $flexsearch)
     {
         $title = 'Holiday Management';
         $section = 'Company Setup';
         $sub_section = 'Holidays';
-        $holidays = Holiday::latest()->paginate(10);
+        $query = Holiday::query();
+        $searchTerm = $request->get('keyword');
+        $searchableFields = ['title', 'start_date', 'end_date'];
+        $holidays = $flexsearch->apply($query, [], $searchTerm, $searchableFields)->orderBy('id', 'desc')->paginate(10);
+        if ($request->ajax()) {
+            return view('company_setup.holidays.search_results', compact('holidays'))->render();
+        }
         return view('company_setup.holidays.index', compact('title', 'section', 'sub_section', 'holidays'));
     }
 

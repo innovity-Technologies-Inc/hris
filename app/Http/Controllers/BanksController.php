@@ -3,16 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bank;
+use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class BanksController extends Controller
 {
-    public function index(){
+    public function index(Request $request, FlexSearch $flexsearch){
         $title = 'Bank';
         $section = 'Company Setup';
         $sub_section = 'Bank';
-        $banks = Bank::latest()->paginate(10);
+        $query = Bank::query();
+        $searchTerm = $request->get('keyword');
+        $searchableFields = ['name', 'short_name', 'bank_code', 'contact_no', 'contact_person', 'contact_person_no'];
+        $banks = $flexsearch->apply($query, [], $searchTerm, $searchableFields)->orderBy('id', 'desc')->paginate(10);
+        if ($request->ajax()) {
+            return view('company_setup.bank.search_results', compact('banks'))->render();
+        }
         return view('company_setup.bank.index', compact('title', 'section', 'sub_section', 'banks'));
     }
 

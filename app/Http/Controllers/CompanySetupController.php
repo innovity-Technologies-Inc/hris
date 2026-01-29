@@ -65,11 +65,17 @@ class CompanySetupController extends Controller
         ]);
     }
 
-    public function companyTypeIndex(){
+    public function companyTypeIndex(Request $request, FlexSearch $flexsearch){
         $title = 'Company Type';
         $section = 'Company Setup';
         $sub_section = 'Company Type';
-        $company_types = CompanyType::latest()->paginate(10);
+        $query = CompanyType::query();
+        $searchTerm = $request->get('keyword');
+        $searchableFields = ['name', 'short_name'];
+        $company_types = $flexsearch->apply($query, [], $searchTerm, $searchableFields)->orderBy('id', 'desc')->paginate(10);
+        if ($request->ajax()) {
+            return view('company_setup.company_type_search_results', compact('company_types'))->render();
+        }
         return view('company_setup.company_type', compact('title', 'section', 'sub_section', 'company_types'));
     }
 
@@ -110,11 +116,17 @@ class CompanySetupController extends Controller
     }
 
 
-    public function companyIndex(){
+    public function companyIndex(Request $request, FlexSearch $flexsearch){
         $title = 'Company';
         $section = 'Company Setup';
         $sub_section = 'Company';
-        $companies = Company::latest()->paginate(10);
+        $query = Company::query()->with(['getCompanyType', 'getGroup']);
+        $searchTerm = $request->get('keyword');
+        $searchableFields = ['name', 'short_name', 'getCompanyType.name', 'getGroup.name', 'address', 'email'];
+        $companies = $flexsearch->apply($query, [], $searchTerm, $searchableFields)->orderBy('id', 'desc')->paginate(10);
+        if ($request->ajax()) {
+            return view('company_setup.company.search_results', compact('companies'))->render();
+        }
         return view('company_setup.company.index', compact('title', 'section', 'sub_section', 'companies'));
     }
 

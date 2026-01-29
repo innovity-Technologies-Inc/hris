@@ -3,16 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tofsil;
+use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class TofsilsController extends Controller
 {
-    public function index(){
+    public function index(Request $request, FlexSearch $flexsearch){
         $title = 'Act';
         $section = 'Company Setup';
         $sub_section = 'Act';
-        $tofsils = Tofsil::latest()->paginate(10);
+        $query = Tofsil::query();
+        $searchTerm = $request->get('keyword');
+        $searchableFields = ['name', 'description'];
+        $tofsils = $flexsearch->apply($query, [], $searchTerm, $searchableFields)->orderBy('id', 'desc')->paginate(10);
+        if ($request->ajax()) {
+            return view('company_setup.tofsil.search_results', compact('tofsils'))->render();
+        }
         return view('company_setup.tofsil.index', compact('title', 'section', 'sub_section', 'tofsils'));
     }
 

@@ -7,17 +7,22 @@ use App\Models\CompanyLocation;
 use App\Models\Department;
 use App\Models\Division;
 use App\Models\Section;
+use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 
 class SectionController extends Controller
 {
-    public function index()
+    public function index(Request $request, FlexSearch $flexsearch)
     {
         $title = 'Sections';
         $section = 'Section Setup';
-        $sections = Section::latest()->paginate(10);
-
-
+        $query = Section::query()->with(['getCompany', 'getLocation', 'getDivision', 'getDepartment']);
+        $searchTerm = $request->get('keyword');
+        $searchableFields = ['name', 'short_name', 'getCompany.name', 'getLocation.name', 'getDivision.name', 'getDepartment.department_name'];
+        $sections = $flexsearch->apply($query, [], $searchTerm, $searchableFields)->orderBy('id', 'desc')->paginate(10);
+        if ($request->ajax()) {
+            return view('company_setup.sections.search_results', compact('sections'))->render();
+        }
         return view('company_setup.sections.index', compact('title', 'section', 'sections'));
     }
     public function create()

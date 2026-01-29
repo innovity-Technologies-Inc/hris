@@ -5,16 +5,23 @@ namespace App\Http\Controllers;
 use App\Models\Bank;
 use App\Models\BankAccount;
 use App\Models\Branch;
+use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class BankAccountsController extends Controller
 {
-    public function index(){
+    public function index(Request $request, FlexSearch $flexsearch){
         $title = 'Bank Account';
         $section = 'Company Setup';
         $sub_section = 'Bank Account';
-        $bank_accounts = BankAccount::latest()->paginate(10);
+        $query = BankAccount::query()->with(['getBank', 'getBranch']);
+        $searchTerm = $request->get('keyword');
+        $searchableFields = ['account_no', 'holder_name', 'account_type', 'contact_person', 'email', 'getBank.name', 'getBranch.name'];
+        $bank_accounts = $flexsearch->apply($query, [], $searchTerm, $searchableFields)->orderBy('id', 'desc')->paginate(10);
+        if ($request->ajax()) {
+            return view('company_setup.bank_accounts.search_results', compact('bank_accounts'))->render();
+        }
         return view('company_setup.bank_accounts.index', compact('title', 'section', 'sub_section', 'bank_accounts'));
     }
 
