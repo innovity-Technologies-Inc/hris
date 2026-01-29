@@ -122,9 +122,13 @@
                                                         40,
                                                         '#974063',
                                                         'me-2',
+                                                        $vehicleRequisition->employee_id,
                                                     ) !!}
                                                     <div>
-                                                        {{ $vehicleRequisition->getEmployee->full_name }}
+                                                        <a href="{{ route('employees.profile.general_informations', $vehicleRequisition->employee_id) }}"
+                                                            class="text-decoration-none text-dark">
+                                                            {{ $vehicleRequisition->getEmployee->full_name }}
+                                                        </a>
                                                         <br><small class="text-muted">ID:
                                                             {{ $vehicleRequisition->getEmployee->system_id }}</small>
                                                     </div>
@@ -379,11 +383,15 @@
                                                         80,
                                                         '#974063',
                                                         'border border-2',
+                                                        $assignedDriver->id,
                                                     ) !!}
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <h6 class="mb-1 fw-bold text-primary">{{ $assignedDriver->full_name }}
-                                                    </h6>
+                                                    <a href="{{ route('employees.profile.general_informations', $assignedDriver->id) }}"
+                                                        class="text-decoration-none">
+                                                        <h6 class="mb-1 fw-bold text-primary">
+                                                            {{ $assignedDriver->full_name }}</h6>
+                                                    </a>
                                                     <p class="mb-1">
                                                         <small class="text-muted">ID:
                                                             {{ $assignedDriver->system_id }}</small>

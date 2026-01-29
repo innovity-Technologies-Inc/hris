@@ -47,9 +47,13 @@
                             45,
                             '#974063',
                             'me-2',
+                            $item->driver_id,
                         ) !!}
                         <div>
-                            <strong>{{ $item->getDriver->full_name ?? 'N/A' }}</strong>
+                            <a href="{{ route('employees.profile.general_informations', $item->driver_id) }}"
+                                class="text-decoration-none">
+                                <strong class="text-dark">{{ $item->getDriver->full_name ?? 'N/A' }}</strong>
+                            </a>
                             <br>
                             <small class="text-muted">
                                 ID: {{ $item->getDriver->system_id ?? 'N/A' }}

@@ -279,10 +279,14 @@
                                                                 50,
                                                                 '#974063',
                                                                 'me-2',
+                                                                $allocation->assigned_driver->id,
                                                             ) !!}
                                                             <div>
-                                                                <strong
-                                                                    class="d-block">{{ $allocation->assigned_driver->full_name ?? $allocation->assigned_driver->name }}</strong>
+                                                                <a href="{{ route('employees.profile.general_informations', $allocation->assigned_driver->id) }}"
+                                                                    class="text-decoration-none">
+                                                                    <strong
+                                                                        class="d-block text-dark">{{ $allocation->assigned_driver->full_name ?? $allocation->assigned_driver->name }}</strong>
+                                                                </a>
                                                                 <small class="text-muted">Driver</small>
                                                             </div>
                                                         </div>

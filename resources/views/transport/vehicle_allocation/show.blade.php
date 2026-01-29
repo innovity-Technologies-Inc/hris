@@ -233,11 +233,15 @@
                                             80,
                                             '#974063',
                                             'me-3',
+                                            $driver->id,
                                         ) !!}
                                         <div>
-                                            <h5 class="mb-1">
-                                                {{ $driver->full_name ?? 'N/A' }}
-                                            </h5>
+                                            <a href="{{ route('employees.profile.general_informations', $driver->id) }}"
+                                                class="text-decoration-none">
+                                                <h5 class="mb-1 text-dark">
+                                                    {{ $driver->full_name ?? 'N/A' }}
+                                                </h5>
+                                            </a>
                                             <p class="text-muted mb-0">
                                                 <small>{{ $driver->system_id ?? '' }}</small>
                                             </p>

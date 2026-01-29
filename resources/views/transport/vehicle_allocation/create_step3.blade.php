@@ -321,10 +321,14 @@
                                                                     30,
                                                                     '#974063',
                                                                     'me-2',
+                                                                    $driver->id,
                                                                 ) !!}
                                                                 <div>
-                                                                    <div class="fw-semibold">
-                                                                        {{ $driver->full_name ?? 'N/A' }}</div>
+                                                                    <a href="{{ route('employees.profile.general_informations', $driver->id) }}"
+                                                                        class="text-decoration-none">
+                                                                        <div class="fw-semibold text-dark">
+                                                                            {{ $driver->full_name ?? 'N/A' }}</div>
+                                                                    </a>
                                                                     <small
                                                                         class="text-muted">{{ $driver->system_id ?? '' }}</small>
                                                                 </div>

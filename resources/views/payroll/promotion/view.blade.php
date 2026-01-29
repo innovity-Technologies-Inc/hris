@@ -1,7 +1,6 @@
 @extends('structure.master')
 
 @section('content')
-
     {{-- Back button and action buttons --}}
     <div class="row mb-3">
         <div class="col-12">
@@ -57,12 +56,16 @@
                                 120,
                                 '#974063',
                                 'border border-3 border-primary',
+                                $promotionData->employee_id,
                             ) !!}
                         </div>
 
                         <div class="col-md-6 mb-2">
                             <strong>Employee Name:</strong>
-                            <span class="ms-2">{{ $promotionData->getEmployee->full_name ?? 'N/A' }}</span>
+                            <a href="{{ route('employees.profile.general_informations', $promotionData->employee_id) }}"
+                                class="ms-2 text-decoration-none">
+                                {{ $promotionData->getEmployee->full_name ?? 'N/A' }}
+                            </a>
                         </div>
                         <div class="col-md-6 mb-2">
                             <strong>Employee ID:</strong>
@@ -149,13 +152,13 @@
                         <div class="col-md-6 mb-2">
                             <label class="text-muted small">Effective From</label>
                             <div class="fw-semibold">
-                                {{  \Carbon\Carbon::parse($promotionData->effective_from)->format('d M Y') }}
+                                {{ \Carbon\Carbon::parse($promotionData->effective_from)->format('d M Y') }}
                             </div>
                         </div>
                         <div class="col-md-6 mb-2">
                             <label class="text-muted small">Effective To</label>
                             <div class="fw-semibold">
-                                {{ $promotionData->effective_to ?  \Carbon\Carbon::parse($promotionData->effective_to)->format('d M Y') : 'Indefinite' }}
+                                {{ $promotionData->effective_to ? \Carbon\Carbon::parse($promotionData->effective_to)->format('d M Y') : 'Indefinite' }}
                             </div>
                         </div>
                     </div>
@@ -178,7 +181,8 @@
                         <div class="col-md-6 mb-2">
                             <label class="text-muted small">Current Status</label>
                             <div>
-                                <span class="badge @if($promotionData->status == 'pending') bg-warning @elseif($promotionData->status == 'approved') bg-warning
+                                <span
+                                    class="badge @if ($promotionData->status == 'pending') bg-warning @elseif($promotionData->status == 'approved') bg-warning
                                      @else bg-danger @endif fs-6 px-3 py-2">
                                     {{ ucfirst($promotionData->status) }}
                                 </span>
@@ -187,7 +191,7 @@
                         <div class="col-md-6 mb-2">
                             <label class="text-muted small">Record Created</label>
                             <div class="fw-semibold">
-                                {{  \Carbon\Carbon::parse($promotionData->created_at)->format('d M Y, h:i A') }}
+                                {{ \Carbon\Carbon::parse($promotionData->created_at)->format('d M Y, h:i A') }}
                             </div>
                         </div>
                     </div>

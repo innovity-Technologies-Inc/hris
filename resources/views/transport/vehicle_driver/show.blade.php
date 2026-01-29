@@ -154,13 +154,19 @@
                                     $vehicleDriver->getDriver->full_name ?? 'N/A',
                                     150,
                                     '#974063',
+                                    '',
+                                    $vehicleDriver->driver_id,
                                 ) !!}
                             </div>
                             <table class="table table-sm">
                                 <tbody>
                                     <tr>
                                         <td class="text-muted border-0 py-2">Name</td>
-                                        <td class="fw-semibold border-0 py-2">{{ $vehicleDriver->getDriver->full_name }}
+                                        <td class="fw-semibold border-0 py-2">
+                                            <a href="{{ route('employees.profile.general_informations', $vehicleDriver->driver_id) }}"
+                                                class="text-decoration-none text-dark">
+                                                {{ $vehicleDriver->getDriver->full_name }}
+                                            </a>
                                         </td>
                                     </tr>
                                     <tr>

@@ -50,21 +50,21 @@
                     <div class="row">
                         {{-- Profile Image --}}
                         <div class="col-md-12 mb-3 text-center">
-                            <a href="{{route('employees.profile.general_informations',$incrementData->employee_id)}}">
                             {!! \App\HelperClass::generateAvatar(
                                 $incrementData->getEmployee->photo_path ?? null,
                                 $incrementData->getEmployee->full_name ?? 'N/A',
                                 120,
                                 '#974063',
                                 'border border-3 border-primary',
+                                $incrementData->employee_id,
                             ) !!}
-                            </a>
                         </div>
 
                         <div class="col-md-6 mb-2">
                             <strong>Employee Name:</strong>
-                            <a href="{{route('employees.profile.general_informations',$incrementData->employee_id)}}">
-                            <span class="ms-2">{{ $incrementData->getEmployee->full_name ?? 'N/A' }}</span>
+                            <a href="{{ route('employees.profile.general_informations', $incrementData->employee_id) }}"
+                                class="ms-2 text-decoration-none">
+                                {{ $incrementData->getEmployee->full_name ?? 'N/A' }}
                             </a>
                         </div>
                         <div class="col-md-6 mb-2">
@@ -143,12 +143,12 @@
                         <div class="col-md-6 mb-2">
                             <label class="text-muted small">Effective From</label>
                             <div class="fw-semibold">
-                                {{ \Carbon\Carbon::parse($incrementData->effective_from)->format('d M Y') }}                            </div>
+                                {{ \Carbon\Carbon::parse($incrementData->effective_from)->format('d M Y') }} </div>
                         </div>
                         <div class="col-md-6 mb-2">
                             <label class="text-muted small">Effective To</label>
                             <div class="fw-semibold">
-                                {{ $incrementData->effective_to ? \Carbon\Carbon::parse($increment->effective_to)->format('d M Y')  : 'Indefinite' }}
+                                {{ $incrementData->effective_to ? \Carbon\Carbon::parse($increment->effective_to)->format('d M Y') : 'Indefinite' }}
                             </div>
                         </div>
                     </div>
@@ -171,7 +171,8 @@
                         <div class="col-md-6 mb-2">
                             <label class="text-muted small">Current Status</label>
                             <div>
-                                <span class="badge @if($incrementData->status == 'pending') bg-warning @elseif($incrementData->status == 'approved') bg-warning
+                                <span
+                                    class="badge @if ($incrementData->status == 'pending') bg-warning @elseif($incrementData->status == 'approved') bg-warning
                                      @else bg-danger @endif fs-6 px-3 py-2">
                                     {{ ucfirst($incrementData->status) }}
                                 </span>

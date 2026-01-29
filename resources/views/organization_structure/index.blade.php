@@ -150,7 +150,8 @@
                                                 <td>
                                                     @php($displayName = $member->getEmployee ? $member->getEmployee->full_name : $member->name)
                                                     @php($photoPath = $member->getEmployee ? $member->getEmployee->photo_path : $member->photo_path)
-                                                    {!! \App\HelperClass::generateAvatar($photoPath ?? null, $displayName, 32, '#974063', '') !!}
+                                                    @php($employeeId = $member->getEmployee ? $member->getEmployee->id : null)
+                                                    {!! \App\HelperClass::generateAvatar($photoPath ?? null, $displayName, 32, '#974063', '', $employeeId) !!}
                                                 </td>
                                                 <td>
                                                     <span
@@ -163,10 +164,15 @@
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    {{ $member->name }}
                                                     @if ($member->getEmployee)
+                                                        <a href="{{ route('employees.profile.general_informations', $member->getEmployee->id) }}"
+                                                            class="text-decoration-none text-dark">
+                                                            {{ $member->name }}
+                                                        </a>
                                                         <br><small class="text-muted">ID:
                                                             {{ $member->getEmployee->system_id }}</small>
+                                                    @else
+                                                        {{ $member->name }}
                                                     @endif
                                                 </td>
                                                 <td>{{ $member->position }}</td>

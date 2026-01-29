@@ -172,9 +172,19 @@
                                             <td>
                                                 @if ($requisition->getEmployee)
                                                     <div class="d-flex align-items-center">
-                                                        {!! \App\HelperClass::generateAvatar(null, $requisition->getEmployee->full_name ?? 'N/A', 35, '#974063', 'me-2') !!}
+                                                        {!! \App\HelperClass::generateAvatar(
+                                                            null,
+                                                            $requisition->getEmployee->full_name ?? 'N/A',
+                                                            35,
+                                                            '#974063',
+                                                            'me-2',
+                                                            $requisition->employee_id,
+                                                        ) !!}
                                                         <div>
-                                                            {{ $requisition->getEmployee->full_name }}
+                                                            <a href="{{ route('employees.profile.general_informations', $requisition->employee_id) }}"
+                                                                class="text-decoration-none text-dark">
+                                                                {{ $requisition->getEmployee->full_name }}
+                                                            </a>
                                                             <small class="text-muted d-block">ID:
                                                                 {{ $requisition->getEmployee->system_id }}</small>
                                                         </div>

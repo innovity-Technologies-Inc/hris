@@ -50,19 +50,20 @@ Each increment object should have:
                                 <th scope="row">{{ $sl++ }}</th>
                                 <td>
                                     <div class="d-flex align-items-center gap-2">
-                                        @if (isset($increment->getEmployee->photo_path) && $increment->getEmployee->photo_path)
-                                            <img src="{{ asset('storage/' . $increment->getEmployee->photo_path) }}"
-                                                alt="Profile" class="rounded-circle"
-                                                style="width: 40px; height: 40px; object-fit: cover;">
-                                        @else
-                                            <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center"
-                                                style="width: 40px; height: 40px; font-size: 14px; font-weight: bold; color: white;">
-                                                {{ strtoupper(substr($increment->getEmployee->full_name ?? 'U', 0, 1)) }}
-                                            </div>
-                                        @endif
+                                        {!! \App\HelperClass::generateAvatar(
+                                            $increment->getEmployee->photo_path ?? null,
+                                            $increment->getEmployee->full_name ?? 'N/A',
+                                            40,
+                                            '#974063',
+                                            '',
+                                            $increment->employee_id,
+                                        ) !!}
                                         <div>
-                                            <div class="fw-semibold">{{ $increment->getEmployee->full_name ?? 'N/A' }}
-                                            </div>
+                                            <a href="{{ route('employees.profile.general_informations', $increment->employee_id) }}"
+                                                class="text-decoration-none">
+                                                <div class="fw-semibold text-dark">
+                                                    {{ $increment->getEmployee->full_name ?? 'N/A' }}</div>
+                                            </a>
                                             <small
                                                 class="text-muted">{{ $increment->getEmployee->applicant_id ?? 'N/A' }}</small>
                                         </div>
@@ -93,10 +94,12 @@ Each increment object should have:
                                     </div>
                                 </td>
                                 <td>
-                                    <span class="small">{{ \Carbon\Carbon::parse($increment->effective_from)->format('d M Y') }}</span>
+                                    <span
+                                        class="small">{{ \Carbon\Carbon::parse($increment->effective_from)->format('d M Y') }}</span>
                                 </td>
                                 <td>
-                                    <span class="badge @if($increment->status == 'pending') bg-warning @elseif($increment->status == 'approved') bg-warning
+                                    <span
+                                        class="badge @if ($increment->status == 'pending') bg-warning @elseif($increment->status == 'approved') bg-warning
                                      @else bg-danger @endif">
                                         {{ ucfirst($increment->status) }}
                                     </span>
