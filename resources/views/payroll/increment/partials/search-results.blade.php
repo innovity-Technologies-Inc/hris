@@ -20,6 +20,12 @@ Each increment object should have:
         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create Increment
     </a>
 
+    @if ($increments->isNotEmpty())
+        <a type="button" class="btn btn-success btn-sm me-3 mb-3 float-end" href="{{ route('increment.adjustment') }}">
+        <i style="height: 12px; width: 12px" data-feather="check"></i> Increment Adjustment
+    </a>
+    @endif
+
     @if ($increments->isEmpty())
         <div class="text-center py-4 text-muted">No increment records found.</div>
     @else
@@ -112,10 +118,11 @@ Each increment object should have:
 
                                             {{-- Approve Button --}}
                                             <form class="d-inline"
-                                                action="{{ route('increment.approve', $increment->id) }}"
+                                                action="{{ route('increment.status.update', $increment->id) }}"
                                                 method="POST">
                                                 @csrf
                                                 @method('PUT')
+                                                <input type="hidden" name="status" value="approved">
                                                 <button type="submit" class="btn btn-success btn-sm confirmApprove"
                                                     title="Approve">
                                                     <i style="height: 12px; width: 12px" data-feather="check"></i>
@@ -124,9 +131,10 @@ Each increment object should have:
 
                                             {{-- Reject Button --}}
                                             <form class="d-inline" method="POST"
-                                                action="{{ route('increment.reject', $increment->id) }}">
+                                                action="{{ route('increment.status.update', $increment->id) }}">
                                                 @csrf
                                                 @method('PUT')
+                                                <input type="hidden" name="status" value="rejected">
                                                 <button type="submit" class="btn btn-danger btn-sm confirmReject"
                                                     title="Reject">
                                                     <i style="height: 12px; width: 12px" data-feather="x"></i>

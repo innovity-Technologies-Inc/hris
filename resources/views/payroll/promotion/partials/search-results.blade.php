@@ -3,6 +3,12 @@
         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create Promotion
     </a>
 
+    @if ($promotions->isNotEmpty())
+    <a type="button" class="btn btn-success btn-sm me-3 mb-3 float-end" href="{{ route('promotion.adjustment') }}">
+        <i style="height: 12px; width: 12px" data-feather="check"></i> Promotion Adjustment
+    </a>
+    @endif
+
     @if ($promotions->isEmpty())
         <div class="text-center py-4 text-muted">No promotion records found.</div>
     @else
@@ -82,10 +88,12 @@
 
                                             {{-- Approve Button --}}
                                             <form class="d-inline"
-                                                action="{{ route('promotion.approve', $promotion->id) }}"
+                                                action="{{ route('promotion.status.update', $promotion->id) }}"
                                                 method="POST">
                                                 @csrf
                                                 @method('PUT')
+                                                <input type="hidden" name="status" value="approved">
+
                                                 <button type="submit" class="btn btn-success btn-sm confirmApprove"
                                                     title="Approve">
                                                     <i style="height: 12px; width: 12px" data-feather="check"></i>
@@ -94,9 +102,10 @@
 
                                             {{-- Reject Button --}}
                                             <form class="d-inline" method="POST"
-                                                action="{{ route('promotion.reject', $promotion->id) }}">
+                                                action="{{ route('promotion.status.update', $promotion->id) }}">
                                                 @csrf
                                                 @method('PUT')
+                                                <input type="hidden" name="status" value="rejected">
                                                 <button type="submit" class="btn btn-danger btn-sm confirmReject"
                                                     title="Reject">
                                                     <i style="height: 12px; width: 12px" data-feather="x"></i>

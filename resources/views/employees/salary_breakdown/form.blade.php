@@ -56,7 +56,7 @@
                                         <input type="number" step="1"
                                                class="form-control"
                                                name="gross_salary" id="gross_salary"
-                                               value="{{isset($employeeData) ? $employeeData->basic_salary_percentage : old('gross_salary')}}"
+                                               value="{{isset($employeeData) ? $employeeData->gross_salary : old('gross_salary')}}"
                                                placeholder="30000" required>
                                     </div>
                                 </div>

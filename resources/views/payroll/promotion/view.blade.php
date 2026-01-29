@@ -14,17 +14,19 @@
                         <a href="{{ route('promotion.edit', $promotionData->id) }}" class="btn btn-primary btn-sm">
                             <i style="height: 12px; width: 12px" data-feather="edit"></i> Edit
                         </a>
-                        <form class="d-inline" action="{{ route('promotion.approve', $promotionData->id) }}" method="POST">
+                        <form class="d-inline" action="{{ route('promotion.status.update', $promotionData->id) }}" method="POST">
                             @csrf
                             @method('PUT')
+                            <input type="hidden" name="status" value="approved">
                             <button type="submit" class="btn btn-success btn-sm"
                                 onclick="return confirm('Are you sure you want to approve this promotion?')">
                                 <i style="height: 12px; width: 12px" data-feather="check"></i> Approve
                             </button>
                         </form>
-                        <form class="d-inline" action="{{ route('promotion.reject', $promotionData->id) }}" method="POST">
+                        <form class="d-inline" action="{{ route('promotion.status.update', $promotionData->id) }}" method="POST">
                             @csrf
                             @method('PUT')
+                            <input type="hidden" name="status" value="rejected">
                             <button type="submit" class="btn btn-danger btn-sm"
                                 onclick="return confirm('Are you sure you want to reject this promotion?')">
                                 <i style="height: 12px; width: 12px" data-feather="x"></i> Reject

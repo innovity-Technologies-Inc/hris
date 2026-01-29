@@ -138,9 +138,9 @@ class EmployeeServices
                 'personal_email' => 'nullable|email|max:255',
 
                 // File uploads
-                'photo_path' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
-                'fingerprint_path' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-                'signature_path' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+                'photo_path' => 'nullable|file|image|mimes:jpeg,png,jpg,webp|max:2048',
+                'fingerprint_path' => 'nullable|file|mimes:jpeg,png,jpg,webp|max:2048',
+                'signature_path' => 'nullable|file|mimes:jpeg,png,jpg,webp|max:2048',
                 'experience_attachment_path' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
             ],
             // Custom error messages

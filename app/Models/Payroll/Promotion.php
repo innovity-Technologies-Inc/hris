@@ -22,6 +22,7 @@ class Promotion extends Model
         'effective_from',
         'effective_to',
         'status',
+        'is_adjustment'
     ];
 
     public function getEmployee()

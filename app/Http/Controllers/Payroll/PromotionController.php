@@ -9,6 +9,7 @@ use App\Models\EmployeeOfficeInfo;
 use App\Models\Payroll\Increment;
 use App\Models\Payroll\Promotion;
 use App\Services\PayrollServices;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -76,11 +77,11 @@ class PromotionController extends Controller
             'new_designation.exists'            => 'New Designation Is Invalid',
             'new_designation.different'         => 'New Designation Must Be Different From Previous Designation',
 
-            'increment_base.required'           => 'Please Select Increment Base',
-            'increment_base.in'                 => 'Selected Increment Base Is Invalid',
+            'promotion_base.required'           => 'Please Select Increment Base',
+            'promotion_base.in'                 => 'Selected Increment Base Is Invalid',
 
-            'increment_method.required'         => 'Please Select Increment Method',
-            'increment_method.in'               => 'Selected Increment Method Is Invalid',
+            'promotion_method.required'         => 'Please Select Increment Method',
+            'promotion_method.in'               => 'Selected Increment Method Is Invalid',
 
             'salary_increase_amount.required'   => 'Please Enter Salary Increase Amount',
             'salary_increase_amount.numeric'    => 'Increase Amount Must Be A Number',
@@ -138,6 +139,55 @@ class PromotionController extends Controller
         $promotionData->delete();
         return redirect()->back()->with([
             'message' => 'Deleted Successfully',
+            'alert-type' => 'success'
+        ]);
+    }
+
+    public function statusUpdate(Request $request, $id){
+        $request->validate([
+            'status' => 'required|in:approved,rejected',
+        ]);
+        $data = Promotion::find($id);
+        if ($request->status = 'approved') {
+            $data->update([
+                'status' => $request->status,
+                'is_adjustment' => 1
+            ]);
+
+        }
+        $data->update(['status' => $request->status]);
+
+        return redirect()->route('promotion.index')->with([
+            'message' => 'Updated Successfully',
+        ]);
+    }
+
+    public function adjustment(){
+
+        $promotions = Promotion::where('is_adjustment', 1)
+            ->whereDate('effective_from', '<=', Carbon::today())
+            ->get();
+//        dd($promotions);
+
+        try{
+            DB::transaction(function () use ($promotions) {
+                foreach ($promotions as $promotion) {
+                    $this->payrollService->updateSalaryData($promotion);
+                    $this->payrollService->designationUpdate($promotion);
+                    $promotion->update(['is_adjustment' => 2]);
+
+                }
+            });
+
+        }catch(\Exception $e){
+            Log::error($e->getMessage());
+            return redirect()->back()->with([
+                'message' => 'Something Went Wrong',
+                'alert-type' => 'error'
+            ]);
+        }
+        return redirect()->route('promotion.index')->with([
+            'message' => 'Updated Successfully',
             'alert-type' => 'success'
         ]);
     }

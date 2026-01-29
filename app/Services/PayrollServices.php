@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Models\EmployeeOfficeInfo;
 use App\Models\EmployeeSalaryBreakdown;
 use App\Models\Payroll\Increment;
 use App\Models\Payroll\Promotion;
+use Illuminate\Support\Facades\Log;
 
 class PayrollServices
 {
@@ -108,6 +110,36 @@ class PayrollServices
     public function incrementDataUpdate($id,$data){
         $increment = Increment::find($id);
         $increment->update($data);
+    }
+
+    public function salaryCalculation($data1, $data2){
+        return $data1 * ($data2 / 100);
+    }
+
+    public function updateSalaryData($data){
+        $employee_id = $data->employee_id;
+        $salaryData = EmployeeSalaryBreakdown::where('employee_id', $employee_id)->first();
+        $newGrossSalary = $data->new_gross_salary;
+        $salaryData->update([
+            'basic_salary' => $this->salaryCalculation( $newGrossSalary, $salaryData->basic_salary_percentage),
+            'house_allowance' => $this->salaryCalculation( $newGrossSalary, $salaryData->house_allowance_percentage),
+            'transport_allowance' => $this->salaryCalculation( $newGrossSalary, $salaryData->transport_allowance_percentage),
+            'food_allowance' => $this->salaryCalculation($newGrossSalary, $salaryData->food_allowance_percentage),
+            'medical_allowance' => $this->salaryCalculation($newGrossSalary, $salaryData->medical_allowance_percentage),
+            'other_earnings' => $this->salaryCalculation($newGrossSalary, $salaryData->other_earnings_percentage),
+            'gross_salary' => $newGrossSalary
+        ]);
+    }
+
+    public function designationUpdate($data){
+        $employee_id = $data->employee_id;
+        $newDesignation  = $data->new_designation;
+        Log::info('Employee Designation: ' . $newDesignation);
+        Log::info('Employee ID: ' . $employee_id);
+        $designation = EmployeeOfficeInfo::where('employee_id', $employee_id)->first();
+        $designation->update([
+            'current_designation_id' => $newDesignation,
+        ]);
     }
 
 }

@@ -396,15 +396,6 @@
                                     @enderror
                                 </div>
 
-                                <div class="col-lg-4 mb-3">
-                                    <label for="bgmea_id" class="form-label">BGMEA ID</label>
-                                    <input type="text" class="form-control @error('bgmea_id') is-invalid @enderror"
-                                        id="bgmea_id" name="bgmea_id"
-                                        value="{{ isset($employee) ? $employee->bgmea_id : old('bgmea_id') }}">
-                                    @error('bgmea_id')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
                             </div>
 
                             <div class="row">
@@ -551,7 +542,7 @@
                                     <input type="text"
                                         class="form-control @error('present_address.village') is-invalid @enderror"
                                         id="present_village" name="present_address[village]"
-                                        value="{{ isset($employee) ? $employee->present_address['village'] : old('present_address.village') }}">
+                                        value="{{ isset($employee->present_address['village']) ? $employee->present_address['village'] : old('present_address.village') }}">
                                     @error('present_address.village')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -565,7 +556,7 @@
                                     <input type="text"
                                         class="form-control @error('present_address.post_office') is-invalid @enderror"
                                         id="present_post_office" name="present_address[post_office]"
-                                        value="{{ isset($employee) ? $employee->present_address['post_office'] : old('present_address.post_office') }}">
+                                        value="{{ isset($employee->present_address['post_office']) ? $employee->present_address['post_office'] : old('present_address.post_office') }}">
                                     @error('present_address.post_office')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -577,7 +568,7 @@
                                     <input type="text"
                                         class="form-control @error('present_address.district') is-invalid @enderror"
                                         id="present_district" name="present_address[district]"
-                                        value="{{ isset($employee) ? $employee->present_address['district'] : old('present_address.district') }}">
+                                        value="{{ isset($employee->present_address['district']) ? $employee->present_address['district'] : old('present_address.district') }}">
                                     @error('present_address.district')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -589,7 +580,7 @@
                                     <input type="text"
                                         class="form-control @error('present_address.division') is-invalid @enderror"
                                         id="present_division" name="present_address[division]"
-                                        value="{{ isset($employee) ? $employee->present_address['division'] : old('present_address.division') }}">
+                                        value="{{ isset($employee->present_address['division']) ? $employee->present_address['division'] : old('present_address.division') }}">
                                     @error('present_address.division')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -603,7 +594,7 @@
                                     <input type="text"
                                         class="form-control @error('present_address.zip_code') is-invalid @enderror"
                                         id="present_zip_code" name="present_address[zip_code]"
-                                        value="{{ isset($employee) ? $employee->present_address['zip_code'] : old('present_address.zip_code') }}">
+                                        value="{{ isset($employee->present_address['zip_code']) ? $employee->present_address['zip_code'] : old('present_address.zip_code') }}">
                                     @error('present_address.zip_code')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -615,7 +606,7 @@
                                     <input type="text"
                                         class="form-control @error('present_address.state') is-invalid @enderror"
                                         id="present_state" name="present_address[state]"
-                                        value="{{ isset($employee) ? $employee->present_address['state'] : old('present_address.state') }}">
+                                        value="{{ isset($employee->present_address['state']) ? $employee->present_address['state'] : old('present_address.state') }}">
                                     @error('present_address.state')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -627,7 +618,7 @@
                                     <input type="text"
                                         class="form-control @error('present_address.country') is-invalid @enderror"
                                         id="present_country" name="present_address[country]"
-                                        value="{{ isset($employee) ? $employee->present_address['country'] : old('present_address.country') }}">
+                                        value="{{ isset($employee->present_address['country']) ? $employee->present_address['country'] : old('present_address.country') }}">
                                     @error('present_address.country')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -664,7 +655,7 @@
                                     <input type="text"
                                         class="form-control @error('permanent_address.line_1') is-invalid @enderror"
                                         id="permanent_address_line_1" name="permanent_address[line_1]"
-                                        value="{{ isset($employee) ? $employee->permanent_address['line_1'] : old('permanent_address.line_1') }}">
+                                        value="{{ isset($employee->permanent_address['line_1']) ? $employee->permanent_address['line_1'] : old('permanent_address.line_1') }}">
                                     @error('permanent_address.line_1')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -675,7 +666,7 @@
                                     <input type="text"
                                         class="form-control @error('permanent_address.village') is-invalid @enderror"
                                         id="permanent_village" name="permanent_address[village]"
-                                        value="{{ isset($employee) ? $employee->permanent_address['village'] : old('permanent_address.village') }}">
+                                        value="{{ isset($employee->permanent_address['village']) ? $employee->permanent_address['village'] : old('permanent_address.village') }}">
                                     @error('permanent_address.village')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -688,7 +679,7 @@
                                     <input type="text"
                                         class="form-control @error('permanent_address.post_office') is-invalid @enderror"
                                         id="permanent_post_office" name="permanent_address[post_office]"
-                                        value="{{ isset($employee) ? $employee->permanent_address['post_office'] : old('permanent_address.post_office') }}">
+                                        value="{{ isset($employee->permanent_address['post_office']) ? $employee->permanent_address['post_office'] : old('permanent_address.post_office') }}">
                                     @error('permanent_address.post_office')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -699,7 +690,7 @@
                                     <input type="text"
                                         class="form-control @error('permanent_address.district') is-invalid @enderror"
                                         id="permanent_district" name="permanent_address[district]"
-                                        value="{{ isset($employee) ? $employee->permanent_address['district'] : old('permanent_address.district') }}">
+                                        value="{{ isset($employee->permanent_address['district']) ? $employee->permanent_address['district'] : old('permanent_address.district') }}">
                                     @error('permanent_address.district')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -710,7 +701,7 @@
                                     <input type="text"
                                         class="form-control @error('permanent_address.division') is-invalid @enderror"
                                         id="permanent_division" name="permanent_address[division]"
-                                        value="{{ isset($employee) ? $employee->permanent_address['division'] : old('permanent_address.division') }}">
+                                        value="{{ isset($employee->permanent_address['division']) ? $employee->permanent_address['division'] : old('permanent_address.division') }}">
                                     @error('permanent_address.division')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -723,7 +714,7 @@
                                     <input type="text"
                                         class="form-control @error('permanent_address.zip_code') is-invalid @enderror"
                                         id="permanent_zip_code" name="permanent_address[zip_code]"
-                                        value="{{ isset($employee) ? $employee->permanent_address['zip_code'] : old('permanent_address.zip_code') }}">
+                                        value="{{ isset($employee->permanent_address['zip_code']) ? $employee->permanent_address['zip_code'] : old('permanent_address.zip_code') }}">
                                     @error('permanent_address.zip_code')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -734,7 +725,7 @@
                                     <input type="text"
                                         class="form-control @error('permanent_address.state') is-invalid @enderror"
                                         id="permanent_state" name="permanent_address[state]"
-                                        value="{{ isset($employee) ? $employee->permanent_address['state'] : old('permanent_address.state') }}">
+                                        value="{{ isset($employee->permanent_address['state']) ? $employee->permanent_address['state'] : old('permanent_address.state') }}">
                                     @error('permanent_address.state')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -745,7 +736,7 @@
                                     <input type="text"
                                         class="form-control @error('permanent_address.country') is-invalid @enderror"
                                         id="permanent_country" name="permanent_address[country]"
-                                        value="{{ isset($employee) ? $employee->permanent_address['country'] : old('permanent_address.country') }}">
+                                        value="{{ isset($employee->permanent_address['country']) ? $employee->permanent_address['country'] : old('permanent_address.country') }}">
                                     @error('permanent_address.country')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -770,7 +761,7 @@
                                     <input type="text"
                                         class="form-control @error('reference_address.emp_id') is-invalid @enderror"
                                         id="reference_emp_id" name="reference_address[emp_id]"
-                                        value="{{ isset($employee) ? $employee->reference_address['emp_id'] : old('reference_address.emp_id') }}">
+                                        value="{{ isset($employee->reference_address['emp_id']) ? $employee->reference_address['emp_id'] : old('reference_address.emp_id') }}">
                                     @error('reference_address.emp_id')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -781,7 +772,7 @@
                                     <input type="text"
                                         class="form-control @error('reference_address.reference_name') is-invalid @enderror"
                                         id="reference_name" name="reference_address[reference_name]"
-                                        value="{{ isset($employee) ? $employee->reference_address['reference_name'] : old('reference_address.reference_name') }}">
+                                        value="{{ isset($employee->reference_address['reference_name']) ? $employee->reference_address['reference_name'] : old('reference_address.reference_name') }}">
                                     @error('reference_address.reference_name')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -792,7 +783,7 @@
                                     <input type="text"
                                         class="form-control @error('reference_address.reference_designation') is-invalid @enderror"
                                         id="reference_designation" name="reference_address[reference_designation]"
-                                        value="{{ isset($employee) ? $employee->reference_address['reference_designation'] : old('reference_address.reference_designation') }}">
+                                        value="{{ isset($employee->reference_address['reference_designation']) ? $employee->reference_address['reference_designation'] : old('reference_address.reference_designation') }}">
                                     @error('reference_address.reference_designation')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -805,7 +796,7 @@
                                     <input type="text"
                                         class="form-control @error('reference_address.line_1') is-invalid @enderror"
                                         id="reference_address_line_1" name="reference_address[line_1]"
-                                        value="{{ isset($employee) ? $employee->reference_address['line_1'] : old('reference_address.line_1') }}">
+                                        value="{{ isset($employee->reference_address['line_1']) ? $employee->reference_address['line_1'] : old('reference_address.line_1') }}">
                                     @error('reference_address.line_1')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -816,7 +807,7 @@
                                     <input type="text"
                                         class="form-control @error('reference_address.village') is-invalid @enderror"
                                         id="reference_village" name="reference_address[village]"
-                                        value="{{ isset($employee) ? $employee->reference_address['village'] : old('reference_address.village') }}">
+                                        value="{{ isset($employee->reference_address['village']) ? $employee->reference_address['village'] : old('reference_address.village') }}">
                                     @error('reference_address.village')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -829,7 +820,7 @@
                                     <input type="text"
                                         class="form-control @error('reference_address.post_office') is-invalid @enderror"
                                         id="reference_post_office" name="reference_address[post_office]"
-                                        value="{{ isset($employee) ? $employee->reference_address['post_office'] : old('reference_address.post_office') }}">
+                                        value="{{ isset($employee->reference_address['post_office']) ? $employee->reference_address['post_office'] : old('reference_address.post_office') }}">
                                     @error('reference_address.post_office')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -840,7 +831,7 @@
                                     <input type="text"
                                         class="form-control @error('reference_address.district') is-invalid @enderror"
                                         id="reference_district" name="reference_address[district]"
-                                        value="{{ isset($employee) ? $employee->reference_address['district'] : old('reference_address.district') }}">
+                                        value="{{ isset($employee->reference_address['district']) ? $employee->reference_address['district'] : old('reference_address.district') }}">
                                     @error('reference_address.district')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -851,7 +842,7 @@
                                     <input type="text"
                                         class="form-control @error('reference_address.division') is-invalid @enderror"
                                         id="reference_division" name="reference_address[division]"
-                                        value="{{ isset($employee) ? $employee->reference_address['division'] : old('reference_address.division') }}">
+                                        value="{{ isset($employee->reference_address['division']) ? $employee->reference_address['division'] : old('reference_address.division') }}">
                                     @error('reference_address.division')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -864,7 +855,7 @@
                                     <input type="text"
                                         class="form-control @error('reference_address.zip_code') is-invalid @enderror"
                                         id="reference_zip_code" name="reference_address[zip_code]"
-                                        value="{{ isset($employee) ? $employee->reference_address['zip_code'] : old('reference_address.zip_code') }}">
+                                        value="{{ isset($employee->reference_address['zip_code']) ? $employee->reference_address['zip_code'] : old('reference_address.zip_code') }}">
                                     @error('reference_address.zip_code')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -875,7 +866,7 @@
                                     <input type="text"
                                         class="form-control @error('reference_address.state') is-invalid @enderror"
                                         id="reference_state" name="reference_address[state]"
-                                        value="{{ isset($employee) ? $employee->reference_address['state'] : old('reference_address.state') }}">
+                                        value="{{ isset($employee->reference_address['state']) ? $employee->reference_address['state'] : old('reference_address.state') }}">
                                     @error('reference_address.state')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -886,7 +877,7 @@
                                     <input type="text"
                                         class="form-control @error('reference_address.country') is-invalid @enderror"
                                         id="reference_country" name="reference_address[country]"
-                                        value="{{ isset($employee) ? $employee->reference_address['country'] : old('reference_address.country') }}">
+                                        value="{{ isset($employee->reference_address['country']) ? $employee->reference_address['country'] : old('reference_address.country') }}">
                                     @error('reference_address.country')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -899,7 +890,7 @@
                                     <input type="tel"
                                         class="form-control @error('reference_address.phone') is-invalid @enderror"
                                         id="reference_phone" name="reference_address[phone]"
-                                        value="{{ isset($employee) ? $employee->reference_address['phone'] : old('reference_address.phone') }}">
+                                        value="{{ isset($employee->reference_address['phone']) ? $employee->reference_address['phone'] : old('reference_address.phone') }}">
                                     @error('reference_address.phone')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -910,7 +901,7 @@
                                     <input type="tel"
                                         class="form-control @error('reference_address.mobile') is-invalid @enderror"
                                         id="reference_mobile" name="reference_address[mobile]"
-                                        value="{{ isset($employee) ? $employee->reference_address['mobile'] : old('reference_address.mobile') }}">
+                                        value="{{ isset($employee->reference_address['mobile']) ? $employee->reference_address['mobile'] : old('reference_address.mobile') }}">
                                     @error('reference_address.mobile')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -921,7 +912,7 @@
                                     <input type="email"
                                         class="form-control @error('reference_address.email') is-invalid @enderror"
                                         id="reference_email" name="reference_address[email]"
-                                        value="{{ isset($employee) ? $employee->reference_address['email'] : old('reference_address.email') }}">
+                                        value="{{ isset($employee->reference_address['email']) ? $employee->reference_address['email'] : old('reference_address.email') }}">
                                     @error('reference_address.email')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -943,7 +934,7 @@
                             <div class="row">
                                 <div class="col-lg-6 mb-3">
                                     <label for="photo_path" class="form-label">Photo</label>
-                                    <input class="form-control @error('photo_path') is-invalid @enderror" type="file"
+                                    <input class=" filepond form-control @error('photo_path') is-invalid @enderror" type="file"
                                         id="photo_path" name="photo_path" accept="image/*">
                                     <small class="form-text text-muted">Accepted formats: JPG, PNG, GIF (Max: 2MB)</small>
                                     @error('photo_path')
@@ -953,7 +944,7 @@
 
                                 <div class="col-lg-6 mb-3">
                                     <label for="fingerprint_path" class="form-label">Fingerprint</label>
-                                    <input class="form-control @error('fingerprint_path') is-invalid @enderror"
+                                    <input class="filepond form-control @error('fingerprint_path') is-invalid @enderror"
                                         type="file" id="fingerprint_path" name="fingerprint_path" accept="image/*">
                                     <small class="form-text text-muted">Accepted formats: JPG, PNG (Max: 2MB)</small>
                                     @error('fingerprint_path')

@@ -20,6 +20,7 @@ class Increment extends Model
         'effective_from',
         'effective_to',
         'status',
+        'is_adjustment'
     ];
 
 

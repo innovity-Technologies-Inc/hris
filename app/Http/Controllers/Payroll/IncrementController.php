@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Employee;
 use App\Models\Payroll\Increment;
 use App\Services\PayrollServices;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -131,6 +132,45 @@ class IncrementController extends Controller
         $incrementData->delete();
         return redirect()->back()->with([
             'message' => 'Deleted Successfully',
+            'alert-type' => 'success'
+        ]);
+    }
+
+    public function statusUpdate(Request $request, $id){
+        $request->validate([
+            'status' => 'required|in:approved,rejected',
+        ]);
+        $data = Increment::find($id);
+            if ($request->status = 'approved') {
+                $data->update([
+                    'status' => $request->status,
+                    'is_adjustment' => 1
+                    ]);
+
+            }
+            $data->update(['status' => $request->status]);
+
+        return redirect()->route('increment.index')->with([
+            'message' => 'Updated Successfully',
+        ]);
+    }
+
+    public function adjustment(){
+
+        $increments = Increment::where('is_adjustment', 1)
+            ->whereDate('effective_from', '<=', Carbon::today())
+            ->get();
+
+//        dd($increments);
+
+        DB::transaction(function () use ($increments) {
+            foreach ($increments as $increment) {
+                $this->payrollService->updateSalaryData($increment);
+                $increment->update(['is_adjustment' => 2]);
+            }
+        });
+        return redirect()->route('increment.index')->with([
+            'message' => 'Updated Successfully',
             'alert-type' => 'success'
         ]);
     }

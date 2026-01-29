@@ -524,26 +524,30 @@ Route::controller(EmployeeMovementsController::class)->prefix('movement')->group
 
 Route::prefix('promotion')->name('promotion.')->controller(PromotionController::class)->group(function () {
     Route::get('/', 'index')->name('index');
-    Route::get('/create', 'create')->name('create');
-    Route::post('/', 'save')->name('store');
-    Route::get('/{id}', 'show')->name('show');
-    Route::get('/{id}/edit', 'edit')->name('edit');
-    Route::put('/{id}', 'save')->name('update');
-    Route::put('/{id}/approve', 'approve')->name('approve');
-    Route::put('/{id}/reject', 'reject')->name('reject');
+    Route::get('create', 'create')->name('create');
+    Route::get('adjustment', 'adjustment')->name('adjustment');
+    Route::post('store', 'save')->name('store');
+    Route::get('view/{id}', 'show')->name('show');
+    Route::get('edit/{id}', 'edit')->name('edit');
+    Route::put('{id}/update', 'save')->name('update');
+    Route::put('{id}/status-update', 'statusUpdate')->name('status.update');
+    Route::put('{id}/delete', 'delete')->name('delete');
+
 });
 
 // Payroll - Employee Increment Routes
 
 Route::prefix('increment')->name('increment.')->controller(IncrementController::class)->group(function () {
     Route::get('/', 'index')->name('index');
-    Route::get('/create', 'create')->name('create');
-    Route::post('/', 'save')->name('store');
-    Route::get('/{id}', 'show')->name('show');
-    Route::get('/{id}/edit', 'edit')->name('edit');
-    Route::put('/{id}', 'save')->name('update');
-    Route::put('/{id}/approve', 'approve')->name('approve');
-    Route::put('/{id}/reject', 'reject')->name('reject');
+    Route::get('create', 'create')->name('create');
+    Route::get('adjustment', 'adjustment')->name('adjustment');
+    Route::post('store', 'save')->name('store');
+    Route::get('view/{id}', 'show')->name('show');
+    Route::get('edit/{id}', 'edit')->name('edit');
+    Route::put('{id}/update', 'save')->name('update');
+    Route::put('{id}/status-update', 'statusUpdate')->name('status.update');
+    Route::put('{id}/delete', 'delete')->name('delete');
+
 });
 
 Route::controller(DataController::class)->group(function () {

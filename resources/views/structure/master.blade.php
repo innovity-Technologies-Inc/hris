@@ -856,9 +856,9 @@
 
 
                     // 👇 Force image format
-                    /*imageCompressOutputMimeType: 'image/webp', // can be 'image/png', 'image/jpeg', etc.
+                    imageCompressOutputMimeType: 'image/webp', // can be 'image/png', 'image/jpeg', etc.
                     imageCompressOutputQuality: 0.7, // 0–1
-                    imageCompressConvertSize: 0 */
+                    imageCompressConvertSize: 0
                 });
             }
         });

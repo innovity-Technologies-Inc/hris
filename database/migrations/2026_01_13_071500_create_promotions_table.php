@@ -26,6 +26,7 @@ return new class extends Migration
             $table->date('effective_from');
             $table->date('effective_to')->nullable();
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->tinyInteger('is_adjustment')->default(0)->comment('0-rejected, 1-Pending for adjustment, 2-Adjusted');
             $table->timestamps();
         });
     }
