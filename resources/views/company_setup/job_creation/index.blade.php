@@ -26,60 +26,8 @@
                 </form>
 
                 <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered mb-0">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Designation</th>
-                                    <th scope="col">Department</th>
-                                    <th scope="col">Job Ind.</th>
-                                    <th scope="col">Display Designation</th>
-                                    <th scope="col">Display Serial</th>
-                                    <th scope="col">Remarks</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            @php
-                                $sl = \App\HelperClass::indexNumberSerialization($job_creations);
-                            @endphp
-                                @foreach ($job_creations as $jobCreation)
-                                    <tr>
-                                        <th scope="row">{{ $sl++ }}</th>
-                                        <td>{{ $jobCreation->getDesignation->company_designation }}</td>
-                                        <td>{{ $jobCreation->getDepartment->department_name }}</td>
-                                        <td>{{ $jobCreation->job_ind }}</td>
-                                        <td>{{ $jobCreation->display_designation }}</td>
-                                        <td>{{ $jobCreation->display_serial }}</td>
-                                        <td>{{ $jobCreation->remarks }}</td>
-                                        <td>
-                                            @if($jobCreation->status == 'active')
-                                                <span class="badge text-bg-success">Active</span>
-                                            @else
-                                                <span class="badge text-bg-danger">Inactive</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <a href="{{ route('job_creations.edit', $jobCreation->id) }}" class="btn btn-primary btn-sm">
-                                                <i style="height: 12px; width: 12px" data-feather="edit"></i>
-                                            </a>
-
-                                            <form action="{{ route('job_creations.delete', $jobCreation->id) }}" method="POST" style="display: inline-block">
-                                                @csrf
-                                                @method('DELETE')
-
-                                                <button class="btn btn-sm btn-danger confirmDelete">
-                                                    <i style="height: 12px; width: 12px" data-feather="trash"></i>
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-
+                    <div class="table-responsive" id="search-result">
+                        @include('company_setup.job_creation.search_results')
                         <div class="mt-3">
                             {{ $job_creations->links() }}
                         </div>
@@ -88,4 +36,43 @@
             </div><!-- end card -->
         </div>
     </div><!-- end row -->
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            function fetchData(url = "{{ route('job_creations.index') }}") {
+                const queryString = $('#filterForm').serialize();
+                $.ajax({
+                    url: url,
+                    method: "GET",
+                    data: queryString,
+                    beforeSend: function() {
+                        $('#search-result').html('<div class="text-center py-4 text-muted">Loading Data...</div>');
+                    },
+                    success: function(response) {
+                        $('#search-result').html(response);
+                        if (typeof feather !== 'undefined') {
+                            feather.replace();
+                        }
+                        const newUrl = '?' + queryString;
+                        window.history.pushState(null, '', newUrl || location.pathname);
+                    },
+                    error: function(xhr) {
+                        console.error('AJAX Error:', xhr.responseText);
+                    }
+                });
+            }
+
+            $('#filterForm').on('input change', function(e) {
+                e.preventDefault();
+                fetchData();
+            });
+
+            $(document).on('click', '#search-result .pagination a', function(e) {
+                e.preventDefault();
+                const url = $(this).attr('href');
+                fetchData(url);
+            });
+        });
+    </script>
 @endsection

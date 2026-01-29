@@ -34,62 +34,9 @@
                     </div>
                 </form>
 
-                <div class="card-body" id="search-result">
-                    <div class="table-responsive">
-                        <table class="table table-bordered mb-0">
-                            <thead>
-                                <tr>
-                                    <th scope="col">SL</th>
-                                    <th scope="col">Title</th>
-                                    <th scope="col">From Date</th>
-                                    <th scope="col">To Date</th>
-                                    <th scope="col">Duration (Days)</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @php
-                                    $sl = \App\HelperClass::indexNumberSerialization($holidays);
-                                @endphp
-                                @foreach ($holidays as $holiday)
-                                    @php
-                                        $duration = $holiday->start_date->diffInDays($holiday->end_date) + 1;
-                                    @endphp
-                                    <tr>
-                                        <th scope="row">{{ $sl++ }}</th>
-                                        <td>{{ $holiday->title }}</td>
-                                        <td>{{ $holiday->start_date->format('d M Y') }}</td>
-                                        <td>{{ $holiday->end_date->format('d M Y') }}</td>
-                                        <td>{{ $duration }}</td>
-                                        <td>
-                                            @if ($holiday->status == 'active')
-                                                <span class="badge bg-success">Active</span>
-                                            @else
-                                                <span class="badge bg-danger">Inactive</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <a href="{{ route('holidays.edit', $holiday->id) }}"
-                                                class="btn btn-primary btn-sm">
-                                                <i style="height: 12px; width: 12px" data-feather="edit"></i>
-                                            </a>
-
-                                            <form action="{{ route('holidays.delete', $holiday->id) }}" method="POST"
-                                                style="display: inline-block">
-                                                @csrf
-                                                @method('DELETE')
-
-                                                <button class="btn btn-sm btn-danger confirmDelete">
-                                                    <i style="height: 12px; width: 12px" data-feather="trash"></i>
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-
+                <div class="card-body">
+                    <div class="table-responsive" id="search-result">
+                        @include('company_setup.holidays.search_results')
                         <div class="mt-3">
                             {{ $holidays->links() }}
                         </div>
@@ -98,4 +45,43 @@
             </div><!-- end card -->
         </div>
     </div><!-- end row -->
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            function fetchData(url = "{{ route('holidays.index') }}") {
+                const queryString = $('#filterForm').serialize();
+                $.ajax({
+                    url: url,
+                    method: "GET",
+                    data: queryString,
+                    beforeSend: function() {
+                        $('#search-result').html('<div class="text-center py-4 text-muted">Loading Data...</div>');
+                    },
+                    success: function(response) {
+                        $('#search-result').html(response);
+                        if (typeof feather !== 'undefined') {
+                            feather.replace();
+                        }
+                        const newUrl = '?' + queryString;
+                        window.history.pushState(null, '', newUrl || location.pathname);
+                    },
+                    error: function(xhr) {
+                        console.error('AJAX Error:', xhr.responseText);
+                    }
+                });
+            }
+
+            $('#filterForm').on('input change', function(e) {
+                e.preventDefault();
+                fetchData();
+            });
+
+            $(document).on('click', '#search-result .pagination a', function(e) {
+                e.preventDefault();
+                const url = $(this).attr('href');
+                fetchData(url);
+            });
+        });
+    </script>
 @endsection
