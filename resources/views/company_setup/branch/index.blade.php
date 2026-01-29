@@ -1,13 +1,12 @@
 @extends('structure.master')
 @section('content')
-
-    {{--    list--}}
+    {{--    list --}}
 
     <div class="row">
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-header">
-                    <a type="button" class="btn btn-warning btn-sm" href="{{route('branches.create')}}">
+                    <a type="button" class="btn btn-warning btn-sm" href="{{ route('branches.create') }}">
                         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                     </a>
                 </div><!-- end card header -->
@@ -17,7 +16,7 @@
                         <div class="col-12">
                             <div class="input-group input-group-md">
                                 <input type="text" class="form-control border-end-0" id="keywordSearch" name="keyword"
-                                       placeholder="Search branches by keyword" aria-label="Keyword Search">
+                                    placeholder="Search branches by keyword" aria-label="Keyword Search">
                                 <span class="input-group-text border-start-0 input-group-bg">
                                     <i class="mdi mdi-magnify text-muted"></i>
                                 </span>
@@ -30,7 +29,7 @@
                     <div class="table-responsive" id="search-result">
                         @include('company_setup.branch.search_results')
                         <div class="mt-3">
-                            {{$branches->links()}}
+                            {{ $branches->links() }}
                         </div>
                     </div>
                 </div>
@@ -48,7 +47,8 @@
                     method: "GET",
                     data: queryString,
                     beforeSend: function() {
-                        $('#search-result').html('<div class="text-center py-4 text-muted">Loading Data...</div>');
+                        $('#search-result').html(
+                            '<div class="text-center py-4 text-muted">Loading Data...</div>');
                     },
                     success: function(response) {
                         $('#search-result').html(response);

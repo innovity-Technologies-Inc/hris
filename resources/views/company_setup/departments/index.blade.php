@@ -47,7 +47,8 @@
                     method: "GET",
                     data: queryString,
                     beforeSend: function() {
-                        $('#search-result').html('<div class="text-center py-4 text-muted">Loading Data...</div>');
+                        $('#search-result').html(
+                            '<div class="text-center py-4 text-muted">Loading Data...</div>');
                     },
                     success: function(response) {
                         $('#search-result').html(response);

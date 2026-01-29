@@ -16,7 +16,7 @@
                         <div class="col-12">
                             <div class="input-group input-group-md">
                                 <input type="text" class="form-control border-end-0" id="keywordSearch" name="keyword"
-                                       placeholder="Search designations by keyword" aria-label="Keyword Search">
+                                    placeholder="Search designations by keyword" aria-label="Keyword Search">
                                 <span class="input-group-text border-start-0 input-group-bg">
                                     <i class="mdi mdi-magnify text-muted"></i>
                                 </span>
@@ -47,7 +47,8 @@
                     method: "GET",
                     data: queryString,
                     beforeSend: function() {
-                        $('#search-result').html('<div class="text-center py-4 text-muted">Loading Data...</div>');
+                        $('#search-result').html(
+                            '<div class="text-center py-4 text-muted">Loading Data...</div>');
                     },
                     success: function(response) {
                         $('#search-result').html(response);

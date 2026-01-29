@@ -10,7 +10,7 @@
                         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                     </a>
                 </div><!-- end card header -->
-                
+
                 {{-- Search Filter Form --}}
                 <form id="filterForm">
                     <div class="row mb-1 mt-2 mx-4">
@@ -28,16 +28,16 @@
                 </form>
 
 
-            <div class="card-body">
-                <div class="table-responsive" id="search-result">
-                    @include('company_setup.company.search_results')
-                    <div class="mt-3">
-                        {{ $companies->links() }}
+                <div class="card-body">
+                    <div class="table-responsive" id="search-result">
+                        @include('company_setup.company.search_results')
+                        <div class="mt-3">
+                            {{ $companies->links() }}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
     </div>
 
@@ -51,7 +51,8 @@
                     method: "GET",
                     data: queryString,
                     beforeSend: function() {
-                        $('#search-result').html('<div class="text-center py-4 text-muted">Loading Data...</div>');
+                        $('#search-result').html(
+                            '<div class="text-center py-4 text-muted">Loading Data...</div>');
                     },
                     success: function(response) {
                         $('#search-result').html(response);
