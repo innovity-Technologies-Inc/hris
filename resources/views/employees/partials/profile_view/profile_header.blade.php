@@ -12,6 +12,7 @@
                                 100,
                                 '#974063',
                                 'rounded-circle img-fluid avatar-xxl img-thumbnail float-start',
+                                $employee->id,
                             ) !!}
                         </div>
                         <div class="overflow-hidden ms-md-4 ms-0">

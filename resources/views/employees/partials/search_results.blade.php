@@ -28,7 +28,14 @@
                             <tr>
                                 <th scope="row">{{ $sl++ }}</th>
                                 <td>
-                                    {!! \App\HelperClass::generateAvatar($employee->photo_path, $employee->full_name, 32, '#974063', '') !!}
+                                    {!! \App\HelperClass::generateAvatar(
+                                        $employee->photo_path,
+                                        $employee->full_name,
+                                        32,
+                                        '#974063',
+                                        '',
+                                        $employee->id,
+                                    ) !!}
                                 </td>
                                 <td>{{ $employee->system_id }}</td>
                                 <td>{{ $employee->applicant_id }}</td>

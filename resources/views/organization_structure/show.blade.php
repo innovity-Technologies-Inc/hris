@@ -22,12 +22,14 @@
                             @php($isKey = ($member->member_type ?? '') === 'Key Member')
                             @php($displayName = $isKey && $member->getEmployee ? $member->getEmployee->full_name : $member->name)
                             @php($photoPath = $isKey && $member->getEmployee ? $member->getEmployee->photo_path : $member->photo_path)
+                            @php($employeeId = $isKey && $member->getEmployee ? $member->getEmployee->id : null)
                             {!! \App\HelperClass::generateAvatar(
                                 $photoPath ?? null,
                                 $displayName,
                                 150,
                                 '#974063',
                                 'border border-3 border-primary shadow-sm',
+                                $employeeId,
                             ) !!}
                         </div>
 

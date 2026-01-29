@@ -21,9 +21,19 @@
                 <td>
                     @if ($item->getEmployee)
                         <div class="d-flex align-items-center">
-                            {!! \App\HelperClass::generateAvatar(null, $item->getEmployee->full_name ?? 'N/A', 40, '#974063', 'me-2') !!}
+                            {!! \App\HelperClass::generateAvatar(
+                                null,
+                                $item->getEmployee->full_name ?? 'N/A',
+                                40,
+                                '#974063',
+                                'me-2',
+                                $item->employee_id,
+                            ) !!}
                             <div>
-                                <strong>{{ $item->getEmployee->full_name }}</strong>
+                                <a href="{{ route('employees.profile.general_informations', $item->employee_id) }}"
+                                    class="text-decoration-none">
+                                    <strong class="text-dark">{{ $item->getEmployee->full_name }}</strong>
+                                </a>
                                 <br><small class="text-muted">ID: {{ $item->getEmployee->system_id }}</small>
                             </div>
                         </div>

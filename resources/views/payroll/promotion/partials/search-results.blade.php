@@ -27,19 +27,20 @@
                                 <th scope="row">{{ $sl++ }}</th>
                                 <td>
                                     <div class="d-flex align-items-center gap-2">
-                                        @if (isset($promotion->getEmployee->photo_path) && $promotion->getEmployee->photo_path)
-                                            <img src="{{ asset('storage/' . $promotion->getEmployee->photo_path) }}"
-                                                alt="Profile" class="rounded-circle"
-                                                style="width: 40px; height: 40px; object-fit: cover;">
-                                        @else
-                                            <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center"
-                                                style="width: 40px; height: 40px; font-size: 14px; font-weight: bold; color: white;">
-                                                {{ strtoupper(substr($promotion->getEmployee->full_name ?? 'U', 0, 1)) }}
-                                            </div>
-                                        @endif
+                                        {!! \App\HelperClass::generateAvatar(
+                                            $promotion->getEmployee->photo_path ?? null,
+                                            $promotion->getEmployee->full_name ?? 'N/A',
+                                            40,
+                                            '#974063',
+                                            '',
+                                            $promotion->employee_id,
+                                        ) !!}
                                         <div>
-                                            <div class="fw-semibold">{{ $promotion->getEmployee->full_name ?? 'N/A' }}
-                                            </div>
+                                            <a href="{{ route('employees.profile.general_informations', $promotion->employee_id) }}"
+                                                class="text-decoration-none">
+                                                <div class="fw-semibold text-dark">
+                                                    {{ $promotion->getEmployee->full_name ?? 'N/A' }}</div>
+                                            </a>
                                             <small
                                                 class="text-muted">{{ $promotion->getEmployee->applicant_id ?? 'N/A' }}</small>
                                         </div>
@@ -60,7 +61,8 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <span class="badge @if($promotion->status == 'pending') bg-warning @elseif($promotion->status == 'approved') bg-warning
+                                    <span
+                                        class="badge @if ($promotion->status == 'pending') bg-warning @elseif($promotion->status == 'approved') bg-warning
                                      @else bg-danger @endif">
                                         {{ ucfirst($promotion->status) }}
                                     </span>
