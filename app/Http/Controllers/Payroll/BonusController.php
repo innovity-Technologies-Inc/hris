@@ -9,6 +9,7 @@ use App\Models\Employee;
 use App\Models\Payroll\Bonus;
 use App\Models\Payroll\PayrollProcess;
 use App\Services\PayrollServices;
+use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -22,12 +23,17 @@ class BonusController extends Controller
         $this->payrollService = $payrollService;
     }
 
-    public function index()
+    public function index(Request $request, FlexSearch $flexSearch)
     {
         $title = 'Employee Bonus';
         $section = 'Employee Bonus';
         $sub_section = 'Index';
-        $payrollProcesses = PayrollProcess::where('type', 'bonus')->orderBy('created_at', 'desc')->paginate(10);
+        $searchResult = $this->payrollService->payrollProcessSearchResult($request,PayrollProcess::class,
+            $flexSearch);
+        $payrollProcesses = $searchResult->where('type', 'bonus')->orderBy('created_at', 'desc')->paginate(20);
+        if ($request->ajax()) {
+            return view('payroll.bonus.partials.search_results', compact('payrollProcesses'));
+        }
         return view('payroll.bonus.index', compact('title', 'section', 'sub_section',
             'payrollProcesses'));
     }

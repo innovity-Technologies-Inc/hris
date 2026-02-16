@@ -8,6 +8,7 @@ use App\Models\CompanyLocation;
 use App\Models\Department;
 use App\Models\Division;
 use App\Models\Section;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class PayrollProcess extends Model
@@ -58,5 +59,11 @@ class PayrollProcess extends Model
     public function getSection()
     {
         return $this->belongsTo(Section::class, 'section_id', 'id');
+    }
+    public function generatedBy(){
+        return $this->belongsTo(User::class, 'generated_by', 'id');
+    }
+    public function approvedBy(){
+        return $this->belongsTo(User::class, 'approved_by', 'id');
     }
 }

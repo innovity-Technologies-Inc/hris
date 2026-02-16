@@ -4,6 +4,7 @@ namespace App\Models\Payroll;
 
 use App\Models\BonusPlan;
 use App\Models\Employee;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Bonus extends Model
@@ -26,5 +27,6 @@ class Bonus extends Model
     public function getBonus(){
         return $this->belongsTo(BonusPlan::class, 'bonus_id', 'id');
     }
+
 
 }

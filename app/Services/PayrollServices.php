@@ -370,4 +370,37 @@ class PayrollServices
         return $data;
     }
 
+    public function payrollProcessSearchResult(Request $request, $modelName, $flexsearch)
+    {
+        $query = $modelName::with('generatedBy');
+
+        $filters = [];
+
+        if ($request->filled('from_start')) {
+            $filters['created_at>='] = ($request->input('from_start'));
+        }
+
+        if ($request->filled('from_end')) {
+            $filters['created_at<='] = ($request->input('from_end'));
+        }
+
+        if ($request->filled('status')) {
+            $filters['approval_status'] = ($request->input('status'));
+        }
+
+        if ($request->filled('salary_month')) {
+            $filters['salary_month'] = ($request->input('salary_month'));
+        }
+
+        $searchTerm = $request->get('keyword');
+
+        $searchableFields = ['generatedBy.name', 'batch_id'];
+
+        $data = $flexsearch->apply($query,
+            $filters,
+            $searchTerm,
+            $searchableFields);
+        return $data;
+    }
+
 }
