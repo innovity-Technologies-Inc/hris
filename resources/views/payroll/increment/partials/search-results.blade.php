@@ -99,7 +99,7 @@ Each increment object should have:
                                 </td>
                                 <td>
                                     <span
-                                        class="badge @if ($increment->status == 'pending') bg-warning @elseif($increment->status == 'approved') bg-warning
+                                        class="badge @if ($increment->status == 'pending') bg-warning @elseif($increment->status == 'approved') bg-success
                                      @else bg-danger @endif">
                                         {{ ucfirst($increment->status) }}
                                     </span>

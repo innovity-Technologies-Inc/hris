@@ -27,10 +27,9 @@ class BonusController extends Controller
         $title = 'Employee Bonus';
         $section = 'Employee Bonus';
         $sub_section = 'Index';
-        $employees = Employee::where('status', 'active')->get();
         $payrollProcesses = PayrollProcess::where('type', 'bonus')->orderBy('created_at', 'desc')->paginate(10);
         return view('payroll.bonus.index', compact('title', 'section', 'sub_section',
-            'payrollProcesses', 'employees'));
+            'payrollProcesses'));
     }
 
     public function create()

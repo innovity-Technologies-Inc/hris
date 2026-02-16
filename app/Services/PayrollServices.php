@@ -11,6 +11,7 @@ use App\Models\Payroll\Increment;
 use App\Models\Payroll\PayrollProcess;
 use App\Models\Payroll\Promotion;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -338,4 +339,35 @@ class PayrollServices
         $process = PayrollProcess::find($id);
         $process->delete();
     }
+
+    public function searchResult(Request $request, $modelName, $flexsearch)
+    {
+        $query = $modelName::with('getEmployee');
+
+        $filters = [];
+
+        if ($request->filled('effective_from_start')) {
+            $filters['effective_from>='] = ($request->input('effective_from_start'));
+        }
+
+        if ($request->filled('effective_from_end')) {
+            $filters['effective_from<='] = ($request->input('effective_from_end'));
+        }
+
+        if ($request->filled('status')) {
+            $filters['status'] = ($request->input('status'));
+        }
+
+        $searchTerm = $request->get('keyword');
+
+        $searchableFields = ['getEmployee.applicant_id', 'getEmployee.full_name', 'getEmployee.system_id'];
+
+        $data = $flexsearch->apply($query,
+            $filters,
+            $searchTerm,
+            $searchableFields)->orderBy('id', 'desc')->paginate(20);
+
+        return $data;
+    }
+
 }

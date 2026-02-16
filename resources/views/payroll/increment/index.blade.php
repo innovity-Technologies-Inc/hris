@@ -24,7 +24,7 @@
                                             </label>
                                             <div class="input-group input-group-md">
                                                 <input type="text" class="form-control border-end-0" id="keywordSearch"
-                                                    name="keyword" placeholder="Search by employee name"
+                                                    name="keyword" placeholder="Search by employee name, applicant id, system id"
                                                     aria-label="Keyword Search" value="{{ request('keyword') }}">
                                                 <span class="input-group-text border-start-0 input-group-bg">
                                                     <i class="mdi mdi-magnify text-muted"></i>
@@ -35,40 +35,21 @@
 
                                     {{-- Second Row: Employee, Increment Method, Status --}}
                                     <div class="row mb-2">
-                                        <div class="col-md-4">
-                                            <label for="employeeName" class="form-label text-muted small fw-semibold mb-1">
-                                                Employee Name
-                                            </label>
-                                            <select id="employeeName" name="employee_id"
-                                                class="form-select form-select-sm select2_list"
-                                                data-placeholder="Select employee">
-                                                <option value="">All Employees</option>
-                                                @foreach ($employees as $employee)
-                                                    <option value="{{ $employee->id }}"
-                                                        {{ request('employee_id') == $employee->id ? 'selected' : '' }}>
-                                                        {{ $employee->full_name }} ({{ $employee->applicant_id }})
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
 
                                         <div class="col-md-4">
-                                            <label for="incrementMethod"
-                                                class="form-label text-muted small fw-semibold mb-1">
-                                                Increment Method
+                                            <label for="effectiveFrom" class="form-label text-muted small fw-semibold mb-1">
+                                                Effective From (Start)
                                             </label>
-                                            <select id="incrementMethod" name="increment_method"
-                                                class="form-select form-select-sm" data-placeholder="Select method">
-                                                <option value="">All Methods</option>
-                                                <option value="fixed"
-                                                    {{ request('increment_method') == 'fixed' ? 'selected' : '' }}>Fixed
-                                                    Amount</option>
-                                                <option value="percentage"
-                                                    {{ request('increment_method') == 'percentage' ? 'selected' : '' }}>
-                                                    Percentage</option>
-                                            </select>
+                                            <input type="date" class="form-control form-control-sm" id="effectiveFrom"
+                                                   name="effective_from_start" value="{{ request('effective_from_start') }}">
                                         </div>
-
+                                        <div class="col-md-4">
+                                            <label for="effectiveTo" class="form-label text-muted small fw-semibold mb-1">
+                                                Effective From (End)
+                                            </label>
+                                            <input type="date" class="form-control form-control-sm" id="effectiveTo"
+                                                   name="effective_from_end" value="{{ request('effective_from_end') }}">
+                                        </div>
                                         <div class="col-md-4">
                                             <label for="statusFilter" class="form-label text-muted small fw-semibold mb-1">
                                                 Status
@@ -85,24 +66,8 @@
                                                 </option>
                                             </select>
                                         </div>
-                                    </div>
 
-                                    {{-- Third Row: Date Range --}}
-                                    <div class="row mb-2">
-                                        <div class="col-md-6">
-                                            <label for="effectiveFrom" class="form-label text-muted small fw-semibold mb-1">
-                                                Effective From (Start)
-                                            </label>
-                                            <input type="date" class="form-control form-control-sm" id="effectiveFrom"
-                                                name="effective_from_start" value="{{ request('effective_from_start') }}">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="effectiveTo" class="form-label text-muted small fw-semibold mb-1">
-                                                Effective From (End)
-                                            </label>
-                                            <input type="date" class="form-control form-control-sm" id="effectiveTo"
-                                                name="effective_from_end" value="{{ request('effective_from_end') }}">
-                                        </div>
+
                                     </div>
 
                                     {{-- Reset Button --}}

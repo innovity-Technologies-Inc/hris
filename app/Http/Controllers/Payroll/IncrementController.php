@@ -7,6 +7,7 @@ use App\Models\Employee;
 use App\Models\Payroll\Increment;
 use App\Services\PayrollServices;
 use Carbon\Carbon;
+use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -20,15 +21,17 @@ class IncrementController extends Controller
         $this->payrollService = $payrollService;
     }
 
-    public function index()
+    public function index(Request $request, FlexSearch $flexSearch)
     {
         $title = 'Employee Increment';
         $section = 'Employee Increment';
         $sub_section = 'Index';
-        $employees = Employee::where('status', 'active')->get();
-        $increments = Increment::latest()->paginate(10);
+        $increments = $this->payrollService->searchResult($request, Increment::class, $flexSearch);
+        if ($request->ajax()) {
+            return view('payroll.increment.partials.search-results', compact('increments'));
+        }
         return view('payroll.increment.index', compact('title', 'section', 'sub_section',
-            'increments', 'employees'));
+            'increments'));
     }
 
     public function create()
