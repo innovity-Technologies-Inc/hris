@@ -119,6 +119,16 @@
                                                 </button>
                                             </form>
                                         @endif
+                                        <form class="d-inline"
+                                              action="{{ route('promotion.delete', $promotion->id) }}"
+                                              method="POST">
+                                            @csrf
+                                            @method('delete')
+                                            <button type="submit" class="btn btn-danger btn-sm confirmDelete"
+                                                    title="Delete">
+                                                <i style="height: 12px; width: 12px" data-feather="trash"></i>
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>

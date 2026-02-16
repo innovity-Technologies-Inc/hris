@@ -539,7 +539,7 @@ Route::prefix('promotion')->name('promotion.')->controller(PromotionController::
     Route::get('edit/{id}', 'edit')->name('edit');
     Route::put('{id}/update', 'save')->name('update');
     Route::put('{id}/status-update', 'statusUpdate')->name('status.update');
-    Route::put('{id}/delete', 'delete')->name('delete');
+    Route::delete('{id}/delete', 'delete')->name('delete');
 
 });
 
@@ -554,7 +554,7 @@ Route::prefix('increment')->name('increment.')->controller(IncrementController::
     Route::get('edit/{id}', 'edit')->name('edit');
     Route::put('{id}/update', 'save')->name('update');
     Route::put('{id}/status-update', 'statusUpdate')->name('status.update');
-    Route::put('{id}/delete', 'delete')->name('delete');
+    Route::delete('{id}/delete', 'delete')->name('delete');
 
 });
 
