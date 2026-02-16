@@ -144,14 +144,15 @@ class IncrementController extends Controller
             'status' => 'required|in:approved,rejected',
         ]);
         $data = Increment::find($id);
-            if ($request->status = 'approved') {
+            if ($request->status == 'approved') {
                 $data->update([
                     'status' => $request->status,
                     'is_adjustment' => 1
                     ]);
 
+            }else{
+                $data->update(['status' => $request->status]);
             }
-            $data->update(['status' => $request->status]);
 
         return redirect()->route('increment.index')->with([
             'message' => 'Updated Successfully',

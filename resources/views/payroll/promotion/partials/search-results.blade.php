@@ -22,6 +22,7 @@
                             <th scope="col">Previous Designation</th>
                             <th scope="col">New Designation</th>
                             <th scope="col">New Gross Salary</th>
+                            <th scope="col">Effective From</th>
                             <th scope="col">Status</th>
                             <th scope="col">Action</th>
                         </tr>
@@ -65,6 +66,10 @@
                                     <div class="fw-semibold text-success fs-6">
                                         ৳{{ number_format($promotion->new_gross_salary, 2) }}
                                     </div>
+                                </td>
+                                <td>
+                                    <span
+                                        class="small">{{ \Carbon\Carbon::parse($promotion->effective_from)->format('d M Y') }}</span>
                                 </td>
                                 <td>
                                     <span

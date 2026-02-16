@@ -10,6 +10,7 @@ use App\Models\Payroll\Increment;
 use App\Models\Payroll\Promotion;
 use App\Services\PayrollServices;
 use Carbon\Carbon;
+use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -20,15 +21,17 @@ class PromotionController extends Controller
     public function __construct(PayrollServices $payrollService){
         $this->payrollService = $payrollService;
     }
-    public function index(){
+    public function index(Request $request, FlexSearch $flexSearch){
         $title = 'Employee Promotion';
         $section = 'Employee Promotion';
         $sub_section = 'Index';
-        $designations = Designation::where('status', 'active')->get();
-        $employees = Employee::has('salary')->where('status', 'active')->get();
-        $promotions = Promotion::latest()->paginate(10);
+        $promotions = $this->payrollService->searchResult($request, Promotion::class, $flexSearch);
+
+        if ($request->ajax()) {
+            return view('payroll.promotion.partials.search-results', compact('promotions'));
+        }
         return view('payroll.promotion.index', compact('title', 'section', 'sub_section',
-            'promotions', 'employees', 'designations'));
+            'promotions'));
     }
 
     public function create(){
@@ -148,14 +151,15 @@ class PromotionController extends Controller
             'status' => 'required|in:approved,rejected',
         ]);
         $data = Promotion::find($id);
-        if ($request->status = 'approved') {
+        if ($request->status == 'approved') {
             $data->update([
                 'status' => $request->status,
                 'is_adjustment' => 1
             ]);
 
+        }else{
+            $data->update(['status' => $request->status]);
         }
-        $data->update(['status' => $request->status]);
 
         return redirect()->route('promotion.index')->with([
             'message' => 'Updated Successfully',
