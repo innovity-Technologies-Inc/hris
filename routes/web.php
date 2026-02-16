@@ -1,50 +1,50 @@
 <?php
 
+use App\Http\Controllers\AllowancePlanController;
 use App\Http\Controllers\ApiKeyController;
-use App\Http\Controllers\SettingsController;
-use App\Http\Controllers\TofsilsController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CompanySetupController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\CompanyLocationController;
-use App\Http\Controllers\DepartmentController;
-use App\Http\Controllers\SalaryGradesController;
-use App\Http\Controllers\GazetteLocationsController;
-use App\Http\Controllers\DivisionController;
-use App\Http\Controllers\BanksController;
-use App\Http\Controllers\BranchesController;
-use App\Http\Controllers\DesignationController;
-use App\Http\Controllers\JobCreationController;
-use App\Http\Controllers\SectionController;
+use App\Http\Controllers\AttendancesController;
 use App\Http\Controllers\BankAccountsController;
-use App\Http\Controllers\EmployeeProfileController;
-use App\Http\Controllers\EmployeeEligibleController;
-use App\Http\Controllers\EmployeeEducationExperienceTrainingController;
-use App\Http\Controllers\EmployeeSalaryBreakdownController;
-use App\Http\Controllers\EmployeeNomineeController;
+use App\Http\Controllers\BanksController;
+use App\Http\Controllers\BonusPlanController;
+use App\Http\Controllers\BranchesController;
+use App\Http\Controllers\CompanyLocationController;
+use App\Http\Controllers\CompanySetupController;
+use App\Http\Controllers\DAPlanController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DataController;
+use App\Http\Controllers\DeductionPlanController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\DesignationController;
+use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\EmployeeBankAccountController;
+use App\Http\Controllers\EmployeeEducationExperienceTrainingController;
+use App\Http\Controllers\EmployeeEligibleController;
+use App\Http\Controllers\EmployeeMovementsController;
+use App\Http\Controllers\EmployeeNomineeController;
+use App\Http\Controllers\EmployeePlansController;
+use App\Http\Controllers\EmployeeProfileController;
+use App\Http\Controllers\EmployeeSalaryBreakdownController;
+use App\Http\Controllers\EmployeeSearchController;
+use App\Http\Controllers\GazetteLocationsController;
+use App\Http\Controllers\HolidayController;
+use App\Http\Controllers\JobCreationController;
+use App\Http\Controllers\LeavePlanController;
+use App\Http\Controllers\LeavesController;
 use App\Http\Controllers\MealPlansController;
-use App\Http\Controllers\ShiftPlanController;
+use App\Http\Controllers\OffDayPlansController;
 use App\Http\Controllers\OrganizationStructureController;
 use App\Http\Controllers\OTPlanController;
-use App\Http\Controllers\LeavePlanController;
-use App\Http\Controllers\RosterPlansController;
-use App\Http\Controllers\OffDayPlansController;
-use App\Http\Controllers\EmployeePlansController;
-use App\Http\Controllers\BonusPlanController;
-use App\Http\Controllers\AllowancePlanController;
-use App\Http\Controllers\TAPlanController;
-use App\Http\Controllers\DAPlanController;
-use App\Http\Controllers\LeavesController;
-use App\Http\Controllers\DeductionPlanController;
-use App\Http\Controllers\HolidayController;
-use App\Http\Controllers\DataController;
-use App\Http\Controllers\AttendancesController;
-use App\Http\Controllers\EmployeeMovementsController;
-use App\Http\Controllers\EmployeeSearchController;
-use App\Http\Controllers\Payroll\PromotionController;
 use App\Http\Controllers\Payroll\IncrementController;
+use App\Http\Controllers\Payroll\PromotionController;
+use App\Http\Controllers\RosterPlansController;
+use App\Http\Controllers\SalaryGradesController;
+use App\Http\Controllers\SectionController;
+use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\ShiftPlanController;
+use App\Http\Controllers\TAPlanController;
+use App\Http\Controllers\TofsilsController;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Route;
 
 //get all assets file
 Route::get('/assets-list', function() {
@@ -558,7 +558,7 @@ Route::prefix('increment')->name('increment.')->controller(IncrementController::
 
 });
 
-Route::prefix('bonus')->name('bonus.')->controller(\App\Http\Controllers\BonusController::class)->group(function () {
+Route::prefix('bonus')->name('bonus.')->controller(\App\Http\Controllers\Payroll\BonusController::class)->group(function () {
     Route::get('/', 'index')->name('index');
     Route::get('create', 'create')->name('create');
     Route::post('store', 'save')->name('store');

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Payroll;
 
+use App\Http\Controllers\Controller;
 use App\Models\BonusPlan;
 use App\Models\Company;
 use App\Models\Employee;
