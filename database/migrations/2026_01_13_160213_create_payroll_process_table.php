@@ -13,14 +13,15 @@ return new class extends Migration
     {
         Schema::create('payroll_process', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('batch_id')->unique();
+            $table->longText('batch_id')->unique();
             $table->unsignedBigInteger('company_id')->nullable();
             $table->unsignedBigInteger('branch_id')->nullable();
             $table->unsignedBigInteger('division_id')->nullable();
             $table->unsignedBigInteger('department_id')->nullable();
             $table->unsignedBigInteger('section_id')->nullable();
-            $table->date('salary_month');
+            $table->string('salary_month');
             $table->enum('type', ['salary', 'bonus']);
+            $table->json('bonus_plan_ids');
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->enum('approval_status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->string('generated_by')->nullable();

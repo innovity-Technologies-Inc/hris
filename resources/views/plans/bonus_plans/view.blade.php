@@ -83,7 +83,7 @@
                                     <label class="text-muted small">Bonus Percentage</label>
                                     <p class="fw-semibold mb-0">
                                         <span class="badge bg-success fs-6">
-                                            {{ number_format($plan->overtime_multiplier, 2) }}× Base Salary
+                                            {{ number_format($plan->multiplier, 2) }}× Base Salary
                                         </span>
                                     </p>
                                 </div>
@@ -97,7 +97,7 @@
                                 <strong>Example:</strong>
                                 If base salary is {{ \App\HelperClass::getGeneralSetting()->currency ?? '৳' }}10,000,
                                 bonus will be
-                                <strong>{{ \App\HelperClass::getGeneralSetting()->currency ?? '৳' }}{{ number_format(10000 * $plan->overtime_multiplier, 2) }}</strong>
+                                <strong>{{ \App\HelperClass::getGeneralSetting()->currency ?? '৳' }}{{ number_format(10000 * $plan->multiplier, 2) }}</strong>
                             </div>
                         @elseif ($plan->salary_rate_type == 'Basic Rate')
                             <div class="alert alert-info mb-0 mt-2">
@@ -118,7 +118,7 @@
                                 <label class="text-muted small">Bonus Amount</label>
                                 <p class="fw-semibold mb-0">
                                     <span class="badge bg-success fs-6">
-                                        {{ \App\HelperClass::getGeneralSetting()->currency ?? '৳' }}{{ number_format($plan->custom_overtime_rate, 2) }}
+                                        {{ \App\HelperClass::getGeneralSetting()->currency ?? '৳' }}{{ number_format($plan->custom_rate, 2) }}
                                     </span>
                                 </p>
                             </div>

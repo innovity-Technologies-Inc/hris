@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Bonus extends Model
 {
-    protected $table = 'bonus';
+    protected $table = 'bonuses';
 
     protected $fillable = [
         'employee_id',
         'batch_id',
-        'bonus_id',
+        'process_id',
         'amount',
     ];
     public function getEmployee()

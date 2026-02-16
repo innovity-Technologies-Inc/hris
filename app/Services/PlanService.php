@@ -165,8 +165,8 @@ class PlanService
             // Configuration fields
             'ot_config_type' => 'required|in:Salary Based,Custom',
             'salary_rate_type' => 'required_if:ot_config_type,Salary Based|nullable|in:Basic Rate,Multiplier',
-            'overtime_multiplier' => 'nullable|numeric|min:0',
-            'custom_overtime_rate' => 'nullable|numeric|min:0',
+            'multiplier' => 'nullable|numeric|min:0',
+            'custom_rate' => 'nullable|numeric|min:0',
 
             'maximum_overtime' => 'nullable|numeric|min:0',
             'status' => 'required|in:active,inactive',
@@ -181,11 +181,11 @@ class PlanService
             'salary_rate_type.required_if' => 'Please select a rate type when using salary-based configuration.',
             'salary_rate_type.in' => 'The selected rate type is invalid.',
 
-            'overtime_multiplier.numeric' => 'Overtime multiplier must be a number.',
-            'overtime_multiplier.min' => 'Overtime multiplier must be at least 0.',
+            'multiplier.numeric' => 'Multiplier must be a number.',
+            'multiplier.min' => 'Multiplier must be at least 0.',
 
-            'custom_overtime_rate.numeric' => 'Custom overtime rate must be a number.',
-            'custom_overtime_rate.min' => 'Custom overtime rate must be at least 0.',
+            'custom_rate.numeric' => 'Custom overtime rate must be a number.',
+            'custom_rate.min' => 'Custom overtime rate must be at least 0.',
 
             'maximum_overtime.numeric' => 'Maximum overtime must be a number.',
             'maximum_overtime.min' => 'Maximum overtime must be at least 0.',
@@ -328,8 +328,8 @@ class PlanService
             // Configuration fields
             'bonus_config_type' => 'required|in:Salary Based,Custom',
             'salary_rate_type' => 'required_if:bonus_config_type,Salary Based|nullable|in:Basic Rate,Multiplier',
-            'overtime_multiplier' => 'nullable|numeric|min:0',
-            'custom_overtime_rate' => 'nullable|numeric|min:0',
+            'multiplier' => 'nullable|numeric|min:0',
+            'custom_rate' => 'nullable|numeric|min:0',
 
             'status' => 'required|in:active,inactive',
         ], [
@@ -346,11 +346,11 @@ class PlanService
             'salary_rate_type.required_if' => 'Please select a rate type when using salary-based configuration.',
             'salary_rate_type.in' => 'The selected rate type is invalid.',
 
-            'overtime_multiplier.numeric' => 'Overtime multiplier must be a number.',
-            'overtime_multiplier.min' => 'Overtime multiplier must be at least 0.',
+            'multiplier.numeric' => 'Multiplier must be a number.',
+            'multiplier.min' => 'Multiplier must be at least 0.',
 
-            'custom_overtime_rate.numeric' => 'Custom overtime rate must be a number.',
-            'custom_overtime_rate.min' => 'Custom overtime rate must be at least 0.',
+            'custom_rate.numeric' => 'Overtime rate must be a number.',
+            'custom_rate.min' => 'Overtime rate must be at least 0.',
 
             'status.required' => 'Please select the plan status.',
             'status.in' => 'The selected status is invalid.',

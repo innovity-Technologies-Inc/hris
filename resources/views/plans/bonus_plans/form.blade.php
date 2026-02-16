@@ -144,18 +144,18 @@
                         <!-- Multiplier Field (Percentage) -->
                         <div class="row" id="multiplier_field_row">
                             <div class="col-md-4 mb-3">
-                                <label for="overtime_multiplier" class="form-label fw-semibold">
+                                <label for="multiplier" class="form-label fw-semibold">
                                     Bonus Percentage <span class="text-danger">*</span>
                                 </label>
                                 <div class="input-group">
                                     <input type="number" step="0.01" min="0" max="5" class="form-control form-control-sm"
-                                        id="overtime_multiplier" name="overtime_multiplier" placeholder="1.0"
-                                        value="{{ isset($plan) ? $plan->overtime_multiplier : old('overtime_multiplier', '1.0') }}"
+                                        id="multiplier" name="multiplier" placeholder="1.0"
+                                        value="{{ isset($plan) ? $plan->multiplier : old('multiplier', '1.0') }}"
                                         style="max-width: 120px;">
                                     <span class="input-group-text bg-light">× Basic Salary</span>
                                 </div>
                                 <small class="text-muted">E.g., 1.0 = 100%, 2.0 = 200%, 0.5 = 50%</small>
-                                @error('overtime_multiplier')
+                                @error('multiplier')
                                     <span class="text-danger d-block">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -170,18 +170,18 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="custom_overtime_rate" class="form-label fw-semibold">
+                                <label for="custom_rate" class="form-label fw-semibold">
                                     Bonus Amount <span class="text-danger">*</span>
                                 </label>
                                 <div class="input-group">
                                     <span class="input-group-text">{{\App\HelperClass::getGeneralSetting()->currency ?? '৳'}}</span>
                                     <input type="number" step="0.01" min="0" class="form-control"
-                                        id="custom_overtime_rate" name="custom_overtime_rate"
+                                        id="custom_rate" name="custom_rate"
                                         placeholder="Enter fixed bonus amount"
-                                        value="{{ isset($plan) ? $plan->custom_overtime_rate : old('custom_overtime_rate') }}">
+                                        value="{{ isset($plan) ? $plan->custom_rate : old('custom_rate') }}">
                                 </div>
                                 <small class="text-muted">Fixed amount regardless of salary</small>
-                                @error('custom_overtime_rate')
+                                @error('custom_rate')
                                     <span class="text-danger d-block">{{ $message }}</span>
                                 @enderror
                             </div>

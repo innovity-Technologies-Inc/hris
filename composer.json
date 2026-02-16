@@ -10,6 +10,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "daiyan_mozumder/flex-db-dump": "^2.0",
         "daiyanmozumder/laravel-flexsearch": "^3.0",
         "endroid/qr-code": "^6.0",
         "laravel/framework": "^12.0",

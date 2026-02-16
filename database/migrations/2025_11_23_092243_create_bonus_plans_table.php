@@ -23,8 +23,8 @@ return new class extends Migration
 
             $table->enum('bonus_config_type', ['Salary Based', 'Custom'])->default('Salary Based');
             $table->enum('salary_rate_type', ['Basic Rate', 'Multiplier'])->default('Basic Rate')->nullable();
-            $table->decimal('overtime_multiplier', 8, 2)->nullable();
-            $table->decimal('custom_overtime_rate', 8, 2)->nullable();
+            $table->decimal('multiplier', 8, 2)->nullable();
+            $table->decimal('custom_rate', 8, 2)->nullable();
 
             // Status
             $table->enum('status', ['active', 'inactive'])->default('active');

@@ -470,16 +470,9 @@ Route::controller(OrganizationStructureController::class)->group(function () {
     Route::delete('organization-structure/{id}', 'destroy')->name('organization-structure.destroy');
 });
 
-Route::get('bonus-entry', function () {
-    return view('trial.bonus-entry', [
-        'companies' => App\Models\Company::all(),
-        'employees' => App\Models\Employee::all(),
-        'bonusPlans' => App\Models\BonusPlan::all(),
-    ]);
-})->name('bonus.entry');
 
 Route::get('salary-process', function () {
-    return view('trial.salary-process', [
+    return view('payroll.salary-process', [
         'companies' => App\Models\Company::all(),
         'employees' => App\Models\Employee::all(),
     ]);
@@ -565,6 +558,19 @@ Route::prefix('increment')->name('increment.')->controller(IncrementController::
 
 });
 
+Route::prefix('bonus')->name('bonus.')->controller(\App\Http\Controllers\BonusController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('create', 'create')->name('create');
+    Route::post('store', 'save')->name('store');
+    Route::get('view/{id}', 'show')->name('show');
+    Route::get('edit/{id}', 'edit')->name('edit');
+    Route::put('{id}/update', 'save')->name('update');
+    Route::put('{id}/status-update', 'statusUpdate')->name('status.update');
+    Route::delete('{id}/delete', 'delete')->name('delete');
+
+});
+
+
 Route::controller(DataController::class)->group(function () {
 
     //company-details
@@ -573,6 +579,7 @@ Route::controller(DataController::class)->group(function () {
     Route::get('get-divisions/{company_id}/{location_id?}', 'getDivisions');
     Route::get('/get-departments/{company_id}/{location_id?}/{division_id?}', 'getDepartments');
     Route::get('/get-sections/{company_id}/{location_id?}/{division_id?}/{department_id?}', 'getSections');
+    Route::get('/get-employees/{company_id}/{location_id?}/{division_id?}/{department_id?}/{section_id?}', 'getEmployees');
     Route::get('get-branches/{bank_id}', 'getBranchesByBank');
 
     //plan_details
@@ -687,6 +694,15 @@ Route::prefix('transport')->name('transport.')->group(function () {
         Route::get('api/application-details', 'getApplicationDetails')->name('vehicle_allocations.application_details');
     });
 });
+
+Route::get('db-backup', function () {
+    $title = 'Database Backup';
+    $section = 'Settings';
+    $sub_section = 'Database Backup';
+    return view('settings.database_backup')->with(compact('title', 'section', 'sub_section'));
+})->name('db_backup');
+
+Route::get('flex/db-dump', [\Flex\DbDump\Http\Controllers\DbDumpController::class, 'download'])->name('flex_db_dump');
 
 // Trial Routes - Payroll Process Index
 Route::get('/trial/payroll-process', function() {

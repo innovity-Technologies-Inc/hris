@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('bonuses', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('process_id');
             $table->unsignedBigInteger('employee_id');
-            $table->unsignedBigInteger('batch_id');
-            $table->unsignedBigInteger('bonus_id');
+            $table->longText('batch_id')->unique();
             $table->decimal('amount', 15, 2);
             $table->timestamps();
         });

@@ -72,6 +72,10 @@ class Employee extends Model
         return $this->hasOne(EmployeeSalaryBreakdown::class, 'employee_id', 'id');
     }
 
+    public function employeeEligibility(){
+        return $this->hasOne(EmployeeEligiblePlan::class, 'employee_id', 'id');
+    }
+
     public function roster(){
         return $this->hasMany(EmployeeRosterPlan::class, 'employee_id', 'id');
     }

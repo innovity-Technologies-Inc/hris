@@ -95,6 +95,37 @@ class DataController extends Controller
 
         return $query->select('id', 'name')->get();
     }
+
+    public function getEmployees($company_id, $location_id = null, $division_id = null, $department_id = null, $section_id = null)
+    {
+        $location_id = ($location_id === 'null') ? null : $location_id;
+        $division_id = ($division_id === 'null') ? null : $division_id;
+        $department_id = ($department_id === 'null') ? null : $department_id;
+        $section_id = ($section_id === 'null') ? null : $section_id;
+
+        $query = Employee::query()->select('id', 'full_name')
+            ->whereHas('salary')
+            ->whereHas('officeInfo', function ($q) use ($company_id, $location_id,
+                $division_id, $department_id, $section_id) {
+                $q->where('current_company_id', $company_id);
+                if ($location_id) {
+                    $q->where('current_business_unit_id', $location_id);
+                }
+                if ($division_id) {
+                    $q->where('current_division_id', $division_id);
+                }
+                if ($department_id) {
+                    $q->where('current_department_id', $department_id);
+                }
+
+                if ($section_id) {
+                    $q->where('current_section_id', $section_id);
+                }
+            });
+
+        return $query->get();
+    }
+
     public function getGradeByAct($tofsil_id){
         $grades = SalaryGrade::where('tofsil_id', $tofsil_id)->get();
         return response()->json($grades);

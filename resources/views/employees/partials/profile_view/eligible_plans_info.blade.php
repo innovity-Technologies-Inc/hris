@@ -66,11 +66,11 @@
                                                             <td>{{ $employeePlan->shift_plan_from ? $employeePlan->shift_plan_from->format('Y-m-d') : 'Not Set' }}
                                                             </td>
                                                         </tr>
-                                                        <tr>
+                                                        {{--<tr>
                                                             <td class="fw-semibold">To Date</td>
                                                             <td>{{ $employeePlan->shift_plan_to ? $employeePlan->shift_plan_to->format('Y-m-d') : 'Not Set' }}
                                                             </td>
-                                                        </tr>
+                                                        </tr>--}}
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -104,11 +104,11 @@
                                                             <td>{{ $employeePlan->leave_plan_from ? $employeePlan->leave_plan_from->format('Y-m-d') : 'Not Set' }}
                                                             </td>
                                                         </tr>
-                                                        <tr>
+                                                        {{--<tr>
                                                             <td class="fw-semibold">To Date</td>
                                                             <td>{{ $employeePlan->leave_plan_to ? $employeePlan->leave_plan_to->format('Y-m-d') : 'Not Set' }}
                                                             </td>
-                                                        </tr>
+                                                        </tr>--}}
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -142,11 +142,11 @@
                                                             <td>{{ $employeePlan->roster_plans_from ? $employeePlan->roster_plans_from->format('Y-m-d') : 'Not Set' }}
                                                             </td>
                                                         </tr>
-                                                        <tr>
+                                                        {{--<tr>
                                                             <td class="fw-semibold">To Date</td>
                                                             <td>{{ $employeePlan->roster_plans_to ? $employeePlan->roster_plans_to->format('Y-m-d') : 'Not Set' }}
                                                             </td>
-                                                        </tr>
+                                                        </tr>--}}
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -180,11 +180,11 @@
                                                             <td>{{ $employeePlan->day_off_work_plan_from ? $employeePlan->day_off_work_plan_from->format('Y-m-d') : 'Not Set' }}
                                                             </td>
                                                         </tr>
-                                                        <tr>
+                                                        {{--<tr>
                                                             <td class="fw-semibold">To Date</td>
                                                             <td>{{ $employeePlan->day_off_work_plan_to ? $employeePlan->day_off_work_plan_to->format('Y-m-d') : 'Not Set' }}
                                                             </td>
-                                                        </tr>
+                                                        </tr>--}}
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -223,11 +223,11 @@
                                                             <td>{{ $employeePlan->ot_plan_from ? $employeePlan->ot_plan_from->format('Y-m-d') : 'Not Set' }}
                                                             </td>
                                                         </tr>
-                                                        <tr>
+                                                        {{--<tr>
                                                             <td class="fw-semibold">To Date</td>
                                                             <td>{{ $employeePlan->ot_plan_to ? $employeePlan->ot_plan_to->format('Y-m-d') : 'Not Set' }}
                                                             </td>
-                                                        </tr>
+                                                        </tr>--}}
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -235,43 +235,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Bonus Plan -->
-                                <div class="col-md-6 mb-3">
-                                    <div class="card border h-100">
-                                        <div class="card-header bg-light">
-                                            <h6 class="mb-0 fw-semibold">
-                                                <i class="mdi mdi-gift text-success me-2"></i>Bonus Plan
-                                            </h6>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="table-responsive">
-                                                <table class="table table-borderless mb-0">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td class="fw-semibold" style="width: 40%;">Status</td>
-                                                            <td>
-                                                                <span
-                                                                    class="badge bg-{{ $employeePlan && strtolower($employeePlan->bonus_plan_status) == 'active' ? 'success' : 'danger' }}">
-                                                                    {{ ucfirst($employeePlan->bonus_plan_status ?? 'Inactive') }}
-                                                                </span>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="fw-semibold">From Date</td>
-                                                            <td>{{ $employeePlan->bonus_plan_from ? $employeePlan->bonus_plan_from->format('Y-m-d') : 'Not Set' }}
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="fw-semibold">To Date</td>
-                                                            <td>{{ $employeePlan->bonus_plan_to ? $employeePlan->bonus_plan_to->format('Y-m-d') : 'Not Set' }}
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
 
                                 <!-- Allowance Plan -->
                                 <div class="col-md-6 mb-3">
@@ -299,11 +262,11 @@
                                                             <td>{{ $employeePlan->allowance_plan_from ? $employeePlan->allowance_plan_from->format('Y-m-d') : 'Not Set' }}
                                                             </td>
                                                         </tr>
-                                                        <tr>
+                                                        {{--<tr>
                                                             <td class="fw-semibold">To Date</td>
                                                             <td>{{ $employeePlan->allowance_plan_to ? $employeePlan->allowance_plan_to->format('Y-m-d') : 'Not Set' }}
                                                             </td>
-                                                        </tr>
+                                                        </tr>--}}
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -311,7 +274,91 @@
                                     </div>
                                 </div>
                             </div>
-                        </div> <!-- Deductions Tab -->
+                        </div>
+
+                        <!-- Benefits Tab -->
+                        <div class="tab-pane pt-4" id="benefits" role="tabpanel">
+                            <div class="row">
+
+                                <!-- Bonus Plan -->
+                                <div class="col-md-6 mb-3">
+                                    <div class="card border h-100">
+                                        <div class="card-header bg-light">
+                                            <h6 class="mb-0 fw-semibold">
+                                                <i class="mdi mdi-gift text-success me-2"></i>Bonus Plan
+                                            </h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-borderless mb-0">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td class="fw-semibold" style="width: 40%;">Status</td>
+                                                        <td>
+                                                                <span
+                                                                    class="badge bg-{{ $employeePlan && strtolower($employeePlan->bonus_plan_status) == 'active' ? 'success' : 'danger' }}">
+                                                                    {{ ucfirst($employeePlan->bonus_plan_status ?? 'Inactive') }}
+                                                                </span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-semibold">From Date</td>
+                                                        <td>{{ $employeePlan->bonus_plan_from ? $employeePlan->bonus_plan_from->format('Y-m-d') : 'Not Set' }}
+                                                        </td>
+                                                    </tr>
+                                                    {{--<tr>
+                                                        <td class="fw-semibold">To Date</td>
+                                                        <td>{{ $employeePlan->bonus_plan_to ? $employeePlan->bonus_plan_to->format('Y-m-d') : 'Not Set' }}
+                                                        </td>
+                                                    </tr>--}}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Medical Plan -->
+                                <div class="col-md-6 mb-3">
+                                    <div class="card border h-100">
+                                        <div class="card-header bg-light">
+                                            <h6 class="mb-0 fw-semibold">
+                                                <i class="mdi mdi-hospital-box text-danger me-2"></i>Medical Plan
+                                            </h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-borderless mb-0">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td class="fw-semibold" style="width: 40%;">Status</td>
+                                                        <td>
+                                                                <span
+                                                                    class="badge bg-{{ $employeePlan && strtolower($employeePlan->medical_plan_status) == 'active' ? 'success' : 'danger' }}">
+                                                                    {{ ucfirst($employeePlan->medical_plan_status ?? 'Inactive') }}
+                                                                </span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-semibold">From Date</td>
+                                                        <td>{{ $employeePlan->medical_plan_from ? $employeePlan->medical_plan_from->format('Y-m-d') : 'Not Set' }}
+                                                        </td>
+                                                    </tr>
+                                                    {{--                                                        <tr>--}}
+                                                    {{--                                                            <td class="fw-semibold">To Date</td>--}}
+                                                    {{--                                                            <td>{{ $employeePlan->medical_plan_to ? $employeePlan->medical_plan_to->format('Y-m-d') : 'Not Set' }}--}}
+                                                    {{--                                                            </td>--}}
+                                                    {{--                                                        </tr>--}}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Deductions Tab -->
                         <div class="tab-pane pt-4" id="deductions" role="tabpanel">
                             <div class="row">
                                 <!-- Late Deduction Plan -->
@@ -341,11 +388,11 @@
                                                             <td>{{ $employeePlan->late_deduction_plan_from ? $employeePlan->late_deduction_plan_from->format('Y-m-d') : 'Not Set' }}
                                                             </td>
                                                         </tr>
-                                                        <tr>
+                                                        {{--<tr>
                                                             <td class="fw-semibold">To Date</td>
                                                             <td>{{ $employeePlan->late_deduction_plan_to ? $employeePlan->late_deduction_plan_to->format('Y-m-d') : 'Not Set' }}
                                                             </td>
-                                                        </tr>
+                                                        </tr>--}}
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -380,11 +427,11 @@
                                                             <td>{{ $employeePlan->early_out_deduction_plan_from ? $employeePlan->early_out_deduction_plan_from->format('Y-m-d') : 'Not Set' }}
                                                             </td>
                                                         </tr>
-                                                        <tr>
+                                                        {{--<tr>
                                                             <td class="fw-semibold">To Date</td>
                                                             <td>{{ $employeePlan->early_out_deduction_plan_to ? $employeePlan->early_out_deduction_plan_to->format('Y-m-d') : 'Not Set' }}
                                                             </td>
-                                                        </tr>
+                                                        </tr>--}}
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -419,54 +466,11 @@
                                                             <td>{{ $employeePlan->excessive_late_plan_from ? $employeePlan->excessive_late_plan_from->format('Y-m-d') : 'Not Set' }}
                                                             </td>
                                                         </tr>
-                                                        <tr>
+                                                        {{--<tr>
                                                             <td class="fw-semibold">To Date</td>
                                                             <td>{{ $employeePlan->excessive_late_plan_to ? $employeePlan->excessive_late_plan_to->format('Y-m-d') : 'Not Set' }}
                                                             </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Benefits Tab -->
-                        <div class="tab-pane pt-4" id="benefits" role="tabpanel">
-                            <div class="row">
-                                <!-- Medical Plan -->
-                                <div class="col-md-6 mb-3">
-                                    <div class="card border h-100">
-                                        <div class="card-header bg-light">
-                                            <h6 class="mb-0 fw-semibold">
-                                                <i class="mdi mdi-hospital-box text-danger me-2"></i>Medical Plan
-                                            </h6>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="table-responsive">
-                                                <table class="table table-borderless mb-0">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td class="fw-semibold" style="width: 40%;">Status</td>
-                                                            <td>
-                                                                <span
-                                                                    class="badge bg-{{ $employeePlan && strtolower($employeePlan->medical_plan_status) == 'active' ? 'success' : 'danger' }}">
-                                                                    {{ ucfirst($employeePlan->medical_plan_status ?? 'Inactive') }}
-                                                                </span>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="fw-semibold">From Date</td>
-                                                            <td>{{ $employeePlan->medical_plan_from ? $employeePlan->medical_plan_from->format('Y-m-d') : 'Not Set' }}
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="fw-semibold">To Date</td>
-                                                            <td>{{ $employeePlan->medical_plan_to ? $employeePlan->medical_plan_to->format('Y-m-d') : 'Not Set' }}
-                                                            </td>
-                                                        </tr>
+                                                        </tr>--}}
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -505,11 +509,11 @@
                                                             <td>{{ $employeePlan->meal_plan_from ? $employeePlan->meal_plan_from->format('Y-m-d') : 'Not Set' }}
                                                             </td>
                                                         </tr>
-                                                        <tr>
+                                                        {{--<tr>
                                                             <td class="fw-semibold">To Date</td>
                                                             <td>{{ $employeePlan->meal_plan_to ? $employeePlan->meal_plan_to->format('Y-m-d') : 'Not Set' }}
                                                             </td>
-                                                        </tr>
+                                                        </tr>--}}
                                                     </tbody>
                                                 </table>
                                             </div>

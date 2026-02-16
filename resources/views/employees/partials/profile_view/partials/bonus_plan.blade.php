@@ -244,11 +244,11 @@
                     detailsContent.find("#bonusStatusBadge").html(`<span class="badge bg-${res.status === 'active' ? 'success' : 'danger'}">${res.status}</span>`);
                     let configHtml = "";
                     if (res.bonus_config_type === "Custom") {
-                        configHtml = `<div class="col-md-4"><label class="text-secondary text-uppercase fw-semibold mb-1">Custom Overtime Rate</label><div class="fw-semibold">${res.custom_overtime_rate ?? '-'}</div></div>`;
+                        configHtml = `<div class="col-md-4"><label class="text-secondary text-uppercase fw-semibold mb-1">Custom Rate</label><div class="fw-semibold">${res.custom_rate ?? '-'}</div></div>`;
                     } else if (res.bonus_config_type === "Salary Based") {
                         configHtml += `<div class="col-md-4"><label class="text-secondary text-uppercase fw-semibold mb-1">Salary Rate Type</label><div class="fw-semibold">${res.salary_rate_type ?? '-'}</div></div>`;
                         if (res.salary_rate_type === "Multiplier") {
-                            configHtml += `<div class="col-md-4"><label class="text-secondary text-uppercase fw-semibold mb-1">Overtime Multiplier</label><div class="fw-semibold">${res.overtime_multiplier ?? '-'}</div></div>`;
+                            configHtml += `<div class="col-md-4"><label class="text-secondary text-uppercase fw-semibold mb-1">Multiplier</label><div class="fw-semibold">${res.multiplier ?? '-'}</div></div>`;
                         }
                     }
                     detailsContent.find("#bonusConfigDetails").html(configHtml);

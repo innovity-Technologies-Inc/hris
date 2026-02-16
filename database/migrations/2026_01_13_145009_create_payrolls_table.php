@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('payrolls', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('employee_id');
-            $table->unsignedBigInteger('batch_id');
+            $table->longText('batch_id')->unique();
+            $table->unsignedBigInteger('process_id');
             $table->decimal('salary', 15, 2);
             $table->decimal('deduction_amount', 15, 2);
             $table->integer('leaves_count');

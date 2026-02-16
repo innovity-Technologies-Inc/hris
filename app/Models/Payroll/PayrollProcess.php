@@ -2,6 +2,7 @@
 
 namespace App\Models\Payroll;
 
+use App\Models\BonusPlan;
 use App\Models\Company;
 use App\Models\CompanyLocation;
 use App\Models\Department;
@@ -22,6 +23,7 @@ class PayrollProcess extends Model
         'section_id',
         'salary_month',
         'type',
+        'bonus_plan_ids',
         'status',
         'approval_status',
         'generated_by',
@@ -29,6 +31,15 @@ class PayrollProcess extends Model
         'total_amount',
         'total_employee',
     ];
+
+    protected $casts = [
+        'bonus_plan_ids' => 'array',
+    ];
+
+    public function bonusPlan()
+    {
+        return $this->belongsTo(BonusPlan::class, 'bonus_plan_ids');
+    }
     public function getCompany()
     {
         return $this->belongsTo(Company::class, 'company_id', 'id');

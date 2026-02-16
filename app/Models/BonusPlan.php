@@ -13,9 +13,9 @@ class BonusPlan extends Model
         'bonus_type',
         'bonus_config_type',
         'salary_rate_type',
-        'overtime_multiplier',
-        'custom_overtime_rate',
+        'multiplier',
+        'custom_rate',
         'status',
     ];
-    
+
 }

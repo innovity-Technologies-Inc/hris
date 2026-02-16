@@ -149,7 +149,7 @@
 
                 <!-- Payroll Menu -->
                 @php
-                    $payrollOpen = request()->is('promotion*') || request()->is('increment*');
+                    $payrollOpen = request()->is('promotion*') || request()->is('increment*') || request()->is('bonus*');
                 @endphp
                 <li>
                     <a href="#payroll" data-bs-toggle="collapse" aria-expanded="{{ $payrollOpen ? 'true' : 'false' }}"
@@ -162,11 +162,15 @@
                         <ul class="nav-second-level">
                             <li>
                                 <a class='tp-link @if (request()->is('promotion') && !request()->is('promotion/create')) menuitem-active @endif'
-                                    href='{{ route('promotion.index') }}'>Employee Promotions</a>
+                                    href='{{ route('promotion.index') }}'>Promotions</a>
                             </li>
                             <li>
                                 <a class='tp-link @if (request()->is('increment') && !request()->is('increment/create')) menuitem-active @endif'
-                                    href='{{ route('increment.index') }}'>Employee Increments</a>
+                                    href='{{ route('increment.index') }}'>Increments</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (request()->is('bonus') && !request()->is('bonus/create')) menuitem-active @endif'
+                                   href='{{ route('bonus.index') }}'>Bonuses</a>
                             </li>
                         </ul>
                     </div>
@@ -446,6 +450,11 @@
                             <li>
                                 <a class='tp-link @if (Route::is('settings.mail_settings.*')) menuitem-active @endif'
                                     href='{{ route('settings.mail_settings') }}'>SMTP</a>
+                            </li>
+
+                            <li>
+                                <a class='tp-link @if (Route::is('db_backup')) menuitem-active @endif'
+                                   href='{{ route('db_backup') }}'>DB Backup</a>
                             </li>
 
                         </ul>

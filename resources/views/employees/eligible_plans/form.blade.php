@@ -71,7 +71,7 @@
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
-                                            <div class="mb-0">
+                                            {{--<div class="mb-0">
                                                 <label for="shift_plan_to" class="form-label">To Date</label>
                                                 <input type="date"
                                                     class="form-control @error('shift_plan_to') is-invalid @enderror"
@@ -80,7 +80,7 @@
                                                 @error('shift_plan_to')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
-                                            </div>
+                                            </div>--}}
                                         </div>
                                     </div>
                                 </div>
@@ -111,7 +111,7 @@
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
-                                            <div class="mb-0">
+                                            {{--<div class="mb-0">
                                                 <label for="leave_plan_to" class="form-label">To Date</label>
                                                 <input type="date"
                                                     class="form-control @error('leave_plan_to') is-invalid @enderror"
@@ -120,7 +120,7 @@
                                                 @error('leave_plan_to')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
-                                            </div>
+                                            </div>--}}
                                         </div>
                                     </div>
                                 </div>
@@ -152,7 +152,7 @@
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
-                                            <div class="mb-0">
+                                            {{--<div class="mb-0">
                                                 <label for="roster_plans_to" class="form-label">To Date</label>
                                                 <input type="date"
                                                     class="form-control @error('roster_plans_to') is-invalid @enderror"
@@ -161,7 +161,7 @@
                                                 @error('roster_plans_to')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
-                                            </div>
+                                            </div>--}}
                                         </div>
                                     </div>
                                 </div>
@@ -195,7 +195,7 @@
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
-                                            <div class="mb-0">
+                                            {{--<div class="mb-0">
                                                 <label for="day_off_work_plan_to" class="form-label">To Date</label>
                                                 <input type="date"
                                                     class="form-control @error('day_off_work_plan_to') is-invalid @enderror"
@@ -204,7 +204,7 @@
                                                 @error('day_off_work_plan_to')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
-                                            </div>
+                                            </div>--}}
                                         </div>
                                     </div>
                                 </div>
@@ -236,7 +236,7 @@
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
-                                            <div class="mb-0">
+                                            {{--<div class="mb-0">
                                                 <label for="ot_plan_to" class="form-label">To Date</label>
                                                 <input type="date"
                                                     class="form-control @error('ot_plan_to') is-invalid @enderror"
@@ -245,7 +245,7 @@
                                                 @error('ot_plan_to')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
-                                            </div>
+                                            </div>--}}
                                         </div>
                                     </div>
                                 </div>
@@ -277,7 +277,7 @@
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
-                                            <div class="mb-0">
+                                            {{--<div class="mb-0">
                                                 <label for="bonus_plan_to" class="form-label">To Date</label>
                                                 <input type="date"
                                                     class="form-control @error('bonus_plan_to') is-invalid @enderror"
@@ -286,7 +286,7 @@
                                                 @error('bonus_plan_to')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
-                                            </div>
+                                            </div>--}}
                                         </div>
                                     </div>
                                 </div>
@@ -319,7 +319,7 @@
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
-                                            <div class="mb-0">
+                                            {{--<div class="mb-0">
                                                 <label for="allowance_plan_to" class="form-label">To Date</label>
                                                 <input type="date"
                                                     class="form-control @error('allowance_plan_to') is-invalid @enderror"
@@ -328,7 +328,7 @@
                                                 @error('allowance_plan_to')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
-                                            </div>
+                                            </div>--}}
                                         </div>
                                     </div>
                                 </div>
@@ -360,7 +360,7 @@
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
-                                            <div class="mb-0">
+                                            {{--<div class="mb-0">
                                                 <label for="meal_plan_to" class="form-label">To Date</label>
                                                 <input type="date"
                                                     class="form-control @error('meal_plan_to') is-invalid @enderror"
@@ -369,7 +369,7 @@
                                                 @error('meal_plan_to')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
-                                            </div>
+                                            </div>--}}
                                         </div>
                                     </div>
                                 </div>
@@ -403,7 +403,7 @@
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
-                                            <div class="mb-0">
+                                            {{--<div class="mb-0">
                                                 <label for="late_deduction_plan_to" class="form-label">To Date</label>
                                                 <input type="date"
                                                     class="form-control @error('late_deduction_plan_to') is-invalid @enderror"
@@ -412,7 +412,7 @@
                                                 @error('late_deduction_plan_to')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
-                                            </div>
+                                            </div>--}}
                                         </div>
                                     </div>
                                 </div>
@@ -449,6 +449,7 @@
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
+{{--
                                             <div class="mb-0">
                                                 <label for="early_out_deduction_plan_to" class="form-label">To
                                                     Date</label>
@@ -460,6 +461,7 @@
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
+--}}
                                         </div>
                                     </div>
                                 </div>
@@ -493,6 +495,7 @@
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
+{{--
                                             <div class="mb-0">
                                                 <label for="excessive_late_plan_to" class="form-label">To Date</label>
                                                 <input type="date"
@@ -503,6 +506,7 @@
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
+--}}
                                         </div>
                                     </div>
                                 </div>
@@ -534,7 +538,7 @@
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
-                                            <div class="mb-0">
+                                            {{--<div class="mb-0">
                                                 <label for="medical_plan_to" class="form-label">To Date</label>
                                                 <input type="date"
                                                     class="form-control @error('medical_plan_to') is-invalid @enderror"
@@ -543,7 +547,7 @@
                                                 @error('medical_plan_to')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
-                                            </div>
+                                            </div>--}}
                                         </div>
                                     </div>
                                 </div>

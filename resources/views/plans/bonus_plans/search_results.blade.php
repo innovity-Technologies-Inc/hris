@@ -43,9 +43,9 @@
                     <td>
                         @if ($item->bonus_config_type == 'Salary Based')
                             {{-- Salary-based calculation display --}}
-                            @if ($item->salary_rate_type == 'Multiplier' && $item->overtime_multiplier)
+                            @if ($item->salary_rate_type == 'Multiplier' && $item->multiplier)
                                 <span class="badge text-bg-secondary">
-                                    {{ number_format($item->overtime_multiplier, 2) }}× Base Salary
+                                    {{ number_format($item->multiplier, 2) }}× Base Salary
                                 </span>
                             @elseif ($item->salary_rate_type == 'Basic Rate')
                                 <span class="badge text-bg-secondary">Basic Salary (100%)</span>
@@ -54,9 +54,9 @@
                             @endif
                         @else
                             {{-- Custom fixed amount display --}}
-                            @if ($item->custom_overtime_rate)
+                            @if ($item->custom_rate)
                                 <span class="badge text-bg-secondary">
-                                    {{\App\HelperClass::getCurrency()}} {{ number_format($item->custom_overtime_rate, 2) }}
+                                    {{\App\HelperClass::getCurrency()}} {{ number_format($item->custom_rate, 2) }}
                                 </span>
                             @else
                                 <span class="text-muted">-</span>
