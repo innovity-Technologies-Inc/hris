@@ -570,6 +570,18 @@ Route::prefix('bonus')->name('bonus.')->controller(\App\Http\Controllers\Payroll
 
 });
 
+Route::prefix('salary-process')->name('salary.')->controller(\App\Http\Controllers\Payroll\SalaryController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('create', 'create')->name('create');
+    Route::post('store', 'save')->name('store');
+    Route::get('view/{id}', 'show')->name('show');
+    Route::get('edit/{id}', 'edit')->name('edit');
+    Route::put('{id}/update', 'save')->name('update');
+    Route::put('{id}/status-update', 'statusUpdate')->name('status.update');
+    Route::delete('{id}/delete', 'delete')->name('delete');
+
+});
+
 
 Route::controller(DataController::class)->group(function () {
 

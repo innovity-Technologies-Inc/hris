@@ -45,7 +45,7 @@ class LeavesController extends Controller
         $title = 'Leave Application';
         $section = 'Leave Management';
         $sub_section = 'Application';
-        $employees = Employee::all();
+        $employees = Employee::where('status', 'active')->orderBy('full_name')->get();
         return view('leaves.create', compact('employees', 'title', 'section', 'sub_section'));
     }
 

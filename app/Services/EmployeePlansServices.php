@@ -12,7 +12,9 @@ class EmployeePlansServices
     public function planSave($validated, $modelName)
     {
         $validated['status'] = 'active';
-        $active_plan = $modelName::where('status', 'active')->first();
+        $employee_id = $validated['employee_id'];
+        $active_plan = $modelName::where('employee_id', $employee_id)
+            ->where('status', 'active')->first();
         if (empty($active_plan)) {
             $plan = $modelName::create($validated);
             return $plan;

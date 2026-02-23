@@ -21,7 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('section_id')->nullable();
             $table->string('salary_month');
             $table->enum('type', ['salary', 'bonus']);
-            $table->json('bonus_plan_ids');
+            $table->json('bonus_plan_ids')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->enum('approval_status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->string('generated_by')->nullable();

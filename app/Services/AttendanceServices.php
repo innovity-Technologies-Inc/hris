@@ -43,7 +43,9 @@ class AttendanceServices
 
     public function getLeaveDays($employeeId)
     {
-        $leaves = Leave::all()->where('employee_id', $employeeId);
+        $leaves = Leave::where('employee_id', $employeeId)
+            ->where('status', 'approved')
+            ->get();
 
         $leaveDates = [];
 

@@ -22,7 +22,7 @@ class Bonus extends Model
         return $this->belongsTo(Employee::class, 'employee_id', 'id');
     }
     public function getBatch(){
-        return $this->belongsTo(PayrollProcess::class, 'batch_id', 'id');
+        return $this->belongsTo(PayrollProcess::class, 'process_id', 'id');
     }
     public function getBonus(){
         return $this->belongsTo(BonusPlan::class, 'bonus_id', 'id');

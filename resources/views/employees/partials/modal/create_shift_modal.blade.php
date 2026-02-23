@@ -38,8 +38,7 @@
                                 <i class="mdi mdi-calendar-end text-danger me-1"></i>
                                 Effective To <span class="text-danger">*</span>
                             </label>
-                            <input type="date" id="modal_shift_effective_to" name="to" class="form-control"
-                                   required>
+                            <input type="date" id="modal_shift_effective_to" name="to" class="form-control">
                         </div>
                     </div>
                     <div id="modal-shift-plan-details" class="mt-4" style="display: none;">

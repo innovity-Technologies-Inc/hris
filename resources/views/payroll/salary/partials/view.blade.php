@@ -6,6 +6,7 @@
                 <h5 class="modal-title" id="viewDetailsModalLabel">
                     <i data-feather="info" class="me-2"></i>Payroll Process Details
                 </h5>
+
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
@@ -113,8 +114,16 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="#" id="view-eligible-btn" class="btn btn-primary">
+                    <i data-feather="users" class="me-1"></i>
+                    View Eligible Employees
+                </a>
+
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Close
+                </button>
             </div>
+
         </div>
     </div>
 </div>

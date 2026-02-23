@@ -17,12 +17,19 @@ class Payroll extends Model
         'leaves_count',
         'offday_work_count',
         'absent_count',
+        'absent_dates',
         'late_count',
         'excessive_late_count',
+        'early_exit_count',
         'overtime_count',
         'overtime_amount',
         'offday_work_salary',
-        'bonus_amount'
+        'bonus_amount',
+        'total_salary',
+    ];
+
+    protected $casts = [
+        'absent_dates' => 'array',
     ];
 
     public function getEmployee(){

@@ -21,8 +21,10 @@ return new class extends Migration
             $table->integer('leaves_count');
             $table->integer('offday_work_count');
             $table->integer('absent_count');
+            $table->json('absent_dates')->nullable();
             $table->integer('late_count');
             $table->integer('excessive_late_count');
+            $table->integer('early_exit_count');
             $table->integer('overtime_count');
             $table->decimal('overtime_amount', 15, 2);
             $table->decimal('offday_work_salary', 15, 2);

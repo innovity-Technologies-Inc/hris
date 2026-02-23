@@ -149,7 +149,8 @@
 
                 <!-- Payroll Menu -->
                 @php
-                    $payrollOpen = request()->is('promotion*') || request()->is('increment*') || request()->is('bonus*');
+                    $payrollOpen = request()->is('promotion*') || request()->is('increment*') || request()->is('bonus*')
+                    || request()->is('salary*');
                 @endphp
                 <li>
                     <a href="#payroll" data-bs-toggle="collapse" aria-expanded="{{ $payrollOpen ? 'true' : 'false' }}"
@@ -171,6 +172,10 @@
                             <li>
                                 <a class='tp-link @if (request()->is('bonus') && !request()->is('bonus/create')) menuitem-active @endif'
                                    href='{{ route('bonus.index') }}'>Bonuses</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (request()->is('salary') && !request()->is('salary/create')) menuitem-active @endif'
+                                   href='{{ route('salary.index') }}'>Salary</a>
                             </li>
                         </ul>
                     </div>
