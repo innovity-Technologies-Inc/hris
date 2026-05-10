@@ -63,7 +63,33 @@ composer install
 npm install
 ```
 
-### 5. Application Optimization
+### 5. PDF Generation Setup (Spatie Browsershot)
+
+This project uses **Spatie Browsershot** for generating Payslips and ID Cards. This requires **Node.js**, **Puppeteer**, and a headless **Chrome/Chromium** browser.
+
+#### A. Install Puppeteer
+If you haven't run `npm install` yet, do so now. It will automatically install Puppeteer as defined in `package.json`.
+```bash
+npm install puppeteer
+```
+
+#### B. Linux/Server Specifics
+If you are deploying on a Linux server (Ubuntu/Debian), you must install the necessary Chromium dependencies:
+```bash
+sudo apt-get update
+sudo apt-get install -y gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgbm1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libnss3 lsb-release xdg-utils wget
+```
+
+#### C. Troubleshooting (Windows)
+If you encounter "Node not found" or "Chrome not found" errors on Windows, update your `.env` file with the absolute paths:
+```env
+BROWSERSHOT_NODE_BINARY="C:\Program Files\nodejs\node.exe"
+BROWSERSHOT_NPM_BINARY="C:\Program Files\nodejs\npm.cmd"
+# Chrome is usually auto-detected, but can be specified:
+# BROWSERSHOT_CHROME_PATH="C:\Program Files\Google\Chrome\Application\chrome.exe"
+```
+
+### 6. Application Optimization
 
 Clear the configuration cache and optimize the application:
 
