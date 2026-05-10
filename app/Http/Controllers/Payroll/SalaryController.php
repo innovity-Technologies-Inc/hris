@@ -91,12 +91,11 @@ class SalaryController extends Controller
         $section = 'Employee Payroll';
         $section_url = route('salary.index');
         $sub_section = 'Eligible Employee';
-        $process = PayrollProcess::find($id);
+        $process = PayrollProcess::findOrFail($id);
         $salary_month = $process->salary_month;
-        $batch_id = $process->batch_id;
-        $salaryes = Payroll::where('batch_id', $batch_id)->orderBy('created_at', 'desc')->paginate(10);
+        $salaryes = Payroll::where('process_id', $id)->orderBy('created_at', 'desc')->paginate(10);
         return view('payroll.salary.view', compact('title', 'section', 'section_url', 'sub_section',
-            'salaryes', 'salary_month', 'sub_section'));
+            'salaryes', 'salary_month'));
     }
 
     public function delete($id)
