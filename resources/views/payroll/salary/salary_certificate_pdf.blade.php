@@ -24,7 +24,7 @@
             padding-bottom: 15px;
         }
         .company-logo {
-            max-height: 60px; /* Reduced logo size */
+            max-height: 60px;
             width: auto;
             margin-bottom: 8px;
         }
@@ -50,18 +50,18 @@
         }
         .content {
             text-align: justify;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         .content p {
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
         .salary-table {
             width: 85%;
-            margin: 15px auto;
+            margin: 10px auto;
             border-collapse: collapse;
         }
         .salary-table td {
-            padding: 6px 12px;
+            padding: 5px 12px;
             border: 1px solid #ccc;
         }
         .salary-table td.label {
@@ -74,7 +74,7 @@
             width: 40%;
         }
         .footer {
-            margin-top: 50px;
+            margin-top: 40px;
         }
         .signature-box {
             width: 250px;
@@ -119,34 +119,54 @@
             in the <strong>{{ $officeInfo->getCurrentDepartment->department_name ?? 'N/A' }}</strong> department.
         </p>
         <p>
-            As per our records, his/her current monthly gross salary and other benefits are as follows:
+            As per our records, his/her monthly salary breakdown is as follows:
         </p>
     </div>
 
     <table class="salary-table">
         <tr>
-            <td class="label">Gross Salary</td>
-            <td class="value">৳ {{ number_format($data['gross_salary'], 2) }}</td>
+            <td class="label">Basic Salary</td>
+            <td class="value">৳ {{ number_format($data['basic_salary'], 2) }}</td>
         </tr>
+        <tr>
+            <td class="label">House Rent Allowance</td>
+            <td class="value">৳ {{ number_format($data['house_allowance'], 2) }}</td>
+        </tr>
+        <tr>
+            <td class="label">Medical Allowance</td>
+            <td class="value">৳ {{ number_format($data['medical_allowance'], 2) }}</td>
+        </tr>
+        @if($data['transport_allowance'] > 0)
+        <tr>
+            <td class="label">Transport Allowance</td>
+            <td class="value">৳ {{ number_format($data['transport_allowance'], 2) }}</td>
+        </tr>
+        @endif
+        @if($data['food_allowance'] > 0)
+        <tr>
+            <td class="label">Food Allowance</td>
+            <td class="value">৳ {{ number_format($data['food_allowance'], 2) }}</td>
+        </tr>
+        @endif
+        @if($data['other_earnings'] > 0)
+        <tr>
+            <td class="label">Other Earnings / Allowances</td>
+            <td class="value">৳ {{ number_format($data['other_earnings'], 2) }}</td>
+        </tr>
+        @endif
         @if($data['overtime'] > 0)
         <tr>
-            <td class="label">Overtime Allowance (Monthly)</td>
+            <td class="label">Overtime (Monthly)</td>
             <td class="value">৳ {{ number_format($data['overtime'], 2) }}</td>
         </tr>
         @endif
-        @if($data['other_allowances'] > 0)
-        <tr>
-            <td class="label">Other Allowances</td>
-            <td class="value">৳ {{ number_format($data['other_allowances'], 2) }}</td>
-        </tr>
-        @endif
         <tr style="font-weight: bold; background-color: #eee;">
-            <td class="label">Total Monthly Remuneration</td>
+            <td class="label">Total Monthly Gross Remuneration</td>
             <td class="value">৳ {{ number_format($data['total_remuneration'], 2) }}</td>
         </tr>
     </table>
 
-    <div class="content">
+    <div class="content" style="margin-top: 15px;">
         <p>
             In words: <strong>Taka {{ App\HelperClass::numberToWords($data['total_remuneration']) }} Only.</strong>
         </p>

@@ -29,10 +29,17 @@ class SalaryCertificateService
             ->where('employee_id', $employee->id)
             ->first();
 
+        // Get the breakdown related to this employee to show the composition
+        $breakdown = EmployeeSalaryBreakdown::where('employee_id', $employee->id)->first();
+
         $data = [
-            'gross_salary' => $payroll->salary,
+            'basic_salary' => $breakdown->basic_salary ?? ($payroll->salary * 0.6), // Fallback to 60% if no breakdown
+            'house_allowance' => $breakdown->house_allowance ?? ($payroll->salary * 0.2),
+            'transport_allowance' => $breakdown->transport_allowance ?? ($payroll->salary * 0.1),
+            'food_allowance' => $breakdown->food_allowance ?? 0,
+            'medical_allowance' => $breakdown->medical_allowance ?? ($payroll->salary * 0.1),
+            'other_earnings' => ($breakdown->other_earnings ?? 0) + $payroll->offday_work_salary + $payroll->bonus_amount,
             'overtime' => $payroll->overtime_amount,
-            'other_allowances' => $payroll->offday_work_salary + $payroll->bonus_amount,
             'total_remuneration' => $payroll->salary + $payroll->overtime_amount + $payroll->offday_work_salary + $payroll->bonus_amount,
         ];
 
@@ -56,9 +63,13 @@ class SalaryCertificateService
             ->first();
 
         $data = [
-            'gross_salary' => $breakdown->gross_salary,
-            'overtime' => 0, // Current breakdown doesn't include OT
-            'other_allowances' => 0,
+            'basic_salary' => $breakdown->basic_salary,
+            'house_allowance' => $breakdown->house_allowance,
+            'transport_allowance' => $breakdown->transport_allowance,
+            'food_allowance' => $breakdown->food_allowance,
+            'medical_allowance' => $breakdown->medical_allowance,
+            'other_earnings' => $breakdown->other_earnings,
+            'overtime' => 0,
             'total_remuneration' => $breakdown->gross_salary,
         ];
 
@@ -84,7 +95,7 @@ class SalaryCertificateService
                 ]))
                 ->setOption('landscape', false)
                 ->format('A4')
-                ->margins(10, 15, 10, 15) // Slightly smaller margins to help fit one page
+                ->margins(10, 15, 10, 15)
                 ->showBackground()
                 ->waitUntilNetworkIdle()
                 ->timeout(config('browsershot.timeout', 60))
