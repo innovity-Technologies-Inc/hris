@@ -34,6 +34,10 @@ A comprehensive Human Resource Management System (HRMS) built with Laravel 12, f
     - Provide a "View Eligible Employees" feature accessible via the Salary Process index page (modal -> view button).
     - Display eligibility data mapped from the existing `payrolls` table associated with the specific salary process batch.
     - **Individual Payroll Detail View**: For each employee in the eligible list, provide a "View" button to see the full breakdown of their payroll data (earnings, deductions, attendance stats, etc.).
+    - **Industry Standard PDF Payslip**: 
+        - In the individual payroll detail page, add a "Generate Payslip" button.
+        - Generate a professional PDF payslip containing company branding (logo, name, address), employee details (Name, ID, Designation, Department), month/year, and a clear breakdown of earnings and deductions.
+        - Company details must be pulled from the `companies` and `employee_office_infos` tables.
 
 ### 🚐 Transport Services
 - Vehicle and Driver management.

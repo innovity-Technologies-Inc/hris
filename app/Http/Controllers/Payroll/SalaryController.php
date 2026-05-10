@@ -8,6 +8,7 @@ use App\Models\Employee;
 use App\Models\Payroll\Payroll;
 use App\Models\Payroll\PayrollProcess;
 use App\Services\PayrollServices;
+use App\Services\PayslipService;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,10 +17,31 @@ use Illuminate\Support\Facades\Log;
 class SalaryController extends Controller
 {
     protected $payrollService;
+    protected $payslipService;
 
-    public function __construct(PayrollServices $payrollService)
+    public function __construct(PayrollServices $payrollService, PayslipService $payslipService)
     {
         $this->payrollService = $payrollService;
+        $this->payslipService = $payslipService;
+    }
+
+    public function generatePayslip($id)
+    {
+        try {
+            $pdfContent = $this->payslipService->generatePayslip($id);
+            $payroll = Payroll::with('getEmployee')->findOrFail($id);
+            $fileName = 'Payslip_' . str_replace(' ', '_', $payroll->getEmployee->full_name) . '_' . date('M_Y', strtotime($payroll->created_at)) . '.pdf';
+
+            return response($pdfContent)
+                ->header('Content-Type', 'application/pdf')
+                ->header('Content-Disposition', 'inline; filename="' . $fileName . '"');
+        } catch (\Exception $e) {
+            Log::error('Payslip generation failed: ' . $e->getMessage());
+            return redirect()->back()->with([
+                'alert-type' => 'error',
+                'message' => 'Failed to generate payslip: ' . $e->getMessage()
+            ]);
+        }
     }
 
     public function index(Request $request, FlexSearch $flexSearch)
