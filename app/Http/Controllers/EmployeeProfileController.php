@@ -40,7 +40,8 @@ class EmployeeProfileController extends Controller
         $section = 'Employees';
         $sub_section = 'General Information / Create';
         $section_url = route('employees.index');
-        return view('employees.general_informations.form', compact('title', 'section', 'sub_section', 'section_url'));
+        $roles = $this->empServices->getRoles();
+        return view('employees.general_informations.form', compact('title', 'section', 'sub_section', 'section_url', 'roles'));
     }
 
 
@@ -78,7 +79,8 @@ class EmployeeProfileController extends Controller
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
         $employee_id = $employee->id;
-        return view('employees.general_informations.form', compact('title', 'section', 'sub_section', 'employee', 'employee_id', 'section_url'));
+        $roles = $this->empServices->getRoles();
+        return view('employees.general_informations.form', compact('title', 'section', 'sub_section', 'employee', 'employee_id', 'section_url', 'roles'));
     }
 
     public function generalInfoUpdate(Request $request, $id){

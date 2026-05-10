@@ -61,6 +61,12 @@ Dedicated sub-system to define various HR policies:
 - **Operations**: Requisitions (applications), approvals, and allocations.
 - **Tracking**: History of vehicle assignments and driver activities.
 
+### 🔐 User Management & RBAC
+- **Authentication**: Integrated via Laravel Breeze (Bootstrap/Blade).
+- **Permissions**: powered by `spatie/laravel-permission` with menu-wise granularity (Create, Edit, View, Delete).
+- **Integration**: Automatic bi-directional linking between `User` and `Employee` models.
+- **Scoping**: Organization-based data visibility restriction (Group, Company, Division, Department, Section, Employee).
+
 ---
 
 ## 🎨 Design & Coding Guidelines

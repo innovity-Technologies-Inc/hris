@@ -12,6 +12,7 @@ class Employee extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'applicant_id',
         'system_id',
         'punch_card_no',
@@ -98,6 +99,11 @@ class Employee extends Model
     public function employeeIdCards(): HasMany
     {
         return $this->hasMany(EmployeeId::class, 'employee_id', 'id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     /**

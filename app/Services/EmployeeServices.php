@@ -19,9 +19,12 @@ use App\Models\EmployeeSalaryBreakdown;
 use App\Models\SalaryGrade;
 use App\Models\Section;
 use App\Models\Tofsil;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Role;
 
 class EmployeeServices
 {
@@ -54,95 +57,107 @@ class EmployeeServices
         return $employees;
     }
 
+    public function getRoles()
+    {
+        return Role::all();
+    }
+
 
     public function employeeInfoValidation($request)
     {
-        $validated = $request->validate(
-            [
-                // System Identifiers
-                'applicant_id' => 'required|string',
-                'system_id' => 'required|string',
-                'punch_card_no' => 'required|string',
+        $id = $request->route('id');
+        $rules = [
+            // System Identifiers
+            'applicant_id' => 'required|string',
+            'system_id' => 'required|string',
+            'punch_card_no' => 'required|string',
 
-                // Personal Information
-                'first_name' => 'required|string|max:255',
-                'last_name' => 'nullable|string|max:255',
-                'middle_name' => 'nullable|string|max:255',
-                'father_name' => 'required|string|max:255',
-                'mother_name' => 'required|string|max:255',
-                'spouse_name' => 'nullable|string|max:255',
-                'marital_status' => 'nullable|in:Single,Married,Divorced,Widowed',
-                'gender' => 'required|in:Male,Female,Other',
-                'religion' => 'required|string|max:255',
-                'nationality' => 'required|string|max:255',
-                'blood_group' => 'nullable|in:A+,A-,B+,B-,AB+,AB-,O+,O-',
-                'height_feet' => 'nullable|integer|min:0',
-                'height_inches' => 'nullable|integer|min:0|max:11',
-                'children_count' => 'nullable|integer|min:0',
+            // Personal Information
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'nullable|string|max:255',
+            'middle_name' => 'nullable|string|max:255',
+            'father_name' => 'required|string|max:255',
+            'mother_name' => 'required|string|max:255',
+            'spouse_name' => 'nullable|string|max:255',
+            'marital_status' => 'nullable|in:Single,Married,Divorced,Widowed',
+            'gender' => 'required|in:Male,Female,Other',
+            'religion' => 'required|string|max:255',
+            'nationality' => 'required|string|max:255',
+            'blood_group' => 'nullable|in:A+,A-,B+,B-,AB+,AB-,O+,O-',
+            'height_feet' => 'nullable|integer|min:0',
+            'height_inches' => 'nullable|integer|min:0|max:11',
+            'children_count' => 'nullable|integer|min:0',
 
-                'present_address.line_1' => 'required|string',
-                'present_address.village' => 'nullable|string',
-                'present_address.post_office' => 'required|string',
-                'present_address.district' => 'required|string',
-                'present_address.division' => 'required|string',
-                'present_address.zip_code' => 'required|string',
-                'present_address.state' => 'required|string',
-                'present_address.country' => 'required|string',
+            'present_address.line_1' => 'required|string',
+            'present_address.village' => 'nullable|string',
+            'present_address.post_office' => 'required|string',
+            'present_address.district' => 'required|string',
+            'present_address.division' => 'required|string',
+            'present_address.zip_code' => 'required|string',
+            'present_address.state' => 'required|string',
+            'present_address.country' => 'required|string',
 
-                'permanent_address.line_1' => 'nullable|string',
-                'permanent_address.village' => 'nullable|string',
-                'permanent_address.post_office' => 'nullable|string',
-                'permanent_address.district' => 'nullable|string',
-                'permanent_address.division' => 'nullable|string',
-                'permanent_address.zip_code' => 'nullable|string',
-                'permanent_address.state' => 'nullable|string',
-                'permanent_address.country' => 'nullable|string',
+            'permanent_address.line_1' => 'nullable|string',
+            'permanent_address.village' => 'nullable|string',
+            'permanent_address.post_office' => 'nullable|string',
+            'permanent_address.district' => 'nullable|string',
+            'permanent_address.division' => 'nullable|string',
+            'permanent_address.zip_code' => 'nullable|string',
+            'permanent_address.state' => 'nullable|string',
+            'permanent_address.country' => 'nullable|string',
 
-                'reference_address.emp_id' => 'nullable|string',
-                'reference_address.reference_name' => 'nullable|string',
-                'reference_address.reference_designation' => 'nullable|string',
-                'reference_address.phone' => 'nullable|string',
-                'reference_address.mobile' => 'nullable|string',
-                'reference_address.email' => 'nullable|string',
-                'reference_address.line_1' => 'nullable|string',
-                'reference_address.village' => 'nullable|string',
-                'reference_address.post_office' => 'nullable|string',
-                'reference_address.district' => 'nullable|string',
-                'reference_address.division' => 'nullable|string',
-                'reference_address.zip_code' => 'nullable|string',
-                'reference_address.state' => 'nullable|string',
-                'reference_address.country' => 'nullable|string',
+            'reference_address.emp_id' => 'nullable|string',
+            'reference_address.reference_name' => 'nullable|string',
+            'reference_address.reference_designation' => 'nullable|string',
+            'reference_address.phone' => 'nullable|string',
+            'reference_address.mobile' => 'nullable|string',
+            'reference_address.email' => 'nullable|string',
+            'reference_address.line_1' => 'nullable|string',
+            'reference_address.village' => 'nullable|string',
+            'reference_address.post_office' => 'nullable|string',
+            'reference_address.district' => 'nullable|string',
+            'reference_address.division' => 'nullable|string',
+            'reference_address.zip_code' => 'nullable|string',
+            'reference_address.state' => 'nullable|string',
+            'reference_address.country' => 'nullable|string',
 
 
-                // Document Information
-                'tin' => 'nullable|string|max:255',
-                'passport_no' => 'nullable|string|max:255',
-                'passport_expiry' => 'nullable|date|after:today',
-                'license_no' => 'nullable|string|max:255',
-                'license_expiry' => 'nullable|date|after:today',
-                'visa_expiry' => 'nullable|date|after:today',
-                'work_expiry' => 'nullable|date|after:today',
-                'residency_id_number' => 'nullable|string|max:255',
+            // Document Information
+            'tin' => 'nullable|string|max:255',
+            'passport_no' => 'nullable|string|max:255',
+            'passport_expiry' => 'nullable|date|after:today',
+            'license_no' => 'nullable|string|max:255',
+            'license_expiry' => 'nullable|date|after:today',
+            'visa_expiry' => 'nullable|date|after:today',
+            'work_expiry' => 'nullable|date|after:today',
+            'residency_id_number' => 'nullable|string|max:255',
 
-                // Birth Information
-                'date_of_birth' => 'required|date|before:today',
-                'birth_country' => 'nullable|string|max:255',
-                'birth_reg_no' => 'nullable|string|max:255',
+            // Birth Information
+            'date_of_birth' => 'required|date|before:today',
+            'birth_country' => 'nullable|string|max:255',
+            'birth_reg_no' => 'nullable|string|max:255',
 
-                // Contact Information
-                'personal_mobile' => 'required|string|max:20',
-                'home_phone' => 'nullable|string|max:20',
-                'work_mobile' => 'nullable|string|max:20',
-                'work_phone' => 'nullable|string|max:20',
-                'work_email' => 'nullable|email|max:255',
-                'personal_email' => 'nullable|email|max:255',
+            // Contact Information
+            'personal_mobile' => 'required|string|max:20',
+            'home_phone' => 'nullable|string|max:20',
+            'work_mobile' => 'nullable|string|max:20',
+            'work_phone' => 'nullable|string|max:20',
+            'work_email' => 'nullable|email|max:255|unique:users,email,' . ($id ? Employee::find($id)->user_id : ''),
+            'personal_email' => 'nullable|email|max:255',
 
-                // File uploads
-                'photo_path' => 'nullable|file|image|mimes:jpeg,png,jpg,webp|max:2048',
-                'fingerprint_path' => 'nullable|file|mimes:jpeg,png,jpg,webp|max:2048',
-                'signature_path' => 'nullable|file|mimes:jpeg,png,jpg,webp|max:2048',
-                'experience_attachment_path' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
-            ],
+            // Login Information
+            'user_type' => 'required|string|in:Group,Company,Business Unit,Division,Department,Section,Employee',
+            'roles' => 'nullable|array',
+            'password' => $id ? 'nullable|min:8|confirmed' : 'required|min:8|confirmed',
+
+            // File uploads
+            'photo_path' => 'nullable|file|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'fingerprint_path' => 'nullable|file|mimes:jpeg,png,jpg,webp|max:2048',
+            'signature_path' => 'nullable|file|mimes:jpeg,png,jpg,webp|max:2048',
+            'experience_attachment_path' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+        ];
+
+        $validated = $request->validate($rules,
             // Custom error messages
             [
                 'applicant_id.required' => 'Applicant ID is required.',
@@ -168,6 +183,9 @@ class EmployeeServices
                 'personal_email.email' => 'Personal email must be a valid email address.',
                 'photo_path.image' => 'Photo must be an image file.',
                 'experience_attachment_path.mimes' => 'Experience attachment must be a PDF or Word document.',
+                'user_type.required' => 'User type is required for login information.',
+                'password.required' => 'Password is required for new accounts.',
+                'password.min' => 'Password must be at least 8 characters.',
             ]
         );
 
@@ -195,31 +213,48 @@ class EmployeeServices
         $validated['full_name'] = trim(($validated['first_name'] ?? '') . ' ' .
             ($validated['middle_name'] ?? '') . ' ' .
             ($validated['last_name'] ?? ''));
-        Log::info($validated);
+
+        // Handle User Logic
+        $userData = [
+            'name' => $validated['full_name'],
+            'email' => $request->work_email,
+            'user_type' => $request->user_type,
+            'status' => 'active',
+        ];
+
+        if ($request->filled('password')) {
+            $userData['password'] = Hash::make($request->password);
+        }
+
+        if ($id) {
+            $employee = $this->getEmployeeById($id);
+            $user = User::find($employee->user_id);
+            if ($user) {
+                $user->update($userData);
+            } else {
+                $user = User::create($userData);
+                $employee->update(['user_id' => $user->id]);
+            }
+        } else {
+            $user = User::create($userData);
+            $validated['user_id'] = $user->id;
+        }
+
+        // Sync Roles
+        if ($request->has('roles')) {
+            $user->syncRoles($request->roles);
+        }
 
         if ($request->hasFile('photo_path')) {
-            $photo = $request->file('photo_path');
-            $validated = $this->employeeAttachmentValidation($validated, $request, $photo, 'photo_path');
-            Log::info('Photo Uploaded');
-        }
-        if ($request->hasFile('fingerprint_path')) {
-            $fingerprint = $request->file('fingerprint_path');
-            $validated = $this->employeeAttachmentValidation($validated, $request, $fingerprint, 'fingerprint_path');
-            Log::info('Fingerprint Uploaded');
-        }
-
-        if ($request->hasFile('signature_path')) {
-            $signature = $request->file('signature_path');
-            $validated = $this->employeeAttachmentValidation($validated, $request, $signature, 'signature_path');
-            Log::info('Signature Uploaded');
-        }
-
+...
         if ($request->hasFile('experience_attachment_path')) {
             $experience_attachment = $request->file('experience_attachment_path');
             $validated = $this->employeeAttachmentValidation($validated, $request, $experience_attachment, 'experience_attachment_path');
         }
         if (empty($id)) {
             $employee_data = Employee::create($validated);
+            // Update user with employee_id for bi-directional link
+            $user->update(['employee_id' => $employee_data->id]);
         } else {
             $employee = $this->getEmployeeById($id);
 

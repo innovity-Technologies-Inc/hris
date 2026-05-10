@@ -462,6 +462,11 @@
                                    href='{{ route('db_backup') }}'>DB Backup</a>
                             </li>
 
+                            <li>
+                                <a class='tp-link @if (Route::is('settings.roles.*')) menuitem-active @endif'
+                                   href='{{ route('settings.roles.index') }}'>Role Management</a>
+                            </li>
+
                         </ul>
                     </div>
                 </li>

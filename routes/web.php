@@ -725,3 +725,10 @@ Route::get('/trial/payroll-process', function() {
     return view('trial.payroll-process-index');
 })->name('trial.payroll_process.index');
 
+// Role Management
+Route::prefix('settings')->name('settings.')->middleware('auth')->group(function () {
+    Route::resource('roles', \App\Http\Controllers\Settings\RoleController::class);
+});
+
+require __DIR__.'/auth.php';
+

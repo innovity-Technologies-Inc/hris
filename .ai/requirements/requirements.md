@@ -48,6 +48,24 @@ A comprehensive Human Resource Management System (HRMS) built with Laravel 12, f
 - Vehicle and Driver management.
 - Requisition and allocation workflows.
 
+### 🔐 User Management & RBAC
+- **Authentication**: Integrated via Laravel Breeze (Blade implementation).
+- **Access Control**: Powered by `spatie/laravel-permission`.
+- **Employee-User Link**:
+    - Automatic `User` creation during `Employee` general information setup.
+    - Login credentials (User Type, Roles, Password) handled in a "Login Information" tab.
+    - `User` email maps to `Employee` work email.
+    - Bi-directional linking: `users.employee_id` and `employees.user_id`.
+- **Organization-Based Visibility (Data Scoping)**:
+    - **Group**: View all data.
+    - **Company**: View data for a specific company and its hierarchy.
+    - **Business Unit/Division/Department/Section**: Scoped access to the specific level and its descendants.
+    - **Employee**: View only their own records.
+- **Role Management UI**:
+    - Centralized management under Settings -> Role Management.
+    - Permission granularity: Create, Edit, View, Delete for all menus and submenus.
+    - Dynamic permission seeder for system-wide menus.
+
 ## Technical Constraints
 - **Framework**: Laravel 12.
 - **PHP Version**: 8.2+ (Strict Typing).
