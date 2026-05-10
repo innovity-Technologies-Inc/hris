@@ -54,7 +54,7 @@ class SalaryController extends Controller
     public function generateSalaryCertificate($id)
     {
         try {
-            $pdfContent = $this->salaryCertificateService->generateSalaryCertificate($id);
+            $pdfContent = $this->salaryCertificateService->generateSalaryCertificateFromPayroll($id);
             $payroll = Payroll::with('getEmployee')->findOrFail($id);
             $fileName = 'Salary_Certificate_' . str_replace(' ', '_', $payroll->getEmployee->full_name) . '.pdf';
 
@@ -63,6 +63,25 @@ class SalaryController extends Controller
                 ->header('Content-Disposition', 'inline; filename="' . $fileName . '"');
         } catch (\Exception $e) {
             Log::error('Salary Certificate generation failed: ' . $e->getMessage());
+            return redirect()->back()->with([
+                'alert-type' => 'error',
+                'message' => 'Failed to generate salary certificate: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    public function generateSalaryCertificateFromProfile($employee_id)
+    {
+        try {
+            $pdfContent = $this->salaryCertificateService->generateSalaryCertificateFromEmployee($employee_id);
+            $employee = Employee::findOrFail($employee_id);
+            $fileName = 'Salary_Certificate_' . str_replace(' ', '_', $employee->full_name) . '.pdf';
+
+            return response($pdfContent)
+                ->header('Content-Type', 'application/pdf')
+                ->header('Content-Disposition', 'inline; filename="' . $fileName . '"');
+        } catch (\Exception $e) {
+            Log::error('Salary Certificate generation from profile failed: ' . $e->getMessage());
             return redirect()->back()->with([
                 'alert-type' => 'error',
                 'message' => 'Failed to generate salary certificate: ' . $e->getMessage()

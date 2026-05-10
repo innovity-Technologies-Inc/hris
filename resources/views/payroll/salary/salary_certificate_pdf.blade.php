@@ -5,61 +5,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Salary Certificate - {{ $employee->full_name }}</title>
     <style>
+        @page {
+            size: A4;
+            margin: 0;
+        }
         body {
             font-family: 'Helvetica', 'Arial', sans-serif;
-            font-size: 14px;
+            font-size: 13px;
             color: #333;
-            line-height: 1.6;
+            line-height: 1.4;
             margin: 0;
-            padding: 40px;
+            padding: 30px 50px;
         }
         .header {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
         }
         .company-logo {
-            max-width: 180px;
-            margin-bottom: 10px;
+            max-height: 60px; /* Reduced logo size */
+            width: auto;
+            margin-bottom: 8px;
         }
         .company-name {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: bold;
             text-transform: uppercase;
             margin: 0;
             color: #1a5a96;
         }
         .company-details {
-            font-size: 12px;
+            font-size: 11px;
             color: #666;
-            margin-top: 5px;
+            margin-top: 3px;
         }
         .certificate-title {
             text-align: center;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             text-decoration: underline;
-            margin: 40px 0;
+            margin: 25px 0;
             text-transform: uppercase;
         }
         .content {
             text-align: justify;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
         .content p {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
         .salary-table {
-            width: 80%;
-            margin: 20px auto;
+            width: 85%;
+            margin: 15px auto;
             border-collapse: collapse;
         }
         .salary-table td {
-            padding: 8px;
-            border: 1px solid #ddd;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
         }
         .salary-table td.label {
             font-weight: bold;
-            background-color: #f9f9f9;
+            background-color: #f5f5f5;
             width: 60%;
         }
         .salary-table td.value {
@@ -67,23 +74,21 @@
             width: 40%;
         }
         .footer {
-            margin-top: 80px;
-        }
-        .signature-section {
-            width: 100%;
+            margin-top: 50px;
         }
         .signature-box {
-            width: 300px;
+            width: 250px;
             text-align: center;
         }
         .signature-line {
-            border-top: 2px solid #333;
-            margin-top: 50px;
-            padding-top: 10px;
+            border-top: 1.5px solid #333;
+            margin-top: 40px;
+            padding-top: 8px;
             font-weight: bold;
         }
         .date-section {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -100,7 +105,7 @@
     </div>
 
     <div class="date-section">
-        <strong>Date:</strong> {{ date('d F, Y') }}
+        Date: {{ date('d F, Y') }}
     </div>
 
     <div class="certificate-title">TO WHOM IT MAY CONCERN</div>
@@ -109,7 +114,7 @@
         <p>
             This is to certify that <strong>{{ $employee->full_name }}</strong>, son/daughter of <strong>{{ $employee->father_name ?? 'N/A' }}</strong>, 
             is a permanent employee of <strong>{{ $officeInfo->getCurrentCompany->name }}</strong>. 
-            He/She joined the company on <strong>{{ \Carbon\Carbon::parse($officeInfo->date_of_join)->format('d F, Y') }}</strong> 
+            He/She joined the company on <strong>{{ $officeInfo->date_of_join ? \Carbon\Carbon::parse($officeInfo->date_of_join)->format('d F, Y') : 'N/A' }}</strong> 
             and is currently serving as <strong>{{ $officeInfo->getCurrentDesignation->company_designation ?? 'N/A' }}</strong> 
             in the <strong>{{ $officeInfo->getCurrentDepartment->department_name ?? 'N/A' }}</strong> department.
         </p>
@@ -121,25 +126,29 @@
     <table class="salary-table">
         <tr>
             <td class="label">Gross Salary</td>
-            <td class="value">৳ {{ number_format($payroll->salary, 2) }}</td>
+            <td class="value">৳ {{ number_format($data['gross_salary'], 2) }}</td>
         </tr>
+        @if($data['overtime'] > 0)
         <tr>
-            <td class="label">Overtime Allowance (Avg/Monthly)</td>
-            <td class="value">৳ {{ number_format($payroll->overtime_amount, 2) }}</td>
+            <td class="label">Overtime Allowance (Monthly)</td>
+            <td class="value">৳ {{ number_format($data['overtime'], 2) }}</td>
         </tr>
+        @endif
+        @if($data['other_allowances'] > 0)
         <tr>
             <td class="label">Other Allowances</td>
-            <td class="value">৳ {{ number_format($payroll->offday_work_salary + $payroll->bonus_amount, 2) }}</td>
+            <td class="value">৳ {{ number_format($data['other_allowances'], 2) }}</td>
         </tr>
+        @endif
         <tr style="font-weight: bold; background-color: #eee;">
             <td class="label">Total Monthly Remuneration</td>
-            <td class="value">৳ {{ number_format($payroll->salary + $payroll->overtime_amount + $payroll->offday_work_salary + $payroll->bonus_amount, 2) }}</td>
+            <td class="value">৳ {{ number_format($data['total_remuneration'], 2) }}</td>
         </tr>
     </table>
 
     <div class="content">
         <p>
-            In words: <strong>Taka {{ App\HelperClass::numberToWords($payroll->salary + $payroll->overtime_amount + $payroll->offday_work_salary + $payroll->bonus_amount) }} Only.</strong>
+            In words: <strong>Taka {{ App\HelperClass::numberToWords($data['total_remuneration']) }} Only.</strong>
         </p>
         <p>
             During his/her tenure with us, we found him/her to be hardworking, honest, and dedicated to his/her duties. 
@@ -151,7 +160,7 @@
         <div class="signature-box">
             <div class="signature-line">
                 Authorized Signatory<br>
-                <small>{{ $officeInfo->getCurrentCompany->name }}</small>
+                <span style="font-weight: normal; font-size: 11px;">{{ $officeInfo->getCurrentCompany->name }}</span>
             </div>
         </div>
     </div>

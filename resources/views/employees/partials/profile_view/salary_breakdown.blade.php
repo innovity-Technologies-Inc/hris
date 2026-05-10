@@ -192,6 +192,10 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-end gap-2">
 
+                            <a href="{{ route('salary.payroll.profile_certificate', $employee->id) }}" class="btn btn-success" target="_blank">
+                                <i class="fas fa-certificate me-1"></i> Salary Certificate
+                            </a>
+
                             <a href="{{ route('employees.salary_breakdown.edit', $employee->id) }}"
                                class="btn btn-primary">
                                 <i class="mdi mdi-pencil me-1"></i> Edit Salary Information
