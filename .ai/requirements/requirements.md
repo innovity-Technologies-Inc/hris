@@ -33,6 +33,7 @@ A comprehensive Human Resource Management System (HRMS) built with Laravel 12, f
 - **Salary Process Eligibility View**: 
     - Provide a "View Eligible Employees" feature accessible via the Salary Process index page (modal -> view button).
     - Display eligibility data mapped from the existing `payrolls` table associated with the specific salary process batch.
+    - **Individual Payroll Detail View**: For each employee in the eligible list, provide a "View" button to see the full breakdown of their payroll data (earnings, deductions, attendance stats, etc.).
 
 ### 🚐 Transport Services
 - Vehicle and Driver management.

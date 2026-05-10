@@ -575,6 +575,7 @@ Route::prefix('salary-process')->name('salary.')->controller(\App\Http\Controlle
     Route::get('create', 'create')->name('create');
     Route::post('store', 'save')->name('store');
     Route::get('view/{id}', 'show')->name('show');
+    Route::get('payroll-detail/{id}', 'showPayroll')->name('payroll.show');
     Route::get('edit/{id}', 'edit')->name('edit');
     Route::put('{id}/update', 'save')->name('update');
     Route::put('{id}/status-update', 'statusUpdate')->name('status.update');

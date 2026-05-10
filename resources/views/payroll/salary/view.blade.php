@@ -30,6 +30,7 @@
                                     <th scope="col">Employee ID</th>
                                     <th scope="col">Employee Name</th>
                                     <th scope="col">Total Salary</th>
+                                    <th scope="col" class="text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -59,6 +60,11 @@
                                         </td>
                                         <td>
                                             ৳ {{ number_format($item->total_salary, 2) }}
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="{{ route('salary.payroll.show', $item->id) }}" class="btn btn-outline-primary btn-sm">
+                                                <i class="fas fa-eye me-1"></i> View
+                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach

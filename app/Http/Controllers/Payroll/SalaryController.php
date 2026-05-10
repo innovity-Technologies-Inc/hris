@@ -98,6 +98,17 @@ class SalaryController extends Controller
             'salaryes', 'salary_month'));
     }
 
+    public function showPayroll($id)
+    {
+        $payroll = Payroll::with(['getEmployee', 'getBatch'])->findOrFail($id);
+        $title = 'Payroll Details';
+        $section = 'Employee Payroll';
+        $section_url = route('salary.index');
+        $sub_section = 'Payroll Detail';
+        
+        return view('payroll.salary.payroll_view', compact('payroll', 'title', 'section', 'section_url', 'sub_section'));
+    }
+
     public function delete($id)
     {
         DB::transaction(function () use ($id) {

@@ -50,6 +50,7 @@ Dedicated sub-system to define various HR policies:
 ### 💰 Payroll & Benefits
 - **Salary Processing**: Automated salary calculation and breakdown.
 - **Salary Process Eligibility View**: A dedicated view to track and audit eligible employees for each salary process batch, accessible via the main salary process index.
+- **Individual Payroll Detail View**: Detailed breakdown of earnings (Gross, OT, Bonus, Off-day) and deductions for each employee within a batch.
 - **Adjustments**: Handle Promotions, Increments, and Bonus distributions.
 - **Structure**: Based on Salary Grades and Employee-specific breakdown.
 
