@@ -170,7 +170,7 @@
                         </div>
 
                         <!-- item-->
-                        <a class='dropdown-item notify-item' href='{{ route('profile.edit') }}'>
+                        <a class='dropdown-item notify-item' href='{{ Auth::user()?->employee_id ? route('employees.profile.general_informations', Auth::user()->employee_id) : '#' }}'>
                             <i class="mdi mdi-account-circle-outline fs-16 align-middle"></i>
                             <span>My Account</span>
                         </a>
