@@ -9,6 +9,7 @@ use App\Models\Payroll\Payroll;
 use App\Models\Payroll\PayrollProcess;
 use App\Services\PayrollServices;
 use App\Services\PayslipService;
+use App\Services\SalaryCertificateService;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,11 +19,17 @@ class SalaryController extends Controller
 {
     protected $payrollService;
     protected $payslipService;
+    protected $salaryCertificateService;
 
-    public function __construct(PayrollServices $payrollService, PayslipService $payslipService)
+    public function __construct(
+        PayrollServices $payrollService, 
+        PayslipService $payslipService,
+        SalaryCertificateService $salaryCertificateService
+    )
     {
         $this->payrollService = $payrollService;
         $this->payslipService = $payslipService;
+        $this->salaryCertificateService = $salaryCertificateService;
     }
 
     public function generatePayslip($id)
@@ -40,6 +47,25 @@ class SalaryController extends Controller
             return redirect()->back()->with([
                 'alert-type' => 'error',
                 'message' => 'Failed to generate payslip: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    public function generateSalaryCertificate($id)
+    {
+        try {
+            $pdfContent = $this->salaryCertificateService->generateSalaryCertificate($id);
+            $payroll = Payroll::with('getEmployee')->findOrFail($id);
+            $fileName = 'Salary_Certificate_' . str_replace(' ', '_', $payroll->getEmployee->full_name) . '.pdf';
+
+            return response($pdfContent)
+                ->header('Content-Type', 'application/pdf')
+                ->header('Content-Disposition', 'inline; filename="' . $fileName . '"');
+        } catch (\Exception $e) {
+            Log::error('Salary Certificate generation failed: ' . $e->getMessage());
+            return redirect()->back()->with([
+                'alert-type' => 'error',
+                'message' => 'Failed to generate salary certificate: ' . $e->getMessage()
             ]);
         }
     }

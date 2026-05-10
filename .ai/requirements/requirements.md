@@ -38,6 +38,11 @@ A comprehensive Human Resource Management System (HRMS) built with Laravel 12, f
         - In the individual payroll detail page, add a "Generate Payslip" button.
         - Generate a professional PDF payslip containing company branding (logo, name, address), employee details (Name, ID, Designation, Department), month/year, and a clear breakdown of earnings and deductions.
         - Company details must be pulled from the `companies` and `employee_office_infos` tables.
+    - **Industry Standard Salary Certificate**:
+        - In the individual payroll detail page, add a "Generate Salary Certificate" button.
+        - Generate a professional Salary Certificate PDF (To Whom It May Concern format).
+        - Include company branding, employee's tenure, designation, and current monthly salary breakdown.
+        - Both Payslip and Salary Certificate should be viewable in the browser as PDFs.
 
 ### 🚐 Transport Services
 - Vehicle and Driver management.

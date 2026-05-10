@@ -11,6 +11,9 @@
                         <a href="{{ route('salary.payroll.payslip', $payroll->id) }}" class="btn btn-danger btn-sm me-2" target="_blank">
                             <i class="fas fa-file-pdf me-1"></i>Generate Payslip
                         </a>
+                        <a href="{{ route('salary.payroll.certificate', $payroll->id) }}" class="btn btn-success btn-sm me-2" target="_blank">
+                            <i class="fas fa-certificate me-1"></i>Salary Certificate
+                        </a>
                         <a href="{{ url()->previous() }}" class="btn btn-light btn-sm">
                             <i class="fas fa-arrow-left me-1"></i>Back
                         </a>

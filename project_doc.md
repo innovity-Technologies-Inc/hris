@@ -52,6 +52,7 @@ Dedicated sub-system to define various HR policies:
 - **Salary Process Eligibility View**: A dedicated view to track and audit eligible employees for each salary process batch, accessible via the main salary process index.
 - **Individual Payroll Detail View**: Detailed breakdown of earnings (Gross, OT, Bonus, Off-day) and deductions for each employee within a batch.
 - **Industry Standard PDF Payslip**: Professional PDF generation of payslips with company branding, employee details, and clear financial breakdown using `Spatie Browsershot`.
+- **Salary Certificate Generation**: Standard "To Whom It May Concern" salary certificate generation for employees, including tenure and remuneration details.
 - **Adjustments**: Handle Promotions, Increments, and Bonus distributions.
 - **Structure**: Based on Salary Grades and Employee-specific breakdown.
 
