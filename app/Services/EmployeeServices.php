@@ -246,7 +246,18 @@ class EmployeeServices
         }
 
         if ($request->hasFile('photo_path')) {
-...
+            $photo = $request->file('photo_path');
+            $validated = $this->employeeAttachmentValidation($validated, $request, $photo, 'photo_path');
+        }
+        if ($request->hasFile('fingerprint_path')) {
+            $fingerprint = $request->file('fingerprint_path');
+            $validated = $this->employeeAttachmentValidation($validated, $request, $fingerprint, 'fingerprint_path');
+        }
+
+        if ($request->hasFile('signature_path')) {
+            $signature = $request->file('signature_path');
+            $validated = $this->employeeAttachmentValidation($validated, $request, $signature, 'signature_path');
+        }
         if ($request->hasFile('experience_attachment_path')) {
             $experience_attachment = $request->file('experience_attachment_path');
             $validated = $this->employeeAttachmentValidation($validated, $request, $experience_attachment, 'experience_attachment_path');
