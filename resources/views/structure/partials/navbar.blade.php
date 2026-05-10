@@ -159,7 +159,6 @@
                             32,
                             '#974063',
                             'rounded-circle',
-                            Auth::user()?->employee_id,
                         ) !!}
                         <span class="pro-user-name ms-1">{{ Auth::user()?->name ?? 'Guest' }} <i class="mdi mdi-chevron-down"></i></span>
                     </a>
