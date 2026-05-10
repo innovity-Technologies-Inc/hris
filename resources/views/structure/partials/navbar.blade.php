@@ -9,7 +9,7 @@
                     </button>
                 </li>
                 <li class="d-none d-lg-block">
-                    <h5 class="mb-0">Good Morning, Alex</h5>
+                    <h5 class="mb-0">Good Morning, {{ Auth::user()?->name ?? 'Guest' }}</h5>
                 </li>
             </ul>
 
@@ -153,8 +153,15 @@
                 <!-- User Dropdown -->
                 <li class="dropdown notification-list topbar-dropdown">
                     <a class="nav-link dropdown-toggle nav-user me-0" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                        <img src="{{asset('')}}assets/images/users/user-13.jpg" alt="user-image" class="rounded-circle">
-                        <span class="pro-user-name ms-1">Alex <i class="mdi mdi-chevron-down"></i></span>
+                        {!! \App\HelperClass::generateAvatar(
+                            Auth::user()?->employee?->photo_path,
+                            Auth::user()?->name ?? 'Guest',
+                            32,
+                            '#974063',
+                            'rounded-circle',
+                            Auth::user()?->employee_id,
+                        ) !!}
+                        <span class="pro-user-name ms-1">{{ Auth::user()?->name ?? 'Guest' }} <i class="mdi mdi-chevron-down"></i></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-end profile-dropdown">
                         <!-- item-->
@@ -163,24 +170,21 @@
                         </div>
 
                         <!-- item-->
-                        <a class='dropdown-item notify-item' href='pages-profile.html'>
+                        <a class='dropdown-item notify-item' href='{{ route('profile.edit') }}'>
                             <i class="mdi mdi-account-circle-outline fs-16 align-middle"></i>
                             <span>My Account</span>
-                        </a>
-
-                        <!-- item-->
-                        <a class='dropdown-item notify-item' href='auth-lock-screen.html'>
-                            <i class="mdi mdi-lock-outline fs-16 align-middle"></i>
-                            <span>Lock Screen</span>
                         </a>
 
                         <div class="dropdown-divider"></div>
 
                         <!-- item-->
-                        <a class='dropdown-item notify-item' href='auth-logout.html'>
-                            <i class="mdi mdi-location-exit fs-16 align-middle"></i>
-                            <span>Logout</span>
-                        </a>
+                        <form method="POST" action="{{ route('logout') }}" id="logout-form">
+                            @csrf
+                            <a class='dropdown-item notify-item' href='#' onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="mdi mdi-location-exit fs-16 align-middle"></i>
+                                <span>Logout</span>
+                            </a>
+                        </form>
                     </div>
                 </li>
             </ul>
