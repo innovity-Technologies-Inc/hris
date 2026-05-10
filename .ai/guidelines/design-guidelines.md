@@ -9,7 +9,10 @@
 
 ## 🍱 Component Design
 - **Dashboard Cards**: Use interactive hover effects and standard CSS transitions.
-- **Tables**: Use FlexSearch patterns for all searchable tables. Ensure tables are responsive.
+- **Tables**: 
+    - Use FlexSearch patterns for all searchable tables. 
+    - Ensure tables are responsive.
+    - **Action Buttons**: ALWAYS use icon-only buttons for all actions (View, Edit, Delete, etc.) in index and list pages to maintain a clean and compact UI. Use tooltips if necessary for clarity.
 - **Forms**: Use Bootstrap's grid system for multi-column form layouts.
 - **Modals**: Use Bootstrap 5 modals for quick actions and small forms.
 

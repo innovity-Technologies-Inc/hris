@@ -62,8 +62,8 @@
                                             ৳ {{ number_format($item->total_salary, 2) }}
                                         </td>
                                         <td class="text-center">
-                                            <a href="{{ route('salary.payroll.show', $item->id) }}" class="btn btn-outline-primary btn-sm">
-                                                <i class="fas fa-eye me-1"></i> View
+                                            <a href="{{ route('salary.payroll.show', $item->id) }}" class="btn btn-outline-primary btn-sm rounded-circle" title="View Details">
+                                                <i class="fas fa-eye"></i>
                                             </a>
                                         </td>
                                     </tr>
