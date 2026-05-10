@@ -220,13 +220,21 @@
         </div>
 
         <div class="footer">
-            <div class="signature-box">
-                <div class="signature-line">Employee Signature</div>
-            </div>
-            <div style="width: 9%;"></div>
-            <div class="signature-box">
-                <div class="signature-line">Authorized Signatory</div>
-            </div>
+            <table style="width: 100%; border: none;">
+                <tr>
+                    <td style="width: 30%; text-align: center; vertical-align: bottom;">
+                        <div style="border-top: 1px solid #333; padding-top: 5px; margin-top: 40px;">Employee Signature</div>
+                    </td>
+                    <td style="width: 5%;"></td>
+                    <td style="width: 30%; text-align: center; vertical-align: bottom;">
+                        <div style="border-top: 1px solid #333; padding-top: 5px; margin-top: 40px;">Accounts Signature</div>
+                    </td>
+                    <td style="width: 5%;"></td>
+                    <td style="width: 30%; text-align: center; vertical-align: bottom;">
+                        <div style="border-top: 1px solid #333; padding-top: 5px; margin-top: 40px;">Authorized Signatory</div>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 </body>
