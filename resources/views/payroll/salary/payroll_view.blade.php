@@ -8,7 +8,7 @@
                         <i class="fas fa-file-invoice-dollar me-2"></i>Payroll Details - {{ $payroll->getEmployee->full_name }}
                     </h5>
                     <div>
-                        <a href="{{ route('salary.payroll.payslip', $payroll->id) }}" class="btn btn-danger btn-sm me-2" target="_blank">
+                        <a href="{{ route('salary.payroll.payslip', $payroll->id) }}" class="btn btn-white text-danger btn-sm me-2 border-danger" target="_blank" style="background: white;">
                             <i class="fas fa-file-pdf me-1"></i>Generate Payslip
                         </a>
                         <a href="{{ url()->previous() }}" class="btn btn-light btn-sm">
