@@ -37,7 +37,7 @@
                             <div class="p-3 bg-light rounded shadow-sm border-start border-4 border-primary d-inline-block text-start">
                                 <h6 class="text-muted small text-uppercase fw-bold mb-2">Payroll Information</h6>
                                 <p class="mb-1"><strong>Batch ID:</strong> <span class="text-primary">{{ $payroll->batch_id }}</span></p>
-                                <p class="mb-0"><strong>Salary Month:</strong> {{ \Carbon\Carbon::parse($payroll->getBatch->salary_month)->format('F, Y') }}</p>
+                                <p class="mb-0"><strong>Salary Month:</strong> {{ $payroll->getBatch ? \Carbon\Carbon::parse($payroll->getBatch->salary_month)->format('F, Y') : 'N/A' }}</p>
                             </div>
                         </div>
                     </div>

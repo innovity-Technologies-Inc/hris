@@ -37,7 +37,7 @@ class Payroll extends Model
     }
 
     public function getBatch(){
-        return $this->belongsTo(PayrollProcess::class, 'batch_id', 'id');
+        return $this->belongsTo(PayrollProcess::class, 'process_id', 'id');
     }
 
 }
