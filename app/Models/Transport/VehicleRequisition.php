@@ -7,8 +7,11 @@ use App\Models\Employee;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+use App\Traits\OrganizationScoped;
+
 class VehicleRequisition extends Model
 {
+    use OrganizationScoped;
     protected $table = 'vehicle_requisitions';
 
     protected $fillable = [

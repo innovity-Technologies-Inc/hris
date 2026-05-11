@@ -4,8 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\OrganizationScoped;
+
 class Attendance extends Model
 {
+    use OrganizationScoped;
     protected $table = 'attendance';
     protected $fillable = [
         'employee_id',

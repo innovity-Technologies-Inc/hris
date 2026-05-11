@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Traits\OrganizationScoped;
 
 class EmployeeEligiblePlan extends Model
 {
-    use HasFactory;
+    use HasFactory, OrganizationScoped;
 
     protected $table = 'employee_eligible_plans';
 

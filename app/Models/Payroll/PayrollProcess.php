@@ -11,8 +11,11 @@ use App\Models\Section;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\OrganizationScoped;
+
 class PayrollProcess extends Model
 {
+    use OrganizationScoped;
     protected $table = 'payroll_process';
 
     protected $fillable = [

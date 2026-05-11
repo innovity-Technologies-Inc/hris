@@ -66,6 +66,17 @@ A comprehensive Human Resource Management System (HRMS) built with Laravel 12, f
     - Permission granularity: Create, Edit, View, Delete for all menus and submenus.
     - Dynamic permission seeder for system-wide menus.
 
+### 🗄️ Database Seeding & Initial Setup
+- **User Types**: Support 'Group', 'Company', 'Department', and 'Employee' user types.
+- **Initial Roles**: 
+    - Create a 'Super Admin' role with full permissions.
+    - Create a 'Group' user type for overall management.
+- **Employee Login Provisioning**:
+    - Bulk create/update `User` accounts for all existing employees.
+    - Assign appropriate roles (e.g., 'HR Manager', 'Department Manager', 'Employee').
+    - Standardize initial passwords to `12345678` for testing/initial rollout.
+    - Ensure at least one user has `user_type` 'Group' and role 'Super Admin' with all permissions.
+
 ## Technical Constraints
 - **Framework**: Laravel 12.
 - **PHP Version**: 8.2+ (Strict Typing).

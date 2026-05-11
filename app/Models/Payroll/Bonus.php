@@ -7,8 +7,11 @@ use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\OrganizationScoped;
+
 class Bonus extends Model
 {
+    use OrganizationScoped;
     protected $table = 'bonuses';
 
     protected $fillable = [

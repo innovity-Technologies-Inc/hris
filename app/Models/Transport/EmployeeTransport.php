@@ -13,8 +13,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+use App\Traits\OrganizationScoped;
+
 class EmployeeTransport extends Model
 {
+    use OrganizationScoped;
     protected $table = 'employee_transports';
 
     protected $fillable = [

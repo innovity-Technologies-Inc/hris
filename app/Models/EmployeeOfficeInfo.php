@@ -5,9 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\OrganizationScoped;
+
 class EmployeeOfficeInfo extends Model
 {
-    use HasFactory;
+    use HasFactory, OrganizationScoped;
 
     protected $fillable = [
         'employee_id', 'emp_type', 'grade_id', 'hr_file_no', 'tofsil_id',

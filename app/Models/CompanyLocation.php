@@ -4,8 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\OrganizationScoped;
+
 class CompanyLocation extends Model
 {
+    use OrganizationScoped;
     protected $fillable = [
         'company_id',
         'name',

@@ -47,7 +47,8 @@
                             </h2>
                             <div id="collapse{{ $menu->id }}" class="accordion-collapse collapse show">
                                 <div class="accordion-body p-3">
-                                    {{-- Parent Menu Permissions --}}
+                                    {{-- Parent Menu Permissions - Only show if NO submenus --}}
+                                    @if($menu->submenus->count() == 0)
                                     <div class="row align-items-center mb-2 pb-2 border-bottom">
                                         <div class="col-md-4">
                                             <span class="text-muted fw-bold">Main Menu</span>
@@ -68,6 +69,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @endif
 
                                     {{-- Submenu Permissions --}}
                                     @foreach($menu->submenus as $submenu)

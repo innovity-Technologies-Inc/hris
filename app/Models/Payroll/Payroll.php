@@ -5,8 +5,11 @@ namespace App\Models\Payroll;
 use App\Models\Employee;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\OrganizationScoped;
+
 class Payroll extends Model
 {
+    use OrganizationScoped;
     protected $table = 'payrolls';
     protected $fillable = [
         'employee_id',

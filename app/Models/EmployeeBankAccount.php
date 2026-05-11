@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\OrganizationScoped;
 
 class EmployeeBankAccount extends Model
 {
+    use OrganizationScoped;
     protected $table = 'employee_bank_accounts';
 
     protected $fillable = [

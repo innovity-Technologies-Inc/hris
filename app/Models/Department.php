@@ -4,8 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\OrganizationScoped;
+
 class Department extends Model
 {
+    use OrganizationScoped;
     protected $fillable = [
         'department_name',
         'short_name',

@@ -17,6 +17,12 @@ class PermissionSeeder extends Seeder
     {
         // 1. Clear existing
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+        
+        // Disable foreign key checks for truncation
+        \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
+        \App\Models\Menu::truncate();
+        Permission::query()->delete();
+        \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
 
         $menus = [
             [
@@ -152,12 +158,16 @@ class PermissionSeeder extends Seeder
                 'order' => $index,
             ]);
 
-            // Create permissions for parent
-            foreach ($actions as $action) {
-                Permission::firstOrCreate(['name' => $parent->slug . '.' . $action, 'guard_name' => 'web']);
+            $hasSubmenus = isset($m['submenus']) && count($m['submenus']) > 0;
+
+            // Create permissions for parent ONLY if it has no submenus
+            if (!$hasSubmenus) {
+                foreach ($actions as $action) {
+                    Permission::firstOrCreate(['name' => $parent->slug . '.' . $action, 'guard_name' => 'web']);
+                }
             }
 
-            if (isset($m['submenus'])) {
+            if ($hasSubmenus) {
                 foreach ($m['submenus'] as $subIndex => $sm) {
                     $child = Menu::create([
                         'name' => $sm['name'],

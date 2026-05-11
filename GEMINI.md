@@ -37,10 +37,14 @@ This project is a comprehensive Human Resource Management System (HRMS) built wi
 - `spatie/browsershot`: PDF/Screenshot generation (see `IDCardService`).
 - `maatwebsite/excel`: Excel imports/exports.
 
-## 🛠️ Workflow
-1. **Model & Migration**: Create the database structure first.
-2. **Service**: Implement the business logic in a dedicated service.
-3. **Import (if needed)**: Create an Import class for bulk data.
-4. **Controller**: Create the controller and inject the service.
-5. **Route**: Define routes in `web.php`.
-6. **View**: Create the blade file following the established design style.
+## 🧪 Testing & Verification Standards
+Refer to [.ai/guidelines/testing-guidelines.md](.ai/guidelines/testing-guidelines.md) for full details.
+- **Framework**: Use **Pest** for all new tests.
+- **Environment**: Use **SQLite in-memory** (`:memory:`) for testing to ensure speed and isolation.
+- **Mandatory Logging**: Every time a test is requested or executed, you **MUST** update `TEST_LOG.md` with the following details:
+    - Date of execution.
+    - The original instruction/goal.
+    - The exact command used to run the tests.
+    - Detailed results (passed/failed counts).
+    - Status (✅ SUCCESS or ❌ FAILED).
+- **Validation**: A task is only considered complete once its behavior is verified by a passing test and documented in `TEST_LOG.md`.

@@ -4,8 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\OrganizationScoped;
+
 class Company extends Model
 {
+    use OrganizationScoped;
     protected $table = 'companies';
     protected $fillable = ['name', 'short_name', 'type_id', 'group_id', 'address', 'fax', 'telephone', 'email', 'status', 'logo'];
 

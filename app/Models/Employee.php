@@ -7,9 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+use App\Traits\OrganizationScoped;
+
 class Employee extends Model
 {
-    use HasFactory;
+    use HasFactory, OrganizationScoped;
 
     protected $fillable = [
         'user_id',

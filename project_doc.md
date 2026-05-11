@@ -69,6 +69,69 @@ Dedicated sub-system to define various HR policies:
 
 ---
 
+## 🛡️ Data Isolation & Organizational Scoping
+
+The system implements a rigorous **Row-Level Security (RLS)** strategy to ensure data privacy and multi-tenant integrity. This is handled automatically at the database level using Laravel Global Scopes.
+
+### 1. The `OrganizationScoped` Trait
+The core of the isolation engine is the `App\Traits\OrganizationScoped` trait. When added to any Eloquent model, it automatically intercepts all database queries (`SELECT`, `UPDATE`, `DELETE`) to inject security filters based on the authenticated user's context.
+
+### 2. User Access Levels (`user_type`)
+Data visibility is determined by the `user_type` field in the `users` table:
+
+| User Type | Scope Coverage | Technical Logic |
+| :--- | :--- | :--- |
+| **Group** | Global | No filters applied. Can see all data across all companies. |
+| **Company** | Single Company | Filters by `company_id` or `current_company_id`. |
+| **Business Unit / Branch** | Physical Location | Filters by `business_unit_id`, `location_id`, or `branch_id`. |
+| **Division** | Single Division | Filters by `division_id` or `current_division_id`. |
+| **Department** | Single Department | Filters by `department_id` or `current_department_id`. |
+| **Section** | Single Section | Filters by `section_id` or `current_section_id`. |
+| **Employee** | Personal Data | Restricted to records where `employee_id` matches their own. |
+
+### 3. Smart Filtering Mechanism
+The trait is designed to be "schema-aware" and handles three levels of data retrieval:
+
+*   **Direct Filtering**: If the table contains organizational columns (e.g., `company_id`), it applies a direct `WHERE` clause.
+*   **Alias Handling**: It automatically detects column variations. For example, a **Business Unit** admin will be filtered using `business_unit_id`, `branch_id`, or `location_id` depending on what exists in the table.
+*   **Relationship Hopping**: If a table (like `Leaves` or `Attendance`) only has an `employee_id`, the trait "hops" to the `EmployeeOfficeInfo` table to verify the employee's current organizational unit before returning the data.
+
+### 4. Implementation Guidelines
+- **Automatic Protection**: Once `use OrganizationScoped;` is added to a model, security is "always on."
+- **Developer Bypass**: In rare cases where a global query is needed (e.g., system-wide analytics), developers must explicitly use `Model::withoutGlobalScopes()`.
+- **Recursion Safety**: The trait uses internal static caching and `withoutGlobalScopes()` during context resolution to prevent infinite loops during the boot process.
+
+### 5. Practical Example: The "Invisible Filter" in Action
+
+**Scenario**: 
+A user named **John** is a **Department Manager** for the "Finance" department (ID: 10). He navigates to the "Monthly Attendance" page.
+
+**The Code**:
+In the Controller, the developer simply writes:
+```php
+$records = Attendance::where('month', '2026-05')->get();
+```
+
+**What Happens Behind the Scenes**:
+1.  **Identity Detection**: The `OrganizationScoped` trait detects that John is logged in and has the `user_type` of **'Department'**.
+2.  **Context Resolution**: The trait looks up John's employee profile (using static cache for speed) and finds his `current_department_id` is **10**.
+3.  **Schema Check**: The trait checks the `attendance` table. It sees there is no `department_id` column, but there is an `employee_id` column.
+4.  **Query Injection**: The trait automatically modifies the query before it is sent to MySQL.
+5.  **Final SQL**:
+    ```sql
+    SELECT * FROM attendance 
+    WHERE month = '2026-05' 
+    AND EXISTS (
+        SELECT 1 FROM employee_office_infos 
+        WHERE employee_office_infos.employee_id = attendance.employee_id 
+        AND employee_office_infos.current_department_id = 10
+    )
+    ```
+
+**Outcome**: John only sees the attendance records for employees in the Finance department. He didn't have to write the filter, and the developer didn't have to remember to add it. Security is enforced by default.
+
+---
+
 ## 🎨 Design & Coding Guidelines
 
 ### UI/UX Standards
