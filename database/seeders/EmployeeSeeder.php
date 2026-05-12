@@ -287,7 +287,7 @@ class EmployeeSeeder extends Seeder
             'first_name' => $firstName,
             'last_name' => $lastName,
             'middle_name' => $middleName,
-            'full_name' => trim("$firstName $middleName $lastName"),
+            'full_name' => preg_replace('/\s+/', ' ', trim("$firstName $middleName $lastName")),
             'father_name' => $this->faker->randomElement($this->bdMaleFirstNames) . ' ' . $this->faker->randomElement($this->bdLastNames),
             'mother_name' => $this->faker->randomElement($this->bdFemaleFirstNames) . ' ' . $this->faker->randomElement($this->bdLastNames),
             'spouse_name' => $spouseName,
@@ -323,7 +323,7 @@ class EmployeeSeeder extends Seeder
             'home_phone' => $this->faker->optional(0.3)->numerify('+880-2-########'),
             'work_mobile' => $this->faker->optional(0.7)->numerify('+880-1#-########'),
             'work_phone' => $this->faker->optional(0.6)->numerify('+880-2-########'),
-            'work_email' => strtolower(Str::slug($firstName . '.' . $lastName)) . '@company.com.bd',
+            'work_email' => strtolower(Str::slug($firstName . '.' . $lastName)) . '.' . $id . '@company.com.bd',
             'personal_email' => strtolower(Str::slug($firstName . $this->faker->numberBetween(1, 999))) . '@gmail.com',
 
             'photo_path' => 'uploads/photos/' . $id . '.jpg',

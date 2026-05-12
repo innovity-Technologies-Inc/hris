@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('process_id');
             $table->unsignedBigInteger('employee_id');
-            $table->longText('batch_id')->unique();
+            $table->string('batch_id')->unique();
             $table->decimal('amount', 15, 2);
             $table->timestamps();
         });

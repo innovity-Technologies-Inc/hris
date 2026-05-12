@@ -29,3 +29,26 @@ $env:DB_CONNECTION='sqlite'; $env:DB_DATABASE=':memory:'; php artisan test tests
 - [x] Employee (Self-data only)
 
 ---
+
+## [2026-05-12] Database Seeder Synchronization Verification
+
+**Instruction:** 
+- Verify that the database seeders correctly synchronize existing employees with login information.
+- Ensure `php artisan db:seed` includes user provisioning and role assignment.
+
+**Test Run Command:**
+```powershell
+vendor/bin/pest tests/Feature/SeederVerificationTest.php
+```
+
+**Results:**
+- **Tests:** 2 passed
+- **Assertions:** 11 passed
+- **Status:** ✅ SUCCESS
+
+**Key Synchronization Verified:**
+- [x] All 2000+ employees linked to unique User accounts.
+- [x] Reciprocal links established (`User.employee_id` and `Employee.user_id`).
+- [x] Existing users updated by email instead of duplicating.
+- [x] Roles (Super Admin, HR Manager, Dept Manager, Employee) correctly assigned based on organizational data.
+- [x] Fixed migration issues in `payrolls`, `payroll_process`, and `bonuses` tables related to unique `longText` columns.

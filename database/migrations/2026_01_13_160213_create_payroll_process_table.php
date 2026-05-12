@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('payroll_process', function (Blueprint $table) {
             $table->id();
-            $table->longText('batch_id')->unique();
+            $table->string('batch_id')->unique();
             $table->unsignedBigInteger('company_id')->nullable();
             $table->unsignedBigInteger('branch_id')->nullable();
             $table->unsignedBigInteger('division_id')->nullable();

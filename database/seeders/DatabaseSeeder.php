@@ -14,7 +14,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             OrganizationSeeder::class,
             EmployeeSeeder::class,
-            OrganizationStructureSeeder::class,  // Seed Board Members and Key Members
+            OrganizationStructureSeeder::class,
+            UserAndRoleSeeder::class,
         ]);
     }
 }
