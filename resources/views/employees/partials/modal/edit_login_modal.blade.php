@@ -1,6 +1,6 @@
 <!-- Edit Login Information Modal -->
 <div class="modal fade" id="editLoginInfoModal" tabindex="-1" aria-labelledby="editLoginInfoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <!-- Using the card directly as the modal content -->
         <div class="modal-content card shadow-sm border-0 mb-0" style="border-radius: 15px; overflow: hidden;">
             <form action="{{ route('employees.update_login_info', $employee->id) }}" method="POST">
