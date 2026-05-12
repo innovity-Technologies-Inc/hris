@@ -844,7 +844,7 @@ class EmployeeServices
             'work_email' => 'required|email|unique:users,email,' . $userId,
             'password' => 'nullable|min:8|confirmed',
             'user_type' => 'required|string|in:Group,Company,Business Unit,Division,Department,Section,Employee',
-            'roles' => 'nullable|array',
+            'role' => 'nullable|string|exists:roles,name',
         ]);
     }
 
@@ -872,9 +872,9 @@ class EmployeeServices
         // Update employee work email as well
         $employee->update(['work_email' => $request->work_email]);
 
-        // Sync Roles
-        if ($request->has('roles')) {
-            $user->syncRoles($request->roles);
+        // Sync Role (Single)
+        if ($request->has('role')) {
+            $user->syncRoles([$request->role]);
         }
 
         return $user;
