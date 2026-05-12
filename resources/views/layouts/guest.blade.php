@@ -99,12 +99,38 @@
                 -webkit-backdrop-filter: blur(20px);
                 border: 1px solid var(--glass-border);
                 border-radius: 28px;
-                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2),
+                            0 0 40px rgba(var(--primary-rgb), 0.15); /* Subtle Glow */
                 width: 100%;
                 max-width: 440px;
                 padding: 3rem 2.5rem;
                 position: relative;
                 z-index: 10;
+                transition: all 0.4s ease;
+            }
+
+            .auth-card:hover {
+                box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.25),
+                            0 0 60px rgba(var(--primary-rgb), 0.25); /* Enhanced Glow on Hover */
+                transform: translateY(-5px);
+            }
+
+            /* Illustration */
+            .bg-illustration {
+                position: absolute;
+                right: 5%;
+                bottom: 5%;
+                width: 400px;
+                opacity: 0.25;
+                z-index: 1;
+                pointer-events: none;
+                transition: opacity 0.3s ease;
+            }
+
+            @media (max-width: 992px) {
+                .bg-illustration {
+                    display: none;
+                }
             }
 
             .auth-card::before {
@@ -233,6 +259,8 @@
     <body>
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
+
+        <img src="{{ asset('assets/images/svg/work-vector.svg') }}" alt="Background Illustration" class="bg-illustration">
 
         <div class="auth-card text-center">
             <div class="auth-logo-wrapper">
