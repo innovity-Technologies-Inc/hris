@@ -11,15 +11,7 @@
                 </div>
                 <div class="card-body p-4">
                     <div class="row">
-                        <div class="col-12 mb-3">
-                            <label for="work_email" class="form-label text-primary fw-bold">Work Email <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-end-0"><i class="fas fa-envelope text-primary"></i></span>
-                                <input type="email" class="form-control border-start-0" id="work_email" name="work_email" 
-                                       value="{{ old('work_email', $employee->user->email ?? $employee->work_email) }}" required>
-                            </div>
-                        </div>
-
+                        <!-- User Type always visible to allow switching back -->
                         <div class="col-12 mb-3">
                             <label for="user_type" class="form-label text-primary fw-bold">User Type <span class="text-danger">*</span></label>
                             <select class="form-select" id="emp_user_type" name="user_type" required>
@@ -31,22 +23,37 @@
                                 @endforeach
                             </select>
                         </div>
+                    </div>
 
-                        <div class="col-12 mb-3">
-                            <label for="role" class="form-label text-primary fw-bold">Assign Role</label>
-                            <select class="form-select" id="role" name="role">
-                                <option value="">Select Role</option>
-                                @foreach($roles as $role)
-                                    <option value="{{ $role->name }}" {{ (isset($employee->user) && $employee->user->hasRole($role->name)) ? 'selected' : '' }}>
-                                        {{ $role->name }}
-                                    </option>
-                                @endforeach
-                            </select>
+                    <!-- Work Email and Role (Hidden for 'Employee' type) -->
+                    <div id="extended_fields_section">
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <label for="work_email" class="form-label text-primary fw-bold">Work Email <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-envelope text-primary"></i></span>
+                                    <input type="email" class="form-control border-start-0" id="work_email" name="work_email" 
+                                           value="{{ old('work_email', $employee->user->email ?? $employee->work_email) }}" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label for="role" class="form-label text-primary fw-bold">Assign Role</label>
+                                <select class="form-select" id="role" name="role">
+                                    <option value="">Select Role</option>
+                                    @foreach($roles as $role)
+                                        <option value="{{ $role->name }}" {{ (isset($employee->user) && $employee->user->hasRole($role->name)) ? 'selected' : '' }}>
+                                            {{ $role->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Toggleable Password Section -->
-                    <div id="password_section" style="display: none;">
+                    <!-- Password Section (Always visible or conditional based on your previous rule, 
+                         but the user says 'only have the password field' for employees) -->
+                    <div id="password_section">
                         <div class="hr-divider mb-4 mt-2">
                             <span class="bg-white px-3 text-muted small fw-bold">PASSWORD SECURITY</span>
                         </div>
@@ -99,10 +106,14 @@
     function togglePasswordSection() {
         const userTypeSelect = document.getElementById('emp_user_type');
         const passwordSection = document.getElementById('password_section');
+        const extendedFields = document.getElementById('extended_fields_section');
+        
         if (userTypeSelect.value === 'Employee') {
             passwordSection.style.display = 'block';
+            extendedFields.style.display = 'none';
         } else {
-            passwordSection.style.display = 'none';
+            passwordSection.style.display = 'block';
+            extendedFields.style.display = 'block';
         }
     }
 
