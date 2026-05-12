@@ -1,5 +1,9 @@
 # Coding Style Guidelines
 
+## 🔄 Workflow Requirements
+- **Post-Task Optimization**: Every task execution MUST be followed by `php artisan optimize` to ensure the application state is fresh.
+- **Mandatory Commits**: Every completed directive MUST be committed to source control immediately.
+
 ## 🏗️ Architectural Framework: Request-Service-Controller Pattern
 This project strictly follows a Service-Oriented Architecture (SOA). Every feature MUST adhere to the following data flow:
 1. **Form Requests**: All incoming data validation MUST be handled by dedicated Laravel Form Request classes (`App\Http\Requests`).
