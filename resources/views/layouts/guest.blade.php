@@ -45,11 +45,11 @@
                 --primary-color: {{ $primaryColor }};
                 --primary-rgb: {{ $primaryRGB }};
                 --secondary-color: #6366f1;
-                --bg-canvas: #f1f5f9; /* Slightly darker than f8fafc */
+                --bg-canvas: #e2e8f0; /* Darker Slate for better card pop in light mode */
             }
 
             [data-bs-theme=dark] {
-                --bg-canvas: #020617; /* Deeper dark than 0f172a */
+                --bg-canvas: #000000; /* Pure black for maximum contrast in dark mode */
             }
 
             body {
@@ -73,10 +73,10 @@
                 z-index: -2;
                 background-color: var(--bg-canvas);
                 background-image: 
-                    radial-gradient(at 0% 0%, rgba(var(--primary-rgb), 0.18) 0px, transparent 55%),
-                    radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 55%),
-                    radial-gradient(at 100% 100%, rgba(var(--primary-rgb), 0.12) 0px, transparent 55%),
-                    radial-gradient(at 0% 100%, rgba(99, 102, 241, 0.18) 0px, transparent 55%);
+                    radial-gradient(at 0% 0%, rgba(var(--primary-rgb), 0.22) 0px, transparent 60%),
+                    radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.2) 0px, transparent 60%),
+                    radial-gradient(at 100% 100%, rgba(var(--primary-rgb), 0.15) 0px, transparent 60%),
+                    radial-gradient(at 0% 100%, rgba(99, 102, 241, 0.22) 0px, transparent 60%);
             }
 
             /* --- Noise Texture --- */
