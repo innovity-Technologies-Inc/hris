@@ -52,7 +52,8 @@ class EmployeeProfileController extends Controller
         $sub_section = 'Profile';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
-        return view('employees.profile', compact('title', 'section', 'sub_section', 'employee', 'section_url'));
+        $roles = $this->empServices->getRoles();
+        return view('employees.profile', compact('title', 'section', 'sub_section', 'employee', 'section_url', 'roles'));
     }
 
     public function generalInfoStore(Request $request){
@@ -212,8 +213,9 @@ class EmployeeProfileController extends Controller
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
         $employee_office_info = EmployeeOfficeInfo::where('employee_id', $id)->first();
+        $roles = $this->empServices->getRoles();
 //        dd($employee_office_info);
-        return view('employees.profile', compact('title', 'section', 'sub_section', 'employee', 'employee_office_info', 'section_url'));
+        return view('employees.profile', compact('title', 'section', 'sub_section', 'employee', 'employee_office_info', 'section_url', 'roles'));
     }
 
     public function officeInfoImport(Request $request){
@@ -279,6 +281,26 @@ class EmployeeProfileController extends Controller
                 'success' => false,
                 'message' => 'Failed to update employee status: ' . $e->getMessage()
             ], 500);
+        }
+    }
+
+    /**
+     * Update employee login information
+     */
+    public function updateLoginInfo(Request $request, $id)
+    {
+        try {
+            $this->empServices->updateLoginInfo($request, $id);
+            return redirect()->back()->with([
+                'message' => 'Login Information Updated Successfully',
+                'alert-type' => 'success'
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error updating login info: ' . $e->getMessage());
+            return redirect()->back()->with([
+                'message' => $e->getMessage(),
+                'alert-type' => 'error'
+            ])->withInput();
         }
     }
 

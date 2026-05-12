@@ -371,6 +371,7 @@ Route::prefix('employees')->middleware('auth')->group(function () {
             Route::get('office-informations/edit/{id}', 'officeInfoEdit')->name('employees.office_informations.edit');
             Route::put('office-informations/{id}/update', 'officeInfoUpdate')->name('employees.office_informations.update');
             Route::post('{id}/toggle-status', 'toggleStatus')->name('employees.toggle_status');
+            Route::post('{id}/update-login-info', 'updateLoginInfo')->name('employees.update_login_info');
         });
 
         Route::middleware('permission:bulk-upload.create')->group(function () {

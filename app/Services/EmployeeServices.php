@@ -835,4 +835,48 @@ class EmployeeServices
         return $employee;
     }
 
+    /**
+     * Validate login information update
+     */
+    public function validateLoginInfo(Request $request, $userId)
+    {
+        return $request->validate([
+            'work_email' => 'required|email|unique:users,email,' . $userId,
+            'password' => 'nullable|min:8|confirmed',
+            'user_type' => 'required|string|in:Group,Company,Business Unit,Division,Department,Section,Employee',
+            'roles' => 'nullable|array',
+        ]);
+    }
+
+    /**
+     * Update employee login information
+     */
+    public function updateLoginInfo(Request $request, $employeeId)
+    {
+        $employee = Employee::findOrFail($employeeId);
+        $user = User::findOrFail($employee->user_id);
+
+        $this->validateLoginInfo($request, $user->id);
+
+        $userData = [
+            'email' => $request->work_email,
+            'user_type' => $request->user_type,
+        ];
+
+        if ($request->filled('password')) {
+            $userData['password'] = Hash::make($request->password);
+        }
+
+        $user->update($userData);
+
+        // Update employee work email as well
+        $employee->update(['work_email' => $request->work_email]);
+
+        // Sync Roles
+        if ($request->has('roles')) {
+            $user->syncRoles($request->roles);
+        }
+
+        return $user;
+    }
 }
