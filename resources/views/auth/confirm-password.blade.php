@@ -1,27 +1,51 @@
 <x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-        {{ __('This is a secure area of the application. Please confirm your password before continuing.') }}
+    <div class="mb-4 text-muted fw-semibold">
+        {{ __('This is a secure area of the application. Please confirm your password before continuing to protect your sensitive data.') }}
     </div>
 
     <form method="POST" action="{{ route('password.confirm') }}">
         @csrf
 
         <!-- Password -->
-        <div>
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        <div class="mb-3">
+            <label for="password" class="form-label small">Secure Password</label>
+            <div class="input-group-custom">
+                <input id="password" 
+                       type="password" 
+                       name="password" 
+                       class="form-control-custom @error('password') is-invalid @enderror" 
+                       required 
+                       placeholder="••••••••"
+                       autocomplete="current-password">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            @error('password')
+                <div class="invalid-feedback d-block mt-n2 mb-3 ps-2">
+                    <small class="fw-bold">{{ $message }}</small>
+                </div>
+            @enderror
         </div>
 
-        <div class="flex justify-end mt-4">
-            <x-primary-button>
-                {{ __('Confirm') }}
-            </x-primary-button>
+        <div class="d-flex align-items-center justify-content-between mb-4 ps-1">
+            <div class="form-check custom-checkbox">
+                <input class="form-check-input" type="checkbox" id="show_password">
+                <label class="form-check-label small text-muted fw-semibold" for="show_password">
+                    Show Password
+                </label>
+            </div>
+        </div>
+
+        <script>
+            document.getElementById('show_password').addEventListener('change', function() {
+                const passwordInput = document.getElementById('password');
+                passwordInput.type = this.checked ? 'text' : 'password';
+            });
+        </script>
+
+        <div class="d-grid">
+            <button type="submit" class="btn-premium">
+                {{ __('Confirm Access') }} <i class="fas fa-lock-open ms-2 fs-13"></i>
+            </button>
         </div>
     </form>
 </x-guest-layout>

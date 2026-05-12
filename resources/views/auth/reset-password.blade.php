@@ -62,10 +62,27 @@
             @enderror
         </div>
 
-        <div class="d-grid">
+        <div class="d-grid gap-2">
+            <div class="form-check custom-checkbox mb-3 ps-1">
+                <input class="form-check-input" type="checkbox" id="show_passwords">
+                <label class="form-check-label small text-muted fw-semibold" for="show_passwords">
+                    Show Passwords
+                </label>
+            </div>
+
             <button type="submit" class="btn-premium">
                 {{ __('Reset Password') }} <i class="fas fa-sync-alt ms-2 fs-13"></i>
             </button>
         </div>
+
+        <script>
+            document.getElementById('show_passwords').addEventListener('change', function() {
+                const passwordInput = document.getElementById('password');
+                const passwordConfirmInput = document.getElementById('password_confirmation');
+                const type = this.checked ? 'text' : 'password';
+                passwordInput.type = type;
+                passwordConfirmInput.type = type;
+            });
+        </script>
     </form>
 </x-guest-layout>
