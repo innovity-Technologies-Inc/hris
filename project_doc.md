@@ -63,6 +63,9 @@ Dedicated sub-system to define various HR policies:
 
 ### 🔐 User Management & RBAC
 - **Authentication**: Integrated via Laravel Breeze (Bootstrap/Blade).
+- **Secure Password Reset Flow**: To prevent data manipulation during the password reset process, the system implements an encrypted email handling strategy:
+    - **View Protection**: The email address is not displayed as an editable field. Instead, it is **encrypted** using Laravel's `encrypt()` helper and passed as a hidden input.
+    - **Controller Control**: The `NewPasswordController` intercepts the request and **decrypts** the email address before validation. This ensures that only the intended, signed email address from the password reset link can be used to reset the password, effectively blocking client-side tampering.
 - **Permissions**: powered by `spatie/laravel-permission` with menu-wise granularity (Create, Edit, View, Delete).
 - **Integration**: Automatic bi-directional linking between `User` and `Employee` models.
 - **Scoping**: Organization-based data visibility restriction (Group, Company, Division, Department, Section, Employee).
