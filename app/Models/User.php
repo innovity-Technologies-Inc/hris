@@ -33,6 +33,17 @@ class User extends Authenticatable
     }
 
     /**
+     * Send the password reset notification.
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new \App\Notifications\PasswordResetNotification($token));
+    }
+
+    /**
      * The attributes that should be hidden for serialization.
      *
      * @var list<string>
