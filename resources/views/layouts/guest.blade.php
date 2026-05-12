@@ -73,10 +73,10 @@
                 z-index: -2;
                 background-color: var(--bg-canvas);
                 background-image: 
-                    radial-gradient(at 0% 0%, rgba(var(--primary-rgb), 0.22) 0px, transparent 60%),
-                    radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.2) 0px, transparent 60%),
-                    radial-gradient(at 100% 100%, rgba(var(--primary-rgb), 0.15) 0px, transparent 60%),
-                    radial-gradient(at 0% 100%, rgba(99, 102, 241, 0.22) 0px, transparent 60%);
+                    radial-gradient(at 0% 0%, rgba(var(--primary-rgb), 0.3) 0px, transparent 65%),
+                    radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 60%),
+                    radial-gradient(at 100% 100%, rgba(var(--primary-rgb), 0.25) 0px, transparent 65%),
+                    radial-gradient(at 0% 100%, rgba(99, 102, 241, 0.15) 0px, transparent 60%);
             }
 
             /* --- Noise Texture --- */
