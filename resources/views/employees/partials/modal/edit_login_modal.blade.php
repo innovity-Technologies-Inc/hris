@@ -10,23 +10,39 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="card-body p-4">
-                    <div class="row">
-                        <!-- User Type always visible to allow switching back -->
-                        <div class="col-12 mb-3">
-                            <label for="user_type" class="form-label text-primary fw-bold">User Type <span class="text-danger">*</span></label>
-                            <select class="form-select" id="emp_user_type" name="user_type" required>
-                                <option value="">Select User Type</option>
-                                @foreach(['Group', 'Company', 'Business Unit', 'Division', 'Department', 'Section', 'Employee'] as $type)
-                                    <option value="{{ $type }}" {{ (old('user_type', $employee->user->user_type ?? '') == $type) ? 'selected' : '' }}>
-                                        {{ $type }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
+                    @php
+                        $currentUserType = $employee->user->user_type ?? 'Employee';
+                        $isEmployee = ($currentUserType === 'Employee');
+                    @endphp
 
-                    <!-- Work Email and Role (Hidden for 'Employee' type) -->
-                    <div id="extended_fields_section">
+                    @if($isEmployee)
+                        <!-- VIEW ONLY MODE for 'Employee' type -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="bg-light rounded-3 p-3 border">
+                                    <div class="mb-2">
+                                        <label class="small text-muted fw-bold text-uppercase">Work Email</label>
+                                        <div class="fw-bold text-dark">{{ $employee->user->email ?? $employee->work_email }}</div>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="small text-muted fw-bold text-uppercase">User Type</label>
+                                        <div class="fw-bold text-dark">{{ $currentUserType }}</div>
+                                    </div>
+                                    <div>
+                                        <label class="small text-muted fw-bold text-uppercase">Assigned Role</label>
+                                        <div class="fw-bold text-dark">
+                                            {{ isset($employee->user) ? $employee->user->getRoleNames()->first() ?? 'N/A' : 'N/A' }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Pass existing values back as hidden inputs so validation/update doesn't fail -->
+                                <input type="hidden" name="work_email" value="{{ $employee->user->email ?? $employee->work_email }}">
+                                <input type="hidden" name="user_type" value="{{ $currentUserType }}">
+                                <input type="hidden" name="role" value="{{ isset($employee->user) ? $employee->user->getRoleNames()->first() : '' }}">
+                            </div>
+                        </div>
+                    @else
+                        <!-- EDITABLE MODE for other user types -->
                         <div class="row">
                             <div class="col-12 mb-3">
                                 <label for="work_email" class="form-label text-primary fw-bold">Work Email <span class="text-danger">*</span></label>
@@ -38,21 +54,35 @@
                             </div>
 
                             <div class="col-12 mb-3">
+                                <label for="user_type" class="form-label text-primary fw-bold">User Type <span class="text-danger">*</span></label>
+                                <select class="form-select" id="emp_user_type" name="user_type" required>
+                                    <option value="">Select User Type</option>
+                                    @foreach(['Group', 'Company', 'Business Unit', 'Division', 'Department', 'Section', 'Employee'] as $type)
+                                        <option value="{{ $type }}" {{ (old('user_type', $currentUserType) == $type) ? 'selected' : '' }}>
+                                            {{ $type }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-12 mb-3">
                                 <label for="role" class="form-label text-primary fw-bold">Assign Role</label>
                                 <select class="form-select" id="role" name="role">
                                     <option value="">Select Role</option>
                                     @foreach($roles as $role)
-                                        <option value="{{ $role->name }}" {{ (isset($employee->user) && $employee->user->hasRole($role->name)) ? 'selected' : '' }}>
+                                        @php
+                                            $hasRole = isset($employee->user) && $employee->user->hasRole($role->name);
+                                        @endphp
+                                        <option value="{{ $role->name }}" {{ $hasRole ? 'selected' : '' }}>
                                             {{ $role->name }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
-                    </div>
+                    @endif
 
-                    <!-- Password Section (Always visible or conditional based on your previous rule, 
-                         but the user says 'only have the password field' for employees) -->
+                    <!-- Password Section (Common to all or required for password changes) -->
                     <div id="password_section">
                         <div class="hr-divider mb-4 mt-2">
                             <span class="bg-white px-3 text-muted small fw-bold">PASSWORD SECURITY</span>
@@ -103,29 +133,6 @@
 </div>
 
 <script>
-    function togglePasswordSection() {
-        const userTypeSelect = document.getElementById('emp_user_type');
-        const passwordSection = document.getElementById('password_section');
-        const extendedFields = document.getElementById('extended_fields_section');
-        
-        if (userTypeSelect.value === 'Employee') {
-            passwordSection.style.display = 'block';
-            extendedFields.style.display = 'none';
-        } else {
-            passwordSection.style.display = 'block';
-            extendedFields.style.display = 'block';
-        }
-    }
-
-    // Listener for User Type change
-    document.getElementById('emp_user_type').addEventListener('change', togglePasswordSection);
-
-    // Initial check on load (for when modal opens or page reloads with input)
-    document.addEventListener('DOMContentLoaded', togglePasswordSection);
-    
-    // Also trigger when Bootstrap modal is shown
-    document.getElementById('editLoginInfoModal').addEventListener('shown.bs.modal', togglePasswordSection);
-
     document.getElementById('show_emp_password').addEventListener('change', function() {
         const passwordInput = document.getElementById('emp_password');
         const passwordConfirmInput = document.getElementById('emp_password_confirmation');
