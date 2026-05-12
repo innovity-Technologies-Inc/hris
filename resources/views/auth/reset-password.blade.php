@@ -3,6 +3,18 @@
         {{ __('Secure your account by choosing a strong new password. Ensure it includes a mix of characters for maximum protection.') }}
     </div>
 
+    <!-- General Errors (Manipulation / Expired Links) -->
+    @if ($errors->has('email') || $errors->has('token'))
+        <div class="alert alert-danger border-0 shadow-sm rounded-4 mb-4 py-3" role="alert">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-exclamation-triangle me-3 fs-5"></i>
+                <div class="small fw-bold">
+                    {{ $errors->first('email') ?: $errors->first('token') }}
+                </div>
+            </div>
+        </div>
+    @endif
+
     <form method="POST" action="{{ route('password.store') }}">
         @csrf
 

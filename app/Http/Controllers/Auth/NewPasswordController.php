@@ -37,7 +37,9 @@ class NewPasswordController extends Controller
                 $decryptedEmail = decrypt($request->email);
                 $request->merge(['email' => $decryptedEmail]);
             } catch (\Exception $e) {
-                // If decryption fails, it might be a manipulation attempt or plain email
+                // If decryption fails, it's a manipulation attempt or expired session.
+                // We should return an error to the user.
+                return back()->withErrors(['email' => 'The password reset link is invalid or has expired.']);
             }
         }
 
@@ -65,9 +67,13 @@ class NewPasswordController extends Controller
         // If the password was successfully reset, we will redirect the user back to
         // the application's home authenticated view. If there is an error we can
         // redirect them back to where they came from with their error message.
-        return $status == Password::PASSWORD_RESET
-                    ? redirect()->route('login')->with('status', __($status))
-                    : back()->withInput($request->only('email'))
-                        ->withErrors(['email' => __($status)]);
+        if ($status == Password::PASSWORD_RESET) {
+            return redirect()->route('login')->with('status', __($status));
+        }
+
+        // If reset fails (e.g., token mismatch or user not found), return with errors
+        throw ValidationException::withMessages([
+            'email' => [__($status)],
+        ]);
     }
 }
