@@ -923,71 +923,73 @@
                 </div>
             </div>
 
-            <!-- Login Information Section -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-header bg-primary text-white">
-                            <h5 class="card-title mb-0">Login Information</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-lg-4 mb-3">
-                                    <label for="user_type" class="form-label text-primary fw-bold">User Type <span class="text-danger">*</span></label>
-                                    <select class="form-select @error('user_type') is-invalid @enderror" id="user_type" name="user_type">
-                                        <option value="">Select User Type</option>
-                                        <option value="Group" {{ (isset($employee->user) && $employee->user->user_type == 'Group') || old('user_type') == 'Group' ? 'selected' : '' }}>Group</option>
-                                        <option value="Company" {{ (isset($employee->user) && $employee->user->user_type == 'Company') || old('user_type') == 'Company' ? 'selected' : '' }}>Company</option>
-                                        <option value="Business Unit" {{ (isset($employee->user) && $employee->user->user_type == 'Business Unit') || old('user_type') == 'Business Unit' ? 'selected' : '' }}>Business Unit</option>
-                                        <option value="Division" {{ (isset($employee->user) && $employee->user->user_type == 'Division') || old('user_type') == 'Division' ? 'selected' : '' }}>Division</option>
-                                        <option value="Department" {{ (isset($employee->user) && $employee->user->user_type == 'Department') || old('user_type') == 'Department' ? 'selected' : '' }}>Department</option>
-                                        <option value="Section" {{ (isset($employee->user) && $employee->user->user_type == 'Section') || old('user_type') == 'Section' ? 'selected' : '' }}>Section</option>
-                                        <option value="Employee" {{ (isset($employee->user) && $employee->user->user_type == 'Employee') || old('user_type') == 'Employee' ? 'selected' : '' }}>Employee</option>
-                                    </select>
-                                    @error('user_type')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-
-                                <div class="col-lg-8 mb-3">
-                                    <label for="roles" class="form-label text-primary fw-bold">Assign Roles</label>
-                                    <select class="form-select select2_list @error('roles') is-invalid @enderror" id="roles" name="roles[]" multiple>
-                                        @foreach($roles as $role)
-                                            <option value="{{ $role->name }}" {{ (isset($employee->user) && $employee->user->hasRole($role->name)) || (is_array(old('roles')) && in_array($role->name, old('roles'))) ? 'selected' : '' }}>
-                                                {{ $role->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('roles')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
+            @if (!isset($employee))
+                <!-- Login Information Section -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="card-title mb-0">Login Information</h5>
                             </div>
-
-                            <div class="row">
-                                <div class="col-lg-6 mb-3">
-                                    <label for="password" class="form-label text-primary fw-bold">Password {{ isset($employee) ? '(Leave blank to keep current)' : '*' }}</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light border-end-0"><i class="fas fa-lock"></i></span>
-                                        <input type="password" class="form-control border-start-0 @error('password') is-invalid @enderror" id="password" name="password">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-4 mb-3">
+                                        <label for="user_type" class="form-label text-primary fw-bold">User Type <span class="text-danger">*</span></label>
+                                        <select class="form-select @error('user_type') is-invalid @enderror" id="user_type" name="user_type">
+                                            <option value="">Select User Type</option>
+                                            <option value="Group" {{ (isset($employee->user) && $employee->user->user_type == 'Group') || old('user_type') == 'Group' ? 'selected' : '' }}>Group</option>
+                                            <option value="Company" {{ (isset($employee->user) && $employee->user->user_type == 'Company') || old('user_type') == 'Company' ? 'selected' : '' }}>Company</option>
+                                            <option value="Business Unit" {{ (isset($employee->user) && $employee->user->user_type == 'Business Unit') || old('user_type') == 'Business Unit' ? 'selected' : '' }}>Business Unit</option>
+                                            <option value="Division" {{ (isset($employee->user) && $employee->user->user_type == 'Division') || old('user_type') == 'Division' ? 'selected' : '' }}>Division</option>
+                                            <option value="Department" {{ (isset($employee->user) && $employee->user->user_type == 'Department') || old('user_type') == 'Department' ? 'selected' : '' }}>Department</option>
+                                            <option value="Section" {{ (isset($employee->user) && $employee->user->user_type == 'Section') || old('user_type') == 'Section' ? 'selected' : '' }}>Section</option>
+                                            <option value="Employee" {{ (isset($employee->user) && $employee->user->user_type == 'Employee') || old('user_type') == 'Employee' ? 'selected' : '' }}>Employee</option>
+                                        </select>
+                                        @error('user_type')
+                                            <small class="text-danger">{{ $message }}</small>
+                                        @enderror
                                     </div>
-                                    @error('password')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
+
+                                    <div class="col-lg-8 mb-3">
+                                        <label for="roles" class="form-label text-primary fw-bold">Assign Roles</label>
+                                        <select class="form-select select2_list @error('roles') is-invalid @enderror" id="roles" name="roles[]" multiple>
+                                            @foreach($roles as $role)
+                                                <option value="{{ $role->name }}" {{ (isset($employee->user) && $employee->user->hasRole($role->name)) || (is_array(old('roles')) && in_array($role->name, old('roles'))) ? 'selected' : '' }}>
+                                                    {{ $role->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('roles')
+                                            <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
                                 </div>
 
-                                <div class="col-lg-6 mb-3">
-                                    <label for="password_confirmation" class="form-label text-primary fw-bold">Confirm Password</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light border-end-0"><i class="fas fa-check-circle"></i></span>
-                                        <input type="password" class="form-control border-start-0" id="password_confirmation" name="password_confirmation">
+                                <div class="row">
+                                    <div class="col-lg-6 mb-3">
+                                        <label for="password" class="form-label text-primary fw-bold">Password {{ isset($employee) ? '(Leave blank to keep current)' : '*' }}</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0"><i class="fas fa-lock"></i></span>
+                                            <input type="password" class="form-control border-start-0 @error('password') is-invalid @enderror" id="password" name="password">
+                                        </div>
+                                        @error('password')
+                                            <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
+
+                                    <div class="col-lg-6 mb-3">
+                                        <label for="password_confirmation" class="form-label text-primary fw-bold">Confirm Password</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0"><i class="fas fa-check-circle"></i></span>
+                                            <input type="password" class="form-control border-start-0" id="password_confirmation" name="password_confirmation">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            @endif
 
             <!-- File Upload Section -->
             <div class="row">
