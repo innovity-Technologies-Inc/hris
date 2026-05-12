@@ -1,6 +1,6 @@
 <!-- Edit Login Information Modal -->
 <div class="modal fade" id="editLoginInfoModal" tabindex="-1" aria-labelledby="editLoginInfoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-md modal-dialog-centered">
         <!-- Using the card directly as the modal content -->
         <div class="modal-content card shadow-sm border-0 mb-0" style="border-radius: 15px; overflow: hidden;">
             <form action="{{ route('employees.update_login_info', $employee->id) }}" method="POST">
@@ -10,9 +10,8 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="card-body p-4">
-                    <!-- Section 1: Credentials -->
                     <div class="row">
-                        <div class="col-lg-12 mb-4">
+                        <div class="col-12 mb-3">
                             <label for="work_email" class="form-label text-primary fw-bold">Work Email <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light border-end-0"><i class="fas fa-envelope text-primary"></i></span>
@@ -20,10 +19,8 @@
                                        value="{{ old('work_email', $employee->user->email ?? $employee->work_email) }}" required>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-lg-4 mb-3">
+                        <div class="col-12 mb-3">
                             <label for="user_type" class="form-label text-primary fw-bold">User Type <span class="text-danger">*</span></label>
                             <select class="form-select" id="user_type" name="user_type" required>
                                 <option value="">Select User Type</option>
@@ -35,7 +32,7 @@
                             </select>
                         </div>
 
-                        <div class="col-lg-8 mb-3">
+                        <div class="col-12 mb-3">
                             <label for="role" class="form-label text-primary fw-bold">Assign Role</label>
                             <select class="form-select" id="role" name="role">
                                 <option value="">Select Role</option>
@@ -53,7 +50,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-lg-6 mb-3">
+                        <div class="col-12 mb-3">
                             <label for="password" class="form-label text-primary fw-bold">New Password</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light border-end-0"><i class="fas fa-lock text-primary"></i></span>
@@ -62,7 +59,7 @@
                             <small class="text-muted mt-1 d-block"><i class="fas fa-info-circle me-1"></i>Leave blank to keep current password</small>
                         </div>
 
-                        <div class="col-lg-6 mb-3">
+                        <div class="col-12 mb-3">
                             <label for="password_confirmation" class="form-label text-primary fw-bold">Confirm Password</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light border-end-0"><i class="fas fa-check-circle text-primary"></i></span>
