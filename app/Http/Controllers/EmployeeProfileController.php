@@ -52,8 +52,7 @@ class EmployeeProfileController extends Controller
         $sub_section = 'Profile';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
-        $roles = $this->empServices->getRoles();
-        return view('employees.profile', compact('title', 'section', 'sub_section', 'employee', 'section_url', 'roles'));
+        return view('employees.profile', compact('title', 'section', 'sub_section', 'employee', 'section_url'));
     }
 
     public function generalInfoStore(Request $request){
@@ -213,9 +212,8 @@ class EmployeeProfileController extends Controller
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
         $employee_office_info = EmployeeOfficeInfo::where('employee_id', $id)->first();
-        $roles = $this->empServices->getRoles();
 //        dd($employee_office_info);
-        return view('employees.profile', compact('title', 'section', 'sub_section', 'employee', 'employee_office_info', 'section_url', 'roles'));
+        return view('employees.profile', compact('title', 'section', 'sub_section', 'employee', 'employee_office_info', 'section_url'));
     }
 
     public function officeInfoImport(Request $request){
