@@ -22,7 +22,7 @@
 
                         <div class="col-12 mb-3">
                             <label for="user_type" class="form-label text-primary fw-bold">User Type <span class="text-danger">*</span></label>
-                            <select class="form-select" id="user_type" name="user_type" required>
+                            <select class="form-select" id="emp_user_type" name="user_type" required>
                                 <option value="">Select User Type</option>
                                 @foreach(['Group', 'Company', 'Business Unit', 'Division', 'Department', 'Section', 'Employee'] as $type)
                                     <option value="{{ $type }}" {{ (old('user_type', $employee->user->user_type ?? '') == $type) ? 'selected' : '' }}>
@@ -45,36 +45,39 @@
                         </div>
                     </div>
 
-                    <div class="hr-divider mb-4 mt-2">
-                        <span class="bg-white px-3 text-muted small fw-bold">PASSWORD SECURITY</span>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-12 mb-3">
-                            <label for="password" class="form-label text-primary fw-bold">New Password</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-end-0"><i class="fas fa-lock text-primary"></i></span>
-                                <input type="password" class="form-control border-start-0" id="emp_password" name="password" placeholder="••••••••">
-                            </div>
-                            <small class="text-muted mt-1 d-block"><i class="fas fa-info-circle me-1"></i>Leave blank to keep current password</small>
+                    <!-- Toggleable Password Section -->
+                    <div id="password_section" style="display: none;">
+                        <div class="hr-divider mb-4 mt-2">
+                            <span class="bg-white px-3 text-muted small fw-bold">PASSWORD SECURITY</span>
                         </div>
 
-                        <div class="col-12 mb-3">
-                            <label for="password_confirmation" class="form-label text-primary fw-bold">Confirm Password</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-end-0"><i class="fas fa-check-circle text-primary"></i></span>
-                                <input type="password" class="form-control border-start-0" id="emp_password_confirmation" name="password_confirmation" placeholder="••••••••">
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <label for="password" class="form-label text-primary fw-bold">New Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-lock text-primary"></i></span>
+                                    <input type="password" class="form-control border-start-0" id="emp_password" name="password" placeholder="••••••••">
+                                </div>
+                                <small class="text-muted mt-1 d-block"><i class="fas fa-info-circle me-1"></i>Leave blank to keep current password</small>
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label for="password_confirmation" class="form-label text-primary fw-bold">Confirm Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-check-circle text-primary"></i></span>
+                                    <input type="password" class="form-control border-start-0" id="emp_password_confirmation" name="password_confirmation" placeholder="••••••••">
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-12 mb-3">
-                            <div class="form-check custom-checkbox">
-                                <input class="form-check-input" type="checkbox" id="show_emp_password">
-                                <label class="form-check-label text-muted fw-bold" for="show_emp_password">
-                                    Show Password
-                                </label>
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <div class="form-check custom-checkbox">
+                                    <input class="form-check-input" type="checkbox" id="show_emp_password">
+                                    <label class="form-check-label text-muted fw-bold" for="show_emp_password">
+                                        Show Password
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -93,6 +96,25 @@
 </div>
 
 <script>
+    function togglePasswordSection() {
+        const userTypeSelect = document.getElementById('emp_user_type');
+        const passwordSection = document.getElementById('password_section');
+        if (userTypeSelect.value === 'Employee') {
+            passwordSection.style.display = 'block';
+        } else {
+            passwordSection.style.display = 'none';
+        }
+    }
+
+    // Listener for User Type change
+    document.getElementById('emp_user_type').addEventListener('change', togglePasswordSection);
+
+    // Initial check on load (for when modal opens or page reloads with input)
+    document.addEventListener('DOMContentLoaded', togglePasswordSection);
+    
+    // Also trigger when Bootstrap modal is shown
+    document.getElementById('editLoginInfoModal').addEventListener('shown.bs.modal', togglePasswordSection);
+
     document.getElementById('show_emp_password').addEventListener('change', function() {
         const passwordInput = document.getElementById('emp_password');
         const passwordConfirmInput = document.getElementById('emp_password_confirmation');
