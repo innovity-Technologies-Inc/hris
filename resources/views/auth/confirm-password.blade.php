@@ -26,7 +26,7 @@
             @enderror
         </div>
 
-        <div class="d-flex align-items-center justify-content-between mb-4 ps-1">
+        <div class="d-flex align-items-center justify-content-between mb-4">
             <div class="form-check custom-checkbox">
                 <input class="form-check-input" type="checkbox" id="show_password">
                 <label class="form-check-label small text-muted fw-semibold" for="show_password">

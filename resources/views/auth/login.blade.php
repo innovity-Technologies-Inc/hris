@@ -54,7 +54,7 @@
         </div>
 
         <!-- Extra Actions -->
-        <div class="d-flex align-items-center justify-content-between mb-4 ps-1">
+        <div class="d-flex align-items-center justify-content-between mb-4">
             <div class="d-flex flex-column gap-1">
                 <div class="form-check custom-checkbox">
                     <input class="form-check-input" type="checkbox" name="remember" id="remember_me">

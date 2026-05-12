@@ -63,7 +63,7 @@
         </div>
 
         <div class="d-grid gap-2">
-            <div class="form-check custom-checkbox mb-3 ps-1">
+            <div class="form-check custom-checkbox mb-3">
                 <input class="form-check-input" type="checkbox" id="show_passwords">
                 <label class="form-check-label small text-muted fw-semibold" for="show_passwords">
                     Show Passwords
