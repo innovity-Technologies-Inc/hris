@@ -16,31 +16,10 @@
                     @endphp
 
                     @if($isEmployee)
-                        <!-- VIEW ONLY MODE for 'Employee' type -->
-                        <div class="row mb-4">
-                            <div class="col-12">
-                                <div class="bg-light rounded-3 p-3 border">
-                                    <div class="mb-2">
-                                        <label class="small text-muted fw-bold text-uppercase">Work Email</label>
-                                        <div class="fw-bold text-dark">{{ $employee->user->email ?? $employee->work_email }}</div>
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="small text-muted fw-bold text-uppercase">User Type</label>
-                                        <div class="fw-bold text-dark">{{ $currentUserType }}</div>
-                                    </div>
-                                    <div>
-                                        <label class="small text-muted fw-bold text-uppercase">Assigned Role</label>
-                                        <div class="fw-bold text-dark">
-                                            {{ isset($employee->user) ? $employee->user->getRoleNames()->first() ?? 'N/A' : 'N/A' }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Pass existing values back as hidden inputs so validation/update doesn't fail -->
-                                <input type="hidden" name="work_email" value="{{ $employee->user->email ?? $employee->work_email }}">
-                                <input type="hidden" name="user_type" value="{{ $currentUserType }}">
-                                <input type="hidden" name="role" value="{{ isset($employee->user) ? $employee->user->getRoleNames()->first() : '' }}">
-                            </div>
-                        </div>
+                        <!-- HIDDEN DATA for 'Employee' type - No labels shown -->
+                        <input type="hidden" name="work_email" value="{{ $employee->user->email ?? $employee->work_email }}">
+                        <input type="hidden" name="user_type" value="{{ $currentUserType }}">
+                        <input type="hidden" name="role" value="{{ isset($employee->user) ? $employee->user->getRoleNames()->first() : '' }}">
                     @else
                         <!-- EDITABLE MODE for other user types -->
                         <div class="row">
