@@ -323,10 +323,10 @@
             <div class="auth-side-form">
                 <div class="auth-header text-center text-lg-start">
                     <div class="auth-logo-box mx-auto mx-lg-0">
-                        @if(isset($generalSettings->logo))
-                            <img src="{{ asset('storage/' . $generalSettings->logo) }}" alt="Logo" style="max-width: 40px;">
+                        @if(isset($generalSettings->favicon))
+                            <img src="{{ asset('storage/' . $generalSettings->favicon) }}" alt="Favicon" style="max-width: 45px; max-height: 45px; object-fit: contain;">
                         @else
-                            <i class="fas fa-bolt fa-2x" style="color: var(--primary-color)"></i>
+                            <i class="fas fa-fingerprint fa-2x" style="color: var(--primary-color)"></i>
                         @endif
                     </div>
                     <h1 class="auth-title">{{ $generalSettings->name ?? 'HRMS' }}</h1>
