@@ -31,6 +31,16 @@ class NewPasswordController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // Decrypt the email if it was encrypted in the view to prevent manipulation
+        if ($request->has('email')) {
+            try {
+                $decryptedEmail = decrypt($request->email);
+                $request->merge(['email' => $decryptedEmail]);
+            } catch (\Exception $e) {
+                // If decryption fails, it might be a manipulation attempt or plain email
+            }
+        }
+
         $request->validate([
             'token' => ['required'],
             'email' => ['required', 'email'],

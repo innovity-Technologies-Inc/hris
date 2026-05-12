@@ -8,28 +8,7 @@
 
         <!-- Password Reset Token -->
         <input type="hidden" name="token" value="{{ $request->route('token') }}">
-
-        <!-- Email Address -->
-        <div class="mb-3">
-            <label for="email" class="form-label small">Corporate Email</label>
-            <div class="input-group-custom">
-                <input id="email" 
-                       type="email" 
-                       name="email" 
-                       class="form-control-custom @error('email') is-invalid @enderror" 
-                       value="{{ old('email', $request->email) }}" 
-                       required 
-                       autofocus 
-                       placeholder="name@company.com"
-                       autocomplete="username">
-                <i class="fas fa-envelope"></i>
-            </div>
-            @error('email')
-                <div class="invalid-feedback d-block mt-n2 mb-3 ps-2">
-                    <small class="fw-bold">{{ $message }}</small>
-                </div>
-            @enderror
-        </div>
+        <input type="hidden" name="email" value="{{ encrypt($request->email) }}">
 
         <!-- Password -->
         <div class="mb-3">
