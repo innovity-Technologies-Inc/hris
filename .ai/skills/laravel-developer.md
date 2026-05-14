@@ -38,10 +38,11 @@ After the implementation is complete and verified:
 - **FlexSearch**: Use `daiyanmozumder/laravel-flexsearch` for all table filtering and searching.
 - **UI/UX**: Strictly follow `.ai/guidelines/design-guidelines.md`.
 - **Coding Standards**: Strictly follow `.ai/guidelines/coding-style.md`.
+- **Testing & Safety**: Strictly follow `.ai/guidelines/testing-guidelines.md` and `.ai/guidelines/testing-safety-guideline.md`. Always use **Pest** for testing and ensure database isolation.
 - **Error Handling**: Use try-catch blocks in Services and log errors.
 
 ## 📦 Key Resources
-- **Guidelines**: `.ai/guidelines/coding-style.md`, `.ai/guidelines/design-guidelines.md`.
+- **Guidelines**: `.ai/guidelines/coding-style.md`, `.ai/guidelines/design-guidelines.md`, `.ai/guidelines/testing-guidelines.md`, `.ai/guidelines/testing-safety-guideline.md`.
 - **Requirements**: `.ai/requirements/requirements.md`.
 - **Tasks**: `.ai/tasks/*.md`.
-- **Packages**: FlexSearch, Maatwebsite Excel, Endroid QR Code, Spatie Browsershot.
+- **Packages**: FlexSearch, Maatwebsite Excel, Endroid QR Code, Spatie Browsershot, Pest.
