@@ -29,10 +29,18 @@
                                     <span>Google Maps API Key</span>
                                     <span class="badge bg-danger ms-2">Required</span>
                                 </label>
-                                <input type="text" class="form-control form-control-lg" id="googleMapsApiKey"
-                                    name="google_maps_api_key" placeholder="Enter your Google Maps API Key"
-                                    value="{{ isset($apiKey) ? $apiKey->google_maps_api_key : old('google_maps_api_key') }}"
-                                    required>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="bi bi-shield-lock text-primary fs-5"></i>
+                                    </span>
+                                    <input type="password" class="form-control form-control-lg border-start-0" id="googleMapsApiKey"
+                                        name="google_maps_api_key" placeholder="Enter your Google Maps API Key"
+                                        value="{{ isset($apiKey) ? $apiKey->google_maps_api_key : old('google_maps_api_key') }}"
+                                        required>
+                                    <span class="input-group-text bg-white border-start-0">
+                                        <i class="fas fa-eye password-toggle"></i>
+                                    </span>
+                                </div>
                                 @error('google_maps_api_key')
                                     <div class="text-danger small mt-2">{{ $message }}</div>
                                 @enderror
