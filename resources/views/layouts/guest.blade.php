@@ -222,7 +222,7 @@
 
             .form-control-custom {
                 width: 100%;
-                padding: 1rem 1.25rem 1rem 3.25rem;
+                padding: 1rem 3.5rem 1rem 3.25rem;
                 background: var(--bs-secondary-bg);
                 border: 2px solid transparent;
                 border-radius: 16px;
@@ -238,23 +238,26 @@
                 outline: none;
             }
 
-            .form-control-custom:focus + i {
+            .form-control-custom:focus ~ i {
                 color: var(--primary-color);
             }
 
             .password-toggle {
                 position: absolute;
                 right: 1.25rem;
+                left: auto !important;
                 top: 50%;
                 transform: translateY(-50%);
                 color: var(--bs-secondary-color);
                 cursor: pointer;
                 transition: all 0.3s;
                 z-index: 10;
+                padding: 5px;
             }
 
             .password-toggle:hover {
                 color: var(--primary-color);
+                transform: translateY(-50%) scale(1.1);
             }
 
             /* --- Premium Button --- */

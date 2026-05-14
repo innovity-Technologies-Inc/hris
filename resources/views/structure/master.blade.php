@@ -96,14 +96,27 @@
             cursor: pointer;
             color: #6c757d;
             transition: all 0.2s;
+            padding: 0 5px;
+            display: inline-block;
         }
 
         .password-toggle:hover {
             color: var(--bs-primary);
+            transform: scale(1.15);
         }
 
         .input-group-text .password-toggle {
             margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .input-group:focus-within .input-group-text {
+            border-color: var(--bs-primary);
+            color: var(--bs-primary);
+        }
+
+        .input-group:focus-within .password-toggle {
+            color: var(--bs-primary);
         }
 
         /* Sidebar color modes follow app theme (navbar toggle) */
