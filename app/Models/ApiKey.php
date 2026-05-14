@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\Crypt;
 
 class ApiKey extends Model
 {
@@ -10,31 +12,28 @@ class ApiKey extends Model
     protected $fillable = ['google_maps_api_key'];
 
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
+     * Accessor: Decrypt the key when retrieved.
+     * Handles plain text gracefully for migration.
      */
-    protected function casts(): array
-    {
-        return [
-            'google_maps_api_key' => 'encrypted',
-        ];
-    }
-
-    /**
-     * Get the google_maps_api_key, handling potential decryption errors for unencrypted data.
-     */
-    protected function getGoogleMapsApiKeyAttribute($value)
+    public function getGoogleMapsApiKeyAttribute($value)
     {
         if (empty($value)) {
             return $value;
         }
 
         try {
-            return decrypt($value);
-        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
-            // If decryption fails, it's likely already unencrypted or encrypted with a different key
+            return Crypt::decrypt($value);
+        } catch (DecryptException $e) {
+            // Return plain text if decryption fails
             return $value;
         }
+    }
+
+    /**
+     * Mutator: Encrypt the key before saving.
+     */
+    public function setGoogleMapsApiKeyAttribute($value)
+    {
+        $this->attributes['google_maps_api_key'] = !empty($value) ? Crypt::encrypt($value) : null;
     }
 }
