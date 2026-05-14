@@ -73,6 +73,7 @@
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-end-0"><i class="fas fa-lock text-primary"></i></span>
                                     <input type="password" class="form-control border-start-0" id="emp_password" name="password" placeholder="••••••••">
+                                    <span class="input-group-text bg-white border-start-0"><i class="fas fa-eye password-toggle"></i></span>
                                 </div>
                                 <small class="text-muted mt-1 d-block"><i class="fas fa-info-circle me-1"></i>Leave blank to keep current password</small>
                             </div>
@@ -82,17 +83,7 @@
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-end-0"><i class="fas fa-check-circle text-primary"></i></span>
                                     <input type="password" class="form-control border-start-0" id="emp_password_confirmation" name="password_confirmation" placeholder="••••••••">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-12 mb-3">
-                                <div class="form-check custom-checkbox">
-                                    <input class="form-check-input" type="checkbox" id="show_emp_password">
-                                    <label class="form-check-label text-muted fw-bold" for="show_emp_password">
-                                        Show Password
-                                    </label>
+                                    <span class="input-group-text bg-white border-start-0"><i class="fas fa-eye password-toggle"></i></span>
                                 </div>
                             </div>
                         </div>
@@ -110,16 +101,6 @@
         </div>
     </div>
 </div>
-
-<script>
-    document.getElementById('show_emp_password').addEventListener('change', function() {
-        const passwordInput = document.getElementById('emp_password');
-        const passwordConfirmInput = document.getElementById('emp_password_confirmation');
-        const type = this.checked ? 'text' : 'password';
-        passwordInput.type = type;
-        passwordConfirmInput.type = type;
-    });
-</script>
 
 <style>
     .hr-divider {

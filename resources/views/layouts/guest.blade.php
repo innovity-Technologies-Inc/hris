@@ -242,6 +242,21 @@
                 color: var(--primary-color);
             }
 
+            .password-toggle {
+                position: absolute;
+                right: 1.25rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: var(--bs-secondary-color);
+                cursor: pointer;
+                transition: all 0.3s;
+                z-index: 10;
+            }
+
+            .password-toggle:hover {
+                color: var(--primary-color);
+            }
+
             /* --- Premium Button --- */
             .btn-premium {
                 background: linear-gradient(135deg, var(--primary-color), #7a3050);
@@ -343,5 +358,18 @@
 
         <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
         <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+        <script>
+            $(document).on('click', '.password-toggle', function() {
+                const input = $(this).siblings('input');
+                const icon = $(this);
+                if (input.attr('type') === 'password') {
+                    input.attr('type', 'text');
+                    icon.removeClass('fa-eye').addClass('fa-eye-slash');
+                } else {
+                    input.attr('type', 'password');
+                    icon.removeClass('fa-eye-slash').addClass('fa-eye');
+                }
+            });
+        </script>
     </body>
 </html>

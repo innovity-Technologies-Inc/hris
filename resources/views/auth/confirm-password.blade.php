@@ -18,6 +18,7 @@
                        placeholder="••••••••"
                        autocomplete="current-password">
                 <i class="fas fa-shield-alt"></i>
+                <i class="fas fa-eye password-toggle"></i>
             </div>
             @error('password')
                 <div class="invalid-feedback d-block mt-n2 mb-3 ps-2">
@@ -25,22 +26,6 @@
                 </div>
             @enderror
         </div>
-
-        <div class="d-flex align-items-center justify-content-between mb-4">
-            <div class="form-check custom-checkbox">
-                <input class="form-check-input" type="checkbox" id="show_password">
-                <label class="form-check-label small text-muted fw-semibold" for="show_password">
-                    Show Password
-                </label>
-            </div>
-        </div>
-
-        <script>
-            document.getElementById('show_password').addEventListener('change', function() {
-                const passwordInput = document.getElementById('password');
-                passwordInput.type = this.checked ? 'text' : 'password';
-            });
-        </script>
 
         <div class="d-grid">
             <button type="submit" class="btn-premium">

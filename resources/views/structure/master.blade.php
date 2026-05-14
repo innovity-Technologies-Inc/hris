@@ -92,6 +92,20 @@
             --sidebar-divider: rgba(255, 255, 255, 0.06);
         }
 
+        .password-toggle {
+            cursor: pointer;
+            color: #6c757d;
+            transition: all 0.2s;
+        }
+
+        .password-toggle:hover {
+            color: var(--bs-primary);
+        }
+
+        .input-group-text .password-toggle {
+            margin: 0;
+        }
+
         /* Sidebar color modes follow app theme (navbar toggle) */
         html[data-bs-theme='light'] .app-sidebar-menu {
             --sidebar-bg-start: #ffffff;
@@ -988,6 +1002,23 @@
 
     // 6. Handle the "Stop" button in the browser
     window.addEventListener('pagehide', hideLoader);
+
+    $(document).on('click', '.password-toggle', function() {
+        // Find the input within the same input-group or parent container
+        let input = $(this).siblings('input');
+        if (input.length === 0) {
+            input = $(this).closest('.input-group').find('input');
+        }
+        
+        const icon = $(this);
+        if (input.attr('type') === 'password') {
+            input.attr('type', 'text');
+            icon.removeClass('fa-eye').addClass('fa-eye-slash');
+        } else {
+            input.attr('type', 'password');
+            icon.removeClass('fa-eye-slash').addClass('fa-eye');
+        }
+    });
 </script>
 
 

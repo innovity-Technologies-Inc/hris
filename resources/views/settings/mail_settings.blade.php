@@ -115,9 +115,9 @@
                                             placeholder="Enter SMTP password"
                                             value="{{ isset($mailSetting) ? $mailSetting->password : old('password') }}"
                                             required>
-                                        <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                                            <i class="bi bi-eye" id="toggleIcon"></i>
-                                        </button>
+                                        <span class="input-group-text bg-white border-start-0">
+                                            <i class="fas fa-eye password-toggle"></i>
+                                        </span>
                                     </div>
                                     @error('password')
                                         <div class="text-danger small mt-1">{{ $message }}</div>
@@ -271,22 +271,6 @@
     </div>
 
     <script>
-        // Toggle password visibility
-        document.getElementById('togglePassword').addEventListener('click', function() {
-            const passwordInput = document.getElementById('password');
-            const toggleIcon = document.getElementById('toggleIcon');
-
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                toggleIcon.classList.remove('bi-eye');
-                toggleIcon.classList.add('bi-eye-slash');
-            } else {
-                passwordInput.type = 'password';
-                toggleIcon.classList.remove('bi-eye-slash');
-                toggleIcon.classList.add('bi-eye');
-            }
-        });
-
         // Form validation
         document.getElementById('mailSettingsForm').addEventListener('submit', function(e) {
             const requiredFields = this.querySelectorAll('[required]');

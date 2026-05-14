@@ -45,13 +45,13 @@ class UserAndRoleSeeder extends Seeder
         Employee::with('officeInfo.getCurrentDepartment')->chunk(200, function ($employees) use ($hrManagerRole, $deptManagerRole, $employeeRole, $defaultPassword) {
             foreach ($employees as $employee) {
                 $email = $employee->work_email ?? 'employee' . $employee->id . '@example.com';
-                
+
                 // Determine Role based on Department or other logic
                 $targetRole = $employeeRole;
                 $userType = 'Employee';
 
                 $deptName = $employee->officeInfo?->getCurrentDepartment?->department_name ?? '';
-                
+
                 if (stripos($deptName, 'HR') !== false || stripos($deptName, 'Human Resource') !== false || stripos($deptName, 'Payroll') !== false) {
                     $targetRole = $hrManagerRole;
                     $userType = 'Department';
