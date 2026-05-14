@@ -79,3 +79,29 @@ $env:DB_CONNECTION='sqlite'; $env:DB_DATABASE=':memory:'; vendor/bin/pest tests/
 - [x] Password Reset with encrypted email protection (PasswordResetTest)
 - [x] UserFactory alignment with `hashed` password cast.
 
+---
+
+## [2026-05-14] SMTP Settings & API Key Encryption Verification
+
+**Instruction:** 
+- Encrypt Google Maps API Key and sensitive SMTP settings (Host, Email, Password) in the database.
+- Use `type="password"` and eye icon toggles in the UI.
+- Handle existing plain text data gracefully to prevent `DecryptException`.
+
+**Test Run Command:**
+```powershell
+$env:DB_CONNECTION='sqlite'; $env:DB_DATABASE=':memory:'; vendor/bin/pest tests/Feature/ApiKeyEncryptionTest.php tests/Feature/MailSettingEncryptionTest.php
+```
+
+**Results:**
+- **Tests:** 3 passed
+- **Assertions:** 10 passed
+- **Status:** ✅ SUCCESS
+
+**Key Features Verified:**
+- [x] API Key encrypted in DB, decrypted in model (Accessor/Mutator).
+- [x] Mail Settings (Host, Email, Password) encrypted in DB, decrypted in model.
+- [x] Graceful handling of existing plain text settings (prevents DecryptException).
+- [x] Secure UI with eye icon toggles for all sensitive fields.
+
+

@@ -46,10 +46,15 @@
                                     <label for="senderEmail" class="form-label fw-semibold">
                                         Sender Email <span class="text-danger">*</span>
                                     </label>
-                                    <input type="email" class="form-control" id="senderEmail" name="sender_email"
-                                        placeholder="noreply@example.com"
-                                        value="{{ isset($mailSetting) ? $mailSetting->sender_email : old('sender_email') }}"
-                                        required>
+                                    <div class="input-group">
+                                        <input type="password" class="form-control" id="senderEmail" name="sender_email"
+                                            placeholder="noreply@example.com"
+                                            value="{{ isset($mailSetting) ? $mailSetting->sender_email : old('sender_email') }}"
+                                            required>
+                                        <span class="input-group-text bg-white border-start-0">
+                                            <i class="fas fa-eye password-toggle"></i>
+                                        </span>
+                                    </div>
                                     @error('sender_email')
                                         <div class="text-danger small mt-1">{{ $message }}</div>
                                     @enderror
@@ -60,10 +65,15 @@
                                     <label for="mailHost" class="form-label fw-semibold">
                                         SMTP Host <span class="text-danger">*</span>
                                     </label>
-                                    <input type="text" class="form-control" id="mailHost" name="mail_host"
-                                        placeholder="smtp.gmail.com"
-                                        value="{{ isset($mailSetting) ? $mailSetting->mail_host : old('mail_host') }}"
-                                        required>
+                                    <div class="input-group">
+                                        <input type="password" class="form-control" id="mailHost" name="mail_host"
+                                            placeholder="smtp.gmail.com"
+                                            value="{{ isset($mailSetting) ? $mailSetting->mail_host : old('mail_host') }}"
+                                            required>
+                                        <span class="input-group-text bg-white border-start-0">
+                                            <i class="fas fa-eye password-toggle"></i>
+                                        </span>
+                                    </div>
                                     @error('mail_host')
                                         <div class="text-danger small mt-1">{{ $message }}</div>
                                     @enderror
