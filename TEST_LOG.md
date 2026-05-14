@@ -52,3 +52,30 @@ vendor/bin/pest tests/Feature/SeederVerificationTest.php
 - [x] Existing users updated by email instead of duplicating.
 - [x] Roles (Super Admin, HR Manager, Dept Manager, Employee) correctly assigned based on organizational data.
 - [x] Fixed migration issues in `payrolls`, `payroll_process`, and `bonuses` tables related to unique `longText` columns.
+
+---
+
+## [2026-05-14] Authentication Eye Icon Toggle & Pest Conversion Verification
+
+**Instruction:** 
+- Replace "Show Password" checkbox with an eye icon toggle across all password fields.
+- Convert existing authentication tests to Pest.
+- Fix factory and notification issues to align with custom project architecture.
+
+**Test Run Command:**
+```powershell
+$env:DB_CONNECTION='sqlite'; $env:DB_DATABASE=':memory:'; vendor/bin/pest tests/Feature/Auth
+```
+
+**Results:**
+- **Tests:** 14 passed
+- **Assertions:** 26 passed
+- **Status:** ✅ SUCCESS
+
+**Key Features Verified:**
+- [x] Login & Logout functionality (AuthenticationTest)
+- [x] Email Verification flow (EmailVerificationTest)
+- [x] Password Confirmation (PasswordConfirmationTest)
+- [x] Password Reset with encrypted email protection (PasswordResetTest)
+- [x] UserFactory alignment with `hashed` password cast.
+
