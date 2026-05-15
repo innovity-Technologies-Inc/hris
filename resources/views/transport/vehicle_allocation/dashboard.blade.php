@@ -45,10 +45,10 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <h6 class="text-muted mb-2">Allocated</h6>
-                                    <h2 class="mb-0 text-info">{{ $stats['allocated_vehicles'] ?? 0 }}</h2>
+                                    <h2 class="mb-0 text-primary">{{ $stats['allocated_vehicles'] ?? 0 }}</h2>
                                 </div>
-                                <div class="bg-info bg-opacity-10 rounded-circle p-3">
-                                    <i class="fas fa-car-side fa-2x text-info"></i>
+                                <div class="bg-primary bg-opacity-10 rounded-circle p-3">
+                                    <i class="fas fa-car-side fa-2x text-primary"></i>
                                 </div>
                             </div>
                         </div>
@@ -90,7 +90,7 @@
                                 class="btn btn-outline-secondary btn-sm">
                                 <i class="fas fa-history me-1"></i>View History
                             </a>
-                            <a href="{{ route('transport.vehicles.index') }}" class="btn btn-outline-info btn-sm">
+                            <a href="{{ route('transport.vehicles.index') }}" class="btn btn-outline-primary btn-sm">
                                 <i class="fas fa-car me-1"></i>Vehicle List
                             </a>
                         </div>

@@ -76,7 +76,7 @@
                                             <tr>
                                                 <td class="fw-semibold text-muted">Seating Capacity:</td>
                                                 <td>
-                                                    <span class="badge bg-info">
+                                                    <span class="badge bg-primary">
                                                         <i
                                                             class="fas fa-users me-1"></i>{{ $allocation->getVehicle->seating_capacity ?? '-' }}
                                                         passengers
@@ -160,9 +160,8 @@
                     <!-- Reference Information -->
                     @if ($allocation->reference)
                         <div class="card border mb-4">
-                            <div class="card-header bg-info bg-opacity-10">
-                                <h6 class="mb-0 text-info">
-                                    <i class="fas fa-link me-2"></i>Reference Information
+                            <div class="card-header bg-primary bg-opacity-10">
+                                <h6 class="mb-0 text-primary">                                    <i class="fas fa-link me-2"></i>Reference Information
                                 </h6>
                             </div>
                             <div class="card-body">

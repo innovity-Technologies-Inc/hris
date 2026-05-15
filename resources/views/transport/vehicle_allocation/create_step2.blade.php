@@ -22,11 +22,11 @@
                             <div class="progress-bar bg-primary" style="width: 50%;"></div>
                         </div>
                         <div class="step-item text-center position-relative" style="z-index: 1;">
-                            <div class="step-circle bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center"
+                            <div class="step-circle bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center"
                                 style="width: 40px; height: 40px;">
                                 <i class="fas fa-check"></i>
                             </div>
-                            <small class="d-block mt-1 text-success">Select Type</small>
+                            <small class="d-block mt-1 text-primary">Select Type</small>
                         </div>
                         <div class="step-item text-center position-relative" style="z-index: 1;">
                             <div class="step-circle bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center"
@@ -48,8 +48,8 @@
                 <div class="card-body p-4">
                     <!-- Allocation Summary -->
                     <div class="card border-0 shadow-sm mb-4">
-                        <div class="card-header bg-info bg-opacity-10">
-                            <h6 class="mb-0 text-info">
+                        <div class="card-header bg-primary bg-opacity-10">
+                            <h6 class="mb-0 text-primary">
                                 <i class="fas fa-clipboard-list me-2"></i>Selected Application Details
                             </h6>
                         </div>
@@ -82,7 +82,7 @@
                                     <div class="col-md-4">
                                         <div class="d-flex flex-column">
                                             <small class="text-muted mb-1">Passengers</small>
-                                            <span class="badge bg-success w-fit">
+                                            <span class="badge bg-primary w-fit">
                                                 <i
                                                     class="fas fa-users me-1"></i>{{ $reference->no_of_passengers ?? ($reference->estimated_passengers ?? 0) }}
                                             </span>
@@ -199,11 +199,11 @@
 
                                                 <!-- Quick Info -->
                                                 <div class="d-flex gap-1 mt-1">
-                                                    <span class="badge bg-info bg-opacity-10 text-info"
+                                                    <span class="badge bg-primary bg-opacity-10 text-primary"
                                                         style="font-size: 10px;">
                                                         {{ $vehicle->vehicle_category ?? 'N/A' }}
                                                     </span>
-                                                    <span class="badge bg-success bg-opacity-10 text-success"
+                                                    <span class="badge bg-primary bg-opacity-10 text-primary"
                                                         style="font-size: 10px;">
                                                         {{ $vehicle->seating_capacity ?? '-' }} seats
                                                     </span>

@@ -99,7 +99,7 @@
                 <div class="card-body">
                     {{-- Action Buttons --}}
                     <div class="d-flex justify-content-between mb-3">
-                        <a type="button" class="btn btn-warning btn-sm"
+                        <a type="button" class="btn btn-primary btn-sm"
                             href="{{ route('transport.employee_transports.create') }}">
                             <i style="height: 12px; width: 12px" data-feather="plus"></i> New Application
                         </a>

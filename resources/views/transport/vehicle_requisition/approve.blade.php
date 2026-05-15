@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card border-0 shadow-sm rounded">
-                <div class="card-header bg-gradient" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+                <div class="card-header bg-primary text-white">
                     <div class="d-flex justify-content-between align-items-center">
                         <h5 class="card-title mb-0 text-white">
                             <i data-feather="check-circle" class="me-2"></i>
@@ -54,7 +54,7 @@
                                         </div>
                                         <div class="col-7">
                                             <span
-                                                class="badge bg-info text-dark">{{ $vehicleRequisition->trip_type }}</span>
+                                                class="badge bg-primary">{{ $vehicleRequisition->trip_type }}</span>
                                             <span class="text-muted small">{{ $vehicleRequisition->trip_mode }}</span>
                                         </div>
                                     </div>
@@ -109,7 +109,7 @@
                                                 <span class="text-muted small fw-semibold">Driver Required</span>
                                             </div>
                                             <div class="col-7">
-                                                <span class="badge bg-success">Yes</span>
+                                                <span class="badge bg-primary">Yes</span>
                                             </div>
                                         </div>
                                         <hr class="my-2">
@@ -119,7 +119,7 @@
                                                 <span class="text-muted small fw-semibold">Self Drive</span>
                                             </div>
                                             <div class="col-7">
-                                                <span class="badge bg-info text-dark">Yes</span>
+                                                <span class="badge bg-primary">Yes</span>
                                             </div>
                                         </div>
                                         <hr class="my-2">
@@ -234,21 +234,21 @@
                                         <div class="d-flex align-items-start">
                                             <div class="me-3">
                                                 <img src="" alt="Vehicle"
-                                                    class="rounded-3 border border-success border-2 d-none"
+                                                    class="rounded-3 border border-primary border-2 d-none"
                                                     id="vehicleImage" width="80" height="80"
                                                     style="object-fit: cover;">
-                                                <div class="border border-success border-2 rounded-3 bg-light d-flex align-items-center justify-content-center d-none"
+                                                <div class="border border-primary border-2 rounded-3 bg-light d-flex align-items-center justify-content-center d-none"
                                                     id="vehicleImagePlaceholder" style="width: 80px; height: 80px;">
-                                                    <i data-feather="truck" class="text-success"
+                                                    <i data-feather="truck" class="text-primary"
                                                         style="width: 30px; height: 30px;"></i>
                                                 </div>
                                             </div>
                                             <div class="flex-grow-1">
-                                                <h6 class="mb-2 fw-bold text-success" id="vehicleModel">-</h6>
+                                                <h6 class="mb-2 fw-bold text-primary" id="vehicleModel">-</h6>
                                                 <div class="row g-2">
                                                     <div class="col-4">
                                                         <small class="text-muted d-block">Category</small>
-                                                        <span class="badge bg-info text-dark"
+                                                        <span class="badge bg-primary"
                                                             id="vehicleCategory">-</span>
                                                     </div>
                                                     <div class="col-4">

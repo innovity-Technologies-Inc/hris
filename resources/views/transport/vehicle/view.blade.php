@@ -83,7 +83,7 @@
                             </div>
                             <div class="col-6">
                                 <div class="p-3 bg-light rounded">
-                                    <i data-feather="activity" class="text-info mb-2"
+                                    <i data-feather="activity" class="text-primary mb-2"
                                         style="width: 24px; height: 24px;"></i>
                                     <h5 class="mb-0 fw-bold">{{ $vehicle->mileage ?? 'N/A' }}</h5>
                                     <small class="text-muted">KM/L</small>

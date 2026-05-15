@@ -39,7 +39,7 @@
                                 <!-- Type -->
                                 <div class="col-md-4 mb-3">
                                     <label for="type" class="form-label fw-semibold">
-                                        <i class="fas fa-tag text-info me-1"></i>
+                                        <i class="fas fa-tag text-primary me-1"></i>
                                         Type <span class="text-danger">*</span>
                                     </label>
                                     <select name="type" id="type" class="form-select select2_list" required>
@@ -68,7 +68,7 @@
                                 <!-- Company -->
                                 <div class="col-md-4 mb-3">
                                     <label for="company_id" class="form-label fw-semibold">
-                                        <i class="fas fa-building text-success me-1"></i>
+                                        <i class="fas fa-building text-primary me-1"></i>
                                         Company <span class="text-danger">*</span>
                                     </label>
                                     <select name="company_id" id="company_id" class="form-select select2_list" required>
@@ -90,7 +90,7 @@
                                     <!-- Branch -->
                                     <div class="col-md-4 mb-3">
                                         <label for="branch_id" class="form-label fw-semibold">
-                                            <i class="fas fa-map-marker-alt text-danger me-1"></i>
+                                            <i class="fas fa-map-marker-alt text-primary me-1"></i>
                                             Branch
                                         </label>
                                         <select name="branch_id" id="branch_id" class="form-select select2_list">
@@ -183,7 +183,7 @@
                                 <!-- Transport Type -->
                                 <div class="col-md-6 mb-3">
                                     <label for="transport_type" class="form-label fw-semibold">
-                                        <i class="fas fa-list text-info me-1"></i>
+                                        <i class="fas fa-list text-primary me-1"></i>
                                         Transport Type <span class="text-danger">*</span>
                                     </label>
                                     <select name="transport_type" id="transport_type" class="form-select" required>
@@ -204,7 +204,7 @@
                                 <!-- Estimated Passengers -->
                                 <div class="col-md-4 mb-3">
                                     <label for="estimated_passengers" class="form-label fw-semibold">
-                                        <i class="fas fa-users text-warning me-1"></i>
+                                        <i class="fas fa-users text-primary me-1"></i>
                                         Estimated Passengers
                                     </label>
                                     <input type="number" name="estimated_passengers" id="estimated_passengers"
@@ -241,7 +241,7 @@
                                 <!-- Start Date -->
                                 <div class="col-md-3 mb-3">
                                     <label for="start_date" class="form-label fw-semibold">
-                                        <i class="fas fa-calendar text-success me-1"></i>
+                                        <i class="fas fa-calendar text-primary me-1"></i>
                                         Start Date <span class="text-danger">*</span>
                                     </label>
                                     <input type="date" name="start_date" id="start_date" class="form-control"
@@ -256,7 +256,7 @@
                                 <!-- End Date -->
                                 <div class="col-md-3 mb-3">
                                     <label for="end_date" class="form-label fw-semibold">
-                                        <i class="fas fa-calendar text-danger me-1"></i>
+                                        <i class="fas fa-calendar text-primary me-1"></i>
                                         End Date <span class="text-danger">*</span>
                                     </label>
                                     <input type="date" name="end_date" id="end_date" class="form-control"
@@ -271,7 +271,7 @@
                                 <!-- Pickup Time -->
                                 <div class="col-md-3 mb-3">
                                     <label for="pickup_time" class="form-label fw-semibold">
-                                        <i class="fas fa-clock text-info me-1"></i>
+                                        <i class="fas fa-clock text-primary me-1"></i>
                                         Pickup Time
                                     </label>
                                     <input type="time" name="pickup_time" id="pickup_time" class="form-control"
@@ -285,7 +285,7 @@
                                 <!-- Drop Time -->
                                 <div class="col-md-3 mb-3">
                                     <label for="drop_time" class="form-label fw-semibold">
-                                        <i class="fas fa-clock text-warning me-1"></i>
+                                        <i class="fas fa-clock text-primary me-1"></i>
                                         Drop Time
                                     </label>
                                     <input type="time" name="drop_time" id="drop_time" class="form-control"
@@ -307,7 +307,7 @@
                                 <!-- Pickup Location -->
                                 <div class="col-md-6 mb-3">
                                     <label for="pickup_location" class="form-label fw-semibold">
-                                        <i class="fas fa-map-marker-alt text-success me-1"></i>
+                                        <i class="fas fa-map-marker-alt text-primary me-1"></i>
                                         Pickup Location
                                     </label>
                                     <input type="text" name="pickup_location" id="pickup_location"
@@ -322,7 +322,7 @@
                                 <!-- Drop Location -->
                                 <div class="col-md-6 mb-3">
                                     <label for="drop_location" class="form-label fw-semibold">
-                                        <i class="fas fa-map-marker-alt text-danger me-1"></i>
+                                        <i class="fas fa-map-marker-alt text-primary me-1"></i>
                                         Drop Location
                                     </label>
                                     <input type="text" name="drop_location" id="drop_location" class="form-control"
@@ -337,7 +337,7 @@
                                 <!-- Route Details -->
                                 <div class="col-md-12 mb-3">
                                     <label for="route_details" class="form-label fw-semibold">
-                                        <i class="fas fa-road text-info me-1"></i>
+                                        <i class="fas fa-road text-primary me-1"></i>
                                         Route Details
                                     </label>
                                     <textarea name="route_details" id="route_details" class="form-control" rows="2"
@@ -359,7 +359,7 @@
                                 <!-- Special Requirements -->
                                 <div class="col-md-6 mb-3">
                                     <label for="special_requirements" class="form-label fw-semibold">
-                                        <i class="fas fa-exclamation-triangle text-warning me-1"></i>
+                                        <i class="fas fa-exclamation-triangle text-primary me-1"></i>
                                         Special Requirements
                                     </label>
                                     <textarea name="special_requirements" id="special_requirements" class="form-control" rows="3"

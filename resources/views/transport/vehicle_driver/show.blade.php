@@ -24,8 +24,8 @@
         <div class="row">
             <div class="col-lg-12 mb-4">
                 <div class="card shadow-sm border-0">
-                    <div class="card-header bg-warning">
-                        <h6 class="mb-0">
+                    <div class="card-header bg-primary text-white">
+                        <h6 class="mb-0 text-white">
                             <i data-feather="calendar" style="width: 18px; height: 18px;"></i>
                             Assignment Details
                         </h6>

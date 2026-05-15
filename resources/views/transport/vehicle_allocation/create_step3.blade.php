@@ -22,18 +22,18 @@
                             <div class="progress-bar bg-primary" style="width: 100%;"></div>
                         </div>
                         <div class="step-item text-center position-relative" style="z-index: 1;">
-                            <div class="step-circle bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center"
+                            <div class="step-circle bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center"
                                 style="width: 40px; height: 40px;">
                                 <i class="fas fa-check"></i>
                             </div>
-                            <small class="d-block mt-1 text-success">Select Type</small>
+                            <small class="d-block mt-1 text-primary">Select Type</small>
                         </div>
                         <div class="step-item text-center position-relative" style="z-index: 1;">
-                            <div class="step-circle bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center"
+                            <div class="step-circle bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center"
                                 style="width: 40px; height: 40px;">
                                 <i class="fas fa-check"></i>
                             </div>
-                            <small class="d-block mt-1 text-success">Select Vehicle</small>
+                            <small class="d-block mt-1 text-primary">Select Vehicle</small>
                         </div>
                         <div class="step-item text-center position-relative" style="z-index: 1;">
                             <div class="step-circle bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center"
@@ -66,8 +66,8 @@
 
                         <!-- Allocation Summary Card -->
                         <div class="card border-0 shadow-sm mb-4">
-                            <div class="card-header bg-info bg-opacity-10">
-                                <h6 class="mb-0 text-info">
+                            <div class="card-header bg-primary bg-opacity-10">
+                                <h6 class="mb-0 text-primary">
                                     <i class="fas fa-info-circle me-2"></i>Allocation Details
                                 </h6>
                             </div>
@@ -122,9 +122,8 @@
                         <!-- Application Details -->
                         @if (isset($reference))
                             <div class="card border-0 shadow-sm mb-4">
-                                <div class="card-header"
-                                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-                                    <h6 class="mb-0">
+                                <div class="card-header bg-primary text-white">
+                                    <h6 class="mb-0 text-white">
                                         <i class="fas fa-file-alt me-2"></i>
                                         {{ $allocationData['allocation_type'] == 'trip_based' ? 'Trip Requisition Details' : 'Employee Transport Details' }}
                                     </h6>
@@ -143,7 +142,7 @@
                                                         <td class="fw-semibold text-muted">Trip Type:</td>
                                                         <td>
                                                             <span
-                                                                class="badge bg-info">{{ $reference->trip_type ?? 'N/A' }}</span>
+                                                                class="badge bg-primary">{{ $reference->trip_type ?? 'N/A' }}</span>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -258,8 +257,8 @@
 
                         <!-- Selected Vehicles List -->
                         <div class="card border-0 shadow-sm mb-4">
-                            <div class="card-header bg-success bg-opacity-10">
-                                <h6 class="mb-0 text-success">
+                            <div class="card-header bg-primary bg-opacity-10">
+                                <h6 class="mb-0 text-primary">
                                     <i class="fas fa-car-side me-2"></i>Selected Vehicles
                                 </h6>
                             </div>
@@ -302,7 +301,7 @@
                                                     </td>
                                                     <td>{{ $vehicle->vehicle_category ?? 'N/A' }}</td>
                                                     <td>
-                                                        <span class="badge bg-info">
+                                                        <span class="badge bg-primary">
                                                             <i
                                                                 class="fas fa-users me-1"></i>{{ $vehicle->seating_capacity ?? '-' }}
                                                         </span>
@@ -344,7 +343,7 @@
                                             <tr>
                                                 <td colspan="5" class="text-end fw-bold">Total Capacity:</td>
                                                 <td colspan="2">
-                                                    <span class="badge bg-success fs-6">
+                                                    <span class="badge bg-primary fs-6">
                                                         <i class="fas fa-users me-1"></i>{{ $totalCapacity }} passengers
                                                     </span>
                                                 </td>
@@ -357,8 +356,8 @@
 
                         <!-- Route Details (Optional) -->
                         <div class="card border-0 shadow-sm mb-4">
-                            <div class="card-header bg-warning bg-opacity-10">
-                                <h6 class="mb-0 text-warning">
+                            <div class="card-header bg-primary bg-opacity-10">
+                                <h6 class="mb-0 text-primary">
                                     <i class="fas fa-route me-2"></i>Route Details (Optional)
                                 </h6>
                             </div>
@@ -412,8 +411,8 @@
 
                         <!-- Approval Remarks -->
                         <div class="card border-0 shadow-sm mb-4">
-                            <div class="card-header bg-secondary bg-opacity-10">
-                                <h6 class="mb-0 text-secondary">
+                            <div class="card-header bg-primary bg-opacity-10">
+                                <h6 class="mb-0 text-primary">
                                     <i class="fas fa-comment me-2"></i>Remarks
                                 </h6>
                             </div>
@@ -427,7 +426,7 @@
                             <a href="{{ route('transport.vehicle_allocations.step2') }}" class="btn btn-secondary px-4">
                                 <i class="fas fa-arrow-left me-1"></i>Previous Step
                             </a>
-                            <button type="submit" class="btn btn-success px-5">
+                            <button type="submit" class="btn btn-primary px-5">
                                 <i class="fas fa-check-circle me-1"></i>Confirm & Create Allocation
                             </button>
                         </div>

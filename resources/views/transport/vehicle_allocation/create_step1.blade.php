@@ -65,8 +65,8 @@
                                             onchange="toggleReferenceSelection()">
                                         <label class="form-check-label w-100" for="type_employee_transport">
                                             <div class="d-flex align-items-center">
-                                                <div class="bg-info bg-opacity-10 rounded-circle p-2 me-3">
-                                                    <i class="fas fa-bus text-info fa-lg"></i>
+                                                <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
+                                                    <i class="fas fa-bus text-primary fa-lg"></i>
                                                 </div>
                                                 <div>
                                                     <strong>Employee Transport</strong>
@@ -84,8 +84,8 @@
                                             onchange="toggleReferenceSelection()">
                                         <label class="form-check-label w-100" for="type_trip_based">
                                             <div class="d-flex align-items-center">
-                                                <div class="bg-success bg-opacity-10 rounded-circle p-2 me-3">
-                                                    <i class="fas fa-route text-success fa-lg"></i>
+                                                <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
+                                                    <i class="fas fa-route text-primary fa-lg"></i>
                                                 </div>
                                                 <div>
                                                     <strong>Trip Based</strong>

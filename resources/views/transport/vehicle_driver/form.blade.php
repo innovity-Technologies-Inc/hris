@@ -65,10 +65,9 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-12">
                                             {{-- Driver Selection Section --}}
                                             <div class="card border-0 shadow-sm">
-                                                <div class="card-header bg-success text-white border-0">
+                                                <div class="card-header bg-primary text-white border-0">
                                                     <h6 class="mb-0 fw-bold">
                                                         <i data-feather="user"></i>
                                                         Select Driver
@@ -104,7 +103,7 @@
                                         <div class="col-12">
                                             {{-- Assignment Details Section --}}
                                             <div class="card border-0 shadow-sm">
-                                                <div class="card-header bg-warning border-0">
+                                                <div class="card-header bg-primary text-white border-0">
                                                     <h6 class="mb-0 fw-bold">
                                                         <i data-feather="calendar"></i>
                                                         Assignment Details
@@ -198,7 +197,7 @@
                                                         <div class="p-2 bg-body-secondary rounded-2">
                                                             <small
                                                                 class="text-muted text-uppercase d-block mb-0 fw-semibold">Category</small>
-                                                            <span class="badge bg-info" id="vehicleCategory">-</span>
+                                                            <span class="badge bg-primary" id="vehicleCategory">-</span>
                                                         </div>
                                                     </div>
                                                     <div class="col-6">
@@ -244,7 +243,7 @@
 
                                 {{-- Driver Preview Card --}}
                                 <div class="card border-0 shadow-lg mb-4 d-none" id="driverPreviewCard">
-                                    <div class="card-header bg-success text-white border-0 py-3">
+                                    <div class="card-header bg-primary text-white border-0 py-3">
                                         <h6 class="mb-0 fw-bold">
                                             <i data-feather="user"></i>
                                             Driver Information

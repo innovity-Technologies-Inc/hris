@@ -14,21 +14,21 @@
         }
 
         .section-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary-color);
             color: white;
             padding: 15px 20px;
         }
 
         .section-header.success {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            background: #11998e;
         }
 
         .section-header.warning {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: #f093fb;
         }
 
         .section-header.info {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: #4facfe;
         }
 
         .detail-row {
@@ -67,9 +67,9 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card border-0 shadow-sm rounded">
-                <div class="card-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="card-header bg-primary text-white">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0" style="color: white;">
+                        <h5 class="card-title mb-0 text-white">
                             <i data-feather="clipboard" class="me-2"></i>
                             Vehicle Requisition Details
                         </h5>

@@ -61,7 +61,7 @@
                                     <tr>
                                         <td class="fw-semibold text-muted">Transport Type:</td>
                                         <td>
-                                            <span class="badge bg-info">{{ $employeeTransport->transport_type }}</span>
+                                            <span class="badge bg-primary">{{ $employeeTransport->transport_type }}</span>
                                         </td>
                                     </tr>
                                 </table>
