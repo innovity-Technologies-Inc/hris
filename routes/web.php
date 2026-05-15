@@ -998,14 +998,14 @@ Route::controller(DataController::class)->middleware('auth')->group(function () 
 // Transport Module Routes
 Route::prefix('transport')->name('transport.')->middleware('auth')->group(function () {
     Route::controller(\App\Http\Controllers\Transport\VehicleController::class)->group(function () {
-        Route::middleware('permission:vehicles.view')->group(function () {
-            Route::get('vehicles', 'index')->name('vehicles.index');
-            Route::get('vehicles/{id}', 'show')->name('vehicles.show');
-            Route::get('vehicles/{id}/history', 'history')->name('vehicles.history');
-        });
         Route::middleware('permission:vehicles.create')->group(function () {
             Route::get('vehicles/create', 'create')->name('vehicles.create');
             Route::post('vehicles', 'store')->name('vehicles.store');
+        });
+        Route::middleware('permission:vehicles.view')->group(function () {
+            Route::get('vehicles', 'index')->name('vehicles.index');
+            Route::get('vehicles/{id}/history', 'history')->name('vehicles.history');
+            Route::get('vehicles/{id}', 'show')->name('vehicles.show');
         });
         Route::middleware('permission:vehicles.edit')->group(function () {
             Route::get('vehicles/{id}/edit', 'edit')->name('vehicles.edit');
@@ -1018,16 +1018,16 @@ Route::prefix('transport')->name('transport.')->middleware('auth')->group(functi
 
     // Vehicle Driver Assignment Routes
     Route::controller(\App\Http\Controllers\Transport\VehicleDriverController::class)->group(function () {
-        Route::middleware('permission:assign-driver.view')->group(function () {
-            Route::get('vehicle-drivers', 'index')->name('vehicle_drivers.index');
-            Route::get('vehicle-drivers/history', 'history')->name('vehicle_drivers.history');
-            Route::get('vehicle-drivers/{id}', 'show')->name('vehicle_drivers.show');
-            Route::get('api/vehicle/{id}', 'getVehicleDetails');
-            Route::get('api/driver/{id}', 'getDriverDetails');
-        });
         Route::middleware('permission:assign-driver.create')->group(function () {
             Route::get('vehicle-drivers/create', 'create')->name('vehicle_drivers.create');
             Route::post('vehicle-drivers', 'store')->name('vehicle_drivers.store');
+        });
+        Route::middleware('permission:assign-driver.view')->group(function () {
+            Route::get('vehicle-drivers', 'index')->name('vehicle_drivers.index');
+            Route::get('vehicle-drivers/history', 'history')->name('vehicle_drivers.history');
+            Route::get('api/vehicle/{id}', 'getVehicleDetails');
+            Route::get('api/driver/{id}', 'getDriverDetails');
+            Route::get('vehicle-drivers/{id}', 'show')->name('vehicle_drivers.show');
         });
         Route::middleware('permission:assign-driver.edit')->group(function () {
             Route::get('vehicle-drivers/{id}/edit', 'edit')->name('vehicle_drivers.edit');
@@ -1040,13 +1040,13 @@ Route::prefix('transport')->name('transport.')->middleware('auth')->group(functi
 
     // Vehicle Requisition Routes
     Route::controller(\App\Http\Controllers\Transport\VehicleRequisitionController::class)->group(function () {
-        Route::middleware('permission:vehicle-requisition.view')->group(function () {
-            Route::get('vehicle-requisitions', 'index')->name('vehicle_requisitions.index');
-            Route::get('vehicle-requisitions/{id}', 'show')->name('vehicle_requisitions.show');
-        });
         Route::middleware('permission:vehicle-requisition.create')->group(function () {
             Route::get('vehicle-requisitions/create', 'create')->name('vehicle_requisitions.create');
             Route::post('vehicle-requisitions', 'store')->name('vehicle_requisitions.store');
+        });
+        Route::middleware('permission:vehicle-requisition.view')->group(function () {
+            Route::get('vehicle-requisitions', 'index')->name('vehicle_requisitions.index');
+            Route::get('vehicle-requisitions/{id}', 'show')->name('vehicle_requisitions.show');
         });
         Route::middleware('permission:vehicle-requisition.edit')->group(function () {
             Route::get('vehicle-requisitions/{id}/approve', 'approve')->name('vehicle_requisitions.approve');
@@ -1057,14 +1057,14 @@ Route::prefix('transport')->name('transport.')->middleware('auth')->group(functi
 
     // Employee Transport Routes
     Route::controller(\App\Http\Controllers\Transport\EmployeeTransportController::class)->group(function () {
+        Route::middleware('permission:employee-transport.create')->group(function () {
+            Route::get('employee-transports/create', 'create')->name('employee_transports.create');
+            Route::post('employee-transports', 'store')->name('employee_transports.store');
+        });
         Route::middleware('permission:employee-transport.view')->group(function () {
             Route::get('employee-transports', 'index')->name('employee_transports.index');
             Route::get('employee-transports/search', 'search')->name('employee_transports.search');
             Route::get('employee-transports/{id}', 'show')->name('employee_transports.show');
-        });
-        Route::middleware('permission:employee-transport.create')->group(function () {
-            Route::get('employee-transports/create', 'create')->name('employee_transports.create');
-            Route::post('employee-transports', 'store')->name('employee_transports.store');
         });
         Route::middleware('permission:employee-transport.edit')->group(function () {
             Route::get('employee-transports/{id}/edit', 'edit')->name('employee_transports.edit');
@@ -1080,12 +1080,6 @@ Route::prefix('transport')->name('transport.')->middleware('auth')->group(functi
 
     // Vehicle Allocation Routes
     Route::controller(\App\Http\Controllers\Transport\VehicleAllocationController::class)->group(function () {
-        Route::middleware('permission:vehicle-allocation.view')->group(function () {
-            Route::get('vehicle-allocations', 'dashboard')->name('vehicle_allocations.dashboard');
-            Route::get('vehicle-allocations/history', 'history')->name('vehicle_allocations.history');
-            Route::get('vehicle-allocations/{id}', 'show')->name('vehicle_allocations.show');
-            Route::get('api/application-details', 'getApplicationDetails')->name('vehicle_allocations.application_details');
-        });
         Route::middleware('permission:vehicle-allocation.create')->group(function () {
             Route::get('vehicle-allocations/create', 'create')->name('vehicle_allocations.create');
             Route::post('vehicle-allocations/step2', 'step2')->name('vehicle_allocations.step2');
@@ -1093,6 +1087,12 @@ Route::prefix('transport')->name('transport.')->middleware('auth')->group(functi
             Route::post('vehicle-allocations/step3', 'step3')->name('vehicle_allocations.step3');
             Route::get('vehicle-allocations/step3', 'step3')->name('vehicle_allocations.step3.get');
             Route::post('vehicle-allocations', 'store')->name('vehicle_allocations.store');
+        });
+        Route::middleware('permission:vehicle-allocation.view')->group(function () {
+            Route::get('vehicle-allocations', 'dashboard')->name('vehicle_allocations.dashboard');
+            Route::get('vehicle-allocations/history', 'history')->name('vehicle_allocations.history');
+            Route::get('api/application-details', 'getApplicationDetails')->name('vehicle_allocations.application_details');
+            Route::get('vehicle-allocations/{id}', 'show')->name('vehicle_allocations.show');
         });
         Route::middleware('permission:vehicle-allocation.edit')->group(function () {
             Route::patch('vehicle-allocations/{id}/release', 'release')->name('vehicle_allocations.release');

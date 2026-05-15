@@ -104,4 +104,28 @@ $env:DB_CONNECTION='sqlite'; $env:DB_DATABASE=':memory:'; vendor/bin/pest tests/
 - [x] Graceful handling of existing plain text settings (prevents DecryptException).
 - [x] Secure UI with eye icon toggles for all sensitive fields.
 
+---
+
+## [2026-05-15] Transport Module Route Reordering Verification
+
+**Instruction:** 
+- Fix "404 Not Found" errors in Transport module (Vehicle Create and Assign Driver).
+- Reorder routes in `routes/web.php` to ensure static paths are matched before wildcards.
+- Verify with Pest tests.
+
+**Test Run Command:**
+```powershell
+$env:DB_CONNECTION='sqlite'; $env:DB_DATABASE=':memory:'; php vendor\bin\pest tests\Feature\TransportRouteTest.php
+```
+
+**Results:**
+- **Tests:** 3 passed
+- **Assertions:** 3 passed
+- **Status:** ✅ SUCCESS
+
+**Key Routes Verified:**
+- [x] `transport.vehicles.create` (Successfully resolved before `{id}`)
+- [x] `transport.vehicles.show` (Correctly resolves with ID)
+- [x] `transport.vehicle_drivers.create` (Successfully resolved before `{id}`)
+
 
