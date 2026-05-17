@@ -8,33 +8,11 @@ This document outlines the mandatory configuration and safety protocols for usin
 
 To prevent tests from accidentally wiping your local database, you **must** implement a multi-layered isolation strategy.
 
-### Layer A: Smart Test Runner Detection
-Update `config/database.php` to force SQLite when a test runner is active. This is the most reliable way to override global environment variables.
-
-```php
-// config/database.php
-
-'default' => (isset($_SERVER['argv']) && (
-    str_contains(implode(' ', $_SERVER['argv']), 'pest') || 
-    str_contains(implode(' ', $_SERVER['argv']), 'phpunit') || 
-    str_contains(implode(' ', $_SERVER['argv']), 'artisan test')
-)) ? 'sqlite' : env('DB_CONNECTION', 'sqlite'),
-
-'connections' => [
-    'sqlite' => [
-        'driver' => 'sqlite',
-        'database' => (isset($_SERVER['argv']) && (
-            str_contains(implode(' ', $_SERVER['argv']), 'pest') || 
-            str_contains(implode(' ', $_SERVER['argv']), 'phpunit') || 
-            str_contains(implode(' ', $_SERVER['argv']), 'artisan test')
-        )) ? ':memory:' : env('DB_DATABASE', database_path('database.sqlite')),
-        // ...
-    ],
-],
-```
+### Layer A: Testing Database Configuration
+Configure `phpunit.xml` to use the dedicated MySQL testing database.
 
 ### Layer B: The "Hard Stop" Exception
-Add a safety check in `tests/TestCase.php`. If the app tries to use anything but SQLite during tests, it must crash immediately.
+Add a safety check in `tests/TestCase.php`. If the app tries to use the main database during tests, it must crash immediately.
 
 ```php
 // tests/TestCase.php
@@ -43,8 +21,8 @@ protected function setUp(): void
 {
     parent::setUp();
 
-    if (config('database.default') !== 'sqlite') {
-        throw new \Exception("CRITICAL SAFETY ERROR: Tests are trying to run on '" . config('database.default') . "' database. Testing is strictly restricted to 'sqlite' (:memory:).");
+    if (config('database.connections.mysql.database') === 'hrms') {
+        throw new \Exception("CRITICAL SAFETY ERROR: Tests are trying to run on the primary 'hrms' database.");
     }
 }
 ```
@@ -55,8 +33,8 @@ Use `<server>` tags instead of `<env>` tags in `phpunit.xml`, as they have highe
 ```xml
 <!-- phpunit.xml -->
 <php>
-    <server name="DB_CONNECTION" value="sqlite"/>
-    <server name="DB_DATABASE" value=":memory:"/>
+    <server name="DB_CONNECTION" value="mysql"/>
+    <server name="DB_DATABASE" value="hrms_test"/>
     <env name="APP_ENV" value="testing"/>
 </php>
 ```
@@ -118,12 +96,15 @@ Always maintain a `TEST_LOG.md` to track your verification history. This ensures
 
 ### Understanding `RefreshDatabase`
 *   **Behavior:** The `RefreshDatabase` trait (configured in `tests/Pest.php`) ensures each test starts with a clean database schema.
-*   **Isolation:** Because this project uses **SQLite In-Memory (`:memory:`)** for testing, `RefreshDatabase` only wipes the temporary in-memory database. It **NEVER** touches your main MySQL `hrms` database.
-*   **Safety Rule:** Never use `Artisan::call('migrate:refresh')`, `migrate:fresh`, or `db:wipe` manually in your tests. Trust the `RefreshDatabase` trait and the in-memory isolation.
+*   **Isolation:** This project uses a dedicated **MySQL database named `hrms_test`** for testing. 
+*   **Configuration:** The connection is strictly managed via `phpunit.xml` using `<server>` tags. 
+    *   `DB_CONNECTION`: `mysql`
+    *   `DB_DATABASE`: `hrms_test`
+*   **Safety Rule:** It **NEVER** touches your main MySQL `hrms` database. Never manually run `migrate:refresh` or `db:wipe` on the main environment.
 
 ### Why is my main database empty?
 If your main database becomes empty after running tests, it is likely because:
-1.  You are running tests in an environment where `DB_CONNECTION` is NOT set to `sqlite` (check `phpunit.xml` or `.env.testing`).
+1.  You have misconfigured `phpunit.xml` or `.env.testing` to point to the main `hrms` database.
 2.  You accidentally ran a destructive artisan command like `migrate:fresh` or `migrate:refresh` on the main environment.
 
-**Always ensure your test output shows "sqlite" as the connection to be 100% safe.**
+**Always ensure your test output shows that it is using the "hrms_test" database to be 100% safe.**
