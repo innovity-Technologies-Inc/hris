@@ -103,21 +103,21 @@ class PermissionSeeder extends Seeder
                 'name' => 'Company Info',
                 'icon' => 'box',
                 'submenus' => [
-                    ['name' => 'Groups', 'route' => 'groups.index'],
-                    ['name' => 'Company Types', 'route' => 'company_types.index'],
-                    ['name' => 'Companies', 'route' => 'companies.index'],
-                    ['name' => 'Company Branches', 'route' => 'company_locations.index'],
-                    ['name' => 'Divisions', 'route' => 'divisions.index'],
-                    ['name' => 'Departments', 'route' => 'departments.index'],
-                    ['name' => 'Sections', 'route' => 'sections.index'],
-                    ['name' => 'Designations', 'route' => 'designations.index'],
-                    ['name' => 'Salary Acts', 'route' => 'tofsils.index'],
-                    ['name' => 'Salary Grades', 'route' => 'salary_grades.index'],
-                    ['name' => 'Banks', 'route' => 'banks.index'],
-                    ['name' => 'Bank Branches', 'route' => 'branches.index'],
-                    ['name' => 'Bank Accounts', 'route' => 'bank_accounts.index'],
-                    ['name' => 'Holidays', 'route' => 'holidays.index'],
-                    ['name' => 'Job Creations', 'route' => 'job_creations.index'],
+                    ['name' => 'Groups', 'route' => 'groups.index', 'actions' => ['view', 'create', 'edit', 'delete']],
+                    ['name' => 'Company Types', 'route' => 'company_types.index', 'actions' => ['view', 'create', 'edit', 'delete']],
+                    ['name' => 'Companies', 'route' => 'companies.index', 'actions' => ['view', 'create', 'edit', 'delete']],
+                    ['name' => 'Company Branches', 'route' => 'company_locations.index', 'actions' => ['view', 'create', 'edit', 'delete']],
+                    ['name' => 'Divisions', 'route' => 'divisions.index', 'actions' => ['view', 'create', 'edit', 'delete']],
+                    ['name' => 'Departments', 'route' => 'departments.index', 'actions' => ['view', 'create', 'edit', 'delete']],
+                    ['name' => 'Sections', 'route' => 'sections.index', 'actions' => ['view', 'create', 'edit', 'delete']],
+                    ['name' => 'Designations', 'route' => 'designations.index', 'actions' => ['view', 'create', 'edit', 'delete']],
+                    ['name' => 'Salary Acts', 'route' => 'tofsils.index', 'actions' => ['view', 'create', 'edit', 'delete']],
+                    ['name' => 'Salary Grades', 'route' => 'salary_grades.index', 'actions' => ['view', 'create', 'edit', 'delete']],
+                    ['name' => 'Banks', 'route' => 'banks.index', 'actions' => ['view', 'create', 'edit', 'delete']],
+                    ['name' => 'Bank Branches', 'route' => 'branches.index', 'actions' => ['view', 'create', 'edit', 'delete']],
+                    ['name' => 'Bank Accounts', 'route' => 'bank_accounts.index', 'actions' => ['view', 'create', 'edit', 'delete']],
+                    ['name' => 'Holidays', 'route' => 'holidays.index', 'actions' => ['view', 'create', 'edit', 'delete']],
+                    ['name' => 'Job Creations', 'route' => 'job_creations.index', 'actions' => ['view', 'create', 'edit', 'delete']],
                 ]
             ],
             [
@@ -132,10 +132,10 @@ class PermissionSeeder extends Seeder
                 'name' => 'Transport',
                 'icon' => 'truck',
                 'submenus' => [
-                    ['name' => 'Vehicles', 'route' => 'transport.vehicles.index'],
-                    ['name' => 'Assign Driver', 'route' => 'transport.vehicle_drivers.index'],
+                    ['name' => 'Vehicles', 'route' => 'transport.vehicles.index', 'actions' => ['view', 'create', 'edit', 'delete']],
+                    ['name' => 'Assign Driver', 'route' => 'transport.vehicle_drivers.index', 'actions' => ['view', 'create', 'edit', 'delete']],
                     ['name' => 'Vehicle Requisition', 'route' => 'transport.vehicle_requisitions.index', 'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'supervisor-approve']],
-                    ['name' => 'Employee Transport', 'route' => 'transport.employee_transports.index'],
+                    ['name' => 'Employee Transport', 'route' => 'transport.employee_transports.index', 'actions' => ['view', 'create', 'edit', 'delete']],
                     ['name' => 'Vehicle Allocation', 'route' => 'transport.vehicle_allocations.dashboard', 'actions' => ['view', 'create', 'edit', 'dashboard']],
                 ]
             ],
@@ -148,12 +148,10 @@ class PermissionSeeder extends Seeder
                     ['name' => 'API Keys', 'route' => 'settings.api_keys', 'actions' => ['view', 'create', 'delete']],
                     ['name' => 'SMTP', 'route' => 'settings.mail_settings', 'actions' => ['view', 'edit']],
                     ['name' => 'DB Backup', 'route' => 'db_backup', 'actions' => ['view', 'create', 'download']],
-                    ['name' => 'Role Management', 'route' => 'settings.roles.index'],
+                    ['name' => 'Role Management', 'route' => 'settings.roles.index', 'actions' => ['view', 'create', 'edit', 'delete']],
                 ]
             ],
         ];
-
-        $defaultActions = ['view', 'create', 'edit', 'delete'];
 
         foreach ($menus as $index => $m) {
             $parent = Menu::create([
@@ -166,10 +164,9 @@ class PermissionSeeder extends Seeder
 
             $hasSubmenus = isset($m['submenus']) && count($m['submenus']) > 0;
 
-            // Create permissions for parent ONLY if it has no submenus
-            if (!$hasSubmenus) {
-                $parentActions = $m['actions'] ?? $defaultActions;
-                foreach ($parentActions as $action) {
+            // Seed actions for parent ONLY if explicitly provided and it has no submenus
+            if (!$hasSubmenus && isset($m['actions'])) {
+                foreach ($m['actions'] as $action) {
                     Permission::firstOrCreate(['name' => $parent->slug . '.' . $action, 'guard_name' => 'web']);
                 }
             }
@@ -184,10 +181,11 @@ class PermissionSeeder extends Seeder
                         'order' => $subIndex,
                     ]);
 
-                    // Create permissions for child
-                    $childActions = $sm['actions'] ?? $defaultActions;
-                    foreach ($childActions as $action) {
-                        Permission::firstOrCreate(['name' => $child->slug . '.' . $action, 'guard_name' => 'web']);
+                    // Seed actions for child ONLY if explicitly provided
+                    if (isset($sm['actions'])) {
+                        foreach ($sm['actions'] as $action) {
+                            Permission::firstOrCreate(['name' => $child->slug . '.' . $action, 'guard_name' => 'web']);
+                        }
                     }
                 }
             }
