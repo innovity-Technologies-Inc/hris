@@ -49,11 +49,16 @@
                                 <div class="accordion-body p-3">
                                     {{-- Parent Menu Permissions - Only show if NO submenus --}}
                                     @if($menu->submenus->count() == 0)
-                                    <div class="row align-items-center mb-2 pb-2 border-bottom">
-                                        <div class="col-md-4">
-                                            <span class="text-muted fw-bold">Main Menu</span>
+                                    <div class="row align-items-center mb-2 pb-2 border-bottom permission-row">
+                                        <div class="col-md-3">
+                                            <div class="form-check">
+                                                <input class="form-check-input select-row" type="checkbox" id="row{{ $menu->id }}">
+                                                <label class="form-check-label fw-bold" for="row{{ $menu->id }}">
+                                                    {{ $menu->name }}
+                                                </label>
+                                            </div>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-9">
                                             <div class="d-flex flex-wrap gap-3">
                                                 @php
                                                     $matchingPermissions = $allPermissions->filter(function($perm) use ($menu) {
@@ -78,12 +83,17 @@
 
                                     {{-- Submenu Permissions --}}
                                     @foreach($menu->submenus as $submenu)
-                                    <div class="row align-items-center mb-1 ms-4">
-                                        <div class="col-md-4">
-                                            <i class="fas fa-arrow-right me-2 text-muted small"></i>
-                                            <span>{{ $submenu->name }}</span>
+                                    <div class="row align-items-center mb-1 ms-4 permission-row">
+                                        <div class="col-md-3">
+                                            <div class="form-check">
+                                                <input class="form-check-input select-row" type="checkbox" id="rowSub{{ $submenu->id }}">
+                                                <label class="form-check-label" for="rowSub{{ $submenu->id }}">
+                                                    <i class="fas fa-arrow-right me-2 text-muted small"></i>
+                                                    {{ $submenu->name }}
+                                                </label>
+                                            </div>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-9">
                                             <div class="d-flex flex-wrap gap-3">
                                                 @php
                                                     $matchingSubPermissions = $allPermissions->filter(function($perm) use ($submenu) {
@@ -125,9 +135,41 @@
 @push('scripts')
 <script>
     $(document).ready(function() {
+        // Global Select All
         $('#selectAll').on('change', function() {
-            $('.perm-check').prop('checked', $(this).prop('checked'));
+            $('.perm-check, .select-row').prop('checked', $(this).prop('checked'));
         });
+
+        // Row Specific Select All
+        $('.select-row').on('change', function() {
+            $(this).closest('.permission-row').find('.perm-check').prop('checked', $(this).prop('checked'));
+            updateGlobalSelectAll();
+        });
+
+        // Individual Checkbox Click
+        $('.perm-check').on('change', function() {
+            const row = $(this).closest('.permission-row');
+            const total = row.find('.perm-check').length;
+            const checked = row.find('.perm-check:checked').length;
+            row.find('.select-row').prop('checked', total === checked);
+            updateGlobalSelectAll();
+        });
+
+        function updateGlobalSelectAll() {
+            const total = $('.perm-check').length;
+            const checked = $('.perm-check:checked').length;
+            $('#selectAll').prop('checked', total === checked);
+        }
+
+        // Initialize Row Selects
+        $('.permission-row').each(function() {
+            const total = $(this).find('.perm-check').length;
+            const checked = $(this).find('.perm-check:checked').length;
+            if (total > 0) {
+                $(this).find('.select-row').prop('checked', total === checked);
+            }
+        });
+        updateGlobalSelectAll();
     });
 </script>
 @endpush
