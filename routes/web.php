@@ -753,12 +753,15 @@ Route::controller(OrganizationStructureController::class)->middleware('auth')->g
 
     Route::middleware('permission:members.view')->group(function () {
         Route::get('organization-structure', 'index')->name('organization-structure.index');
-        Route::get('organization-structure/{id}', 'show')->name('organization-structure.show');
     });
 
     Route::middleware('permission:members.create')->group(function () {
         Route::get('organization-structure/create', 'create')->name('organization-structure.create');
         Route::post('organization-structure', 'store')->name('organization-structure.store');
+    });
+
+    Route::middleware('permission:members.view')->group(function () {
+        Route::get('organization-structure/{id}', 'show')->name('organization-structure.show');
     });
 
     Route::middleware('permission:members.edit')->group(function () {
@@ -810,13 +813,15 @@ Route::prefix('settings')->middleware('auth')->group(function () {
     Route::controller(\App\Http\Controllers\IDCardDesignController::class)->group(function (){
        Route::middleware('permission:id-card-design.view')->group(function () {
            Route::get('id-design', 'index')->name('settings.id_design.index');
-           Route::get('id-design/{id}', 'show')->name('settings.id_design.show');
-           Route::get('id-design/{id}/preview', 'preview')->name('settings.id_design.preview');
-           Route::get('id-design/{id}/download', 'download')->name('settings.id_design.download');
        });
        Route::middleware('permission:id-card-design.create')->group(function () {
            Route::get('id-design/create', 'create')->name('settings.id_design.create');
            Route::post('id-design/store', 'store')->name('settings.id_design.store');
+       });
+       Route::middleware('permission:id-card-design.view')->group(function () {
+           Route::get('id-design/{id}', 'show')->name('settings.id_design.show');
+           Route::get('id-design/{id}/preview', 'preview')->name('settings.id_design.preview');
+           Route::get('id-design/{id}/download', 'download')->name('settings.id_design.download');
        });
        Route::middleware('permission:id-card-design.edit')->group(function () {
            Route::post('id-design/{id}/activate', 'activate')->name('settings.id_design.activate');
