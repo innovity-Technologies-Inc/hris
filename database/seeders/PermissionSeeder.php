@@ -17,13 +17,16 @@ class PermissionSeeder extends Seeder
     {
         // 1. Clear existing
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
-        
+
         // Disable foreign key checks for truncation
         \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
         \App\Models\Menu::truncate();
-        Permission::query()->delete();
+        \Illuminate\Support\Facades\DB::table('role_has_permissions')->truncate();
+        \Illuminate\Support\Facades\DB::table('model_has_permissions')->truncate();
+        \Illuminate\Support\Facades\DB::table('model_has_roles')->truncate();
+        \Illuminate\Support\Facades\DB::table('roles')->truncate();
+        \Illuminate\Support\Facades\DB::table('permissions')->truncate();
         \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
-
         $menus = [
             [
                 'name' => 'Dashboard',
@@ -37,35 +40,25 @@ class PermissionSeeder extends Seeder
                 'icon' => 'users',
                 'submenus' => [
                     ['name' => 'Employee Information', 'route' => 'employees.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import', 'export']],
-                    ['name' => 'Search Employee', 'route' => 'search.employee', 'actions' => ['view']],
-                    ['name' => 'Bulk Upload', 'route' => 'employees.import', 'actions' => ['view', 'create']],
                 ]
             ],
             [
                 'name' => 'Attendance',
                 'icon' => 'clock',
-                'submenus' => [
-                    ['name' => 'Clock In / Out', 'route' => 'attendance.clock_in_out', 'actions' => ['view', 'create']],
-                    ['name' => 'Create Attendance', 'route' => 'attendance.create', 'actions' => ['view', 'create']],
-                    ['name' => 'Bulk Upload Attendance', 'route' => 'attendance.bulk-upload', 'actions' => ['view', 'create']],
-                    ['name' => 'Records', 'route' => 'attendance.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import', 'export']],
-                ]
+                'actions' => ['view', 'create', 'edit', 'delete', 'import', 'export'],
+                'submenus' => [],
             ],
             [
                 'name' => 'Leaves',
                 'icon' => 'calendar',
-                'submenus' => [
-                    ['name' => 'Leave Application', 'route' => 'leaves.create', 'actions' => ['view', 'create', 'edit', 'delete', 'approve']],
-                    ['name' => 'Leave Logs', 'route' => 'leaves.index', 'actions' => ['view', 'edit', 'delete']],
-                ]
+                'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'supervisor-approve'],
+                'submenus' => []
             ],
             [
                 'name' => 'Movement',
                 'icon' => 'move',
-                'submenus' => [
-                    ['name' => 'Movement Application', 'route' => 'movement.create', 'actions' => ['view', 'create', 'edit', 'delete', 'approve']],
-                    ['name' => 'Movement Logs', 'route' => 'movement.index', 'actions' => ['view', 'edit', 'delete']],
-                ]
+                'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'supervisor-approve'],
+                'submenus' => []
             ],
             [
                 'name' => 'Payroll',
@@ -73,8 +66,8 @@ class PermissionSeeder extends Seeder
                 'submenus' => [
                     ['name' => 'Promotions', 'route' => 'promotion.index', 'actions' => ['view', 'create', 'edit', 'delete']],
                     ['name' => 'Increments', 'route' => 'increment.index', 'actions' => ['view', 'create', 'edit', 'delete']],
-                    ['name' => 'Bonuses', 'route' => 'bonus.index', 'actions' => ['view', 'create', 'edit', 'delete', 'approve']],
-                    ['name' => 'Salary', 'route' => 'salary.index', 'actions' => ['view', 'create', 'edit', 'delete', 'generate', 'report']],
+                    ['name' => 'Bonuses', 'route' => 'bonus.index', 'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'management-approve']],
+                    ['name' => 'Salary', 'route' => 'salary.index', 'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'management-approve']],
                 ]
             ],
             [
@@ -129,9 +122,9 @@ class PermissionSeeder extends Seeder
                 'submenus' => [
                     ['name' => 'Vehicles', 'route' => 'transport.vehicles.index'],
                     ['name' => 'Assign Driver', 'route' => 'transport.vehicle_drivers.index'],
-                    ['name' => 'Vehicle Requisition', 'route' => 'transport.vehicle_requisitions.index', 'actions' => ['view', 'create', 'edit', 'delete', 'approve']],
+                    ['name' => 'Vehicle Requisition', 'route' => 'transport.vehicle_requisitions.index', 'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'supervisor-approve']],
                     ['name' => 'Employee Transport', 'route' => 'transport.employee_transports.index'],
-                    ['name' => 'Vehicle Allocation', 'route' => 'transport.vehicle_allocations.dashboard', 'actions' => ['view', 'dashboard']],
+                    ['name' => 'Vehicle Allocation', 'route' => 'transport.vehicle_allocations.dashboard', 'actions' => ['view', 'create', 'edit']],
                 ]
             ],
             [
@@ -139,10 +132,10 @@ class PermissionSeeder extends Seeder
                 'icon' => 'settings',
                 'submenus' => [
                     ['name' => 'General Settings', 'route' => 'settings.general_settings', 'actions' => ['view', 'edit']],
-                    ['name' => 'ID Card Design', 'route' => 'settings.id_design.index', 'actions' => ['view', 'create', 'edit', 'delete', 'activate', 'deactivate', 'preview', 'download']],
-                    ['name' => 'API Keys', 'route' => 'settings.api_keys', 'actions' => ['view', 'create', 'delete']],
+                    ['name' => 'ID Card Design', 'route' => 'settings.id_design.index', 'actions' => ['view', 'create', 'edit', 'delete']],
+                    ['name' => 'API Keys', 'route' => 'settings.api_keys', 'actions' => ['view', 'edit']],
                     ['name' => 'SMTP', 'route' => 'settings.mail_settings', 'actions' => ['view', 'edit']],
-                    ['name' => 'DB Backup', 'route' => 'db_backup', 'actions' => ['view', 'create', 'download']],
+                    ['name' => 'DB Backup', 'route' => 'db_backup', 'actions' => ['download']],
                     ['name' => 'Role Management', 'route' => 'settings.roles.index'],
                 ]
             ],
@@ -191,7 +184,7 @@ class PermissionSeeder extends Seeder
         // Create Super Admin role and assign all permissions
         $role = Role::firstOrCreate(['name' => 'Super Admin', 'guard_name' => 'web']);
         $role->syncPermissions(Permission::all());
-        
+
         // Ensure a default user is Super Admin if needed
         $user = \App\Models\User::where('email', 'admin@example.com')->first();
         if ($user) {
