@@ -836,45 +836,48 @@ class EmployeeServices
     }
 
     /**
-     * Validate login information update
-     */
-    public function validateLoginInfo(Request $request, $userId)
-    {
-        return $request->validate([
-            'work_email' => 'required|email|unique:users,email,' . $userId,
-            'password' => 'nullable|min:8|confirmed',
-            'user_type' => 'required|string|in:Group,Company,Business Unit,Division,Department,Section,Employee',
-            'role' => 'nullable|string|exists:roles,name',
-        ]);
-    }
-
-    /**
      * Update employee login information
      */
     public function updateLoginInfo(Request $request, $employeeId)
     {
         $employee = Employee::findOrFail($employeeId);
         $user = User::findOrFail($employee->user_id);
+        $canManageRoles = auth()->user()->can('role-management.edit');
 
-        $this->validateLoginInfo($request, $user->id);
-
-        $userData = [
-            'email' => $request->work_email,
-            'user_type' => $request->user_type,
+        // Validation logic
+        $rules = [
+            'password' => 'nullable|min:8|confirmed',
         ];
 
+        if ($canManageRoles) {
+            $rules['work_email'] = 'required|email|unique:users,email,' . $user->id;
+            $rules['user_type'] = 'required|string|in:Group,Company,Business Unit,Division,Department,Section,Employee';
+            $rules['role'] = 'nullable|string|exists:roles,name';
+        }
+
+        $request->validate($rules);
+
+        // Update logic
+        $userData = [];
         if ($request->filled('password')) {
             $userData['password'] = Hash::make($request->password);
         }
 
-        $user->update($userData);
+        if ($canManageRoles) {
+            $userData['email'] = $request->work_email;
+            $userData['user_type'] = $request->user_type;
+            
+            // Update employee work email as well
+            $employee->update(['work_email' => $request->work_email]);
 
-        // Update employee work email as well
-        $employee->update(['work_email' => $request->work_email]);
+            // Sync Role
+            if ($request->has('role')) {
+                $user->syncRoles([$request->role]);
+            }
+        }
 
-        // Sync Role (Single)
-        if ($request->has('role')) {
-            $user->syncRoles([$request->role]);
+        if (!empty($userData)) {
+            $user->update($userData);
         }
 
         return $user;

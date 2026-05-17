@@ -12,16 +12,28 @@
                 <div class="card-body p-4">
                     @php
                         $currentUserType = $employee->user->user_type ?? 'Employee';
-                        $isEmployee = ($currentUserType === 'Employee');
+                        $canManageRoles = auth()->user()->can('role-management.edit');
                     @endphp
 
-                    @if($isEmployee)
-                        <!-- HIDDEN DATA for 'Employee' type - No labels shown -->
+                    @if(!$canManageRoles)
+                        <!-- READ-ONLY DATA for Email, Type, Role - User can only change password -->
+                        <div class="alert alert-soft-info border-0 mb-4 d-flex align-items-center" role="alert">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <div>You can only update the account password. Profile management is restricted.</div>
+                        </div>
+
                         <input type="hidden" name="work_email" value="{{ $employee->user->email ?? $employee->work_email }}">
                         <input type="hidden" name="user_type" value="{{ $currentUserType }}">
                         <input type="hidden" name="role" value="{{ isset($employee->user) ? $employee->user->getRoleNames()->first() : '' }}">
+                        
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <p class="mb-1 text-muted small fw-bold text-uppercase">Associated Email</p>
+                                <p class="mb-0 fw-medium">{{ $employee->user->email ?? $employee->work_email }}</p>
+                            </div>
+                        </div>
                     @else
-                        <!-- EDITABLE MODE for other user types -->
+                        <!-- FULL EDITABLE MODE for users with role-management.edit permission -->
                         <div class="row">
                             <div class="col-12 mb-3">
                                 <label for="work_email" class="form-label text-primary fw-bold">Work Email <span class="text-danger">*</span></label>
