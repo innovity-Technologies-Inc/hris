@@ -531,7 +531,6 @@ Route::prefix('plans')->middleware('auth')->group(function () {
         Route::controller(ShiftPlanController::class)->group(function(){
             Route::middleware('permission:shift-plans.view')->group(function () {
                 Route::get('/', 'index')->name('plans.shift_plans.index');
-                Route::get('{id}', 'show')->name('plans.shift_plans.show');
             });
             Route::middleware('permission:shift-plans.create')->group(function () {
                 Route::get('create', 'create')->name('plans.shift_plans.create');
@@ -545,6 +544,9 @@ Route::prefix('plans')->middleware('auth')->group(function () {
             Route::middleware('permission:shift-plans.delete')->group(function () {
                 Route::delete('delete/{id}', 'delete')->name('plans.shift_plans.delete');
             });
+            Route::middleware('permission:shift-plans.view')->group(function () {
+                Route::get('{id}', 'show')->name('plans.shift_plans.show');
+            });
         });
     });
 
@@ -552,7 +554,6 @@ Route::prefix('plans')->middleware('auth')->group(function () {
         Route::controller(LeavePlanController::class)->group(function(){
             Route::middleware('permission:leave-plans.view')->group(function () {
                 Route::get('/', 'index')->name('plans.leave_plans.index');
-                Route::get('{id}', 'show')->name('plans.leave_plans.show');
             });
             Route::middleware('permission:leave-plans.create')->group(function () {
                 Route::get('create', 'create')->name('plans.leave_plans.create');
@@ -566,6 +567,9 @@ Route::prefix('plans')->middleware('auth')->group(function () {
             Route::middleware('permission:leave-plans.delete')->group(function () {
                 Route::delete('delete/{id}', 'delete')->name('plans.leave_plans.delete');
             });
+            Route::middleware('permission:leave-plans.view')->group(function () {
+                Route::get('{id}', 'show')->name('plans.leave_plans.show');
+            });
         });
     });
 
@@ -573,7 +577,6 @@ Route::prefix('plans')->middleware('auth')->group(function () {
         Route::controller(OTPlanController::class)->group(function(){
             Route::middleware('permission:ot-plans.view')->group(function () {
                 Route::get('/', 'index')->name('plans.ot_plans.index');
-                Route::get('{id}', 'show')->name('plans.ot_plans.show');
             });
             Route::middleware('permission:ot-plans.create')->group(function () {
                 Route::get('create', 'create')->name('plans.ot_plans.create');
@@ -587,6 +590,9 @@ Route::prefix('plans')->middleware('auth')->group(function () {
             Route::middleware('permission:ot-plans.delete')->group(function () {
                 Route::delete('delete/{id}', 'delete')->name('plans.ot_plans.delete');
             });
+            Route::middleware('permission:ot-plans.view')->group(function () {
+                Route::get('{id}', 'show')->name('plans.ot_plans.show');
+            });
         });
     });
 
@@ -594,7 +600,6 @@ Route::prefix('plans')->middleware('auth')->group(function () {
         Route::controller(RosterPlansController::class)->group(function(){
             Route::middleware('permission:roster-plans.view')->group(function () {
                 Route::get('/', 'index')->name('plans.roster_plans.index');
-                Route::get('{id}', 'show')->name('plans.roster_plans.show');
             });
             Route::middleware('permission:roster-plans.create')->group(function () {
                 Route::get('create', 'create')->name('plans.roster_plans.create');
@@ -608,6 +613,9 @@ Route::prefix('plans')->middleware('auth')->group(function () {
             Route::middleware('permission:roster-plans.delete')->group(function () {
                 Route::delete('delete/{id}', 'delete')->name('plans.roster_plans.delete');
             });
+            Route::middleware('permission:roster-plans.view')->group(function () {
+                Route::get('{id}', 'show')->name('plans.roster_plans.show');
+            });
         });
     });
 
@@ -615,7 +623,6 @@ Route::prefix('plans')->middleware('auth')->group(function () {
         Route::controller(OffDayPlansController::class)->group(function(){
             Route::middleware('permission:off-day-work-plans.view')->group(function () {
                 Route::get('/', 'index')->name('plans.off_day_plans.index');
-                Route::get('{id}', 'show')->name('plans.off_day_plans.show');
             });
             Route::middleware('permission:off-day-work-plans.create')->group(function () {
                 Route::get('create', 'create')->name('plans.off_day_plans.create');
@@ -629,6 +636,9 @@ Route::prefix('plans')->middleware('auth')->group(function () {
             Route::middleware('permission:off-day-work-plans.delete')->group(function () {
                 Route::delete('delete/{id}', 'delete')->name('plans.off_day_plans.delete');
             });
+            Route::middleware('permission:off-day-work-plans.view')->group(function () {
+                Route::get('{id}', 'show')->name('plans.off_day_plans.show');
+            });
         });
     });
 
@@ -636,7 +646,6 @@ Route::prefix('plans')->middleware('auth')->group(function () {
         Route::controller(BonusPlanController::class)->group(function(){
             Route::middleware('permission:bonus-plans.view')->group(function () {
                 Route::get('/', 'index')->name('plans.bonus_plans.index');
-                Route::get('{id}', 'show')->name('plans.bonus_plans.show');
             });
             Route::middleware('permission:bonus-plans.create')->group(function () {
                 Route::get('create', 'create')->name('plans.bonus_plans.create');
@@ -650,6 +659,9 @@ Route::prefix('plans')->middleware('auth')->group(function () {
             Route::middleware('permission:bonus-plans.delete')->group(function () {
                 Route::delete('delete/{id}', 'delete')->name('plans.bonus_plans.delete');
             });
+            Route::middleware('permission:bonus-plans.view')->group(function () {
+                Route::get('{id}', 'show')->name('plans.bonus_plans.show');
+            });
         });
     });
 
@@ -657,7 +669,6 @@ Route::prefix('plans')->middleware('auth')->group(function () {
         Route::controller(AllowancePlanController::class)->group(function(){
             Route::middleware('permission:allowance-plans.view')->group(function () {
                 Route::get('/', 'index')->name('plans.allowance_plans.index');
-                Route::get('{id}', 'show')->name('plans.allowance_plans.show');
             });
             Route::middleware('permission:allowance-plans.create')->group(function () {
                 Route::get('create', 'create')->name('plans.allowance_plans.create');
@@ -670,6 +681,9 @@ Route::prefix('plans')->middleware('auth')->group(function () {
             });
             Route::middleware('permission:allowance-plans.delete')->group(function () {
                 Route::delete('delete/{id}', 'delete')->name('plans.allowance_plans.delete');
+            });
+            Route::middleware('permission:allowance-plans.view')->group(function () {
+                Route::get('{id}', 'show')->name('plans.allowance_plans.show');
             });
         });
     });
