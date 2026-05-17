@@ -54,15 +54,20 @@
                                             <span class="text-muted fw-bold">Main Menu</span>
                                         </div>
                                         <div class="col-md-8">
-                                            <div class="d-flex gap-4">
-                                                @foreach(['view', 'create', 'edit', 'delete'] as $action)
-                                                @php $permName = $menu->slug . '.' . $action; @endphp
+                                            <div class="d-flex flex-wrap gap-3">
+                                                @php
+                                                    $matchingPermissions = $allPermissions->filter(function($perm) use ($menu) {
+                                                        return str_starts_with($perm->name, $menu->slug . '.');
+                                                    });
+                                                @endphp
+                                                @foreach($matchingPermissions as $permission)
+                                                @php $action = str_replace($menu->slug . '.', '', $permission->name); @endphp
                                                 <div class="form-check">
                                                     <input class="form-check-input perm-check" type="checkbox" name="permissions[]" 
-                                                        value="{{ $permName }}" id="perm{{ $menu->id }}{{ $action }}"
-                                                        {{ (isset($rolePermissions) && in_array($permName, $rolePermissions)) ? 'checked' : '' }}>
+                                                        value="{{ $permission->name }}" id="perm{{ $menu->id }}{{ $action }}"
+                                                        {{ (isset($rolePermissions) && in_array($permission->name, $rolePermissions)) ? 'checked' : '' }}>
                                                     <label class="form-check-label text-capitalize" for="perm{{ $menu->id }}{{ $action }}">
-                                                        {{ $action }}
+                                                        {{ str_replace('-', ' ', $action) }}
                                                     </label>
                                                 </div>
                                                 @endforeach
@@ -79,15 +84,20 @@
                                             <span>{{ $submenu->name }}</span>
                                         </div>
                                         <div class="col-md-8">
-                                            <div class="d-flex gap-4">
-                                                @foreach(['view', 'create', 'edit', 'delete'] as $action)
-                                                @php $permName = $submenu->slug . '.' . $action; @endphp
+                                            <div class="d-flex flex-wrap gap-3">
+                                                @php
+                                                    $matchingSubPermissions = $allPermissions->filter(function($perm) use ($submenu) {
+                                                        return str_starts_with($perm->name, $submenu->slug . '.');
+                                                    });
+                                                @endphp
+                                                @foreach($matchingSubPermissions as $permission)
+                                                @php $action = str_replace($submenu->slug . '.', '', $permission->name); @endphp
                                                 <div class="form-check">
                                                     <input class="form-check-input perm-check" type="checkbox" name="permissions[]" 
-                                                        value="{{ $permName }}" id="permSub{{ $submenu->id }}{{ $action }}"
-                                                        {{ (isset($rolePermissions) && in_array($permName, $rolePermissions)) ? 'checked' : '' }}>
+                                                        value="{{ $permission->name }}" id="permSub{{ $submenu->id }}{{ $action }}"
+                                                        {{ (isset($rolePermissions) && in_array($permission->name, $rolePermissions)) ? 'checked' : '' }}>
                                                     <label class="form-check-label text-capitalize" for="permSub{{ $submenu->id }}{{ $action }}">
-                                                        {{ $action }}
+                                                        {{ str_replace('-', ' ', $action) }}
                                                     </label>
                                                 </div>
                                                 @endforeach

@@ -19,6 +19,11 @@ class RoleServices
         return Menu::with('submenus')->whereNull('parent_id')->orderBy('order')->get();
     }
 
+    public function getAllPermissions()
+    {
+        return Permission::all();
+    }
+
     public function saveRole($request, $id = null)
     {
         return DB::transaction(function () use ($request, $id) {

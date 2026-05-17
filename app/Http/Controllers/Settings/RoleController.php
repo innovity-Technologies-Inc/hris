@@ -32,8 +32,9 @@ class RoleController extends Controller
         $section = 'Settings';
         $sub_section = 'Roles / Create';
         $menus = $this->roleServices->getMenus();
+        $allPermissions = $this->roleServices->getAllPermissions();
         
-        return view('settings.roles.form', compact('title', 'section', 'sub_section', 'menus'));
+        return view('settings.roles.form', compact('title', 'section', 'sub_section', 'menus', 'allPermissions'));
     }
 
     public function store(Request $request)
@@ -65,9 +66,10 @@ class RoleController extends Controller
         $sub_section = 'Roles / Edit';
         $role = \Spatie\Permission\Models\Role::with('permissions')->findOrFail($id);
         $menus = $this->roleServices->getMenus();
+        $allPermissions = $this->roleServices->getAllPermissions();
         $rolePermissions = $role->permissions->pluck('name')->toArray();
         
-        return view('settings.roles.form', compact('title', 'section', 'sub_section', 'role', 'menus', 'rolePermissions'));
+        return view('settings.roles.form', compact('title', 'section', 'sub_section', 'role', 'menus', 'allPermissions', 'rolePermissions'));
     }
 
     public function update(Request $request, $id)
