@@ -20,6 +20,7 @@
     <div class="container-fluid px-4 pb-5">
 
         {{-- Filter Card --}}
+        @can('attendance.view')
         <div class="card border-0 shadow-sm mb-4 overflow-hidden">
             <div class="card-header bg-gradient bg-primary text-white border-0 py-3">
                 <div class="d-flex align-items-center">
@@ -133,6 +134,7 @@
                 </form>
             </div>
         </div>
+        @endcan
 
         {{-- Results Card --}}
         <div class="card border-0 shadow-sm overflow-hidden">
@@ -140,6 +142,7 @@
                 <div class="row align-items-center">
                     <div class="col-auto">
                         <div class="btn-group shadow-sm" role="group">
+                            @can('attendance.view')
                             <button type="button" class="btn btn-outline-primary" title="Export to Excel">
                                 <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20">
                                     <path
@@ -155,6 +158,7 @@
                                 </svg>
                                 <span class="d-none d-md-inline ms-2">Print</span>
                             </button>
+                            @endcan
                         </div>
                     </div>
                 </div>

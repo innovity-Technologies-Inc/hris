@@ -39,13 +39,13 @@ class PermissionSeeder extends Seeder
             [
                 'name' => 'Employee Management',
                 'icon' => 'users',
-                'actions' => ['view', 'create', 'edit', 'delete', 'import', 'export']
+                'actions' => ['view', 'create', 'edit', 'delete', 'import']
             ],
 
             [
                 'name' => 'Attendance',
                 'icon' => 'clock',
-                'actions' => ['view', 'create', 'edit', 'delete', 'import', 'export']
+                'actions' => ['view', 'create', 'edit', 'delete', 'import']
             ],
 
             [
@@ -67,7 +67,7 @@ class PermissionSeeder extends Seeder
                     ['name' => 'Promotions', 'route' => 'promotion.index', 'actions' => ['view', 'create', 'edit', 'delete']],
                     ['name' => 'Increments', 'route' => 'increment.index', 'actions' => ['view', 'create', 'edit', 'delete']],
                     ['name' => 'Bonuses', 'route' => 'bonus.index', 'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'management-approve']],
-                    ['name' => 'Salary', 'route' => 'salary.index', 'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'management-approve', 'generate', 'report']],
+                    ['name' => 'Salary', 'route' => 'salary.index', 'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'management-approve']],
                 ]
             ],
             [
@@ -124,7 +124,7 @@ class PermissionSeeder extends Seeder
                     ['name' => 'Assign Driver', 'route' => 'transport.vehicle_drivers.index'],
                     ['name' => 'Vehicle Requisition', 'route' => 'transport.vehicle_requisitions.index', 'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'supervisor-approve']],
                     ['name' => 'Employee Transport', 'route' => 'transport.employee_transports.index', 'actions' => ['view', 'create', 'edit', 'delete',]],
-                    ['name' => 'Vehicle Allocation', 'route' => 'transport.vehicle_allocations.dashboard', 'actions' => ['view', 'create', 'edit', 'dashboard']],
+                    ['name' => 'Vehicle Allocation', 'route' => 'transport.vehicle_allocations.dashboard', 'actions' => ['view', 'create', 'edit', 'delete']],
                 ]
             ],
             [
@@ -132,10 +132,10 @@ class PermissionSeeder extends Seeder
                 'icon' => 'sliders',
                 'submenus' => [
                     ['name' => 'General Settings', 'route' => 'settings.general_settings', 'actions' => ['view', 'edit']],
-                    ['name' => 'ID Card Design', 'route' => 'settings.id_design.index', 'actions' => ['view', 'create', 'edit', 'delete', 'activate', 'deactivate', 'preview', 'download']],
-                    ['name' => 'API Keys', 'route' => 'settings.api_keys', 'actions' => ['view', 'create', 'delete']],
+                    ['name' => 'ID Card Design', 'route' => 'settings.id_design.index', 'actions' => ['view', 'create', 'edit', 'delete']],
+                    ['name' => 'API Keys', 'route' => 'settings.api_keys', 'actions' => ['view', 'edit', 'delete']],
                     ['name' => 'SMTP', 'route' => 'settings.mail_settings', 'actions' => ['view', 'edit']],
-                    ['name' => 'DB Backup', 'route' => 'db_backup', 'actions' => ['view', 'create', 'download']],
+                    ['name' => 'DB Backup', 'route' => 'db_backup', 'actions' => ['download']],
                     ['name' => 'Role Management', 'route' => 'settings.roles.index', 'actions' => ['view', 'create', 'edit', 'delete',]],
                 ]
             ],

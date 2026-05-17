@@ -54,6 +54,7 @@
                 </div>
             </td>
             <td class="text-center" style="width: 200px" >
+                @can('salary.view')
                 <button type="button" class="btn btn-info btn-sm view-details"
                         data-id="{{ $item->id }}"
                         data-batch-id="{{ $item->batch_id }}"
@@ -73,15 +74,19 @@
                         title="View Details">
                     <i style="height: 12px; width: 12px" data-feather="eye"></i>
                 </button>
+                @endcan
 
                 @if ($item->approval_status == 'pending')
                     {{-- Edit Button --}}
+                    @can('salary.edit')
                     <a href="{{ route('bonus.edit', $item->id) }}"
                        class="btn btn-primary btn-sm" title="Edit">
                         <i style="height: 12px; width: 12px" data-feather="edit"></i>
                     </a>
+                    @endcan
 
                     {{-- Approve Button --}}
+                    @can('salary.hr-approve')
                     <form class="d-inline"
                           action="{{ route('bonus.status.update', $item->id) }}"
                           method="POST">
@@ -106,7 +111,9 @@
                             <i style="height: 12px; width: 12px" data-feather="x"></i>
                         </button>
                     </form>
+                    @endcan
                 @endif
+                @can('salary.delete')
                 <form class="d-inline"
                       action="{{ route('bonus.delete', $item->id) }}"
                       method="POST">
@@ -117,6 +124,7 @@
                         <i style="height: 12px; width: 12px" data-feather="trash"></i>
                     </button>
                 </form>
+                @endcan
             </td>
         </tr>
     @empty

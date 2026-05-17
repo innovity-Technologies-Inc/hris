@@ -38,9 +38,9 @@
 
                 <!-- Employees Menu -->
                 @php
-                    $canViewEmployeeInfo = auth()->user()->can('employee-information.view');
-                    $canSearchEmployee = auth()->user()->can('search-employee.view');
-                    $canBulkUploadEmployee = auth()->user()->can('bulk-upload.view');
+                    $canViewEmployeeInfo = auth()->user()->can('employee-management.view');
+                    $canSearchEmployee = auth()->user()->can('employee-management.view');
+                    $canBulkUploadEmployee = auth()->user()->can('employee-management.create');
                     $showEmployeesMenu = $canViewEmployeeInfo || $canSearchEmployee || $canBulkUploadEmployee;
                 @endphp
                 @if($showEmployeesMenu)
@@ -79,10 +79,10 @@
 
                 <!-- Attendance Menu -->
                 @php
-                    $canClockInOut = auth()->user()->can('clock-in-out.view');
-                    $canCreateAttendance = auth()->user()->can('create-attendance.view');
-                    $canBulkUploadAttendance = auth()->user()->can('bulk-upload-attendance.view');
-                    $canRecords = auth()->user()->can('records.view');
+                    $canClockInOut = auth()->user()->can('attendance.view');
+                    $canCreateAttendance = auth()->user()->can('attendance.create');
+                    $canBulkUploadAttendance = auth()->user()->can('attendance.import');
+                    $canRecords = auth()->user()->can('attendance.view');
                     $showAttendanceMenu = $canClockInOut || $canCreateAttendance || $canBulkUploadAttendance || $canRecords;
                     $attendanceOpen = Route::is('attendance.*');
                 @endphp
@@ -132,8 +132,8 @@
 
                 <!-- Leaves Menu -->
                 @php
-                    $canLeaveApplication = auth()->user()->can('leave-application.view');
-                    $canLeaveLogs = auth()->user()->can('leave-logs.view');
+                    $canLeaveApplication = auth()->user()->can('leaves.create');
+                    $canLeaveLogs = auth()->user()->can('leaves.view');
                     $showLeavesMenu = $canLeaveApplication || $canLeaveLogs;
                     $leavesOpen = request()->is('leaves*');
                 @endphp
@@ -166,8 +166,8 @@
 
                 <!-- Movement Menu -->
                 @php
-                    $canMovementApplication = auth()->user()->can('movement-application.view');
-                    $canMovementLogs = auth()->user()->can('movement-logs.view');
+                    $canMovementApplication = auth()->user()->can('movement.create');
+                    $canMovementLogs = auth()->user()->can('movement.view');
                     $showMovementMenu = $canMovementApplication || $canMovementLogs;
                     $movementOpen = request()->is('movement*');
                 @endphp

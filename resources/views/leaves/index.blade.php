@@ -5,6 +5,7 @@
     {{-- Leave Applications List --}}
     <div class="row">
         <div class="col-lg-12">
+            @can('leaves.view')
             <div class="card border-0 shadow-sm rounded">
                 <div class="card-header">
                     <h5 class="card-title mb-0">Search Leave Applications</h5>
@@ -66,6 +67,7 @@
                     </div>
                 </div>
             </div>
+            @endcan
         </div>
 
 
@@ -77,13 +79,18 @@
                 <div class="card-body">
                     {{-- Action Buttons --}}
                     <div class="d-flex justify-content-between mb-3">
+                        @can('leaves.create')
                         <a type="button" class="btn btn-warning btn-sm" href="{{ route('leaves.create') }}">
                             <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                         </a>
+                        @endcan
+                        
+                        @can('leaves.import')
                         <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal"
                             data-bs-target="#bulkUploadModal">
                             <i style="height: 12px; width: 12px" data-feather="upload"></i> Upload Bulk
                         </button>
+                        @endcan
                     </div>
 
                     @if ($leaves->isEmpty())

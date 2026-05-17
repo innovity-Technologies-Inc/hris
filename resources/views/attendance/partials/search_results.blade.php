@@ -102,10 +102,12 @@
 
                     {{-- Action --}}
                     <td class="py-3 pe-4 text-center">
+                        @can('attendance.view')
                         <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
                             data-bs-target="#viewAttendanceModal{{ $record->id }}" title="View Details">
                             <i class="bi bi-eye"></i>
                         </button>
+                        @endcan
                     </td>
                 </tr>
 

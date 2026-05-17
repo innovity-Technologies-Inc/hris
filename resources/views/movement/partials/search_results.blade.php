@@ -43,13 +43,16 @@
             </td>
             <td>
                 {{-- View Button --}}
+                @can('movement.view')
                 <button type="button" class="btn btn-info btn-sm" title="View" data-bs-toggle="modal"
                         data-bs-target="#viewMovementModal{{ $movement->id }}"
                         onclick="loadMovementDetails({{ json_encode($movement) }})">
                     <i style="height: 12px; width: 12px" data-feather="eye"></i>
                 </button>
+                @endcan
 
                 @if ($movement->status == 'pending')
+                    @can('movement.hr-approve')
                     <form class="d-inline" action="{{ route('movement.change_status') }}"
                           method="post">
                         @method('put')
@@ -73,17 +76,21 @@
                             <i style="height: 12px; width: 12px" data-feather="x"></i>
                         </button>
                     </form>
+                    @endcan
                 @endif
 
                 @if ($movement->status == 'pending')
                     {{-- Edit Button --}}
+                    @can('movement.edit')
                     <a href="{{ route('movement.edit', $movement->id) }}" class="btn btn-primary btn-sm"
                        title="Edit">
                         <i style="height: 12px; width: 12px" data-feather="edit"></i>
                     </a>
+                    @endcan
                 @endif
 
                 {{-- Delete Button --}}
+                @can('movement.delete')
                 <form action="{{ route('movement.destroy', $movement->id) }}" method="POST"
                       class="d-inline">
                     @csrf
@@ -92,6 +99,7 @@
                         <i style="height: 12px; width: 12px" data-feather="trash-2"></i>
                     </button>
                 </form>
+                @endcan
             </td>
         </tr>
 

@@ -1,8 +1,10 @@
 <div class="card-body p-0">
+    @can('employee-management.create')
     <a type="button" class="btn btn-warning btn-sm me-3 mb-3 "
         href="{{ route('employees.general_informations.create') }}">
         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
     </a>
+    @endcan
 
     @if ($employees->isEmpty())
         <div class="text-center py-4 text-muted">No employees found.</div>
@@ -17,7 +19,9 @@
                             <th scope="col">System ID</th>
                             <th scope="col">Employee ID</th>
                             <th scope="col">Employee Name</th>
+                            @can('employee-management.view')
                             <th scope="col" style="width: 120px;">Action</th>
+                            @endcan
                         </tr>
                     </thead>
                     <tbody>
@@ -40,12 +44,14 @@
                                 <td>{{ $employee->system_id }}</td>
                                 <td>{{ $employee->applicant_id }}</td>
                                 <td>{{ $employee->full_name }}</td>
+                                @can('employee-management.view')
                                 <td>
                                     <a href="{{ route('employees.profile.general_informations', $employee->id) }}"
                                         class="btn btn-secondary btn-sm" title="View">
                                         <i style="height: 12px; width: 12px" data-feather="eye"></i>
                                     </a>
                                 </td>
+                                @endcan
                             </tr>
                         @endforeach
                     </tbody>

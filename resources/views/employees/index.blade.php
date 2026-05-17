@@ -3,6 +3,7 @@
 @section('content')
     {{-- Employee List --}}
     <div class="row">
+        @can('employee-management.view')
         <div class="col-lg-12">
             <div class="card border-0 shadow-sm rounded">
                 <div class="card-header">
@@ -103,6 +104,7 @@
                 </div>
             </div>
         </div>
+        @endcan
 
         <div class="col-lg-12 mt-3">
             <div class="card border-0 shadow-sm rounded">

@@ -32,13 +32,17 @@
                 @endif
             </td>
             <td>
+                @can('leaves.view')
                 <button type="button" class="btn btn-secondary btn-sm" title="View"
                         data-bs-toggle="modal" data-bs-target="#viewLeaveModal">
                     <i style="height: 12px; width: 12px" data-feather="eye"></i>
                 </button>
                 {{-- Include View Modal --}}
                 @include('leaves.partials.view_modal')
+                @endcan
+
                 @if ($application->status == 'pending')
+                    @can('leaves.hr-approve')
                     <form class="d-inline" action="{{ route('leaves.change_status') }}"
                           method="post">
                         @method('put')
@@ -62,7 +66,9 @@
                             <i style="height: 12px; width: 12px" data-feather="x"></i>
                         </button>
                     </form>
+                    @endcan
                 @endif
+                @can('leaves.delete')
                 <form action="{{ route('leaves.destroy', $application->id) }}"
                       method="POST" class="d-inline">
                     @csrf
@@ -73,6 +79,7 @@
                         <i style="height: 12px; width: 12px" data-feather="trash-2"></i>
                     </button>
                 </form>
+                @endcan
             </td>
         </tr>
     @endforeach

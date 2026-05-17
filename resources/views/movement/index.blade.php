@@ -5,6 +5,7 @@
     {{-- Employee Movement List --}}
     <div class="row">
         <div class="col-lg-12">
+            @can('movement.view')
             <div class="card border-0 shadow-sm rounded">
                 <div class="card-header">
                     <h5 class="card-title mb-0">Search Employee Movement</h5>
@@ -78,6 +79,7 @@
                     </div>
                 </div>
             </div>
+            @endcan
         </div>
 
 
@@ -89,9 +91,11 @@
                 <div class="card-body">
                     {{-- Action Buttons --}}
                     <div class="d-flex justify-content-between mb-3">
+                        @can('movement.create')
                         <a type="button" class="btn btn-warning btn-sm" href="{{ route('movement.create') }}">
                             <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                         </a>
+                        @endcan
                         {{-- <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal"
                             data-bs-target="#bulkUploadModal">
                             <i style="height: 12px; width: 12px" data-feather="upload"></i> Upload Bulk
