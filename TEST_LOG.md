@@ -128,4 +128,30 @@ $env:DB_CONNECTION='sqlite'; $env:DB_DATABASE=':memory:'; php vendor\bin\pest te
 - [x] `transport.vehicles.show` (Correctly resolves with ID)
 - [x] `transport.vehicle_drivers.create` (Successfully resolved before `{id}`)
 
+---
+
+## [2026-05-18] Permission System Reset Verification
+
+**Instruction:** 
+- Remove permission-related tables and run the permission seeder.
+- Restore system default roles, permissions, and menus.
+
+**Test Run Command:**
+```powershell
+php artisan db:seed --class=PermissionSeeder
+php artisan tinker --execute="echo 'Roles: ' . \Spatie\Permission\Models\Role::count() . PHP_EOL; echo 'Permissions: ' . \Spatie\Permission\Models\Permission::count() . PHP_EOL; echo 'Menus: ' . \App\Models\Menu::count() . PHP_EOL;"
+```
+
+**Results:**
+- **Roles:** 1 (Super Admin)
+- **Permissions:** 216
+- **Menus:** 54
+- **Status:** ✅ SUCCESS
+
+**Key Features Verified:**
+- [x] All permission-related tables truncated and re-seeded.
+- [x] Super Admin role created and linked to all permissions.
+- [x] Menu structure restored with 54 items.
+- [x] Application cache optimized.
+
 

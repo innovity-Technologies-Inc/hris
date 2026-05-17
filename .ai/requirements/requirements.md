@@ -65,6 +65,7 @@ A comprehensive Human Resource Management System (HRMS) built with Laravel 12, f
     - Centralized management under Settings -> Role Management.
     - Permission granularity: Create, Edit, View, Delete for all menus and submenus.
     - Dynamic permission seeder for system-wide menus.
+    - **Permission Reset**: Ability to clear and re-seed all permission-related data (roles, permissions, menus) to restore system defaults.
 
 ### 🗄️ Database Seeding & Initial Setup
 - **User Types**: Support 'Group', 'Company', 'Department', and 'Employee' user types.
