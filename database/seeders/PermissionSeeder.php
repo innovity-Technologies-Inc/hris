@@ -7,6 +7,8 @@ use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class PermissionSeeder extends Seeder
 {
@@ -19,46 +21,56 @@ class PermissionSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         // Disable foreign key checks for truncation
-        \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
-        \App\Models\Menu::truncate();
-        \Illuminate\Support\Facades\DB::table('role_has_permissions')->truncate();
-        \Illuminate\Support\Facades\DB::table('model_has_permissions')->truncate();
-        \Illuminate\Support\Facades\DB::table('model_has_roles')->truncate();
-        \Illuminate\Support\Facades\DB::table('roles')->truncate();
-        \Illuminate\Support\Facades\DB::table('permissions')->truncate();
-        \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
+        Schema::disableForeignKeyConstraints();
+        Menu::truncate();
+        DB::table('role_has_permissions')->truncate();
+        DB::table('model_has_permissions')->truncate();
+        DB::table('model_has_roles')->truncate();
+        DB::table('roles')->truncate();
+        DB::table('permissions')->truncate();
+        Schema::enableForeignKeyConstraints();
+
         $menus = [
             [
                 'name' => 'Dashboard',
                 'icon' => 'home',
                 'route' => 'dashboard',
                 'actions' => ['view'],
-                'submenus' => []
             ],
             [
                 'name' => 'Employees',
                 'icon' => 'users',
                 'submenus' => [
                     ['name' => 'Employee Information', 'route' => 'employees.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import', 'export']],
+                    ['name' => 'Search Employee', 'route' => 'search.employee', 'actions' => ['view']],
+                    ['name' => 'Bulk Upload', 'route' => 'employees.import', 'actions' => ['view', 'create']],
                 ]
             ],
             [
                 'name' => 'Attendance',
                 'icon' => 'clock',
-                'actions' => ['view', 'create', 'edit', 'delete', 'import', 'export'],
-                'submenus' => [],
+                'submenus' => [
+                    ['name' => 'Clock In / Out', 'route' => 'attendance.clock_in_out', 'actions' => ['view', 'create']],
+                    ['name' => 'Create Attendance', 'route' => 'attendance.create', 'actions' => ['view', 'create']],
+                    ['name' => 'Bulk Upload Attendance', 'route' => 'attendance.bulk-upload', 'actions' => ['view', 'create']],
+                    ['name' => 'Records', 'route' => 'attendance.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import', 'export']],
+                ]
             ],
             [
                 'name' => 'Leaves',
                 'icon' => 'calendar',
-                'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'supervisor-approve'],
-                'submenus' => []
+                'submenus' => [
+                    ['name' => 'Leave Application', 'route' => 'leaves.create', 'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'supervisor-approve']],
+                    ['name' => 'Leave Logs', 'route' => 'leaves.index', 'actions' => ['view', 'edit', 'delete']],
+                ]
             ],
             [
                 'name' => 'Movement',
                 'icon' => 'move',
-                'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'supervisor-approve'],
-                'submenus' => []
+                'submenus' => [
+                    ['name' => 'Movement Application', 'route' => 'movement.create', 'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'supervisor-approve']],
+                    ['name' => 'Movement Logs', 'route' => 'movement.index', 'actions' => ['view', 'edit', 'delete']],
+                ]
             ],
             [
                 'name' => 'Payroll',
@@ -67,7 +79,7 @@ class PermissionSeeder extends Seeder
                     ['name' => 'Promotions', 'route' => 'promotion.index', 'actions' => ['view', 'create', 'edit', 'delete']],
                     ['name' => 'Increments', 'route' => 'increment.index', 'actions' => ['view', 'create', 'edit', 'delete']],
                     ['name' => 'Bonuses', 'route' => 'bonus.index', 'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'management-approve']],
-                    ['name' => 'Salary', 'route' => 'salary.index', 'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'management-approve']],
+                    ['name' => 'Salary', 'route' => 'salary.index', 'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'management-approve', 'generate', 'report']],
                 ]
             ],
             [
@@ -124,7 +136,7 @@ class PermissionSeeder extends Seeder
                     ['name' => 'Assign Driver', 'route' => 'transport.vehicle_drivers.index'],
                     ['name' => 'Vehicle Requisition', 'route' => 'transport.vehicle_requisitions.index', 'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'supervisor-approve']],
                     ['name' => 'Employee Transport', 'route' => 'transport.employee_transports.index'],
-                    ['name' => 'Vehicle Allocation', 'route' => 'transport.vehicle_allocations.dashboard', 'actions' => ['view', 'create', 'edit']],
+                    ['name' => 'Vehicle Allocation', 'route' => 'transport.vehicle_allocations.dashboard', 'actions' => ['view', 'create', 'edit', 'dashboard']],
                 ]
             ],
             [
@@ -132,10 +144,10 @@ class PermissionSeeder extends Seeder
                 'icon' => 'settings',
                 'submenus' => [
                     ['name' => 'General Settings', 'route' => 'settings.general_settings', 'actions' => ['view', 'edit']],
-                    ['name' => 'ID Card Design', 'route' => 'settings.id_design.index', 'actions' => ['view', 'create', 'edit', 'delete']],
-                    ['name' => 'API Keys', 'route' => 'settings.api_keys', 'actions' => ['view', 'edit']],
+                    ['name' => 'ID Card Design', 'route' => 'settings.id_design.index', 'actions' => ['view', 'create', 'edit', 'delete', 'activate', 'deactivate', 'preview', 'download']],
+                    ['name' => 'API Keys', 'route' => 'settings.api_keys', 'actions' => ['view', 'create', 'delete']],
                     ['name' => 'SMTP', 'route' => 'settings.mail_settings', 'actions' => ['view', 'edit']],
-                    ['name' => 'DB Backup', 'route' => 'db_backup', 'actions' => ['download']],
+                    ['name' => 'DB Backup', 'route' => 'db_backup', 'actions' => ['view', 'create', 'download']],
                     ['name' => 'Role Management', 'route' => 'settings.roles.index'],
                 ]
             ],
