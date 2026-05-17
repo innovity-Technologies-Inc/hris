@@ -33,58 +33,46 @@ class PermissionSeeder extends Seeder
         $menus = [
             [
                 'name' => 'Dashboard',
-                'icon' => 'home',
-                'route' => 'dashboard',
+                'icon' => 'gauge',
                 'actions' => ['view'],
             ],
             [
-                'name' => 'Employees',
+                'name' => 'Employee Management',
                 'icon' => 'users',
-                'submenus' => [
-                    ['name' => 'Employee Information', 'route' => 'employees.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import', 'export']],
-                    ['name' => 'Search Employee', 'route' => 'search.employee', 'actions' => ['view']],
-                    ['name' => 'Bulk Upload', 'route' => 'employees.import', 'actions' => ['view', 'create']],
-                ]
+                'actions' => ['view', 'create', 'edit', 'delete', 'import', 'export']
             ],
+
             [
                 'name' => 'Attendance',
                 'icon' => 'clock',
-                'submenus' => [
-                    ['name' => 'Clock In / Out', 'route' => 'attendance.clock_in_out', 'actions' => ['view', 'create']],
-                    ['name' => 'Create Attendance', 'route' => 'attendance.create', 'actions' => ['view', 'create']],
-                    ['name' => 'Bulk Upload Attendance', 'route' => 'attendance.bulk-upload', 'actions' => ['view', 'create']],      
-                    ['name' => 'Records', 'route' => 'attendance.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import', 'export']],
-                ]
+                'actions' => ['view', 'create', 'edit', 'delete', 'import', 'export']
             ],
+
             [
                 'name' => 'Leaves',
-                'icon' => 'calendar',
-                'submenus' => [
-                    ['name' => 'Leave Application', 'route' => 'leaves.create', 'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'supervisor-approve']],
-                    ['name' => 'Leave Logs', 'route' => 'leaves.index', 'actions' => ['view', 'edit', 'delete']],
-                ]
+                'icon' => 'calendar-days',
+                'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'supervisor-approve']
             ],
+
             [
                 'name' => 'Movement',
-                'icon' => 'move',
-                'submenus' => [
-                    ['name' => 'Movement Application', 'route' => 'movement.create', 'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'supervisor-approve']],
-                    ['name' => 'Movement Logs', 'route' => 'movement.index', 'actions' => ['view', 'edit', 'delete']],
-                ]
+                'icon' => 'person-walking-arrow-right',
+                'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'supervisor-approve']
             ],
+
             [
                 'name' => 'Payroll',
-                'icon' => 'dollar-sign',
+                'icon' => 'money-bill-wave',
                 'submenus' => [
-                    ['name' => 'Promotions', 'route' => 'promotion.index', 'actions' => ['view', 'create', 'edit', 'delete']],       
-                    ['name' => 'Increments', 'route' => 'increment.index', 'actions' => ['view', 'create', 'edit', 'delete']],       
+                    ['name' => 'Promotions', 'route' => 'promotion.index', 'actions' => ['view', 'create', 'edit', 'delete']],
+                    ['name' => 'Increments', 'route' => 'increment.index', 'actions' => ['view', 'create', 'edit', 'delete']],
                     ['name' => 'Bonuses', 'route' => 'bonus.index', 'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'management-approve']],
                     ['name' => 'Salary', 'route' => 'salary.index', 'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'management-approve', 'generate', 'report']],
                 ]
             ],
             [
                 'name' => 'Plans',
-                'icon' => 'layers',
+                'icon' => 'layer-group',
                 'submenus' => [
                     ['name' => 'Meal Plans', 'route' => 'plans.meal_plans.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
                     ['name' => 'Shift Plans', 'route' => 'plans.shift_plans.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
@@ -101,28 +89,28 @@ class PermissionSeeder extends Seeder
             ],
             [
                 'name' => 'Company Info',
-                'icon' => 'box',
+                'icon' => 'building-columns',
                 'submenus' => [
-                    ['name' => 'Groups', 'route' => 'groups.index'],
-                    ['name' => 'Company Types', 'route' => 'company_types.index'],
-                    ['name' => 'Companies', 'route' => 'companies.index'],
-                    ['name' => 'Company Branches', 'route' => 'company_locations.index'],
-                    ['name' => 'Divisions', 'route' => 'divisions.index'],
-                    ['name' => 'Departments', 'route' => 'departments.index'],
-                    ['name' => 'Sections', 'route' => 'sections.index'],
-                    ['name' => 'Designations', 'route' => 'designations.index'],
-                    ['name' => 'Salary Acts', 'route' => 'tofsils.index'],
-                    ['name' => 'Salary Grades', 'route' => 'salary_grades.index'],
-                    ['name' => 'Banks', 'route' => 'banks.index'],
-                    ['name' => 'Bank Branches', 'route' => 'branches.index'],
-                    ['name' => 'Bank Accounts', 'route' => 'bank_accounts.index'],
-                    ['name' => 'Holidays', 'route' => 'holidays.index'],
-                    ['name' => 'Job Creations', 'route' => 'job_creations.index'],
+                    ['name' => 'Groups', 'route' => 'groups.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
+                    ['name' => 'Company Types', 'route' => 'company_types.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
+                    ['name' => 'Companies', 'route' => 'companies.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
+                    ['name' => 'Company Branches', 'route' => 'company_locations.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
+                    ['name' => 'Divisions', 'route' => 'divisions.index','actions' => ['view', 'create', 'edit', 'delete', 'import']],
+                    ['name' => 'Departments', 'route' => 'departments.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
+                    ['name' => 'Sections', 'route' => 'sections.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
+                    ['name' => 'Designations', 'route' => 'designations.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
+                    ['name' => 'Salary Acts', 'route' => 'tofsils.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
+                    ['name' => 'Salary Grades', 'route' => 'salary_grades.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
+                    ['name' => 'Banks', 'route' => 'banks.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
+                    ['name' => 'Bank Branches', 'route' => 'branches.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
+                    ['name' => 'Bank Accounts', 'route' => 'bank_accounts.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
+                    ['name' => 'Holidays', 'route' => 'holidays.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
+                    ['name' => 'Job Creations', 'route' => 'job_creations.index','actions' => ['view', 'create', 'edit', 'delete', 'import']],
                 ]
             ],
             [
                 'name' => 'Structure',
-                'icon' => 'git-branch',
+                'icon' => 'sitemap',
                 'submenus' => [
                     ['name' => 'Structural View', 'route' => 'organization-structure.view', 'actions' => ['view']],
                     ['name' => 'Members', 'route' => 'organization-structure.index', 'actions' => ['view', 'create', 'edit', 'delete']],
@@ -130,25 +118,25 @@ class PermissionSeeder extends Seeder
             ],
             [
                 'name' => 'Transport',
-                'icon' => 'truck',
+                'icon' => 'truck-fast',
                 'submenus' => [
                     ['name' => 'Vehicles', 'route' => 'transport.vehicles.index'],
                     ['name' => 'Assign Driver', 'route' => 'transport.vehicle_drivers.index'],
                     ['name' => 'Vehicle Requisition', 'route' => 'transport.vehicle_requisitions.index', 'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'supervisor-approve']],
-                    ['name' => 'Employee Transport', 'route' => 'transport.employee_transports.index'],
+                    ['name' => 'Employee Transport', 'route' => 'transport.employee_transports.index', 'actions' => ['view', 'create', 'edit', 'delete',]],
                     ['name' => 'Vehicle Allocation', 'route' => 'transport.vehicle_allocations.dashboard', 'actions' => ['view', 'create', 'edit', 'dashboard']],
                 ]
             ],
             [
                 'name' => 'Settings',
-                'icon' => 'settings',
+                'icon' => 'sliders',
                 'submenus' => [
                     ['name' => 'General Settings', 'route' => 'settings.general_settings', 'actions' => ['view', 'edit']],
                     ['name' => 'ID Card Design', 'route' => 'settings.id_design.index', 'actions' => ['view', 'create', 'edit', 'delete', 'activate', 'deactivate', 'preview', 'download']],
                     ['name' => 'API Keys', 'route' => 'settings.api_keys', 'actions' => ['view', 'create', 'delete']],
                     ['name' => 'SMTP', 'route' => 'settings.mail_settings', 'actions' => ['view', 'edit']],
                     ['name' => 'DB Backup', 'route' => 'db_backup', 'actions' => ['view', 'create', 'download']],
-                    ['name' => 'Role Management', 'route' => 'settings.roles.index'],
+                    ['name' => 'Role Management', 'route' => 'settings.roles.index', 'actions' => ['view', 'create', 'edit', 'delete',]],
                 ]
             ],
         ];
