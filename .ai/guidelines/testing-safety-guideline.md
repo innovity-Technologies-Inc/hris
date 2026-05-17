@@ -112,8 +112,18 @@ rm bootstrap/cache/config.php
 
 Always maintain a `TEST_LOG.md` to track your verification history. This ensures consistency and accountability.
 
-**Format:**
-- **Date:** [YYYY-MM-DD]
-- **Goal:** Short description of the feature/bug fix.
-- **Command:** The exact Pest command used.
-- **Result:** Assertion counts and Status (✅ SUCCESS / ❌ FAILED).
+---
+
+## 🛡️ 5. Zero-Destruction & Data Preservation
+
+### Understanding `RefreshDatabase`
+*   **Behavior:** The `RefreshDatabase` trait (configured in `tests/Pest.php`) ensures each test starts with a clean database schema.
+*   **Isolation:** Because this project uses **SQLite In-Memory (`:memory:`)** for testing, `RefreshDatabase` only wipes the temporary in-memory database. It **NEVER** touches your main MySQL `hrms` database.
+*   **Safety Rule:** Never use `Artisan::call('migrate:refresh')`, `migrate:fresh`, or `db:wipe` manually in your tests. Trust the `RefreshDatabase` trait and the in-memory isolation.
+
+### Why is my main database empty?
+If your main database becomes empty after running tests, it is likely because:
+1.  You are running tests in an environment where `DB_CONNECTION` is NOT set to `sqlite` (check `phpunit.xml` or `.env.testing`).
+2.  You accidentally ran a destructive artisan command like `migrate:fresh` or `migrate:refresh` on the main environment.
+
+**Always ensure your test output shows "sqlite" as the connection to be 100% safe.**
