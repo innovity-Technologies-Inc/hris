@@ -6,9 +6,11 @@
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-header">
-                    <a type="button" class="btn btn-warning btn-sm" href="{{ route('sections.create') }}">
-                        <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
-                    </a>
+                    @can('sections.create')
+                        <a type="button" class="btn btn-warning btn-sm" href="{{ route('sections.create') }}">
+                            <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
+                        </a>
+                    @endcan
                 </div><!-- end card header -->
                 {{-- Search Filter Form --}}
                 <form id="filterForm">

@@ -13,6 +13,7 @@
     @endif--}}
 
 
+    @canany(['groups.create', 'groups.edit'])
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -62,6 +63,7 @@
             </div>
         </div>
     </div>
+    @endcanany
 
 
 

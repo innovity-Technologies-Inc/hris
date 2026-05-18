@@ -35,28 +35,34 @@
                         @endif
                     </td>
                     <td>
-                        <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal"
-                            data-bs-target="#companyView{{ $item->id }}">
-                            <i style="height: 12px; width: 12px" data-feather="eye"></i>
-                        </button>
-
-                        <a type="button" class="btn btn-primary btn-sm"
-                            href="{{ route('companies.edit', $item->id) }}">
-                            <i style="height: 12px; width: 12px" data-feather="edit"></i>
-                        </a>
-
-                        @include('company_setup.company.modal.view')
-
-                        <form action="{{ route('companies.delete', $item->id) }}" method="POST"
-                            style="display: inline-block">
-                            @csrf
-                            @method('DELETE')
-
-                            <button class ="btn btn-sm btn-danger confirmDelete">
-                                <i style="height: 12px; width: 12px" data-feather="trash"></i>
+                        @can('companies.view')
+                            <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#companyView{{ $item->id }}">
+                                <i style="height: 12px; width: 12px" data-feather="eye"></i>
                             </button>
-                        </form>
+                        @endcan
 
+                        @can('companies.edit')
+                            <a type="button" class="btn btn-primary btn-sm" href="{{ route('companies.edit', $item->id) }}">
+                                <i style="height: 12px; width: 12px" data-feather="edit"></i>
+                            </a>
+                        @endcan
+
+                        @can('companies.view')
+                            @include('company_setup.company.modal.view')
+                        @endcan
+
+                        @can('companies.delete')
+                            <form action="{{ route('companies.delete', $item->id) }}" method="POST"
+                                style="display: inline-block">
+                                @csrf
+                                @method('DELETE')
+
+                                <button class ="btn btn-sm btn-danger confirmDelete">
+                                    <i style="height: 12px; width: 12px" data-feather="trash"></i>
+                                </button>
+                            </form>
+                        @endcan
                     </td>
 
                 </tr>

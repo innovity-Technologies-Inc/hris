@@ -37,20 +37,23 @@
                         @endif
                     </td>
                     <td>
-                        <a type="button" class="btn btn-primary btn-sm" href="{{ route('banks.edit', $item->id) }}">
-                            <i style="height: 12px; width: 12px" data-feather="edit"></i>
-                        </a>
+                        @can('banks.edit')
+                            <a type="button" class="btn btn-primary btn-sm" href="{{ route('banks.edit', $item->id) }}">
+                                <i style="height: 12px; width: 12px" data-feather="edit"></i>
+                            </a>
+                        @endcan
 
-                        <form action="{{ route('banks.delete', $item->id) }}" method="POST"
-                            style="display: inline-block">
-                            @csrf
-                            @method('DELETE')
+                        @can('banks.delete')
+                            <form action="{{ route('banks.delete', $item->id) }}" method="POST"
+                                style="display: inline-block">
+                                @csrf
+                                @method('DELETE')
 
-                            <button class ="btn btn-sm btn-danger confirmDelete">
-                                <i style="height: 12px; width: 12px" data-feather="trash"></i>
-                            </button>
-                        </form>
-
+                                <button class ="btn btn-sm btn-danger confirmDelete">
+                                    <i style="height: 12px; width: 12px" data-feather="trash"></i>
+                                </button>
+                            </form>
+                        @endcan
                     </td>
 
                 </tr>

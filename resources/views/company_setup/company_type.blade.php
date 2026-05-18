@@ -2,6 +2,7 @@
 @section('content')
     {{--    Form --}}
 
+    @can('company-types.create')
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -59,6 +60,7 @@
             </div>
         </div>
     </div>
+    @endcan
 
     {{--    list --}}
 

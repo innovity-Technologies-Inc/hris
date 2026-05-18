@@ -28,11 +28,14 @@
                             <span class="badge text-bg-danger">Inactive</span>
                     @endif
                     <td>
+                        @can('groups.edit')
                         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
                                 data-bs-target="#group-edit{{ $group->id }}">
                             <i style="height: 12px; width: 12px" data-feather="edit"></i>
                         </button>
+                        @endcan
 
+                        @can('groups.delete')
                         <form action="{{ route('groups.delete', $group->id) }}" method="POST"
                               style="display: inline-block">
                             @csrf
@@ -44,6 +47,7 @@
 
 
                         </form>
+                        @endcan
 
                     </td>
 

@@ -6,9 +6,11 @@
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-header">
+                    @can('companies.create')
                     <a type="button" class="btn btn-warning btn-sm" href="{{ route('companies.create') }}">
                         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                     </a>
+                    @endcan
                 </div><!-- end card header -->
 
                 {{-- Search Filter Form --}}

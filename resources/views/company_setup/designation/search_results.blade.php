@@ -28,19 +28,23 @@
                         @endif
                     </td>
                     <td>
-                        <a href="{{ route('designations.edit', $designation->id) }}" class="btn btn-primary btn-sm">
-                            <i style="height: 12px; width: 12px" data-feather="edit"></i>
-                        </a>
+                        @can('designations.edit')
+                            <a href="{{ route('designations.edit', $designation->id) }}" class="btn btn-primary btn-sm">
+                                <i style="height: 12px; width: 12px" data-feather="edit"></i>
+                            </a>
+                        @endcan
 
-                        <form action="{{ route('designations.delete', $designation->id) }}" method="POST"
-                            style="display: inline-block">
-                            @csrf
-                            @method('DELETE')
+                        @can('designations.delete')
+                            <form action="{{ route('designations.delete', $designation->id) }}" method="POST"
+                                style="display: inline-block">
+                                @csrf
+                                @method('DELETE')
 
-                            <button class="btn btn-sm btn-danger confirmDelete">
-                                <i style="height: 12px; width: 12px" data-feather="trash"></i>
-                            </button>
-                        </form>
+                                <button class="btn btn-sm btn-danger confirmDelete">
+                                    <i style="height: 12px; width: 12px" data-feather="trash"></i>
+                                </button>
+                            </form>
+                        @endcan
                     </td>
                 </tr>
             @endforeach

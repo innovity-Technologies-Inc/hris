@@ -33,28 +33,33 @@
                         @endif
                     </td>
                     <td>
-                        <a type="button" class="btn btn-primary btn-sm"
-                            href="{{ route('bank_accounts.edit', $item->id) }}">
-                            <i style="height: 12px; width: 12px" data-feather="edit"></i>
-                        </a>
+                        @can('bank-accounts.edit')
+                            <a type="button" class="btn btn-primary btn-sm"
+                                href="{{ route('bank_accounts.edit', $item->id) }}">
+                                <i style="height: 12px; width: 12px" data-feather="edit"></i>
+                            </a>
+                        @endcan
 
-                        <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal"
-                            data-bs-target="#bankAccountsView{{ $item->id }}">
-                            <i style="height: 12px; width: 12px" data-feather="eye"></i>
-                        </button>
-
-                        @include('company_setup.bank_accounts.modal.view')
-
-                        <form action="{{ route('bank_accounts.delete', $item->id) }}" method="POST"
-                            style="display: inline-block">
-                            @csrf
-                            @method('DELETE')
-
-                            <button class ="btn btn-sm btn-danger confirmDelete">
-                                <i style="height: 12px; width: 12px" data-feather="trash"></i>
+                        @can('bank-accounts.view')
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#bankAccountsView{{ $item->id }}">
+                                <i style="height: 12px; width: 12px" data-feather="eye"></i>
                             </button>
-                        </form>
 
+                            @include('company_setup.bank_accounts.modal.view')
+                        @endcan
+
+                        @can('bank-accounts.delete')
+                            <form action="{{ route('bank_accounts.delete', $item->id) }}" method="POST"
+                                style="display: inline-block">
+                                @csrf
+                                @method('DELETE')
+
+                                <button class ="btn btn-sm btn-danger confirmDelete">
+                                    <i style="height: 12px; width: 12px" data-feather="trash"></i>
+                                </button>
+                            </form>
+                        @endcan
                     </td>
 
                 </tr>

@@ -34,19 +34,23 @@
                     <td>{{ $department->department_name ?? 'N/A' }}</td>
                     <td>{{ $department->short_name }}</td>
                     <td>
-                        <a href="{{ route('departments.edit', $department->id) }}" class="btn btn-primary btn-sm">
-                            <i style="height: 12px; width: 12px" data-feather="edit"></i>
-                        </a>
+                        @can('departments.edit')
+                            <a href="{{ route('departments.edit', $department->id) }}" class="btn btn-primary btn-sm">
+                                <i style="height: 12px; width: 12px" data-feather="edit"></i>
+                            </a>
+                        @endcan
 
-                        <form action="{{ route('departments.delete', $department->id) }}" method="POST"
-                            style="display: inline-block">
-                            @csrf
-                            @method('DELETE')
+                        @can('departments.delete')
+                            <form action="{{ route('departments.delete', $department->id) }}" method="POST"
+                                style="display: inline-block">
+                                @csrf
+                                @method('DELETE')
 
-                            <button class="btn btn-sm btn-danger confirmDelete">
-                                <i style="height: 12px; width: 12px" data-feather="trash"></i>
-                            </button>
-                        </form>
+                                <button class="btn btn-sm btn-danger confirmDelete">
+                                    <i style="height: 12px; width: 12px" data-feather="trash"></i>
+                                </button>
+                            </form>
+                        @endcan
                     </td>
                 </tr>
             @endforeach

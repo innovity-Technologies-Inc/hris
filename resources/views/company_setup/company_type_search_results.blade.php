@@ -28,11 +28,14 @@
                         @endif
                     </td>
                     <td>
+                        @can('company-types.edit')
                         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
                             data-bs-target="#company_type-edit{{ $company_type->id }}">
                             <i style="height: 12px; width: 12px" data-feather="edit"></i>
                         </button>
+                        @endcan
 
+                        @can('company-types.delete')
                         <form action="{{ route('company_types.delete', $company_type->id) }}" method="POST"
                             style="display: inline-block">
                             @csrf
@@ -42,6 +45,7 @@
                                 <i style="height: 12px; width: 12px" data-feather="trash"></i>
                             </button>
                         </form>
+                        @endcan
                     </td>
 
                     @include('company_setup.modal.company_type_edit')
