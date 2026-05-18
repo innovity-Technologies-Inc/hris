@@ -852,10 +852,17 @@ class EmployeeServices
         ]);
 
         try {
+            // Generate a unique applicant_id (format: EMP-RANDOM)
+            $applicantId = 'APP-' . strtoupper(bin2hex(random_bytes(4)));
+            while (Employee::where('applicant_id', $applicantId)->exists()) {
+                $applicantId = 'APP-' . strtoupper(bin2hex(random_bytes(4)));
+            }
+
             // 1. Create Employee
             $employee = Employee::create([
                 'full_name' => $request->full_name,
                 'work_email' => $request->work_email,
+                'applicant_id' => $applicantId,
                 'status' => 'active',
             ]);
 
