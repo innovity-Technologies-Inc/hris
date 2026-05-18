@@ -5,6 +5,7 @@
     {{-- Employee Increment Search --}}
     <div class="row">
         <div class="col-lg-12">
+            @can('increments.view')
             <div class="card border-0 shadow-sm rounded">
                 <div class="card-header">
                     <h5 class="card-title mb-0">Search Employee Increments</h5>
@@ -85,6 +86,7 @@
                     </div>
                 </div>
             </div>
+            @endcan
         </div>
 
 
@@ -94,6 +96,15 @@
                     <h5 class="card-title mb-0">Employee Increments List</h5>
                 </div>
                 <div class="card-body">
+                    {{-- Action Buttons --}}
+                    <div class="d-flex justify-content-between mb-3">
+                        @can('increments.create')
+                        <a type="button" class="btn btn-warning btn-sm" href="{{ route('increment.create') }}">
+                            <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
+                        </a>
+                        @endcan
+                    </div>
+
                     <div id="search-result">
                         @include('payroll.increment.partials.search-results')
                     </div>

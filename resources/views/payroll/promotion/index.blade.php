@@ -5,6 +5,7 @@
     {{-- Employee Promotion Search --}}
     <div class="row">
         <div class="col-lg-12">
+            @can('promotions.view')
             <div class="card border-0 shadow-sm rounded">
                 <div class="card-header">
                     <h5 class="card-title mb-0">Search Employee Promotions</h5>
@@ -85,6 +86,7 @@
                     </div>
                 </div>
             </div>
+            @endcan
         </div>
 
 
@@ -94,6 +96,15 @@
                     <h5 class="card-title mb-0">Employee Promotions List</h5>
                 </div>
                 <div class="card-body">
+                    {{-- Action Buttons --}}
+                    <div class="d-flex justify-content-between mb-3">
+                        @can('promotions.create')
+                        <a type="button" class="btn btn-warning btn-sm" href="{{ route('promotion.create') }}">
+                            <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
+                        </a>
+                        @endcan
+                    </div>
+
                     <div id="search-result">
                         @include('payroll.promotion.partials.search-results')
                     </div>

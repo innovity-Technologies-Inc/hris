@@ -3,6 +3,7 @@
     {{-- Search Section --}}
     <div class="row">
         <div class="col-lg-12">
+            @can('bonuses.view')
             <div class="card border-0 shadow-sm rounded">
                 <div class="card-header">
                     <h5 class="card-title mb-0">
@@ -95,6 +96,7 @@
                     </div>
                 </div>
             </div>
+            @endcan
         </div>
 
         {{-- List Section --}}
@@ -106,9 +108,11 @@
                 <div class="card-body">
                     {{-- Action Buttons --}}
                     <div class="d-flex justify-content-between mb-3">
+                        @can('bonuses.create')
                         <a type="button" class="btn btn-warning btn-sm" href="{{route('bonus.create')}}">
                             <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                         </a>
+                        @endcan
                     </div>
 
                     <div class="table-responsive" id="search-result">
