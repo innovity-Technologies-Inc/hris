@@ -1,6 +1,6 @@
 <div class="p-0">
     @can('employee-management.create')
-        <div class="d-flex justify-content-end mb-3">
+        <div class="d-flex justify-content-start mb-3">
             <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#createOptionsModal">
                 <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
             </button>
