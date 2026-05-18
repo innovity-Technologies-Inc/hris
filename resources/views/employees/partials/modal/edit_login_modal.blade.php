@@ -12,14 +12,14 @@
                 <div class="card-body p-4">
                     @php
                         $currentUserType = $employee->user->user_type ?? 'Employee';
-                        $canManageRoles = auth()->user()->can('role-management.edit');
+                        $canEditFullProfile = auth()->user()->can('employee-management.edit');
                     @endphp
 
-                    @if(!$canManageRoles)
+                    @if(!$canEditFullProfile)
                         <!-- READ-ONLY DATA for Email, Type, Role - User can only change password -->
                         <div class="alert alert-soft-info border-0 mb-4 d-flex align-items-center" role="alert">
                             <i class="fas fa-info-circle me-2"></i>
-                            <div>You can only update the account password. Profile management is restricted.</div>
+                            <div>You can only update your account password. Profile management is restricted to administrators.</div>
                         </div>
 
                         <input type="hidden" name="work_email" value="{{ $employee->user->email ?? $employee->work_email }}">
@@ -33,7 +33,7 @@
                             </div>
                         </div>
                     @else
-                        <!-- FULL EDITABLE MODE for users with role-management.edit permission -->
+                        <!-- FULL EDITABLE MODE for users with employee-management.edit permission -->
                         <div class="row">
                             <div class="col-12 mb-3">
                                 <label for="work_email" class="form-label text-primary fw-bold">Work Email <span class="text-danger">*</span></label>

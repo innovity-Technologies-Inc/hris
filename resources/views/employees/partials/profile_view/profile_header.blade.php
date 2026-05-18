@@ -31,11 +31,9 @@
                         <div class="ms-auto">
                             <div class="d-flex align-items-center gap-3">
                                 <!-- Edit Login Info Button -->
-                                @can('employee-management.edit')
                                 <button type="button" class="btn btn-primary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#editLoginInfoModal">
                                     <i class="mdi mdi-account-key me-1"></i> Edit Login Info
                                 </button>
-                                @endcan
 
                                 <!-- ID Card Action Button -->
                                 @include('employee.partials.id_card_button', ['employee' => $employee])
