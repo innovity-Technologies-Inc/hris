@@ -26,6 +26,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 
+use App\Mail\EmployeeAccountCreated;
+use Illuminate\Support\Facades\Mail;
+
 class EmployeeServices
 {
     public function getEmployees()
@@ -836,28 +839,78 @@ class EmployeeServices
     }
 
     /**
-     * Update employee login information
+     * Create a new employee and system user account
      */
+    public function createEmployeeAccount(Request $request)
+    {
+        $request->validate([
+            'full_name' => 'required|string|max:255',
+            'work_email' => 'required|email|unique:users,email|unique:employees,work_email',
+            'user_type' => 'required|string|in:Group,Company,Business Unit,Division,Department,Section,Employee',
+            'role' => 'nullable|string|exists:roles,name',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        try {
+            // 1. Create Employee
+            $employee = Employee::create([
+                'full_name' => $request->full_name,
+                'work_email' => $request->work_email,
+                'status' => 'active',
+            ]);
+
+            // 2. Create User
+            $user = User::create([
+                'name' => $request->full_name,
+                'email' => $request->work_email,
+                'password' => Hash::make($request->password),
+                'user_type' => $request->user_type,
+                'employee_id' => $employee->id,
+                'status' => 'active',
+            ]);
+
+            // 3. Link User to Employee
+            $employee->update(['user_id' => $user->id]);
+
+            // 4. Assign Role
+            if ($request->has('role') && !empty($request->role)) {
+                $user->assignRole($request->role);
+            }
+
+            // 5. Send Email
+            Mail::to($request->work_email)->send(new EmployeeAccountCreated(
+                $request->full_name,
+                $request->work_email,
+                $request->password
+            ));
+
+            return $user;
+
+        } catch (\Exception $e) {
+            Log::error('Error creating employee account: ' . $e->getMessage());
+            throw $e;
+        }
+    }
     public function updateLoginInfo(Request $request, $employeeId)
     {
         $employee = Employee::findOrFail($employeeId);
-        $user = User::findOrFail($employee->user_id);
+        $user = User::find($employee->user_id);
         $canManageRoles = auth()->user()->can('role-management.edit');
 
         // Validation logic
         $rules = [
-            'password' => 'nullable|min:8|confirmed',
+            'password' => ($user ? 'nullable' : 'required') . '|min:8|confirmed',
         ];
 
         if ($canManageRoles) {
-            $rules['work_email'] = 'required|email|unique:users,email,' . $user->id;
+            $rules['work_email'] = 'required|email|unique:users,email' . ($user ? ',' . $user->id : '');
             $rules['user_type'] = 'required|string|in:Group,Company,Business Unit,Division,Department,Section,Employee';
             $rules['role'] = 'nullable|string|exists:roles,name';
         }
 
         $request->validate($rules);
 
-        // Update logic
+        // Update or Create logic
         $userData = [];
         if ($request->filled('password')) {
             $userData['password'] = Hash::make($request->password);
@@ -866,18 +919,25 @@ class EmployeeServices
         if ($canManageRoles) {
             $userData['email'] = $request->work_email;
             $userData['user_type'] = $request->user_type;
+            $userData['name'] = $employee->full_name;
+            $userData['status'] = 'active';
+            $userData['employee_id'] = $employee->id;
             
             // Update employee work email as well
             $employee->update(['work_email' => $request->work_email]);
-
-            // Sync Role
-            if ($request->has('role')) {
-                $user->syncRoles([$request->role]);
-            }
         }
 
-        if (!empty($userData)) {
-            $user->update($userData);
+        if ($user) {
+            if (!empty($userData)) {
+                $user->update($userData);
+            }
+        } else {
+            $user = User::create($userData);
+            $employee->update(['user_id' => $user->id]);
+        }
+
+        if ($canManageRoles && $request->has('role')) {
+            $user->syncRoles([$request->role]);
         }
 
         return $user;

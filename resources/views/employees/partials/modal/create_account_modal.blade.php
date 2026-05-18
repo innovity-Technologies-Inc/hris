@@ -1,22 +1,21 @@
-<!-- Edit Login Information Modal -->
-<div class="modal fade" id="editLoginInfoModal" tabindex="-1" aria-labelledby="editLoginInfoModalLabel" aria-hidden="true">
+<!-- Create Employee Account Modal -->
+<div class="modal fade" id="createAccountModal" tabindex="-1" aria-labelledby="createAccountModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md modal-dialog-centered">
-        <!-- Using the card directly as the modal content -->
         <div class="modal-content card shadow-sm border-0 mb-0" style="border-radius: 15px; overflow: hidden;">
-            <form action="{{ route('employees.update_login_info', $employee->id) }}" method="POST">
+            <form id="createAccountForm" action="{{ route('employees.store_account') }}" method="POST">
                 @csrf
                 <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0 text-white"><i class="fas fa-user-shield me-2"></i>Edit Login Information</h5>
+                    <h5 class="card-title mb-0 text-white"><i class="fas fa-user-shield me-2"></i>Create Employee Account</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="card-body p-4">
-                    @include('employees.partials.modal.login_info_form', ['employee' => $employee, 'mode' => 'edit'])
+                    @include('employees.partials.modal.login_info_form', ['employee' => null, 'mode' => 'create'])
                 </div>
                 <div class="card-footer bg-light py-3">
                     <div class="d-flex justify-content-end gap-2">
                         <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary px-4 fw-bold">
-                            <i class="fas fa-save me-1"></i> Update Account Credentials
+                            <i class="fas fa-user-plus me-1"></i> Create Account
                         </button>
                     </div>
                 </div>
@@ -43,3 +42,22 @@
         margin-left: .5em;
     }
 </style>
+
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        // Password visibility toggle
+        $('.password-toggle').on('click', function() {
+            var input = $(this).closest('.input-group').find('input');
+            var icon = $(this);
+            if (input.attr('type') === 'password') {
+                input.attr('type', 'text');
+                icon.removeClass('fa-eye').addClass('fa-eye-slash');
+            } else {
+                input.attr('type', 'password');
+                icon.removeClass('fa-eye-slash').addClass('fa-eye');
+            }
+        });
+    });
+</script>
+@endpush

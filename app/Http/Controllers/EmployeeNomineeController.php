@@ -28,6 +28,16 @@ class EmployeeNomineeController extends Controller
         $sub_section = 'Nominee Information / Add';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
+
+        if (!$employee) {
+            abort(404, 'Employee not found');
+        }
+
+        // Security check: Employees can only view their own profile
+        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+            abort(403, 'Unauthorized access to other profiles.');
+        }
+
         return view('employees.nominee_information.form', compact('employee', 'title', 'section', 'sub_section', 'section_url'));
     }
 
@@ -67,15 +77,25 @@ class EmployeeNomineeController extends Controller
         $section = 'Employees';
         $sub_section = 'Nominee Information / Edit';
         $section_url = route('employees.index');
+        $employee = $this->empServices->getEmployeeById($id);
+
+        if (!$employee) {
+            abort(404, 'Employee not found');
+        }
+
+        // Security check: Employees can only view their own profile
+        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+            abort(403, 'Unauthorized access to other profiles.');
+        }
+
         $employee_nominee_info = EmployeeNominee::where('employee_id', $id)->first();
 //        dd($employee_nominee_info);
         if($employee_nominee_info){
-            $employee = Employee::select('id', 'full_name')->where('id', $id)->first();
             return view('employees.nominee_information.form', compact('title', 'section',
                 'sub_section', 'section_url', 'employee', 'employee_nominee_info'));
         }else{
             return redirect()->route('employees.index')->with([
-                'message' => 'Employee Not Found',
+                'message' => 'Nominee Information Not Found',
                 'alert-type' => 'error'
             ]);
         }
@@ -109,6 +129,16 @@ class EmployeeNomineeController extends Controller
         $sub_section = 'Profile - Nominee Information';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
+
+        if (!$employee) {
+            abort(404, 'Employee not found');
+        }
+
+        // Security check: Employees can only view their own profile
+        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+            abort(403, 'Unauthorized access to other profiles.');
+        }
+
         $employee_nominee_info = EmployeeNominee::where('employee_id', $id)->first();
 //        dd($employee_nominee_info);
         return view('employees.profile', compact('title', 'section', 'sub_section', 'employee', 'employee_nominee_info', 'section_url'));

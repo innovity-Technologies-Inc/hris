@@ -360,6 +360,17 @@ class DataController extends Controller
         ]);
     }
 
+    public function getEmployeesForAccount()
+    {
+        $employees = Employee::where('status', 'active')
+            ->whereNull('user_id')
+            ->select('id', 'full_name', 'applicant_id', 'work_email')
+            ->orderBy('full_name')
+            ->get();
+            
+        return response()->json($employees);
+    }
+
 
 
 

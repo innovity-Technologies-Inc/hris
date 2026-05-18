@@ -218,6 +218,16 @@ class LeavesController extends Controller
         $sub_section = 'Profile - Leave Information';
         $section_url = route('employees.index');
         $employee = Employee::find($id);
+
+        if (!$employee) {
+            abort(404, 'Employee not found');
+        }
+
+        // Security check: Employees can only view their own profile
+        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+            abort(403, 'Unauthorized access to other profiles.');
+        }
+
         $leaveDetails = EmployeeLeavePlan::with( 'leaveCount')->where('employee_id', $id)->get();
         $leaveHistory = Leave::where('employee_id', $id)->orderBy('id', 'desc')->get();
         return view('employees.profile', compact('title', 'section', 'sub_section', 'employee', 'leaveDetails', 'leaveHistory', 'section_url'));

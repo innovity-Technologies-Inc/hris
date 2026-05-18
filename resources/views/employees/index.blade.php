@@ -120,8 +120,10 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    @include('employees.partials.modal.create_options_modal')
+    @include('employees.partials.modal.create_account_modal')
 
+@push('scripts')
     <script>
         $(document).ready(function() {
             // Function to perform AJAX search
@@ -178,4 +180,5 @@
             });
         });
     </script>
+@endpush
 @endsection

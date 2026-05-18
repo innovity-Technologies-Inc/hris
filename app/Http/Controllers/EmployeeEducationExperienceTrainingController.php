@@ -24,6 +24,16 @@ class EmployeeEducationExperienceTrainingController extends Controller
         $sub_section = 'Education, Experience, and Training / Add';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
+
+        if (!$employee) {
+            abort(404, 'Employee not found');
+        }
+
+        // Security check: Employees can only view their own profile
+        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+            abort(403, 'Unauthorized access to other profiles.');
+        }
+
         return view('employees.education_experience_trainings.form', compact('employee', 'title', 'section', 'sub_section', 'section_url'));
     }
     public function store(Request $request)
@@ -62,6 +72,15 @@ class EmployeeEducationExperienceTrainingController extends Controller
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
 
+        if (!$employee) {
+            abort(404, 'Employee not found');
+        }
+
+        // Security check: Employees can only view their own profile
+        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+            abort(403, 'Unauthorized access to other profiles.');
+        }
+
         // Get the JSON record
         $employeeData = EmployeeEducationExperienceTraining::where('employee_id', $id)->first();
 
@@ -76,6 +95,16 @@ class EmployeeEducationExperienceTrainingController extends Controller
     public function edit($id)
     {
         $employee = $this->empServices->getEmployeeById($id);
+
+        if (!$employee) {
+            abort(404, 'Employee not found');
+        }
+
+        // Security check: Employees can only view their own profile
+        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+            abort(403, 'Unauthorized access to other profiles.');
+        }
+
         $title = 'Add Employees Education, Experience, and Training Information';
         $section = 'Employees';
         $sub_section = 'Education, Experience, and Training / Edit';

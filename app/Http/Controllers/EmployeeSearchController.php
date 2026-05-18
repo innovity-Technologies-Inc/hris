@@ -28,6 +28,11 @@ class EmployeeSearchController extends Controller
      */
     public function index(Request $request, FlexSearch $flexsearch)
     {
+        // Security check: Employees should not be able to search other employees
+        if (auth()->user()->user_type === 'Employee') {
+            abort(403, 'Unauthorized access to employee search.');
+        }
+
         $title = 'Search Employee';
         $section = 'Employees';
         $sub_section = 'Search';
@@ -256,6 +261,11 @@ class EmployeeSearchController extends Controller
      */
     public function export(Request $request, FlexSearch $flexsearch)
     {
+        // Security check: Employees should not be able to export employee data
+        if (auth()->user()->user_type === 'Employee') {
+            abort(403, 'Unauthorized access to employee export.');
+        }
+
         // Build same query as index method
         $query = Employee::query();
         $searchableColumns = ['applicant_id', 'full_name', 'system_id'];

@@ -28,6 +28,16 @@ class EmployeeEligibleController extends Controller
         $sub_section = 'Eligible Plan / Create';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
+
+        if (!$employee) {
+            abort(404, 'Employee not found');
+        }
+
+        // Security check: Employees can only view their own profile
+        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+            abort(403, 'Unauthorized access to other profiles.');
+        }
+
         return view('employees.eligible_plans.form', compact('employee', 'title', 'section', 'sub_section', 'section_url'));
     }
 
@@ -74,6 +84,16 @@ class EmployeeEligibleController extends Controller
         $sub_section = 'Profile - Eligible Plan';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
+
+        if (!$employee) {
+            abort(404, 'Employee not found');
+        }
+
+        // Security check: Employees can only view their own profile
+        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+            abort(403, 'Unauthorized access to other profiles.');
+        }
+
         $employeePlan = EmployeeEligiblePlan::where('employee_id', $id)->first();
 //        dd($employeePlan);
         return view('employees.profile', compact('employeePlan', 'employee', 'title', 'section', 'sub_section', 'section_url'));
@@ -85,6 +105,16 @@ class EmployeeEligibleController extends Controller
     public function edit($id)
     {
         $employee = $this->empServices->getEmployeeById($id);
+
+        if (!$employee) {
+            abort(404, 'Employee not found');
+        }
+
+        // Security check: Employees can only view their own profile
+        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+            abort(403, 'Unauthorized access to other profiles.');
+        }
+
         $employeePlan = EmployeeEligiblePlan::where('employee_id', $id)->first();
         $title = 'Edit Employee Eligible Plan';
         $section = 'Employees';

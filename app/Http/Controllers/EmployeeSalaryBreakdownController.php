@@ -25,6 +25,16 @@ class EmployeeSalaryBreakdownController extends Controller
         $sub_section = 'Salary Breakdown / Add';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
+
+        if (!$employee) {
+            abort(404, 'Employee not found');
+        }
+
+        // Security check: Employees can only view their own profile
+        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+            abort(403, 'Unauthorized access to other profiles.');
+        }
+
         return view('employees.salary_breakdown.form', compact('employee', 'title', 'section', 'sub_section', 'section_url'));
     }
 
@@ -71,6 +81,16 @@ class EmployeeSalaryBreakdownController extends Controller
         $sub_section = 'Employees Salary Breakdown';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
+
+        if (!$employee) {
+            abort(404, 'Employee not found');
+        }
+
+        // Security check: Employees can only view their own profile
+        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+            abort(403, 'Unauthorized access to other profiles.');
+        }
+
         $employeeData = EmployeeSalaryBreakdown::where('employee_id', $id)->first();
 //        dd($employeeData);
         return view('employees.profile', compact('employeeData', 'employee', 'title', 'section', 'sub_section', 'section_url'));
@@ -82,6 +102,16 @@ class EmployeeSalaryBreakdownController extends Controller
     public function edit($id)
     {
         $employee = $this->empServices->getEmployeeById($id);
+
+        if (!$employee) {
+            abort(404, 'Employee not found');
+        }
+
+        // Security check: Employees can only view their own profile
+        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+            abort(403, 'Unauthorized access to other profiles.');
+        }
+
         $employeeData = EmployeeSalaryBreakdown::where('employee_id', $id)->first();
         $title = 'Edit Employee Salary Breakdown';
         $section = 'Employees';

@@ -38,6 +38,16 @@ class EmployeePlansController extends Controller
         $sub_section = 'Profile';
         $section_url = route('employees.index');
         $employee = Employee::find($id);
+
+        if (!$employee) {
+            abort(404, 'Employee not found');
+        }
+
+        // Security check: Employees can only view their own profile
+        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+            abort(403, 'Unauthorized access to other profiles.');
+        }
+
         if ($type === 'meal-plans'){
             $mealPlans = MealPlan::where('status', 'active')->get();
             $activeMealPlans = EmployeeMealPlan::where('employee_id', $id)->where('status', 'active')->get();

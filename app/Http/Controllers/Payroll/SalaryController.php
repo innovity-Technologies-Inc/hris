@@ -73,6 +73,11 @@ class SalaryController extends Controller
     public function generateSalaryCertificateFromProfile($employee_id)
     {
         try {
+            // Security check: Employees can only generate their own certificate
+            if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $employee_id) {
+                abort(403, 'Unauthorized access to other profiles.');
+            }
+
             $pdfContent = $this->salaryCertificateService->generateSalaryCertificateFromEmployee($employee_id);
             $employee = Employee::findOrFail($employee_id);
             $fileName = 'Salary_Certificate_' . str_replace(' ', '_', $employee->full_name) . '.pdf';

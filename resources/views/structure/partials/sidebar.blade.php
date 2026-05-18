@@ -38,49 +38,55 @@
 
                 <!-- Employees Menu -->
                 @php
+                    $isEmployeeType = auth()->user()->user_type === 'Employee';
                     $canViewEmployeeInfo = auth()->user()->can('employee-management.view');
-                    $canSearchEmployee = auth()->user()->can('employee-management.view');
+                    $canSearchEmployee = auth()->user()->can('employee-management.view') && !$isEmployeeType;
                     $canBulkUploadEmployee = auth()->user()->can('employee-management.import');
                     $showEmployeesMenu = $canViewEmployeeInfo || $canSearchEmployee || $canBulkUploadEmployee;
                 @endphp
                 @if($showEmployeesMenu)
                 <li>
-                    <a href="#sidebarEmployees" data-bs-toggle="collapse"
-                        aria-expanded="{{ Route::is('employees.*') || Route::is('search.employee') ? 'true' : 'false' }}"
-                        class="@if (Route::is('employees.*') || Route::is('search.employee')) menuitem-active @endif">
-                        <i data-feather="users"></i>
-                        <span> Employees </span>
-                        <span class="menu-arrow"></span>
-                    </a>
-                    <div class="collapse @if (Route::is('employees.*') || Route::is('search.employee')) show @endif" id="sidebarEmployees">
-                        <ul class="nav-second-level">
-                            @if($canViewEmployeeInfo)
-                            <li>
-                                @php
-                                    $employeeInfoUrl = route('employees.index');
-                                    $isEmployeeType = auth()->user()->user_type === 'Employee';
-                                    if ($isEmployeeType && auth()->user()->employee_id) {
-                                        $employeeInfoUrl = route('employees.profile.general_informations', auth()->user()->employee_id);
-                                    }
-                                @endphp
-                                <a class='tp-link @if (Route::is('employees.index') || (Route::is('employees.profile.*') && $isEmployeeType)) menuitem-active @endif'
-                                    href='{{ $employeeInfoUrl }}'>Employee Information</a>
-                            </li>
-                            @endif
-                            @if($canSearchEmployee)
-                            <li>
-                                <a class='tp-link @if (Route::is('search.employee')) menuitem-active @endif'
-                                    href='{{ route('search.employee') }}'>Search Employee</a>
-                            </li>
-                            @endif
-                            @if($canBulkUploadEmployee)
-                            <li>
-                                <a class='tp-link @if (Route::is('employees.import')) menuitem-active @endif'
-                                    href='{{ route('employees.import') }}'>Bulk Upload</a>
-                            </li>
-                            @endif
-                        </ul>
-                    </div>
+                    @if($isEmployeeType)
+                        @php
+                            $employeeInfoUrl = auth()->user()->employee_id 
+                                ? route('employees.profile.general_informations', auth()->user()->employee_id) 
+                                : '#';
+                        @endphp
+                        <a href="{{ $employeeInfoUrl }}" class="tp-link @if (Route::is('employees.profile.*')) menuitem-active @endif">
+                            <i data-feather="users"></i>
+                            <span> Employee Profile </span>
+                        </a>
+                    @else
+                        <a href="#sidebarEmployees" data-bs-toggle="collapse"
+                            aria-expanded="{{ Route::is('employees.*') || Route::is('search.employee') ? 'true' : 'false' }}"
+                            class="@if (Route::is('employees.*') || Route::is('search.employee')) menuitem-active @endif">
+                            <i data-feather="users"></i>
+                            <span> Employees </span>
+                            <span class="menu-arrow"></span>
+                        </a>
+                        <div class="collapse @if (Route::is('employees.*') || Route::is('search.employee')) show @endif" id="sidebarEmployees">
+                            <ul class="nav-second-level">
+                                @if($canViewEmployeeInfo)
+                                <li>
+                                    <a class='tp-link @if (Route::is('employees.index')) menuitem-active @endif'
+                                        href='{{ route('employees.index') }}'>Employee Information</a>
+                                </li>
+                                @endif
+                                @if($canSearchEmployee)
+                                <li>
+                                    <a class='tp-link @if (Route::is('search.employee')) menuitem-active @endif'
+                                        href='{{ route('search.employee') }}'>Search Employee</a>
+                                </li>
+                                @endif
+                                @if($canBulkUploadEmployee)
+                                <li>
+                                    <a class='tp-link @if (Route::is('employees.import')) menuitem-active @endif'
+                                        href='{{ route('employees.import') }}'>Bulk Upload</a>
+                                </li>
+                                @endif
+                            </ul>
+                        </div>
+                    @endif
                 </li>
                 @endif
 

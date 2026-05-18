@@ -372,6 +372,7 @@ Route::prefix('employees')->middleware('auth')->group(function () {
             Route::put('office-informations/{id}/update', 'officeInfoUpdate')->name('employees.office_informations.update');
             Route::post('{id}/toggle-status', 'toggleStatus')->name('employees.toggle_status');
             Route::post('{id}/update-login-info', 'updateLoginInfo')->name('employees.update_login_info');
+            Route::post('store-account', 'storeAccount')->name('employees.store_account');
         });
 
         Route::middleware('permission:employee-management.import')->group(function () {
@@ -992,6 +993,7 @@ Route::controller(DataController::class)->middleware('auth')->group(function () 
     //employee_details
     Route::get('get-current-designation/{employee_id}', 'getEmployeeCurrentDesignation');
     Route::get('get-employee-salary/{employee_id}', 'getEmployeeSalary');
+    Route::get('get-employees-for-account', 'getEmployeesForAccount')->name('get-employees-for-account');
 
 
 });

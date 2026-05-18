@@ -1,9 +1,8 @@
 <div class="card-body p-0">
     @can('employee-management.create')
-    <a type="button" class="btn btn-warning btn-sm me-3 mb-3 "
-        href="{{ route('employees.general_informations.create') }}">
+    <button type="button" class="btn btn-warning btn-sm me-3 mb-3" data-bs-toggle="modal" data-bs-target="#createOptionsModal">
         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
-    </a>
+    </button>
     @endcan
 
     @if ($employees->isEmpty())

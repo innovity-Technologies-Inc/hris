@@ -34,6 +34,16 @@ class EmployeeBankAccountController extends Controller
         $section_url = route('employees.index');
         $banks = Bank::all();
         $employee = $this->empServices->getEmployeeById($id);
+
+        if (!$employee) {
+            abort(404, 'Employee not found');
+        }
+
+        // Security check: Employees can only view their own profile
+        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+            abort(403, 'Unauthorized access to other profiles.');
+        }
+
         return view('employees.bank_accounts.form', compact('title', 'section', 'sub_section', 'section_url', 'banks', 'employee'));
     }
 
@@ -71,6 +81,16 @@ class EmployeeBankAccountController extends Controller
         $sub_section = 'Profile - Bank Account Details';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
+
+        if (!$employee) {
+            abort(404, 'Employee not found');
+        }
+
+        // Security check: Employees can only view their own profile
+        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+            abort(403, 'Unauthorized access to other profiles.');
+        }
+
         $employeeData = EmployeeBankAccount::where('employee_id', $id)->first();
         return view('employees.profile', compact('employeeData', 'employee', 'title', 'section', 'sub_section', 'section_url'));
 
@@ -82,6 +102,16 @@ class EmployeeBankAccountController extends Controller
     public function edit(string $id)
     {
         $employee = $this->empServices->getEmployeeById($id);
+
+        if (!$employee) {
+            abort(404, 'Employee not found');
+        }
+
+        // Security check: Employees can only view their own profile
+        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+            abort(403, 'Unauthorized access to other profiles.');
+        }
+
         $employeeData = EmployeeBankAccount::where('employee_id', $id)->first();
         $title = 'Edit Employee Bank Account Details';
         $section = 'Employees';

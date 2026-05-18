@@ -27,11 +27,12 @@ class EmployeeProfileController extends Controller
         $sub_section = 'Employees / List';
 
         $employees = $this->empServices->employeeSearchResult($request, $flexsearch);
+        $roles = $this->empServices->getRoles();
 
         if ($request->ajax()) {
-            return view('employees.partials.search_results', compact('employees'))->render();
+            return view('employees.partials.search_results', compact('employees', 'roles'))->render();
         }
-        return view('employees.index', compact('employees', 'title', 'section', 'sub_section'));
+        return view('employees.index', compact('employees', 'title', 'section', 'sub_section', 'roles'));
 
     }
 
@@ -55,6 +56,11 @@ class EmployeeProfileController extends Controller
 
         if (!$employee) {
             abort(404, 'Employee not found');
+        }
+
+        // Security check: Employees can only view their own profile
+        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+            abort(403, 'Unauthorized access to other profiles.');
         }
 
         return view('employees.profile', compact('title', 'section', 'sub_section', 'employee', 'section_url'));
@@ -83,12 +89,32 @@ class EmployeeProfileController extends Controller
         $sub_section = 'General Information / Edit';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
+
+        if (!$employee) {
+            abort(404, 'Employee not found');
+        }
+
+        // Security check: Employees can only edit their own profile
+        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+            abort(403, 'Unauthorized access to other profiles.');
+        }
+
         $employee_id = $employee->id;
         $roles = $this->empServices->getRoles();
         return view('employees.general_informations.form', compact('title', 'section', 'sub_section', 'employee', 'employee_id', 'section_url', 'roles'));
     }
 
     public function generalInfoUpdate(Request $request, $id){
+        $employee = $this->empServices->getEmployeeById($id);
+        if (!$employee) {
+            abort(404, 'Employee not found');
+        }
+
+        // Security check
+        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+            abort(403, 'Unauthorized access to other profiles.');
+        }
+
         $validated = $this->empServices->employeeInfoValidation($request);
         try{
             $this->empServices->employeeInfoSave($request,$validated, $id);
@@ -174,6 +200,17 @@ class EmployeeProfileController extends Controller
         $section = 'Employees';
         $sub_section = 'Office Information / Edit';
         $section_url = route('employees.index');
+        $employee = $this->empServices->getEmployeeById($id);
+
+        if (!$employee) {
+            abort(404, 'Employee not found');
+        }
+
+        // Security check
+        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+            abort(403, 'Unauthorized access to other profiles.');
+        }
+
         $employee_office_info = EmployeeOfficeInfo::where('employee_id', $id)->first();
         $designations = $this->empServices->getDesignations();
         if($employee_office_info){
@@ -184,7 +221,7 @@ class EmployeeProfileController extends Controller
                 'sub_section', 'section_url', 'employee', 'companies', 'acts', 'employee_office_info', 'designations'));
         }else{
             return redirect()->route('employees.index')->with([
-                'message' => 'Employee Not Found',
+                'message' => 'Employee Office Information Not Found',
                 'alert-type' => 'error'
             ]);
         }
@@ -192,6 +229,16 @@ class EmployeeProfileController extends Controller
     }
 
     public function officeInfoUpdate(Request $request, $id){
+        $employee = $this->empServices->getEmployeeById($id);
+        if (!$employee) {
+            abort(404, 'Employee not found');
+        }
+
+        // Security check
+        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+            abort(403, 'Unauthorized access to other profiles.');
+        }
+
         $validated = $this->empServices->employeeOfficeInfoValidation($request);
         $employee_office_info = EmployeeOfficeInfo::where('employee_id', $id)->first();
 
@@ -216,6 +263,16 @@ class EmployeeProfileController extends Controller
         $sub_section = 'Profile - Office Information';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
+
+        if (!$employee) {
+            abort(404, 'Employee not found');
+        }
+
+        // Security check: Employees can only view their own profile
+        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+            abort(403, 'Unauthorized access to other profiles.');
+        }
+
         $employee_office_info = EmployeeOfficeInfo::where('employee_id', $id)->first();
 //        dd($employee_office_info);
         return view('employees.profile', compact('title', 'section', 'sub_section', 'employee', 'employee_office_info', 'section_url'));
@@ -290,21 +347,38 @@ class EmployeeProfileController extends Controller
     /**
      * Update employee login information
      */
-    public function updateLoginInfo(Request $request, $id)
-    {
-        try {
+    public function updateLoginInfo(Request $request, $id){
+        try{
             $this->empServices->updateLoginInfo($request, $id);
             return redirect()->back()->with([
-                'message' => 'Login Information Updated Successfully',
+                'message' => 'Login Info Updated Successfully',
                 'alert-type' => 'success'
             ]);
-        } catch (\Exception $e) {
+        }catch(\Exception $e){
             Log::error('Error updating login info: ' . $e->getMessage());
             return redirect()->back()->with([
                 'message' => $e->getMessage(),
                 'alert-type' => 'error'
             ])->withInput();
         }
+    }
+
+    public function storeAccount(Request $request)
+    {
+        try {
+            $this->empServices->createEmployeeAccount($request);
+            return redirect()->route('employees.index')->with([
+                'message' => 'Employee Account Created and Credentials Sent Successfully',
+                'alert-type' => 'success'
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with([
+                'message' => $e->getMessage(),
+                'alert-type' => 'error'
+            ])->withInput();
+        }
+    }
+
     }
 
 }
