@@ -33,43 +33,101 @@
                            value="{{ old('full_name') }}" required>
                 </div>
             </div>
-        @endif
 
-        <div class="col-12 mb-3">
-            <label for="{{ $mode }}_work_email" class="form-label text-primary fw-bold">Work Email <span class="text-danger">*</span></label>
-            <div class="input-group">
-                <span class="input-group-text bg-light border-end-0"><i class="fas fa-envelope text-primary"></i></span>
-                <input type="email" class="form-control border-start-0" id="{{ $mode }}_work_email" name="work_email" 
-                       value="{{ old('work_email', $employee?->user?->email ?? $employee?->work_email ?? '') }}" required>
+            <div class="col-md-6 mb-3">
+                <label for="{{ $mode }}_applicant_id" class="form-label text-primary fw-bold">Applicant ID <span class="text-danger">*</span></label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-id-badge text-primary"></i></span>
+                    <input type="text" class="form-control border-start-0" id="{{ $mode }}_applicant_id" name="applicant_id" 
+                           value="{{ old('applicant_id') }}" required>
+                </div>
             </div>
-        </div>
 
-        <div class="col-12 mb-3">
-            <label for="{{ $mode }}_user_type" class="form-label text-primary fw-bold">User Type <span class="text-danger">*</span></label>
-            <select class="form-select" id="{{ $mode }}_user_type" name="user_type" required>
-                <option value="">Select User Type</option>
-                @foreach(['Group', 'Company', 'Business Unit', 'Division', 'Department', 'Section', 'Employee'] as $type)
-                    <option value="{{ $type }}" {{ (old('user_type', $currentUserType) == $type) ? 'selected' : '' }}>
-                        {{ $type }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+            <div class="col-md-6 mb-3">
+                <label for="{{ $mode }}_system_id" class="form-label text-primary fw-bold">System ID <span class="text-danger">*</span></label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-laptop-code text-primary"></i></span>
+                    <input type="text" class="form-control border-start-0" id="{{ $mode }}_system_id" name="system_id" 
+                           value="{{ old('system_id') }}" required>
+                </div>
+            </div>
 
-        <div class="col-12 mb-3">
-            <label for="{{ $mode }}_role" class="form-label text-primary fw-bold">Assign Role</label>
-            <select class="form-select" id="{{ $mode }}_role" name="role">
-                <option value="">Select Role</option>
-                @foreach($roles as $role)
-                    @php
-                        $hasRole = isset($employee?->user) && $employee?->user?->hasRole($role->name);
-                    @endphp
-                    <option value="{{ $role->name }}" {{ $hasRole ? 'selected' : '' }}>
-                        {{ $role->name }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+            <div class="col-md-6 mb-3">
+                <label for="{{ $mode }}_punch_card_no" class="form-label text-primary fw-bold">Punch Card No <span class="text-danger">*</span></label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-clock text-primary"></i></span>
+                    <input type="text" class="form-control border-start-0" id="{{ $mode }}_punch_card_no" name="punch_card_no" 
+                           value="{{ old('punch_card_no') }}" required>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label for="{{ $mode }}_work_email" class="form-label text-primary fw-bold">Work Email <span class="text-danger">*</span></label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-envelope text-primary"></i></span>
+                    <input type="email" class="form-control border-start-0" id="{{ $mode }}_work_email" name="work_email" 
+                           value="{{ old('work_email') }}" required>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label for="{{ $mode }}_user_type" class="form-label text-primary fw-bold">User Type <span class="text-danger">*</span></label>
+                <select class="form-select" id="{{ $mode }}_user_type" name="user_type" required>
+                    <option value="">Select User Type</option>
+                    @foreach(['Group', 'Company', 'Business Unit', 'Division', 'Department', 'Section', 'Employee'] as $type)
+                        <option value="{{ $type }}" {{ (old('user_type', $currentUserType) == $type) ? 'selected' : '' }}>
+                            {{ $type }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label for="{{ $mode }}_role" class="form-label text-primary fw-bold">Assign Role</label>
+                <select class="form-select" id="{{ $mode }}_role" name="role">
+                    <option value="">Select Role</option>
+                    @foreach($roles as $role)
+                        <option value="{{ $role->name }}">{{ $role->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+        @else
+            <div class="col-12 mb-3">
+                <label for="{{ $mode }}_work_email" class="form-label text-primary fw-bold">Work Email <span class="text-danger">*</span></label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-envelope text-primary"></i></span>
+                    <input type="email" class="form-control border-start-0" id="{{ $mode }}_work_email" name="work_email" 
+                           value="{{ old('work_email', $employee?->user?->email ?? $employee?->work_email ?? '') }}" required>
+                </div>
+            </div>
+
+            <div class="col-12 mb-3">
+                <label for="{{ $mode }}_user_type" class="form-label text-primary fw-bold">User Type <span class="text-danger">*</span></label>
+                <select class="form-select" id="{{ $mode }}_user_type" name="user_type" required>
+                    <option value="">Select User Type</option>
+                    @foreach(['Group', 'Company', 'Business Unit', 'Division', 'Department', 'Section', 'Employee'] as $type)
+                        <option value="{{ $type }}" {{ (old('user_type', $currentUserType) == $type) ? 'selected' : '' }}>
+                            {{ $type }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-12 mb-3">
+                <label for="{{ $mode }}_role" class="form-label text-primary fw-bold">Assign Role</label>
+                <select class="form-select" id="{{ $mode }}_role" name="role">
+                    <option value="">Select Role</option>
+                    @foreach($roles as $role)
+                        @php
+                            $hasRole = isset($employee?->user) && $employee?->user?->hasRole($role->name);
+                        @endphp
+                        <option value="{{ $role->name }}" {{ $hasRole ? 'selected' : '' }}>
+                            {{ $role->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        @endif
     </div>
 @endif
 
@@ -80,7 +138,7 @@
     </div>
 
     <div class="row">
-        <div class="col-12 mb-3">
+        <div class="col-md-6 mb-3">
             <label for="{{ $mode }}_password" class="form-label text-primary fw-bold">
                 {{ $mode === 'create' ? 'Password' : 'New Password' }} 
                 @if($mode === 'create') <span class="text-danger">*</span> @endif
@@ -96,7 +154,7 @@
             @endif
         </div>
 
-        <div class="col-12 mb-3">
+        <div class="col-md-6 mb-3">
             <label for="{{ $mode }}_password_confirmation" class="form-label text-primary fw-bold">Confirm Password @if($mode === 'create') <span class="text-danger">*</span> @endif</label>
             <div class="input-group">
                 <span class="input-group-text bg-light border-end-0"><i class="fas fa-check-circle text-primary"></i></span>

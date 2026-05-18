@@ -845,6 +845,9 @@ class EmployeeServices
     {
         $request->validate([
             'full_name' => 'required|string|max:255',
+            'applicant_id' => 'required|string|unique:employees,applicant_id',
+            'system_id' => 'required|string|unique:employees,system_id',
+            'punch_card_no' => 'required|string|unique:employees,punch_card_no',
             'work_email' => 'required|email|unique:users,email|unique:employees,work_email',
             'user_type' => 'required|string|in:Group,Company,Business Unit,Division,Department,Section,Employee',
             'role' => 'nullable|string|exists:roles,name',
@@ -852,17 +855,13 @@ class EmployeeServices
         ]);
 
         try {
-            // Generate a unique applicant_id (format: EMP-RANDOM)
-            $applicantId = 'APP-' . strtoupper(bin2hex(random_bytes(4)));
-            while (Employee::where('applicant_id', $applicantId)->exists()) {
-                $applicantId = 'APP-' . strtoupper(bin2hex(random_bytes(4)));
-            }
-
             // 1. Create Employee
             $employee = Employee::create([
                 'full_name' => $request->full_name,
                 'work_email' => $request->work_email,
-                'applicant_id' => $applicantId,
+                'applicant_id' => $request->applicant_id,
+                'system_id' => $request->system_id,
+                'punch_card_no' => $request->punch_card_no,
                 'status' => 'active',
             ]);
 
