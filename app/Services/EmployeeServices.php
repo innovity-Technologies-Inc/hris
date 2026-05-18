@@ -862,7 +862,7 @@ class EmployeeServices
                 'applicant_id' => $request->applicant_id,
                 'system_id' => $request->system_id,
                 'punch_card_no' => $request->punch_card_no,
-                'status' => 'active',
+                'status' => 'incomplete',
             ]);
 
             // 2. Create User
