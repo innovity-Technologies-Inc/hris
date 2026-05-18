@@ -52,6 +52,11 @@ class EmployeeProfileController extends Controller
         $sub_section = 'Profile';
         $section_url = route('employees.index');
         $employee = $this->empServices->getEmployeeById($id);
+
+        if (!$employee) {
+            abort(404, 'Employee not found');
+        }
+
         return view('employees.profile', compact('title', 'section', 'sub_section', 'employee', 'section_url'));
     }
 

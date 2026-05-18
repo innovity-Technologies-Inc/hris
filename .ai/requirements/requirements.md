@@ -66,6 +66,11 @@ A comprehensive Human Resource Management System (HRMS) built with Laravel 12, f
     - Permission granularity: Create, Edit, View, Delete for all menus and submenus.
     - Dynamic permission seeder for system-wide menus.
     - **Permission Reset**: Ability to clear and re-seed all permission-related data (roles, permissions, menus) to restore system defaults.
+    - **RBAC Visibility for Action Buttons**: 
+        - Apply `@can` checks for Create, Edit, Delete, and Import buttons across all index and partial blade files for Company Setup, Plans, and Transport modules.
+        - Wrap "Edit" buttons in employee profile partials (Bank Accounts, Education, Eligible Plans, Nominee, Office Info, Salary Breakdown) with `@can('employee-management.edit')`.
+        - Wrap "Create", "Assign", "Store", "Remove", and "Delete" buttons/forms for Meal, Shift, Roster, OT, Off-Day, Bonus, and Leave plans in employee profile with `@can('employee-management.edit')`.
+        - Use permission slugs from `PermissionSeeder` (e.g., `slug.create`, `slug.edit`, `slug.delete`, `slug.import`).
 
 ### 🗄️ Database Seeding & Initial Setup
 - **User Types**: Support 'Group', 'Company', 'Department', and 'Employee' user types.

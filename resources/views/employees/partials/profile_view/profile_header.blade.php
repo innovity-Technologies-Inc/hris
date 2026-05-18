@@ -7,25 +7,25 @@
                     <div class="hando-main-sections">
                         <div class="hando-profile-main">
                             {!! \App\HelperClass::generateAvatar(
-                                $employee->photo_path ?? null,
-                                $employee->full_name,
+                                $employee?->photo_path ?? null,
+                                $employee?->full_name,
                                 100,
                                 '#974063',
                                 'rounded-circle img-fluid avatar-xxl img-thumbnail float-start',
-                                $employee->id,
+                                $employee?->id,
                             ) !!}
                         </div>
                         <div class="overflow-hidden ms-md-4 ms-0">
-                            <h4 class="m-0 text-dark fs-20 mt-2 mt-md-0">{{ $employee->first_name }}
-                                {{ $employee->middle_name }} {{ $employee->last_name }}</h4>
+                            <h4 class="m-0 text-dark fs-20 mt-2 mt-md-0">{{ $employee?->first_name }}
+                                {{ $employee?->middle_name }} {{ $employee?->last_name }}</h4>
                             <p class="my-1 text-muted fs-16">
                                 {{--                                        Senior Software Engineer - --}}
-                                Employee ID: {{ $employee->applicant_id }}</p>
+                                Employee ID: {{ $employee?->applicant_id }}</p>
                             <span class="fs-15">
                                 <i class="mdi mdi-phone me-2 align-middle"></i>
-                                <span>{{ $employee->personal_mobile }}</span>
+                                <span>{{ $employee?->personal_mobile }}</span>
                                 <i class="mdi mdi-email ms-3 me-2 align-middle"></i>
-                                <span>{{ $employee->personal_email }}</span>
+                                <span>{{ $employee?->personal_email }}</span>
                             </span>
                         </div>
                         <div class="ms-auto">
@@ -44,20 +44,20 @@
                                     <span class="me-2 fw-semibold">Status:</span>
                                     <div class="form-check form-switch">
                                         <input class="form-check-input" type="checkbox" id="employeeStatusToggle"
-                                            {{ $employee->status == 'active' ? 'checked' : '' }}
+                                            {{ $employee?->status == 'active' ? 'checked' : '' }}
                                             style="width: 3rem; height: 1.5rem; cursor: pointer;">
                                         <label class="form-check-label ms-2 fw-bold" for="employeeStatusToggle"
                                             id="statusLabel"
-                                            style="color: {{ $employee->status == 'active' ? '#28a745' : '#dc3545' }};">
-                                            {{ ucfirst($employee->status ?? 'active') }}
+                                            style="color: {{ $employee?->status == 'active' ? '#28a745' : '#dc3545' }};">
+                                            {{ ucfirst($employee?->status ?? 'active') }}
                                         </label>
                                     </div>
                                 </div>
                                 @else
                                 <div class="d-flex align-items-center">
                                     <span class="me-2 fw-semibold">Status:</span>
-                                    <span class="badge rounded-pill {{ $employee->status == 'active' ? 'bg-success' : 'bg-danger' }}">
-                                        {{ ucfirst($employee->status ?? 'active') }}
+                                    <span class="badge rounded-pill {{ $employee?->status == 'active' ? 'bg-success' : 'bg-danger' }}">
+                                        {{ ucfirst($employee?->status ?? 'active') }}
                                     </span>
                                 </div>
                                 @endcan
@@ -81,15 +81,15 @@
                 <div class="row">
                     <div class="col-md-4">
                         <p class="mb-2"><strong>Employee ID:</strong></p>
-                        <p class="text-muted">{{ $employee->applicant_id }}</p>
+                        <p class="text-muted">{{ $employee?->applicant_id }}</p>
                     </div>
                     <div class="col-md-4">
                         <p class="mb-2"><strong>System ID:</strong></p>
-                        <p class="text-muted">{{ $employee->system_id }}</p>
+                        <p class="text-muted">{{ $employee?->system_id }}</p>
                     </div>
                     <div class="col-md-4">
                         <p class="mb-2"><strong>Punch Card No:</strong></p>
-                        <p class="text-muted">{{ $employee->punch_card_no }}</p>
+                        <p class="text-muted">{{ $employee?->punch_card_no }}</p>
                     </div>
                 </div>
             </div>
