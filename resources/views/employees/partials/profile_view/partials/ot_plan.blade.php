@@ -8,12 +8,15 @@
                 <h5 class="fs-16 text-dark fw-semibold mb-0">Overtime Plan Management</h5>
             </div>
         </div>
-        <div>
-            {{-- Create Button to Open Modal --}}
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createOTPlanModal">
-                <i class="mdi mdi-plus-circle me-1"></i> Create New
-            </button>
-        </div>
+        @can('employee-management.edit')
+            <div>
+                {{-- Create Button to Open Modal --}}
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#createOTPlanModal">
+                    <i class="mdi mdi-plus-circle me-1"></i> Create New
+                </button>
+            </div>
+        @endcan
     </div>
 </div>
 
@@ -47,17 +50,19 @@
                 <div class="card-header border-0 py-3 position-relative" style="background: var(--bs-tertiary-bg);">
 
                     {{-- Remove Button --}}
-                    <div class="position-absolute top-0 end-0 mt-2 me-3">
-                        <form
-                            action="{{ route('employees.profile.plans.remove', ['id' => $activeOtPLan->id, 'type' => 'ot-plans']) }}"
-                            method="post">
-                            @csrf
-                            @method('put')
-                            <button type="submit" class="btn btn-sm btn-outline-danger shadow-sm removeBtn">
-                                <i class="mdi mdi-close-circle"></i> Remove
-                            </button>
-                        </form>
-                    </div>
+                    @can('employee-management.edit')
+                        <div class="position-absolute top-0 end-0 mt-2 me-3">
+                            <form
+                                action="{{ route('employees.profile.plans.remove', ['id' => $activeOtPLan->id, 'type' => 'ot-plans']) }}"
+                                method="post">
+                                @csrf
+                                @method('put')
+                                <button type="submit" class="btn btn-sm btn-outline-danger shadow-sm removeBtn">
+                                    <i class="mdi mdi-close-circle"></i> Remove
+                                </button>
+                            </form>
+                        </div>
+                    @endcan
 
                     {{-- Plan Name & Status --}}
                     <div class="text-center">
@@ -298,16 +303,20 @@
                                                 </span>
                                             </td>
                                             <td class="text-center">
-                                                <form
-                                                    action="{{ route('employees.profile.plans.delete', ['type' => 'ot-plans', 'id' => $plan->id]) }}"
-                                                    method="post">
-                                                    @csrf
-                                                    @method('delete')
-                                                    <button type="submit" class="btn btn-sm btn-danger confirmDelete"
-                                                        title="Delete Record">
-                                                        <i class="mdi mdi-delete"></i> Delete
-                                                    </button>
-                                                </form>
+                                                @can('employee-management.edit')
+                                                    <form
+                                                        action="{{ route('employees.profile.plans.delete', ['type' => 'ot-plans', 'id' => $plan->id]) }}"
+                                                        method="post">
+                                                        @csrf
+                                                        @method('delete')
+                                                        <button type="submit" class="btn btn-sm btn-danger confirmDelete"
+                                                            title="Delete Record">
+                                                            <i class="mdi mdi-delete"></i> Delete
+                                                        </button>
+                                                    </form>
+                                                @else
+                                                    <span class="badge bg-light text-muted">No Actions</span>
+                                                @endcan
                                             </td>
                                         </tr>
                                     @endif

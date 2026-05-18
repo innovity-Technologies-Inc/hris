@@ -10,12 +10,15 @@
             </div>
 
         </div>
-        <div>
-            {{-- Create Button to Open Modal --}}
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createMealPlanModal">
-                <i class="mdi mdi-plus-circle me-1"></i> Create New
-            </button>
-        </div>
+        @can('employee-management.edit')
+            <div>
+                {{-- Create Button to Open Modal --}}
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#createMealPlanModal">
+                    <i class="mdi mdi-plus-circle me-1"></i> Create New
+                </button>
+            </div>
+        @endcan
     </div>
 </div>
 
@@ -75,16 +78,20 @@
                                             </span>
                                         </td>
                                         <td class="text-center">
-                                            <form
-                                                action="{{ route('employees.profile.plans.remove', ['id' => $plan->id, 'type' => 'meal-plans']) }}"
-                                                method="post">
-                                                @csrf
-                                                @method('put')
-                                                <button type="submit"
-                                                    class="btn btn-sm btn-outline-danger shadow-sm removeBtn">
-                                                    <i class="mdi mdi-close-circle"></i> Remove
-                                                </button>
-                                            </form>
+                                            @can('employee-management.edit')
+                                                <form
+                                                    action="{{ route('employees.profile.plans.remove', ['id' => $plan->id, 'type' => 'meal-plans']) }}"
+                                                    method="post">
+                                                    @csrf
+                                                    @method('put')
+                                                    <button type="submit"
+                                                        class="btn btn-sm btn-outline-danger shadow-sm removeBtn">
+                                                        <i class="mdi mdi-close-circle"></i> Remove
+                                                    </button>
+                                                </form>
+                                            @else
+                                                <span class="badge bg-light text-muted">No Actions</span>
+                                            @endcan
                                         </td>
                                     </tr>
                                 @endforeach
@@ -165,16 +172,20 @@
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            <form
-                                                action="{{ route('employees.profile.plans.delete', ['type' => 'meal-plans', 'id' => $plan->id]) }}"
-                                                method="post">
-                                                @csrf
-                                                @method('delete')
-                                                <button type="submit" class="btn btn-sm btn-danger confirmDelete"
-                                                    title="Delete Record">
-                                                    <i class="mdi mdi-delete"></i> Delete
-                                                </button>
-                                            </form>
+                                            @can('employee-management.edit')
+                                                <form
+                                                    action="{{ route('employees.profile.plans.delete', ['type' => 'meal-plans', 'id' => $plan->id]) }}"
+                                                    method="post">
+                                                    @csrf
+                                                    @method('delete')
+                                                    <button type="submit" class="btn btn-sm btn-danger confirmDelete"
+                                                        title="Delete Record">
+                                                        <i class="mdi mdi-delete"></i> Delete
+                                                    </button>
+                                                </form>
+                                            @else
+                                                <span class="badge bg-light text-muted">No Actions</span>
+                                            @endcan
                                         </td>
                                     </tr>
                                 @endforeach

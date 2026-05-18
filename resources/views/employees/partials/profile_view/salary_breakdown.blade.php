@@ -196,11 +196,12 @@
                                 <i class="fas fa-certificate me-1"></i> Salary Certificate
                             </a>
 
-                            <a href="{{ route('employees.salary_breakdown.edit', $employee->id) }}"
-                               class="btn btn-primary">
-                                <i class="mdi mdi-pencil me-1"></i> Edit Salary Information
-                            </a>
-
+                            @can('employee-management.edit')
+                                <a href="{{ route('employees.salary_breakdown.edit', $employee->id) }}"
+                                   class="btn btn-primary">
+                                    <i class="mdi mdi-pencil me-1"></i> Edit Salary Information
+                                </a>
+                            @endcan
                         </div>
                     </div>
                 </div>

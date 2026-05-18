@@ -31,14 +31,17 @@
                         <div class="ms-auto">
                             <div class="d-flex align-items-center gap-3">
                                 <!-- Edit Login Info Button -->
+                                @can('employee-management.edit')
                                 <button type="button" class="btn btn-primary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#editLoginInfoModal">
                                     <i class="mdi mdi-account-key me-1"></i> Edit Login Info
                                 </button>
+                                @endcan
 
                                 <!-- ID Card Action Button -->
                                 @include('employee.partials.id_card_button', ['employee' => $employee])
 
                                 <!-- Status Toggle -->
+                                @can('employee-management.edit')
                                 <div class="d-flex align-items-center">
                                     <span class="me-2 fw-semibold">Status:</span>
                                     <div class="form-check form-switch">
@@ -52,6 +55,14 @@
                                         </label>
                                     </div>
                                 </div>
+                                @else
+                                <div class="d-flex align-items-center">
+                                    <span class="me-2 fw-semibold">Status:</span>
+                                    <span class="badge rounded-pill {{ $employee->status == 'active' ? 'bg-success' : 'bg-danger' }}">
+                                        {{ ucfirst($employee->status ?? 'active') }}
+                                    </span>
+                                </div>
+                                @endcan
                             </div>
                         </div>
                     </div>

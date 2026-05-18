@@ -482,14 +482,13 @@
         <div class="card">
             <div class="card-body">
                 <div class="d-flex justify-content-end gap-2">
-
-                    <a href="{{ route('employees.office_informations.edit', $employee->id) }}"
-                       class="btn btn-primary">
-                        <i class="mdi mdi-pencil me-1"></i> Edit Company Information
-                    </a>
-
-                </div>
-            </div>
+                    @can('employee-management.edit')
+                        <a href="{{ route('employees.office_informations.edit', $employee->id) }}"
+                           class="btn btn-primary">
+                            <i class="mdi mdi-pencil me-1"></i> Edit Company Information
+                        </a>
+                    @endcan
+                </div>            </div>
         </div>
     </div>
 </div>

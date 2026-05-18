@@ -536,10 +536,12 @@
         <div class="card">
             <div class="card-body">
                 <div class="d-flex justify-content-end gap-2">
+                    @can('employee-management.edit')
                     <a href="{{ route('employees.general_informations.edit', $employee->id) }}"
                         class="btn btn-primary">
                         <i class="mdi mdi-pencil me-1"></i> Edit Profile
                     </a>
+                    @endcan
                 </div>
             </div>
         </div>

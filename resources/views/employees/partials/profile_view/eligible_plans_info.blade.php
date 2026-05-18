@@ -574,8 +574,10 @@
                     <div class="d-flex justify-content-end gap-2">
                         <a href="{{ route('employees.index') }}" class="btn btn-secondary">Back to List</a>
                         @if ($employeePlan)
-                            <a href="{{ route('employees.eligible_plans.edit', $employee->id) }}"
-                                class="btn btn-primary">Edit Plans</a>
+                            @can('employee-management.edit')
+                                <a href="{{ route('employees.eligible_plans.edit', $employee->id) }}"
+                                    class="btn btn-primary">Edit Plans</a>
+                            @endcan
                         @endif
                     </div>
                 </div>
