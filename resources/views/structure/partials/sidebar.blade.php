@@ -40,7 +40,7 @@
                 @php
                     $canViewEmployeeInfo = auth()->user()->can('employee-management.view');
                     $canSearchEmployee = auth()->user()->can('employee-management.view');
-                    $canBulkUploadEmployee = auth()->user()->can('employee-management.create');
+                    $canBulkUploadEmployee = auth()->user()->can('employee-management.import');
                     $showEmployeesMenu = $canViewEmployeeInfo || $canSearchEmployee || $canBulkUploadEmployee;
                 @endphp
                 @if($showEmployeesMenu)
