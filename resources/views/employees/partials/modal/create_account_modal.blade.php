@@ -1,6 +1,6 @@
 <!-- Create Employee Account Modal -->
 <div class="modal fade" id="createAccountModal" tabindex="-1" aria-labelledby="createAccountModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content card shadow-sm border-0 mb-0" style="border-radius: 15px; overflow: hidden;">
             <form id="createAccountForm" action="{{ route('employees.store_account') }}" method="POST">
                 @csrf
