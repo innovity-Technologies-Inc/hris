@@ -56,8 +56,15 @@
                         <ul class="nav-second-level">
                             @if($canViewEmployeeInfo)
                             <li>
-                                <a class='tp-link @if (Route::is('employees.index')) menuitem-active @endif'
-                                    href='{{ route('employees.index') }}'>Employee Information</a>
+                                @php
+                                    $employeeInfoUrl = route('employees.index');
+                                    $isEmployeeType = auth()->user()->user_type === 'Employee';
+                                    if ($isEmployeeType && auth()->user()->employee_id) {
+                                        $employeeInfoUrl = route('employees.profile.general_informations', auth()->user()->employee_id);
+                                    }
+                                @endphp
+                                <a class='tp-link @if (Route::is('employees.index') || (Route::is('employees.profile.*') && $isEmployeeType)) menuitem-active @endif'
+                                    href='{{ $employeeInfoUrl }}'>Employee Information</a>
                             </li>
                             @endif
                             @if($canSearchEmployee)
