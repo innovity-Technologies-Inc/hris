@@ -16,14 +16,18 @@ Each increment object should have:
 --}}
 
 <div class="card-body p-0">
+    @can('increments.create')
     <a type="button" class="btn btn-warning btn-sm me-3 mb-3" href="{{ route('increment.create') }}">
         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create Increment
     </a>
+    @endcan
 
     @if ($increments->isNotEmpty())
+        @can('increments.hr-approve')
         <a type="button" class="btn btn-success btn-sm me-3 mb-3 float-end" href="{{ route('increment.adjustment') }}">
-        <i style="height: 12px; width: 12px" data-feather="check"></i> Increment Adjustment
-    </a>
+            <i style="height: 12px; width: 12px" data-feather="check"></i> Increment Adjustment
+        </a>
+        @endcan
     @endif
 
     @if ($increments->isEmpty())
@@ -107,19 +111,24 @@ Each increment object should have:
                                 <td>
                                     <div class="d-flex gap-1">
                                         {{-- View Button --}}
+                                        @can('increments.view')
                                         <a href="{{ route('increment.show', $increment->id) }}"
                                             class="btn btn-info btn-sm" title="View Details">
                                             <i style="height: 12px; width: 12px" data-feather="eye"></i>
                                         </a>
+                                        @endcan
 
                                         @if ($increment->status == 'pending')
                                             {{-- Edit Button --}}
+                                            @can('increments.edit')
                                             <a href="{{ route('increment.edit', $increment->id) }}"
                                                 class="btn btn-primary btn-sm" title="Edit">
                                                 <i style="height: 12px; width: 12px" data-feather="edit"></i>
                                             </a>
+                                            @endcan
 
                                             {{-- Approve Button --}}
+                                            @can('increments.hr-approve')
                                             <form class="d-inline"
                                                 action="{{ route('increment.status.update', $increment->id) }}"
                                                 method="POST">
@@ -143,7 +152,9 @@ Each increment object should have:
                                                     <i style="height: 12px; width: 12px" data-feather="x"></i>
                                                 </button>
                                             </form>
+                                            @endcan
                                         @endif
+                                        @can('increments.delete')
                                         <form class="d-inline"
                                               action="{{ route('increment.delete', $increment->id) }}"
                                               method="POST">
@@ -154,6 +165,7 @@ Each increment object should have:
                                                 <i style="height: 12px; width: 12px" data-feather="trash"></i>
                                             </button>
                                         </form>
+                                        @endcan
                                     </div>
                                 </td>
                             </tr>

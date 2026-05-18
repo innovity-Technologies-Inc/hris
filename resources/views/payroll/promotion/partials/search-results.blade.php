@@ -1,12 +1,16 @@
 <div class="card-body p-0">
+    @can('promotions.create')
     <a type="button" class="btn btn-warning btn-sm me-3 mb-3" href="{{ route('promotion.create') }}">
         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create Promotion
     </a>
+    @endcan
 
     @if ($promotions->isNotEmpty())
+    @can('promotions.hr-approve')
     <a type="button" class="btn btn-success btn-sm me-3 mb-3 float-end" href="{{ route('promotion.adjustment') }}">
         <i style="height: 12px; width: 12px" data-feather="check"></i> Promotion Adjustment
     </a>
+    @endcan
     @endif
 
     @if ($promotions->isEmpty())
@@ -81,19 +85,24 @@
                                 <td>
                                     <div class="d-flex gap-1">
                                         {{-- View Button --}}
+                                        @can('promotions.view')
                                         <a href="{{ route('promotion.show', $promotion->id) }}"
                                             class="btn btn-info btn-sm" title="View Details">
                                             <i style="height: 12px; width: 12px" data-feather="eye"></i>
                                         </a>
+                                        @endcan
 
                                         @if ($promotion->status == 'pending')
                                             {{-- Edit Button --}}
+                                            @can('promotions.edit')
                                             <a href="{{ route('promotion.edit', $promotion->id) }}"
                                                 class="btn btn-primary btn-sm" title="Edit">
                                                 <i style="height: 12px; width: 12px" data-feather="edit"></i>
                                             </a>
+                                            @endcan
 
                                             {{-- Approve Button --}}
+                                            @can('promotions.hr-approve')
                                             <form class="d-inline"
                                                 action="{{ route('promotion.status.update', $promotion->id) }}"
                                                 method="POST">
@@ -118,7 +127,9 @@
                                                     <i style="height: 12px; width: 12px" data-feather="x"></i>
                                                 </button>
                                             </form>
+                                            @endcan
                                         @endif
+                                        @can('promotions.delete')
                                         <form class="d-inline"
                                               action="{{ route('promotion.delete', $promotion->id) }}"
                                               method="POST">
@@ -129,6 +140,7 @@
                                                 <i style="height: 12px; width: 12px" data-feather="trash"></i>
                                             </button>
                                         </form>
+                                        @endcan
                                     </div>
                                 </td>
                             </tr>
