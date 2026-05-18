@@ -379,6 +379,4 @@ class EmployeeProfileController extends Controller
         }
     }
 
-    }
-
 }
