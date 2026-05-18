@@ -78,7 +78,7 @@ Route::prefix('company-setup')->middleware('auth')->group(function () {
 
     Route::get('bulk-upload', function () {
         return view('company_setup.bulk_uploads.form');
-    })->name('company_setup.bulk_upload')->middleware('permission:bulk-upload.view');
+    })->name('company_setup.bulk_upload')->middleware('permission:employee-management.import');
 
     Route::controller(CompanySetupController::class)->group(function () {
         Route::middleware('permission:groups.view')->group(function () {
@@ -339,7 +339,7 @@ Route::prefix('company-setup')->middleware('auth')->group(function () {
 
 // Search Employee Routes
 Route::controller(EmployeeSearchController::class)->middleware('auth')->group(function () {
-    Route::middleware('permission:search-employee.view')->group(function () {
+    Route::middleware('permission:employee-management.view')->group(function () {
         Route::get('search/employee', 'index')->name('search.employee');
         Route::get('search/employee/export', 'export')->name('search.employee.export');
     });
@@ -348,24 +348,24 @@ Route::controller(EmployeeSearchController::class)->middleware('auth')->group(fu
 Route::prefix('employees')->middleware('auth')->group(function () {
 
     Route::controller(EmployeeProfileController::class)->group(function () {
-        Route::middleware('permission:employee-information.view')->group(function () {
+        Route::middleware('permission:employee-management.view')->group(function () {
             Route::get('/', 'index')->name('employees.index');
             Route::get('profile/{id}/general-informations', 'profileView')->name('employees.profile.general_informations');
             Route::get('profile/{id}/office-informations', 'showOfficeInfo')->name('employees.profile.office_informations');
         });
 
-        Route::middleware('permission:bulk-upload.view')->group(function () {
+        Route::middleware('permission:employee-management.import')->group(function () {
             Route::get('import', 'bulkEmployeeImportSections')->name('employees.import');
         });
 
-        Route::middleware('permission:employee-information.create')->group(function () {
+        Route::middleware('permission:employee-management.create')->group(function () {
             Route::get('general-informations/create', 'generalInfoCreate')->name('employees.general_informations.create');
             Route::post('general-informations/store', 'generalInfoStore')->name('employees.general_informations.store');
             Route::get('office-informations/create/{id}', 'officeInfoCreate')->name('employees.office_informations.create');
             Route::post('office-informations/store', 'officeInfoStore')->name('employees.office_informations.store');
         });
 
-        Route::middleware('permission:employee-information.edit')->group(function () {
+        Route::middleware('permission:employee-management.edit')->group(function () {
             Route::get('general-informations/edit/{id}', 'generalInfoEdit')->name('employees.general_informations.edit');
             Route::put('general-informations/{id}/update', 'generalInfoUpdate')->name('employees.general_informations.update');
             Route::get('office-informations/edit/{id}', 'officeInfoEdit')->name('employees.office_informations.edit');
@@ -374,7 +374,7 @@ Route::prefix('employees')->middleware('auth')->group(function () {
             Route::post('{id}/update-login-info', 'updateLoginInfo')->name('employees.update_login_info');
         });
 
-        Route::middleware('permission:bulk-upload.create')->group(function () {
+        Route::middleware('permission:employee-management.import')->group(function () {
             Route::post('general-informations/import', 'generalInfoImport')->name('employees.general_informations.import');
             Route::post('office-informations/import', 'officeInfoImport')->name('employees.office_informations.import');
         });
@@ -402,104 +402,104 @@ Route::prefix('employees')->middleware('auth')->group(function () {
     });
 
     Route::controller(EmployeeEligibleController::class)->group(function(){
-        Route::middleware('permission:employee-information.view')->group(function () {
+        Route::middleware('permission:employee-management.view')->group(function () {
             Route::get('profile/{id}/eligible-plans', 'show')->name('employees.profile.eligible_plans');
         });
-        Route::middleware('permission:employee-information.create')->group(function () {
+        Route::middleware('permission:employee-management.create')->group(function () {
             Route::get('eligible-plans/create/{id}', 'create')->name('employees.eligible_plans.create');
             Route::post('eligible-plans/store', 'store')->name('employees.eligible_plans.store');
         });
-        Route::middleware('permission:employee-information.edit')->group(function () {
+        Route::middleware('permission:employee-management.edit')->group(function () {
             Route::get('eligible-plans/edit/{id}', 'edit')->name('employees.eligible_plans.edit');
             Route::put('eligible-plans/{id}/update', 'update')->name('employees.eligible_plans.update');
         });
-        Route::middleware('permission:bulk-upload.create')->group(function () {
+        Route::middleware('permission:employee-management.import')->group(function () {
             Route::post('eligible-plans/import', 'import')->name('employees.eligible_plans.import');
         });
     });
 
     Route::controller(EmployeeEducationExperienceTrainingController::class)->group(function(){
-        Route::middleware('permission:employee-information.view')->group(function () {
+        Route::middleware('permission:employee-management.view')->group(function () {
             Route::get('profile/{id}/education-information', 'show')->name('employees.profile.education_information');
         });
-        Route::middleware('permission:employee-information.create')->group(function () {
+        Route::middleware('permission:employee-management.create')->group(function () {
             Route::get('education-information/create/{id}', 'create')->name('employees.education_information.create');
             Route::post('education-information/store', 'store')->name('employees.education_information.store');
         });
-        Route::middleware('permission:employee-information.edit')->group(function () {
+        Route::middleware('permission:employee-management.edit')->group(function () {
             Route::get('education-information/edit/{id}', 'edit')->name('employees.education_information.edit');
             Route::put('education-information/{id}/update', 'update')->name('employees.education_information.update');
         });
-        Route::middleware('permission:bulk-upload.create')->group(function () {
+        Route::middleware('permission:employee-management.import')->group(function () {
             Route::post('education-information/import', 'import')->name('employees.education_information.import');
         });
     });
 
     Route::controller(EmployeeNomineeController::class)->group(function(){
-        Route::middleware('permission:employee-information.view')->group(function () {
+        Route::middleware('permission:employee-management.view')->group(function () {
             Route::get('profile/{id}/nominee-information', 'show')->name('employees.profile.nominee_information');
         });
-        Route::middleware('permission:employee-information.create')->group(function () {
+        Route::middleware('permission:employee-management.create')->group(function () {
             Route::get('nominee-information/create/{id}', 'create')->name('employees.nominee_information.create');
             Route::post('nominee-information/store', 'store')->name('employees.nominee_information.store');
         });
-        Route::middleware('permission:employee-information.edit')->group(function () {
+        Route::middleware('permission:employee-management.edit')->group(function () {
             Route::get('nominee-information/edit/{id}', 'edit')->name('employees.nominee_information.edit');
             Route::put('nominee-information/{id}/update', 'update')->name('employees.nominee_information.update');
         });
-        Route::middleware('permission:bulk-upload.create')->group(function () {
+        Route::middleware('permission:employee-management.import')->group(function () {
             Route::post('nominee-information/import', 'import')->name('employees.nominee_information.import');
         });
     });
 
     Route::controller(EmployeeSalaryBreakdownController::class)->group(function(){
-        Route::middleware('permission:employee-information.view')->group(function () {
+        Route::middleware('permission:employee-management.view')->group(function () {
             Route::get('profile/{id}/salary-breakdown', 'show')->name('employees.profile.salary_breakdown');
         });
-        Route::middleware('permission:employee-information.create')->group(function () {
+        Route::middleware('permission:employee-management.create')->group(function () {
             Route::get('salary-breakdown/create/{id}', 'create')->name('employees.salary_breakdown.create');
             Route::post('salary-breakdown/store', 'store')->name('employees.salary_breakdown.store');
         });
-        Route::middleware('permission:employee-information.edit')->group(function () {
+        Route::middleware('permission:employee-management.edit')->group(function () {
             Route::get('salary-breakdown/edit/{id}', 'edit')->name('employees.salary_breakdown.edit');
             Route::put('salary-breakdown/{id}/update', 'update')->name('employees.salary_breakdown.update');
         });
-        Route::middleware('permission:bulk-upload.create')->group(function () {
+        Route::middleware('permission:employee-management.import')->group(function () {
             Route::post('salary-breakdown/import', 'import')->name('employees.salary_breakdown.import');
         });
     });
 
     Route::controller(EmployeeBankAccountController::class)->group(function () {
-        Route::middleware('permission:employee-information.view')->group(function () {
+        Route::middleware('permission:employee-management.view')->group(function () {
             Route::get('profile/{id}/bank-accounts', 'show')->name('employees.profile.bank_accounts');
         });
-        Route::middleware('permission:employee-information.create')->group(function () {
+        Route::middleware('permission:employee-management.create')->group(function () {
             Route::get('bank-accounts/create/{id}', 'create')->name('employees.bank_accounts.create');
             Route::post('bank-accounts/store', 'store')->name('employees.bank_accounts.store');
         });
-        Route::middleware('permission:employee-information.edit')->group(function () {
+        Route::middleware('permission:employee-management.edit')->group(function () {
             Route::get('bank-accounts/edit/{id}', 'edit')->name('employees.bank_accounts.edit');
             Route::put('bank-accounts/{id}/update', 'update')->name('employees.bank_accounts.update');
         });
-        Route::middleware('permission:bulk-upload.create')->group(function () {
+        Route::middleware('permission:employee-management.import')->group(function () {
             Route::post('bank-accounts/import', 'import')->name('employees.bank_accounts.import');
         });
     });
 
     Route::controller(EmployeePlansController::class)->group(function () {
-        Route::middleware('permission:employee-information.view')->group(function () {
+        Route::middleware('permission:employee-management.view')->group(function () {
             Route::get('profile/{id}/plans/{type}', 'plansView')->name('employees.profile.plans');
         });
-        Route::middleware('permission:employee-information.edit')->group(function () {
+        Route::middleware('permission:employee-management.edit')->group(function () {
             Route::post('profile/plans/{type}/store', 'assignPlan')->name('employees.profile.plans.store');
             Route::put('profile/plans/{type}/remove/{id}', 'removePlan')->name('employees.profile.plans.remove');
         });
-        Route::middleware('permission:employee-information.delete')->group(function () {
+        Route::middleware('permission:employee-management.delete')->group(function () {
             Route::delete('profile/plans/{type}/delete/{id}', 'deletePlan')->name('employees.profile.plans.delete');
         });
     });
 
-    Route::get('profile/{id}/leave-info', [LeavesController::class, 'showLeaveInfo'])->name('employees.profile.leave_info')->middleware('permission:leave-logs.view');
+    Route::get('profile/{id}/leave-info', [LeavesController::class, 'showLeaveInfo'])->name('employees.profile.leave_info')->middleware('permission:leaves.view');
 
 });
 
@@ -507,7 +507,7 @@ Route::prefix('employees')->middleware('auth')->group(function () {
 Route::prefix('plans')->middleware('auth')->group(function () {
     Route::get('bulk-upload', function () {
         return view('plans.bulk_uploads.form');
-    })->name('plans.bulk_upload')->middleware('permission:bulk-upload.view');
+    })->name('plans.bulk_upload')->middleware('permission:employee-management.import');
 
     Route::prefix('meal-plans')->group(function () {
         Route::controller(MealPlansController::class)->group(function(){
@@ -835,37 +835,39 @@ Route::prefix('settings')->middleware('auth')->group(function () {
 
 Route::prefix('leaves')->middleware('auth')->group(function () {
     Route::controller(LeavesController::class)->group(function (){
-        Route::middleware('permission:leave-logs.view')->group(function () {
+        Route::middleware('permission:leaves.view')->group(function () {
             Route::get('/', 'index')->name('leaves.index');
         });
-        Route::middleware('permission:leave-application.create')->group(function () {
+        Route::middleware('permission:leaves.create')->group(function () {
             Route::get('create', 'create')->name('leaves.create');
             Route::post('store', 'store')->name('leaves.store');
             Route::post('import', 'import')->name('leaves.import');
         });
-        Route::middleware('permission:leave-application.edit')->group(function () {
+        Route::middleware('permission:leaves.hr-approve')->group(function () {
             Route::put('change-status', 'changeStatus')->name('leaves.change_status');
         });
-        Route::middleware('permission:leave-application.delete')->group(function () {
+        Route::middleware('permission:leaves.delete')->group(function () {
             Route::delete('{id}/delete', 'destroy')->name('leaves.destroy');
         });
     });
 });
 
 Route::controller(EmployeeMovementsController::class)->prefix('movement')->middleware('auth')->group(function (){
-    Route::middleware('permission:movement-logs.view')->group(function () {
+    Route::middleware('permission:movement.view')->group(function () {
         Route::get('/', 'index')->name('movement.index');
     });
-    Route::middleware('permission:movement-application.create')->group(function () {
+    Route::middleware('permission:movement.create')->group(function () {
         Route::get('create', 'form')->name('movement.create');
         Route::post('store', 'save')->name('movement.store');
     });
-    Route::middleware('permission:movement-application.edit')->group(function () {
+    Route::middleware('permission:movement.edit')->group(function () {
         Route::get('{id}/edit', 'form')->name('movement.edit');
         Route::put('{id}/update', 'save')->name('movement.update');
+    });
+    Route::middleware('permission:movement.hr-approve')->group(function () {
         Route::put('change-status', 'changeStatus')->name('movement.change_status');
     });
-    Route::middleware('permission:movement-application.delete')->group(function () {
+    Route::middleware('permission:movement.delete')->group(function () {
         Route::delete('{id}/delete', 'destroy')->name('movement.destroy');
     });
 });
@@ -995,20 +997,20 @@ Route::controller(DataController::class)->middleware('auth')->group(function () 
 });
 
     Route::controller(AttendancesController::class)->prefix('attendance')->middleware('auth')->group(function (){
-        Route::middleware('permission:records.view')->group(function () {
+        Route::middleware('permission:attendance.view')->group(function () {
             Route::get('/', 'index')->name('attendance.index');
             Route::get('print', 'printIndex')->name('attendance.print');
             Route::get('print/{id}', 'printDetail')->name('attendance.print-detail');
         });
-        Route::middleware('permission:create-attendance.create')->group(function () {
+        Route::middleware('permission:attendance.create')->group(function () {
             Route::get('create', 'create')->name('attendance.create');
             Route::post('store', 'store')->name('attendance.store');
         });
-        Route::middleware('permission:bulk-upload-attendance.create')->group(function () {
+        Route::middleware('permission:attendance.import')->group(function () {
             Route::get('bulk-upload', 'bulkUpload')->name('attendance.bulk-upload');
             Route::post('import', 'import')->name('attendance.import');
         });
-        Route::middleware('permission:clock-in-out.view')->group(function () {
+        Route::middleware('permission:attendance.view')->group(function () {
             Route::get('clock-in-out', 'clock_in_out')->name('attendance.clock_in_out');
             Route::post('clock-in-store', 'clockInOutStore')->name('attendance.clock_in_out_store');
         });
@@ -1125,9 +1127,9 @@ Route::get('db-backup', function () {
     $section = 'Settings';
     $sub_section = 'Database Backup';
     return view('settings.database_backup')->with(compact('title', 'section', 'sub_section'));
-})->name('db_backup')->middleware(['auth', 'permission:db-backup.view']);
+})->name('db_backup')->middleware(['auth', 'permission:db-backup.download']);
 
-Route::get('flex/db-dump', [\Flex\DbDump\Http\Controllers\DbDumpController::class, 'download'])->name('flex_db_dump')->middleware(['auth', 'permission:db-backup.create']);
+Route::get('flex/db-dump', [\Flex\DbDump\Http\Controllers\DbDumpController::class, 'download'])->name('flex_db_dump')->middleware(['auth', 'permission:db-backup.download']);
 
 // Trial Routes - Payroll Process Index
 Route::get('/trial/payroll-process', function() {
