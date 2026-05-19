@@ -80,7 +80,7 @@ class EmployeeProfileController extends Controller
                 'alert-type' => 'error'
             ]);
         }
-        return redirect()->route('employees.education_information.create', $employee->id)->with([
+        return redirect()->route('employees.profile.general_informations', $employee->id)->with([
             'message' => 'Info Added Successfully',
             'alert-type' => 'success',
         ]);
@@ -156,7 +156,11 @@ class EmployeeProfileController extends Controller
                 'alert-type' => 'error'
             ]);
         }
-        return redirect()->route('employees.index')->with([
+        $redirectRoute = (auth()->user()->user_type === 'Employee')
+            ? route('employees.profile.general_informations', $id)
+            : route('employees.index');
+
+        return redirect()->to($redirectRoute)->with([
             'message' => 'Info Updated Successfully',
             'alert-type' => 'success'
         ]);

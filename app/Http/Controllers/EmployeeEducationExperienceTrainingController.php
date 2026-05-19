@@ -48,21 +48,10 @@ class EmployeeEducationExperienceTrainingController extends Controller
                 'alert-type' => 'error'
             ]);
         }
-        $employeeOfficeInfo = EmployeeOfficeInfo::where('employee_id', $employeeEduData->employee_id)->first();
-
-        if(empty($employeeOfficeInfo)){
-            return redirect()->route('employees.office_informations.create', $employeeEduData->employee_id)->with([
-                'message' => 'Education Info Added Successfully',
-                'alert-type' => 'success'
-            ]);
-        }
-        else{
-            return redirect()->route('employees.profile.education_information', $employeeEduData->employee_id)->with([
-                    'message' => 'Education Info Added Successfully',
-                    'alert-type' => 'success'
-                ]
-            );
-        }
+        return redirect()->route('employees.profile.education_information', $employeeEduData->employee_id)->with([
+            'message' => 'Education Info Added Successfully',
+            'alert-type' => 'success'
+        ]);
     }
     public function show($id)
     {
