@@ -1,7 +1,7 @@
 <!-- Employment History Section -->
 <div class="row">
     <div class="col-12">
-        @if(isset($historyData) && $historyData->status === 'incomplete')
+        @if((isset($historyData) && $historyData->status === 'incomplete') || empty($historyData))
             <!-- Incomplete Profile Warning -->
             <div class="card border-0 shadow-none mb-3" style="background-color: rgba(151, 64, 99, 0.05); border: 1px solid rgba(151, 64, 99, 0.2) !important;">
                 <div class="card-body text-center py-5">
@@ -13,7 +13,7 @@
                         Please provide your previous employment history to proceed with the profile verification.
                     </p>
                     @can('employee-management.create')
-                    <a href="{{ route('employees.employment_history.edit', $employee->id) }}"
+                    <a href="{{ isset($historyData) ? route('employees.employment_history.edit', $employee->id) : route('employees.employment_history.create', $employee->id) }}"
                         class="btn btn-lg px-5 shadow-sm text-white" style="background-color: #974063;">
                         <i class="fas fa-plus me-1"></i> Complete History Now
                     </a>
