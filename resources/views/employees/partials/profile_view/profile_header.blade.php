@@ -45,7 +45,7 @@
                                 @include('employee.partials.id_card_button', ['employee' => $employee])
 
                                 <!-- Status Toggle -->
-                                @can('employee-management.edit')
+                                @if(auth()->user()->can('employee-management.edit') && auth()->user()->user_type !== 'Employee')
                                 @if($employee?->status === 'pending')
                                 <button type="button" class="btn btn-info text-white d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#reviewProfileModal">
                                     <i class="mdi mdi-clipboard-check me-1"></i> Review Profile
@@ -77,7 +77,7 @@
                                         {{ ucfirst($employee?->status ?? 'active') }}
                                     </span>
                                 </div>
-                                @endcan
+                                @endif
                             </div>
                         </div>
                     </div>

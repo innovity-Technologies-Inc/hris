@@ -44,6 +44,7 @@
                 }
             });
 
+            @if(auth()->user()->user_type !== 'Employee')
             $('#employeeStatusToggle').on('change', function(e) {
                 e.preventDefault();
 
@@ -134,6 +135,7 @@
                     // If user cancelled, checkbox state is already reverted
                 });
             });
+            @endif
         });
     </script>
 @endpush

@@ -371,6 +371,14 @@ class EmployeeProfileController extends Controller
      */
     public function toggleStatus(Request $request, $id)
     {
+        // Restricted for Employees
+        if (auth()->user()->user_type === 'Employee') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized access.'
+            ], 403);
+        }
+
         try {
             $validated = $request->validate([
                 'status' => 'required|in:active,inactive,incomplete,pending'
