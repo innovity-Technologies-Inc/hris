@@ -277,6 +277,8 @@ class EmployeeServices
         }
         if (empty($id)) {
             $employee_data = Employee::create($validated);
+            $employee_data->general_info_status = (auth()->user()->user_type === 'Employee') ? 'pending' : 'active';
+            $employee_data->save();
             // Update user with employee_id for bi-directional link
             $user->update(['employee_id' => $employee_data->id]);
         } else {
@@ -295,6 +297,8 @@ class EmployeeServices
                 $this->employeeAttachmentDelete($employee->experience_attachment_path);
             }
             $employee->update($validated);
+            $employee->general_info_status = (auth()->user()->user_type === 'Employee') ? 'pending' : 'active';
+            $employee->save();
             $employee_data = $employee;
         }
         return $employee_data;
@@ -999,6 +1003,11 @@ class EmployeeServices
      */
     public function reviewProfile($employee, string $status, ?string $cause = null, ?array $sections = [])
     {
+        Log::info('Reviewing Profile for Employee ID: ' . $employee->id, [
+            'status' => $status,
+            'sections' => $sections
+        ]);
+
         // 1. Update Employee Main Status
         $employee->status = $status;
         if ($status === 'incomplete') {
@@ -1011,33 +1020,26 @@ class EmployeeServices
         // 2. Update Section Statuses
         if ($status === 'active') {
             // If overall status is active, all sections become active
-            \App\Models\EmployeeEducationExperienceTraining::where('employee_id', $employee->id)->update(['status' => 'active']);
-            \App\Models\EmployeeNominee::where('employee_id', $employee->id)->update(['status' => 'active']);
-            \App\Models\EmployeeEmploymentHistory::where('employee_id', $employee->id)->update(['status' => 'active']);
+            $employee->general_info_status = 'active';
+            $employee->save();
+            \Illuminate\Support\Facades\DB::table('employee_education_experience_training')->where('employee_id', $employee->id)->update(['status' => 'active']);
+            \Illuminate\Support\Facades\DB::table('employee_nominees')->where('employee_id', $employee->id)->update(['status' => 'active']);
+            \Illuminate\Support\Facades\DB::table('employee_employment_histories')->where('employee_id', $employee->id)->update(['status' => 'active']);
         } else {
             // If overall status is incomplete, handle specific sections
-            // Default to all if sections array is empty (fallback)
             $targetSections = !empty($sections) ? $sections : ['general', 'education', 'history', 'nominee'];
 
-            if (in_array('education', $targetSections)) {
-                \App\Models\EmployeeEducationExperienceTraining::where('employee_id', $employee->id)->update(['status' => 'incomplete']);
-            } else {
-                \App\Models\EmployeeEducationExperienceTraining::where('employee_id', $employee->id)->update(['status' => 'active']);
-            }
+            $employee->general_info_status = in_array('general', $targetSections) ? 'incomplete' : 'active';
+            $employee->save();
 
-            if (in_array('history', $targetSections)) {
-                \App\Models\EmployeeEmploymentHistory::where('employee_id', $employee->id)->update(['status' => 'incomplete']);
-            } else {
-                \App\Models\EmployeeEmploymentHistory::where('employee_id', $employee->id)->update(['status' => 'active']);
-            }
+            $eduStatus = in_array('education', $targetSections) ? 'incomplete' : 'active';
+            \Illuminate\Support\Facades\DB::table('employee_education_experience_training')->where('employee_id', $employee->id)->update(['status' => $eduStatus]);
 
-            if (in_array('nominee', $targetSections)) {
-                \App\Models\EmployeeNominee::where('employee_id', $employee->id)->update(['status' => 'incomplete']);
-            } else {
-                \App\Models\EmployeeNominee::where('employee_id', $employee->id)->update(['status' => 'active']);
-            }
+            $histStatus = in_array('history', $targetSections) ? 'incomplete' : 'active';
+            \Illuminate\Support\Facades\DB::table('employee_employment_histories')->where('employee_id', $employee->id)->update(['status' => $histStatus]);
 
-            // Note: 'general' section is handled by the main $employee->status
+            $nomStatus = in_array('nominee', $targetSections) ? 'incomplete' : 'active';
+            \Illuminate\Support\Facades\DB::table('employee_nominees')->where('employee_id', $employee->id)->update(['status' => $nomStatus]);
         }
 
         $user = $employee->user;

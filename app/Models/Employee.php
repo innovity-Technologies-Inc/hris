@@ -59,6 +59,7 @@ class Employee extends Model
         'reference_address',
         'review_cause',
         'status',
+        'general_info_status',
     ];
 
     protected $casts = [

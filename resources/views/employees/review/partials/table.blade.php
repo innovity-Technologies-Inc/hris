@@ -38,6 +38,9 @@
                 </td>
                 <td>
                     <div class="d-flex flex-column gap-1">
+                        <span class="badge {{ $employee->general_info_status === 'active' ? 'bg-success' : ($employee->general_info_status === 'pending' ? 'bg-info' : 'bg-warning text-dark') }} small fw-normal px-2 py-1">
+                            General: {{ ucfirst($employee->general_info_status ?? 'Incomplete') }}
+                        </span>
                         <span class="badge {{ $employee->educationInfo?->status === 'active' ? 'bg-success' : ($employee->educationInfo?->status === 'pending' ? 'bg-info' : 'bg-warning text-dark') }} small fw-normal px-2 py-1">
                             Education: {{ ucfirst($employee->educationInfo?->status ?? 'Missing') }}
                         </span>
