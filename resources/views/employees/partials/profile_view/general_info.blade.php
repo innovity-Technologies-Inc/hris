@@ -2,18 +2,18 @@
     <!-- Only show Complete Profile button for incomplete status -->
     <div class="row">
         <div class="col-12">
-            <div class="card border-warning bg-soft-warning shadow-none">
+            <div class="card border-primary bg-soft-primary shadow-none">
                 <div class="card-body text-center py-5">
-                    <div class="avatar-lg bg-soft-warning rounded-circle mx-auto mb-4 d-flex align-items-center justify-content-center">
-                        <i class="mdi mdi-account-alert fs-48 text-warning"></i>
+                    <div class="avatar-lg bg-soft-primary rounded-circle mx-auto mb-4 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                        <i class="fas fa-user-clock text-primary" style="font-size: 40px;"></i>
                     </div>
                     <h4 class="fw-bold text-dark">Incomplete Profile</h4>
                     <p class="text-muted mb-4 mx-auto" style="max-width: 500px;">
                         Your employee profile is currently incomplete. Please provide your personal, contact, and address information to activate your account and move to the pending review status.
                     </p>
                     <a href="{{ route('employees.general_informations.edit', $employee->id) }}"
-                        class="btn btn-warning btn-lg px-5 shadow-sm">
-                        <i class="mdi mdi-account-check me-1"></i> Complete My Profile Now
+                        class="btn btn-primary btn-lg px-5 shadow-sm">
+                        <i class="fas fa-user-edit me-1"></i> Complete My Profile Now
                     </a>
                 </div>
             </div>
