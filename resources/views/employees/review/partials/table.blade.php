@@ -32,11 +32,11 @@
                 <td><span class="badge bg-light text-dark fw-normal px-2 py-1">{{ $employee->system_id }}</span></td>
                 <td>
                     <div class="small">
-                        <span class="text-dark fw-semibold">{{ optional($employee->officeInfo->getCurrentCompany)->name }}</span><br>
-                        <span class="text-muted">{{ optional($employee->officeInfo->getCurrentDepartment)->department_name }}</span>
+                        <span class="text-dark fw-semibold">{{ $employee->officeInfo?->getCurrentCompany?->name ?? 'N/A' }}</span><br>
+                        <span class="text-muted">{{ $employee->officeInfo?->getCurrentDepartment?->department_name ?? 'N/A' }}</span>
                     </div>
                 </td>
-                <td>{{ optional($employee->officeInfo->getCurrentDesignation)->company_designation }}</td>
+                <td>{{ $employee->officeInfo?->getCurrentDesignation?->company_designation ?? 'N/A' }}</td>
                 <td>{{ $employee->updated_at->format('d M, Y') }}</td>
                 <td class="text-center">
                     <a href="{{ route('employees.profile.general_informations', $employee->id) }}" class="btn btn-secondary btn-sm" title="View">

@@ -94,13 +94,13 @@
 </head>
 <body>
     <div class="header">
-        @if($officeInfo->getCurrentCompany->logo)
+        @if($officeInfo?->getCurrentCompany?->logo)
             <img src="{{ public_path('storage/' . $officeInfo->getCurrentCompany->logo) }}" class="company-logo" alt="Logo">
         @endif
-        <h1 class="company-name">{{ $officeInfo->getCurrentCompany->name }}</h1>
+        <h1 class="company-name">{{ $officeInfo?->getCurrentCompany?->name ?? 'N/A' }}</h1>
         <div class="company-details">
-            {{ $officeInfo->getCurrentCompany->address }}<br>
-            Phone: {{ $officeInfo->getCurrentCompany->telephone }} | Email: {{ $officeInfo->getCurrentCompany->email }}
+            {{ $officeInfo?->getCurrentCompany?->address ?? '' }}<br>
+            Phone: {{ $officeInfo?->getCurrentCompany?->telephone ?? '' }} | Email: {{ $officeInfo?->getCurrentCompany?->email ?? '' }}
         </div>
     </div>
 
@@ -113,10 +113,10 @@
     <div class="content">
         <p>
             This is to certify that <strong>{{ $employee->full_name }}</strong>, son/daughter of <strong>{{ $employee->father_name ?? 'N/A' }}</strong>, 
-            is a permanent employee of <strong>{{ $officeInfo->getCurrentCompany->name }}</strong>. 
-            He/She joined the company on <strong>{{ $officeInfo->date_of_join ? \Carbon\Carbon::parse($officeInfo->date_of_join)->format('d F, Y') : 'N/A' }}</strong> 
-            and is currently serving as <strong>{{ $officeInfo->getCurrentDesignation->company_designation ?? 'N/A' }}</strong> 
-            in the <strong>{{ $officeInfo->getCurrentDepartment->department_name ?? 'N/A' }}</strong> department.
+            is a permanent employee of <strong>{{ $officeInfo?->getCurrentCompany?->name ?? 'N/A' }}</strong>. 
+            He/She joined the company on <strong>{{ $officeInfo?->date_of_join ? \Carbon\Carbon::parse($officeInfo->date_of_join)->format('d F, Y') : 'N/A' }}</strong> 
+            and is currently serving as <strong>{{ $officeInfo?->getCurrentDesignation?->company_designation ?? 'N/A' }}</strong> 
+            in the <strong>{{ $officeInfo?->getCurrentDepartment?->department_name ?? 'N/A' }}</strong> department.
         </p>
         <p>
             As per our records, his/her monthly salary breakdown is as follows:
@@ -180,7 +180,7 @@
         <div class="signature-box">
             <div class="signature-line">
                 Authorized Signatory<br>
-                <span style="font-weight: normal; font-size: 11px;">{{ $officeInfo->getCurrentCompany->name }}</span>
+                <span style="font-weight: normal; font-size: 11px;">{{ $officeInfo?->getCurrentCompany?->name ?? 'N/A' }}</span>
             </div>
         </div>
     </div>

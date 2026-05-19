@@ -78,7 +78,7 @@
                         <div class="col-md-6 mb-2">
                             <strong>Department:</strong>
                             <span
-                                class="ms-2">{{ $promotionData->getEmployee->officeInfo->getCurrentDepartment->name ?? 'N/A' }}</span>
+                                class="ms-2">{{ $promotionData->getEmployee->officeInfo?->getCurrentDepartment?->department_name ?? 'N/A' }}</span>
                         </div>
                     </div>
                 </div>

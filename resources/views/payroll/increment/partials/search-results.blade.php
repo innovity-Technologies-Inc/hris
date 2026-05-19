@@ -76,7 +76,7 @@ Each increment object should have:
                                 <td>
                                     <div class="small">
                                         <span
-                                            class="fw-semibold">{{ $increment->getEmployee->officeInfo->getCurrentDesignation->company_designation ?? 'N/A' }}</span>
+                                            class="fw-semibold">{{ $increment->getEmployee->officeInfo?->getCurrentDesignation?->company_designation ?? 'N/A' }}</span>
                                         <br>
                                     </div>
                                 </td>

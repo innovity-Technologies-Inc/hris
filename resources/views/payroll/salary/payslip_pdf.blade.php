@@ -110,12 +110,12 @@
 <body>
     <div class="container">
         <div class="header">
-            @if($officeInfo->getCurrentCompany->logo)
+            @if($officeInfo?->getCurrentCompany?->logo)
                 <img src="{{ public_path('storage/' . $officeInfo->getCurrentCompany->logo) }}" class="company-logo" alt="Logo">
             @endif
-            <h1 class="company-name">{{ $officeInfo->getCurrentCompany->name }}</h1>
-            <p class="company-address">{{ $officeInfo->getCurrentCompany->address }}</p>
-            <p class="company-address">Phone: {{ $officeInfo->getCurrentCompany->telephone }} | Email: {{ $officeInfo->getCurrentCompany->email }}</p>
+            <h1 class="company-name">{{ $officeInfo?->getCurrentCompany?->name ?? 'N/A' }}</h1>
+            <p class="company-address">{{ $officeInfo?->getCurrentCompany?->address ?? '' }}</p>
+            <p class="company-address">Phone: {{ $officeInfo?->getCurrentCompany?->telephone ?? '' }} | Email: {{ $officeInfo?->getCurrentCompany?->email ?? '' }}</p>
             <div class="payslip-title">PAYSLIP FOR THE MONTH OF {{ \Carbon\Carbon::parse($payroll->getBatch->salary_month)->format('F, Y') }}</div>
         </div>
 
@@ -134,7 +134,7 @@
                             </tr>
                             <tr>
                                 <td class="label">Designation:</td>
-                                <td class="value">{{ $officeInfo->getCurrentDesignation->company_designation ?? 'N/A' }}</td>
+                                <td class="value">{{ $officeInfo?->getCurrentDesignation?->company_designation ?? 'N/A' }}</td>
                             </tr>
                         </table>
                     </td>
@@ -142,7 +142,7 @@
                         <table class="info-table">
                             <tr>
                                 <td class="label">Department:</td>
-                                <td class="value">{{ $officeInfo->getCurrentDepartment->department_name ?? 'N/A' }}</td>
+                                <td class="value">{{ $officeInfo?->getCurrentDepartment?->department_name ?? 'N/A' }}</td>
                             </tr>
                             <tr>
                                 <td class="label">Batch ID:</td>
