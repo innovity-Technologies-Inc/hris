@@ -15,6 +15,29 @@ A comprehensive Human Resource Management System (HRMS) built with Laravel 12, f
 - Salary Breakdown management.
 - Movement (Transfers) and status tracking.
 - Dynamic ID Card generation with QR codes.
+- **Profile Review System**:
+    - Dedicated "Profile Review" page listing employees with `pending` status.
+    - Profile View enhancement: "Review" button for pending employees.
+    - Review Workflow:
+        - Modal with options: `Incomplete` or `Accept`.
+        - If `Incomplete`: Provide a mandatory "Cause" text; status reverts to `incomplete`.
+        - If `Accept`: Status changes to `active`.
+    - Automated Email Notifications:
+        - Notify employee when status is set to `incomplete` (including the cause).
+        - Notify employee when status is set to `active`.
+
+### 🔔 Hierarchical Notification System
+- **Database Notifications**:
+    - Table: `notifications` (fields: `user_type`, `user_id` (nullable), `message`, `data`, `read_at`).
+    - **Notification Workflow**:
+        - Employee submits profile -> Notification for `user_type = 'hr'`, `user_id = null`.
+        - HR/Admin reviews profile -> Notification for `user_type = 'Employee'`, `user_id = {employee_user_id}`.
+    - **Visibility Logic**:
+        - `Employee`: View notifications where `user_id` matches.
+        - `HR`: View notifications where `user_type = 'hr'` (accessible to 'Group' type users).
+        - **Hierarchical Escalation**:
+            - User types (small to big): `Employee` -> `Section` -> `Department` -> `Division` -> `Business Unit` -> `Company` -> `Group`.
+            - Logic: If a notification is assigned to a `user_id`, determine that user's type. The notification should be visible to the user at the next level up in the same organizational hierarchy (e.g., if a Section-type user is targeted, the notification goes to the Division-type user associated with that section's division).
 
 ### 📅 Plans & Policies
 - **Attendance**: Shift Plans, Roster Plans.

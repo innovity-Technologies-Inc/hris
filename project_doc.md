@@ -35,6 +35,21 @@ This is a robust Human Resource Management System (HRMS) built with Laravel 12. 
 - **Lifecycle**: Manage Nominees, Education/Experience, Bank Accounts, and Salary Breakdowns.
 - **Status**: Toggle employment status and manage movements (transfers).
 - **ID Cards**: Dynamic ID card generation with QR codes using `IDCardService` and `QrCodeService`.
+- **Profile Review System**:
+    - **Workflow**: New employee profiles start as `incomplete`, move to `pending` upon submission, and finally to `active` after HR approval.
+    - **Review Dashboard**: A dedicated interface for HR to audit pending profiles.
+    - **Approval/Rejection**: HR can mark profiles as `incomplete` with a specific cause (triggering a feedback loop) or `active`.
+    - **Email Feedback**: Automated emails are dispatched to employees notifying them of their profile's review outcome (Approval or Incomplete with cause).
+
+### 🔔 Hierarchical Notification System
+A custom real-time notification engine with intelligent visibility rules based on the organizational chart.
+- **Infrastructure**: Custom `Notification` model and table.
+- **Triggers**: Automated creation during key events (e.g., profile submission, review completion).
+- **Visibility Levels**:
+    - **Direct**: Employees see notifications assigned to their specific User ID.
+    - **HR/Group**: Global access to administrative notifications (e.g., "New Profile for Review").
+    - **Supervisor Hierarchy**: Intelligent upstream visibility. A notification targeted at a specific user type (e.g., Section) is automatically visible to the user at the next level up (e.g., Department) within the same organizational branch.
+- **User Type Hierarchy**: `Employee` -> `Section` -> `Department` -> `Division` -> `Business Unit` -> `Company` -> `Group`.
 
 ### 📅 Plans & Policy Management
 Dedicated sub-system to define various HR policies:
@@ -61,25 +76,26 @@ Dedicated sub-system to define various HR policies:
 - **Operations**: Requisitions (applications), approvals, and allocations.
 - **Tracking**: History of vehicle assignments and driver activities.
 
-### 🔐 User Management & RBAC
-- **Authentication**: Integrated via Laravel Breeze (Bootstrap/Blade).
-- **Secure Password Reset Flow**: To prevent data manipulation during the password reset process, the system implements an encrypted email handling strategy:
-    - **View Protection**: The email address is not displayed as an editable field. Instead, it is **encrypted** using Laravel's `encrypt()` helper and passed as a hidden input.
-    - **Controller Control**: The `NewPasswordController` intercepts the request and **decrypts** the email address before validation. This ensures that only the intended, signed email address from the password reset link can be used to reset the password, effectively blocking client-side tampering.
-- **Permissions**: powered by `spatie/laravel-permission` with menu-wise granularity (Create, Edit, View, Delete).
-- **Integration**: Automatic bi-directional linking between `User` and `Employee` models.
-- **Scoping**: Organization-based data visibility restriction (Group, Company, Division, Department, Section, Employee).
-
 ---
 
-## 🛡️ Data Isolation & Organizational Scoping
+## 🔐 Security & Access Control
 
+### 1. RBAC (Role-Based Access Control)
+- **Engine**: `spatie/laravel-permission`.
+- **Granularity**: Permissions are mapped to menus and specific actions (Create, Edit, View, Delete, Import).
+
+### 2. Employee Security Overrides
+To ensure data integrity and prevent self-tampering, strict "hard overrides" are applied to the `Employee` user type, regardless of their assigned RBAC roles:
+- **Restricted Modules**: Employees are strictly blocked from **Creating** or **Editing** their own (or others') Office Information, Policy Tags (Eligible Plans), Salary Breakdowns, Bank Accounts, Work Plans, and Leave History.
+- **Technical Enforcement**: These restrictions are enforced at both the UI level (hidden buttons) and the Backend level (Controller-level 403 aborts).
+
+### 3. Data Isolation & Organizational Scoping
 The system implements a rigorous **Row-Level Security (RLS)** strategy to ensure data privacy and multi-tenant integrity. This is handled automatically at the database level using Laravel Global Scopes.
 
-### 1. The `OrganizationScoped` Trait
+#### The `OrganizationScoped` Trait
 The core of the isolation engine is the `App\Traits\OrganizationScoped` trait. When added to any Eloquent model, it automatically intercepts all database queries (`SELECT`, `UPDATE`, `DELETE`) to inject security filters based on the authenticated user's context.
 
-### 2. User Access Levels (`user_type`)
+#### User Access Levels (`user_type`)
 Data visibility is determined by the `user_type` field in the `users` table:
 
 | User Type | Scope Coverage | Technical Logic |
@@ -92,46 +108,10 @@ Data visibility is determined by the `user_type` field in the `users` table:
 | **Section** | Single Section | Filters by `section_id` or `current_section_id`. |
 | **Employee** | Personal Data | Restricted to records where `employee_id` matches their own. |
 
-### 3. Smart Filtering Mechanism
-The trait is designed to be "schema-aware" and handles three levels of data retrieval:
-
-*   **Direct Filtering**: If the table contains organizational columns (e.g., `company_id`), it applies a direct `WHERE` clause.
-*   **Alias Handling**: It automatically detects column variations. For example, a **Business Unit** admin will be filtered using `business_unit_id`, `branch_id`, or `location_id` depending on what exists in the table.
-*   **Relationship Hopping**: If a table (like `Leaves` or `Attendance`) only has an `employee_id`, the trait "hops" to the `EmployeeOfficeInfo` table to verify the employee's current organizational unit before returning the data.
-
-### 4. Implementation Guidelines
-- **Automatic Protection**: Once `use OrganizationScoped;` is added to a model, security is "always on."
-- **Developer Bypass**: In rare cases where a global query is needed (e.g., system-wide analytics), developers must explicitly use `Model::withoutGlobalScopes()`.
-- **Recursion Safety**: The trait uses internal static caching and `withoutGlobalScopes()` during context resolution to prevent infinite loops during the boot process.
-
-### 5. Practical Example: The "Invisible Filter" in Action
-
-**Scenario**: 
-A user named **John** is a **Department Manager** for the "Finance" department (ID: 10). He navigates to the "Monthly Attendance" page.
-
-**The Code**:
-In the Controller, the developer simply writes:
-```php
-$records = Attendance::where('month', '2026-05')->get();
-```
-
-**What Happens Behind the Scenes**:
-1.  **Identity Detection**: The `OrganizationScoped` trait detects that John is logged in and has the `user_type` of **'Department'**.
-2.  **Context Resolution**: The trait looks up John's employee profile (using static cache for speed) and finds his `current_department_id` is **10**.
-3.  **Schema Check**: The trait checks the `attendance` table. It sees there is no `department_id` column, but there is an `employee_id` column.
-4.  **Query Injection**: The trait automatically modifies the query before it is sent to MySQL.
-5.  **Final SQL**:
-    ```sql
-    SELECT * FROM attendance 
-    WHERE month = '2026-05' 
-    AND EXISTS (
-        SELECT 1 FROM employee_office_infos 
-        WHERE employee_office_infos.employee_id = attendance.employee_id 
-        AND employee_office_infos.current_department_id = 10
-    )
-    ```
-
-**Outcome**: John only sees the attendance records for employees in the Finance department. He didn't have to write the filter, and the developer didn't have to remember to add it. Security is enforced by default.
+### 4. Secure Password Reset Flow
+To prevent data manipulation during the password reset process, the system implements an encrypted email handling strategy:
+- **View Protection**: The email address is not displayed as an editable field. Instead, it is **encrypted** using Laravel's `encrypt()` helper and passed as a hidden input.
+- **Controller Control**: The `NewPasswordController` intercepts the request and **decrypts** the email address before validation. This ensures that only the intended, signed email address from the password reset link can be used to reset the password, effectively blocking client-side tampering.
 
 ---
 

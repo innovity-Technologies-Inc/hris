@@ -27,18 +27,26 @@ Follow the **Request -> Service -> Thin Controller** pattern strictly:
 6. **Route**: Register routes in `routes/web.php`.
 7. **View**: Implement Bootstrap 5 / Glassmorphism UI in `.blade.php` files, ensuring Dark Mode support.
 
-### 4. Post-Execution & Finalization
-After the implementation is complete and verified:
-1. **Documentation**: Update `project_doc.md` to reflect the changes (e.g., new modules, logic changes, or UI updates).
-2. **Optimization**: Run `php artisan optimize` to refresh the cache and ensure system performance.
-3. **Commit**: Commit the changes with a clear, concise message that follows the project's style. Propose the message to the user first.
+### 4. Verification (Testing)
+Before considering a task complete, you MUST:
+1. **Write/Update Tests**: Use **Pest PHP** for all new tests. Ensure coverage for business logic and organizational scoping.
+2. **Execution Environment**: Always use **SQLite in-memory** (`:memory:`) for testing to ensure speed and isolation.
+3. **Command**: Use `$env:DB_CONNECTION='sqlite'; $env:DB_DATABASE=':memory:'; php artisan test` (or equivalent).
+4. **Mandatory Logging**: Update `TEST_LOG.md` with execution date, instruction, exact command, detailed results, and status.
+5. **Safety**: Ensure you NEVER run tests on the primary `hrms` database.
+
+### 5. Post-Execution & Finalization
+After implementation and verification are complete:
+1. **Documentation**: Update `project_doc.md` to reflect changes.
+2. **Optimization**: Run `php artisan optimize` to refresh caches.
+3. **Commit**: Commit changes with a clear message following project style.
 
 ## 🛠️ Guidelines & Mandates
 - **Strict Typing**: Use PHP 8.2+ type hints for all method arguments and return types.
 - **FlexSearch**: Use `daiyanmozumder/laravel-flexsearch` for all table filtering and searching.
 - **UI/UX**: Strictly follow `.ai/guidelines/design-guidelines.md`.
 - **Coding Standards**: Strictly follow `.ai/guidelines/coding-style.md`.
-- **Testing & Safety**: Strictly follow `.ai/guidelines/testing-guidelines.md` and `.ai/guidelines/testing-safety-guideline.md`. Always use **Pest** for testing and ensure database isolation.
+- **Testing & Safety**: Strictly follow `.ai/guidelines/testing-guidelines.md` and `.ai/guidelines/testing-safety-guideline.md`.
 - **Error Handling**: Use try-catch blocks in Services and log errors.
 
 ## 📦 Key Resources

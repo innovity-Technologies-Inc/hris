@@ -33,114 +33,18 @@
                 <li class="dropdown notification-list topbar-dropdown">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
                         <i data-feather="bell" class="noti-icon"></i>
-                        <span class="badge bg-danger rounded-circle noti-icon-badge">9</span>
+                        <span class="badge bg-danger rounded-circle noti-icon-badge d-none" id="notificationCount">0</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-end dropdown-lg">
                         <!-- item-->
                         <div class="dropdown-item noti-title">
                             <h5 class="m-0">
-                                <span class="float-end"><a href="" class="text-dark"><small>Clear All</small></a></span>Notification
+                                <span class="float-end"><a href="javascript:void(0);" onclick="markAllNotificationsRead()" class="text-dark"><small>Clear All</small></a></span>Notification
                             </h5>
                         </div>
 
-                        <div class="noti-scroll" data-simplebar="">
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item text-muted link-primary active">
-                                <div class="notify-icon">
-                                    <img src="{{asset('')}}assets/images/users/user-12.jpg" class="img-fluid rounded-circle" alt="">
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <p class="notify-details">Carl Steadham</p>
-                                    <small class="text-muted">5 min ago</small>
-                                </div>
-                                <p class="mb-0 user-msg">
-                                    <small class="fs-14">Completed <span class="text-reset">Improve workflow in Figma</span></small>
-                                </p>
-                            </a>
-
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item text-muted link-primary">
-                                <div class="notify-icon">
-                                    <img src="{{asset('')}}assets/images/users/user-2.jpg" class="img-fluid rounded-circle" alt="">
-                                </div>
-                                <div class="notify-content">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <p class="notify-details">Olivia McGuire</p>
-                                        <small class="text-muted">1 min ago</small>
-                                    </div>
-
-                                    <div class="d-flex mt-2 align-items-center">
-                                        <div class="notify-sub-icon">
-                                            <i class="mdi mdi-download-box text-dark"></i>
-                                        </div>
-
-                                        <div>
-                                            <p class="notify-details mb-0">dark-themes.zip</p>
-                                            <small class="text-muted">2.4 MB</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item text-muted link-primary">
-                                <div class="notify-icon">
-                                    <img src="{{asset('')}}assets/images/users/user-3.jpg" class="img-fluid rounded-circle" alt="">
-                                </div>
-                                <div class="notify-content">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <p class="notify-details">Travis Williams</p>
-                                        <small class="text-muted">7 min ago</small>
-                                    </div>
-                                    <p class="noti-mentioned p-2 rounded-2 mb-0 mt-2">
-                                        <span class="text-primary">@Patryk</span> Please make sure that you're....
-                                    </p>
-                                </div>
-                            </a>
-
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item text-muted link-primary">
-                                <div class="notify-icon">
-                                    <img src="{{asset('')}}assets/images/users/user-8.jpg" class="img-fluid rounded-circle" alt="">
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <p class="notify-details">Violette Lasky</p>
-                                    <small class="text-muted">5 min ago</small>
-                                </div>
-                                <p class="mb-0 user-msg">
-                                    <small class="fs-14">Completed <span class="text-reset">Create new components</span></small>
-                                </p>
-                            </a>
-
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item text-muted link-primary">
-                                <div class="notify-icon">
-                                    <img src="{{asset('')}}assets/images/users/user-5.jpg" class="img-fluid rounded-circle" alt="">
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <p class="notify-details">Ralph Edwards</p>
-                                    <small class="text-muted">5 min ago</small>
-                                </div>
-                                <p class="mb-0 user-msg">
-                                    <small class="fs-14">Completed<span class="text-reset">Improve workflow in React</span></small>
-                                </p>
-                            </a>
-
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item text-muted link-primary">
-                                <div class="notify-icon">
-                                    <img src="{{asset('')}}assets/images/users/user-6.jpg" class="img-fluid rounded-circle" alt="">
-                                </div>
-                                <div class="notify-content">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <p class="notify-details">Jocab jones</p>
-                                        <small class="text-muted">7 min ago</small>
-                                    </div>
-                                    <p class="noti-mentioned p-2 rounded-2 mb-0 mt-2">
-                                        <span class="text-reset">@Patryk</span> Please make sure that you're....
-                                    </p>
-                                </div>
-                            </a>
+                        <div class="noti-scroll" data-simplebar="" id="notificationList">
+                            {{-- Notifications will be loaded here via AJAX --}}
                         </div>
 
                         <!-- All-->
@@ -149,6 +53,53 @@
                         </a>
                     </div>
                 </li>
+
+@push('scripts')
+<script>
+function fetchHeaderNotifications() {
+    $.ajax({
+        url: "{{ route('notifications.header') }}",
+        method: "GET",
+        success: function(response) {
+            $('#notificationList').html(response.html);
+            if (response.unread_count > 0) {
+                $('#notificationCount').text(response.unread_count).removeClass('d-none');
+            } else {
+                $('#notificationCount').addClass('d-none');
+            }
+        }
+    });
+}
+
+function markNotificationRead(id) {
+    $.ajax({
+        url: "/notifications/" + id + "/mark-as-read",
+        method: "POST",
+        data: { _token: "{{ csrf_token() }}" },
+        success: function() {
+            fetchHeaderNotifications();
+        }
+    });
+}
+
+function markAllNotificationsRead() {
+    $.ajax({
+        url: "{{ route('notifications.mark-all-read') }}",
+        method: "POST",
+        data: { _token: "{{ csrf_token() }}" },
+        success: function() {
+            fetchHeaderNotifications();
+        }
+    });
+}
+
+$(document).ready(function() {
+    fetchHeaderNotifications();
+    // Refresh every 60 seconds
+    setInterval(fetchHeaderNotifications, 60000);
+});
+</script>
+@endpush
 
                 <!-- User Dropdown -->
                 <li class="dropdown notification-list topbar-dropdown">

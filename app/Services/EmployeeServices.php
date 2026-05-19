@@ -948,4 +948,55 @@ class EmployeeServices
 
         return $user;
     }
+
+    /**
+     * Review employee profile status.
+     */
+    public function reviewProfile($employee, string $status, ?string $cause = null)
+    {
+        $employee->status = $status;
+        if ($status === 'incomplete') {
+            $employee->review_cause = $cause;
+        } else {
+            $employee->review_cause = null;
+        }
+        $employee->save();
+
+        $user = $employee->user;
+        if (!$user) {
+            // If user doesn't exist, we might need to handle it, 
+            // but normally pending employees should have users.
+            return;
+        }
+
+        $notificationService = app(\App\Services\NotificationServices::class);
+
+        if ($status === 'incomplete') {
+            // Send Email
+            \Illuminate\Support\Facades\Mail::to($employee->work_email)->send(new \App\Mail\ProfileIncompleteMail($employee, $cause));
+            
+            // Create Notification for Employee
+            $notificationService->createNotification(
+                'Employee',
+                $user->id,
+                'Profile Incomplete',
+                'Your profile has been marked as incomplete. Cause: ' . $cause,
+                ['employee_id' => $employee->id]
+            );
+        } elseif ($status === 'active') {
+            // Send Email
+            \Illuminate\Support\Facades\Mail::to($employee->work_email)->send(new \App\Mail\ProfileActiveMail($employee));
+            
+            // Create Notification for Employee
+            $notificationService->createNotification(
+                'Employee',
+                $user->id,
+                'Profile Activated',
+                'Your profile has been successfully reviewed and activated.',
+                ['employee_id' => $employee->id]
+            );
+        }
+
+        return $employee;
+    }
 }

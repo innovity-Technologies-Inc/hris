@@ -15,8 +15,7 @@
                         @can('employee-management.create')
                         <a href="{{ route('employees.general_informations.edit', $employee->id) }}"
                             class="btn btn-lg px-5 shadow-sm text-white" style="background-color: #974063;">
-                            <i class="fas fa-user-edit me-1"></i> Complete My Profile Now
-                        </a>
+                            <i class="fas fa-user-edit me-1"></i> Complete profile Now                        </a>
                         @endcan
                     @endif
                 </div>

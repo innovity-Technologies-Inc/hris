@@ -68,6 +68,10 @@
                             <ul class="nav-second-level">
                                 @if($canViewEmployeeInfo)
                                 <li>
+                                    <a class='tp-link @if (Route::is('employees.review.index')) menuitem-active @endif'
+                                        href='{{ route('employees.review.index') }}'>Profile Review</a>
+                                </li>
+                                <li>
                                     <a class='tp-link @if (Route::is('employees.index')) menuitem-active @endif'
                                         href='{{ route('employees.index') }}'>Employee Information</a>
                                 </li>

@@ -46,6 +46,11 @@
 
                                 <!-- Status Toggle -->
                                 @can('employee-management.edit')
+                                @if($employee?->status === 'pending')
+                                <button type="button" class="btn btn-info text-white d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#reviewProfileModal">
+                                    <i class="mdi mdi-clipboard-check me-1"></i> Review Profile
+                                </button>
+                                @endif
                                 <div class="d-flex align-items-center">
                                     <span class="me-2 fw-semibold">Status:</span>
                                     <div class="form-check form-switch">
@@ -110,3 +115,4 @@
 </div>
 
 @include('employees.partials.modal.edit_login_modal')
+@include('employees.partials.modal.review_profile_modal')

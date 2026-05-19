@@ -31,18 +31,33 @@ Follow the **Request -> Service -> Thin Controller** pattern strictly:
 6. **Route**: Register web/api routes in `routes/web.php`.
 7. **View**: Implement Bootstrap 5 / Glassmorphism UI in `.blade.php` files.
 
-### 4. Guidelines Adherence
+### 4. Verification (Testing)
+Before considering a task complete, you MUST:
+1. **Write/Update Tests**: Use **Pest PHP** for all new tests. Ensure coverage for business logic and organizational scoping.
+2. **Execution Environment**: Always use **SQLite in-memory** (`:memory:`) for testing to ensure speed and isolation.
+3. **Command**: Use `$env:DB_CONNECTION='sqlite'; $env:DB_DATABASE=':memory:'; php artisan test` (or equivalent).
+4. **Mandatory Logging**: Update `TEST_LOG.md` with execution date, instruction, exact command, detailed results, and status.
+5. **Safety**: Ensure you NEVER run tests on the primary `hrms` database.
+
+### 5. Post-Execution & Finalization
+After implementation and verification are complete:
+1. **Documentation**: Update `project_doc.md` to reflect changes.
+2. **Optimization**: Run `php artisan optimize` to refresh caches.
+3. **Commit**: Commit changes with a clear message following project style.
+
+## 🛠️ Guidelines & Mandates
 - **Strict Typing**: Use PHP 8.2+ type hints.
 - **FlexSearch**: Use `daiyanmozumder/laravel-flexsearch` for all filtering.
 - **UI/UX**: Follow `.ai/guidelines/design-guidelines.md`.
 - **Coding**: Follow `.ai/guidelines/coding-style.md`.
+- **Testing & Safety**: Strictly follow `.ai/guidelines/testing-guidelines.md` and `.ai/guidelines/testing-safety-guideline.md`.
 
 ## 🛠️ Key Files to Reference
-- **Guidelines**: `.ai/guidelines/coding-style.md`, `.ai/guidelines/design-guidelines.md`.
+- **Guidelines**: `.ai/guidelines/coding-style.md`, `.ai/guidelines/design-guidelines.md`, `.ai/guidelines/testing-guidelines.md`, `.ai/guidelines/testing-safety-guideline.md`.
 - **Requirements**: `.ai/requirements/requirements.md`.
 - **Tasks**: `.ai/tasks/*.md`.
 
 ## 📦 Project Context
 - **Framework**: Laravel 12.
 - **Key Patterns**: SOA, Thin Controllers, Form Requests, Service Classes.
-- **Main Technologies**: PHP 8.2, Bootstrap 5, MySQL, FlexSearch.
+- **Main Technologies**: PHP 8.2, Bootstrap 5, MySQL, FlexSearch, Pest PHP.

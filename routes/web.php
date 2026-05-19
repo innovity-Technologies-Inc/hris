@@ -22,6 +22,8 @@ use App\Http\Controllers\EmployeeEligibleController;
 use App\Http\Controllers\EmployeeMovementsController;
 use App\Http\Controllers\EmployeeNomineeController;
 use App\Http\Controllers\EmployeePlansController;
+use App\Http\Controllers\EmployeeReviewController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\EmployeeProfileController;
 use App\Http\Controllers\EmployeeSalaryBreakdownController;
 use App\Http\Controllers\EmployeeSearchController;
@@ -68,6 +70,14 @@ Route::get('qr-examples', function () {
 Route::get('id-card-preview', function () {
     return view('settings.id_design.designs.design_2');
 })->name('id.card.preview');
+
+Route::prefix('notifications')->middleware('auth')->group(function () {
+    Route::controller(NotificationController::class)->group(function () {
+        Route::get('header', 'getHeaderNotifications')->name('notifications.header');
+        Route::post('{id}/mark-as-read', 'markAsRead')->name('notifications.mark-read');
+        Route::post('mark-all-read', 'markAllAsRead')->name('notifications.mark-all-read');
+    });
+});
 
 Route::get('/', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
 
@@ -346,6 +356,15 @@ Route::controller(EmployeeSearchController::class)->middleware('auth')->group(fu
 });
 
 Route::prefix('employees')->middleware('auth')->group(function () {
+
+    Route::controller(EmployeeReviewController::class)->group(function () {
+        Route::middleware('permission:employee-management.view')->group(function () {
+            Route::get('review', 'index')->name('employees.review.index');
+        });
+        Route::middleware('permission:employee-management.edit')->group(function () {
+            Route::post('review/{id}/submit', 'review')->name('employees.review.submit');
+        });
+    });
 
     Route::controller(EmployeeProfileController::class)->group(function () {
         Route::get('profile/{id}/general-informations', 'profileView')->name('employees.profile.general_informations');

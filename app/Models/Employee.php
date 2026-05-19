@@ -57,6 +57,7 @@ class Employee extends Model
         'present_address',
         'permanent_address',
         'reference_address',
+        'review_cause',
         'status',
     ];
 
