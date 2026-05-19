@@ -40,18 +40,20 @@
                                 <td>
                                     <span class="text-muted small">{{ $notification->created_at->diffForHumans() }}</span>
                                 </td>
-                                <td class="pe-4 text-center">
-                                    @if(is_null($notification->read_at))
-                                    <button class="btn btn-sm btn-light border mark-read-btn" data-id="{{ $notification->id }}" title="Mark as Read">
-                                        <i class="mdi mdi-check"></i>
-                                    </button>
-                                    @endif
-                                    
-                                    @if(isset($notification->data['employee_id']))
-                                    <a href="{{ route('employees.profile.general_informations', $notification->data['employee_id']) }}" class="btn btn-sm btn-info text-white ms-1" title="View Related Profile">
-                                        <i class="mdi mdi-eye"></i>
-                                    </a>
-                                    @endif
+                                <td class="pe-4">
+                                    <div class="d-flex justify-content-center gap-1">
+                                        @if(is_null($notification->read_at))
+                                        <button class="btn btn-sm btn-light border mark-read-btn" data-id="{{ $notification->id }}" title="Mark as Read">
+                                            <i class="mdi mdi-check"></i>
+                                        </button>
+                                        @endif
+                                        
+                                        @if(isset($notification->data['employee_id']))
+                                        <a href="{{ route('employees.profile.general_informations', $notification->data['employee_id']) }}" class="btn btn-sm btn-info text-white" title="View Related Profile">
+                                            <i class="mdi mdi-eye"></i>
+                                        </a>
+                                        @endif
+                                    </div>
                                 </td>
                             </tr>
                             @empty
