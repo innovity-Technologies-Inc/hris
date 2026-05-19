@@ -1,4 +1,3 @@
-@can('employee-management.create')
 <div class="card shadow-sm border-0">
 
     <div class="card-body p-4">
@@ -182,4 +181,3 @@
         })
     });
 </script>
-@endcan

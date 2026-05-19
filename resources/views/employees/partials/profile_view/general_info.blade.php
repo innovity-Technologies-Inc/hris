@@ -502,18 +502,12 @@
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-end gap-2">
-                        @php
-                            $canEdit = auth()->user()->can('employee-management.edit');
-                            $isOwner = auth()->user()->employee_id == $employee->id || auth()->user()->id == $employee->user_id;
-                            $isIncompleteOrPending = in_array($employee->status, ['incomplete', 'pending']);
-                        @endphp
-
-                        @if($canEdit || ($isOwner && $isIncompleteOrPending))
+                        @can('employee-management.edit')
                         <a href="{{ route('employees.general_informations.edit', $employee->id) }}"
                             class="btn btn-primary">
                             <i class="mdi mdi-pencil me-1"></i> Edit Profile
                         </a>
-                        @endif
+                        @endcan
                     </div>
                 </div>
             </div>
