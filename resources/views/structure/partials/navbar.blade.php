@@ -43,7 +43,7 @@
                             </h5>
                         </div>
 
-                        <div class="noti-scroll" data-simplebar="" id="notificationList">
+                        <div class="noti-scroll" data-simplebar="" id="notificationList" style="max-height: 400px; overflow-y: auto;">
                             {{-- Notifications will be loaded here via AJAX --}}
                         </div>
 
