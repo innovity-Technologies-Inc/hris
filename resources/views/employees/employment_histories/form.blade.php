@@ -141,6 +141,9 @@
                         <a href="{{ route('employees.profile.general_informations', $employee->id) }}" class="btn btn-secondary">
                             <i class="mdi mdi-arrow-left me-1"></i> Back to Profile
                         </a>
+                        <button type="button" id="previewBtn" class="btn btn-info text-white">
+                            <i class="mdi mdi-eye me-1"></i> Preview
+                        </button>
                         <button type="submit" class="btn btn-primary">
                             <i class="mdi mdi-content-save me-1"></i>
                             {{ isset($historyData) ? 'Update History' : 'Save History' }}
@@ -150,6 +153,7 @@
             </div>
         </form>
     </div>
+    @include('employees.partials.preview_modal')
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

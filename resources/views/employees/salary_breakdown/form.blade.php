@@ -251,6 +251,9 @@
                         <button type="button" class="btn btn-secondary">
                             <i class="bi bi-x-circle"></i> Cancel
                         </button>
+                        <button type="button" id="previewBtn" class="btn btn-info text-white">
+                            <i class="mdi mdi-eye me-1"></i> Preview
+                        </button>
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-check-circle"></i> Save Salary Breakdown
                         </button>
@@ -259,6 +262,7 @@
             </div>
         </form>
     </div>
+    @include('employees.partials.preview_modal')
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

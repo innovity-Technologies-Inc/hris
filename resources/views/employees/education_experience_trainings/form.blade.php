@@ -679,6 +679,9 @@
                         <a href="#" class="btn btn-secondary">
                             <i class="mdi mdi-arrow-left me-1"></i> Cancel
                         </a>
+                        <button type="button" id="previewBtn" class="btn btn-info text-white">
+                            <i class="mdi mdi-eye me-1"></i> Preview
+                        </button>
                         <button type="submit" class="btn btn-primary">
                             <i class="mdi mdi-content-save me-1"></i>
                             {{ isset($employeeData) ? 'Update Information' : 'Save Information' }}
@@ -688,6 +691,7 @@
             </div>
         </form>
     </div>
+    @include('employees.partials.preview_modal')
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

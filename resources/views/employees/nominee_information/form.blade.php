@@ -400,6 +400,9 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-end gap-2">
                                 <button type="reset" class="btn btn-secondary">Reset</button>
+                                <button type="button" id="previewBtn" class="btn btn-info text-white">
+                                    <i class="mdi mdi-eye me-1"></i> Preview
+                                </button>
                                 <button type="submit" class="btn btn-primary">Submit Nominee Information</button>
                             </div>
                         </div>
@@ -409,4 +412,5 @@
 
         </form>
     </div>
+    @include('employees.partials.preview_modal')
 @endsection

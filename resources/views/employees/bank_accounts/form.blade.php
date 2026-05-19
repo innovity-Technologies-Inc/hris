@@ -107,7 +107,10 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-12 d-flex gap-2">
+                                <button type="button" id="previewBtn" class="btn btn-info text-white">
+                                    <i class="mdi mdi-eye me-1"></i> Preview
+                                </button>
                                 <button type="submit" class="btn btn-primary">Submit</button>
                                 <a href="#" class="btn btn-secondary">Cancel</a>
                             </div>
@@ -119,6 +122,7 @@
 
         </div>
     </div>
+    @include('employees.partials.preview_modal')
 
     <script src="{{asset('assets/libs/jquery/jquery.min.js')}}"></script>
 
