@@ -74,6 +74,7 @@ Route::get('id-card-preview', function () {
 
 Route::prefix('notifications')->middleware('auth')->group(function () {
     Route::controller(NotificationController::class)->group(function () {
+        Route::get('/', 'index')->name('notifications.index');
         Route::get('header', 'getHeaderNotifications')->name('notifications.header');
         Route::post('{id}/mark-as-read', 'markAsRead')->name('notifications.mark-read');
         Route::post('mark-all-read', 'markAllAsRead')->name('notifications.mark-all-read');

@@ -16,6 +16,22 @@ class NotificationController extends Controller
     }
 
     /**
+     * Display a listing of all notifications.
+     */
+    public function index()
+    {
+        $title = 'Notifications';
+        $section = 'Dashboard';
+        $sub_section = 'All Notifications';
+        $user = Auth::user();
+        
+        $notifications = $this->notificationServices->getVisibleNotifications($user)
+            ->paginate(20);
+
+        return view('notifications.index', compact('title', 'section', 'sub_section', 'notifications'));
+    }
+
+    /**
      * Get unread notifications for the header.
      */
     public function getHeaderNotifications()
