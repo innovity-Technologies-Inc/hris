@@ -19,6 +19,7 @@
 
 
             <!-- System Identifiers Section -->
+            @if(auth()->user()->user_type !== 'Employee')
             <div class="row">
                 <div class="col-12">
                     <div class="card">
@@ -64,6 +65,7 @@
                     </div>
                 </div>
             </div>
+            @endif
 
             <!-- Personal Information Section -->
             <div class="row">

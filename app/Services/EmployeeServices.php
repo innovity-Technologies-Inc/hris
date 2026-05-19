@@ -69,11 +69,13 @@ class EmployeeServices
     public function employeeInfoValidation($request)
     {
         $id = $request->route('id');
+        $isEmployee = auth()->user()->user_type === 'Employee';
+
         $rules = [
             // System Identifiers
-            'applicant_id' => 'required|string',
-            'system_id' => 'required|string',
-            'punch_card_no' => 'required|string',
+            'applicant_id' => $isEmployee ? 'nullable|string' : 'required|string',
+            'system_id' => $isEmployee ? 'nullable|string' : 'required|string',
+            'punch_card_no' => $isEmployee ? 'nullable|string' : 'required|string',
 
             // Personal Information
             'first_name' => 'required|string|max:255',
