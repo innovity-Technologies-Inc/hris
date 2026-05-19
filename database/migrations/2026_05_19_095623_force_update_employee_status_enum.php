@@ -12,7 +12,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement("ALTER TABLE employees MODIFY COLUMN status ENUM('active', 'inactive', 'incomplete', 'pending') NOT NULL DEFAULT 'active'");
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement("ALTER TABLE employees MODIFY COLUMN status ENUM('active', 'inactive', 'incomplete', 'pending') NOT NULL DEFAULT 'active'");
+        }
     }
 
     /**
@@ -20,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("ALTER TABLE employees MODIFY COLUMN status ENUM('active', 'inactive') NOT NULL DEFAULT 'active'");
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement("ALTER TABLE employees MODIFY COLUMN status ENUM('active', 'inactive') NOT NULL DEFAULT 'active'");
+        }
     }
 };
