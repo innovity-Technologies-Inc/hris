@@ -1,8 +1,5 @@
 @extends('structure.master')
 @section('content')
-    @if(Route::currentRouteNamed('employees.bank_accounts.create'))
-        @include('employees.partials.creation_button')
-    @endif
     {{--    Form --}}
     <div class="card">
         <div class="card-header">
@@ -18,15 +15,7 @@
                         @csrf
 
                         <div class="row">
-
-                            <div class="col-md-6 mb-2">
-                                <label for="employee_id" class="form-label">Employee Name <span
-                                        class="text-danger">*</span></label>
-                                <input type="text" class="form-control" readonly
-                                       value="{{ $employee->full_name }}">
-
-                                <input type="hidden" name="employee_id" value="{{ $employee->id }}">
-                            </div>
+                            <input type="hidden" name="employee_id" value="{{ $employee->id }}">
 
                             <div class="col-md-6 mb-2">
                                 <label for="bank_id" class="form-label">Bank <span

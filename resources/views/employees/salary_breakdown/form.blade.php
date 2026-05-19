@@ -1,43 +1,13 @@
 @extends('structure.master')
 @section('content')
     <div class="mt-4">
-        @if(!isset($employeeData))
-            @include('employees.partials.creation_button')
-        @endif
             <form class="" method="POST" enctype="multipart/form-data"
                   action="{{isset($employeeData) ? route('employees.salary_breakdown.update', $employeeData->id) : route('employees.salary_breakdown.store') }}">
                 @if(isset($employeeData))
                     @method('PUT')
                 @endif
                 @csrf
-
-            <!-- Employee Information Section -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header bg-primary text-white">
-                            <h5 class="card-title mb-0 text-white">
-                                <i class="bi bi-person-badge"></i> Employee Information
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group mb-3">
-                                        <label for="employee_id" class="form-label">Employee Name <span
-                                                class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" readonly
-                                               value="{{ $employee->full_name }}">
-
-                                        <input type="hidden" name="employee_id" value="{{ $employee->id }}">
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                <input type="hidden" name="employee_id" value="{{ $employee->id }}">
 
             <!-- Salary Breakdown Section -->
             <div class="row mt-4">

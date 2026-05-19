@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const clone = form.cloneNode(true);
 
             // 2. Cleanup: Remove elements we don't want in preview
-            const toRemove = clone.querySelectorAll('button, input[type="submit"], input[type="reset"], .text-danger, script, .alert, input[type="hidden"]');
+            const toRemove = clone.querySelectorAll('button, a, input[type="submit"], input[type="reset"], .text-danger, script, .alert, input[type="hidden"]');
             toRemove.forEach(el => el.remove());
 
             // 3. Transform inputs to read-only labels

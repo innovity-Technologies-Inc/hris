@@ -1,9 +1,5 @@
 @extends('structure.master')
 @section('content')
-    @if (!isset($employee))
-        @include('employees.partials.creation_button')
-    @endif
-
     <div class="mt-4">
         @if ($errors->any())
             <div class="alert alert-danger">

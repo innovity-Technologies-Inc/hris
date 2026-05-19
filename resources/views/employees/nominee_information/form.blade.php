@@ -1,8 +1,5 @@
 @extends('structure.master')
 @section('content')
-    @if(!isset($employee_nominee_info))
-        @include('employees.partials.creation_button')
-    @endif
     <div class="mt-4">
         {{--@if ($errors->any())
             <div class="alert alert-danger">
@@ -30,14 +27,7 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-lg-4 mb-3">
-                                    <label for="employee_id" class="form-label">Employee <span
-                                            class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" readonly
-                                           value="{{ $employee->full_name }}">
-
-                                    <input type="hidden" name="employee_id" value="{{ $employee->id }}">
-                                </div>
+                                <input type="hidden" name="employee_id" value="{{ $employee->id }}">
 
                                 <div class="col-lg-4 mb-3">
                                     <label for="nominee_name" class="form-label">Nominee Name <span class="text-danger">*</span></label>

@@ -1,8 +1,5 @@
 @extends('structure.master')
 @section('content')
-    @if (Route::currentRouteNamed('employees.employment_history.create'))
-        @include('employees.partials.creation_button')
-    @endif
     <div class="mt-4">
         {{-- Display All Validation Errors Summary --}}
         @if ($errors->any())
@@ -23,27 +20,7 @@
                 @method('PUT')
             @endif
             @csrf
-
-            <!-- Employee Selection Section -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-primary text-white">
-                            <h5 class="card-title mb-0"><i class="mdi mdi-account me-2"></i>Employee Name</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-lg-6 mb-3">
-                                    <label for="employee_id" class="form-label">Employee Name <span
-                                            class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" readonly value="{{ $employee->full_name }}">
-                                    <input type="hidden" name="employee_id" value="{{ $employee->id }}">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <input type="hidden" name="employee_id" value="{{ $employee->id }}">
 
             <!-- Employment History Section -->
             <div class="row mt-3">

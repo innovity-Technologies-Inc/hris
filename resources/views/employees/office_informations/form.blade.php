@@ -1,8 +1,5 @@
 @extends('structure.master')
 @section('content')
-    @if(!isset($employee_office_info))
-    @include('employees.partials.creation_button')
-    @endif
     <div class="mt-4">
 
         <form class="" method="POST" enctype="multipart/form-data" action="{{isset($employee_office_info) ? route('employees.office_informations.update', $employee_office_info->id) : route('employees.office_informations.store') }}">
@@ -20,15 +17,7 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-lg-6 mb-3">
-                                    <label for="employee_id" class="form-label">Employee Name <span
-                                            class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" readonly
-                                           value="{{ $employee->full_name }}">
-
-                                    <input type="hidden" name="employee_id" value="{{ $employee->id }}">
-
-                                </div>
+                                <input type="hidden" name="employee_id" value="{{ $employee->id }}">
 
                                 <div class="col-lg-6 mb-3">
                                     <label for="emp_type" class="form-label">Employee Type <span
