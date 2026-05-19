@@ -59,7 +59,7 @@
                                         <tbody>
                                         <tr>
                                             <td class="fw-semibold">Employee Type</td>
-                                            <td><span class="badge bg-success">{{ucwords($employee_office_info->emp_type)}}</span></td>
+                                            <td><span class="badge px-2 py-1 bg-success">{{ucwords($employee_office_info->emp_type)}}</span></td>
                                         </tr>
 
                                         <tr>
@@ -191,7 +191,7 @@
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold" style="width: 40%;">Designation</td>
-                                            <td><span class="badge bg-info">{{$employee_office_info->getCurrentDesignation->company_designation ?? 'N/A'}}</span></td>
+                                            <td><span class="badge px-2 py-1 bg-info">{{$employee_office_info->getCurrentDesignation->company_designation ?? 'N/A'}}</span></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -212,9 +212,9 @@
                                             <td class="fw-semibold" style="width: 40%;">Orientation Required</td>
                                             <td>
                                                 @if($employee_office_info->orientation_required == 'yes')
-                                                <span class="badge bg-success">Yes</span>
+                                                <span class="badge px-2 py-1 bg-success">Yes</span>
                                                     @else
-                                                        <span class="badge bg-danger">No</span>
+                                                        <span class="badge px-2 py-1 bg-danger">No</span>
                                                     @endif
 
                                             </td>
@@ -300,7 +300,7 @@
                                             <td>
                                                 @if(!empty($employee_office_info->weekends))
                                                 @foreach($employee_office_info->weekends as $item)
-                                                <span class="badge bg-secondary">{{$item}}</span>
+                                                <span class="badge px-2 py-1 bg-secondary">{{$item}}</span>
                                                 @endforeach
                                                 @endif
                                             </td>
@@ -311,7 +311,7 @@
                                                 @if(!empty($employee_office_info->alternate_off_day))
 
                                                 @foreach($employee_office_info->alternate_off_day as $item)
-                                                    <span class="badge bg-secondary">{{$item}}</span>
+                                                    <span class="badge px-2 py-1 bg-secondary">{{$item}}</span>
                                                 @endforeach
                                                 @endif
                                             </td>
@@ -349,9 +349,9 @@
                                                 <span class="fw-semibold">OT Allowed</span>
                                             </div>
                                             @if($employee_office_info->ot_allowed == 'yes')
-                                                <span class="badge bg-success">Yes</span>
+                                                <span class="badge px-2 py-1 bg-success">Yes</span>
                                             @else
-                                                <span class="badge bg-danger">No</span>
+                                                <span class="badge px-2 py-1 bg-danger">No</span>
                                             @endif                                        </div>
                                         <div class="d-flex justify-content-between align-items-center mb-3">
                                             <div>
@@ -359,9 +359,9 @@
                                                 <span class="fw-semibold">PF Eligible</span>
                                             </div>
                                             @if($employee_office_info->pf_eligible == 'yes')
-                                                <span class="badge bg-success">Yes</span>
+                                                <span class="badge px-2 py-1 bg-success">Yes</span>
                                             @else
-                                                <span class="badge bg-danger">No</span>
+                                                <span class="badge px-2 py-1 bg-danger">No</span>
                                             @endif                                        </div>
                                         <div class="d-flex justify-content-between align-items-center mb-3">
                                             <div>
@@ -369,9 +369,9 @@
                                                 <span class="fw-semibold">Transport Eligible</span>
                                             </div>
                                             @if($employee_office_info->transport_eligible == 'yes')
-                                                <span class="badge bg-success">Yes</span>
+                                                <span class="badge px-2 py-1 bg-success">Yes</span>
                                             @else
-                                                <span class="badge bg-danger">No</span>
+                                                <span class="badge px-2 py-1 bg-danger">No</span>
                                             @endif
                                         </div>
                                         <div class="d-flex justify-content-between align-items-center">
@@ -380,9 +380,9 @@
                                                 <span class="fw-semibold">Gratuity Eligible</span>
                                             </div>
                                             @if($employee_office_info->gratuity_eligible == 'yes')
-                                                <span class="badge bg-success">Yes</span>
+                                                <span class="badge px-2 py-1 bg-success">Yes</span>
                                             @else
-                                                <span class="badge bg-danger">No</span>
+                                                <span class="badge px-2 py-1 bg-danger">No</span>
                                             @endif
                                         </div>
                                     </div>
@@ -399,9 +399,9 @@
                                                 <span class="fw-semibold">Can Apply Loan</span>
                                             </div>
                                             @if($employee_office_info->can_apply_loan == 'yes')
-                                                <span class="badge bg-success">Yes</span>
+                                                <span class="badge px-2 py-1 bg-success">Yes</span>
                                             @else
-                                                <span class="badge bg-danger">No</span>
+                                                <span class="badge px-2 py-1 bg-danger">No</span>
                                             @endif                                        </div>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div>
@@ -409,9 +409,9 @@
                                                 <span class="fw-semibold">Can Apply Advance</span>
                                             </div>
                                             @if($employee_office_info->can_apply_advance == 'yes')
-                                                <span class="badge bg-success">Yes</span>
+                                                <span class="badge px-2 py-1 bg-success">Yes</span>
                                             @else
-                                                <span class="badge bg-danger">No</span>
+                                                <span class="badge px-2 py-1 bg-danger">No</span>
                                             @endif                                        </div>
                                     </div>
                                 </div>

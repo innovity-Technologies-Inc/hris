@@ -73,7 +73,7 @@
                                         elseif ($employee?->status == 'incomplete') $statusClass = 'bg-warning text-dark';
                                         elseif ($employee?->status == 'pending') $statusClass = 'bg-info';
                                     @endphp
-                                    <span class="badge rounded-pill {{ $statusClass }}">
+                                    <span class="badge rounded-pill {{ $statusClass }} px-3 py-2">
                                         {{ ucfirst($employee?->status ?? 'active') }}
                                     </span>
                                 </div>

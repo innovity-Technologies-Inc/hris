@@ -56,7 +56,7 @@
                                                             <td class="fw-semibold" style="width: 40%;">Status</td>
                                                             <td>
                                                                 <span
-                                                                    class="badge bg-{{ $employeePlan && strtolower($employeePlan->shift_plan_status) == 'active' ? 'success' : 'danger' }}">
+                                                                    class="badge px-3 py-1 bg-{{ $employeePlan && strtolower($employeePlan->shift_plan_status) == 'active' ? 'success' : 'danger' }}">
                                                                     {{ ucfirst($employeePlan->shift_plan_status ?? 'Inactive') }}
                                                                 </span>
                                                             </td>
@@ -94,7 +94,7 @@
                                                             <td class="fw-semibold" style="width: 40%;">Status</td>
                                                             <td>
                                                                 <span
-                                                                    class="badge bg-{{ $employeePlan && strtolower($employeePlan->leave_plan_status) == 'active' ? 'success' : 'danger' }}">
+                                                                    class="badge px-3 py-1 bg-{{ $employeePlan && strtolower($employeePlan->leave_plan_status) == 'active' ? 'success' : 'danger' }}">
                                                                     {{ ucfirst($employeePlan->leave_plan_status ?? 'Inactive') }}
                                                                 </span>
                                                             </td>
@@ -132,7 +132,7 @@
                                                             <td class="fw-semibold" style="width: 40%;">Status</td>
                                                             <td>
                                                                 <span
-                                                                    class="badge bg-{{ $employeePlan && strtolower($employeePlan->roster_plans_status) == 'active' ? 'success' : 'danger' }}">
+                                                                    class="badge px-3 py-1 bg-{{ $employeePlan && strtolower($employeePlan->roster_plans_status) == 'active' ? 'success' : 'danger' }}">
                                                                     {{ ucfirst($employeePlan->roster_plans_status ?? 'Inactive') }}
                                                                 </span>
                                                             </td>
@@ -170,7 +170,7 @@
                                                             <td class="fw-semibold" style="width: 40%;">Status</td>
                                                             <td>
                                                                 <span
-                                                                    class="badge bg-{{ $employeePlan && strtolower($employeePlan->day_off_work_plan_status) == 'active' ? 'success' : 'danger' }}">
+                                                                    class="badge px-3 py-1 bg-{{ $employeePlan && strtolower($employeePlan->day_off_work_plan_status) == 'active' ? 'success' : 'danger' }}">
                                                                     {{ ucfirst($employeePlan->day_off_work_plan_status ?? 'Inactive') }}
                                                                 </span>
                                                             </td>
@@ -213,7 +213,7 @@
                                                             <td class="fw-semibold" style="width: 40%;">Status</td>
                                                             <td>
                                                                 <span
-                                                                    class="badge bg-{{ $employeePlan && strtolower($employeePlan->ot_plan_status) == 'active' ? 'success' : 'danger' }}">
+                                                                    class="badge px-3 py-1 bg-{{ $employeePlan && strtolower($employeePlan->ot_plan_status) == 'active' ? 'success' : 'danger' }}">
                                                                     {{ ucfirst($employeePlan->ot_plan_status ?? 'Inactive') }}
                                                                 </span>
                                                             </td>
@@ -252,7 +252,7 @@
                                                             <td class="fw-semibold" style="width: 40%;">Status</td>
                                                             <td>
                                                                 <span
-                                                                    class="badge bg-{{ $employeePlan && strtolower($employeePlan->allowance_plan_status) == 'active' ? 'success' : 'danger' }}">
+                                                                    class="badge px-3 py-1 bg-{{ $employeePlan && strtolower($employeePlan->allowance_plan_status) == 'active' ? 'success' : 'danger' }}">
                                                                     {{ ucfirst($employeePlan->allowance_plan_status ?? 'Inactive') }}
                                                                 </span>
                                                             </td>
@@ -296,7 +296,7 @@
                                                         <td class="fw-semibold" style="width: 40%;">Status</td>
                                                         <td>
                                                                 <span
-                                                                    class="badge bg-{{ $employeePlan && strtolower($employeePlan->bonus_plan_status) == 'active' ? 'success' : 'danger' }}">
+                                                                    class="badge px-3 py-1 bg-{{ $employeePlan && strtolower($employeePlan->bonus_plan_status) == 'active' ? 'success' : 'danger' }}">
                                                                     {{ ucfirst($employeePlan->bonus_plan_status ?? 'Inactive') }}
                                                                 </span>
                                                         </td>
@@ -334,7 +334,7 @@
                                                         <td class="fw-semibold" style="width: 40%;">Status</td>
                                                         <td>
                                                                 <span
-                                                                    class="badge bg-{{ $employeePlan && strtolower($employeePlan->medical_plan_status) == 'active' ? 'success' : 'danger' }}">
+                                                                    class="badge px-3 py-1 bg-{{ $employeePlan && strtolower($employeePlan->medical_plan_status) == 'active' ? 'success' : 'danger' }}">
                                                                     {{ ucfirst($employeePlan->medical_plan_status ?? 'Inactive') }}
                                                                 </span>
                                                         </td>
@@ -378,7 +378,7 @@
                                                             <td class="fw-semibold" style="width: 40%;">Status</td>
                                                             <td>
                                                                 <span
-                                                                    class="badge bg-{{ $employeePlan && strtolower($employeePlan->late_deduction_plan_status) == 'active' ? 'success' : 'danger' }}">
+                                                                    class="badge px-3 py-1 bg-{{ $employeePlan && strtolower($employeePlan->late_deduction_plan_status) == 'active' ? 'success' : 'danger' }}">
                                                                     {{ ucfirst($employeePlan->late_deduction_plan_status ?? 'Inactive') }}
                                                                 </span>
                                                             </td>
@@ -417,7 +417,7 @@
                                                             <td class="fw-semibold" style="width: 40%;">Status</td>
                                                             <td>
                                                                 <span
-                                                                    class="badge bg-{{ $employeePlan && strtolower($employeePlan->early_out_deduction_plan_status) == 'active' ? 'success' : 'danger' }}">
+                                                                    class="badge px-3 py-1 bg-{{ $employeePlan && strtolower($employeePlan->early_out_deduction_plan_status) == 'active' ? 'success' : 'danger' }}">
                                                                     {{ ucfirst($employeePlan->early_out_deduction_plan_status ?? 'Inactive') }}
                                                                 </span>
                                                             </td>
@@ -456,7 +456,7 @@
                                                             <td class="fw-semibold" style="width: 40%;">Status</td>
                                                             <td>
                                                                 <span
-                                                                    class="badge bg-{{ $employeePlan && strtolower($employeePlan->excessive_late_plan_status) == 'active' ? 'success' : 'danger' }}">
+                                                                    class="badge px-3 py-1 bg-{{ $employeePlan && strtolower($employeePlan->excessive_late_plan_status) == 'active' ? 'success' : 'danger' }}">
                                                                     {{ ucfirst($employeePlan->excessive_late_plan_status ?? 'Inactive') }}
                                                                 </span>
                                                             </td>
@@ -499,7 +499,7 @@
                                                             <td class="fw-semibold" style="width: 40%;">Status</td>
                                                             <td>
                                                                 <span
-                                                                    class="badge bg-{{ $employeePlan && strtolower($employeePlan->meal_plan_status) == 'active' ? 'success' : 'danger' }}">
+                                                                    class="badge px-3 py-1 bg-{{ $employeePlan && strtolower($employeePlan->meal_plan_status) == 'active' ? 'success' : 'danger' }}">
                                                                     {{ ucfirst($employeePlan->meal_plan_status ?? 'Inactive') }}
                                                                 </span>
                                                             </td>

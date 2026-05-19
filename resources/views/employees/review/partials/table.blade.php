@@ -29,7 +29,7 @@
                         </div>
                     </div>
                 </td>
-                <td><span class="badge bg-light text-dark fw-normal">{{ $employee->system_id }}</span></td>
+                <td><span class="badge bg-light text-dark fw-normal px-2 py-1">{{ $employee->system_id }}</span></td>
                 <td>
                     <div class="small">
                         <span class="text-dark fw-semibold">{{ optional($employee->officeInfo->getCurrentCompany)->name }}</span><br>
