@@ -11,16 +11,13 @@
                     <p class="text-muted mb-4 mx-auto" style="max-width: 500px;">
                         Your employee profile is currently incomplete. Please provide your personal, contact, and address information to activate your account and move to the pending review status.
                     </p>
-                    @php
-                        $isOwner = auth()->user()->employee_id == $employee->id || auth()->user()->id == $employee->user_id;
-                        $canCreate = auth()->user()->can('employee-management.create');
-                    @endphp
-
-                    @if($isOwner || $canCreate)
-                    <a href="{{ route('employees.general_informations.edit', $employee->id) }}"
-                        class="btn btn-lg px-5 shadow-sm text-white" style="background-color: #974063;">
-                        <i class="fas fa-user-edit me-1"></i> Complete My Profile Now
-                    </a>
+                    @if($employee->status === 'incomplete')
+                        @can('employee-management.create')
+                        <a href="{{ route('employees.general_informations.edit', $employee->id) }}"
+                            class="btn btn-lg px-5 shadow-sm text-white" style="background-color: #974063;">
+                            <i class="fas fa-user-edit me-1"></i> Complete My Profile Now
+                        </a>
+                        @endcan
                     @endif
                 </div>
             </div>

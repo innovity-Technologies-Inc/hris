@@ -461,11 +461,11 @@
                                 </p>
 
                                 <!-- Action Button -->
-                                @if(auth()->user()->employee_id == $employee->id || auth()->user()->id == $employee->user_id || auth()->user()->can('employee-management.create'))
+                                @can('employee-management.create')
                                 <a href="{{route('employees.office_informations.create', $employee->id)}}" class="btn btn-primary btn-lg px-5 rounded-pill">
                                     Add Information
                                 </a>
-                                @endif
+                                @endcan
 
                             </div>
                         </div>
