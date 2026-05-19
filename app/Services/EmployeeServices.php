@@ -279,6 +279,7 @@ class EmployeeServices
             $employee_data = Employee::create($validated);
             $employee_data->general_info_status = (auth()->user()->user_type === 'Employee') ? 'pending' : 'active';
             $employee_data->save();
+            $this->revertProfileToPending($employee_data->id);
             // Update user with employee_id for bi-directional link
             $user->update(['employee_id' => $employee_data->id]);
         } else {
@@ -299,6 +300,7 @@ class EmployeeServices
             $employee->update($validated);
             $employee->general_info_status = (auth()->user()->user_type === 'Employee') ? 'pending' : 'active';
             $employee->save();
+            $this->revertProfileToPending($id);
             $employee_data = $employee;
         }
         return $employee_data;
@@ -633,9 +635,11 @@ class EmployeeServices
         $validated['status'] = (auth()->user()->user_type === 'Employee') ? 'pending' : 'active';
         if (isset($employeeEduData)) {
             $employeeEduData->update($validated);
+            $this->revertProfileToPending($employeeEduData->employee_id);
             return $employeeEduData;
         } else {
             $data = EmployeeEducationExperienceTraining::create($validated);
+            $this->revertProfileToPending($data->employee_id);
             return $data;
         }
     }
@@ -704,6 +708,7 @@ class EmployeeServices
                 Log::info('Photo Uploaded');
             }
             $employeeNomineeData->update($validated);
+            $this->revertProfileToPending($employeeNomineeData->employee_id);
             return $employeeNomineeData;
         } else {
             if ($request->hasFile('photo_path')) {
@@ -712,6 +717,7 @@ class EmployeeServices
                 Log::info('Photo Uploaded');
             }
             $data = EmployeeNominee::create($validated);
+            $this->revertProfileToPending($data->employee_id);
             return $data;
         }
     }
@@ -995,6 +1001,7 @@ class EmployeeServices
         ]);
 
         $history->save();
+        $this->revertProfileToPending($history->employee_id);
         return $history;
     }
 
@@ -1094,5 +1101,33 @@ class EmployeeServices
         }
 
         return $employee;
+    }
+
+    /**
+     * Revert employee profile and user status to pending when an employee updates their profile.
+     */
+    public function revertProfileToPending($employeeId)
+    {
+        if (auth()->user()->user_type !== 'Employee') {
+            return;
+        }
+
+        $employee = Employee::find($employeeId);
+        if ($employee) {
+            $employee->update(['status' => 'pending']);
+
+            if ($employee->user_id) {
+                \App\Models\User::where('id', $employee->user_id)->update(['status' => 'pending']);
+            }
+
+            // Notify HR
+            app(\App\Services\NotificationServices::class)->createNotification(
+                'hr',
+                null,
+                'Profile Updated for Review',
+                'Employee ' . $employee->full_name . ' has updated their profile details.',
+                ['employee_id' => $employee->id]
+            );
+        }
     }
 }

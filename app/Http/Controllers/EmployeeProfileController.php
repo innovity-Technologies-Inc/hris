@@ -127,28 +127,6 @@ class EmployeeProfileController extends Controller
         $validated = $this->empServices->employeeInfoValidation($request);
         try{
             $this->empServices->employeeInfoSave($request,$validated, $id);
-            
-            // Status transition logic
-            if ($employee->status === 'incomplete' || $employee->status === 'pending') {
-                $newStatus = (auth()->user()->user_type === 'Employee') ? 'pending' : 'active';
-                $employee->update(['status' => $newStatus]);
-                
-                // Also update the associated user's status if they have one
-                if ($employee->user_id) {
-                    $employee->user->update(['status' => $newStatus]);
-                }
-
-                // If status became pending, notify HR
-                if ($newStatus === 'pending') {
-                    app(\App\Services\NotificationServices::class)->createNotification(
-                        'hr',
-                        null,
-                        'New Profile for Review',
-                        'Employee ' . $employee->full_name . ' has submitted their profile for review.',
-                        ['employee_id' => $employee->id]
-                    );
-                }
-            }
         }catch(\Exception $e){
             Log::error($e->getMessage());
             return redirect()->back()->with([
