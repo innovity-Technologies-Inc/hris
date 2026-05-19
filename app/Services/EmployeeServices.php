@@ -1003,9 +1003,10 @@ class EmployeeServices
      */
     public function reviewProfile($employee, string $status, ?string $cause = null, ?array $sections = [])
     {
-        Log::info('Reviewing Profile for Employee ID: ' . $employee->id, [
-            'status' => $status,
-            'sections' => $sections
+        Log::info('--- Profile Review Started ---', [
+            'employee_id' => $employee->id,
+            'review_status' => $status,
+            'selected_sections' => $sections
         ]);
 
         // 1. Update Employee Main Status
@@ -1017,29 +1018,55 @@ class EmployeeServices
         }
         $employee->save();
 
-        // 2. Update Section Statuses
+        // 2. Helper to Update or Initialize Section Status
+        $updateSectionStatus = function($table, $empId, $newStatus) {
+            $exists = \Illuminate\Support\Facades\DB::table($table)->where('employee_id', $empId)->exists();
+            if ($exists) {
+                return \Illuminate\Support\Facades\DB::table($table)->where('employee_id', $empId)->update(['status' => $newStatus]);
+            } else {
+                // If record doesn't exist, create a shell record with the status
+                return \Illuminate\Support\Facades\DB::table($table)->insert([
+                    'employee_id' => $empId,
+                    'status' => $newStatus,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            }
+        };
+
+        // 3. Update Section Statuses
         if ($status === 'active') {
             // If overall status is active, all sections become active
             $employee->general_info_status = 'active';
             $employee->save();
-            \Illuminate\Support\Facades\DB::table('employee_education_experience_training')->where('employee_id', $employee->id)->update(['status' => 'active']);
-            \Illuminate\Support\Facades\DB::table('employee_nominees')->where('employee_id', $employee->id)->update(['status' => 'active']);
-            \Illuminate\Support\Facades\DB::table('employee_employment_histories')->where('employee_id', $employee->id)->update(['status' => 'active']);
+
+            $eduUpdated = $updateSectionStatus('employee_education_experience_training', $employee->id, 'active');
+            $nomUpdated = $updateSectionStatus('employee_nominees', $employee->id, 'active');
+            $histUpdated = $updateSectionStatus('employee_employment_histories', $employee->id, 'active');
+
+            Log::info('Set All to Active', ['edu' => $eduUpdated, 'nom' => $nomUpdated, 'hist' => $histUpdated]);
         } else {
             // If overall status is incomplete, handle specific sections
             $targetSections = !empty($sections) ? $sections : ['general', 'education', 'history', 'nominee'];
+            Log::info('Processing Incomplete Status', ['targetSections' => $targetSections]);
 
             $employee->general_info_status = in_array('general', $targetSections) ? 'incomplete' : 'active';
             $employee->save();
 
             $eduStatus = in_array('education', $targetSections) ? 'incomplete' : 'active';
-            \Illuminate\Support\Facades\DB::table('employee_education_experience_training')->where('employee_id', $employee->id)->update(['status' => $eduStatus]);
+            $eduUpdated = $updateSectionStatus('employee_education_experience_training', $employee->id, $eduStatus);
 
             $histStatus = in_array('history', $targetSections) ? 'incomplete' : 'active';
-            \Illuminate\Support\Facades\DB::table('employee_employment_histories')->where('employee_id', $employee->id)->update(['status' => $histStatus]);
+            $histUpdated = $updateSectionStatus('employee_employment_histories', $employee->id, $histStatus);
 
             $nomStatus = in_array('nominee', $targetSections) ? 'incomplete' : 'active';
-            \Illuminate\Support\Facades\DB::table('employee_nominees')->where('employee_id', $employee->id)->update(['status' => $nomStatus]);
+            $nomUpdated = $updateSectionStatus('employee_nominees', $employee->id, $nomStatus);
+
+            Log::info('Section Updates Executed', [
+                'edu' => ['status' => $eduStatus, 'result' => $eduUpdated],
+                'hist' => ['status' => $histStatus, 'result' => $histUpdated],
+                'nom' => ['status' => $nomStatus, 'result' => $nomUpdated],
+            ]);
         }
 
         $user = $employee->user;
