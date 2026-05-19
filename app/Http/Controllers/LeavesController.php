@@ -42,6 +42,11 @@ class LeavesController extends Controller
     }
 
     public function create(){
+        // Restricted for Employees
+        if (auth()->user()->user_type === 'Employee') {
+            abort(403, 'Unauthorized access.');
+        }
+
         $title = 'Leave Application';
         $section = 'Leave Management';
         $sub_section = 'Application';
@@ -50,6 +55,11 @@ class LeavesController extends Controller
     }
 
     public function store(Request $request){
+        // Restricted for Employees
+        if (auth()->user()->user_type === 'Employee') {
+            abort(403, 'Unauthorized access.');
+        }
+
         $employee_id = $request->input('employee_id');
         $plan_id = $request->input('plan_id');
 
@@ -128,6 +138,11 @@ class LeavesController extends Controller
     }
 
     public function destroy($id){
+        // Restricted for Employees
+        if (auth()->user()->user_type === 'Employee') {
+            abort(403, 'Unauthorized access.');
+        }
+
         $leave_request = Leave::find($id);
 
         $leave = LeaveCount::where('employee_id', $leave_request->employee_id)
@@ -147,6 +162,11 @@ class LeavesController extends Controller
     }
 
     public function changeStatus(Request $request){
+        // Restricted for Employees
+        if (auth()->user()->user_type === 'Employee') {
+            abort(403, 'Unauthorized access.');
+        }
+
         $id = $request->input('id');
         $status = $request->input('status');
         $leave_request = Leave::find($id);
@@ -193,6 +213,11 @@ class LeavesController extends Controller
 
     public function import(Request $request)
     {
+        // Restricted for Employees
+        if (auth()->user()->user_type === 'Employee') {
+            abort(403, 'Unauthorized access.');
+        }
+
         $request->validate([
             'file' => 'required|mimes:xlsx,xls,csv,txt',
         ]);

@@ -8,15 +8,17 @@
                 <h5 class="fs-16 text-dark fw-semibold mb-0">Off Day Plan Management</h5>
             </div>
         </div>
-        @can('employee-management.edit')
-            <div>
-                {{-- Create Button to Open Modal --}}
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                    data-bs-target="#createOffDayPlanModal">
-                    <i class="mdi mdi-plus-circle me-1"></i> Add
-                </button>
-            </div>
-        @endcan
+        @if(auth()->user()->user_type !== 'Employee')
+            @can('employee-management.edit')
+                <div>
+                    {{-- Create Button to Open Modal --}}
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#createOffDayPlanModal">
+                        <i class="mdi mdi-plus-circle me-1"></i> Add
+                    </button>
+                </div>
+            @endcan
+        @endif
     </div>
 </div>
 
@@ -123,19 +125,21 @@
                                                     <i class="mdi mdi-eye"></i> View
                                                 </button>
                                                 {{-- Remove Button --}}
-                                                @can('employee-management.edit')
-                                                    <form
-                                                        action="{{ route('employees.profile.plans.remove', ['id' => $plan->id, 'type' => 'offday-plans']) }}"
-                                                        method="post" class="d-inline">
-                                                        @csrf
-                                                        @method('put')
-                                                        <button type="submit"
-                                                            class="btn btn-sm btn-outline-danger shadow-sm removeBtn"
-                                                            title="Remove Plan">
-                                                            <i class="mdi mdi-close-circle"></i> Remove
-                                                        </button>
-                                                    </form>
-                                                @endcan
+                                                @if(auth()->user()->user_type !== 'Employee')
+                                                    @can('employee-management.edit')
+                                                        <form
+                                                            action="{{ route('employees.profile.plans.remove', ['id' => $plan->id, 'type' => 'offday-plans']) }}"
+                                                            method="post" class="d-inline">
+                                                            @csrf
+                                                            @method('put')
+                                                            <button type="submit"
+                                                                class="btn btn-sm btn-outline-danger shadow-sm removeBtn"
+                                                                title="Remove Plan">
+                                                                <i class="mdi mdi-close-circle"></i> Remove
+                                                            </button>
+                                                        </form>
+                                                    @endcan
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>
@@ -236,18 +240,20 @@
                                                     <i class="mdi mdi-eye"></i> View
                                                 </button>
                                                 {{-- Delete Button --}}
-                                                @can('employee-management.edit')
-                                                <form
-                                                    action="{{ route('employees.profile.plans.delete', ['type' => 'offday-plans', 'id' => $plan->id]) }}"
-                                                    method="post" class="d-inline">
-                                                    @csrf
-                                                    @method('delete')
-                                                    <button type="submit" class="btn btn-sm btn-danger confirmDelete"
-                                                        title="Delete Record">
-                                                        <i class="mdi mdi-delete"></i> Delete
-                                                    </button>
-                                                </form>
-                                                @endcan
+                                                @if(auth()->user()->user_type !== 'Employee')
+                                                    @can('employee-management.edit')
+                                                    <form
+                                                        action="{{ route('employees.profile.plans.delete', ['type' => 'offday-plans', 'id' => $plan->id]) }}"
+                                                        method="post" class="d-inline">
+                                                        @csrf
+                                                        @method('delete')
+                                                        <button type="submit" class="btn btn-sm btn-danger confirmDelete"
+                                                            title="Delete Record">
+                                                            <i class="mdi mdi-delete"></i> Delete
+                                                        </button>
+                                                    </form>
+                                                    @endcan
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>

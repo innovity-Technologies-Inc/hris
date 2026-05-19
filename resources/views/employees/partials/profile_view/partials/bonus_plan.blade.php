@@ -29,12 +29,14 @@
                     <div class="card-header bg-light">
                         <h5 class="mb-3 fw-semibold">💰 Bonus Plan List</h5>
 
-                        @can('employee-management.edit')
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="bonusSelectAll" onchange="handleSelectAll('bonus', this.checked)">
-                            <label class="form-check-label" for="bonusSelectAll">Select all</label>
-                        </div>
-                        @endcan
+                        @if(auth()->user()->user_type !== 'Employee')
+                            @can('employee-management.edit')
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="bonusSelectAll" onchange="handleSelectAll('bonus', this.checked)">
+                                <label class="form-check-label" for="bonusSelectAll">Select all</label>
+                            </div>
+                            @endcan
+                        @endif
                     </div>
 
                     {{-- FORM - Normal Submit --}}
@@ -54,7 +56,7 @@
                                            id="bonus-plan-{{ $item->id }}"
                                            onchange="updateSelectAllState('bonus')"
                                            @if(isset($activeBonusPlans) && $activeBonusPlans->contains('plan_id', $item->id)) checked @endif
-                                           @cannot('employee-management.edit') disabled @endcannot >
+                                           @if(auth()->user()->user_type === 'Employee' || auth()->user()->cannot('employee-management.edit')) disabled @endif >
 
                                     <label for="bonus-plan-{{ $item->id }}" class="form-check-label flex-grow-1">
                                         {{ $item->name }}
@@ -66,13 +68,15 @@
                             @endforeach
                         </div>
 
-                        @can('employee-management.edit')
-                        <div class="card-footer bg-light">
-                            <button class="btn btn-primary w-100 py-2" type="submit">
-                                <i class="bi bi-check-circle me-2"></i>Submit Selected
-                            </button>
-                        </div>
-                        @endcan
+                        @if(auth()->user()->user_type !== 'Employee')
+                            @can('employee-management.edit')
+                            <div class="card-footer bg-light">
+                                <button class="btn btn-primary w-100 py-2" type="submit">
+                                    <i class="bi bi-check-circle me-2"></i>Submit Selected
+                                </button>
+                            </div>
+                            @endcan
+                        @endif
 
                     </form>
                 </div>

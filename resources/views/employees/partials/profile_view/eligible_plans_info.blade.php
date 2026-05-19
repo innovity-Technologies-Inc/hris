@@ -552,12 +552,14 @@
                                     </p>
 
                                     <!-- Action Button -->
-                                    @can('employee-management.create')
-                                    <a href="{{ route('employees.eligible_plans.create', $employee->id) }}"
-                                        class="btn btn-primary btn-lg px-5 rounded-pill">
-                                        Add Information
-                                    </a>
-                                    @endcan
+                                    @if(auth()->user()->user_type !== 'Employee')
+                                        @can('employee-management.create')
+                                        <a href="{{ route('employees.eligible_plans.create', $employee->id) }}"
+                                            class="btn btn-primary btn-lg px-5 rounded-pill">
+                                            Add Information
+                                        </a>
+                                        @endcan
+                                    @endif
 
                                 </div>
                             </div>
@@ -576,10 +578,12 @@
                     <div class="d-flex justify-content-end gap-2">
                         <a href="{{ route('employees.index') }}" class="btn btn-secondary">Back to List</a>
                         @if ($employeePlan)
-                            @can('employee-management.edit')
-                                <a href="{{ route('employees.eligible_plans.edit', $employee->id) }}"
-                                    class="btn btn-primary">Edit Plans</a>
-                            @endcan
+                            @if(auth()->user()->user_type !== 'Employee')
+                                @can('employee-management.edit')
+                                    <a href="{{ route('employees.eligible_plans.edit', $employee->id) }}"
+                                        class="btn btn-primary">Edit Plans</a>
+                                @endcan
+                            @endif
                         @endif
                     </div>
                 </div>

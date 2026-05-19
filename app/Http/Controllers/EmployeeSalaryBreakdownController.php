@@ -20,6 +20,11 @@ class EmployeeSalaryBreakdownController extends Controller
 
     public function create($id)
     {
+        // Restricted for Employees
+        if (auth()->user()->user_type === 'Employee') {
+            abort(403, 'Unauthorized access.');
+        }
+
         $title = 'Add Employees Salary Breakdown';
         $section = 'Employees';
         $sub_section = 'Salary Breakdown / Add';
@@ -43,6 +48,11 @@ class EmployeeSalaryBreakdownController extends Controller
      */
     public function store(Request $request)
     {
+        // Restricted for Employees
+        if (auth()->user()->user_type === 'Employee') {
+            abort(403, 'Unauthorized access.');
+        }
+
         $validated = $this->empServices->employeeSalaryBreakdownValidation($request);
 
         try {
@@ -101,6 +111,11 @@ class EmployeeSalaryBreakdownController extends Controller
      */
     public function edit($id)
     {
+        // Restricted for Employees
+        if (auth()->user()->user_type === 'Employee') {
+            abort(403, 'Unauthorized access.');
+        }
+
         $employee = $this->empServices->getEmployeeById($id);
 
         if (!$employee) {
@@ -125,6 +140,11 @@ class EmployeeSalaryBreakdownController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // Restricted for Employees
+        if (auth()->user()->user_type === 'Employee') {
+            abort(403, 'Unauthorized access.');
+        }
+
         $validated = $this->empServices->employeeSalaryBreakdownValidation($request);
         $employeeData = EmployeeSalaryBreakdown::findOrFail($id);
         try {
@@ -143,6 +163,11 @@ class EmployeeSalaryBreakdownController extends Controller
     }
 
     public function import(Request $request){
+        // Restricted for Employees
+        if (auth()->user()->user_type === 'Employee') {
+            abort(403, 'Unauthorized access.');
+        }
+
         $request->validate([
             'file' => 'required|mimes:text/csv,text/plain,application/csv,text/comma-separated-values,text/anytext,application/octet-stream,application/txt,xlsx,csv,txt',
         ]);

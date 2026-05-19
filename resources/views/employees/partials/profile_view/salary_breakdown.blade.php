@@ -172,11 +172,13 @@
                                 </p>
 
                                 <!-- Action Button -->
-                                @can('employee-management.create')
-                                <a href="{{route('employees.salary_breakdown.create', $employee->id)}}" class="btn btn-primary btn-lg px-5 rounded-pill">
-                                    Add Information
-                                </a>
-                                @endcan
+                                @if(auth()->user()->user_type !== 'Employee')
+                                    @can('employee-management.create')
+                                    <a href="{{route('employees.salary_breakdown.create', $employee->id)}}" class="btn btn-primary btn-lg px-5 rounded-pill">
+                                        Add Information
+                                    </a>
+                                    @endcan
+                                @endif
 
                             </div>
                         </div>
@@ -198,12 +200,14 @@
                                 <i class="fas fa-certificate me-1"></i> Salary Certificate
                             </a>
 
-                            @can('employee-management.edit')
-                                <a href="{{ route('employees.salary_breakdown.edit', $employee->id) }}"
-                                   class="btn btn-primary">
-                                    <i class="mdi mdi-pencil me-1"></i> Edit Salary Information
-                                </a>
-                            @endcan
+                            @if(auth()->user()->user_type !== 'Employee')
+                                @can('employee-management.edit')
+                                    <a href="{{ route('employees.salary_breakdown.edit', $employee->id) }}"
+                                       class="btn btn-primary">
+                                        <i class="mdi mdi-pencil me-1"></i> Edit Salary Information
+                                    </a>
+                                @endcan
+                            @endif
                         </div>
                     </div>
                 </div>

@@ -23,6 +23,11 @@ class EmployeeEligibleController extends Controller
 
     public function create($id)
     {
+        // Restricted for Employees
+        if (auth()->user()->user_type === 'Employee') {
+            abort(403, 'Unauthorized access.');
+        }
+
         $title = 'Add Employees Eligible Plan';
         $section = 'Employees';
         $sub_section = 'Eligible Plan / Create';
@@ -46,6 +51,11 @@ class EmployeeEligibleController extends Controller
      */
     public function store(Request $request)
     {
+        // Restricted for Employees
+        if (auth()->user()->user_type === 'Employee') {
+            abort(403, 'Unauthorized access.');
+        }
+
         $validated = $this->empServices->employeeEligiblePlanValidation($request);
 
         try {
@@ -104,6 +114,11 @@ class EmployeeEligibleController extends Controller
      */
     public function edit($id)
     {
+        // Restricted for Employees
+        if (auth()->user()->user_type === 'Employee') {
+            abort(403, 'Unauthorized access.');
+        }
+
         $employee = $this->empServices->getEmployeeById($id);
 
         if (!$employee) {
@@ -129,6 +144,11 @@ class EmployeeEligibleController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // Restricted for Employees
+        if (auth()->user()->user_type === 'Employee') {
+            abort(403, 'Unauthorized access.');
+        }
+
         $validated = $this->empServices->employeeEligiblePlanValidation($request);
         $employeePlan = EmployeeEligiblePlan::findOrFail($id);
         try {
@@ -148,6 +168,11 @@ class EmployeeEligibleController extends Controller
     }
 
     public function import(Request $request){
+        // Restricted for Employees
+        if (auth()->user()->user_type === 'Employee') {
+            abort(403, 'Unauthorized access.');
+        }
+
         $request->validate([
             'file' => 'required|mimes:text/csv,text/plain,application/csv,text/comma-separated-values,text/anytext,application/octet-stream,application/txt,xlsx,csv,txt',
         ]);

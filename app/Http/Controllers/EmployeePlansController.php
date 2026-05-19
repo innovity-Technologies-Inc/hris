@@ -158,6 +158,11 @@ class EmployeePlansController extends Controller
 
     public function assignPlan(Request $request, $type)
     {
+        // Restricted for Employees
+        if (auth()->user()->user_type === 'Employee') {
+            abort(403, 'Unauthorized access.');
+        }
+
         try {
             if ($type === 'meal-plans') {
                 $validated = $this->empPlans->validation($request);
@@ -236,6 +241,11 @@ class EmployeePlansController extends Controller
 
     public function removePlan($type, $id)
     {
+        // Restricted for Employees
+        if (auth()->user()->user_type === 'Employee') {
+            abort(403, 'Unauthorized access.');
+        }
+
         if ($type === 'meal-plans'){
             $this->empPlans->planRemove($id, EmployeeMealPlan::class);
         }elseif ($type === 'shift-plans'){
@@ -256,6 +266,11 @@ class EmployeePlansController extends Controller
 
     public function deletePlan($type, $id)
     {
+        // Restricted for Employees
+        if (auth()->user()->user_type === 'Employee') {
+            abort(403, 'Unauthorized access.');
+        }
+
         if ($type === 'meal-plans'){
             $this->empPlans->planDelete($id, EmployeeMealPlan::class);
         }elseif ($type === 'shift-plans'){

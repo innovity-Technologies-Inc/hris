@@ -460,12 +460,14 @@
                                     Please add employee information to get started.
                                 </p>
 
-                                <!-- Action Button -->
+                            <!-- Action Button -->
+                            @if(auth()->user()->user_type !== 'Employee')
                                 @can('employee-management.create')
                                 <a href="{{route('employees.office_informations.create', $employee->id)}}" class="btn btn-primary btn-lg px-5 rounded-pill">
                                     Add Information
                                 </a>
                                 @endcan
+                            @endif
 
                             </div>
                         </div>
@@ -484,12 +486,14 @@
         <div class="card">
             <div class="card-body">
                 <div class="d-flex justify-content-end gap-2">
-                    @can('employee-management.edit')
-                        <a href="{{ route('employees.office_informations.edit', $employee->id) }}"
-                           class="btn btn-primary">
-                            <i class="mdi mdi-pencil me-1"></i> Edit Company Information
-                        </a>
-                    @endcan
+                    @if(auth()->user()->user_type !== 'Employee')
+                        @can('employee-management.edit')
+                            <a href="{{ route('employees.office_informations.edit', $employee->id) }}"
+                               class="btn btn-primary">
+                                <i class="mdi mdi-pencil me-1"></i> Edit Company Information
+                            </a>
+                        @endcan
+                    @endif
                 </div>            </div>
         </div>
     </div>

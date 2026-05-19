@@ -8,18 +8,18 @@
                 <h5 class="fs-16 text-dark fw-semibold mb-0">Overtime Plan Management</h5>
             </div>
         </div>
+        @if(auth()->user()->user_type !== 'Employee')
         @can('employee-management.edit')
-            <div>
-                {{-- Create Button to Open Modal --}}
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                    data-bs-target="#createOTPlanModal">
-                    <i class="mdi mdi-plus-circle me-1"></i> Create New
-                </button>
-            </div>
+        <div>
+            {{-- Create Button to Open Modal --}}
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createOTPlanModal">
+                <i class="mdi mdi-plus-circle me-1"></i> Add
+            </button>
+        </div>
         @endcan
-    </div>
-</div>
-
+        @endif
+        </div>
+        </div>
 {{--
     =====================================================
     ACTIVE OT PLANS SECTION

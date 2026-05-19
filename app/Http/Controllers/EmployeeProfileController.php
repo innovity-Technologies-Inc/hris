@@ -173,6 +173,11 @@ class EmployeeProfileController extends Controller
     }
 
     public function officeInfoCreate($id){
+        // Restricted for Employees
+        if (auth()->user()->user_type === 'Employee') {
+            abort(403, 'Unauthorized access.');
+        }
+
         $title = 'Add Employee Office Information';
         $section = 'Employees';
         $sub_section = 'Office Information / Create';
@@ -186,6 +191,11 @@ class EmployeeProfileController extends Controller
     }
 
     public function officeInfoStore(Request $request){
+        // Restricted for Employees
+        if (auth()->user()->user_type === 'Employee') {
+            abort(403, 'Unauthorized access.');
+        }
+
         $validated = $this->empServices->employeeOfficeInfoValidation($request);
         try{
             $employee = $this->empServices->employeeOfficeInfoSave($request, $validated);
@@ -216,6 +226,11 @@ class EmployeeProfileController extends Controller
     }
 
     public function officeInfoEdit($id){
+        // Restricted for Employees
+        if (auth()->user()->user_type === 'Employee') {
+            abort(403, 'Unauthorized access.');
+        }
+
         $title = 'Edit Employee Office Information';
         $section = 'Employees';
         $sub_section = 'Office Information / Edit';
@@ -249,6 +264,11 @@ class EmployeeProfileController extends Controller
     }
 
     public function officeInfoUpdate(Request $request, $id){
+        // Restricted for Employees
+        if (auth()->user()->user_type === 'Employee') {
+            abort(403, 'Unauthorized access.');
+        }
+
         $employee = $this->empServices->getEmployeeById($id);
         if (!$employee) {
             abort(404, 'Employee not found');
@@ -302,6 +322,11 @@ class EmployeeProfileController extends Controller
     }
 
     public function officeInfoImport(Request $request){
+        // Restricted for Employees
+        if (auth()->user()->user_type === 'Employee') {
+            abort(403, 'Unauthorized access.');
+        }
+
         $request->validate([
             'file' => 'required|mimes:text/csv,text/plain,application/csv,text/comma-separated-values,text/anytext,application/octet-stream,application/txt,xlsx,csv,txt',
         ]);

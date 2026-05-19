@@ -29,12 +29,14 @@
                     <div class="card-header bg-light">
                         <h5 class="mb-3 fw-semibold">📋 Leave Plan List</h5>
                         @if(count($leavePlans) > 0)
-                            @can('employee-management.edit')
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="leaveSelectAll" onchange="handleSelectAll('leave', this.checked)">
-                                <label class="form-check-label" for="leaveSelectAll">Select all</label>
-                            </div>
-                            @endcan
+                            @if(auth()->user()->user_type !== 'Employee')
+                                @can('employee-management.edit')
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="leaveSelectAll" onchange="handleSelectAll('leave', this.checked)">
+                                    <label class="form-check-label" for="leaveSelectAll">Select all</label>
+                                </div>
+                                @endcan
+                            @endif
                         @endif
                     </div>
 
@@ -52,7 +54,7 @@
                                            id="leave-plan-{{ $item->id }}"
                                            onchange="updateSelectAllState('leave')"
                                            @if(isset($activeLeavePlans) && $activeLeavePlans->contains('plan_id', $item->id)) checked @endif
-                                           @cannot('employee-management.edit') disabled @endcannot>
+                                           @if(auth()->user()->user_type === 'Employee' || auth()->user()->cannot('employee-management.edit')) disabled @endif>
                                     <label for="leave-plan-{{ $item->id }}" class="form-check-label flex-grow-1">{{ $item->name }}</label>
                                     <button type="button" class="btn btn-sm btn-outline-primary view-leave-plan-details ms-2" onclick="viewLeavePlanDetails({{ $item->id }}, this)" title="View Details">
                                         <i class="bi bi-eye"></i>
@@ -66,13 +68,15 @@
                         </div>
 
                         @if(count($leavePlans) > 0)
-                            @can('employee-management.edit')
-                            <div class="card-footer bg-light">
-                                <button class="btn btn-primary w-100 py-2" type="submit">
-                                    <i class="bi bi-check-circle me-2"></i>Submit Selected
-                                </button>
-                            </div>
-                            @endcan
+                            @if(auth()->user()->user_type !== 'Employee')
+                                @can('employee-management.edit')
+                                <div class="card-footer bg-light">
+                                    <button class="btn btn-primary w-100 py-2" type="submit">
+                                        <i class="bi bi-check-circle me-2"></i>Submit Selected
+                                    </button>
+                                </div>
+                                @endcan
+                            @endif
                         @endif
                     </form>
                 </div>
