@@ -16,14 +16,6 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer bg-light border-top">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="mdi mdi-close me-1"></i> Close & Edit
-                </button>
-                <button type="button" id="confirmSubmitBtn" class="btn btn-primary px-4">
-                    <i class="mdi mdi-check-circle me-1"></i> Confirm & Submit
-                </button>
-            </div>
         </div>
     </div>
 </div>
@@ -31,8 +23,8 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const previewBtn = document.getElementById('previewBtn');
-    const confirmSubmitBtn = document.getElementById('confirmSubmitBtn');
-    const previewModal = new bootstrap.Modal(document.getElementById('formPreviewModal'));
+    const previewModalEl = document.getElementById('formPreviewModal');
+    const previewModal = new bootstrap.Modal(previewModalEl);
     const previewContent = document.getElementById('previewContent');
 
     if (previewBtn) {
@@ -59,11 +51,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     displayValue = originalInput.options[originalInput.selectedIndex] ? originalInput.options[originalInput.selectedIndex].text : '';
                     if (displayValue.toLowerCase().includes('select') || displayValue === '') displayValue = '<span class="text-muted italic">Not selected</span>';
                 } else if (input.type === 'checkbox' || input.type === 'radio') {
-                    // Skip the input itself, we'll handle the label
                     if (originalInput.checked) {
                         displayValue = '<span class="badge bg-primary px-2 py-1">Selected</span>';
                     } else {
-                        // If it's a grouped checkbox (like weekends), and unchecked, we might want to just hide it or show 'No'
                         input.parentElement.remove();
                         return;
                     }
@@ -74,45 +64,62 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (displayValue === '') displayValue = '<span class="text-muted italic">Empty</span>';
                 }
 
-                // Create a styled display element
                 const displayEl = document.createElement('div');
                 displayEl.className = 'preview-value p-2 bg-light rounded mt-1 fw-bold text-dark border';
                 displayEl.innerHTML = displayValue;
 
-                // For textareas, don't limit height as much
                 if (input.tagName === 'TEXTAREA') {
                     displayEl.classList.add('h-auto');
                 }
 
-                // Replace input with display element
                 input.parentNode.replaceChild(displayEl, input);
             });
 
-            // 4. Final Polish: Clean up asterisks and spacing
+            // 4. Final Polish: Clean up asterisks
             clone.innerHTML = clone.innerHTML.replace(/\*/g, '');
 
-            // 5. Inject and Show
+            // 5. Add Action Buttons to the Clone
+            const actionRow = document.createElement('div');
+            actionRow.className = 'row mt-4 pt-3 border-top';
+            actionRow.innerHTML = `
+                <div class="col-12 d-flex justify-content-end gap-2">
+                    <button type="button" class="btn btn-secondary px-4 preview-cancel-btn">
+                        <i class="mdi mdi-close me-1"></i> Close & Edit
+                    </button>
+                    <button type="button" class="btn btn-primary px-4 preview-confirm-btn">
+                        <i class="mdi mdi-check-circle me-1"></i> Confirm & Submit
+                    </button>
+                </div>
+            `;
+            clone.appendChild(actionRow);
+
+            // 6. Inject and Show
             previewContent.innerHTML = '';
             previewContent.appendChild(clone);
             
-            // Fix any select2 or custom wrapper leftovers that might look weird
+            // Fix Select2 artifacts
             const select2Containers = previewContent.querySelectorAll('.select2-container');
             select2Containers.forEach(el => el.remove());
 
-            previewModal.show();
-        });
-    }
+            // 7. Attach Listeners to dynamic buttons
+            const confirmBtn = previewContent.querySelector('.preview-confirm-btn');
+            const cancelBtn = previewContent.querySelector('.preview-cancel-btn');
 
-    if (confirmSubmitBtn) {
-        confirmSubmitBtn.addEventListener('click', function() {
-            const originalSubmitBtn = document.querySelector('button[type="submit"]');
-            if (originalSubmitBtn) {
+            confirmBtn.addEventListener('click', function() {
+                const originalSubmitBtn = form.querySelector('button[type="submit"]');
                 previewModal.hide();
-                originalSubmitBtn.click();
-            } else {
-                const form = document.querySelector('form');
-                if (form) form.submit();
-            }
+                if (originalSubmitBtn) {
+                    originalSubmitBtn.click();
+                } else {
+                    form.submit();
+                }
+            });
+
+            cancelBtn.addEventListener('click', function() {
+                previewModal.hide();
+            });
+
+            previewModal.show();
         });
     }
 });
