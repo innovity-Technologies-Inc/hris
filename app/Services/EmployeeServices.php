@@ -854,6 +854,20 @@ class EmployeeServices
         $employee->status = $status;
         $employee->save();
 
+        // Also update associated user if exists
+        if ($employee->user_id) {
+            \App\Models\User::where('id', $employee->user_id)->update(['status' => $status]);
+        }
+
+        // Send Email Notification
+        if (!empty($employee->work_email)) {
+            try {
+                \Illuminate\Support\Facades\Mail::to($employee->work_email)->send(new \App\Mail\ProfileStatusMail($employee, $status));
+            } catch (\Exception $e) {
+                Log::error('Failed to send status toggle email: ' . $e->getMessage());
+            }
+        }
+
         return $employee;
     }
 
