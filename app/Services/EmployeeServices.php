@@ -626,7 +626,7 @@ class EmployeeServices
 
     public function employeeEducationInfoSave($validated, $employeeEduData = null)
     {
-        $validated['status'] = 'pending';
+        $validated['status'] = (auth()->user()->user_type === 'Employee') ? 'pending' : 'active';
         if (isset($employeeEduData)) {
             $employeeEduData->update($validated);
             return $employeeEduData;
@@ -691,7 +691,7 @@ class EmployeeServices
 
     public function employeeNomineeInfoSave($request, $validated, $employeeNomineeData = null)
     {
-        $validated['status'] = 'pending';
+        $validated['status'] = (auth()->user()->user_type === 'Employee') ? 'pending' : 'active';
         if (isset($employeeNomineeData)) {
             if ($request->hasFile('photo_path')) {
                 $this->employeeAttachmentDelete($employeeNomineeData->photo_path);
@@ -987,7 +987,7 @@ class EmployeeServices
         $history->fill([
             'employee_id' => $validated['employee_id'],
             'histories' => $validated['histories'],
-            'status' => 'pending', // Set to pending after update/create
+            'status' => (auth()->user()->user_type === 'Employee') ? 'pending' : 'active',
         ]);
 
         $history->save();

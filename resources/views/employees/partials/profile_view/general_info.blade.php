@@ -1,5 +1,5 @@
-@if($employee->status === 'incomplete' || empty($employee->first_name))
-    <!-- Only show Complete Profile button for incomplete status -->
+@if(auth()->user()->user_type === 'Employee' && ($employee->status === 'incomplete' || empty($employee->first_name)))
+    <!-- Only show Complete Profile button for incomplete status to Employees -->
     <div class="row">
         <div class="col-12">
             <div class="card border-0 shadow-none" style="background-color: rgba(151, 64, 99, 0.05); border: 1px solid rgba(151, 64, 99, 0.2) !important;">

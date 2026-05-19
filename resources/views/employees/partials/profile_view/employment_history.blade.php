@@ -1,8 +1,8 @@
 <!-- Employment History Section -->
 <div class="row">
     <div class="col-12">
-        @if((isset($historyData) && $historyData->status === 'incomplete') || empty($historyData))
-            <!-- Incomplete Profile Warning -->
+        @if(auth()->user()->user_type === 'Employee' && ((isset($historyData) && $historyData->status === 'incomplete') || empty($historyData)))
+            <!-- Incomplete Profile Warning for Employees -->
             <div class="card border-0 shadow-none mb-3" style="background-color: rgba(151, 64, 99, 0.05); border: 1px solid rgba(151, 64, 99, 0.2) !important;">
                 <div class="card-body text-center py-5">
                     <div class="avatar-lg rounded-circle mx-auto mb-4 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; background-color: rgba(151, 64, 99, 0.1);">
