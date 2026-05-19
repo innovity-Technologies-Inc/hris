@@ -130,10 +130,12 @@ class EmployeeProfileController extends Controller
             
             // Status transition logic
             if ($employee->status === 'incomplete' || $employee->status === 'pending') {
-                if (auth()->user()->user_type === 'Employee') {
-                    $employee->update(['status' => 'pending']);
-                } else {
-                    $employee->update(['status' => 'active']);
+                $newStatus = (auth()->user()->user_type === 'Employee') ? 'pending' : 'active';
+                $employee->update(['status' => $newStatus]);
+                
+                // Also update the associated user's status if they have one
+                if ($employee->user_id) {
+                    $employee->user->update(['status' => $newStatus]);
                 }
             }
         }catch(\Exception $e){

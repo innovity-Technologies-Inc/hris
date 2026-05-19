@@ -872,7 +872,7 @@ class EmployeeServices
                 'password' => Hash::make($request->password),
                 'user_type' => $request->user_type,
                 'employee_id' => $employee->id,
-                'status' => 'active',
+                'status' => 'incomplete',
             ]);
 
             // 3. Link User to Employee
