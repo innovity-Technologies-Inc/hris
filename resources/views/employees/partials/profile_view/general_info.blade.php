@@ -1,4 +1,4 @@
-@if($employee->status === 'incomplete')
+@if($employee->status === 'incomplete' || empty($employee->first_name))
     <!-- Only show Complete Profile button for incomplete status -->
     <div class="row">
         <div class="col-12">
@@ -11,13 +11,12 @@
                     <p class="text-muted mb-4 mx-auto" style="max-width: 500px;">
                         Your employee profile is currently incomplete. Please provide your personal, contact, and address information to activate your account and move to the pending review status.
                     </p>
-                    @if($employee->status === 'incomplete')
-                        @can('employee-management.create')
-                        <a href="{{ route('employees.general_informations.edit', $employee->id) }}"
-                            class="btn btn-lg px-5 shadow-sm text-white" style="background-color: #974063;">
-                            <i class="fas fa-user-edit me-1"></i> Complete profile Now                        </a>
-                        @endcan
-                    @endif
+                    @can('employee-management.create')
+                    <a href="{{ route('employees.general_informations.edit', $employee->id) }}"
+                        class="btn btn-lg px-5 shadow-sm text-white" style="background-color: #974063;">
+                        <i class="fas fa-user-edit me-1"></i> Complete profile Now
+                    </a>
+                    @endcan
                 </div>
             </div>
         </div>

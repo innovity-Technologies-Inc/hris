@@ -457,6 +457,20 @@ Route::prefix('employees')->middleware('auth')->group(function () {
         });
     });
 
+    Route::controller(EmployeeEmploymentHistoryController::class)->group(function(){
+        Route::middleware('permission:employee-management.view')->group(function () {
+            Route::get('profile/{id}/employment-history', 'show')->name('employees.profile.employment_history');
+        });
+        Route::middleware('permission:employee-management.create')->group(function () {
+            Route::get('employment-history/create/{id}', 'create')->name('employees.employment_history.create');
+            Route::post('employment-history/store', 'store')->name('employees.employment_history.store');
+        });
+        Route::middleware('permission:employee-management.edit')->group(function () {
+            Route::get('employment-history/edit/{id}', 'edit')->name('employees.employment_history.edit');
+            Route::put('employment-history/{id}/update', 'update')->name('employees.employment_history.update');
+        });
+    });
+
     Route::controller(EmployeeNomineeController::class)->group(function(){
         Route::middleware('permission:employee-management.view')->group(function () {
             Route::get('profile/{id}/nominee-information', 'show')->name('employees.profile.nominee_information');

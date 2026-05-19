@@ -626,13 +626,11 @@ class EmployeeServices
 
     public function employeeEducationInfoSave($validated, $employeeEduData = null)
     {
+        $validated['status'] = 'pending';
         if (isset($employeeEduData)) {
             $employeeEduData->update($validated);
             return $employeeEduData;
         } else {
-//            $data = new EmployeeEducationExperienceTraining($validated);
-//            dd($data->getAttributes());
-
             $data = EmployeeEducationExperienceTraining::create($validated);
             return $data;
         }
@@ -693,6 +691,7 @@ class EmployeeServices
 
     public function employeeNomineeInfoSave($request, $validated, $employeeNomineeData = null)
     {
+        $validated['status'] = 'pending';
         if (isset($employeeNomineeData)) {
             if ($request->hasFile('photo_path')) {
                 $this->employeeAttachmentDelete($employeeNomineeData->photo_path);
@@ -960,6 +959,42 @@ class EmployeeServices
     }
 
     /**
+     * Validate employee employment history information
+     */
+    public function employeeEmploymentHistoryValidation($request)
+    {
+        return $request->validate([
+            'employee_id' => 'required|exists:employees,id',
+            'histories' => 'required|array|min:1',
+            'histories.*.company_name' => 'required|string|max:255',
+            'histories.*.designation' => 'required|string|max:255',
+            'histories.*.joining_date' => 'required|date',
+            'histories.*.end_date' => 'nullable|date|after_or_equal:histories.*.joining_date',
+            'histories.*.job_description' => 'nullable|string',
+            'histories.*.achievements' => 'nullable|string',
+        ]);
+    }
+
+    /**
+     * Save employee employment history information
+     */
+    public function employeeEmploymentHistorySave($validated, $history = null)
+    {
+        if (!$history) {
+            $history = new \App\Models\EmployeeEmploymentHistory();
+        }
+
+        $history->fill([
+            'employee_id' => $validated['employee_id'],
+            'histories' => $validated['histories'],
+            'status' => 'pending', // Set to pending after update/create
+        ]);
+
+        $history->save();
+        return $history;
+    }
+
+    /**
      * Review employee profile status.
      */
     public function reviewProfile($employee, string $status, ?string $cause = null)
@@ -972,10 +1007,13 @@ class EmployeeServices
         }
         $employee->save();
 
+        // Update other section statuses
+        \App\Models\EmployeeEducationExperienceTraining::where('employee_id', $employee->id)->update(['status' => $status]);
+        \App\Models\EmployeeNominee::where('employee_id', $employee->id)->update(['status' => $status]);
+        \App\Models\EmployeeEmploymentHistory::where('employee_id', $employee->id)->update(['status' => $status]);
+
         $user = $employee->user;
         if (!$user) {
-            // If user doesn't exist, we might need to handle it, 
-            // but normally pending employees should have users.
             return;
         }
 

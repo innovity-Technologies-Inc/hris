@@ -92,6 +92,18 @@ class Employee extends Model
         return $this->hasOne(EmployeeOfficeInfo::class, 'employee_id', 'id');
     }
 
+    public function educationInfo(){
+        return $this->hasOne(EmployeeEducationExperienceTraining::class, 'employee_id', 'id');
+    }
+
+    public function nomineeInfo(){
+        return $this->hasOne(EmployeeNominee::class, 'employee_id', 'id');
+    }
+
+    public function employmentHistory(){
+        return $this->hasOne(EmployeeEmploymentHistory::class, 'employee_id', 'id');
+    }
+
     public function salaryBreakdown(){
         return $this->hasOne(EmployeeSalaryBreakdown::class, 'employee_id', 'id');
     }

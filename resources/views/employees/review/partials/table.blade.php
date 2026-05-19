@@ -5,7 +5,7 @@
                 <th scope="col" class="text-muted small fw-bold text-uppercase">Employee</th>
                 <th scope="col" class="text-muted small fw-bold text-uppercase">System ID</th>
                 <th scope="col" class="text-muted small fw-bold text-uppercase">Organization</th>
-                <th scope="col" class="text-muted small fw-bold text-uppercase">Designation</th>
+                <th scope="col" class="text-muted small fw-bold text-uppercase">Sections Status</th>
                 <th scope="col" class="text-muted small fw-bold text-uppercase">Submission Date</th>
                 <th scope="col" class="text-center text-muted small fw-bold text-uppercase" style="width: 120px;">Action</th>
             </tr>
@@ -36,7 +36,19 @@
                         <span class="text-muted">{{ $employee->officeInfo?->getCurrentDepartment?->department_name ?? 'N/A' }}</span>
                     </div>
                 </td>
-                <td>{{ $employee->officeInfo?->getCurrentDesignation?->company_designation ?? 'N/A' }}</td>
+                <td>
+                    <div class="d-flex flex-column gap-1">
+                        <span class="badge {{ $employee->educationInfo?->status === 'active' ? 'bg-success' : ($employee->educationInfo?->status === 'pending' ? 'bg-info' : 'bg-warning text-dark') }} small fw-normal px-2 py-1">
+                            Education: {{ ucfirst($employee->educationInfo?->status ?? 'Missing') }}
+                        </span>
+                        <span class="badge {{ $employee->employmentHistory?->status === 'active' ? 'bg-success' : ($employee->employmentHistory?->status === 'pending' ? 'bg-info' : 'bg-warning text-dark') }} small fw-normal px-2 py-1">
+                            History: {{ ucfirst($employee->employmentHistory?->status ?? 'Missing') }}
+                        </span>
+                        <span class="badge {{ $employee->nomineeInfo?->status === 'active' ? 'bg-success' : ($employee->nomineeInfo?->status === 'pending' ? 'bg-info' : 'bg-warning text-dark') }} small fw-normal px-2 py-1">
+                            Nominee: {{ ucfirst($employee->nomineeInfo?->status ?? 'Missing') }}
+                        </span>
+                    </div>
+                </td>
                 <td>{{ $employee->updated_at->format('d M, Y') }}</td>
                 <td class="text-center">
                     <a href="{{ route('employees.profile.general_informations', $employee->id) }}" class="btn btn-secondary btn-sm" title="View">

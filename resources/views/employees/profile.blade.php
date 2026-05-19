@@ -17,6 +17,8 @@
         @include('employees.partials.profile_view.eligible_plans_info')
     @elseif(Route::currentRouteNamed('employees.profile.education_information'))
         @include('employees.partials.profile_view.education_info')
+    @elseif(Route::currentRouteNamed('employees.profile.employment_history'))
+        @include('employees.partials.profile_view.employment_history')
     @elseif(Route::currentRouteNamed('employees.profile.nominee_information'))
         @include('employees.partials.profile_view.nominee_information')
     @elseif(Route::currentRouteNamed('employees.profile.salary_breakdown'))

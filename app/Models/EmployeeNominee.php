@@ -38,6 +38,7 @@ class EmployeeNominee extends Model
         'state',
         'zip_code',
         'country',
+        'status',
     ];
 
 //    protected $casts = [

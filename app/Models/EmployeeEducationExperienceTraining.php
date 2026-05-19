@@ -17,6 +17,7 @@ class EmployeeEducationExperienceTraining extends Model
         'educations',
         'experiences',
         'trainings',
+        'status',
     ];
 
     protected $casts = [

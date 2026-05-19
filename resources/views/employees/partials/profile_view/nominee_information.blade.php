@@ -1,7 +1,26 @@
 <div class="row">
     <div class="col-12">
-        @if (!empty($employee_nominee_info))
-            <div class="card">
+        @if ((isset($employee_nominee_info) && $employee_nominee_info->status === 'incomplete') || empty($employee_nominee_info))
+            <!-- Incomplete Profile Warning -->
+            <div class="card border-0 shadow-none mb-3" style="background-color: rgba(151, 64, 99, 0.05); border: 1px solid rgba(151, 64, 99, 0.2) !important;">
+                <div class="card-body text-center py-5">
+                    <div class="avatar-lg rounded-circle mx-auto mb-4 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; background-color: rgba(151, 64, 99, 0.1);">
+                        <i class="fas fa-users" style="font-size: 40px; color: #974063;"></i>
+                    </div>
+                    <h4 class="fw-bold text-dark">Incomplete Nominee Information</h4>
+                    <p class="text-muted mb-4 mx-auto" style="max-width: 500px;">
+                        Please provide your nominee details to proceed with the profile verification.
+                    </p>
+                    @can('employee-management.create')
+                    <a href="{{ isset($employee_nominee_info) ? route('employees.nominee_information.edit', $employee->id) : route('employees.nominee_information.create', $employee->id) }}"
+                        class="btn btn-lg px-5 shadow-sm text-white" style="background-color: #974063;">
+                        <i class="fas fa-plus me-1"></i> Complete Nominee Now
+                    </a>
+                    @endcan
+                </div>
+            </div>
+        @elseif (!empty($employee_nominee_info))
+            <div class="card shadow-sm border-0">
                 <div class="card-body pt-0">
                     <ul class="nav nav-underline border-bottom pt-2" id="pills-tab" role="tablist">
                         <li class="nav-item" role="presentation">

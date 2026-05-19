@@ -29,7 +29,10 @@ class EmployeeReviewController extends Controller
         $query = Employee::where('status', 'pending')->with([
             'officeInfo.getCurrentCompany',
             'officeInfo.getCurrentDepartment',
-            'officeInfo.getCurrentDesignation'
+            'officeInfo.getCurrentDesignation',
+            'educationInfo',
+            'nomineeInfo',
+            'employmentHistory',
         ]);
 
         $searchableColumns = [
