@@ -76,8 +76,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Create a styled display element
                 const displayEl = document.createElement('div');
-                displayEl.className = 'preview-value p-2 bg-light rounded border-start border-primary border-3 mt-1 fw-bold text-dark';
+                displayEl.className = 'preview-value p-2 bg-light rounded mt-1 fw-bold text-dark border';
                 displayEl.innerHTML = displayValue;
+
+                // For textareas, don't limit height as much
+                if (input.tagName === 'TEXTAREA') {
+                    displayEl.classList.add('h-auto');
+                }
 
                 // Replace input with display element
                 input.parentNode.replaceChild(displayEl, input);
@@ -115,29 +120,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <style>
 #previewContent .preview-value {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     min-height: 38px;
     display: flex;
     align-items: center;
+    background-color: #f8f9fa !important;
+    border: 1px solid #dee2e6 !important;
 }
-#previewContent label {
-    margin-bottom: 2px;
-    font-weight: 600;
-    color: #666;
+#previewContent .preview-value.h-auto {
+    min-height: auto;
+    align-items: flex-start;
 }
-#previewContent .card {
-    margin-bottom: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-.italic {
-    font-style: italic;
-}
-</style>
-
-<style>
 #previewContent label {
     font-size: 0.75rem;
     letter-spacing: 0.5px;
+    font-weight: 700;
+    color: #495057;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+#previewContent .card {
+    margin-bottom: 1.25rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
 }
 #previewContent .text-dark {
     word-break: break-all;
