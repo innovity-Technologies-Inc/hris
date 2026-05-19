@@ -69,13 +69,15 @@ class EmployeeServices
     public function employeeInfoValidation($request)
     {
         $id = $request->route('id');
+        $employee = $id ? Employee::find($id) : null;
+        $userId = $employee ? $employee->user_id : null;
         $isEmployee = auth()->user()->user_type === 'Employee';
 
         $rules = [
             // System Identifiers
-            'applicant_id' => $isEmployee ? 'nullable|string' : 'required|string',
-            'system_id' => $isEmployee ? 'nullable|string' : 'required|string',
-            'punch_card_no' => $isEmployee ? 'nullable|string' : 'required|string',
+            'applicant_id' => $isEmployee ? 'nullable|string' : 'required|string|unique:employees,applicant_id,' . $id,
+            'system_id' => $isEmployee ? 'nullable|string' : 'required|string|unique:employees,system_id,' . $id,
+            'punch_card_no' => $isEmployee ? 'nullable|string' : 'required|string|unique:employees,punch_card_no,' . $id,
 
             // Personal Information
             'first_name' => 'required|string|max:255',
@@ -147,11 +149,11 @@ class EmployeeServices
             'home_phone' => 'nullable|string|max:20',
             'work_mobile' => 'nullable|string|max:20',
             'work_phone' => 'nullable|string|max:20',
-            'work_email' => 'nullable|email|max:255|unique:users,email,' . ($id ? Employee::find($id)->user_id : ''),
+            'work_email' => 'nullable|email|max:255|unique:users,email,' . $userId,
             'personal_email' => 'nullable|email|max:255',
 
             // Login Information
-            'user_type' => 'required|string|in:Group,Company,Business Unit,Division,Department,Section,Employee',
+            'user_type' => $id ? 'nullable|string|in:Group,Company,Business Unit,Division,Department,Section,Employee' : 'required|string|in:Group,Company,Business Unit,Division,Department,Section,Employee',
             'roles' => 'nullable|array',
             'password' => $id ? 'nullable|min:8|confirmed' : 'required|min:8|confirmed',
 
@@ -223,9 +225,15 @@ class EmployeeServices
         $userData = [
             'name' => $validated['full_name'],
             'email' => $request->work_email,
-            'user_type' => $request->user_type,
-            'status' => 'active',
         ];
+
+        if ($request->filled('user_type')) {
+            $userData['user_type'] = $request->user_type;
+        }
+
+        if (!$id) {
+            $userData['status'] = 'active';
+        }
 
         if ($request->filled('password')) {
             $userData['password'] = Hash::make($request->password);

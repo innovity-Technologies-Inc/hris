@@ -7,7 +7,7 @@
                     class="btn btn-outline-secondary w-100 py-3 text-decoration-none
             @if (request()->routeIs('employees.general_informations.create') ||
                     request()->routeIs('employees.profile.general_informations')) active @endif">
-                    <span class="badge bg-secondary rounded-circle me-2">1</span>
+                    <span class="badge bg-secondary rounded-circle me-2 px-2 py-1">1</span>
                     General Information
                 </a>
             </div>
@@ -17,7 +17,7 @@
                     <a href="{{ route('employees.profile.education_information', $employee->id) }}"
                         class="btn btn-outline-secondary w-100 py-3 text-decoration-none @if (request()->routeIs('employees.education_information.create') ||
                                 request()->routeIs('employees.profile.education_information')) active @endif">
-                        <span class="badge bg-secondary rounded-circle me-2">2</span>
+                        <span class="badge bg-secondary rounded-circle me-2 px-2 py-1">2</span>
                         Education Information
                     </a>
                 </div>
@@ -25,44 +25,44 @@
                 <div class="col">
                     <button type="submit"
                         class="btn btn-outline-secondary w-100 py-3 text-decoration-none information">
-                        <span class="badge bg-secondary rounded-circle me-2">2</span>
+                        <span class="badge bg-secondary rounded-circle me-2 px-2 py-1">2</span>
                         Education Information
                     </button>
                 </div>
             @endif
 
-            @if (isset($employee->id))
+            @if (isset($employee->id) && $employee->status === 'active')
                 <div class="col">
                     <a href="{{ route('employees.profile.office_informations', $employee->id) }}"
                         class="btn btn-outline-secondary w-100 py-3 text-decoration-none @if (request()->routeIs('employees.office_informations.create') ||
                                 request()->routeIs('employees.profile.office_informations')) active @endif">
-                        <span class="badge bg-secondary rounded-circle me-2">3</span>
+                        <span class="badge bg-secondary rounded-circle me-2 px-2 py-1">3</span>
                         Office Information
                     </a>
                 </div>
-            @else
+            @elseif(!isset($employee->id))
                 <div class="col">
                     <button type="submit"
                         class="btn btn-outline-secondary w-100 py-3 text-decoration-none information">
-                        <span class="badge bg-secondary rounded-circle me-2">3</span>
+                        <span class="badge bg-secondary rounded-circle me-2 px-2 py-1">3</span>
                         Office Information
                     </button>
                 </div>
             @endif
 
-            @if (isset($employee->id))
+            @if (isset($employee->id) && $employee->status === 'active')
                 <div class="col">
                     <a href="{{ route('employees.profile.eligible_plans', $employee->id) }}"
                         class="btn btn-outline-secondary w-100 py-3 text-decoration-none @if (request()->routeIs('employees.eligible_plans.create') || request()->routeIs('employees.profile.eligible_plans')) active @endif">
-                        <span class="badge bg-secondary rounded-circle me-2">4</span>
+                        <span class="badge bg-secondary rounded-circle me-2 px-2 py-1">4</span>
                         Policy Tag
                     </a>
                 </div>
-            @else
+            @elseif(!isset($employee->id))
                 <div class="col">
                     <button type="submit"
                         class="btn btn-outline-secondary w-100 py-3 text-decoration-none information">
-                        <span class="badge bg-secondary rounded-circle me-2">4</span>
+                        <span class="badge bg-secondary rounded-circle me-2 px-2 py-1">4</span>
                         Policy Tag
                     </button>
                 </div>
@@ -73,7 +73,7 @@
                     <a href="{{ route('employees.profile.nominee_information', $employee->id) }}"
                         class="btn btn-outline-secondary w-100 py-3 text-decoration-none @if (request()->routeIs('employees.nominee_information.create') ||
                                 request()->routeIs('employees.profile.nominee_information')) active @endif">
-                        <span class="badge bg-secondary rounded-circle me-2">5</span>
+                        <span class="badge bg-secondary rounded-circle me-2 px-2 py-1">5</span>
                         Nominee Information
                     </a>
                 </div>
@@ -81,80 +81,80 @@
                 <div class="col">
                     <button type="submit"
                         class="btn btn-outline-secondary w-100 py-3 text-decoration-none information">
-                        <span class="badge bg-secondary rounded-circle me-2">5</span>
+                        <span class="badge bg-secondary rounded-circle me-2 px-2 py-1">5</span>
                         Nominee Information
                     </button>
                 </div>
             @endif
 
-            @if (isset($employee->id))
+            @if (isset($employee->id) && $employee->status === 'active')
                 <div class="col">
                     <a href="{{ route('employees.profile.salary_breakdown', $employee->id) }}"
                         class="btn btn-outline-secondary w-100 py-3 text-decoration-none @if (request()->routeIs('employees.salary_breakdown.create') || request()->routeIs('employees.profile.salary_breakdown')) active @endif">
-                        <span class="badge bg-secondary rounded-circle me-2">6</span>
+                        <span class="badge bg-secondary rounded-circle me-2 px-2 py-1">6</span>
                         Salary Breakdown
                     </a>
                 </div>
-            @else
+            @elseif(!isset($employee->id))
                 <div class="col">
                     <button type="submit"
                         class="btn btn-outline-secondary w-100 py-3 text-decoration-none information">
-                        <span class="badge bg-secondary rounded-circle me-2">6</span>
+                        <span class="badge bg-secondary rounded-circle me-2 px-2 py-1">6</span>
                         Salary Breakdown
                     </button>
                 </div>
             @endif
 
-            @if (isset($employee->id))
+            @if (isset($employee->id) && $employee->status === 'active')
                 <div class="col">
                     <a href="{{ route('employees.profile.bank_accounts', $employee->id) }}"
                         class="btn btn-outline-secondary w-100 py-3 text-decoration-none @if (request()->routeIs('employees.bank_accounts.create') || request()->routeIs('employees.profile.bank_accounts')) active @endif">
-                        <span class="badge bg-secondary rounded-circle me-2">7</span>
+                        <span class="badge bg-secondary rounded-circle me-2 px-2 py-1">7</span>
                         Accounts Information
                     </a>
                 </div>
-            @else
+            @elseif(!isset($employee->id))
                 <div class="col">
                     <button type="submit"
                         class="btn btn-outline-secondary w-100 py-3 text-decoration-none information">
-                        <span class="badge bg-secondary rounded-circle me-2">7</span>
+                        <span class="badge bg-secondary rounded-circle me-2 px-2 py-1">7</span>
                         Accounts Information
                     </button>
                 </div>
             @endif
 
 
-            @if (isset($employee->id))
+            @if (isset($employee->id) && $employee->status === 'active')
                 <div class="col">
                     <a href="{{ route('employees.profile.plans', ['id' => $employee->id, 'type' => 'meal-plans']) }}"
                         class="btn btn-outline-secondary w-100 py-3 text-decoration-none @if (request()->routeIs('employees.profile.plans')) active @endif">
-                        <span class="badge bg-secondary rounded-circle me-2">8</span>
+                        <span class="badge bg-secondary rounded-circle me-2 px-2 py-1">8</span>
                         Plans
                     </a>
                 </div>
-            @else
+            @elseif(!isset($employee->id))
                 <div class="col">
                     <button type="submit"
                         class="btn btn-outline-secondary w-100 py-3 text-decoration-none information">
-                        <span class="badge bg-secondary rounded-circle me-2">8</span>
+                        <span class="badge bg-secondary rounded-circle me-2 px-2 py-1">8</span>
                         Plans
                     </button>
                 </div>
             @endif
 
-            @if (isset($employee->id))
+            @if (isset($employee->id) && $employee->status === 'active')
                 <div class="col">
                     <a href="{{ route('employees.profile.leave_info', $employee->id) }}"
                         class="btn btn-outline-secondary w-100 py-3 text-decoration-none @if (request()->routeIs('employees.profile.leave_info')) active @endif">
-                        <span class="badge bg-secondary rounded-circle me-2">9</span>
+                        <span class="badge bg-secondary rounded-circle me-2 px-2 py-1">9</span>
                         Leave Info
                     </a>
                 </div>
-            @else
+            @elseif(!isset($employee->id))
                 <div class="col">
                     <button type="submit"
                         class="btn btn-outline-secondary w-100 py-3 text-decoration-none information">
-                        <span class="badge bg-secondary rounded-circle me-2">9</span>
+                        <span class="badge bg-secondary rounded-circle me-2 px-2 py-1">9</span>
                         Leave Info
                     </button>
                 </div>

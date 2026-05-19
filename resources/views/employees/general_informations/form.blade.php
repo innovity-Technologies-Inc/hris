@@ -5,11 +5,20 @@
     @endif
 
     <div class="mt-4">
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
         <form class="" method="POST" enctype="multipart/form-data"
-            action={{ isset($employee)
+            action="{{ isset($employee)
                 ? route('employees.general_informations.update', $employee->id)
-                : route('employees.general_informations.store') }}>
+                : route('employees.general_informations.store') }}">
             @if (isset($employee))
                 @method('PUT')
             @endif
