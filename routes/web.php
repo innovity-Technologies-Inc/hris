@@ -18,6 +18,7 @@ use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\EmployeeBankAccountController;
 use App\Http\Controllers\EmployeeEducationExperienceTrainingController;
+use App\Http\Controllers\EmployeeEmploymentHistoryController;
 use App\Http\Controllers\EmployeeEligibleController;
 use App\Http\Controllers\EmployeeMovementsController;
 use App\Http\Controllers\EmployeeNomineeController;
