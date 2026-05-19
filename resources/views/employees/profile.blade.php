@@ -4,7 +4,9 @@
 
     @include('employees.partials.profile_view.profile_header')
 
-    @include('employees.partials.creation_button')
+    @if(!(auth()->user()->user_type === 'Employee' && $employee->status === 'incomplete'))
+        @include('employees.partials.creation_button')
+    @endif
 
 
     @if (Route::currentRouteNamed('employees.profile.general_informations'))
