@@ -68,11 +68,12 @@ class EmployeeReviewController extends Controller
         $request->validate([
             'status' => 'required|in:active,incomplete',
             'cause' => 'required_if:status,incomplete|nullable|string',
+            'sections' => 'nullable|array',
         ]);
 
         try {
             $employee = Employee::findOrFail($id);
-            $this->employeeServices->reviewProfile($employee, $request->status, $request->cause);
+            $this->employeeServices->reviewProfile($employee, $request->status, $request->cause, $request->sections);
 
             return redirect()->route('employees.review.index')->with([
                 'message' => 'Employee profile reviewed successfully.',

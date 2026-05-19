@@ -997,8 +997,9 @@ class EmployeeServices
     /**
      * Review employee profile status.
      */
-    public function reviewProfile($employee, string $status, ?string $cause = null)
+    public function reviewProfile($employee, string $status, ?string $cause = null, ?array $sections = [])
     {
+        // 1. Update Employee Main Status
         $employee->status = $status;
         if ($status === 'incomplete') {
             $employee->review_cause = $cause;
@@ -1007,10 +1008,37 @@ class EmployeeServices
         }
         $employee->save();
 
-        // Update other section statuses
-        \App\Models\EmployeeEducationExperienceTraining::where('employee_id', $employee->id)->update(['status' => $status]);
-        \App\Models\EmployeeNominee::where('employee_id', $employee->id)->update(['status' => $status]);
-        \App\Models\EmployeeEmploymentHistory::where('employee_id', $employee->id)->update(['status' => $status]);
+        // 2. Update Section Statuses
+        if ($status === 'active') {
+            // If overall status is active, all sections become active
+            \App\Models\EmployeeEducationExperienceTraining::where('employee_id', $employee->id)->update(['status' => 'active']);
+            \App\Models\EmployeeNominee::where('employee_id', $employee->id)->update(['status' => 'active']);
+            \App\Models\EmployeeEmploymentHistory::where('employee_id', $employee->id)->update(['status' => 'active']);
+        } else {
+            // If overall status is incomplete, handle specific sections
+            // Default to all if sections array is empty (fallback)
+            $targetSections = !empty($sections) ? $sections : ['general', 'education', 'history', 'nominee'];
+
+            if (in_array('education', $targetSections)) {
+                \App\Models\EmployeeEducationExperienceTraining::where('employee_id', $employee->id)->update(['status' => 'incomplete']);
+            } else {
+                \App\Models\EmployeeEducationExperienceTraining::where('employee_id', $employee->id)->update(['status' => 'active']);
+            }
+
+            if (in_array('history', $targetSections)) {
+                \App\Models\EmployeeEmploymentHistory::where('employee_id', $employee->id)->update(['status' => 'incomplete']);
+            } else {
+                \App\Models\EmployeeEmploymentHistory::where('employee_id', $employee->id)->update(['status' => 'active']);
+            }
+
+            if (in_array('nominee', $targetSections)) {
+                \App\Models\EmployeeNominee::where('employee_id', $employee->id)->update(['status' => 'incomplete']);
+            } else {
+                \App\Models\EmployeeNominee::where('employee_id', $employee->id)->update(['status' => 'active']);
+            }
+
+            // Note: 'general' section is handled by the main $employee->status
+        }
 
         $user = $employee->user;
         if (!$user) {
