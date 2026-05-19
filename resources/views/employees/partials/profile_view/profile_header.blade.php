@@ -31,7 +31,7 @@
                         <div class="ms-auto">
                             <div class="d-flex align-items-center gap-3">
                                 <!-- Edit Login Info Button -->
-                                <button type="button" class="btn btn-primary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#editLoginInfoModal">
+                                <button type="button" class="btn text-white d-flex align-items-center" style="background-color: #974063;" data-bs-toggle="modal" data-bs-target="#editLoginInfoModal">
                                     <i class="mdi mdi-account-key me-1"></i> Edit Login Info
                                 </button>
 

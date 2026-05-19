@@ -26,52 +26,52 @@
     <div class="row">
         @if($mode === 'create')
             <div class="col-12 mb-3">
-                <label for="{{ $mode }}_full_name" class="form-label text-primary fw-bold">Full Name <span class="text-danger">*</span></label>
+                <label for="{{ $mode }}_full_name" class="form-label fw-bold" style="color: #974063;">Full Name <span class="text-danger">*</span></label>
                 <div class="input-group">
-                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-user text-primary"></i></span>
+                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-user" style="color: #974063;"></i></span>
                     <input type="text" class="form-control border-start-0" id="{{ $mode }}_full_name" name="full_name" 
                            value="{{ old('full_name') }}" required>
                 </div>
             </div>
 
             <div class="col-md-6 mb-3">
-                <label for="{{ $mode }}_applicant_id" class="form-label text-primary fw-bold">Applicant ID <span class="text-danger">*</span></label>
+                <label for="{{ $mode }}_applicant_id" class="form-label fw-bold" style="color: #974063;">Applicant ID <span class="text-danger">*</span></label>
                 <div class="input-group">
-                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-id-badge text-primary"></i></span>
+                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-id-badge" style="color: #974063;"></i></span>
                     <input type="text" class="form-control border-start-0" id="{{ $mode }}_applicant_id" name="applicant_id" 
                            value="{{ old('applicant_id') }}" required>
                 </div>
             </div>
 
             <div class="col-md-6 mb-3">
-                <label for="{{ $mode }}_system_id" class="form-label text-primary fw-bold">System ID <span class="text-danger">*</span></label>
+                <label for="{{ $mode }}_system_id" class="form-label fw-bold" style="color: #974063;">System ID <span class="text-danger">*</span></label>
                 <div class="input-group">
-                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-laptop-code text-primary"></i></span>
+                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-laptop-code" style="color: #974063;"></i></span>
                     <input type="text" class="form-control border-start-0" id="{{ $mode }}_system_id" name="system_id" 
                            value="{{ old('system_id') }}" required>
                 </div>
             </div>
 
             <div class="col-md-6 mb-3">
-                <label for="{{ $mode }}_punch_card_no" class="form-label text-primary fw-bold">Punch Card No <span class="text-danger">*</span></label>
+                <label for="{{ $mode }}_punch_card_no" class="form-label fw-bold" style="color: #974063;">Punch Card No <span class="text-danger">*</span></label>
                 <div class="input-group">
-                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-clock text-primary"></i></span>
+                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-clock" style="color: #974063;"></i></span>
                     <input type="text" class="form-control border-start-0" id="{{ $mode }}_punch_card_no" name="punch_card_no" 
                            value="{{ old('punch_card_no') }}" required>
                 </div>
             </div>
 
             <div class="col-md-6 mb-3">
-                <label for="{{ $mode }}_work_email" class="form-label text-primary fw-bold">Work Email <span class="text-danger">*</span></label>
+                <label for="{{ $mode }}_work_email" class="form-label fw-bold" style="color: #974063;">Work Email <span class="text-danger">*</span></label>
                 <div class="input-group">
-                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-envelope text-primary"></i></span>
+                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-envelope" style="color: #974063;"></i></span>
                     <input type="email" class="form-control border-start-0" id="{{ $mode }}_work_email" name="work_email" 
                            value="{{ old('work_email') }}" required>
                 </div>
             </div>
 
             <div class="col-md-6 mb-3">
-                <label for="{{ $mode }}_user_type" class="form-label text-primary fw-bold">User Type <span class="text-danger">*</span></label>
+                <label for="{{ $mode }}_user_type" class="form-label fw-bold" style="color: #974063;">User Type <span class="text-danger">*</span></label>
                 <select class="form-select" id="{{ $mode }}_user_type" name="user_type" required>
                     <option value="">Select User Type</option>
                     @foreach(['Group', 'Company', 'Business Unit', 'Division', 'Department', 'Section', 'Employee'] as $type)
@@ -83,7 +83,7 @@
             </div>
 
             <div class="col-md-6 mb-3">
-                <label for="{{ $mode }}_role" class="form-label text-primary fw-bold">Assign Role</label>
+                <label for="{{ $mode }}_role" class="form-label fw-bold" style="color: #974063;">Assign Role</label>
                 <select class="form-select" id="{{ $mode }}_role" name="role">
                     <option value="">Select Role</option>
                     @foreach($roles as $role)
@@ -93,16 +93,16 @@
             </div>
         @else
             <div class="col-12 mb-3">
-                <label for="{{ $mode }}_work_email" class="form-label text-primary fw-bold">Work Email <span class="text-danger">*</span></label>
+                <label for="{{ $mode }}_work_email" class="form-label fw-bold" style="color: #974063;">Work Email <span class="text-danger">*</span></label>
                 <div class="input-group">
-                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-envelope text-primary"></i></span>
+                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-envelope" style="color: #974063;"></i></span>
                     <input type="email" class="form-control border-start-0" id="{{ $mode }}_work_email" name="work_email" 
                            value="{{ old('work_email', $employee?->user?->email ?? $employee?->work_email ?? '') }}" required>
                 </div>
             </div>
 
             <div class="col-12 mb-3">
-                <label for="{{ $mode }}_user_type" class="form-label text-primary fw-bold">User Type <span class="text-danger">*</span></label>
+                <label for="{{ $mode }}_user_type" class="form-label fw-bold" style="color: #974063;">User Type <span class="text-danger">*</span></label>
                 <select class="form-select" id="{{ $mode }}_user_type" name="user_type" required>
                     <option value="">Select User Type</option>
                     @foreach(['Group', 'Company', 'Business Unit', 'Division', 'Department', 'Section', 'Employee'] as $type)
@@ -114,7 +114,7 @@
             </div>
 
             <div class="col-12 mb-3">
-                <label for="{{ $mode }}_role" class="form-label text-primary fw-bold">Assign Role</label>
+                <label for="{{ $mode }}_role" class="form-label fw-bold" style="color: #974063;">Assign Role</label>
                 <select class="form-select" id="{{ $mode }}_role" name="role">
                     <option value="">Select Role</option>
                     @foreach($roles as $role)
@@ -139,12 +139,12 @@
 
     <div class="row">
         <div class="col-md-6 mb-3">
-            <label for="{{ $mode }}_password" class="form-label text-primary fw-bold">
+            <label for="{{ $mode }}_password" class="form-label fw-bold" style="color: #974063;">
                 {{ $mode === 'create' ? 'Password' : 'New Password' }} 
                 @if($mode === 'create') <span class="text-danger">*</span> @endif
             </label>
             <div class="input-group">
-                <span class="input-group-text bg-light border-end-0"><i class="fas fa-lock text-primary"></i></span>
+                <span class="input-group-text bg-light border-end-0"><i class="fas fa-lock" style="color: #974063;"></i></span>
                 <input type="password" class="form-control border-start-0" id="{{ $mode }}_password" name="password" 
                        placeholder="••••••••" {{ $mode === 'create' ? 'required' : '' }}>
                 <span class="input-group-text bg-white border-start-0"><i class="fas fa-eye password-toggle"></i></span>
@@ -155,9 +155,9 @@
         </div>
 
         <div class="col-md-6 mb-3">
-            <label for="{{ $mode }}_password_confirmation" class="form-label text-primary fw-bold">Confirm Password @if($mode === 'create') <span class="text-danger">*</span> @endif</label>
+            <label for="{{ $mode }}_password_confirmation" class="form-label fw-bold" style="color: #974063;">Confirm Password @if($mode === 'create') <span class="text-danger">*</span> @endif</label>
             <div class="input-group">
-                <span class="input-group-text bg-light border-end-0"><i class="fas fa-check-circle text-primary"></i></span>
+                <span class="input-group-text bg-light border-end-0"><i class="fas fa-check-circle" style="color: #974063;"></i></span>
                 <input type="password" class="form-control border-start-0" id="{{ $mode }}_password_confirmation" name="password_confirmation" 
                        placeholder="••••••••" {{ $mode === 'create' ? 'required' : '' }}>
                 <span class="input-group-text bg-white border-start-0"><i class="fas fa-eye password-toggle"></i></span>
