@@ -531,7 +531,7 @@
                                     <input type="text"
                                         class="form-control @error('present_address.line_1') is-invalid @enderror"
                                         id="present_address_line_1" name="present_address[line_1]"
-                                        value="{{ isset($employee) ? $employee->present_address['line_1'] : old('present_address.line_1') }}">
+                                        value="{{ isset($employee->present_address['line_1']) ? $employee->present_address['line_1'] : old('present_address.line_1') }}">
                                     @error('present_address.line_1')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
