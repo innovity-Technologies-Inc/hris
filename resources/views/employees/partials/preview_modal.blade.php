@@ -40,94 +40,62 @@ document.addEventListener('DOMContentLoaded', function() {
             const form = this.closest('form');
             if (!form) return;
 
-            previewContent.innerHTML = '';
-            let html = '<div class="row g-4">';
+            // 1. Clone the form content
+            const clone = form.cloneNode(true);
 
-            const inputs = form.querySelectorAll('input:not([type="hidden"]):not([type="file"]):not([type="password"]):not([type="submit"]):not([type="reset"]), select, textarea');
-            
-            // Map to store grouped array fields
-            const groups = {};
+            // 2. Cleanup: Remove elements we don't want in preview
+            const toRemove = clone.querySelectorAll('button, input[type="submit"], input[type="reset"], .text-danger, script, .alert, input[type="hidden"]');
+            toRemove.forEach(el => el.remove());
 
-            inputs.forEach((input) => {
-                if (!input.name) return;
+            // 3. Transform inputs to read-only labels
+            const inputs = clone.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                const originalInput = form.querySelector(`[name="${input.name}"]`);
+                if (!originalInput) return;
 
-                // Check if name is an array like "educations[0][title]"
-                const arrayMatch = input.name.match(/^(.+)\[(\d+)\]\[(.+)\]$/);
+                let displayValue = '';
                 
-                if (arrayMatch) {
-                    const groupName = arrayMatch[1];
-                    const index = arrayMatch[2];
-                    const fieldName = arrayMatch[3];
-
-                    if (!groups[groupName]) groups[groupName] = {};
-                    if (!groups[groupName][index]) groups[groupName][index] = [];
-
-                    groups[groupName][index].push({
-                        label: fieldName.replace(/_/g, ' ').toUpperCase(),
-                        value: getInputValue(input)
-                    });
-                } else {
-                    // Regular field
-                    let labelText = '';
-                    const label = form.querySelector(`label[for="${input.id}"]`);
-                    if (label) {
-                        labelText = label.innerText.replace('*', '').trim();
+                if (input.tagName === 'SELECT') {
+                    displayValue = originalInput.options[originalInput.selectedIndex] ? originalInput.options[originalInput.selectedIndex].text : '';
+                    if (displayValue.toLowerCase().includes('select') || displayValue === '') displayValue = '<span class="text-muted italic">Not selected</span>';
+                } else if (input.type === 'checkbox' || input.type === 'radio') {
+                    // Skip the input itself, we'll handle the label
+                    if (originalInput.checked) {
+                        displayValue = '<span class="badge bg-primary px-2 py-1">Selected</span>';
                     } else {
-                        labelText = input.name.replace(/\[|\]|_/g, ' ').toUpperCase();
+                        // If it's a grouped checkbox (like weekends), and unchecked, we might want to just hide it or show 'No'
+                        input.parentElement.remove();
+                        return;
                     }
-
-                    html += `
-                        <div class="col-md-6 border-bottom pb-2">
-                            <label class="text-muted small fw-bold text-uppercase d-block mb-1">${labelText}</label>
-                            <div class="text-dark fw-medium">${getInputValue(input)}</div>
-                        </div>
-                    `;
+                } else if (input.type === 'password') {
+                    displayValue = '********';
+                } else {
+                    displayValue = originalInput.value.trim();
+                    if (displayValue === '') displayValue = '<span class="text-muted italic">Empty</span>';
                 }
+
+                // Create a styled display element
+                const displayEl = document.createElement('div');
+                displayEl.className = 'preview-value p-2 bg-light rounded border-start border-primary border-3 mt-1 fw-bold text-dark';
+                displayEl.innerHTML = displayValue;
+
+                // Replace input with display element
+                input.parentNode.replaceChild(displayEl, input);
             });
 
-            // Process grouped array fields
-            for (const [groupName, indices] of Object.entries(groups)) {
-                html += `<div class="col-12 mt-4 mb-2"><h6 class="text-primary border-bottom pb-2 text-uppercase"><i class="mdi mdi-layers-outline me-1"></i>${groupName.replace(/_/g, ' ')}</h6></div>`;
-                
-                for (const [index, fields] of Object.entries(indices)) {
-                    html += `<div class="col-12"><div class="row bg-light p-3 rounded mb-2">`;
-                    html += `<div class="col-12 mb-2 text-muted small fw-bold"># ${parseInt(index) + 1}</div>`;
-                    fields.forEach(field => {
-                        html += `
-                            <div class="col-md-4 mb-3">
-                                <label class="text-muted small fw-bold text-uppercase d-block mb-1">${field.label}</label>
-                                <div class="text-dark fw-medium">${field.value}</div>
-                            </div>
-                        `;
-                    });
-                    html += `</div></div>`;
-                }
-            }
+            // 4. Final Polish: Clean up asterisks and spacing
+            clone.innerHTML = clone.innerHTML.replace(/\*/g, '');
 
-            html += '</div>';
-            previewContent.innerHTML = html;
+            // 5. Inject and Show
+            previewContent.innerHTML = '';
+            previewContent.appendChild(clone);
+            
+            // Fix any select2 or custom wrapper leftovers that might look weird
+            const select2Containers = previewContent.querySelectorAll('.select2-container');
+            select2Containers.forEach(el => el.remove());
+
             previewModal.show();
         });
-    }
-
-    function getInputValue(input) {
-        let value = '';
-        if (input.tagName === 'SELECT') {
-            value = input.options[input.selectedIndex] ? input.options[input.selectedIndex].text : '';
-            if (value.toLowerCase().includes('choose one') || value === '') value = '<span class="text-muted italic">Not selected</span>';
-        } else if (input.type === 'checkbox') {
-            value = input.checked ? '<span class="badge bg-success">Yes</span>' : '<span class="badge bg-light text-dark border">No</span>';
-        } else if (input.type === 'radio') {
-            if (input.checked) {
-                value = input.nextElementSibling ? input.nextElementSibling.innerText : 'Checked';
-            } else {
-                return ''; // Should be handled by caller
-            }
-        } else {
-            value = input.value.trim();
-            if (value === '') value = '<span class="text-muted italic">Empty</span>';
-        }
-        return value;
     }
 
     if (confirmSubmitBtn) {
@@ -144,6 +112,27 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+
+<style>
+#previewContent .preview-value {
+    font-size: 0.9rem;
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+}
+#previewContent label {
+    margin-bottom: 2px;
+    font-weight: 600;
+    color: #666;
+}
+#previewContent .card {
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.italic {
+    font-style: italic;
+}
+</style>
 
 <style>
 #previewContent label {
