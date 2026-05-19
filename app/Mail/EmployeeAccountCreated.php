@@ -44,8 +44,18 @@ class EmployeeAccountCreated extends Mailable
      */
     public function content(): Content
     {
+        $generalSettings = \App\HelperClass::getGeneralSetting();
         return new Content(
-            markdown: 'emails.employee_account_created',
+            view: 'emails.employee_account_created',
+            with: [
+                'name' => $this->name,
+                'email' => $this->email,
+                'password' => $this->password,
+                'loginUrl' => $this->loginUrl,
+                'generalSettings' => $generalSettings,
+                'appName' => $generalSettings->name ?? config('app.name'),
+                'primaryColor' => '#974063',
+            ]
         );
     }
 

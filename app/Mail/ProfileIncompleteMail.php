@@ -40,8 +40,16 @@ class ProfileIncompleteMail extends Mailable
      */
     public function content(): Content
     {
+        $generalSettings = \App\HelperClass::getGeneralSetting();
         return new Content(
             view: 'emails.profile_incomplete',
+            with: [
+                'employee' => $this->employee,
+                'cause' => $this->cause,
+                'generalSettings' => $generalSettings,
+                'appName' => $generalSettings->name ?? config('app.name'),
+                'primaryColor' => '#974063',
+            ]
         );
     }
 }

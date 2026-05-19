@@ -38,8 +38,15 @@ class ProfileActiveMail extends Mailable
      */
     public function content(): Content
     {
+        $generalSettings = \App\HelperClass::getGeneralSetting();
         return new Content(
             view: 'emails.profile_active',
+            with: [
+                'employee' => $this->employee,
+                'generalSettings' => $generalSettings,
+                'appName' => $generalSettings->name ?? config('app.name'),
+                'primaryColor' => '#974063',
+            ]
         );
     }
 }
