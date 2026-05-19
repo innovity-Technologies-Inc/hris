@@ -14,25 +14,14 @@
                         <div class="border rounded shadow-sm p-3 filter-section-bg">
                             <form id="searchForm">
                                 <div class="row g-3">
-                                    <div class="col-md-4">
-                                        <label class="form-label text-muted small fw-semibold mb-1">Search</label>
+                                    <div class="col-md-8">
+                                        <label class="form-label text-muted small fw-semibold mb-1">Keyword Search</label>
                                         <div class="input-group input-group-md">
-                                            <input type="text" name="search" class="form-control border-end-0" placeholder="Name, ID, Email..." value="{{ request('search') }}">
+                                            <input type="text" name="search" class="form-control border-end-0" placeholder="Search by Name, Email, ID, Punch Card, System ID..." value="{{ request('search') }}">
                                             <span class="input-group-text border-start-0 input-group-bg">
                                                 <i class="mdi mdi-magnify text-muted"></i>
                                             </span>
                                         </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label text-muted small fw-semibold mb-1">Department</label>
-                                        <select name="department" class="form-select form-select-md">
-                                            <option value="">All Departments</option>
-                                            @foreach($departments as $dept)
-                                                <option value="{{ $dept->id }}" {{ request('department') == $dept->id ? 'selected' : '' }}>
-                                                    {{ $dept->department_name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
                                     </div>
                                     <div class="col-md-2 d-flex align-items-end">
                                         <button type="submit" class="btn btn-primary btn-md w-100">

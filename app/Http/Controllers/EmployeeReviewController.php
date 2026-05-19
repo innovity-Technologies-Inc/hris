@@ -33,21 +33,16 @@ class EmployeeReviewController extends Controller
         ]);
 
         $searchableColumns = [
-            'applicant_id',
             'full_name',
-            'system_id',
-            'personal_mobile',
+            'personal_email',
             'work_email',
+            'applicant_id',
+            'punch_card_no',
+            'system_id',
         ];
 
         $keyword = $request->input('search');
         $filters = [];
-
-        if ($request->filled('department')) {
-            $query->whereHas('officeInfo', function($q) use ($request) {
-                $q->where('current_department_id', $request->input('department'));
-            });
-        }
 
         $employees = $flexsearch->apply($query, $filters, $keyword, $searchableColumns)
             ->paginate(10);
@@ -59,9 +54,7 @@ class EmployeeReviewController extends Controller
             ]);
         }
 
-        $departments = \App\Models\Department::select('id', 'department_name')->orderBy('department_name')->get();
-
-        return view('employees.review.index', compact('title', 'section', 'sub_section', 'employees', 'departments'));
+        return view('employees.review.index', compact('title', 'section', 'sub_section', 'employees'));
     }
 
     /**
