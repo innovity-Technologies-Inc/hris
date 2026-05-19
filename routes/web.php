@@ -348,10 +348,11 @@ Route::controller(EmployeeSearchController::class)->middleware('auth')->group(fu
 Route::prefix('employees')->middleware('auth')->group(function () {
 
     Route::controller(EmployeeProfileController::class)->group(function () {
+        Route::get('profile/{id}/general-informations', 'profileView')->name('employees.profile.general_informations');
+        Route::get('profile/{id}/office-informations', 'showOfficeInfo')->name('employees.profile.office_informations');
+
         Route::middleware('permission:employee-management.view')->group(function () {
             Route::get('/', 'index')->name('employees.index');
-            Route::get('profile/{id}/general-informations', 'profileView')->name('employees.profile.general_informations');
-            Route::get('profile/{id}/office-informations', 'showOfficeInfo')->name('employees.profile.office_informations');
         });
 
         Route::middleware('permission:employee-management.import')->group(function () {
@@ -365,9 +366,10 @@ Route::prefix('employees')->middleware('auth')->group(function () {
             Route::post('office-informations/store', 'officeInfoStore')->name('employees.office_informations.store');
         });
 
+        Route::get('general-informations/edit/{id}', 'generalInfoEdit')->name('employees.general_informations.edit');
+        Route::put('general-informations/{id}/update', 'generalInfoUpdate')->name('employees.general_informations.update');
+
         Route::middleware('permission:employee-management.edit')->group(function () {
-            Route::get('general-informations/edit/{id}', 'generalInfoEdit')->name('employees.general_informations.edit');
-            Route::put('general-informations/{id}/update', 'generalInfoUpdate')->name('employees.general_informations.update');
             Route::get('office-informations/edit/{id}', 'officeInfoEdit')->name('employees.office_informations.edit');
             Route::put('office-informations/{id}/update', 'officeInfoUpdate')->name('employees.office_informations.update');
             Route::post('{id}/toggle-status', 'toggleStatus')->name('employees.toggle_status');

@@ -56,7 +56,13 @@
                                 @else
                                 <div class="d-flex align-items-center">
                                     <span class="me-2 fw-semibold">Status:</span>
-                                    <span class="badge rounded-pill {{ $employee?->status == 'active' ? 'bg-success' : 'bg-danger' }}">
+                                    @php
+                                        $statusClass = 'bg-success';
+                                        if ($employee?->status == 'inactive') $statusClass = 'bg-danger';
+                                        elseif ($employee?->status == 'incomplete') $statusClass = 'bg-warning text-dark';
+                                        elseif ($employee?->status == 'pending') $statusClass = 'bg-info';
+                                    @endphp
+                                    <span class="badge rounded-pill {{ $statusClass }}">
                                         {{ ucfirst($employee?->status ?? 'active') }}
                                     </span>
                                 </div>

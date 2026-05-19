@@ -335,7 +335,7 @@ class EmployeeProfileController extends Controller
     {
         try {
             $validated = $request->validate([
-                'status' => 'required|in:active,inactive'
+                'status' => 'required|in:active,inactive,incomplete,pending'
             ]);
 
             $employee = $this->empServices->toggleEmployeeStatus($id, $validated['status']);
