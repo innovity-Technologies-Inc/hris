@@ -11,10 +11,17 @@
                     <p class="text-muted mb-4 mx-auto" style="max-width: 500px;">
                         Your employee profile is currently incomplete. Please provide your personal, contact, and address information to activate your account and move to the pending review status.
                     </p>
+                    @php
+                        $isOwner = auth()->user()->employee_id == $employee->id || auth()->user()->id == $employee->user_id;
+                        $canCreate = auth()->user()->can('employee-management.create');
+                    @endphp
+
+                    @if($isOwner || $canCreate)
                     <a href="{{ route('employees.general_informations.edit', $employee->id) }}"
                         class="btn btn-lg px-5 shadow-sm text-white" style="background-color: #974063;">
                         <i class="fas fa-user-edit me-1"></i> Complete My Profile Now
                     </a>
+                    @endif
                 </div>
             </div>
         </div>
@@ -498,12 +505,18 @@
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-end gap-2">
-                        @can('employee-management.edit')
+                        @php
+                            $canEdit = auth()->user()->can('employee-management.edit');
+                            $isOwner = auth()->user()->employee_id == $employee->id || auth()->user()->id == $employee->user_id;
+                            $isIncompleteOrPending = in_array($employee->status, ['incomplete', 'pending']);
+                        @endphp
+
+                        @if($canEdit || ($isOwner && $isIncompleteOrPending))
                         <a href="{{ route('employees.general_informations.edit', $employee->id) }}"
                             class="btn btn-primary">
                             <i class="mdi mdi-pencil me-1"></i> Edit Profile
                         </a>
-                        @endcan
+                        @endif
                     </div>
                 </div>
             </div>

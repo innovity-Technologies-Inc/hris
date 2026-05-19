@@ -1,3 +1,9 @@
+@php
+    $isOwner = isset($employee) && (auth()->user()->employee_id == $employee->id || auth()->user()->id == $employee->user_id);
+    $canCreate = auth()->user()->can('employee-management.create');
+@endphp
+
+@if($isOwner || $canCreate)
 <div class="card shadow-sm border-0">
 
     <div class="card-body p-4">
@@ -181,3 +187,4 @@
         })
     });
 </script>
+@endif

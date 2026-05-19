@@ -30,10 +30,16 @@
                         </div>
                         <div class="ms-auto">
                             <div class="d-flex align-items-center gap-3">
+                                @php
+                                    $isOwner = isset($employee) && (auth()->user()->employee_id == $employee->id || auth()->user()->id == $employee->user_id);
+                                    $canEdit = auth()->user()->can('employee-management.edit');
+                                @endphp
                                 <!-- Edit Login Info Button -->
+                                @if($isOwner || $canEdit)
                                 <button type="button" class="btn text-white d-flex align-items-center" style="background-color: #974063;" data-bs-toggle="modal" data-bs-target="#editLoginInfoModal">
                                     <i class="mdi mdi-account-key me-1"></i> Edit Login Info
                                 </button>
+                                @endif
 
                                 <!-- ID Card Action Button -->
                                 @include('employee.partials.id_card_button', ['employee' => $employee])
