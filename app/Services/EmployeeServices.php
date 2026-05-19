@@ -1018,20 +1018,11 @@ class EmployeeServices
         }
         $employee->save();
 
-        // 2. Helper to Update or Initialize Section Status
+        // 2. Helper to Update Section Status ONLY if record exists
         $updateSectionStatus = function($table, $empId, $newStatus) {
-            $exists = \Illuminate\Support\Facades\DB::table($table)->where('employee_id', $empId)->exists();
-            if ($exists) {
-                return \Illuminate\Support\Facades\DB::table($table)->where('employee_id', $empId)->update(['status' => $newStatus]);
-            } else {
-                // If record doesn't exist, create a shell record with the status
-                return \Illuminate\Support\Facades\DB::table($table)->insert([
-                    'employee_id' => $empId,
-                    'status' => $newStatus,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]);
-            }
+            return \Illuminate\Support\Facades\DB::table($table)
+                ->where('employee_id', $empId)
+                ->update(['status' => $newStatus]);
         };
 
         // 3. Update Section Statuses
