@@ -58,9 +58,12 @@ class EmployeeProfileController extends Controller
             abort(404, 'Employee not found');
         }
 
-        // Security check: Employees can only view their own profile
-        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
-            abort(403, 'Unauthorized access to other profiles.');
+        // Security check: Owner can view, or user with permission can view
+        $isOwner = auth()->user()->employee_id == $id || auth()->user()->id == $employee->user_id;
+        $canViewAny = auth()->user()->can('employee-management.view');
+
+        if (!$isOwner && !$canViewAny) {
+            abort(403, 'Unauthorized access.');
         }
 
         return view('employees.profile', compact('title', 'section', 'sub_section', 'employee', 'section_url'));
@@ -94,9 +97,12 @@ class EmployeeProfileController extends Controller
             abort(404, 'Employee not found');
         }
 
-        // Security check: Employees can only edit their own profile
-        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
-            abort(403, 'Unauthorized access to other profiles.');
+        // Security check: Owner can edit, or user with permission can edit
+        $isOwner = auth()->user()->id == $employee->user_id;
+        $canEditAny = auth()->user()->can('employee-management.edit');
+
+        if (!$isOwner && !$canEditAny) {
+            abort(403, 'Unauthorized access.');
         }
 
         $employee_id = $employee->id;
@@ -110,14 +116,26 @@ class EmployeeProfileController extends Controller
             abort(404, 'Employee not found');
         }
 
-        // Security check
-        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
-            abort(403, 'Unauthorized access to other profiles.');
+        // Security check: Owner can update, or user with permission can update
+        $isOwner = auth()->user()->id == $employee->user_id;
+        $canEditAny = auth()->user()->can('employee-management.edit');
+
+        if (!$isOwner && !$canEditAny) {
+            abort(403, 'Unauthorized access.');
         }
 
         $validated = $this->empServices->employeeInfoValidation($request);
         try{
             $this->empServices->employeeInfoSave($request,$validated, $id);
+            
+            // Status transition logic
+            if ($employee->status === 'incomplete' || $employee->status === 'pending') {
+                if (auth()->user()->user_type === 'Employee') {
+                    $employee->update(['status' => 'pending']);
+                } else {
+                    $employee->update(['status' => 'active']);
+                }
+            }
         }catch(\Exception $e){
             Log::error($e->getMessage());
             return redirect()->back()->with([
@@ -268,9 +286,12 @@ class EmployeeProfileController extends Controller
             abort(404, 'Employee not found');
         }
 
-        // Security check: Employees can only view their own profile
-        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
-            abort(403, 'Unauthorized access to other profiles.');
+        // Security check: Owner can view, or user with permission can view
+        $isOwner = auth()->user()->employee_id == $id || auth()->user()->id == $employee->user_id;
+        $canViewAny = auth()->user()->can('employee-management.view');
+
+        if (!$isOwner && !$canViewAny) {
+            abort(403, 'Unauthorized access.');
         }
 
         $employee_office_info = EmployeeOfficeInfo::where('employee_id', $id)->first();
