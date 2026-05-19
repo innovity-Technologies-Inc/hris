@@ -40,6 +40,8 @@ This is a robust Human Resource Management System (HRMS) built with Laravel 12. 
     - **Review Dashboard**: A dedicated interface for HR to audit pending profiles.
     - **Approval/Rejection**: HR can mark profiles as `incomplete` with a specific cause (triggering a feedback loop) or `active`.
     - **Email Feedback**: Automated emails are dispatched to employees notifying them of their profile's review outcome (Approval or Incomplete with cause).
+    - **UI Alignment**: The review interface is designed to match the system-wide employee management style, featuring integrated search cards and high-performance filtering.
+    - **Sidebar Integration**: The "Profile Review" menu is logically positioned immediately following "Employee Information" for a streamlined HR auditing workflow.
 
 ### 🔔 Hierarchical Notification System
 A custom real-time notification engine with intelligent visibility rules based on the organizational chart.

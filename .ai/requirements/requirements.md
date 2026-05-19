@@ -25,6 +25,9 @@ A comprehensive Human Resource Management System (HRMS) built with Laravel 12, f
     - Automated Email Notifications:
         - Notify employee when status is set to `incomplete` (including the cause).
         - Notify employee when status is set to `active`.
+    - **Profile Review UI/UX Enhancement**:
+        - Align the styling of the "Profile Review" page with the "Employee Information" page (Integrated cards, same header style, filter layout).
+        - Position the "Profile Review" menu item immediately after "Employee Information" in the sidebar for better logical flow.
 
 ### 🔔 Hierarchical Notification System
 - **Database Notifications**:

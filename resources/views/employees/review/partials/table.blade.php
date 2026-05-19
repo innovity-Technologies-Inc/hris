@@ -1,23 +1,28 @@
 <div class="table-responsive">
-    <table class="table table-hover align-middle mb-0">
-        <thead class="bg-light">
+    <table class="table table-bordered align-middle mb-0">
+        <thead>
             <tr>
-                <th class="ps-4 py-3 text-muted small fw-bold text-uppercase">Employee</th>
-                <th class="py-3 text-muted small fw-bold text-uppercase">ID</th>
-                <th class="py-3 text-muted small fw-bold text-uppercase">Organization</th>
-                <th class="py-3 text-muted small fw-bold text-uppercase">Designation</th>
-                <th class="py-3 text-muted small fw-bold text-uppercase">Submission Date</th>
-                <th class="py-3 text-center text-muted small fw-bold text-uppercase" style="width: 120px;">Actions</th>
+                <th scope="col" class="text-muted small fw-bold text-uppercase">Employee</th>
+                <th scope="col" class="text-muted small fw-bold text-uppercase">System ID</th>
+                <th scope="col" class="text-muted small fw-bold text-uppercase">Organization</th>
+                <th scope="col" class="text-muted small fw-bold text-uppercase">Designation</th>
+                <th scope="col" class="text-muted small fw-bold text-uppercase">Submission Date</th>
+                <th scope="col" class="text-center text-muted small fw-bold text-uppercase" style="width: 120px;">Action</th>
             </tr>
         </thead>
         <tbody>
             @forelse($employees as $employee)
             <tr>
-                <td class="ps-4">
+                <td>
                     <div class="d-flex align-items-center">
-                        <div class="avatar-sm rounded-circle bg-light d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                            <i class="fas fa-user text-primary"></i>
-                        </div>
+                        {!! \App\HelperClass::generateAvatar(
+                            $employee->photo_path,
+                            $employee->full_name,
+                            32,
+                            '#974063',
+                            'me-2',
+                            $employee->id,
+                        ) !!}
                         <div>
                             <h6 class="mb-0 fw-bold">{{ $employee->full_name }}</h6>
                             <small class="text-muted">{{ $employee->work_email }}</small>
@@ -34,8 +39,8 @@
                 <td>{{ optional($employee->officeInfo->getCurrentDesignation)->company_designation }}</td>
                 <td>{{ $employee->updated_at->format('d M, Y') }}</td>
                 <td class="text-center">
-                    <a href="{{ route('employees.profile.general_informations', $employee->id) }}" class="btn btn-sm btn-outline-primary rounded-pill px-3">
-                        <i class="fas fa-eye me-1"></i> View
+                    <a href="{{ route('employees.profile.general_informations', $employee->id) }}" class="btn btn-secondary btn-sm" title="View">
+                        <i style="height: 12px; width: 12px" data-feather="eye"></i>
                     </a>
                 </td>
             </tr>
@@ -43,7 +48,7 @@
             <tr>
                 <td colspan="6" class="text-center py-5">
                     <div class="text-muted">
-                        <i class="fas fa-clipboard-check mb-3" style="font-size: 48px; opacity: 0.5;"></i>
+                        <i data-feather="clipboard" class="mb-3" style="height: 48px; width: 48px; opacity: 0.5;"></i>
                         <p class="mb-0">No pending profiles found for review.</p>
                     </div>
                 </td>
@@ -54,7 +59,13 @@
 </div>
 
 @if($employees->hasPages())
-<div class="d-flex justify-content-center p-4 border-top">
-    {{ $employees->links() }}
+<div class="mt-3">
+    {{ $employees->appends(request()->query())->links() }}
 </div>
 @endif
+
+<script>
+    if (typeof feather !== 'undefined') {
+        feather.replace();
+    }
+</script>
