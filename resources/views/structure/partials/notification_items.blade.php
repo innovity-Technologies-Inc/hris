@@ -5,7 +5,7 @@
         </div>
         <div class="d-flex align-items-center justify-content-between">
             <p class="notify-details">{{ $notification->title }}</p>
-            <small class="text-muted">{{ $notification->created_at->diffForHumans() }}</small>
+            <small class="text-muted">{{ $notification->created_at->diffForHumans(null, true, true) }}</small>
         </div>
         <p class="mb-0 user-msg">
             <small class="fs-14">{{ $notification->message }}</small>

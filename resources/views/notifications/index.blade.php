@@ -38,7 +38,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <span class="text-muted small">{{ $notification->created_at->diffForHumans() }}</span>
+                                    <span class="text-muted small">{{ $notification->created_at->diffForHumans(null, true, true) }}</span>
                                 </td>
                                 <td class="pe-4">
                                     <div class="d-flex justify-content-center gap-1">
