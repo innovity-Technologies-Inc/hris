@@ -1,36 +1,3 @@
-
-    <style>
-        .icon-circle {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-        }
-        .bg-light-primary {
-            background-color: rgba(13, 110, 253, 0.1);
-        }
-        .bg-light-success {
-            background-color: rgba(25, 135, 84, 0.1);
-        }
-        .bg-light-info {
-            background-color: rgba(13, 202, 240, 0.1);
-        }
-        .bg-light-danger {
-            background-color: rgba(220, 53, 69, 0.1);
-        }
-        .text-monospace {
-            font-family: 'Courier New', monospace;
-            font-weight: 600;
-        }
-        .shadow-sm {
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
-        }
-    </style>
-
-
     <div class="row">
         @if(!empty($employeeData))
         <div class="col-12">

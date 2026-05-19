@@ -24,25 +24,6 @@
     </div>
 </div>
 
-<style>
-    .hr-divider {
-        display: flex;
-        align-items: center;
-        text-align: center;
-    }
-    .hr-divider::before, .hr-divider::after {
-        content: '';
-        flex: 1;
-        border-bottom: 1px solid #e9ecef;
-    }
-    .hr-divider:not(:empty)::before {
-        margin-right: .5em;
-    }
-    .hr-divider:not(:empty)::after {
-        margin-left: .5em;
-    }
-</style>
-
 @push('scripts')
 {{-- Global password toggle in master.blade.php handles the eye icon --}}
 @endpush

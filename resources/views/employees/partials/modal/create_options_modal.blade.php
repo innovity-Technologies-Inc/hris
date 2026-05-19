@@ -41,29 +41,6 @@
     </div>
 </div>
 
-<style>
-    .transition-hover {
-        transition: all 0.3s ease;
-    }
-    .transition-hover:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(151, 64, 99, 0.1) !important;
-        background-color: #fff !important;
-    }
-    .bg-soft-primary {
-        background-color: rgba(151, 64, 99, 0.1);
-    }
-    .bg-soft-success {
-        background-color: rgba(40, 167, 69, 0.1);
-    }
-    .cursor-pointer {
-        cursor: pointer;
-    }
-    .fs-32 {
-        font-size: 32px;
-    }
-</style>
-
 @push('scripts')
 <script>
     $(document).ready(function() {
