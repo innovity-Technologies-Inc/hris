@@ -14,7 +14,7 @@ class GeneralSettingSeeder extends Seeder
     {
         DB::table('general_settings')->truncate();
         DB::table('general_settings')->insert([
-            'name' => 'ParcTaxi HRMS',
+            'name' => 'HRIS',
             'currency' => 'BDT',
             'logo_light' => 'assets/images/logo-light.png',
             'logo_dark' => 'assets/images/logo-dark.png',
