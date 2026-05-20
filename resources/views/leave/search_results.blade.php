@@ -32,7 +32,7 @@
                 @endif
             </td>
             <td>
-                @can('leave.view')
+                @can('leaves.view')
                 <button type="button" class="btn btn-secondary btn-sm" title="View"
                         data-bs-toggle="modal" data-bs-target="#viewLeaveModal">
                     <i style="height: 12px; width: 12px" data-feather="eye"></i>
@@ -42,7 +42,7 @@
                 @endcan
 
                 @if ($application->status == 'pending')
-                    @can('leave.hr-approve')
+                    @can('leaves.hr-approve')
                     <form class="d-inline" action="{{ route('leave.change_status') }}"
                           method="post">
                         @method('put')
@@ -68,7 +68,7 @@
                     </form>
                     @endcan
                 @endif
-                @can('leave.delete')
+                @can('leaves.delete')
                 <form action="{{ route('leave.destroy', $application->id) }}"
                       method="POST" class="d-inline">
                     @csrf

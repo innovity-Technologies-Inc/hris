@@ -279,7 +279,7 @@
                     $canTAPlans = auth()->user()->can('ta-plans.view');
                     $canDAPlans = auth()->user()->can('da-plans.view');
                     $canDeductionPlans = auth()->user()->can('deduction-plan.view');
-                    $canBulkUploadPlans = auth()->user()->can('bulk-upload.view');
+                    $canBulkUploadPlans = auth()->user()->can('employee-management.import');
                     $showPlansMenu = $canMealPlans || $canShiftPlans || $canLeavePlans || $canOTPlans || $canRosterPlans || $canOffDayPlans || $canBonusPlans || $canAllowancePlans || $canTAPlans || $canDAPlans || $canDeductionPlans || $canBulkUploadPlans;
                 @endphp
                 @if($showPlansMenu)
@@ -388,9 +388,10 @@
                     $canBankAccounts = auth()->user()->can('bank-accounts.view');
                     $canHolidays = auth()->user()->can('holidays.view');
                     $canJobCreations = auth()->user()->can('job-creations.view');
-                    $canBulkUploadCompany = auth()->user()->can('bulk-upload.view');
+                    $canBulkUploadCompany = auth()->user()->can('employee-management.import');
 
                     $showCompanyMenu = $canGroups || $canCompanyTypes || $canCompanies || $canCompanyBranches || $canDivisions || $canDepartments || $canSections || $canDesignations || $canSalaryActs || $canSalaryGrades || $canBanks || $canBankBranches || $canBankAccounts || $canHolidays || $canJobCreations || $canBulkUploadCompany;
+
 
                     $companyOpen =
                         Route::is('groups.*') ||
@@ -633,7 +634,7 @@
                     $canIDCardDesign = auth()->user()->can('id-card-design.view');
                     $canAPIKeys = auth()->user()->can('api-keys.view');
                     $canSMTP = auth()->user()->can('smtp.view');
-                    $canDBBackup = auth()->user()->can('db-backup.view');
+                    $canDBBackup = auth()->user()->can('db-backup.download');
                     $canRoleManagement = auth()->user()->can('role-management.view');
                     $showSettingsMenu = $canGeneralSettings || $canIDCardDesign || $canAPIKeys || $canSMTP || $canDBBackup || $canRoleManagement;
                 @endphp
