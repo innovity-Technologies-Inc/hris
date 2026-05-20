@@ -16,9 +16,9 @@ class GeneralSettingSeeder extends Seeder
         DB::table('general_settings')->insert([
             'name' => 'HRIS',
             'currency' => 'BDT',
-            'logo_light' => 'assets/images/logo-light.png',
-            'logo_dark' => 'assets/images/logo-dark.png',
-            'favicon' => 'assets/images/favicon.ico',
+            'logo_light' => 'assets/images/logo.png',
+            'logo_dark' => 'assets/images/logo.png',
+            'favicon' => 'assets/images/favicon.png',
             'branch_status' => 1,
             'division_status' => 1,
             'department_status' => 1,
