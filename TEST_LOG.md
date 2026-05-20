@@ -16,3 +16,15 @@
 
 **Status**: ✅ SUCCESS
 
+## 2026-05-20 (Employment History Fix)
+
+**Goal**: Fix `Undefined array key "joining_date"` in employment history view and ensure seeder consistency.
+
+**Exact Command**: `$env:DB_CONNECTION='sqlite'; $env:DB_DATABASE=':memory:'; php artisan test tests/Feature/EmployeeEmploymentHistoryViewTest.php`
+
+**Results**:
+- `employment history view handles missing joining_date gracefully`: ✅ PASSED
+- `employment history view handles correct data correctly`: ✅ PASSED
+
+**Status**: ✅ SUCCESS
+

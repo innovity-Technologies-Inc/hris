@@ -108,6 +108,10 @@ A comprehensive Human Resource Management System (HRMS) built with Laravel 12, f
     - Assign appropriate roles (e.g., 'HR Manager', 'Department Manager', 'Employee').
     - Standardize initial passwords to `12345678` for testing/initial rollout.
     - Ensure at least one user has `user_type` 'Group' and role 'Super Admin' with all permissions.
+- **Data Consistency & Seeder Reliability**:
+    - Ensure all seeders generate data that adheres to the validation rules defined in the corresponding Services.
+    - **Employment History Seeder**: Align `EmployeeSeeder` dummy data with `EmployeeServices` validation (use `company_name` and `joining_date` keys).
+    - **Robust Views**: Implement defensive programming in Blade templates (e.g., using `?? null` or `isset()`) to prevent crashes when accessing array keys from JSON-casted columns that might be missing due to legacy data or seeder inconsistencies.
 
 ### 📁 Modular Organization
 - **Goal**: Reorganize the project codebase into logical modules based on the sidebar menu structure.

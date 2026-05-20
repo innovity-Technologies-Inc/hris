@@ -38,11 +38,24 @@
                                 <div class="d-flex justify-content-between align-items-start mb-1">
                                     <h6 class="fw-bold text-dark mb-0">{{ $history['designation'] ?? 'N/A' }}</h6>
                                     <span class="badge bg-light text-primary border px-2 py-1">
-                                        {{ \Carbon\Carbon::parse($history['joining_date'])->format('M Y') }} - 
-                                        {{ isset($history['end_date']) ? \Carbon\Carbon::parse($history['end_date'])->format('M Y') : 'Present' }}
+                                        @if(!empty($history['joining_date']))
+                                            {{ \Carbon\Carbon::parse($history['joining_date'])->format('M Y') }}
+                                        @elseif(!empty($history['from_date']))
+                                            {{ \Carbon\Carbon::parse($history['from_date'])->format('M Y') }}
+                                        @else
+                                            N/A
+                                        @endif
+                                        - 
+                                        @if(isset($history['end_date']) && !empty($history['end_date']))
+                                            {{ \Carbon\Carbon::parse($history['end_date'])->format('M Y') }}
+                                        @elseif(isset($history['to_date']) && !empty($history['to_date']))
+                                            {{ \Carbon\Carbon::parse($history['to_date'])->format('M Y') }}
+                                        @else
+                                            Present
+                                        @endif
                                     </span>
                                 </div>
-                                <p class="text-primary fw-semibold mb-2">{{ $history['company_name'] ?? 'N/A' }}</p>
+                                <p class="text-primary fw-semibold mb-2">{{ $history['company_name'] ?? $history['company'] ?? 'N/A' }}</p>
                                 
                                 @if(!empty($history['job_description']))
                                     <div class="mb-2">

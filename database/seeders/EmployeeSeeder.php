@@ -176,9 +176,35 @@ class EmployeeSeeder extends Seeder
     {
         return [
             'employee_id' => $employeeId,
-            'educations' => json_encode([['title' => 'Bachelor', 'institute' => 'DU', 'year' => 2015]]),
-            'experiences' => json_encode([['company' => 'Old Corp', 'duration' => '2 years']]),
-            'trainings' => json_encode([['title' => 'HR Management', 'year' => 2018]]),
+            'educations' => json_encode([[
+                'education_title' => 'Bachelor of Science',
+                'institute' => 'University of Dhaka',
+                'group_major' => 'Computer Science',
+                'board_university' => 'Dhaka Board',
+                'result_grade' => 'A+',
+                'passing_year' => '2015',
+                'gpa_cgpa' => '3.80'
+            ]]),
+            'experiences' => json_encode([[
+                'company' => 'Old Corp Ltd',
+                'designation' => 'Software Engineer',
+                'department' => 'IT',
+                'date_from' => $this->faker->dateTimeBetween('-5 years', '-3 years')->format('Y-m-d'),
+                'date_to' => $this->faker->dateTimeBetween('-3 years', '-2 years')->format('Y-m-d'),
+                'duration' => '2 years',
+                'responsibility' => 'Backend development using Laravel'
+            ]]),
+            'trainings' => json_encode([[
+                'training_title' => 'Advanced Laravel',
+                'course_name' => 'Laravel Mastery',
+                'training_code' => 'LAT-101',
+                'institute' => 'Tech Academy',
+                'country' => 'Bangladesh',
+                'location' => 'Dhaka',
+                'duration' => '3 months',
+                'from_date' => $this->faker->dateTimeBetween('-2 years', '-1 year')->format('Y-m-d'),
+                'to_date' => $this->faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d'),
+            ]]),
             'status' => 'active',
             'created_at' => now(), 'updated_at' => now(),
         ];
@@ -193,6 +219,24 @@ class EmployeeSeeder extends Seeder
             'created_at' => now(), 'updated_at' => now(),
         ];
     }
+
+    private function generateEmploymentHistoryData($employeeId): array
+    {
+        return [
+            'employee_id' => $employeeId,
+            'histories' => json_encode([[
+                'company_name' => 'Previous Solution Ltd',
+                'designation' => 'Executive Developer',
+                'joining_date' => $this->faker->dateTimeBetween('-10 years', '-5 years')->format('Y-m-d'),
+                'end_date' => $this->faker->dateTimeBetween('-5 years', '-1 year')->format('Y-m-d'),
+                'job_description' => 'Managed enterprise systems and databases.',
+                'achievements' => 'Improved system performance by 30%.'
+            ]]),
+            'status' => 'active',
+            'created_at' => now(), 'updated_at' => now(),
+        ];
+    }
+
 
     private function generateSalaryBreakdownData($employeeId): array
     {
@@ -215,16 +259,6 @@ class EmployeeSeeder extends Seeder
             'branch_id' => $branchId,
             'account_holder_name' => $this->faker->name,
             'account_number' => $this->faker->numerify('################'),
-            'status' => 'active',
-            'created_at' => now(), 'updated_at' => now(),
-        ];
-    }
-
-    private function generateEmploymentHistoryData($employeeId): array
-    {
-        return [
-            'employee_id' => $employeeId,
-            'histories' => json_encode([['company' => 'Previous Ltd', 'designation' => 'Executive']]),
             'status' => 'active',
             'created_at' => now(), 'updated_at' => now(),
         ];
