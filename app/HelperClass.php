@@ -113,7 +113,7 @@ class HelperClass
 
         // Wrap with profile link if employee ID is provided
         if (!empty($employeeId)) {
-            $profileUrl = route('employees.profile.general_informations', $employeeId);
+            $profileUrl = route('employee.profile.general_informations', $employeeId);
             return '<a href="' . $profileUrl . '" class="text-decoration-none" style="cursor: pointer;" title="View Profile">' . $avatarHtml . '</a>';
         }
 

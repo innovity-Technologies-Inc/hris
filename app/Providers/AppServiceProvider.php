@@ -38,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // Provide roles to the Edit Login Info modal
-        View::composer('employees.partials.modal.edit_login_modal', function ($view) {
+        View::composer('employee.partials.modal.edit_login_modal', function ($view) {
             $view->with('roles', Role::all());
         });
 

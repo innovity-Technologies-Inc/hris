@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\Employee;
 
 use App\Models\Employee\EmployeeOfficeInfo;
 use Illuminate\Database\Eloquent\Factories\Factory;
