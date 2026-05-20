@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class GeneralSettingSeeder extends Seeder
 {
@@ -12,6 +13,24 @@ class GeneralSettingSeeder extends Seeder
      */
     public function run(): void
     {
+        // Ensure the storage directory exists
+        $storagePath = storage_path('app/public/assets/images');
+        if (!File::isDirectory($storagePath)) {
+            File::makeDirectory($storagePath, 0755, true);
+        }
+
+        // Copy assets from public to storage
+        $logoSource = public_path('assets/images/logo.png');
+        $faviconSource = public_path('assets/images/favicon.png');
+
+        if (File::exists($logoSource)) {
+            File::copy($logoSource, $storagePath . '/logo.png');
+        }
+
+        if (File::exists($faviconSource)) {
+            File::copy($faviconSource, $storagePath . '/favicon.png');
+        }
+
         DB::table('general_settings')->truncate();
         DB::table('general_settings')->insert([
             'name' => 'HRIS',
