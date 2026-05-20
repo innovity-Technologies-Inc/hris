@@ -2,6 +2,14 @@
 
 namespace App\Models\Employee;
 
+use App\Models\Company\Company;
+use App\Models\Company\CompanyLocation;
+use App\Models\Company\Department;
+use App\Models\Company\Designation;
+use App\Models\Company\Division;
+use App\Models\Company\SalaryGrade;
+use App\Models\Company\Section;
+use App\Models\Company\Tofsil;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
