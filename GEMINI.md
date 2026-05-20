@@ -8,11 +8,25 @@ This project is a comprehensive Human Resource Management System (HRMS) built wi
 
 ## 🏗️ Architectural Overview
 - **Framework**: Laravel 12.
-- **Pattern**: Service-Oriented Architecture (SOA).
-- **Business Logic**: Always place complex logic in `App\Services`. Controllers should remain thin, primarily handling request validation and response delegation.
+- **Pattern**: Strict Request -> Service -> API Controller structure.
+- **API-First Development**: All new features must implement API endpoints in controllers that return **JSON responses**. 
+- **Frontend Interaction**: 
+    - Use **Blade templates** for the UI structure.
+    - Use **Axios** and **Vanilla JavaScript** for all data fetching and asynchronous interactions with the API controllers.
+- **Business Logic**: Always place complex logic in `App\Services`. Controllers should remain thin, primarily handling service delegation and JSON response formatting.
 - **Filtering & Searching**: Use the `daiyanmozumder/laravel-flexsearch` package for all table filtering and searching.
-- **Models**: Use Eloquent models located in `App\Models`. Use relationships extensively for organizational data (Company -> Division -> Department -> Section).
-- **Data Import**: Uses `maatwebsite/excel` with dedicated import classes in `App\Imports`.
+- **Models**: Use Eloquent models located in `App\Models`. Use relationships extensively for organizational data.
+
+## 📁 Modular Organization
+- **Directory Structure**: For every module, maintain dedicated subdirectories across all layers to ensure clean separation of concerns:
+    - `App\Http\Controllers\{Module}`
+    - `App\Http\Requests\{Module}`
+    - `App\Services\{Module}`
+    - `App\Models\{Module}`
+    - `App\Imports\{Module}`
+    - `App\Notifications\{Module}`
+    - `App\Mail\{Module}`
+    - `resources\views\{module}`
 
 ## 🎨 Design & UI Standards
 - **Layout**: The master layout is located at `resources/views/structure/master.blade.php`.
@@ -30,7 +44,7 @@ This project is a comprehensive Human Resource Management System (HRMS) built wi
     - Services: `NameServices.php` (e.g., `EmployeeServices.php`).
     - Controllers: `NameController.php`.
     - Imports: `NameImport.php`.
-- **Validation**: Use Request classes or inline validation in controllers.
+- **Validation**: ALWAYS use dedicated Request classes for validation.
 - **Search Implementation**: Refer to `EmployeeSearchController.php` for standard FlexSearch implementation patterns.
 - **Error Handling**: Use try-catch blocks in services and log errors when necessary.
 

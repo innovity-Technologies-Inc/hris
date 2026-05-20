@@ -16,16 +16,27 @@ For every new feature, bug fix, or modification, you MUST follow this sequence s
 - Each task should be atomic, specific, and verifiable.
 
 ### 3. Execution (Surgical Updates)
-Follow the **Request -> Service -> Thin Controller** pattern strictly:
-1. **Model & Migration**: Define database schema and Eloquent relationships first.
-2. **Form Request**: Implement all validation logic in `App\Http\Requests`. Never validate in controllers.
-3. **Service**: Centralize all business logic and database operations in `App\Services`.
+Follow the **Request -> Service -> API Controller** pattern strictly:
+1. **Model & Migration**: Define database schema and Eloquent relationships in `App\Models\{Module}`.
+2. **Form Request**: Implement all validation logic in `App\Http\Requests\{Module}`. Never validate in controllers.
+3. **Service**: Centralize all business logic and database operations in `App\Services\{Module}`.
     - Naming: `{Module}Services.php`.
-    - Injection: Inject into controllers via the constructor.
-4. **Import (if needed)**: Use `App\Imports` for bulk data handling (Excel).
-5. **Controller**: Keep it thin; its only job is to call service methods and return responses.
+    - Injection: Inject into controllers.
+4. **Import (if needed)**: Use `App\Imports\{Module}` for bulk data handling.
+5. **API Controller**: Located in `App\Http\Controllers\{Module}`. Keep it thin; its only job is to call service methods and return **standardized JSON responses**.
 6. **Route**: Register routes in `routes/web.php`.
-7. **View**: Implement Bootstrap 5 / Glassmorphism UI in `.blade.php` files, ensuring Dark Mode support.
+7. **View**: 
+    - Structure: Implement Bootstrap 5 / Glassmorphism UI in `resources/views/{module}`.
+    - Interaction: Use **Axios** and **Vanilla JavaScript** for all API fetching and asynchronous operations. No page reloads for data updates.
+
+## 📁 Modular Directory Enforcement
+For every module, you MUST maintain dedicated subdirectories across:
+- `app/Http/Controllers/{Module}/`
+- `app/Http/Requests/{Module}/`
+- `app/Services/{Module}/`
+- `app/Models/{Module}/`
+- `app/Imports/{Module}/`
+- `resources/views/{module}/`
 
 ### 4. Verification (Testing)
 Before considering a task complete, you MUST:
