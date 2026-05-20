@@ -216,6 +216,41 @@
                 </li>
                 @endif
 
+                <!-- Transfer Menu -->
+                @php
+                    $canTransferApplication = auth()->user()->can('transfer.create');
+                    $canTransferLogs = auth()->user()->can('transfer.view');
+                    $showTransferMenu = $canTransferApplication || $canTransferLogs;
+                    $transferOpen = Route::is('transfer.*');
+                @endphp
+                @if($showTransferMenu)
+                <li>
+                    <a href="#transfer" data-bs-toggle="collapse"
+                        aria-expanded="{{ $transferOpen ? 'true' : 'false' }}"
+                        class="@if ($transferOpen) menuitem-active @endif">
+                        <i data-feather="shuffle"></i>
+                        <span> Transfer </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse @if ($transferOpen) show @endif" id="transfer">
+                        <ul class="nav-second-level">
+                            @if($canTransferApplication)
+                            <li>
+                                <a class='tp-link @if (Route::is('transfer.create')) menuitem-active @endif'
+                                    href='{{ route('transfer.create') }}'>Application</a>
+                            </li>
+                            @endif
+                            @if($canTransferLogs)
+                            <li>
+                                <a class='tp-link @if (Route::is('transfer.index')) menuitem-active @endif'
+                                    href='{{ route('transfer.index') }}'>Logs</a>
+                            </li>
+                            @endif
+                        </ul>
+                    </div>
+                </li>
+                @endif
+
                 <!-- Payroll Menu -->
                 @php
                     $canPromotions = auth()->user()->can('promotions.view');

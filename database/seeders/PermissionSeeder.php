@@ -61,6 +61,12 @@ class PermissionSeeder extends Seeder
             ],
 
             [
+                'name' => 'Transfer',
+                'icon' => 'shuffle',
+                'actions' => ['view', 'create', 'edit', 'delete', 'approve']
+            ],
+
+            [
                 'name' => 'Payroll',
                 'icon' => 'money-bill-wave',
                 'submenus' => [

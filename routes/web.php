@@ -1180,6 +1180,38 @@ Route::prefix('settings')->name('setting.')->middleware(['auth', 'permission:rol
     Route::resource('roles', \App\Http\Controllers\Setting\RoleController::class);
 });
 
+// Transfer Routes
+Route::prefix('transfer')->name('transfer.')->middleware('auth')->group(function () {
+    Route::controller(\App\Http\Controllers\Transfer\TransferController::class)->group(function () {
+        Route::middleware('permission:transfer.view')->group(function () {
+            Route::get('logs', 'index')->name('index');
+            Route::get('view/{id}', 'show')->name('show');
+        });
+        Route::middleware('permission:transfer.create')->group(function () {
+            Route::get('application', 'create')->name('create');
+        });
+    });
+
+    // API Routes (Returning JSON)
+    Route::prefix('api')->name('api.')->controller(\App\Http\Controllers\Transfer\TransferAPIController::class)->group(function () {
+        Route::get('employees', 'getEmployees')->name('employees');
+        Route::get('companies', 'getCompanies')->name('companies');
+        Route::get('units/{companyId}', 'getUnits')->name('units');
+        Route::get('divisions/{companyId}/{locationId}', 'getDivisions')->name('divisions');
+        Route::get('departments/{companyId}/{locationId}/{divisionId}', 'getDepartments')->name('departments');
+        Route::get('sections/{companyId}/{locationId}/{divisionId}/{departmentId}', 'getSections')->name('sections');
+        Route::get('designations', 'getDesignations')->name('designations');
+        
+        Route::post('store', 'store')->name('store')->middleware('permission:transfer.create');
+        Route::get('list', 'list')->name('list')->middleware('permission:transfer.view');
+        
+        Route::post('set-approvers/{id}', 'setApprovers')->name('set_approvers')->middleware('permission:transfer.approve');
+        Route::post('approve/{id}', 'approve')->name('approve')->middleware('permission:transfer.approve');
+        Route::post('complete/{id}', 'complete')->name('complete')->middleware('permission:transfer.edit');
+        Route::get('search-authorities', 'searchAuthorities')->name('search_authorities');
+    });
+});
+
 require __DIR__.'/auth.php';
 
 

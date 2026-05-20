@@ -74,6 +74,32 @@ A comprehensive Human Resource Management System (HRMS) built with Laravel 12, f
 - Vehicle and Driver management.
 - Requisition and allocation workflows.
 
+### 🔄 Transfer Module
+- **Goal**: Facilitate and track employee movement between different organizational units (Companies, Business Units, Divisions, Departments, Sections).
+- **Sections**:
+    - `Application`: A form for requesting an employee's transfer to a new organizational hierarchy.
+    - `Logs`: A list of all transfer requests with detailed status tracking and approval history.
+- **Workflow**:
+    1. **Submission**:
+        - Select target employee.
+        - Select target organizational units (cascading dropdowns: Company -> Business Unit -> Division -> Department -> Section -> Designation).
+    2. **Approval Configuration**:
+        - HR/Admin configures the required number of approvals (e.g., 3).
+        - HR/Admin selects specific employees as "Approval Authorities".
+        - Integrated filter for picking authorities (Name, Company, Business Unit, Division, Department, Section, User Type).
+    3. **Approval Lifecycle**:
+        - Authorities receive automated email and in-app panel notifications.
+        - Authorities approve/reject from their dedicated approval panel.
+        - HR monitors real-time approval status.
+    4. **Execution & Finalization**:
+        - Once all approvals are secured, HR marks the transfer as `complete`.
+        - **Automatic Data Update**: Upon completion, the system automatically updates the employee's `EmployeeOfficeInfo` record with the new organizational data.
+        - Final notifications (Email + Panel) are sent to the employee and all relevant parties.
+- **Technical Mandate**:
+    - **Backend**: Strict Request -> Service -> API Controller pattern returning JSON responses.
+    - **Frontend**: Blade templates for structure; **Axios** and **Vanilla JavaScript** for all dynamic data fetching (e.g., cascading dropdowns, filtering, status updates) and asynchronous form submissions.
+    - **UI**: Modern Bootstrap 5 / Glassmorphism design consistent with the rest of the HRMS.
+
 ### 🔐 User Management & RBAC
 - **Authentication**: Integrated via Laravel Breeze (Blade implementation).
 - **Access Control**: Powered by `spatie/laravel-permission`.
