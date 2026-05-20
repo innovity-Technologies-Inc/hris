@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Employee;
+use App\Models\Employee\Employee;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -83,3 +83,4 @@ class UserAndRoleSeeder extends Seeder
         $this->command->info('Provisioned employees with login info and roles.');
     }
 }
+

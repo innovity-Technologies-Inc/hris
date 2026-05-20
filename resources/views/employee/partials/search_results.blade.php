@@ -1,0 +1,75 @@
+<div class="p-0">
+    @can('employee-management.create')
+        <div class="d-flex justify-content-start mb-3">
+            <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#createOptionsModal">
+                <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
+            </button>
+        </div>
+    @endcan
+
+    @if ($employees->isEmpty())
+        <div class="text-center py-4 text-muted border rounded">No employees found.</div>
+    @else
+        <div class="table-responsive">
+            <table class="table table-bordered mb-0">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Profile</th>
+                        <th scope="col">System ID</th>
+                        <th scope="col">Employee ID</th>
+                        <th scope="col">Employee Name</th>
+                        @can('employee-management.view')
+                            <th scope="col" style="width: 120px;">Action</th>
+                        @endcan
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                        $sl = \App\HelperClass::indexNumberSerialization($employees);
+                    @endphp
+                    @foreach ($employees as $employee)
+                        <tr>
+                            <th scope="row">{{ $sl++ }}</th>
+                            <td>
+                                {!! \App\HelperClass::generateAvatar(
+                                    $employee->photo_path,
+                                    $employee->full_name,
+                                    32,
+                                    '#974063',
+                                    '',
+                                    $employee->id,
+                                ) !!}
+                            </td>
+                            <td>{{ $employee->system_id }}</td>
+                            <td>{{ $employee->applicant_id }}</td>
+                            <td>{{ $employee->full_name }}</td>
+                            @can('employee-management.view')
+                                <td>
+                                    <a href="{{ route('employee.profile.general_informations', $employee->id) }}"
+                                        class="btn btn-secondary btn-sm" title="View">
+                                        <i style="height: 12px; width: 12px" data-feather="eye"></i>
+                                    </a>
+                                </td>
+                            @endcan
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-3">
+            {{ $employees->appends(request()->query())->links() }}
+        </div>
+    @endif
+
+    {{-- Reinitialize Feather Icons after AJAX load --}}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
+        });
+    </script>
+</div>
+

@@ -110,7 +110,7 @@
                                             <strong class="text-primary">{{ $item->getEmployee->applicant_id }}</strong>
                                         </td>
                                         <td>
-                                            <a href="{{ route('employees.profile.general_informations', $item->employee_id) }}">
+                                            <a href="{{ route('employee.profile.general_informations', $item->employee_id) }}">
                                             {{ $item->getEmployee->full_name }}
                                             </a>
                                         </td>
@@ -132,3 +132,4 @@
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 @endsection
+

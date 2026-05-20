@@ -47,7 +47,7 @@
                                             $promotion->employee_id,
                                         ) !!}
                                         <div>
-                                            <a href="{{ route('employees.profile.general_informations', $promotion->employee_id) }}"
+                                            <a href="{{ route('employee.profile.general_informations', $promotion->employee_id) }}"
                                                 class="text-decoration-none">
                                                 <div class="fw-semibold text-dark">
                                                     {{ $promotion->getEmployee->full_name ?? 'N/A' }}</div>
@@ -166,3 +166,4 @@
 <div>
     {{ $promotions->links() }}
 </div>
+

@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\EmployeeOfficeInfo;
+use App\Models\Employee\EmployeeOfficeInfo;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class EmployeeOfficeInfoFactory extends Factory
@@ -20,3 +20,4 @@ class EmployeeOfficeInfoFactory extends Factory
         ];
     }
 }
+

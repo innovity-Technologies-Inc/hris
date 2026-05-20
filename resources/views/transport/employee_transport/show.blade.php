@@ -282,7 +282,7 @@
                                                                 $allocation->assigned_driver->id,
                                                             ) !!}
                                                             <div>
-                                                                <a href="{{ route('employees.profile.general_informations', $allocation->assigned_driver->id) }}"
+                                                                <a href="{{ route('employee.profile.general_informations', $allocation->assigned_driver->id) }}"
                                                                     class="text-decoration-none">
                                                                     <strong
                                                                         class="d-block text-dark">{{ $allocation->assigned_driver->full_name ?? $allocation->assigned_driver->name }}</strong>
@@ -352,3 +352,4 @@
         </div>
     </div>
 @endsection
+

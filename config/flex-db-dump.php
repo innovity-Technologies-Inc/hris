@@ -33,3 +33,4 @@ return [
     'middleware' => ['web', 'auth'],
 
 ];
+

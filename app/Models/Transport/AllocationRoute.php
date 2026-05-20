@@ -96,3 +96,4 @@ class AllocationRoute extends Model
         return $query->whereDate('route_date', now()->toDateString());
     }
 }
+

@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Payroll;
 
 use App\Http\Controllers\Controller;
-use App\Models\Employee;
+use App\Models\Employee\Employee;
 use App\Models\Payroll\Increment;
-use App\Services\PayrollServices;
+use App\Services\Payroll\PayrollServices;
 use Carbon\Carbon;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
@@ -179,3 +179,4 @@ class IncrementController extends Controller
         ]);
     }
 }
+

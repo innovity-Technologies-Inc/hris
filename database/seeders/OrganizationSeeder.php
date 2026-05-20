@@ -467,3 +467,4 @@ class OrganizationSeeder extends Seeder
         DB::table('salary_grades')->insert($salaryGrades);
     }
 }
+

@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Artisan;
 
 beforeEach(function () {
     // Seed general setting to avoid 500 error in views
-    \App\Models\GeneralSetting::updateOrCreate(['id' => 1], [
+    \App\Models\Setting\GeneralSetting::updateOrCreate(['id' => 1], [
         'name' => 'Test Company',
         'company_name' => 'Test Company',
         'branch_status' => 1,
@@ -85,3 +85,4 @@ function getPermissionForRoute(string $routeName): ?string {
 
     return $map[$routeName] ?? null;
 }
+

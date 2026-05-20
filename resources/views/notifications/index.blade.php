@@ -49,7 +49,7 @@
                                         @endif
                                         
                                         @if(isset($notification->data['employee_id']))
-                                        <a href="{{ route('employees.profile.general_informations', $notification->data['employee_id']) }}" class="btn btn-sm btn-info text-white" title="View Related Profile">
+                                        <a href="{{ route('employee.profile.general_informations', $notification->data['employee_id']) }}" class="btn btn-sm btn-info text-white" title="View Related Profile">
                                             <i class="mdi mdi-eye"></i>
                                         </a>
                                         @endif
@@ -140,3 +140,4 @@ $(document).ready(function() {
 });
 </script>
 @endpush
+

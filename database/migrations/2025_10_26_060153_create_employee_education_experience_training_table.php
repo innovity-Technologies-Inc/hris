@@ -31,3 +31,4 @@ return new class extends Migration
         Schema::dropIfExists('employee_education_experience_training');
     }
 };
+

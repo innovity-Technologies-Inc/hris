@@ -9,7 +9,7 @@
         <div id="sidebar-menu">
 
             <div class="logo-box">
-                <a class='logo' href='{{ route('dashboard') }}'>
+                <a class='logo' href='{{ route('dashboard.index') }}'>
                     <span class="logo-sm">
                         <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">
                     </span>
@@ -29,7 +29,7 @@
 
                 @if(auth()->user()->can('dashboard.view'))
                 <li>
-                    <a href="{{ route('dashboard') }}" class="@if (Route::is('dashboard')) menuitem-active @endif">
+                    <a href="{{ route('dashboard.index') }}" class="@if (Route::is('dashboard.index')) menuitem-active @endif">
                         <i data-feather="home"></i>
                         <span> Dashboard </span>
                     </a>
@@ -49,43 +49,43 @@
                     @if($isEmployeeType)
                         @php
                             $employeeInfoUrl = auth()->user()->employee_id 
-                                ? route('employees.profile.general_informations', auth()->user()->employee_id) 
+                                ? route('employee.profile.general_informations', auth()->user()->employee_id) 
                                 : '#';
                         @endphp
-                        <a href="{{ $employeeInfoUrl }}" class="tp-link @if (Route::is('employees.profile.*')) menuitem-active @endif">
+                        <a href="{{ $employeeInfoUrl }}" class="tp-link @if (Route::is('employee.profile.*')) menuitem-active @endif">
                             <i data-feather="users"></i>
                             <span> Employee Profile </span>
                         </a>
                     @else
                         <a href="#sidebarEmployees" data-bs-toggle="collapse"
-                            aria-expanded="{{ Route::is('employees.*') || Route::is('search.employee') ? 'true' : 'false' }}"
-                            class="@if (Route::is('employees.*') || Route::is('search.employee')) menuitem-active @endif">
+                            aria-expanded="{{ Route::is('employee.*') || Route::is('employee.employee') ? 'true' : 'false' }}"
+                            class="@if (Route::is('employee.*') || Route::is('employee.employee')) menuitem-active @endif">
                             <i data-feather="users"></i>
                             <span> Employees </span>
                             <span class="menu-arrow"></span>
                         </a>
-                        <div class="collapse @if (Route::is('employees.*') || Route::is('search.employee')) show @endif" id="sidebarEmployees">
+                        <div class="collapse @if (Route::is('employee.*') || Route::is('employee.employee')) show @endif" id="sidebarEmployees">
                             <ul class="nav-second-level">
                                 @if($canViewEmployeeInfo)
                                 <li>
-                                    <a class='tp-link @if (Route::is('employees.index')) menuitem-active @endif'
-                                        href='{{ route('employees.index') }}'>Employee Information</a>
+                                    <a class='tp-link @if (Route::is('employee.index')) menuitem-active @endif'
+                                        href='{{ route('employee.index') }}'>Employee Information</a>
                                 </li>
                                 <li>
-                                    <a class='tp-link @if (Route::is('employees.review.index')) menuitem-active @endif'
-                                        href='{{ route('employees.review.index') }}'>Profile Review</a>
+                                    <a class='tp-link @if (Route::is('employee.review.index')) menuitem-active @endif'
+                                        href='{{ route('employee.review.index') }}'>Profile Review</a>
                                 </li>
                                 @endif
                                 @if($canSearchEmployee)
                                 <li>
-                                    <a class='tp-link @if (Route::is('search.employee')) menuitem-active @endif'
-                                        href='{{ route('search.employee') }}'>Search Employee</a>
+                                    <a class='tp-link @if (Route::is('employee.employee')) menuitem-active @endif'
+                                        href='{{ route('employee.employee') }}'>Search Employee</a>
                                 </li>
                                 @endif
                                 @if($canBulkUploadEmployee)
                                 <li>
-                                    <a class='tp-link @if (Route::is('employees.import')) menuitem-active @endif'
-                                        href='{{ route('employees.import') }}'>Bulk Upload</a>
+                                    <a class='tp-link @if (Route::is('employee.import')) menuitem-active @endif'
+                                        href='{{ route('employee.import') }}'>Bulk Upload</a>
                                 </li>
                                 @endif
                             </ul>
@@ -149,8 +149,8 @@
 
                 <!-- Leaves Menu -->
                 @php
-                    $canLeaveApplication = auth()->user()->can('leaves.create');
-                    $canLeaveLogs = auth()->user()->can('leaves.view');
+                    $canLeaveApplication = auth()->user()->can('leave.create');
+                    $canLeaveLogs = auth()->user()->can('leave.view');
                     $showLeavesMenu = $canLeaveApplication || $canLeaveLogs;
                     $leavesOpen = request()->is('leaves*');
                 @endphp
@@ -166,14 +166,14 @@
                         <ul class="nav-second-level">
                             @if($canLeaveApplication)
                             <li>
-                                <a class='tp-link @if (request()->is('leaves.create')) menuitem-active @endif'
-                                    href='{{ route('leaves.create') }}'>Application</a>
+                                <a class='tp-link @if (request()->is('leave.create')) menuitem-active @endif'
+                                    href='{{ route('leave.create') }}'>Application</a>
                             </li>
                             @endif
                             @if($canLeaveLogs)
                             <li>
-                                <a class='tp-link @if (request()->is('leaves.index')) menuitem-active @endif'
-                                    href='{{ route('leaves.index') }}'>Logs</a>
+                                <a class='tp-link @if (request()->is('leave.index')) menuitem-active @endif'
+                                    href='{{ route('leave.index') }}'>Logs</a>
                             </li>
                             @endif
                         </ul>
@@ -285,84 +285,84 @@
                 @if($showPlansMenu)
                 <li>
                     <a href="#plans" data-bs-toggle="collapse"
-                        aria-expanded="{{ Route::is('plans.*') ? 'true' : 'false' }}"
-                        class="@if (Route::is('plans.*')) menuitem-active @endif">
+                        aria-expanded="{{ Route::is('plan.*') ? 'true' : 'false' }}"
+                        class="@if (Route::is('plan.*')) menuitem-active @endif">
                         <i data-feather="layers"></i>
                         <span> Plans </span>
                         <span class="menu-arrow"></span>
                     </a>
-                    <div class="collapse @if (Route::is('plans.*')) show @endif" id="plans">
+                    <div class="collapse @if (Route::is('plan.*')) show @endif" id="plans">
                         <ul class="nav-second-level">
                             @if($canMealPlans)
                             <li>
-                                <a class='tp-link @if (Route::is('plans.meal_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plans.meal_plans.index') }}'>Meal Plans</a>
+                                <a class='tp-link @if (Route::is('plan.meal_plans.*')) menuitem-active @endif'
+                                    href='{{ route('plan.meal_plans.index') }}'>Meal Plans</a>
                             </li>
                             @endif
                             @if($canShiftPlans)
                             <li>
-                                <a class='tp-link @if (Route::is('plans.shift_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plans.shift_plans.index') }}'>Shift Plans</a>
+                                <a class='tp-link @if (Route::is('plan.shift_plans.*')) menuitem-active @endif'
+                                    href='{{ route('plan.shift_plans.index') }}'>Shift Plans</a>
                             </li>
                             @endif
                             @if($canLeavePlans)
                             <li>
-                                <a class='tp-link @if (Route::is('plans.leave_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plans.leave_plans.index') }}'>Leave Plans</a>
+                                <a class='tp-link @if (Route::is('plan.leave_plans.*')) menuitem-active @endif'
+                                    href='{{ route('plan.leave_plans.index') }}'>Leave Plans</a>
                             </li>
                             @endif
                             @if($canOTPlans)
                             <li>
-                                <a class='tp-link @if (Route::is('plans.ot_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plans.ot_plans.index') }}'>OT Plans</a>
+                                <a class='tp-link @if (Route::is('plan.ot_plans.*')) menuitem-active @endif'
+                                    href='{{ route('plan.ot_plans.index') }}'>OT Plans</a>
                             </li>
                             @endif
                             @if($canRosterPlans)
                             <li>
-                                <a class='tp-link @if (Route::is('plans.roster_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plans.roster_plans.index') }}'>Roster Plans</a>
+                                <a class='tp-link @if (Route::is('plan.roster_plans.*')) menuitem-active @endif'
+                                    href='{{ route('plan.roster_plans.index') }}'>Roster Plans</a>
                             </li>
                             @endif
                             @if($canOffDayPlans)
                             <li>
-                                <a class='tp-link @if (Route::is('plans.off_day_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plans.off_day_plans.index') }}'>Off-Day Work Plans</a>
+                                <a class='tp-link @if (Route::is('plan.off_day_plans.*')) menuitem-active @endif'
+                                    href='{{ route('plan.off_day_plans.index') }}'>Off-Day Work Plans</a>
                             </li>
                             @endif
                             @if($canBonusPlans)
                             <li>
-                                <a class='tp-link @if (Route::is('plans.bonus_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plans.bonus_plans.index') }}'>Bonus Plans</a>
+                                <a class='tp-link @if (Route::is('plan.bonus_plans.*')) menuitem-active @endif'
+                                    href='{{ route('plan.bonus_plans.index') }}'>Bonus Plans</a>
                             </li>
                             @endif
                             @if($canAllowancePlans)
                             <li>
-                                <a class='tp-link @if (Route::is('plans.allowance_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plans.allowance_plans.index') }}'>Allowance Plans</a>
+                                <a class='tp-link @if (Route::is('plan.allowance_plans.*')) menuitem-active @endif'
+                                    href='{{ route('plan.allowance_plans.index') }}'>Allowance Plans</a>
                             </li>
                             @endif
                             @if($canTAPlans)
                             <li>
-                                <a class='tp-link @if (Route::is('plans.ta_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plans.ta_plans.index') }}'>TA Plans</a>
+                                <a class='tp-link @if (Route::is('plan.ta_plans.*')) menuitem-active @endif'
+                                    href='{{ route('plan.ta_plans.index') }}'>TA Plans</a>
                             </li>
                             @endif
                             @if($canDAPlans)
                             <li>
-                                <a class='tp-link @if (Route::is('plans.da_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plans.da_plans.index') }}'>DA Plans</a>
+                                <a class='tp-link @if (Route::is('plan.da_plans.*')) menuitem-active @endif'
+                                    href='{{ route('plan.da_plans.index') }}'>DA Plans</a>
                             </li>
                             @endif
                             @if($canDeductionPlans)
                             <li>
-                                <a class='tp-link @if (Route::is('plans.deduction_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plans.deduction_plans.index') }}'>Deduction Plan</a>
+                                <a class='tp-link @if (Route::is('plan.deduction_plans.*')) menuitem-active @endif'
+                                    href='{{ route('plan.deduction_plans.index') }}'>Deduction Plan</a>
                             </li>
                             @endif
                             @if($canBulkUploadPlans)
                             <li>
-                                <a class='tp-link @if (Route::is('plans.bulk_upload')) menuitem-active @endif'
-                                    href='{{ route('plans.bulk_upload') }}'>Bulk Upload</a>
+                                <a class='tp-link @if (Route::is('plan.bulk_upload')) menuitem-active @endif'
+                                    href='{{ route('plan.bulk_upload') }}'>Bulk Upload</a>
                             </li>
                             @endif
                         </ul>
@@ -402,7 +402,7 @@
                         Route::is('tofsils.*') ||
                         Route::is('salary_grades.*') ||
                         Route::is('gazette_locations.*') ||
-                        Route::is('company_setup.bulk_upload');
+                        Route::is('company.bulk_upload');
                 @endphp
                 @if($showCompanyMenu)
                 <li>
@@ -516,8 +516,8 @@
 
                             @if($canBulkUploadCompany)
                             <li>
-                                <a class='tp-link @if (Route::is('company_setup.bulk_upload')) menuitem-active @endif'
-                                    href='{{ route('company_setup.bulk_upload') }}'>Bulk Upload</a>
+                                <a class='tp-link @if (Route::is('company.bulk_upload')) menuitem-active @endif'
+                                    href='{{ route('company.bulk_upload') }}'>Bulk Upload</a>
                             </li>
                             @endif
 
@@ -640,36 +640,36 @@
                 @if($showSettingsMenu)
                 <li>
                     <a href="#settings" data-bs-toggle="collapse"
-                        aria-expanded="{{ Route::is('settings.*') ? 'true' : 'false' }}"
-                        class="@if (Route::is('settings.*')) menuitem-active @endif">
+                        aria-expanded="{{ Route::is('setting.*') ? 'true' : 'false' }}"
+                        class="@if (Route::is('setting.*')) menuitem-active @endif">
                         <i data-feather="settings"></i>
                         <span> Settings </span>
                         <span class="menu-arrow"></span>
                     </a>
-                    <div class="collapse @if (Route::is('settings.*')) show @endif" id="settings">
+                    <div class="collapse @if (Route::is('setting.*')) show @endif" id="settings">
                         <ul class="nav-second-level">
                             @if($canGeneralSettings)
                             <li>
-                                <a class='tp-link @if (Route::is('settings.general_settings.*')) menuitem-active @endif'
-                                    href='{{ route('settings.general_settings') }}'>General</a>
+                                <a class='tp-link @if (Route::is('setting.general_settings.*')) menuitem-active @endif'
+                                    href='{{ route('setting.general_settings') }}'>General</a>
                             </li>
                             @endif
                             @if($canIDCardDesign)
                             <li>
-                                <a class='tp-link @if (Route::is('settings.id_design.*')) menuitem-active @endif'
-                                    href='{{ route('settings.id_design.index') }}'>ID Card Design</a>
+                                <a class='tp-link @if (Route::is('setting.id_design.*')) menuitem-active @endif'
+                                    href='{{ route('setting.id_design.index') }}'>ID Card Design</a>
                             </li>
                             @endif
                             @if($canAPIKeys)
                             <li>
-                                <a class='tp-link @if (Route::is('settings.api_keys')) menuitem-active @endif'
-                                    href='{{ route('settings.api_keys') }}'>API Keys</a>
+                                <a class='tp-link @if (Route::is('setting.api_keys')) menuitem-active @endif'
+                                    href='{{ route('setting.api_keys') }}'>API Keys</a>
                             </li>
                             @endif
                             @if($canSMTP)
                             <li>
-                                <a class='tp-link @if (Route::is('settings.mail_settings.*')) menuitem-active @endif'
-                                    href='{{ route('settings.mail_settings') }}'>SMTP</a>
+                                <a class='tp-link @if (Route::is('setting.mail_settings.*')) menuitem-active @endif'
+                                    href='{{ route('setting.mail_settings') }}'>SMTP</a>
                             </li>
                             @endif
 
@@ -682,8 +682,8 @@
 
                             @if($canRoleManagement)
                             <li>
-                                <a class='tp-link @if (Route::is('settings.roles.*')) menuitem-active @endif'
-                                   href='{{ route('settings.roles.index') }}'>Role Management</a>
+                                <a class='tp-link @if (Route::is('setting.roles.*')) menuitem-active @endif'
+                                   href='{{ route('setting.roles.index') }}'>Role Management</a>
                             </li>
                             @endif
 
@@ -702,3 +702,4 @@
     </div>
 </div>
 <!-- Left Sidebar End -->
+

@@ -235,7 +235,7 @@
                                             $driver->id,
                                         ) !!}
                                         <div>
-                                            <a href="{{ route('employees.profile.general_informations', $driver->id) }}"
+                                            <a href="{{ route('employee.profile.general_informations', $driver->id) }}"
                                                 class="text-decoration-none">
                                                 <h5 class="mb-1 text-dark">
                                                     {{ $driver->full_name ?? 'N/A' }}
@@ -413,3 +413,4 @@
         }
     </script>
 @endpush
+

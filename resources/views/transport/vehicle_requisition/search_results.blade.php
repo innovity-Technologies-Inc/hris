@@ -30,7 +30,7 @@
                                 $item->employee_id,
                             ) !!}
                             <div>
-                                <a href="{{ route('employees.profile.general_informations', $item->employee_id) }}"
+                                <a href="{{ route('employee.profile.general_informations', $item->employee_id) }}"
                                     class="text-decoration-none">
                                     <strong class="text-dark">{{ $item->getEmployee->full_name }}</strong>
                                 </a>
@@ -103,3 +103,4 @@
 <div class="mt-3">
     {{ $vehicleRequisitions->links() }}
 </div>
+

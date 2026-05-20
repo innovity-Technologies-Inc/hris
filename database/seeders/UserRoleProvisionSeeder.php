@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Employee;
+use App\Models\Employee\Employee;
 use App\Models\User;
-use App\Models\EmployeeOfficeInfo;
+use App\Models\Employee\EmployeeOfficeInfo;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
@@ -79,3 +79,4 @@ class UserRoleProvisionSeeder extends Seeder
         $this->command->info('Provisioned ' . $employees->count() . ' employees with login info and roles.');
     }
 }
+

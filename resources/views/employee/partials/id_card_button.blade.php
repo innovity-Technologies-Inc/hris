@@ -10,7 +10,7 @@
 @php
     $hasActiveIdCard = $employee->hasActiveIdCard();
     $activeIdCard = $hasActiveIdCard ? $employee->getActiveIdCard() : null;
-    $hasActiveDesign = \App\Models\IDCardDesign::where('status', 'active')->exists();
+    $hasActiveDesign = \App\Models\Setting\IDCardDesign::where('status', 'active')->exists();
 @endphp
 
 <div class="id-card-action">
@@ -22,12 +22,12 @@
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
                 <li>
-                    <a class="dropdown-item" href="{{ route('employees.id_card.view', $employee->id) }}" target="_blank">
+                    <a class="dropdown-item" href="{{ route('employee.id_card.view', $employee->id) }}" target="_blank">
                         <i class="bi bi-eye me-2"></i>View PDF
                     </a>
                 </li>
                 <li>
-                    <a class="dropdown-item" href="{{ route('employees.id_card.download', $employee->id) }}">
+                    <a class="dropdown-item" href="{{ route('employee.id_card.download', $employee->id) }}">
                         <i class="bi bi-download me-2"></i>Download PDF
                     </a>
                 </li>
@@ -39,7 +39,7 @@
                         onclick="confirmRegenerateIdCard({{ $employee->id }}, '{{ $employee->full_name }}')">
                         <i class="bi bi-arrow-repeat me-2"></i>Regenerate
                     </button>
-                    <form action="{{ route('employees.id_card.regenerate', $employee->id) }}" method="POST"
+                    <form action="{{ route('employee.id_card.regenerate', $employee->id) }}" method="POST"
                         id="regenerateIdCardForm-{{ $employee->id }}" style="display: none;">
                         @csrf
                     </form>
@@ -52,7 +52,7 @@
                         onclick="confirmCancelIdCard({{ $employee->id }}, '{{ $employee->full_name }}')">
                         <i class="bi bi-x-circle me-2"></i>Cancel ID
                     </button>
-                    <form action="{{ route('employees.id_card.deactivate', $employee->id) }}" method="POST"
+                    <form action="{{ route('employee.id_card.deactivate', $employee->id) }}" method="POST"
                         id="cancelIdCardForm-{{ $employee->id }}" style="display: none;">
                         @csrf
                     </form>
@@ -67,7 +67,7 @@
                 <i class="bi bi-plus-circle me-2"></i>Generate ID Card
             </button>
 
-            <form action="{{ route('employees.id_card.generate', $employee->id) }}" method="POST"
+            <form action="{{ route('employee.id_card.generate', $employee->id) }}" method="POST"
                 id="generateIdCardForm-{{ $employee->id }}" style="display: none;">
                 @csrf
             </form>
@@ -77,7 +77,7 @@
             </button>
             <small class="d-block text-danger mt-1">
                 <i class="bi bi-info-circle me-1"></i>
-                No active ID card design. <a href="{{ route('settings.id_design.index') }}">Activate a design</a>
+                No active ID card design. <a href="{{ route('setting.id_design.index') }}">Activate a design</a>
             </small>
         @endif
     @endif
@@ -161,3 +161,4 @@
         });
     }
 </script>
+

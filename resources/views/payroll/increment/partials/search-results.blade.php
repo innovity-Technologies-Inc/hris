@@ -63,7 +63,7 @@ Each increment object should have:
                                             $increment->employee_id,
                                         ) !!}
                                         <div>
-                                            <a href="{{ route('employees.profile.general_informations', $increment->employee_id) }}"
+                                            <a href="{{ route('employee.profile.general_informations', $increment->employee_id) }}"
                                                 class="text-decoration-none">
                                                 <div class="fw-semibold text-dark">
                                                     {{ $increment->getEmployee->full_name ?? 'N/A' }}</div>
@@ -191,3 +191,4 @@ Each increment object should have:
 <div>
     {{ $increments->links() }}
 </div>
+

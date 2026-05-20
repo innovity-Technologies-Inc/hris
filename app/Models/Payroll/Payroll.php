@@ -2,7 +2,7 @@
 
 namespace App\Models\Payroll;
 
-use App\Models\Employee;
+use App\Models\Employee\Employee;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Traits\OrganizationScoped;
@@ -44,3 +44,4 @@ class Payroll extends Model
     }
 
 }
+

@@ -84,3 +84,4 @@
 <div class="mt-3">
     {{ $vehicles->links() }}
 </div>
+

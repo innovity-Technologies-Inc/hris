@@ -2,8 +2,8 @@
 
 namespace App\Models\Payroll;
 
-use App\Models\BonusPlan;
-use App\Models\Employee;
+use App\Models\Plan\BonusPlan;
+use App\Models\Employee\Employee;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
@@ -33,3 +33,4 @@ class Bonus extends Model
 
 
 }
+

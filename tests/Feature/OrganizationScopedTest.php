@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Employee;
+use App\Models\Employee\Employee;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -122,6 +122,7 @@ test('Scoped user can only see organizational units in their scope', function ()
 
     // Since Department model also uses OrganizationScoped
     // They should only see their own department
-    expect(\App\Models\Department::count())->toBe(1);
-    expect(\App\Models\Department::first()->id)->toBe(1);
+    expect(\App\Models\Company\Department::count())->toBe(1);
+    expect(\App\Models\Company\Department::first()->id)->toBe(1);
 });
+

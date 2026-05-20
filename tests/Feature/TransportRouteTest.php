@@ -24,7 +24,7 @@ beforeEach(function () {
     $this->user->assignRole($role);
 
     // Setup for Vehicle Driver create
-    \App\Models\Designation::create([
+    \App\Models\Company\Designation::create([
         'company_designation' => 'Driver',
         'designation_level' => 1,
         'status' => 'Active',
@@ -62,3 +62,4 @@ test('vehicle driver create route is accessible', function () {
 
     $response->assertStatus(200);
 });
+

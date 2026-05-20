@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Payroll;
 
 use App\Http\Controllers\Controller;
-use App\Models\Designation;
-use App\Models\Employee;
-use App\Models\EmployeeOfficeInfo;
+use App\Models\Company\Designation;
+use App\Models\Employee\Employee;
+use App\Models\Employee\EmployeeOfficeInfo;
 use App\Models\Payroll\Increment;
 use App\Models\Payroll\Promotion;
-use App\Services\PayrollServices;
+use App\Services\Payroll\PayrollServices;
 use Carbon\Carbon;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
@@ -196,3 +196,4 @@ class PromotionController extends Controller
         ]);
     }
 }
+

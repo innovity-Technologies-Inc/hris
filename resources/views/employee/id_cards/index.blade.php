@@ -79,18 +79,18 @@
                                         <td>
                                             <div class="btn-group btn-group-sm">
                                                 @if ($idCard->pdfExists())
-                                                    <a href="{{ route('employees.id_card.view', $idCard->employee_id) }}"
+                                                    <a href="{{ route('employee.id_card.view', $idCard->employee_id) }}"
                                                         class="btn btn-outline-primary" target="_blank" title="View PDF">
                                                         <i class="bi bi-eye"></i>
                                                     </a>
-                                                    <a href="{{ route('employees.id_card.download', $idCard->employee_id) }}"
+                                                    <a href="{{ route('employee.id_card.download', $idCard->employee_id) }}"
                                                         class="btn btn-outline-secondary" title="Download PDF">
                                                         <i class="bi bi-download"></i>
                                                     </a>
                                                 @endif
                                                 @if ($idCard->status === 'active')
                                                     <form
-                                                        action="{{ route('employees.id_card.regenerate', $idCard->employee_id) }}"
+                                                        action="{{ route('employee.id_card.regenerate', $idCard->employee_id) }}"
                                                         method="POST" class="d-inline"
                                                         onsubmit="return confirm('Regenerate will invalidate the current ID card. Continue?')">
                                                         @csrf
@@ -126,3 +126,4 @@
         </div>
     </div>
 @endsection
+

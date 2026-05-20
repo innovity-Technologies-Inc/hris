@@ -125,7 +125,7 @@
                                                         $vehicleRequisition->employee_id,
                                                     ) !!}
                                                     <div>
-                                                        <a href="{{ route('employees.profile.general_informations', $vehicleRequisition->employee_id) }}"
+                                                        <a href="{{ route('employee.profile.general_informations', $vehicleRequisition->employee_id) }}"
                                                             class="text-decoration-none text-dark">
                                                             {{ $vehicleRequisition->getEmployee->full_name }}
                                                         </a>
@@ -387,7 +387,7 @@
                                                     ) !!}
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <a href="{{ route('employees.profile.general_informations', $assignedDriver->id) }}"
+                                                    <a href="{{ route('employee.profile.general_informations', $assignedDriver->id) }}"
                                                         class="text-decoration-none">
                                                         <h6 class="mb-1 fw-bold text-primary">
                                                             {{ $assignedDriver->full_name }}</h6>
@@ -433,3 +433,4 @@
         </div>
     </div>
 @endsection
+

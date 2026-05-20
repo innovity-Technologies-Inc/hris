@@ -16,3 +16,4 @@
         <p class="mb-0">No new notifications</p>
     </div>
 @endforelse
+

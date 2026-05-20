@@ -3,27 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\HelperClass;
-use App\Models\Attendance;
-use App\Models\BonusPlan;
-use App\Models\Branch;
-use App\Models\CompanyLocation;
-use App\Models\Department;
-use App\Models\Division;
-use App\Models\Employee;
-use App\Models\EmployeeEligiblePlan;
-use App\Models\EmployeeLeavePlan;
-use App\Models\EmployeeOfficeInfo;
-use App\Models\EmployeeSalaryBreakdown;
-use App\Models\LeaveCount;
-use App\Models\LeavePlan;
-use App\Models\MealPlan;
-use App\Models\OffDayPlan;
-use App\Models\OTPlan;
-use App\Models\RosterPlan;
-use App\Models\SalaryGrade;
-use App\Models\Section;
-use App\Models\ShiftPlan;
-use App\Services\AttendanceServices;
+use App\Models\Attendance\Attendance;
+use App\Models\Plan\BonusPlan;
+use App\Models\Company\Branch;
+use App\Models\Company\CompanyLocation;
+use App\Models\Company\Department;
+use App\Models\Company\Division;
+use App\Models\Employee\Employee;
+use App\Models\Employee\EmployeeEligiblePlan;
+use App\Models\Employee\EmployeeLeavePlan;
+use App\Models\Employee\EmployeeOfficeInfo;
+use App\Models\Employee\EmployeeSalaryBreakdown;
+use App\Models\Leave\LeaveCount;
+use App\Models\Plan\LeavePlan;
+use App\Models\Plan\MealPlan;
+use App\Models\Plan\OffDayPlan;
+use App\Models\Plan\OTPlan;
+use App\Models\Plan\RosterPlan;
+use App\Models\Company\SalaryGrade;
+use App\Models\Company\Section;
+use App\Models\Plan\ShiftPlan;
+use App\Services\Attendance\AttendanceServices;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -377,3 +377,4 @@ class DataController extends Controller
 
 
 }
+

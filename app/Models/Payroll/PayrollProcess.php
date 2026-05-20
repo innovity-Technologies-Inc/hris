@@ -2,12 +2,12 @@
 
 namespace App\Models\Payroll;
 
-use App\Models\BonusPlan;
-use App\Models\Company;
-use App\Models\CompanyLocation;
-use App\Models\Department;
-use App\Models\Division;
-use App\Models\Section;
+use App\Models\Plan\BonusPlan;
+use App\Models\Company\Company;
+use App\Models\Company\CompanyLocation;
+use App\Models\Company\Department;
+use App\Models\Company\Division;
+use App\Models\Company\Section;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
@@ -70,3 +70,4 @@ class PayrollProcess extends Model
         return $this->belongsTo(User::class, 'approved_by', 'id');
     }
 }
+

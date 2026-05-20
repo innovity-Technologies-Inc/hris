@@ -71,7 +71,7 @@ echo "\n";
 // 4. Check General Settings and Logo
 echo "4. Checking General Settings and Logo...\n";
 try {
-    $generalSettings = \App\Models\GeneralSetting::first();
+    $generalSettings = \App\Models\Setting\GeneralSetting::first();
     if ($generalSettings) {
         echo "   ✓ General Settings found\n";
         echo "   - Company Name: " . ($generalSettings->company_name ?? 'Not set') . "\n";
@@ -109,7 +109,7 @@ echo "\n";
 // 5. Test QR Code Generation
 echo "5. Testing QR Code Generation...\n";
 try {
-    $qrCodeService = app(\App\Services\QrCodeService::class);
+    $qrCodeService = app(\App\Services\Setting\QrCodeService::class);
 
     // Test 1: Simple QR without logo
     echo "   Test 1: Simple QR without logo...\n";

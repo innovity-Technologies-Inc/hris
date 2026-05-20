@@ -2,8 +2,8 @@
 
 namespace App\Models\Transport;
 
-use App\Models\Department;
-use App\Models\Employee;
+use App\Models\Company\Department;
+use App\Models\Employee\Employee;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -95,3 +95,4 @@ class VehicleRequisition extends Model
         };
     }
 }
+

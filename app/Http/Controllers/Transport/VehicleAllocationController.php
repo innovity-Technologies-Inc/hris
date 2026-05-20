@@ -8,7 +8,7 @@ use App\Models\Transport\EmployeeTransport;
 use App\Models\Transport\Vehicle;
 use App\Models\Transport\VehicleAllocation;
 use App\Models\Transport\VehicleRequisition;
-use App\Services\TransportService;
+use App\Services\Transport\TransportService;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -660,3 +660,4 @@ class VehicleAllocationController extends Controller
         }
     }
 }
+

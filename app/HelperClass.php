@@ -3,7 +3,7 @@
 namespace App;
 
 
-use App\Models\GeneralSetting;
+use App\Models\Setting\GeneralSetting;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -238,3 +238,4 @@ class HelperClass
 
 
 }
+

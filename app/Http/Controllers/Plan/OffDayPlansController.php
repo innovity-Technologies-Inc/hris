@@ -1,0 +1,148 @@
+<?php
+
+namespace App\Http\Controllers\Plan;
+
+use App\Http\Controllers\Controller;
+
+use App\Imports\Plan\OffDayPlansImport;
+use App\Models\Plan\OffDayPlan;
+use App\Models\Plan\ShiftPlan;
+use App\Services\Plan\PlanService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
+
+class OffDayPlansController extends Controller
+{
+    protected $planServices;
+
+    public function __construct(PlanService $planServices)
+    {
+        $this->planServices = $planServices;
+    }
+
+    public function index(Request $request)
+    {
+        $title = 'Off Day Plan';
+        $section = 'Plans Setup';
+        $sub_section = 'Off Day Plan';
+        $columns = ['name', 'short_name'];
+        $term = $request->get('keyword');
+        $plans = $this->planServices->search(OffDayPlan::class, $columns, [], [], $term, 20);
+
+        if ($request->ajax()) {
+            return view('plan.off_day_plans.search_results', compact('plans'))->render();
+        }
+        return view('plan.off_day_plans.index', compact('title', 'section', 'sub_section', 'plans'));
+    }
+
+    public function create()
+    {
+        $title = 'Create Off Day Plan';
+        $section = 'Off Day Plans';
+        $sub_section = 'Create';
+        $section_url = route('plan.off_day_plans.index');
+        $shifts = ShiftPlan::where('active_ind', 'active')->get();
+        return view('plan.off_day_plans.form', compact('title', 'section', 'sub_section', 'section_url', 'shifts'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $this->planServices->offDayPlanValidation($request);
+
+        try {
+            $this->planServices->planSave($validated, OffDayPlan::class);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->back()->with([
+                'message' => 'Something Went Wrong, Try Again Later',
+                'alert-type' => 'error',
+            ]);
+        }
+
+        return redirect()->route('plan.off_day_plans.index')->with([
+            'message' => 'Off Day Plan Created Successfully',
+            'alert-type' => 'success',
+        ]);
+    }
+
+    public function show($id)
+    {
+        $title = 'Off Day Plan';
+        $section = 'Off Day Plans';
+        $sub_section = 'Show';
+        $section_url = route('plan.off_day_plans.index');
+        $plan = OffDayPlan::with('getShift')->findOrFail($id);
+        return view('plan.off_day_plans.view', compact('title', 'section', 'sub_section', 'section_url', 'plan'));
+    }
+
+    public function edit($id)
+    {
+        $title = 'Edit Off Day Plan';
+        $section = 'Off Day Plans';
+        $sub_section = 'Edit';
+        $section_url = route('plan.off_day_plans.index');
+        $plan = OffDayPlan::with('getShift')->findOrFail($id);
+        $shifts = ShiftPlan::where('active_ind', 'active')->get();
+        return view('plan.off_day_plans.form', compact('title', 'section', 'sub_section', 'section_url', 'plan', 'shifts'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validated = $this->planServices->offDayPlanValidation($request);
+
+        try {
+            $this->planServices->planSave($validated, OffDayPlan::class, $id);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->back()->with([
+                'message' => 'Something Went Wrong, Try Again Later',
+                'alert-type' => 'error',
+            ]);
+        }
+
+        return redirect()->route('plan.off_day_plans.index')->with([
+            'message' => 'Off Day Plan Updated Successfully',
+            'alert-type' => 'success',
+        ]);
+    }
+
+    public function delete($id)
+    {
+        try {
+            $this->planServices->planDelete(OffDayPlan::class, $id);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->back()->with([
+                'message' => 'Something Went Wrong, Try Again Later',
+                'alert-type' => 'error',
+            ]);
+        }
+
+        return redirect()->back()->with([
+            'message' => 'Off Day Plan Deleted Successfully',
+        ]);
+    }
+
+    public function import(Request $request){
+        $request->validate([
+            'file' => 'required|mimes:text/csv,text/plain,application/csv,text/comma-separated-values,text/anytext,application/octet-stream,application/txt,xlsx,csv,txt',
+        ]);
+//        dd($request->all());
+        try{
+            Excel::import(new OffDayPlansImport(), $request->file('file'));
+            return redirect()->route('plan.off_day_plans.index')->with([
+                'message' => 'Imported Successfully',
+                'alert-type' => 'success'
+            ]);
+        }catch (\Exception $e){
+            Log::error($e->getMessage());
+            return redirect()->back()->with([
+                'message' => $e->getMessage(). 'Contact with your administrator',
+                'alert-type' => 'error'
+            ]);
+        }
+
+    }
+}
+

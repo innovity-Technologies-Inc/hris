@@ -4,7 +4,7 @@
     <div class="py-4" style="max-width: 800px; margin: 0 auto;">
         <!-- Header -->
         <div class="mb-4">
-            <a href="{{ route('employees.id_cards.index') }}" class="btn btn-outline-secondary btn-sm mb-3">
+            <a href="{{ route('employee.id_cards.index') }}" class="btn btn-outline-secondary btn-sm mb-3">
                 <i class="bi bi-arrow-left me-1"></i> Back to ID Cards
             </a>
             <h2 class="fs-3 fw-bold text-dark mb-1">ID Card Details</h2>
@@ -108,11 +108,11 @@
                 <!-- Actions -->
                 <div class="d-flex gap-2 flex-wrap">
                     @if ($employeeIdCard->pdfExists())
-                        <a href="{{ route('employees.id_card.view', $employeeIdCard->employee_id) }}"
+                        <a href="{{ route('employee.id_card.view', $employeeIdCard->employee_id) }}"
                             class="btn btn-primary" target="_blank">
                             <i class="bi bi-eye me-2"></i>View PDF
                         </a>
-                        <a href="{{ route('employees.id_card.download', $employeeIdCard->employee_id) }}"
+                        <a href="{{ route('employee.id_card.download', $employeeIdCard->employee_id) }}"
                             class="btn btn-outline-primary">
                             <i class="bi bi-download me-2"></i>Download PDF
                         </a>
@@ -124,7 +124,7 @@
                     @endif
 
                     @if ($employeeIdCard->status === 'active')
-                        <form action="{{ route('employees.id_card.regenerate', $employeeIdCard->employee_id) }}"
+                        <form action="{{ route('employee.id_card.regenerate', $employeeIdCard->employee_id) }}"
                             method="POST" class="d-inline"
                             onsubmit="return confirm('Regenerate will invalidate the current ID card. Continue?')">
                             @csrf
@@ -133,7 +133,7 @@
                             </button>
                         </form>
 
-                        <form action="{{ route('employees.id_card.deactivate', $employeeIdCard->employee_id) }}"
+                        <form action="{{ route('employee.id_card.deactivate', $employeeIdCard->employee_id) }}"
                             method="POST" class="d-inline"
                             onsubmit="return confirm('Are you sure you want to deactivate this ID card?')">
                             @csrf
@@ -158,3 +158,4 @@
         </div>
     </div>
 @endsection
+

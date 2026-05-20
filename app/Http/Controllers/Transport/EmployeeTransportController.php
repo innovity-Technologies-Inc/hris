@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Transport;
 
 use App\Http\Controllers\Controller;
-use App\Models\Company;
+use App\Models\Company\Company;
 use App\Models\Transport\EmployeeTransport;
-use App\Services\TransportService;
+use App\Services\Transport\TransportService;
 use App\HelperClass;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
@@ -441,3 +441,4 @@ class EmployeeTransportController extends Controller
         }
     }
 }
+

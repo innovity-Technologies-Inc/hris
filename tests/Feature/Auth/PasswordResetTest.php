@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\User;
-use App\Notifications\PasswordResetNotification;
+use App\Notifications\Setting\PasswordResetNotification;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -67,3 +67,4 @@ test('password can be reset with valid token', function () {
         return true;
     });
 });
+

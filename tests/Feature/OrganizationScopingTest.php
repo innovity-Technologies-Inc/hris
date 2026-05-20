@@ -1,12 +1,12 @@
 <?php
 
 use App\Models\User;
-use App\Models\Employee;
-use App\Models\EmployeeOfficeInfo;
-use App\Models\Company;
-use App\Models\Division;
-use App\Models\Department;
-use App\Models\Section;
+use App\Models\Employee\Employee;
+use App\Models\Employee\EmployeeOfficeInfo;
+use App\Models\Company\Company;
+use App\Models\Company\Division;
+use App\Models\Company\Department;
+use App\Models\Company\Section;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -34,8 +34,8 @@ function createEmployee($overrides = []) {
 
 beforeEach(function () {
     // Setup basic organization structure
-    $group = \App\Models\Group::create(['name' => 'Test Group', 'short_name' => 'TG', 'status' => 'active']);
-    $type = \App\Models\CompanyType::create(['name' => 'Test Type', 'short_name' => 'TT', 'status' => 'active']);
+    $group = \App\Models\Company\Group::create(['name' => 'Test Group', 'short_name' => 'TG', 'status' => 'active']);
+    $type = \App\Models\Company\CompanyType::create(['name' => 'Test Type', 'short_name' => 'TT', 'status' => 'active']);
 
     $this->companyA = Company::create([
         'name' => 'Company A', 
@@ -55,8 +55,8 @@ beforeEach(function () {
     ]);
 
     // Business Units (CompanyLocation)
-    $this->buA = \App\Models\CompanyLocation::create(['name' => 'BU A', 'company_id' => $this->companyA->id, 'location_address' => 'Addr BU A', 'status' => 'active']);
-    $this->buB = \App\Models\CompanyLocation::create(['name' => 'BU B', 'company_id' => $this->companyB->id, 'location_address' => 'Addr BU B', 'status' => 'active']);
+    $this->buA = \App\Models\Company\CompanyLocation::create(['name' => 'BU A', 'company_id' => $this->companyA->id, 'location_address' => 'Addr BU A', 'status' => 'active']);
+    $this->buB = \App\Models\Company\CompanyLocation::create(['name' => 'BU B', 'company_id' => $this->companyB->id, 'location_address' => 'Addr BU B', 'status' => 'active']);
 
     $this->divisionA = Division::create([
         'name' => 'Division A', 
@@ -161,7 +161,7 @@ test('group user can see everything', function () {
         ->and(Division::count())->toBe(2)
         ->and(Department::count())->toBe(2)
         ->and(Section::count())->toBe(2)
-        ->and(\App\Models\CompanyLocation::count())->toBe(2);
+        ->and(\App\Models\Company\CompanyLocation::count())->toBe(2);
 });
 
 test('company user can only see their own company data', function () {
@@ -184,8 +184,8 @@ test('business unit user can only see their own business unit data', function ()
     $this->userA->update(['user_type' => 'Business Unit']);
     Auth::login($this->userA);
 
-    expect(\App\Models\CompanyLocation::count())->toBe(1)
-        ->and(\App\Models\CompanyLocation::first()->id)->toBe($this->buA->id);
+    expect(\App\Models\Company\CompanyLocation::count())->toBe(1)
+        ->and(\App\Models\Company\CompanyLocation::first()->id)->toBe($this->buA->id);
 
     expect(Division::count())->toBe(1)
         ->and(Division::first()->id)->toBe($this->divisionA->id);
@@ -239,9 +239,10 @@ test('employee user can only see their own data', function () {
     
     // For other tables, it should filter by employee_id if it exists
     // Let's create an attendance record for both
-    \App\Models\Attendance::create(['employee_id' => $this->employeeA->id, 'attendance_date' => now()]);
-    \App\Models\Attendance::create(['employee_id' => $this->employeeB->id, 'attendance_date' => now()]);
+    \App\Models\Attendance\Attendance::create(['employee_id' => $this->employeeA->id, 'attendance_date' => now()]);
+    \App\Models\Attendance\Attendance::create(['employee_id' => $this->employeeB->id, 'attendance_date' => now()]);
 
-    expect(\App\Models\Attendance::count())->toBe(1)
-        ->and(\App\Models\Attendance::first()->employee_id)->toBe($this->employeeA->id);
+    expect(\App\Models\Attendance\Attendance::count())->toBe(1)
+        ->and(\App\Models\Attendance\Attendance::first()->employee_id)->toBe($this->employeeA->id);
 });
+

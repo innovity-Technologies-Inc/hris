@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Models\ApiKey;
-use App\Models\MailSetting;
+use App\Models\Setting\ApiKey;
+use App\Models\Setting\MailSetting;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
@@ -86,3 +86,4 @@ class AppServiceProvider extends ServiceProvider
         }
     }
 }
+

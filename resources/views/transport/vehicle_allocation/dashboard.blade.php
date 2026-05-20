@@ -181,7 +181,7 @@
                                                             $requisition->employee_id,
                                                         ) !!}
                                                         <div>
-                                                            <a href="{{ route('employees.profile.general_informations', $requisition->employee_id) }}"
+                                                            <a href="{{ route('employee.profile.general_informations', $requisition->employee_id) }}"
                                                                 class="text-decoration-none text-dark">
                                                                 {{ $requisition->getEmployee->full_name }}
                                                             </a>
@@ -553,3 +553,4 @@
         });
     </script>
 @endpush
+

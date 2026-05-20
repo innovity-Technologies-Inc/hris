@@ -65,7 +65,7 @@
                                         $item->driver_id,
                                     ) !!}
                                     <div>
-                                        <a href="{{ route('employees.profile.general_informations', $item->driver_id) }}"
+                                        <a href="{{ route('employee.profile.general_informations', $item->driver_id) }}"
                                             class="text-decoration-none">
                                             <strong
                                                 class="text-dark">{{ $item->getDriver->full_name ?? 'N/A' }}</strong>
@@ -105,3 +105,4 @@
 <div class="mt-3">
     {{ $vehicleDrivers->links() }}
 </div>
+

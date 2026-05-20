@@ -2,12 +2,12 @@
 
 namespace App\Models\Transport;
 
-use App\Models\Branch;
-use App\Models\Company;
-use App\Models\Department;
-use App\Models\Division;
-use App\Models\Employee;
-use App\Models\Section;
+use App\Models\Company\Branch;
+use App\Models\Company\Company;
+use App\Models\Company\Department;
+use App\Models\Company\Division;
+use App\Models\Employee\Employee;
+use App\Models\Company\Section;
 use App\Models\Transport\VehicleAllocation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -115,3 +115,4 @@ class EmployeeTransport extends Model
         };
     }
 }
+

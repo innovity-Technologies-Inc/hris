@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Transport;
 use App\Http\Controllers\Controller;
 use App\Models\Transport\Vehicle;
 use App\HelperClass;
-use App\Services\TransportService;
+use App\Services\Transport\TransportService;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -286,3 +286,4 @@ class VehicleController extends Controller
         }
     }
 }
+

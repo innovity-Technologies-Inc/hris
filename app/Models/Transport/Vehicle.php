@@ -99,3 +99,4 @@ class Vehicle extends Model
         return $query->where('is_allocated', true);
     }
 }
+

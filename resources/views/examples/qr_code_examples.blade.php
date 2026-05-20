@@ -150,7 +150,7 @@
                 <span class="badge badge-info">With Logo</span>
 
                 @php
-                    $qrCodeService = app(\App\Services\QrCodeService::class);
+                    $qrCodeService = app(\App\Services\Setting\QrCodeService::class);
 
                     $employeeData = "Employee ID: EMP001\n";
                     $employeeData .= "Name: John Doe\n";
@@ -180,7 +180,7 @@
                 </div>
 
                 <div class="code-snippet">@verbatim
-                        $qrService = app(\App\Services\QrCodeService::class);
+                        $qrService = app(\App\Services\Setting\QrCodeService::class);
                         $qr = $qrService->generateQRBase64(
                         "Employee ID: EMP001\nName: John",
                         null, // System logo
@@ -458,7 +458,7 @@
             <div class="info-box">
                 <p><strong>Step 1:</strong> Get service instance</p>
                 <div class="code-snippet" style="margin: 10px 0;">@verbatim
-                        $qrService = app(\App\Services\QrCodeService::class);
+                        $qrService = app(\App\Services\Setting\QrCodeService::class);
                     @endverbatim
                 </div>
             </div>
@@ -487,3 +487,4 @@
 </body>
 
 </html>
+

@@ -47,3 +47,4 @@ test('email is not verified with invalid hash', function () {
 
     $this->assertFalse($user->fresh()->hasVerifiedEmail());
 });
+

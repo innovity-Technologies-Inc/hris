@@ -62,7 +62,7 @@
 
                         <div class="col-md-6 mb-2">
                             <strong>Employee Name:</strong>
-                            <a href="{{ route('employees.profile.general_informations', $incrementData->employee_id) }}"
+                            <a href="{{ route('employee.profile.general_informations', $incrementData->employee_id) }}"
                                 class="ms-2 text-decoration-none">
                                 {{ $incrementData->getEmployee->full_name ?? 'N/A' }}
                             </a>
@@ -197,3 +197,4 @@
         }
     </script>
 @endsection
+

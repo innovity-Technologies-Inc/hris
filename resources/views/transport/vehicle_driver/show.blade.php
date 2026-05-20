@@ -163,7 +163,7 @@
                                     <tr>
                                         <td class="text-muted border-0 py-2">Name</td>
                                         <td class="fw-semibold border-0 py-2">
-                                            <a href="{{ route('employees.profile.general_informations', $vehicleDriver->driver_id) }}"
+                                            <a href="{{ route('employee.profile.general_informations', $vehicleDriver->driver_id) }}"
                                                 class="text-decoration-none text-dark">
                                                 {{ $vehicleDriver->getDriver->full_name }}
                                             </a>
@@ -197,3 +197,4 @@
         </div>
     </div>
 @endsection
+

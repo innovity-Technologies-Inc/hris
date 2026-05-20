@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Transport\Vehicle;
 use App\Models\Transport\VehicleRequisition;
 use App\Models\Transport\VehicleDriver;
-use App\Models\Employee;
-use App\Models\Department;
-use App\Services\TransportService;
+use App\Models\Employee\Employee;
+use App\Models\Company\Department;
+use App\Services\Transport\TransportService;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -204,3 +204,4 @@ class VehicleRequisitionController extends Controller
         return response()->json($vehicleDetails);
     }
 }
+

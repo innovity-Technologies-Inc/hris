@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Menu;
+use App\Models\Setting\Menu;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -192,3 +192,4 @@ class PermissionSeeder extends Seeder
         }
     }
 }
+

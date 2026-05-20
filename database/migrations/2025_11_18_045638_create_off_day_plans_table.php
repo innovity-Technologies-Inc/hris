@@ -37,3 +37,4 @@ return new class extends Migration
         Schema::dropIfExists('off_day_plans');
     }
 };
+

@@ -51,3 +51,4 @@ return new class extends Migration
         Schema::dropIfExists('allocation_routes');
     }
 };
+

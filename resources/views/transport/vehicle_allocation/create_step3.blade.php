@@ -323,7 +323,7 @@
                                                                     $driver->id,
                                                                 ) !!}
                                                                 <div>
-                                                                    <a href="{{ route('employees.profile.general_informations', $driver->id) }}"
+                                                                    <a href="{{ route('employee.profile.general_informations', $driver->id) }}"
                                                                         class="text-decoration-none">
                                                                         <div class="fw-semibold text-dark">
                                                                             {{ $driver->full_name ?? 'N/A' }}</div>
@@ -436,3 +436,4 @@
         </div>
     </div>
 @endsection
+

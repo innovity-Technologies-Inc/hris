@@ -109,6 +109,39 @@ A comprehensive Human Resource Management System (HRMS) built with Laravel 12, f
     - Standardize initial passwords to `12345678` for testing/initial rollout.
     - Ensure at least one user has `user_type` 'Group' and role 'Super Admin' with all permissions.
 
+### 📁 Modular Organization
+- **Goal**: Reorganize the project codebase into logical modules based on the sidebar menu structure.
+- **Modules**:
+    - `Dashboard`: Core dashboard and analytics.
+    - `Employee`: Employee information, profile reviews, search, and bulk uploads.
+    - `Attendance`: Clocking, attendance records, and bulk imports.
+    - `Leave`: Leave applications and logs.
+    - `Movement`: Employee movement (transfer) applications and logs.
+    - `Payroll`: Promotions, increments, bonuses, and salary processing.
+    - `Plan`: Management of various plans (Meal, Shift, Leave, OT, Roster, Off-Day, Bonus, Allowance, TA, DA, Deduction).
+    - `Company`: Organizational hierarchy (Groups, Companies, Branches, Divisions, Departments, Sections), Designations, Banks, Holidays, and Job Creations.
+    - `Structure`: Organizational structural views and member management.
+    - `Transport`: Vehicle and driver management, requisitions, and allocations.
+    - `Setting`: General settings, ID card design, API keys, SMTP, DB backup, and Role Management.
+- **Migration Scope**:
+    - **Views**: Consolidate redundant folders (e.g., `employees` -> `employee`) and update all `view()` calls.
+    - **Imports**: Organize `app/Imports` into module subdirectories (e.g., `app/Imports/Attendance`).
+    - **Mail & Notifications**: Organize `app/Mail` and `app/Notifications` into module subdirectories (e.g., `app/Mail/Employee`).
+- **Directory Structure**:
+    - Each module will have dedicated directories in:
+        - `app/Http/Controllers/{Module}`
+        - `app/Models/{Module}`
+        - `app/Services/{Module}`
+        - `app/Http/Requests/{Module}`
+        - `app/Imports/{Module}`
+        - `app/Mail/{Module}`
+        - `app/Notifications/{Module}`
+        - `resources/views/{module_snake_case}`
+- **Implementation**: 
+    - Maintain backward compatibility where necessary during the transition.
+    - Update namespaces and imports for all moved files.
+    - Run `php artisan optimize` after structural changes.
+
 ## Technical Constraints
 - **Framework**: Laravel 12.
 - **PHP Version**: 8.2+ (Strict Typing).

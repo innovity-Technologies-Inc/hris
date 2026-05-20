@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Payroll;
 
 use App\Http\Controllers\Controller;
-use App\Models\BonusPlan;
-use App\Models\Company;
-use App\Models\Employee;
+use App\Models\Plan\BonusPlan;
+use App\Models\Company\Company;
+use App\Models\Employee\Employee;
 use App\Models\Payroll\Bonus;
 use App\Models\Payroll\PayrollProcess;
-use App\Services\PayrollServices;
+use App\Services\Payroll\PayrollServices;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -129,3 +129,4 @@ class BonusController extends Controller
     }
 
 }
+

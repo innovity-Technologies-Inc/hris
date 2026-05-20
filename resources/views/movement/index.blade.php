@@ -175,3 +175,4 @@
     {{-- Include Import Modal --}}
     @include('movement.partials.import_modal')
 @endsection
+

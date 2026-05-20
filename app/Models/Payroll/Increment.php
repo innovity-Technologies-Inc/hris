@@ -2,8 +2,8 @@
 
 namespace App\Models\Payroll;
 
-use App\Models\Designation;
-use App\Models\Employee;
+use App\Models\Company\Designation;
+use App\Models\Employee\Employee;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\OrganizationScoped;
 
@@ -37,3 +37,4 @@ class Increment extends Model
     }
 
 }
+

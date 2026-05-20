@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Payroll;
 
 use App\Http\Controllers\Controller;
-use App\Models\Company;
-use App\Models\Employee;
+use App\Models\Company\Company;
+use App\Models\Employee\Employee;
 use App\Models\Payroll\Payroll;
 use App\Models\Payroll\PayrollProcess;
-use App\Services\PayrollServices;
-use App\Services\PayslipService;
-use App\Services\SalaryCertificateService;
+use App\Services\Payroll\PayrollServices;
+use App\Services\Payroll\PayslipService;
+use App\Services\Payroll\SalaryCertificateService;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -207,3 +207,4 @@ class SalaryController extends Controller
         ]);
     }
 }
+

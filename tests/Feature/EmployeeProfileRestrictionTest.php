@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\User;
-use App\Models\Employee;
+use App\Models\Employee\Employee;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -60,3 +60,4 @@ test('employee user cannot access leave application creation', function () {
     $response = $this->get(route('leaves.create'));
     $response->assertStatus(403);
 });
+
