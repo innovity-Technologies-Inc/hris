@@ -149,10 +149,10 @@
 
                 <!-- Leaves Menu -->
                 @php
-                    $canLeaveApplication = auth()->user()->can('leave.create');
-                    $canLeaveLogs = auth()->user()->can('leave.view');
+                    $canLeaveApplication = auth()->user()->can('leaves.create');
+                    $canLeaveLogs = auth()->user()->can('leaves.view');
                     $showLeavesMenu = $canLeaveApplication || $canLeaveLogs;
-                    $leavesOpen = request()->is('leaves*');
+                    $leavesOpen = Route::is('leave.*');
                 @endphp
                 @if($showLeavesMenu)
                 <li>
@@ -166,13 +166,13 @@
                         <ul class="nav-second-level">
                             @if($canLeaveApplication)
                             <li>
-                                <a class='tp-link @if (request()->is('leave.create')) menuitem-active @endif'
+                                <a class='tp-link @if (Route::is('leave.create')) menuitem-active @endif'
                                     href='{{ route('leave.create') }}'>Application</a>
                             </li>
                             @endif
                             @if($canLeaveLogs)
                             <li>
-                                <a class='tp-link @if (request()->is('leave.index')) menuitem-active @endif'
+                                <a class='tp-link @if (Route::is('leave.index')) menuitem-active @endif'
                                     href='{{ route('leave.index') }}'>Logs</a>
                             </li>
                             @endif
@@ -186,7 +186,7 @@
                     $canMovementApplication = auth()->user()->can('movement.create');
                     $canMovementLogs = auth()->user()->can('movement.view');
                     $showMovementMenu = $canMovementApplication || $canMovementLogs;
-                    $movementOpen = request()->is('movement*');
+                    $movementOpen = Route::is('movement.*');
                 @endphp
                 @if($showMovementMenu)
                 <li>
@@ -201,13 +201,13 @@
                         <ul class="nav-second-level">
                             @if($canMovementApplication)
                             <li>
-                                <a class='tp-link @if (request()->is('movement/create')) menuitem-active @endif'
+                                <a class='tp-link @if (Route::is('movement.create')) menuitem-active @endif'
                                     href='{{ route('movement.create') }}'>Application</a>
                             </li>
                             @endif
                             @if($canMovementLogs)
                             <li>
-                                <a class='tp-link @if (request()->is('movement') && !request()->is('movement/create')) menuitem-active @endif'
+                                <a class='tp-link @if (Route::is('movement.index')) menuitem-active @endif'
                                     href='{{ route('movement.index') }}'>Logs</a>
                             </li>
                             @endif
