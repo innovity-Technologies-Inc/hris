@@ -38,9 +38,26 @@ class UserAndRoleSeeder extends Seeder
 
         $this->command->info('Super Admin user created with user_type: Group');
 
+        // 3. Create Specific Test User
+        $testEmployee = Employee::first(); // Use the first seeded employee
+        if ($testEmployee) {
+            $testUser = User::updateOrCreate(
+                ['email' => 'test@example.com'],
+                [
+                    'name' => $testEmployee->full_name,
+                    'password' => Hash::make('12345678'),
+                    'user_type' => 'Employee',
+                    'employee_id' => $testEmployee->id,
+                    'status' => 'active',
+                ]
+            );
+            $testUser->syncRoles(['Employee']);
+            $testEmployee->update(['user_id' => $testUser->id]);
+        }
+
         $defaultPassword = Hash::make('12345678');
 
-        // 3. Provision Login for All Employees
+        // 4. Provision Login for All Employees
         // Using chunking for performance with ~2000 records
         Employee::with('officeInfo.getCurrentDepartment')->chunk(200, function ($employees) use ($hrManagerRole, $deptManagerRole, $employeeRole, $defaultPassword) {
             foreach ($employees as $employee) {

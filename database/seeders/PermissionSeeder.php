@@ -182,13 +182,26 @@ class PermissionSeeder extends Seeder
         }
 
         // Create Super Admin role and assign all permissions
-        $role = Role::firstOrCreate(['name' => 'Super Admin', 'guard_name' => 'web']);
-        $role->syncPermissions(Permission::all());
+        $superAdminRole = Role::firstOrCreate(['name' => 'Super Admin', 'guard_name' => 'web']);
+        $superAdminRole->syncPermissions(Permission::all());
+
+        // Create Employee role and assign specific permissions
+        $employeeRole = Role::firstOrCreate(['name' => 'Employee', 'guard_name' => 'web']);
+        $employeeRole->syncPermissions([
+            'employee-management.create',
+            'employee-management.edit',
+            'leaves.create',
+            'leaves.view',
+            'attendance.create',
+            'attendance.view',
+            'movement.create',
+            'movement.view',
+        ]);
 
         // Ensure a default user is Super Admin if needed
         $user = \App\Models\User::where('email', 'admin@example.com')->first();
         if ($user) {
-            $user->assignRole($role);
+            $user->assignRole($superAdminRole);
         }
     }
 }
