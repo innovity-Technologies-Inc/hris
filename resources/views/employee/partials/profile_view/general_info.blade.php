@@ -288,23 +288,23 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <p><strong>Address Line 1:</strong>
-                                                        {{ $employee->present_address['line_1'] }}</p>
+                                                        {{ $employee->present_address['line_1'] ?? 'N/A' }}</p>
                                                     <p><strong>Village:</strong>
-                                                        {{ $employee->present_address['village'] }}</p>
+                                                        {{ $employee->present_address['village'] ?? 'N/A' }}</p>
                                                     <p><strong>Post Office:</strong>
-                                                        {{ $employee->present_address['post_office'] }}</p>
-                                                    <p><strong>State:</strong> {{ $employee->present_address['state'] }}
+                                                        {{ $employee->present_address['post_office'] ?? 'N/A' }}</p>
+                                                    <p><strong>State:</strong> {{ $employee->present_address['state'] ?? 'N/A' }}
                                                     </p>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <p><strong>District:</strong>
-                                                        {{ $employee->present_address['district'] }}</p>
+                                                        {{ $employee->present_address['district'] ?? 'N/A' }}</p>
                                                     <p><strong>Division:</strong>
-                                                        {{ $employee->present_address['division'] }}</p>
+                                                        {{ $employee->present_address['division'] ?? 'N/A' }}</p>
                                                     <p><strong>Zip Code:</strong>
-                                                        {{ $employee->present_address['zip_code'] }}</p>
+                                                        {{ $employee->present_address['zip_code'] ?? 'N/A' }}</p>
                                                     <p><strong>Country:</strong>
-                                                        {{ $employee->present_address['country'] }}</p>
+                                                        {{ $employee->present_address['country'] ?? 'N/A' }}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -319,24 +319,24 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <p><strong>Address Line 1:</strong>
-                                                        {{ $employee->permanent_address['line_1'] }}</p>
+                                                        {{ $employee->permanent_address['line_1'] ?? 'N/A' }}</p>
                                                     <p><strong>Village:</strong>
-                                                        {{ $employee->permanent_address['village'] }}</p>
+                                                        {{ $employee->permanent_address['village'] ?? 'N/A' }}</p>
                                                     <p><strong>Post Office:</strong>
-                                                        {{ $employee->permanent_address['post_office'] }}</p>
+                                                        {{ $employee->permanent_address['post_office'] ?? 'N/A' }}</p>
                                                     <p>
-                                                        <strong>State:</strong> {{ $employee->permanent_address['state'] }}
+                                                        <strong>State:</strong> {{ $employee->permanent_address['state'] ?? 'N/A' }}
                                                     </p>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <p><strong>District:</strong>
-                                                        {{ $employee->permanent_address['district'] }}</p>
+                                                        {{ $employee->permanent_address['district'] ?? 'N/A' }}</p>
                                                     <p><strong>Division:</strong>
-                                                        {{ $employee->permanent_address['division'] }}</p>
+                                                        {{ $employee->permanent_address['division'] ?? 'N/A' }}</p>
                                                     <p><strong>Zip Code:</strong>
-                                                        {{ $employee->permanent_address['zip_code'] }}</p>
+                                                        {{ $employee->permanent_address['zip_code'] ?? 'N/A' }}</p>
                                                     <p><strong>Country:</strong>
-                                                        {{ $employee->permanent_address['country'] }}</p>
+                                                        {{ $employee->permanent_address['country'] ?? 'N/A' }}</p>
                                                 </div>
 
                                             </div>
