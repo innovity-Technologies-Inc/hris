@@ -61,7 +61,7 @@ class PermissionSeeder extends Seeder
             ],
 
             [
-                'name' => 'Transfer',
+                'name' => 'Transfers',
                 'icon' => 'shuffle',
                 'actions' => ['view', 'create', 'edit', 'delete', 'approve']
             ],
@@ -202,6 +202,8 @@ class PermissionSeeder extends Seeder
             'attendance.view',
             'movement.create',
             'movement.view',
+            'transfers.create',
+            'transfers.view',
         ]);
 
         // Ensure a default user is Super Admin if needed
