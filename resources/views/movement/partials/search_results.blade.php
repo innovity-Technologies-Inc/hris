@@ -5,13 +5,19 @@
         <th scope="col">Employee Name</th>
         <th scope="col">From</th>
         <th scope="col">To</th>
-        <th scope="col">Total Allowance</th>
-        <th scope="col">Status</th>
+        @if(auth()->user()->user_type !== 'Employee')
+            <th scope="col">Total Allowance</th>
+            <th scope="col">Status</th>
+            <th scope="col">Payment</th>
+        @endif
         <th scope="col">Action</th>
     </tr>
     </thead>
     <tbody>
-    @php $sl = 1; @endphp
+    @php 
+        $sl = 1;
+        $isEmployee = auth()->user()->user_type === 'Employee';
+    @endphp
     @foreach ($movements as $movement)
         <tr>
             <th scope="row">{{ $sl++ }}</th>
@@ -27,6 +33,7 @@
                 <div>{{ \Carbon\Carbon::parse($movement->to_date)->format('d M Y') }}</div>
                 <small class="text-muted">{{ \Carbon\Carbon::parse($movement->to_date)->format('h:i A') }}</small>
             </td>
+            @if(!$isEmployee)
             <td class="text-end">
                 <span class="fw-semibold text-primary">৳{{ number_format($movement->total_allowance, 2) }}</span>
             </td>
@@ -42,63 +49,20 @@
                 @endif
             </td>
             <td>
+                @if ($movement->payment_status == 'paid')
+                    <span class="badge bg-success">Paid</span>
+                @else
+                    <span class="badge bg-secondary">Unpaid</span>
+                @endif
+            </td>
+            @endif
+            <td>
                 {{-- View Button --}}
                 @can('movement.view')
-                <button type="button" class="btn btn-info btn-sm" title="View" data-bs-toggle="modal"
-                        data-bs-target="#viewTravel MovementModal{{ $movement->id }}"
-                        onclick="loadTravel MovementDetails({{ json_encode($movement) }})">
-                    <i style="height: 12px; width: 12px" data-feather="eye"></i>
+                <button type="button" class="btn btn-info btn-sm rounded-pill px-3" title="View" data-bs-toggle="modal"
+                        data-bs-target="#viewTravelMovementModal{{ $movement->id }}">
+                    <i class="bi bi-eye me-1"></i> View
                 </button>
-                @endcan
-
-                @if ($movement->status == 'pending')
-                    @can('movement.hr-approve')
-                    <form class="d-inline" action="{{ route('movement.change_status') }}"
-                          method="post">
-                        @method('put')
-                        @csrf
-                        <input type="hidden" name="id" value="{{ $movement->id }}">
-                        <input type="hidden" name="status" value="approved">
-                        <button type="submit" class="btn btn-success btn-sm confirmApprove"
-                                title="Approve">
-                            <i style="height: 12px; width: 12px" data-feather="check"></i>
-                        </button>
-                    </form>
-                    <form class="d-inline" method="post"
-                          action="{{ route('movement.change_status') }}">
-                        @method('put')
-                        @csrf
-                        <input type="hidden" name="id"
-                               value="{{ $movement->id }}">
-                        <input type="hidden" name="status" value="rejected">
-                        <button type="submit" class="btn btn-danger btn-sm confirmReject"
-                                title="Reject">
-                            <i style="height: 12px; width: 12px" data-feather="x"></i>
-                        </button>
-                    </form>
-                    @endcan
-                @endif
-
-                @if ($movement->status == 'pending')
-                    {{-- Edit Button --}}
-                    @can('movement.edit')
-                    <a href="{{ route('movement.edit', $movement->id) }}" class="btn btn-primary btn-sm"
-                       title="Edit">
-                        <i style="height: 12px; width: 12px" data-feather="edit"></i>
-                    </a>
-                    @endcan
-                @endif
-
-                {{-- Delete Button --}}
-                @can('movement.delete')
-                <form action="{{ route('movement.destroy', $movement->id) }}" method="POST"
-                      class="d-inline">
-                    @csrf
-                    @method('delete')
-                    <button type="submit" class="btn btn-danger btn-sm confirmDelete" title="Delete">
-                        <i style="height: 12px; width: 12px" data-feather="trash-2"></i>
-                    </button>
-                </form>
                 @endcan
             </td>
         </tr>
@@ -113,11 +77,6 @@
     // Reinitialize feather icons after table load
     if (typeof feather !== 'undefined') {
         feather.replace();
-    }
-
-    // Function to load movement details (if needed for dynamic data)
-    function loadTravel MovementDetails(movement) {
-        console.log('Travel Movement Details:', movement);
     }
 </script>
 

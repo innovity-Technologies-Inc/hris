@@ -34,6 +34,14 @@ class EmployeeMovementsController extends Controller
             $filters['from_date<='] = Carbon::parse($request->input('to'))->copy()->endOfDay();
         }
 
+        if ($request->filled('status')) {
+            $filters['status'] = $request->input('status');
+        }
+
+        if ($request->filled('payment_status')) {
+            $filters['payment_status'] = $request->input('payment_status');
+        }
+
         $movements = $flexsearch
             ->apply($query, $filters, $keyword, $searchableColumns)
             ->paginate(10);
@@ -217,18 +225,11 @@ class EmployeeMovementsController extends Controller
     public function changeStatus(Request $request){
         $id = $request->input('id');
         $status = $request->input('status');
-        $movement = EmployeeMovement::find($id);
-
+        
         try {
-            if($status == 'approved') {
-                $movement->status = 'approved';
-                $movement->save();
-            }
-
-            if($status == 'rejected') {
-                $movement->status = 'rejected';
-                $movement->save();
-            }
+            $movement = EmployeeMovement::findOrFail($id);
+            $movement->status = $status;
+            $movement->save();
         }catch (\Exception $e){
             Log::error($e->getMessage());
             return redirect()->back()->with([
@@ -239,6 +240,28 @@ class EmployeeMovementsController extends Controller
 
         return redirect()->back()->with([
             'message' => 'Status Changed Successfully',
+            'alert-type' => 'success'
+        ]);
+    }
+
+    public function changePaymentStatus(Request $request){
+        $id = $request->input('id');
+        $status = $request->input('payment_status');
+        
+        try {
+            $movement = EmployeeMovement::findOrFail($id);
+            $movement->payment_status = $status;
+            $movement->save();
+        }catch (\Exception $e){
+            Log::error($e->getMessage());
+            return redirect()->back()->with([
+                'message' => 'Something went wrong. Please try again later.',
+                'alert-type' => 'error'
+            ]);
+        }
+
+        return redirect()->back()->with([
+            'message' => 'Payment Status Changed Successfully',
             'alert-type' => 'success'
         ]);
     }

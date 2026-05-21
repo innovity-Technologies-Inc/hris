@@ -17,7 +17,7 @@ class EmployeeMovement extends Model
         'destination_address', 'dest_lat', 'dest_lng',
         'distance', 'ta_plan_id', 'da_plan_id',
         'total_ta', 'total_da', 'total_days', 'total_allowance',
-        'reason', 'status',
+        'reason', 'status', 'payment_status',
     ];
 
     public function getEmployee()

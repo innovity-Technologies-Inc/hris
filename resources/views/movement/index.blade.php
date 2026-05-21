@@ -39,23 +39,24 @@
                                         </div>
                                     </div>
 
-                                    {{-- Second Row: Date Range & Status --}}
+                                    {{-- Second Row: Date Range, Status & Payment --}}
                                     <div class="row mb-2">
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <label for="fromDate" class="form-label text-muted small fw-semibold mb-1">
                                                 From Date
                                             </label>
                                             <input type="date" class="form-control" id="fromDate" name="from"
                                                 value="{{ request('from') }}">
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <label for="toDate" class="form-label text-muted small fw-semibold mb-1">
                                                 To Date
                                             </label>
                                             <input type="date" class="form-control" id="toDate" name="to"
                                                 value="{{ request('to') }}">
                                         </div>
-                                        <div class="col-md-4">
+                                        @if(auth()->user()->user_type !== 'Employee')
+                                        <div class="col-md-3">
                                             <label for="statusFilter" class="form-label text-muted small fw-semibold mb-1">
                                                 Status
                                             </label>
@@ -66,6 +67,17 @@
                                                 <option value="rejected">Rejected</option>
                                             </select>
                                         </div>
+                                        <div class="col-md-3">
+                                            <label for="paymentStatusFilter" class="form-label text-muted small fw-semibold mb-1">
+                                                Payment Status
+                                            </label>
+                                            <select class="form-select" id="paymentStatusFilter" name="payment_status">
+                                                <option value="">All Status</option>
+                                                <option value="paid">Paid</option>
+                                                <option value="unpaid">Unpaid</option>
+                                            </select>
+                                        </div>
+                                        @endif
                                     </div>
 
                                     {{-- Reset Button --}}
