@@ -34,8 +34,8 @@
                             <span class="text-white">{{ $transfer->currentDivision->name ?? 'N/A' }} / {{ $transfer->currentDepartment->department_name ?? 'N/A' }}</span>
                         </div>
                         <div class="info-item mb-2">
-                            <label class="text-white-50 small d-block">Section / Designation</label>
-                            <span class="text-white">{{ $transfer->currentSection->name ?? 'N/A' }} / {{ $transfer->currentDesignation->company_designation ?? 'N/A' }}</span>
+                            <label class="text-white-50 small d-block">Section</label>
+                            <span class="text-white">{{ $transfer->currentSection->name ?? 'N/A' }}</span>
                         </div>
                     </div>
 
@@ -55,8 +55,8 @@
                             <span class="text-white">{{ $transfer->requestedDivision->name ?? 'N/A' }} / {{ $transfer->requestedDepartment->department_name ?? 'N/A' }}</span>
                         </div>
                         <div class="info-item mb-2">
-                            <label class="text-white-50 small d-block">Section / Designation</label>
-                            <span class="text-white">{{ $transfer->requestedSection->name ?? 'N/A' }} / {{ $transfer->requestedDesignation->company_designation ?? 'N/A' }}</span>
+                            <label class="text-white-50 small d-block">Section</label>
+                            <span class="text-white">{{ $transfer->requestedSection->name ?? 'N/A' }}</span>
                         </div>
                     </div>
                 </div>

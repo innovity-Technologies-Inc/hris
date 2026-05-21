@@ -23,7 +23,6 @@
                         'division' => 3,
                         'department' => 4,
                         'section' => 5,
-                        'designation' => 6,
                     ];
                     
                     $currentLevel = $isEmployee ? ($setting->employee_transfer_level ?? 'company') : ($setting->supervisor_transfer_level ?? 'company');
@@ -96,14 +95,6 @@
                             @if($levelWeight > 5) <input type="hidden" name="requested_section_id" id="hidden_section_id"> @endif
                         </div>
 
-                        <div class="col-md-4">
-                            <label class="form-label">Designation <span class="text-danger">*</span></label>
-                            <select name="requested_designation_id" id="requested_designation_id" class="form-select" required @if($levelWeight > 6) disabled @endif>
-                                <option value="">Select Designation</option>
-                            </select>
-                            @if($levelWeight > 6) <input type="hidden" name="requested_designation_id" id="hidden_designation_id"> @endif
-                        </div>
-
                         <div class="col-12 mt-4">
                             <button type="submit" class="btn btn-primary px-4">
                                 <i data-feather="send" class="me-1"></i> Submit Application
@@ -128,7 +119,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const divisionSelect = document.getElementById('requested_division_id');
     const departmentSelect = document.getElementById('requested_department_id');
     const sectionSelect = document.getElementById('requested_section_id');
-    const designationSelect = document.getElementById('requested_designation_id');
     const transferForm = document.getElementById('transferForm');
 
     // Initial Fetch
@@ -136,7 +126,6 @@ document.addEventListener('DOMContentLoaded', function() {
     fetchEmployees();
     @endif
     fetchCompanies();
-    fetchDesignations();
 
     // Event Listeners for Cascading
     @if(!$isEmployee)
@@ -221,12 +210,6 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(err => console.error(err));
     }
 
-    function fetchDesignations() {
-        axios.get('{{ route('transfer.api.designations') }}')
-            .then(res => populateSelect(designationSelect, res.data.data, 'Select Designation'))
-            .catch(err => console.error(err));
-    }
-
     function fetchOfficeInfo(employeeId) {
         axios.get(`{{ url('get-office-info') }}/${employeeId}`)
             .then(res => {
@@ -260,11 +243,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         setTimeout(() => {
                             setField(sectionSelect, 'hidden_section_id', info.current_section_id, info.get_current_section?.name);
                         }, 2000);
-                    }
-                    if (weight > 6) {
-                        setTimeout(() => {
-                            setField(designationSelect, 'hidden_designation_id', info.current_designation_id, info.get_current_designation?.company_designation);
-                        }, 2500);
                     }
                 }
             })

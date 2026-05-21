@@ -20,7 +20,6 @@ class StoreTransferRequest extends FormRequest
             'requested_division_id' => 'nullable|exists:divisions,id',
             'requested_department_id' => 'nullable|exists:departments,id',
             'requested_section_id' => 'nullable|exists:sections,id',
-            'requested_designation_id' => 'nullable|exists:designations,id',
             'remarks' => 'nullable|string|max:500',
         ];
 
@@ -43,7 +42,7 @@ class StoreTransferRequest extends FormRequest
 
     private function validateLevelRestriction(&$rules, $level, $employeeId)
     {
-        $levels = ['company' => 1, 'business_unit' => 2, 'division' => 3, 'department' => 4, 'section' => 5, 'designation' => 6];
+        $levels = ['company' => 1, 'business_unit' => 2, 'division' => 3, 'department' => 4, 'section' => 5];
         $weight = $levels[$level] ?? 1;
         
         $officeInfo = \App\Models\Employee\EmployeeOfficeInfo::where('employee_id', $employeeId)->first();
@@ -54,6 +53,5 @@ class StoreTransferRequest extends FormRequest
         if ($weight > 3) $rules['requested_division_id'] = 'nullable|in:' . $officeInfo->current_division_id;
         if ($weight > 4) $rules['requested_department_id'] = 'nullable|in:' . $officeInfo->current_department_id;
         if ($weight > 5) $rules['requested_section_id'] = 'nullable|in:' . $officeInfo->current_section_id;
-        if ($weight > 6) $rules['requested_designation_id'] = 'nullable|in:' . $officeInfo->current_designation_id;
     }
 }

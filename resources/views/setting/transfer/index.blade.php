@@ -17,7 +17,6 @@
                             <option value="division" {{ $setting->employee_transfer_level == 'division' ? 'selected' : '' }}>Division</option>
                             <option value="department" {{ $setting->employee_transfer_level == 'department' ? 'selected' : '' }}>Department</option>
                             <option value="section" {{ $setting->employee_transfer_level == 'section' ? 'selected' : '' }}>Section</option>
-                            <option value="designation" {{ $setting->employee_transfer_level == 'designation' ? 'selected' : '' }}>Designation</option>
                         </select>
                         <small class="text-info mt-1 d-block">Defines the minimum organizational level an Employee can select in their transfer application.</small>
                     </div>
@@ -30,7 +29,6 @@
                             <option value="division" {{ $setting->supervisor_transfer_level == 'division' ? 'selected' : '' }}>Division</option>
                             <option value="department" {{ $setting->supervisor_transfer_level == 'department' ? 'selected' : '' }}>Department</option>
                             <option value="section" {{ $setting->supervisor_transfer_level == 'section' ? 'selected' : '' }}>Section</option>
-                            <option value="designation" {{ $setting->supervisor_transfer_level == 'designation' ? 'selected' : '' }}>Designation</option>
                         </select>
                         <small class="text-info mt-1 d-block">Defines the minimum organizational level for Managers/Admins when creating transfers for others.</small>
                     </div>

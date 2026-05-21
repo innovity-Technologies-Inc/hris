@@ -122,7 +122,7 @@ class TransferServices
                 'current_division_id' => $transfer->requested_division_id,
                 'current_department_id' => $transfer->requested_department_id,
                 'current_section_id' => $transfer->requested_section_id,
-                'current_designation_id' => $transfer->requested_designation_id,
+                'current_designation_id' => $transfer->requested_designation_id ?? $officeInfo->current_designation_id,
             ]);
 
             $transfer->update([
