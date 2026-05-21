@@ -38,8 +38,8 @@
                         </div>
 
                         <div class="col-12">
-                            <hr class="my-3 text-white-50">
-                            <h6 class="text-white mb-3"><i data-feather="map-pin" class="me-2"></i>Requested Office Information</h6>
+                            <hr class="my-3 border-secondary-subtle opacity-25">
+                            <h6 class="mb-3"><i data-feather="map-pin" class="me-2 text-primary"></i>Requested Office Information</h6>
                         </div>
 
                         <!-- Cascading Dropdowns -->
