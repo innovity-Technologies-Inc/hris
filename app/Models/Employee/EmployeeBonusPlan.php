@@ -2,6 +2,7 @@
 
 namespace App\Models\Employee;
 
+use App\Models\Plan\BonusPlan;
 use Illuminate\Database\Eloquent\Model;
 
 class EmployeeBonusPlan extends Model

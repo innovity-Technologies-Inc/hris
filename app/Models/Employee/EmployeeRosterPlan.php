@@ -2,6 +2,7 @@
 
 namespace App\Models\Employee;
 
+use App\Models\Plan\RosterPlan;
 use Illuminate\Database\Eloquent\Model;
 
 class EmployeeRosterPlan extends Model

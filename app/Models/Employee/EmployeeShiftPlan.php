@@ -2,6 +2,7 @@
 
 namespace App\Models\Employee;
 
+use App\Models\Plan\ShiftPlan;
 use Illuminate\Database\Eloquent\Model;
 
 class EmployeeShiftPlan extends Model

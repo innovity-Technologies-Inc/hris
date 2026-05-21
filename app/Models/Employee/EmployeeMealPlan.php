@@ -2,6 +2,7 @@
 
 namespace App\Models\Employee;
 
+use App\Models\Plan\MealPlan;
 use Illuminate\Database\Eloquent\Model;
 
 class EmployeeMealPlan extends Model

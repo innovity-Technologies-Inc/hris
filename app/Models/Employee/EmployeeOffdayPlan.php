@@ -2,6 +2,7 @@
 
 namespace App\Models\Employee;
 
+use App\Models\Plan\OffDayPlan;
 use Illuminate\Database\Eloquent\Model;
 
 class EmployeeOffdayPlan extends Model
