@@ -869,6 +869,14 @@ Route::prefix('settings')->middleware('auth')->group(function () {
            Route::delete('id-design/{id}/delete', 'destroy')->name('setting.id_design.destroy');
        });
     });
+
+    // Transfer Settings Routes
+    Route::controller(\App\Http\Controllers\Setting\TransferSettingController::class)->group(function () {
+        Route::middleware('permission:general-settings.view')->group(function () {
+            Route::get('transfer-settings', 'index')->name('setting.transfer.index');
+            Route::post('transfer-settings/update', 'update')->name('setting.transfer.update');
+        });
+    });
 });
 
 Route::prefix('leaves')->middleware('auth')->group(function () {
@@ -1007,6 +1015,7 @@ Route::controller(DataController::class)->middleware('auth')->group(function () 
     Route::get('/get-sections/{company_id}/{location_id?}/{division_id?}/{department_id?}', 'getSections');
     Route::get('/get-employees/{company_id}/{location_id?}/{division_id?}/{department_id?}/{section_id?}', 'getEmployees');
     Route::get('get-branches/{bank_id}', 'getBranchesByBank');
+    Route::get('get-office-info/{employee_id}', 'getEmployeeOfficeInfo');
 
     //plan_details
     Route::get('get-meal-plans/{type}', 'getMealPlanByType');

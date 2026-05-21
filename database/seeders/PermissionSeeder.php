@@ -138,6 +138,7 @@ class PermissionSeeder extends Seeder
                 'icon' => 'sliders',
                 'submenus' => [
                     ['name' => 'General Settings', 'route' => 'settings.general_settings', 'actions' => ['view', 'edit']],
+                    ['name' => 'Transfer Settings', 'route' => 'setting.transfer.index', 'actions' => ['view', 'edit']],
                     ['name' => 'ID Card Design', 'route' => 'settings.id_design.index', 'actions' => ['view', 'create', 'edit', 'delete']],
                     ['name' => 'API Keys', 'route' => 'settings.api_keys', 'actions' => ['view', 'edit', 'delete']],
                     ['name' => 'SMTP', 'route' => 'settings.mail_settings', 'actions' => ['view', 'edit']],

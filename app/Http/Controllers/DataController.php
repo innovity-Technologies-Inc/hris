@@ -371,6 +371,20 @@ class DataController extends Controller
         return response()->json($employees);
     }
 
+    public function getEmployeeOfficeInfo($employee_id)
+    {
+        $info = EmployeeOfficeInfo::with([
+            'getCurrentCompany',
+            'getCurrentBusinessUnit',
+            'getCurrentDivision',
+            'getCurrentDepartment',
+            'getCurrentSection',
+            'getCurrentDesignation'
+        ])->where('employee_id', $employee_id)->first();
+
+        return response()->json($info);
+    }
+
 
 
 

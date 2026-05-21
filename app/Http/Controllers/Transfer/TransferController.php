@@ -19,7 +19,8 @@ class TransferController extends Controller
     {
         $title = 'Transfer Application';
         $section = 'Transfer';
-        return view('transfer.application', compact('title', 'section'));
+        $setting = \App\HelperClass::getTransferSetting();
+        return view('transfer.application', compact('title', 'section', 'setting'));
     }
 
     public function show($id)

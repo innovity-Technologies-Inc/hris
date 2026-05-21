@@ -690,6 +690,18 @@
                                     href='{{ route('setting.general_settings') }}'>General</a>
                             </li>
                             @endif
+                            @if($canRoleManagement)
+                            <li>
+                                <a class='tp-link @if (Route::is('setting.roles.*')) menuitem-active @endif'
+                                   href='{{ route('setting.roles.index') }}'>Role Management</a>
+                            </li>
+                            @endif
+                            @if(auth()->user()->can('general-settings.view'))
+                            <li>
+                                <a class='tp-link @if (Route::is('setting.transfer.index')) menuitem-active @endif'
+                                   href='{{ route('setting.transfer.index') }}'>Transfer Settings</a>
+                            </li>
+                            @endif
                             @if($canIDCardDesign)
                             <li>
                                 <a class='tp-link @if (Route::is('setting.id_design.*')) menuitem-active @endif'
@@ -713,13 +725,6 @@
                             <li>
                                 <a class='tp-link @if (Route::is('db_backup')) menuitem-active @endif'
                                    href='{{ route('db_backup') }}'>DB Backup</a>
-                            </li>
-                            @endif
-
-                            @if($canRoleManagement)
-                            <li>
-                                <a class='tp-link @if (Route::is('setting.roles.*')) menuitem-active @endif'
-                                   href='{{ route('setting.roles.index') }}'>Role Management</a>
                             </li>
                             @endif
 

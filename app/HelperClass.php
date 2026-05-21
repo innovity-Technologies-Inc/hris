@@ -46,6 +46,10 @@ class HelperClass
         $data = GeneralSetting::first();
         return $data;
     }
+
+    public static function getTransferSetting(){
+        return \App\Models\Setting\TransferSetting::first();
+    }
     public static function getHoursByMinutes($minutes){
         $isNegative = $minutes < 0;
         $minutes = abs($minutes);

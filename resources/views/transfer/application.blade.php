@@ -15,6 +15,19 @@
                     $isEmployee = auth()->user()->user_type === 'Employee';
                     $loggedInEmployeeId = auth()->user()->employee_id;
                     $loggedInEmployeeName = auth()->user()->employee?->full_name ?? auth()->user()->name;
+                    
+                    // Level Weights
+                    $levels = [
+                        'company' => 1,
+                        'business_unit' => 2,
+                        'division' => 3,
+                        'department' => 4,
+                        'section' => 5,
+                        'designation' => 6,
+                    ];
+                    
+                    $currentLevel = $isEmployee ? ($setting->employee_transfer_level ?? 'company') : ($setting->supervisor_transfer_level ?? 'company');
+                    $levelWeight = $levels[$currentLevel] ?? 1;
                 @endphp
                 <form id="transferForm">
                     <div class="row g-3">
@@ -28,7 +41,7 @@
                                 @endif
                             </select>
                             @if($isEmployee)
-                                <input type="hidden" name="employee_id" value="{{ $loggedInEmployeeId }}">
+                                <input type="hidden" name="employee_id" id="hidden_employee_id" value="{{ $loggedInEmployeeId }}">
                             @endif
                         </div>
                         
@@ -45,44 +58,50 @@
                         <!-- Cascading Dropdowns -->
                         <div class="col-md-4">
                             <label class="form-label">Company <span class="text-danger">*</span></label>
-                            <select name="requested_company_id" id="requested_company_id" class="form-select" required>
+                            <select name="requested_company_id" id="requested_company_id" class="form-select" required @if($levelWeight > 1) disabled @endif>
                                 <option value="">Select Company</option>
                             </select>
+                            @if($levelWeight > 1) <input type="hidden" name="requested_company_id" id="hidden_company_id"> @endif
                         </div>
 
                         <div class="col-md-4">
                             <label class="form-label">Business Unit</label>
-                            <select name="requested_business_unit_id" id="requested_business_unit_id" class="form-select">
+                            <select name="requested_business_unit_id" id="requested_business_unit_id" class="form-select" @if($levelWeight > 2) disabled @endif>
                                 <option value="">Select Business Unit</option>
                             </select>
+                            @if($levelWeight > 2) <input type="hidden" name="requested_business_unit_id" id="hidden_unit_id"> @endif
                         </div>
 
                         <div class="col-md-4">
                             <label class="form-label">Division</label>
-                            <select name="requested_division_id" id="requested_division_id" class="form-select">
+                            <select name="requested_division_id" id="requested_division_id" class="form-select" @if($levelWeight > 3) disabled @endif>
                                 <option value="">Select Division</option>
                             </select>
+                            @if($levelWeight > 3) <input type="hidden" name="requested_division_id" id="hidden_division_id"> @endif
                         </div>
 
                         <div class="col-md-4">
                             <label class="form-label">Department</label>
-                            <select name="requested_department_id" id="requested_department_id" class="form-select">
+                            <select name="requested_department_id" id="requested_department_id" class="form-select" @if($levelWeight > 4) disabled @endif>
                                 <option value="">Select Department</option>
                             </select>
+                            @if($levelWeight > 4) <input type="hidden" name="requested_department_id" id="hidden_department_id"> @endif
                         </div>
 
                         <div class="col-md-4">
                             <label class="form-label">Section</label>
-                            <select name="requested_section_id" id="requested_section_id" class="form-select">
+                            <select name="requested_section_id" id="requested_section_id" class="form-select" @if($levelWeight > 5) disabled @endif>
                                 <option value="">Select Section</option>
                             </select>
+                            @if($levelWeight > 5) <input type="hidden" name="requested_section_id" id="hidden_section_id"> @endif
                         </div>
 
                         <div class="col-md-4">
                             <label class="form-label">Designation <span class="text-danger">*</span></label>
-                            <select name="requested_designation_id" id="requested_designation_id" class="form-select" required>
+                            <select name="requested_designation_id" id="requested_designation_id" class="form-select" required @if($levelWeight > 6) disabled @endif>
                                 <option value="">Select Designation</option>
                             </select>
+                            @if($levelWeight > 6) <input type="hidden" name="requested_designation_id" id="hidden_designation_id"> @endif
                         </div>
 
                         <div class="col-12 mt-4">
@@ -120,6 +139,16 @@ document.addEventListener('DOMContentLoaded', function() {
     fetchDesignations();
 
     // Event Listeners for Cascading
+    @if(!$isEmployee)
+    employeeSelect.addEventListener('change', function() {
+        if (this.value) {
+            fetchOfficeInfo(this.value);
+        }
+    });
+    @else
+    fetchOfficeInfo('{{ $loggedInEmployeeId }}');
+    @endif
+
     companySelect.addEventListener('change', function() {
         const companyId = this.value;
         resetDropdowns([unitSelect, divisionSelect, departmentSelect, sectionSelect]);
@@ -196,6 +225,58 @@ document.addEventListener('DOMContentLoaded', function() {
         axios.get('{{ route('transfer.api.designations') }}')
             .then(res => populateSelect(designationSelect, res.data.data, 'Select Designation'))
             .catch(err => console.error(err));
+    }
+
+    function fetchOfficeInfo(employeeId) {
+        axios.get(`{{ url('get-office-info') }}/${employeeId}`)
+            .then(res => {
+                const info = res.data;
+                if (info) {
+                    const weight = {{ $levelWeight }};
+                    
+                    if (weight > 1) {
+                        setField(companySelect, 'hidden_company_id', info.current_company_id, info.get_current_company?.name);
+                        fetchUnits(info.current_company_id);
+                    }
+                    if (weight > 2) {
+                        setTimeout(() => {
+                            setField(unitSelect, 'hidden_unit_id', info.current_business_unit_id, info.get_current_business_unit?.name);
+                            fetchDivisions(info.current_company_id, info.current_business_unit_id || 'null');
+                        }, 500);
+                    }
+                    if (weight > 3) {
+                        setTimeout(() => {
+                            setField(divisionSelect, 'hidden_division_id', info.current_division_id, info.get_current_division?.name);
+                            fetchDepartments(info.current_company_id, info.current_business_unit_id || 'null', info.current_division_id || 'null');
+                        }, 1000);
+                    }
+                    if (weight > 4) {
+                        setTimeout(() => {
+                            setField(departmentSelect, 'hidden_department_id', info.current_department_id, info.get_current_department?.department_name);
+                            fetchSections(info.current_company_id, info.current_business_unit_id || 'null', info.current_division_id || 'null', info.current_department_id || 'null');
+                        }, 1500);
+                    }
+                    if (weight > 5) {
+                        setTimeout(() => {
+                            setField(sectionSelect, 'hidden_section_id', info.current_section_id, info.get_current_section?.name);
+                        }, 2000);
+                    }
+                    if (weight > 6) {
+                        setTimeout(() => {
+                            setField(designationSelect, 'hidden_designation_id', info.current_designation_id, info.get_current_designation?.company_designation);
+                        }, 2500);
+                    }
+                }
+            })
+            .catch(err => console.error(err));
+    }
+
+    function setField(select, hiddenId, value, label) {
+        if (value) {
+            select.innerHTML = `<option value="${value}" selected>${label}</option>`;
+            const hidden = document.getElementById(hiddenId);
+            if (hidden) hidden.value = value;
+        }
     }
 
     // Helper Functions
