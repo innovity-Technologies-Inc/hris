@@ -57,7 +57,7 @@
                                 <div class="col-12">
                                     <div class="alert alert-info">
                                         <i class="mdi mdi-account-heart me-2"></i>
-                                        <strong>Employee:</strong> {{ $employee->full_name }}
+                                        <strong>Employee:</strong> {{ $employee->full_name ?? 'N/A' }}
                                     </div>
                                 </div>
                             </div>
@@ -70,35 +70,35 @@
                                             <tbody>
                                             <tr>
                                                 <td class="fw-semibold" style="width: 40%;">Nominee Name</td>
-                                                <td>{{ $employee_nominee_info->nominee_name }}</td>
+                                                <td>{{ $employee_nominee_info->nominee_name ?? 'N/A' }}</td>
                                             </tr>
                                             <tr>
                                                 <td class="fw-semibold">Gender</td>
                                                 <td><span
-                                                        class="badge bg-info">{{ $employee_nominee_info->gender }}</span>
+                                                        class="badge bg-info">{{ $employee_nominee_info->gender ?? 'N/A' }}</span>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td class="fw-semibold">Date of Birth</td>
-                                                <td>{{ $employee_nominee_info->date_of_birth }}</td>
+                                                <td>{{ $employee_nominee_info->date_of_birth ?? 'N/A' }}</td>
                                             </tr>
                                             <tr>
                                                 <td class="fw-semibold">Blood Group</td>
                                                 <td><span
-                                                        class="badge bg-danger">{{ $employee_nominee_info->blood_group }}</span>
+                                                        class="badge bg-danger">{{ $employee_nominee_info->blood_group ?? 'N/A' }}</span>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td class="fw-semibold">Religion</td>
-                                                <td>{{ $employee_nominee_info->religion }}</td>
+                                                <td>{{ $employee_nominee_info->religion ?? 'N/A' }}</td>
                                             </tr>
                                             <tr>
                                                 <td class="fw-semibold">Marital Status</td>
-                                                <td>{{ $employee_nominee_info->marital_status }}</td>
+                                                <td>{{ $employee_nominee_info->marital_status ?? 'N/A' }}</td>
                                             </tr>
                                             <tr>
                                                 <td class="fw-semibold">Nationality</td>
-                                                <td>{{ $employee_nominee_info->nationality }}</td>
+                                                <td>{{ $employee_nominee_info->nationality ?? 'N/A' }}</td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -112,15 +112,15 @@
                                             <tbody>
                                             <tr>
                                                 <td class="fw-semibold" style="width: 40%;">Father's Name</td>
-                                                <td>{{ $employee_nominee_info->father_name }}</td>
+                                                <td>{{ $employee_nominee_info->father_name ?? 'N/A' }}</td>
                                             </tr>
                                             <tr>
                                                 <td class="fw-semibold">Mother's Name</td>
-                                                <td>{{ $employee_nominee_info->mother_name }}</td>
+                                                <td>{{ $employee_nominee_info->mother_name ?? 'N/A' }}</td>
                                             </tr>
                                             <tr>
                                                 <td class="fw-semibold">Spouse Name</td>
-                                                <td>{{ $employee_nominee_info->spouse_name }}</td>
+                                                <td>{{ $employee_nominee_info->spouse_name ?? 'N/A' }}</td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -160,7 +160,7 @@
                                                 </div>
                                                 {{-- <span class="badge bg-primary">Verified</span> --}}
                                             </div>
-                                            <p class="mb-0 fs-15 text-dark">{{ $employee_nominee_info->nid }}</p>
+                                            <p class="mb-0 fs-15 text-dark">{{ $employee_nominee_info->nid ?? 'N/A' }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -176,7 +176,7 @@
                                                 </div>
                                                 {{-- <span class="badge bg-success">Verified</span> --}}
                                             </div>
-                                            <p class="mb-0 fs-15 text-dark">{{ $employee_nominee_info->birth_reg_no }}
+                                            <p class="mb-0 fs-15 text-dark">{{ $employee_nominee_info->birth_reg_no ?? 'N/A' }}
                                             </p>
                                         </div>
                                     </div>
@@ -197,7 +197,7 @@
                                                     <div>
                                                         <small class="text-muted d-block">Phone</small>
                                                         <span
-                                                            class="fw-semibold">{{ $employee_nominee_info->phone }}</span>
+                                                            class="fw-semibold">{{ $employee_nominee_info->phone ?? 'N/A' }}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -207,7 +207,7 @@
                                                     <div>
                                                         <small class="text-muted d-block">Mobile</small>
                                                         <span
-                                                            class="fw-semibold">{{ $employee_nominee_info->mobile }}</span>
+                                                            class="fw-semibold">{{ $employee_nominee_info->mobile ?? 'N/A' }}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -243,7 +243,7 @@
                                         <div class="card-body">
                                             <p class="mb-0">
                                                 <i class="mdi mdi-map-marker text-danger me-2"></i>
-                                                {{ $employee_nominee_info->present_address_line }}
+                                                {{ $employee_nominee_info->present_address_line ?? 'N/A' }}
                                             </p>
                                         </div>
                                     </div>
@@ -258,19 +258,19 @@
                                             <tbody>
                                             <tr>
                                                 <td class="fw-semibold" style="width: 40%;">Village</td>
-                                                <td>{{ $employee_nominee_info->village }}</td>
+                                                <td>{{ $employee_nominee_info->village ?? 'N/A' }}</td>
                                             </tr>
                                             <tr>
                                                 <td class="fw-semibold">Post Office</td>
-                                                <td>{{ $employee_nominee_info->post_office }}</td>
+                                                <td>{{ $employee_nominee_info->post_office ?? 'N/A' }}</td>
                                             </tr>
                                             <tr>
                                                 <td class="fw-semibold">Thana/Upazila</td>
-                                                <td>{{ $employee_nominee_info->thana }}</td>
+                                                <td>{{ $employee_nominee_info->thana ?? 'N/A' }}</td>
                                             </tr>
                                             <tr>
                                                 <td class="fw-semibold">District</td>
-                                                <td>{{ $employee_nominee_info->district }}</td>
+                                                <td>{{ $employee_nominee_info->district ?? 'N/A' }}</td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -284,16 +284,16 @@
                                             <tbody>
                                             <tr>
                                                 <td class="fw-semibold" style="width: 40%;">State/Division</td>
-                                                <td>{{ $employee_nominee_info->state }}</td>
+                                                <td>{{ $employee_nominee_info->state ?? 'N/A' }}</td>
                                             </tr>
                                             <tr>
                                                 <td class="fw-semibold">Zip/Postal Code</td>
-                                                <td>{{ $employee_nominee_info->zip_code }}</td>
+                                                <td>{{ $employee_nominee_info->zip_code ?? 'N/A' }}</td>
                                             </tr>
                                             <tr>
                                                 <td class="fw-semibold">Country</td>
                                                 <td><span
-                                                        class="badge bg-success">{{ $employee_nominee_info->country }}</span>
+                                                        class="badge bg-success">{{ $employee_nominee_info->country ?? 'N/A' }}</span>
                                                 </td>
                                             </tr>
                                             </tbody>

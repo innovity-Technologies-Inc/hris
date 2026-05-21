@@ -59,12 +59,12 @@
                                         <tbody>
                                         <tr>
                                             <td class="fw-semibold">Employee Type</td>
-                                            <td><span class="badge px-2 py-1 bg-success">{{ucwords($employee_office_info->emp_type)}}</span></td>
+                                            <td><span class="badge px-2 py-1 bg-success">{{ucwords($employee_office_info->emp_type ?? 'N/A')}}</span></td>
                                         </tr>
 
                                         <tr>
                                             <td class="fw-semibold">HR File Number</td>
-                                            <td>{{$employee_office_info->hr_file_no}}</td>
+                                            <td>{{$employee_office_info->hr_file_no ?? 'N/A'}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Act</td>
@@ -83,7 +83,7 @@
                                 <h5 class="fs-16 text-dark fw-semibold mb-3">File Notes</h5>
                                 <div class="card bg-light border-0">
                                     <div class="card-body">
-                                        <p class="mb-0">{{$employee_office_info->file_note}}</p>
+                                        <p class="mb-0">{{$employee_office_info->file_note ?? 'N/A'}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -96,7 +96,7 @@
                             <div class="col-12">
                                 <div class="alert alert-info">
                                     <i class="mdi mdi-information-outline me-2"></i>
-                                    <strong>Date of Joining:</strong> {{$employee_office_info->date_of_join}}
+                                    <strong>Date of Joining:</strong> {{$employee_office_info->date_of_join ?? 'N/A'}}
                                 </div>
                             </div>
                         </div>
@@ -221,19 +221,19 @@
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Orientation From</td>
-                                            <td>{{$employee_office_info->orientation_from}}</td>
+                                            <td>{{$employee_office_info->orientation_from ?? 'N/A'}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Orientation To</td>
-                                            <td>{{$employee_office_info->orientation_to}}</td>
+                                            <td>{{$employee_office_info->orientation_to ?? 'N/A'}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Orientation Type</td>
-                                            <td>{{$employee_office_info->orientation_type}}</td>
+                                            <td>{{$employee_office_info->orientation_type ?? 'N/A'}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Orientation Days</td>
-                                            <td>{{$employee_office_info->orientation_days}} days</td>
+                                            <td>{{$employee_office_info->orientation_days ?? 0 }} days</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -252,15 +252,15 @@
                                         <tbody>
                                         <tr>
                                             <td class="fw-semibold" style="width: 40%;">Confirmation Date</td>
-                                            <td>{{$employee_office_info->confirmation_date}}</td>
+                                            <td>{{$employee_office_info->confirmation_date ?? 'N/A'}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Probation Duration</td>
-                                            <td>{{$employee_office_info->probation_duration}} Days</td>
+                                            <td>{{$employee_office_info->probation_duration ?? 0 }} Days</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Next Promotion Date</td>
-                                            <td>{{$employee_office_info->next_promotion_date}}</td>
+                                            <td>{{$employee_office_info->next_promotion_date ?? 'N/A'}}</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -274,11 +274,11 @@
                                         <tbody>
                                         <tr>
                                             <td class="fw-semibold" style="width: 40%;">Promotion Cycle</td>
-                                            <td>{{$employee_office_info->promotion_cycle}}</td>
+                                            <td>{{$employee_office_info->promotion_cycle ?? 'N/A'}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Increment Cycle</td>
-                                            <td>{{$employee_office_info->increment_cycle}}</td>
+                                            <td>{{$employee_office_info->increment_cycle ?? 'N/A'}}</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -300,7 +300,7 @@
                                             <td>
                                                 @if(!empty($employee_office_info->weekends))
                                                 @foreach($employee_office_info->weekends as $item)
-                                                <span class="badge px-2 py-1 bg-secondary">{{$item}}</span>
+                                                <span class="badge px-2 py-1 bg-secondary">{{$item ?? 'N/A'}}</span>
                                                 @endforeach
                                                 @endif
                                             </td>
@@ -311,7 +311,7 @@
                                                 @if(!empty($employee_office_info->alternate_off_day))
 
                                                 @foreach($employee_office_info->alternate_off_day as $item)
-                                                    <span class="badge px-2 py-1 bg-secondary">{{$item}}</span>
+                                                    <span class="badge px-2 py-1 bg-secondary">{{$item ?? 'N/A'}}</span>
                                                 @endforeach
                                                 @endif
                                             </td>
@@ -334,7 +334,7 @@
                                         <tbody>
                                         <tr>
                                             <td class="fw-semibold" style="width: 40%;">Salary Type</td>
-                                            <td>{{ucwords($employee_office_info->orientation_from)}}</td>
+                                            <td>{{ucwords($employee_office_info->salary_type ?? 'N/A')}}</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -348,7 +348,7 @@
                                                 <i class="mdi mdi-clock-check text-success fs-20 me-2"></i>
                                                 <span class="fw-semibold">OT Allowed</span>
                                             </div>
-                                            @if($employee_office_info->ot_allowed == 'yes')
+                                            @if(($employee_office_info->ot_allowed ?? 'no') == 'yes')
                                                 <span class="badge px-2 py-1 bg-success">Yes</span>
                                             @else
                                                 <span class="badge px-2 py-1 bg-danger">No</span>
@@ -358,7 +358,7 @@
                                                 <i class="mdi mdi-piggy-bank text-info fs-20 me-2"></i>
                                                 <span class="fw-semibold">PF Eligible</span>
                                             </div>
-                                            @if($employee_office_info->pf_eligible == 'yes')
+                                            @if(($employee_office_info->pf_eligible ?? 'no') == 'yes')
                                                 <span class="badge px-2 py-1 bg-success">Yes</span>
                                             @else
                                                 <span class="badge px-2 py-1 bg-danger">No</span>
@@ -368,7 +368,7 @@
                                                 <i class="mdi mdi-bus text-primary fs-20 me-2"></i>
                                                 <span class="fw-semibold">Transport Eligible</span>
                                             </div>
-                                            @if($employee_office_info->transport_eligible == 'yes')
+                                            @if(($employee_office_info->transport_eligible ?? 'no') == 'yes')
                                                 <span class="badge px-2 py-1 bg-success">Yes</span>
                                             @else
                                                 <span class="badge px-2 py-1 bg-danger">No</span>
@@ -379,7 +379,7 @@
                                                 <i class="mdi mdi-gift text-warning fs-20 me-2"></i>
                                                 <span class="fw-semibold">Gratuity Eligible</span>
                                             </div>
-                                            @if($employee_office_info->gratuity_eligible == 'yes')
+                                            @if(($employee_office_info->gratuity_eligible ?? 'no') == 'yes')
                                                 <span class="badge px-2 py-1 bg-success">Yes</span>
                                             @else
                                                 <span class="badge px-2 py-1 bg-danger">No</span>
@@ -398,7 +398,7 @@
                                                 <i class="mdi mdi-cash-multiple text-success fs-20 me-2"></i>
                                                 <span class="fw-semibold">Can Apply Loan</span>
                                             </div>
-                                            @if($employee_office_info->can_apply_loan == 'yes')
+                                            @if(($employee_office_info->can_apply_loan ?? 'no') == 'yes')
                                                 <span class="badge px-2 py-1 bg-success">Yes</span>
                                             @else
                                                 <span class="badge px-2 py-1 bg-danger">No</span>
@@ -408,7 +408,7 @@
                                                 <i class="mdi mdi-cash-fast text-primary fs-20 me-2"></i>
                                                 <span class="fw-semibold">Can Apply Advance</span>
                                             </div>
-                                            @if($employee_office_info->can_apply_advance == 'yes')
+                                            @if(($employee_office_info->can_apply_advance ?? 'no') == 'yes')
                                                 <span class="badge px-2 py-1 bg-success">Yes</span>
                                             @else
                                                 <span class="badge px-2 py-1 bg-danger">No</span>
@@ -422,7 +422,7 @@
                                         <tbody>
                                         <tr>
                                             <td class="fw-semibold" style="width: 40%;">PF Effective Date</td>
-                                            <td>{{$employee_office_info->pf_effective_date}}</td>
+                                            <td>{{$employee_office_info->pf_effective_date ?? 'N/A'}}</td>
                                         </tr>
                                         </tbody>
                                     </table>

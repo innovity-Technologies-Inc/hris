@@ -3,8 +3,13 @@
 
         @if(!empty($employeeData))
         @php
-            $benefits = [$employeeData->house_allowance, $employeeData->transport_allowance,
-            $employeeData->food_allowance, $employeeData->medical_allowance, $employeeData->other_earnings];
+            $benefits = [
+                $employeeData->house_allowance ?? 0, 
+                $employeeData->transport_allowance ?? 0,
+                $employeeData->food_allowance ?? 0, 
+                $employeeData->medical_allowance ?? 0, 
+                $employeeData->other_earnings ?? 0
+            ];
             $total_benefits = array_sum($benefits);
         @endphp
 
@@ -31,13 +36,13 @@
                             <thead class="table-light">
                                 <tr>
                                     <th class="fw-semibold text-dark">Component</th>
-                                    <th class="fw-semibold text-dark text-end">Amount ({{ $employeeData->currency }})</th>
+                                    <th class="fw-semibold text-dark text-end">Amount ({{ $employeeData->currency ?? 'N/A' }})</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td class="text-dark fw-semibold">Basic Salary</td>
-                                    <td class="text-dark text-end fw-bold">{{ number_format($employeeData->basic_salary, 2) }}</td>
+                                    <td class="text-dark text-end fw-bold">{{ number_format($employeeData->basic_salary ?? 0, 2) }}</td>
                                 </tr>
                                 <tr>
                                     <td colspan="2" class="bg-light">
@@ -46,28 +51,28 @@
                                 </tr>
                                 <tr>
                                     <td class="text-dark ps-4">House Allowance</td>
-                                    <td class="text-dark text-end">{{ number_format($employeeData->house_allowance, 2) }}</td>
+                                    <td class="text-dark text-end">{{ number_format($employeeData->house_allowance ?? 0, 2) }}</td>
                                 </tr>
                                 <tr>
                                     <td class="text-dark ps-4">Transport Allowance</td>
-                                    <td class="text-dark text-end">{{ number_format($employeeData->transport_allowance, 2) }}</td>
+                                    <td class="text-dark text-end">{{ number_format($employeeData->transport_allowance ?? 0, 2) }}</td>
                                 </tr>
                                 <tr>
                                     <td class="text-dark ps-4">Food Allowance</td>
-                                    <td class="text-dark text-end">{{ number_format($employeeData->food_allowance, 2) }}</td>
+                                    <td class="text-dark text-end">{{ number_format($employeeData->food_allowance ?? 0, 2) }}</td>
                                 </tr>
                                 <tr>
                                     <td class="text-dark ps-4">Medical Allowance</td>
-                                    <td class="text-dark text-end">{{ number_format($employeeData->medical_allowance, 2) }}</td>
+                                    <td class="text-dark text-end">{{ number_format($employeeData->medical_allowance ?? 0, 2) }}</td>
                                 </tr>
                                 <tr>
                                     <td class="text-dark ps-4">Other Earnings</td>
-                                    <td class="text-dark text-end">{{ number_format($employeeData->other_earnings, 2) }}</td>
+                                    <td class="text-dark text-end">{{ number_format($employeeData->other_earnings ?? 0, 2) }}</td>
                                 </tr>
                                 <tr class="table-light">
                                     <td class="text-dark fw-bold">Total Benefits</td>
 
-                                    <td class="text-dark text-end fw-bold">{{ number_format($total_benefits, 2) }}</td>
+                                    <td class="text-dark text-end fw-bold">{{ number_format($total_benefits ?? 0, 2) }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -88,15 +93,15 @@
                             <tbody>
                                 <tr>
                                     <td class="bg-light fw-semibold text-dark" width="70%">Basic Salary</td>
-                                    <td class="text-dark text-end fw-bold">{{ number_format($employeeData->basic_salary, 2) }} {{ $employeeData->currency }}</td>
+                                    <td class="text-dark text-end fw-bold">{{ number_format($employeeData->basic_salary ?? 0, 2) }} {{ $employeeData->currency ?? 'N/A' }}</td>
                                 </tr>
                                 <tr>
                                     <td class="bg-light fw-semibold text-dark">Total Allowances & Benefits</td>
-                                    <td class="text-dark text-end fw-bold">{{ number_format($total_benefits, 2) }} {{ $employeeData->currency }}</td>
+                                    <td class="text-dark text-end fw-bold">{{ number_format($total_benefits ?? 0, 2) }} {{ $employeeData->currency ?? 'N/A' }}</td>
                                 </tr>
                                 <tr class="table-secondary">
                                     <td class="fw-bold text-dark fs-5">GROSS SALARY</td>
-                                    <td class="text-dark text-end fw-bold fs-5">{{ number_format($employeeData->gross_salary, 2) }} {{ $employeeData->currency }}</td>
+                                    <td class="text-dark text-end fw-bold fs-5">{{ number_format($employeeData->gross_salary ?? 0, 2) }} {{ $employeeData->currency ?? 'N/A' }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -111,8 +116,8 @@
                 <div class="card border border-secondary border-2 shadow-sm h-100">
                     <div class="card-body text-center py-4">
                         <p class="text-muted text-uppercase small fw-semibold mb-2">Basic Salary</p>
-                        <h3 class="fw-bold text-dark mb-0">{{ number_format($employeeData->basic_salary, 2) }}</h3>
-                        <p class="text-muted small mb-0">{{ $employeeData->currency }}</p>
+                        <h3 class="fw-bold text-dark mb-0">{{ number_format($employeeData->basic_salary ?? 0, 2) }}</h3>
+                        <p class="text-muted small mb-0">{{ $employeeData->currency ?? 'N/A' }}</p>
                     </div>
                 </div>
             </div>
@@ -120,8 +125,8 @@
                 <div class="card border border-secondary border-2 shadow-sm h-100">
                     <div class="card-body text-center py-4">
                         <p class="text-muted text-uppercase small fw-semibold mb-2">Total Benefits</p>
-                        <h3 class="fw-bold text-dark mb-0">{{ number_format($total_benefits, 2) }}</h3>
-                        <p class="text-muted small mb-0">{{ $employeeData->currency }}</p>
+                        <h3 class="fw-bold text-dark mb-0">{{ number_format($total_benefits ?? 0, 2) }}</h3>
+                        <p class="text-muted small mb-0">{{ $employeeData->currency ?? 'N/A' }}</p>
                     </div>
                 </div>
             </div>
@@ -129,8 +134,8 @@
                 <div class="card border border-dark border-3 shadow-sm h-100 bg-light">
                     <div class="card-body text-center py-4">
                         <p class="text-dark text-uppercase small fw-bold mb-2">Gross Salary</p>
-                        <h2 class="fw-bold text-dark mb-0">{{ number_format($employeeData->gross_salary, 2) }}</h2>
-                        <p class="text-dark small fw-semibold mb-0">{{ $employeeData->currency }}</p>
+                        <h2 class="fw-bold text-dark mb-0">{{ number_format($employeeData->gross_salary ?? 0, 2) }}</h2>
+                        <p class="text-dark small fw-semibold mb-0">{{ $employeeData->currency ?? 'N/A' }}</p>
                     </div>
                 </div>
             </div>
@@ -140,7 +145,7 @@
         <div class="row mt-4">
             <div class="col-12">
                 <div class="bg-white p-3 border-start border-dark border-4">
-                    <p class="text-muted small mb-0"><strong>Note:</strong> This is an official salary breakdown statement. All amounts are in {{ $employeeData->currency }}. For any discrepancies, please contact the HR department.</p>
+                    <p class="text-muted small mb-0"><strong>Note:</strong> This is an official salary breakdown statement. All amounts are in {{ $employeeData->currency ?? 'N/A' }}. For any discrepancies, please contact the HR department.</p>
                 </div>
             </div>
         </div>

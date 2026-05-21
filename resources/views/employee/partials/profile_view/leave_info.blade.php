@@ -28,9 +28,9 @@
                                 <div class="col-md-6 col-lg-4">
                                     <div class="leave-card">
                                         <div class="leave-card-header">
-                                            <h5 class="mb-0">{{ $leave->getPlan->name }}</h5>
+                                            <h5 class="mb-0">{{ $leave->getPlan->name ?? 'N/A' }}</h5>
                                             <span class="badge bg-success">
-                                                {{ $leave->getPlan->leave_type }}
+                                                {{ $leave->getPlan->leave_type ?? 'N/A' }}
                                             </span>
                                         </div>
 
@@ -43,7 +43,7 @@
 
                                         <div class="leave-stats">
                                             <div class="stat-item">
-                                                <span class="stat-value text-primary">{{ $leave->getPlan->leave_limit }}</span>
+                                                <span class="stat-value text-primary">{{ $leave->getPlan->leave_limit ?? 'N/A' }}</span>
                                                 <span class="stat-label">Limit</span>
                                             </div>
                                             @php
@@ -58,7 +58,7 @@
                                                 <span class="stat-label">Taken</span>
                                             </div>
                                             <div class="stat-item">
-                                                <span class="stat-value text-success">{{$leave->getPlan->leave_limit - $taken }}</span>
+                                                <span class="stat-value text-success">{{ ($leave->getPlan->leave_limit ?? 0) - $taken }}</span>
                                                 <span class="stat-label">Remaining</span>
                                             </div>
                                         </div>
@@ -97,35 +97,40 @@
                                         <tr>
                                             <td>{{ $sl++ }}</td>
                                             <td>
-                                                <strong>{{ $item->getPlan->name }}</strong>
+                                                <strong>{{ $item->getPlan->name ?? 'N/A' }}</strong>
                                             </td>
                                             <td>
                                                 <span
                                                     class="badge bg-success">
-                                                    {{ $item->getPlan->leave_type }}
+                                                    {{ $item->getPlan->leave_type ?? 'N/A' }}
                                                 </span>
                                             </td>
-                                            <td>{{ \Carbon\Carbon::parse($item->from)->format('jS F, Y') }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($item->to)->format('jS F, Y') }}</td>
+                                            <td>{{ !empty($item->from) ? \Carbon\Carbon::parse($item->from)->format('jS F, Y') : 'N/A' }}</td>
+                                            <td>{{ !empty($item->to) ? \Carbon\Carbon::parse($item->to)->format('jS F, Y') : 'N/A' }}</td>
                                             <td>
                                                 <span class="badge bg-primary rounded-pill">
-                                                    {{ $item->leave_count }} days
+                                                    {{ $item->leave_count ?? 0 }} days
                                                 </span>
                                             </td>
                                             <td>
-                                                @if($item->status == 'pending')
-                                                <span class="badge bg-warning">
-                                                    {{ ucwords($item->status) }}
-                                                </span>
-                                                @elseif($item->staus == 'approved')
+                                                @php $status = $item->status ?? 'pending'; @endphp
+                                                @if($status == 'pending')
+                                                    <span class="badge bg-warning text-dark">
+                                                        {{ ucwords($status) }}
+                                                    </span>
+                                                @elseif($status == 'approved')
                                                     <span class="badge bg-success">
-                                                    {{ ucwords($item->status) }}
-                                                </span>
-                                                @elseif($item->staus == 'rejected')
+                                                        {{ ucwords($status) }}
+                                                    </span>
+                                                @elseif($status == 'rejected')
                                                     <span class="badge bg-danger">
-                                                    {{ ucwords($item->status) }}
-                                                </span>
-                                                    @endif
+                                                        {{ ucwords($status) }}
+                                                    </span>
+                                                @else
+                                                    <span class="badge bg-info">
+                                                        {{ ucwords($status) }}
+                                                    </span>
+                                                @endif
                                             </td>
                                         </tr>
                                     @empty
