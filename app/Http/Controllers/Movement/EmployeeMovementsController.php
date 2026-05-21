@@ -17,8 +17,8 @@ class EmployeeMovementsController extends Controller
 {
 
     public function index(Request $request, FlexSearch $flexsearch){
-        $title = 'Employee Movement';
-        $section = 'Movement';
+        $title = 'Employee Travel Movement';
+        $section = 'Travel Movement';
         $query = EmployeeMovement::with('getEmployee');
 
         $searchableColumns = ['getEmployee.full_name'];
@@ -45,8 +45,8 @@ class EmployeeMovementsController extends Controller
 
     public function form($id = null)
     {
-        $title = (!empty($id) ? 'Edit' : 'Add') . ' Employee Movement Information';
-        $section = 'Movement';
+        $title = (!empty($id) ? 'Edit' : 'Add') . ' Employee Travel Movement Information';
+        $section = 'Travel Movement';
         $sub_section = !empty($id) ? 'Edit' : 'Add';
         $section_url = route('movement.index');
         
@@ -84,8 +84,8 @@ class EmployeeMovementsController extends Controller
 
     public function update($id)
     {
-        $title = 'Edit Employee Movement Information';
-        $section = 'Movement';
+        $title = 'Edit Employee Travel Movement Information';
+        $section = 'Travel Movement';
         $sub_section = 'Edit';
         $section_url = route('movement.index');
         $employees = Employee::all();
@@ -243,4 +243,3 @@ class EmployeeMovementsController extends Controller
         ]);
     }
 }
-

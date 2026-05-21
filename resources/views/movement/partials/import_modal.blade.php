@@ -1,11 +1,11 @@
-{{-- Bulk Upload Modal for Employee Movement --}}
+{{-- Bulk Upload Modal for Employee Travel Movement --}}
 <div class="modal fade" id="bulkUploadModal" tabindex="-1" aria-labelledby="bulkUploadModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content border-0 shadow-lg">
             {{-- Modal Header --}}
             <div class="modal-header bg-primary text-white border-0">
                 <h5 class="modal-title fw-semibold" id="bulkUploadModalLabel">
-                    <i class="mdi mdi-file-upload-outline me-2"></i>Bulk Employee Movement Upload
+                    <i class="mdi mdi-file-upload-outline me-2"></i>Bulk Employee Travel Movement Upload
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                     aria-label="Close"></button>
@@ -25,7 +25,7 @@
                             </span>
                             <div>
                                 <strong>Currently Uploading For:</strong>
-                                <span>Employee Movement Records</span>
+                                <span>Employee Travel Movement Records</span>
                             </div>
                         </div>
                     </div>

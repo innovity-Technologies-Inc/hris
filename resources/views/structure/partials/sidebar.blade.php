@@ -194,7 +194,7 @@
                         aria-expanded="{{ $movementOpen ? 'true' : 'false' }}"
                         class="@if ($movementOpen) menuitem-active @endif">
                         <i data-feather="move"></i>
-                        <span> Movement </span>
+                        <span> Travel Movement </span>
                         <span class="menu-arrow"></span>
                     </a>
                     <div class="collapse @if ($movementOpen) show @endif" id="movement">
@@ -229,7 +229,7 @@
                         aria-expanded="{{ $transferOpen ? 'true' : 'false' }}"
                         class="@if ($transferOpen) menuitem-active @endif">
                         <i data-feather="shuffle"></i>
-                        <span> Transfer </span>
+                        <span> Career Movement </span>
                         <span class="menu-arrow"></span>
                     </a>
                     <div class="collapse @if ($transferOpen) show @endif" id="transfer">

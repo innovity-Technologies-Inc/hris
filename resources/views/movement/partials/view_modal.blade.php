@@ -1,12 +1,12 @@
-{{-- View Employee Movement Details Modal --}}
-<div class="modal fade" id="viewMovementModal{{ $movement->id }}" tabindex="-1"
-    aria-labelledby="viewMovementModalLabel{{ $movement->id }}" aria-hidden="true">
+{{-- View Employee Travel Movement Details Modal --}}
+<div class="modal fade" id="viewTravel MovementModal{{ $movement->id }}" tabindex="-1"
+    aria-labelledby="viewTravel MovementModalLabel{{ $movement->id }}" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content border-0 shadow-lg">
             {{-- Modal Header --}}
             <div class="modal-header bg-primary text-white border-0">
-                <h5 class="modal-title fw-semibold" id="viewMovementModalLabel{{ $movement->id }}">
-                    <i class="bi bi-geo-alt-fill me-2"></i>Employee Movement Details
+                <h5 class="modal-title fw-semibold" id="viewTravel MovementModalLabel{{ $movement->id }}">
+                    <i class="bi bi-geo-alt-fill me-2"></i>Employee Travel Movement Details
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                     aria-label="Close"></button>
@@ -58,11 +58,11 @@
                     </div>
                 </div>
 
-                {{-- Movement Details Card --}}
+                {{-- Travel Movement Details Card --}}
                 <div class="card border-info mb-4">
                     <div class="card-header bg-info-subtle">
                         <h6 class="mb-0 text-info fw-semibold">
-                            <i class="bi bi-calendar-event me-2"></i>Movement Timeline & Location
+                            <i class="bi bi-calendar-event me-2"></i>Travel Movement Timeline & Location
                         </h6>
                     </div>
                     <div class="card-body">
@@ -234,7 +234,7 @@
                 <div class="card border-secondary mb-4">
                     <div class="card-header bg-secondary-subtle">
                         <h6 class="mb-0 text-secondary fw-semibold">
-                            <i class="bi bi-chat-left-text me-2"></i>Reason / Purpose of Movement
+                            <i class="bi bi-chat-left-text me-2"></i>Reason / Purpose of Travel Movement
                         </h6>
                     </div>
                     <div class="card-body">
@@ -260,7 +260,7 @@
                     <i class="bi bi-x-circle me-2"></i>Close
                 </button>
                 <a href="{{ route('movement.edit', $movement->id) }}" class="btn btn-primary">
-                    <i class="bi bi-pencil-square me-2"></i>Edit Movement
+                    <i class="bi bi-pencil-square me-2"></i>Edit Travel Movement
                 </a>
             </div>
         </div>

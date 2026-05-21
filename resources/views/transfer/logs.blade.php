@@ -10,7 +10,7 @@
                         <div class="bg-primary bg-opacity-10 rounded-circle p-3 me-3 d-inline-flex align-items-center justify-content-center">
                             <i class="bi bi-journal-text text-primary fs-4"></i>
                         </div>
-                        <h2 class="fs-4 fw-bold text-dark mb-0">Transfer Logs</h2>
+                        <h2 class="fs-4 fw-bold text-dark mb-0">Career Movement Logs</h2>
                     </div>
                     @can('transfers.create')
                     <a href="{{ route('transfer.create') }}" class="btn btn-dark btn-lg rounded-3 shadow px-4">
@@ -57,9 +57,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const tableBody = document.getElementById('transferTableBody');
     const pagination = document.getElementById('pagination');
 
-    fetchTransfers();
+    fetchCareer Movements();
 
-    function fetchTransfers(page = 1) {
+    function fetchCareer Movements(page = 1) {
         axios.get(`{{ route('transfer.api.list') }}?page=${page}`)
             .then(res => {
                 const transfers = res.data.data.data;
@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
         for (let i = 1; i <= meta.last_page; i++) {
             const li = document.createElement('li');
             li.className = `page-item ${meta.current_page === i ? 'active' : ''}`;
-            li.innerHTML = `<button class="page-link" onclick="window.fetchTransfers(${i})">${i}</button>`;
+            li.innerHTML = `<button class="page-link" onclick="window.fetchCareer Movements(${i})">${i}</button>`;
             ul.appendChild(li);
         }
 
@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Expose to global for onclick
-    window.fetchTransfers = fetchTransfers;
+    window.fetchCareer Movements = fetchCareer Movements;
 });
 </script>
 @endpush

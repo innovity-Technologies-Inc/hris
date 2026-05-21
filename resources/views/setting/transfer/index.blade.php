@@ -7,13 +7,13 @@
             <!-- Form Body -->
             <div class="card-body p-4 p-md-5">
                 <form id="transferSettingForm">
-                    <!-- Transfer Configuration Section -->
+                    <!-- Career Movement Configuration Section -->
                     <div class="mb-5">
                         <div class="d-flex align-items-center mb-4">
                             <div class="bg-primary bg-opacity-10 rounded-circle p-3 me-3 d-inline-flex align-items-center justify-content-center">
                                 <i class="bi bi-shuffle text-primary fs-4"></i>
                             </div>
-                            <h2 class="fs-4 fw-bold text-dark mb-0">Transfer Level Configuration</h2>
+                            <h2 class="fs-4 fw-bold text-dark mb-0">Career Movement Level Configuration</h2>
                         </div>
 
                         <!-- Employee Request Level -->
@@ -21,7 +21,7 @@
                             <div class="card-body p-4">
                                 <label for="employee_transfer_level" class="form-label fw-semibold text-dark mb-3 d-flex align-items-center">
                                     <i class="bi bi-person-badge text-primary me-2 fs-5"></i>
-                                    <span>Employee Transfer Request Level</span>
+                                    <span>Employee Career Movement Request Level</span>
                                     <span class="badge bg-danger ms-2">Required</span>
                                 </label>
                                 <select name="employee_transfer_level" id="employee_transfer_level" class="form-select form-select-lg" required>
@@ -43,7 +43,7 @@
                             <div class="card-body p-4">
                                 <label for="supervisor_transfer_level" class="form-label fw-semibold text-dark mb-3 d-flex align-items-center">
                                     <i class="bi bi-person-check text-info me-2 fs-5"></i>
-                                    <span>Supervisor Transfer Request Level</span>
+                                    <span>Supervisor Career Movement Request Level</span>
                                     <span class="badge bg-danger ms-2">Required</span>
                                 </label>
                                 <select name="supervisor_transfer_level" id="supervisor_transfer_level" class="form-select form-select-lg" required>

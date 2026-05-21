@@ -45,8 +45,8 @@
                 {{-- View Button --}}
                 @can('movement.view')
                 <button type="button" class="btn btn-info btn-sm" title="View" data-bs-toggle="modal"
-                        data-bs-target="#viewMovementModal{{ $movement->id }}"
-                        onclick="loadMovementDetails({{ json_encode($movement) }})">
+                        data-bs-target="#viewTravel MovementModal{{ $movement->id }}"
+                        onclick="loadTravel MovementDetails({{ json_encode($movement) }})">
                     <i style="height: 12px; width: 12px" data-feather="eye"></i>
                 </button>
                 @endcan
@@ -116,8 +116,8 @@
     }
 
     // Function to load movement details (if needed for dynamic data)
-    function loadMovementDetails(movement) {
-        console.log('Movement Details:', movement);
+    function loadTravel MovementDetails(movement) {
+        console.log('Travel Movement Details:', movement);
     }
 </script>
 

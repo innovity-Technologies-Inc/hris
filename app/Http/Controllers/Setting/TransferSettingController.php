@@ -10,9 +10,9 @@ class TransferSettingController extends Controller
 {
     public function index()
     {
-        $title = 'Transfer Settings';
+        $title = 'Career Movement Settings';
         $section = 'Settings';
-        $sub_section = 'Transfer Settings';
+        $sub_section = 'Career Movement Settings';
         $setting = TransferSetting::first();
 
         return view('setting.transfer.index', compact('title', 'section', 'sub_section', 'setting'));
@@ -30,7 +30,7 @@ class TransferSettingController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Transfer settings updated successfully.'
+            'message' => 'Career Movement settings updated successfully.'
         ]);
     }
 }

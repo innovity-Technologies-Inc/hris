@@ -8,7 +8,7 @@
         <!-- Form Body -->
         <div class="card-body p-4 p-md-5">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="fs-4 fw-bold text-dark mb-0">Transfer Application</h2>
+                <h2 class="fs-4 fw-bold text-dark mb-0">Career Movement Application</h2>
                 <a href="{{ route('transfer.index') }}" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
                     <i class="bi bi-list me-1"></i> View Logs
                 </a>
@@ -71,7 +71,7 @@
                         <div class="card-body p-4">
                             <label for="remarks" class="form-label fw-semibold text-dark mb-3 d-flex align-items-center">
                                 <i class="bi bi-chat-left-text text-info me-2 fs-5"></i>
-                                <span>Remarks (Transfer Cause)</span>
+                                <span>Remarks (Career Movement Cause)</span>
                             </label>
                             <textarea name="remarks" id="remarks" class="form-control form-control-lg" rows="3" placeholder="Enter transfer reason or additional notes..."></textarea>
                         </div>

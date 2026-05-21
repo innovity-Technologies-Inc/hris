@@ -10,27 +10,27 @@ class TransferController extends Controller
 {
     public function index()
     {
-        $title = 'Transfer Logs';
-        $section = 'Transfer';
+        $title = 'Career Movement Logs';
+        $section = 'Career Movement';
         return view('transfer.logs', compact('title', 'section'));
     }
 
     public function create()
     {
-        $title = 'Transfer Application';
-        $section = 'Transfer';
+        $title = 'Career Movement Application';
+        $section = 'Career Movement';
         $setting = \App\HelperClass::getTransferSetting();
         return view('transfer.application', compact('title', 'section', 'setting'));
     }
 
     public function show($id)
     {
-        $title = 'Transfer Details';
-        $section = 'Transfer';
+        $title = 'Career Movement Details';
+        $section = 'Career Movement';
         $transfer = Transfer::with([
             'employee.officeInfo',
-            'currentCompany', 'currentBusinessUnit', 'currentDivision', 'currentDepartment', 'currentSection', 'currentDesignation',
-            'requestedCompany', 'requestedBusinessUnit', 'requestedDivision', 'requestedDepartment', 'requestedSection', 'requestedDesignation',
+            'currentCompany', 'currentBusinessUnit', 'currentDivision', 'currentDepartment', 'currentSection',
+            'requestedCompany', 'requestedBusinessUnit', 'requestedDivision', 'requestedDepartment', 'requestedSection',
             'approvals.approver'
         ])->findOrFail($id);
 

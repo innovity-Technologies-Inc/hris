@@ -8,7 +8,7 @@
             <!-- Form Body -->
             <div class="card-body p-4 p-md-5">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2 class="fs-4 fw-bold text-dark mb-0">{{ isset($movement) ? 'Edit' : 'Create' }} Movement Application</h2>
+                    <h2 class="fs-4 fw-bold text-dark mb-0">{{ isset($movement) ? 'Edit' : 'Create' }} Travel Movement Application</h2>
                     <a href="{{ route('movement.index') }}" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
                         <i class="bi bi-list me-1"></i> View Logs
                     </a>
@@ -20,7 +20,7 @@
                     $loggedInEmployeeName = auth()->user()->employee?->full_name ?? auth()->user()->name;
                 @endphp
 
-                <form id="employeeMovementForm"
+                <form id="employeeTravel MovementForm"
                       method="POST"
                       action="{{ isset($movement) ? route('movement.update', $movement->id) : route('movement.store') }}">
 
@@ -92,13 +92,13 @@
                         </div>
                     </div>
 
-                    <!-- Movement Logistics Section -->
+                    <!-- Travel Movement Logistics Section -->
                     <div class="mb-5">
                         <div class="d-flex align-items-center mb-4">
                             <div class="bg-success bg-opacity-10 rounded-circle p-3 me-3 d-inline-flex align-items-center justify-content-center">
                                 <i class="bi bi-geo-alt text-success fs-4"></i>
                             </div>
-                            <h3 class="fs-5 fw-bold text-dark mb-0">Movement Logistics</h3>
+                            <h3 class="fs-5 fw-bold text-dark mb-0">Travel Movement Logistics</h3>
                         </div>
 
                         <div class="card border shadow-sm p-4">
@@ -242,7 +242,7 @@
                             <i class="bi bi-x-circle me-2"></i>Cancel
                         </a>
                         <button type="submit" class="btn btn-lg btn-dark px-4 px-md-5 rounded-3 shadow">
-                            <i class="bi bi-send-fill me-2"></i>{{ isset($movement) ? 'Update Movement' : 'Submit Movement' }}
+                            <i class="bi bi-send-fill me-2"></i>{{ isset($movement) ? 'Update Travel Movement' : 'Submit Travel Movement' }}
                         </button>
                     </div>
                 </form>
@@ -252,7 +252,7 @@
         <!-- Footer Info -->
         <div class="text-center mt-4 text-muted small">
             <i class="bi bi-info-circle me-1"></i>
-            Movements are tracked and verified against configured TA/DA plans
+            Travel Movements are tracked and verified against configured TA/DA plans
         </div>
     </div>
 </div>

@@ -6,7 +6,7 @@
     <div class="col-md-12">
         <div class="card glass-card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0 text-white">Transfer Request Details: {{ $transfer->employee->full_name }}</h5>
+                <h5 class="card-title mb-0 text-white">Career Movement Request Details: {{ $transfer->employee->full_name }}</h5>
                 <div>
                     @if($transfer->status === 'approved' && auth()->user()->can('transfers.edit'))
                     <button class="btn btn-sm btn-success" id="btnComplete">
@@ -122,7 +122,7 @@
                 @if($myApproval)
                 <div class="mt-4 p-3 border border-primary-20 rounded bg-primary-10">
                     <h6 class="text-white mb-3">Your Approval Required</h6>
-                    <button class="btn btn-success" onclick="approveTransfer()">Approve Request</button>
+                    <button class="btn btn-success" onclick="approveCareer Movement()">Approve Request</button>
                 </div>
                 @endif
                 @else
@@ -140,7 +140,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content glass-card">
             <div class="modal-header">
-                <h5 class="modal-title text-white">Setup Transfer Approvers</h5>
+                <h5 class="modal-title text-white">Setup Career Movement Approvers</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
@@ -254,9 +254,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Approve Action
-    window.approveTransfer = function() {
+    window.approveCareer Movement = function() {
         Swal.fire({
-            title: 'Approve Transfer?',
+            title: 'Approve Career Movement?',
             text: "Are you sure you want to approve this request?",
             icon: 'question',
             showCancelButton: true,
@@ -276,7 +276,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (btnComplete) {
         btnComplete.addEventListener('click', function() {
             Swal.fire({
-                title: 'Finalize Transfer?',
+                title: 'Finalize Career Movement?',
                 text: "This will update the employee's office info and mark the transfer as complete.",
                 icon: 'warning',
                 showCancelButton: true,

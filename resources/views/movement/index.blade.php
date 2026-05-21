@@ -2,7 +2,7 @@
 
 @section('content')
 
-    {{-- Employee Movement List --}}
+    {{-- Employee Travel Movement List --}}
     <div class="row">
         <div class="col-lg-12">
             @can('movement.view')
@@ -12,7 +12,7 @@
                         <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-3 d-inline-flex align-items-center justify-content-center">
                             <i class="bi bi-search text-primary fs-5"></i>
                         </div>
-                        <h5 class="card-title mb-0 text-dark fw-bold">Search Employee Movement</h5>
+                        <h5 class="card-title mb-0 text-dark fw-bold">Search Employee Travel Movement</h5>
                     </div>
                 </div>
                 <div class="card-body p-4">
@@ -95,7 +95,7 @@
                             <div class="bg-info bg-opacity-10 rounded-circle p-2 me-3 d-inline-flex align-items-center justify-content-center">
                                 <i class="bi bi-truck text-info fs-5"></i>
                             </div>
-                            <h5 class="card-title mb-0 text-dark fw-bold">Employee Movement Records</h5>
+                            <h5 class="card-title mb-0 text-dark fw-bold">Employee Travel Movement Records</h5>
                         </div>
                         <div>
                             @can('movement.create')
