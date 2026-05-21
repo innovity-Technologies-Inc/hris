@@ -6,16 +6,20 @@
     <div class="row">
         <div class="col-lg-12">
             @can('leaves.view')
-            <div class="card border-0 shadow-sm rounded">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Search Leave Applications</h5>
-                </div><!-- end card header -->
-                <div class="card-header border-bottom p-4">
+            <div class="card border-0 shadow-lg rounded-4 my-4">
+                <div class="card-header border-bottom bg-white rounded-top-4 p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-3 d-inline-flex align-items-center justify-content-center">
+                            <i class="bi bi-search text-primary fs-5"></i>
+                        </div>
+                        <h5 class="card-title mb-0 text-dark fw-bold">Search Leave Applications</h5>
+                    </div>
+                </div>
+                <div class="card-body p-4">
                     <div class="row align-items-start">
-
                         {{-- Filter Section --}}
                         <div class="col-md-12">
-                            <div class="border rounded shadow-sm p-3 filter-section-bg">
+                            <div class="border-0 rounded-3 p-0">
                                 <form id="filterForm">
                                     {{-- First Row: Keyword Search --}}
                                     <div class="row mb-2">
@@ -71,30 +75,38 @@
         </div>
 
 
-        <div class="col-lg-12 mt-3">
-            <div class="card border-0 shadow-sm rounded">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Leave Applications List</h5>
-                </div>
-                <div class="card-body">
-                    {{-- Action Buttons --}}
-                    <div class="d-flex justify-content-between mb-3">
-                        @can('leaves.create')
-                        <a type="button" class="btn btn-warning btn-sm" href="{{ route('leave.create') }}">
-                            <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
-                        </a>
-                        @endcan
-                        
-                        @can('leaves.import')
-                        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal"
-                            data-bs-target="#bulkUploadModal">
-                            <i style="height: 12px; width: 12px" data-feather="upload"></i> Upload Bulk
-                        </button>
-                        @endcan
+        <div class="col-lg-12">
+            <div class="card border-0 shadow-lg rounded-4 mb-5">
+                <div class="card-header border-bottom bg-white rounded-top-4 p-4">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-success bg-opacity-10 rounded-circle p-2 me-3 d-inline-flex align-items-center justify-content-center">
+                                <i class="bi bi-calendar-event text-success fs-5"></i>
+                            </div>
+                            <h5 class="card-title mb-0 text-dark fw-bold">Leave Applications List</h5>
+                        </div>
+                        <div class="d-flex gap-2">
+                            @can('leaves.create')
+                            <a class="btn btn-dark btn-sm rounded-3 shadow px-3" href="{{ route('leave.create') }}">
+                                <i class="bi bi-plus-circle me-1"></i> Create
+                            </a>
+                            @endcan
+                            
+                            @can('leaves.import')
+                            <button type="button" class="btn btn-success btn-sm rounded-3 shadow px-3" data-bs-toggle="modal"
+                                data-bs-target="#bulkUploadModal">
+                                <i class="bi bi-upload me-1"></i> Upload Bulk
+                            </button>
+                            @endcan
+                        </div>
                     </div>
-
+                </div>
+                <div class="card-body p-4">
                     @if ($leaves->isEmpty())
-                        <div class="text-center py-4 text-muted">No leave applications found.</div>
+                        <div class="text-center py-5 text-muted">
+                            <i class="bi bi-inbox fs-1 d-block mb-3 opacity-25"></i>
+                            No leave applications found.
+                        </div>
                     @else
                         <div class="table-responsive" id="search-result">
                             @include('leave.search_results')

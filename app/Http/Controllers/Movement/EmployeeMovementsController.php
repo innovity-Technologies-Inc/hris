@@ -45,11 +45,19 @@ class EmployeeMovementsController extends Controller
 
     public function form($id = null)
     {
-        $title = !empty($id) ? 'Edit' : 'Add' . ' Employee Movement Information';
+        $title = (!empty($id) ? 'Edit' : 'Add') . ' Employee Movement Information';
         $section = 'Movement';
         $sub_section = !empty($id) ? 'Edit' : 'Add';
         $section_url = route('movement.index');
-        $employees = Employee::all();
+        
+        $isEmployee = auth()->user()->user_type === 'Employee';
+        
+        if ($isEmployee) {
+            $employees = Employee::where('id', auth()->user()->employee_id)->get();
+        } else {
+            $employees = Employee::where('status', 'active')->orderBy('full_name')->get();
+        }
+
         $taPlans = TAPlan::where('status', 'active')->get();
         $daPlans = DAPlan::where('status', 'active')->get();
         $statusOptions = [
@@ -60,6 +68,10 @@ class EmployeeMovementsController extends Controller
 
         if (!empty($id)){
             $movement = EmployeeMovement::findorFail($id);
+            // Security: Employees can only edit their own movements
+            if ($isEmployee && $movement->employee_id != auth()->user()->employee_id) {
+                abort(403, 'Unauthorized access.');
+            }
             return view('movement.form', compact(
                 'employees', 'taPlans', 'daPlans', 'statusOptions', 'title', 'section', 'sub_section', 'section_url'
             , 'movement'));
@@ -89,6 +101,13 @@ class EmployeeMovementsController extends Controller
     }
 
     public function save(Request $request, $id=null){
+        $isEmployee = auth()->user()->user_type === 'Employee';
+
+        // Security: Employees can only submit for themselves
+        if ($isEmployee && $request->input('employee_id') != auth()->user()->employee_id) {
+            abort(403, 'Unauthorized access.');
+        }
+
         $validated = $request->validate([
 
                 'employee_id' => ['required', 'exists:employees,id'],

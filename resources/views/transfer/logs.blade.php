@@ -2,40 +2,48 @@
 
 @section('content')
 <div class="row">
-    <div class="col-xl-12">
-        <div class="card glass-card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0 text-white">Transfer Logs</h5>
-                @can('transfers.create')
-                <a href="{{ route('transfer.create') }}" class="btn btn-sm btn-warning">
-                    <i data-feather="plus" class="me-1"></i> New Application
-                </a>
-                @endcan
-            </div>
-            <div class="card-body">
+    <div class="col-12">
+        <div class="card shadow-lg border-0 rounded-4 my-4">
+            <div class="card-body p-4 p-md-5">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-primary bg-opacity-10 rounded-circle p-3 me-3 d-inline-flex align-items-center justify-content-center">
+                            <i class="bi bi-journal-text text-primary fs-4"></i>
+                        </div>
+                        <h2 class="fs-4 fw-bold text-dark mb-0">Transfer Logs</h2>
+                    </div>
+                    @can('transfers.create')
+                    <a href="{{ route('transfer.create') }}" class="btn btn-dark btn-lg rounded-3 shadow px-4">
+                        <i class="bi bi-plus-circle me-2"></i>New Application
+                    </a>
+                    @endcan
+                </div>
+
                 <div class="table-responsive">
-                    <table class="table table-bordered mb-0 text-white">
-                        <thead class="bg-white-10">
+                    <table class="table table-hover align-middle border-0">
+                        <thead class="bg-light">
                             <tr>
-                                <th>#</th>
-                                <th>Employee</th>
-                                <th>Requested Unit</th>
-                                <th>Designation</th>
-                                <th>Status</th>
-                                <th>Created At</th>
-                                <th>Action</th>
+                                <th class="border-0 rounded-start ps-4">#</th>
+                                <th class="border-0">Employee</th>
+                                <th class="border-0">Requested Unit</th>
+                                <th class="border-0">Status</th>
+                                <th class="border-0">Created At</th>
+                                <th class="border-0 rounded-end text-end pe-4">Action</th>
                             </tr>
                         </thead>
-                        <tbody id="transferTableBody">
+                        <tbody id="transferTableBody" class="border-top-0">
                             <tr>
-                                <td colspan="7" class="text-center py-4">Loading transfers...</td>
+                                <td colspan="6" class="text-center py-5">
+                                    <div class="spinner-border spinner-border-sm text-primary me-2"></div>
+                                    Loading transfers...
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
                 
                 <!-- Pagination Placeholder -->
-                <div id="pagination" class="mt-3 d-flex justify-content-end"></div>
+                <div id="pagination" class="mt-4 d-flex justify-content-end"></div>
             </div>
         </div>
     </div>
@@ -59,13 +67,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 renderPagination(res.data.data);
             })
             .catch(err => {
-                tableBody.innerHTML = '<tr><td colspan="7" class="text-center text-danger">Failed to load data.</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-danger py-5">Failed to load data.</td></tr>';
             });
     }
 
     function renderTable(data) {
         if (data.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="7" class="text-center py-4">No transfer records found.</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="6" class="text-center py-5 text-muted">No transfer records found.</td></tr>';
             return;
         }
 
@@ -74,25 +82,33 @@ document.addEventListener('DOMContentLoaded', function() {
             const statusBadge = getStatusBadge(item.status);
             const row = `
                 <tr>
-                    <td>${index + 1}</td>
+                    <td class="ps-4 text-muted">${index + 1}</td>
                     <td>
-                        <div class="fw-bold">${item.employee.full_name}</div>
-                        <small class="text-white-50">${item.employee.applicant_id}</small>
+                        <div class="d-flex align-items-center">
+                            <div class="bg-light rounded-circle p-2 me-3">
+                                <i class="bi bi-person text-secondary"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold text-dark">${item.employee.full_name}</div>
+                                <small class="text-muted">${item.employee.applicant_id}</small>
+                            </div>
+                        </div>
                     </td>
-                    <td>${item.requested_company.name}</td>
-                    <td>${item.requested_designation.company_designation}</td>
-                    <td>${statusBadge}</td>
-                    <td>${new Date(item.created_at).toLocaleDateString()}</td>
                     <td>
-                        <a href="{{ url('transfer/view') }}/${item.id}" class="btn btn-sm btn-info">
-                            <i data-feather="eye" style="width: 14px; height: 14px;"></i>
+                        <div class="text-dark fw-medium">${item.requested_company.name}</div>
+                    </td>
+                    <td>${statusBadge}</td>
+                    <td class="text-muted">${new Date(item.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                    <td class="text-end pe-4">
+                        <a href="{{ url('transfer/view') }}/${item.id}" class="btn btn-sm btn-light border rounded-pill px-3">
+                            <i class="bi bi-eye me-1"></i> View
                         </a>
                     </td>
                 </tr>
             `;
             tableBody.insertAdjacentHTML('beforeend', row);
         });
-        feather.replace();
+        if (typeof feather !== 'undefined') feather.replace();
     }
 
     function getStatusBadge(status) {
