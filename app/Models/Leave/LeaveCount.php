@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Leave\Leave;
+namespace App\Models\Leave;
 
 use App\Models\Employee\Employee;
 use App\Models\Plan\LeavePlan;

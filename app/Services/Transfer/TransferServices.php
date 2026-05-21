@@ -53,7 +53,7 @@ class TransferServices
     public function setApprovers(Transfer $transfer, array $approverIds)
     {
         return DB::transaction(function () use ($transfer, $approverIds) {
-            $transfer->transfer_approvals()->delete(); // Clear existing if any
+            $transfer->approvals()->delete(); // Clear existing if any
 
             foreach ($approverIds as $approverId) {
                 TransferApproval::create([

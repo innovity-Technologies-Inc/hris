@@ -1183,11 +1183,11 @@ Route::prefix('settings')->name('setting.')->middleware(['auth', 'permission:rol
 // Transfer Routes
 Route::prefix('transfer')->name('transfer.')->middleware('auth')->group(function () {
     Route::controller(\App\Http\Controllers\Transfer\TransferController::class)->group(function () {
-        Route::middleware('permission:transfer.view')->group(function () {
+        Route::middleware('permission:transfers.view')->group(function () {
             Route::get('logs', 'index')->name('index');
             Route::get('view/{id}', 'show')->name('show');
         });
-        Route::middleware('permission:transfer.create')->group(function () {
+        Route::middleware('permission:transfers.create')->group(function () {
             Route::get('application', 'create')->name('create');
         });
     });
@@ -1202,12 +1202,12 @@ Route::prefix('transfer')->name('transfer.')->middleware('auth')->group(function
         Route::get('sections/{companyId}/{locationId}/{divisionId}/{departmentId}', 'getSections')->name('sections');
         Route::get('designations', 'getDesignations')->name('designations');
         
-        Route::post('store', 'store')->name('store')->middleware('permission:transfer.create');
-        Route::get('list', 'list')->name('list')->middleware('permission:transfer.view');
+        Route::post('store', 'store')->name('store')->middleware('permission:transfers.create');
+        Route::get('list', 'list')->name('list')->middleware('permission:transfers.view');
         
-        Route::post('set-approvers/{id}', 'setApprovers')->name('set_approvers')->middleware('permission:transfer.approve');
-        Route::post('approve/{id}', 'approve')->name('approve')->middleware('permission:transfer.approve');
-        Route::post('complete/{id}', 'complete')->name('complete')->middleware('permission:transfer.edit');
+        Route::post('set-approvers/{id}', 'setApprovers')->name('set_approvers')->middleware('permission:transfers.approve');
+        Route::post('approve/{id}', 'approve')->name('approve')->middleware('permission:transfers.approve');
+        Route::post('complete/{id}', 'complete')->name('complete')->middleware('permission:transfers.edit');
         Route::get('search-authorities', 'searchAuthorities')->name('search_authorities');
     });
 });

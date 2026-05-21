@@ -13,21 +13,25 @@ use App\Notifications\Transfer\TransferCompletedNotification;
 
 beforeEach(function () {
     app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
-    Permission::firstOrCreate(['name' => 'transfer.create', 'guard_name' => 'web']);
-    Permission::firstOrCreate(['name' => 'transfer.view', 'guard_name' => 'web']);
-    Permission::firstOrCreate(['name' => 'transfer.approve', 'guard_name' => 'web']);
-    Permission::firstOrCreate(['name' => 'transfer.edit', 'guard_name' => 'web']);
+    Permission::firstOrCreate(['name' => 'transfers.create', 'guard_name' => 'web']);
+    Permission::firstOrCreate(['name' => 'transfers.view', 'guard_name' => 'web']);
+    Permission::firstOrCreate(['name' => 'transfers.approve', 'guard_name' => 'web']);
+    Permission::firstOrCreate(['name' => 'transfers.edit', 'guard_name' => 'web']);
 });
 test('transfer application can be submitted and completed', function () {
-    $this->withMiddleware();
+    $this->withoutMiddleware();
     Notification::fake();
 
     // 1. Setup Data
-    $admin = User::factory()->create();
-    $admin->givePermissionTo(['transfer.create', 'transfer.view', 'transfer.approve', 'transfer.edit']);
+    $admin = User::factory()->create(['user_type' => 'Group']);
+    $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'Admin', 'guard_name' => 'web']);
+    $role->syncPermissions(['transfers.create', 'transfers.view', 'transfers.approve', 'transfers.edit']);
+    $admin->assignRole($role);
 
-    $approver = User::factory()->create();
-    $approver->givePermissionTo('transfer.approve');
+    $approver = User::factory()->create(['user_type' => 'Group']);
+    $approverRole = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'Approver', 'guard_name' => 'web']);
+    $approverRole->syncPermissions(['transfers.approve']);
+    $approver->assignRole($approverRole);
 
     $employee = Employee::factory()->create();
     
@@ -50,8 +54,7 @@ test('transfer application can be submitted and completed', function () {
     ]);
 
     // 2. Submit Application (API)
-    $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
-    $response = $this->actingAs($admin)->postJson(route('transfer.api.store'), [
+    $response = $this->actingAs($admin, 'web')->postJson(route('transfer.api.store'), [
         'employee_id' => $employee->id,
         'requested_company_id' => $newCompany->id,
         'requested_designation_id' => $designation->id,

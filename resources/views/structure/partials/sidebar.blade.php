@@ -218,8 +218,8 @@
 
                 <!-- Transfer Menu -->
                 @php
-                    $canTransferApplication = auth()->user()->can('transfer.create');
-                    $canTransferLogs = auth()->user()->can('transfer.view');
+                    $canTransferApplication = auth()->user()->can('transfers.create');
+                    $canTransferLogs = auth()->user()->can('transfers.view');
                     $showTransferMenu = $canTransferApplication || $canTransferLogs;
                     $transferOpen = Route::is('transfer.*');
                 @endphp
