@@ -56,14 +56,14 @@
                                                             <td class="fw-semibold" style="width: 40%;">Status</td>
                                                             <td>
                                                                 <span
-                                                                    class="badge px-3 py-1 bg-{{ $employeePlan && strtolower($employeePlan->shift_plan_status) == 'active' ? 'success' : 'danger' }}">
+                                                                    class="badge px-3 py-1 bg-{{ ($employeePlan->shift_plan_status ?? '') == 'active' ? 'success' : 'danger' }}">
                                                                     {{ ucfirst($employeePlan->shift_plan_status ?? 'Inactive') }}
                                                                 </span>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td class="fw-semibold">From Date</td>
-                                                            <td>{{ $employeePlan->shift_plan_from ? $employeePlan->shift_plan_from->format('Y-m-d') : 'Not Set' }}
+                                                            <td>{{ ($employeePlan->shift_plan_from ?? null) ? $employeePlan->shift_plan_from->format('Y-m-d') : 'Not Set' }}
                                                             </td>
                                                         </tr>
                                                         {{--<tr>
@@ -94,14 +94,14 @@
                                                             <td class="fw-semibold" style="width: 40%;">Status</td>
                                                             <td>
                                                                 <span
-                                                                    class="badge px-3 py-1 bg-{{ $employeePlan && strtolower($employeePlan->leave_plan_status) == 'active' ? 'success' : 'danger' }}">
+                                                                    class="badge px-3 py-1 bg-{{ ($employeePlan->leave_plan_status ?? '') == 'active' ? 'success' : 'danger' }}">
                                                                     {{ ucfirst($employeePlan->leave_plan_status ?? 'Inactive') }}
                                                                 </span>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td class="fw-semibold">From Date</td>
-                                                            <td>{{ $employeePlan->leave_plan_from ? $employeePlan->leave_plan_from->format('Y-m-d') : 'Not Set' }}
+                                                            <td>{{ ($employeePlan->leave_plan_from ?? null) ? $employeePlan->leave_plan_from->format('Y-m-d') : 'Not Set' }}
                                                             </td>
                                                         </tr>
                                                         {{--<tr>
@@ -132,14 +132,14 @@
                                                             <td class="fw-semibold" style="width: 40%;">Status</td>
                                                             <td>
                                                                 <span
-                                                                    class="badge px-3 py-1 bg-{{ $employeePlan && strtolower($employeePlan->roster_plans_status) == 'active' ? 'success' : 'danger' }}">
+                                                                    class="badge px-3 py-1 bg-{{ ($employeePlan->roster_plans_status ?? '') == 'active' ? 'success' : 'danger' }}">
                                                                     {{ ucfirst($employeePlan->roster_plans_status ?? 'Inactive') }}
                                                                 </span>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td class="fw-semibold">From Date</td>
-                                                            <td>{{ $employeePlan->roster_plans_from ? $employeePlan->roster_plans_from->format('Y-m-d') : 'Not Set' }}
+                                                            <td>{{ ($employeePlan->roster_plans_from ?? null) ? $employeePlan->roster_plans_from->format('Y-m-d') : 'Not Set' }}
                                                             </td>
                                                         </tr>
                                                         {{--<tr>
@@ -170,14 +170,14 @@
                                                             <td class="fw-semibold" style="width: 40%;">Status</td>
                                                             <td>
                                                                 <span
-                                                                    class="badge px-3 py-1 bg-{{ $employeePlan && strtolower($employeePlan->day_off_work_plan_status) == 'active' ? 'success' : 'danger' }}">
+                                                                    class="badge px-3 py-1 bg-{{ ($employeePlan->day_off_work_plan_status ?? '') == 'active' ? 'success' : 'danger' }}">
                                                                     {{ ucfirst($employeePlan->day_off_work_plan_status ?? 'Inactive') }}
                                                                 </span>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td class="fw-semibold">From Date</td>
-                                                            <td>{{ $employeePlan->day_off_work_plan_from ? $employeePlan->day_off_work_plan_from->format('Y-m-d') : 'Not Set' }}
+                                                            <td>{{ ($employeePlan->day_off_work_plan_from ?? null) ? $employeePlan->day_off_work_plan_from->format('Y-m-d') : 'Not Set' }}
                                                             </td>
                                                         </tr>
                                                         {{--<tr>
@@ -213,14 +213,14 @@
                                                             <td class="fw-semibold" style="width: 40%;">Status</td>
                                                             <td>
                                                                 <span
-                                                                    class="badge px-3 py-1 bg-{{ $employeePlan && strtolower($employeePlan->ot_plan_status) == 'active' ? 'success' : 'danger' }}">
+                                                                    class="badge px-3 py-1 bg-{{ ($employeePlan->ot_plan_status ?? '') == 'active' ? 'success' : 'danger' }}">
                                                                     {{ ucfirst($employeePlan->ot_plan_status ?? 'Inactive') }}
                                                                 </span>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td class="fw-semibold">From Date</td>
-                                                            <td>{{ $employeePlan->ot_plan_from ? $employeePlan->ot_plan_from->format('Y-m-d') : 'Not Set' }}
+                                                            <td>{{ ($employeePlan->ot_plan_from ?? null) ? $employeePlan->ot_plan_from->format('Y-m-d') : 'Not Set' }}
                                                             </td>
                                                         </tr>
                                                         {{--<tr>
@@ -252,14 +252,14 @@
                                                             <td class="fw-semibold" style="width: 40%;">Status</td>
                                                             <td>
                                                                 <span
-                                                                    class="badge px-3 py-1 bg-{{ $employeePlan && strtolower($employeePlan->allowance_plan_status) == 'active' ? 'success' : 'danger' }}">
+                                                                    class="badge px-3 py-1 bg-{{ ($employeePlan->allowance_plan_status ?? '') == 'active' ? 'success' : 'danger' }}">
                                                                     {{ ucfirst($employeePlan->allowance_plan_status ?? 'Inactive') }}
                                                                 </span>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td class="fw-semibold">From Date</td>
-                                                            <td>{{ $employeePlan->allowance_plan_from ? $employeePlan->allowance_plan_from->format('Y-m-d') : 'Not Set' }}
+                                                            <td>{{ ($employeePlan->allowance_plan_from ?? null) ? $employeePlan->allowance_plan_from->format('Y-m-d') : 'Not Set' }}
                                                             </td>
                                                         </tr>
                                                         {{--<tr>
@@ -296,14 +296,14 @@
                                                         <td class="fw-semibold" style="width: 40%;">Status</td>
                                                         <td>
                                                                 <span
-                                                                    class="badge px-3 py-1 bg-{{ $employeePlan && strtolower($employeePlan->bonus_plan_status) == 'active' ? 'success' : 'danger' }}">
+                                                                    class="badge px-3 py-1 bg-{{ ($employeePlan->bonus_plan_status ?? '') == 'active' ? 'success' : 'danger' }}">
                                                                     {{ ucfirst($employeePlan->bonus_plan_status ?? 'Inactive') }}
                                                                 </span>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="fw-semibold">From Date</td>
-                                                        <td>{{ $employeePlan->bonus_plan_from ? $employeePlan->bonus_plan_from->format('Y-m-d') : 'Not Set' }}
+                                                        <td>{{ ($employeePlan->bonus_plan_from ?? null) ? $employeePlan->bonus_plan_from->format('Y-m-d') : 'Not Set' }}
                                                         </td>
                                                     </tr>
                                                     {{--<tr>
@@ -334,14 +334,14 @@
                                                         <td class="fw-semibold" style="width: 40%;">Status</td>
                                                         <td>
                                                                 <span
-                                                                    class="badge px-3 py-1 bg-{{ $employeePlan && strtolower($employeePlan->medical_plan_status) == 'active' ? 'success' : 'danger' }}">
+                                                                    class="badge px-3 py-1 bg-{{ ($employeePlan->medical_plan_status ?? '') == 'active' ? 'success' : 'danger' }}">
                                                                     {{ ucfirst($employeePlan->medical_plan_status ?? 'Inactive') }}
                                                                 </span>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="fw-semibold">From Date</td>
-                                                        <td>{{ $employeePlan->medical_plan_from ? $employeePlan->medical_plan_from->format('Y-m-d') : 'Not Set' }}
+                                                        <td>{{ ($employeePlan->medical_plan_from ?? null) ? $employeePlan->medical_plan_from->format('Y-m-d') : 'Not Set' }}
                                                         </td>
                                                     </tr>
                                                     {{--                                                        <tr>--}}
@@ -378,14 +378,14 @@
                                                             <td class="fw-semibold" style="width: 40%;">Status</td>
                                                             <td>
                                                                 <span
-                                                                    class="badge px-3 py-1 bg-{{ $employeePlan && strtolower($employeePlan->late_deduction_plan_status) == 'active' ? 'success' : 'danger' }}">
+                                                                    class="badge px-3 py-1 bg-{{ ($employeePlan->late_deduction_plan_status ?? '') == 'active' ? 'success' : 'danger' }}">
                                                                     {{ ucfirst($employeePlan->late_deduction_plan_status ?? 'Inactive') }}
                                                                 </span>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td class="fw-semibold">From Date</td>
-                                                            <td>{{ $employeePlan->late_deduction_plan_from ? $employeePlan->late_deduction_plan_from->format('Y-m-d') : 'Not Set' }}
+                                                            <td>{{ ($employeePlan->late_deduction_plan_from ?? null) ? $employeePlan->late_deduction_plan_from->format('Y-m-d') : 'Not Set' }}
                                                             </td>
                                                         </tr>
                                                         {{--<tr>
@@ -417,14 +417,14 @@
                                                             <td class="fw-semibold" style="width: 40%;">Status</td>
                                                             <td>
                                                                 <span
-                                                                    class="badge px-3 py-1 bg-{{ $employeePlan && strtolower($employeePlan->early_out_deduction_plan_status) == 'active' ? 'success' : 'danger' }}">
+                                                                    class="badge px-3 py-1 bg-{{ ($employeePlan->early_out_deduction_plan_status ?? '') == 'active' ? 'success' : 'danger' }}">
                                                                     {{ ucfirst($employeePlan->early_out_deduction_plan_status ?? 'Inactive') }}
                                                                 </span>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td class="fw-semibold">From Date</td>
-                                                            <td>{{ $employeePlan->early_out_deduction_plan_from ? $employeePlan->early_out_deduction_plan_from->format('Y-m-d') : 'Not Set' }}
+                                                            <td>{{ ($employeePlan->early_out_deduction_plan_from ?? null) ? $employeePlan->early_out_deduction_plan_from->format('Y-m-d') : 'Not Set' }}
                                                             </td>
                                                         </tr>
                                                         {{--<tr>
@@ -456,14 +456,14 @@
                                                             <td class="fw-semibold" style="width: 40%;">Status</td>
                                                             <td>
                                                                 <span
-                                                                    class="badge px-3 py-1 bg-{{ $employeePlan && strtolower($employeePlan->excessive_late_plan_status) == 'active' ? 'success' : 'danger' }}">
+                                                                    class="badge px-3 py-1 bg-{{ ($employeePlan->excessive_late_plan_status ?? '') == 'active' ? 'success' : 'danger' }}">
                                                                     {{ ucfirst($employeePlan->excessive_late_plan_status ?? 'Inactive') }}
                                                                 </span>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td class="fw-semibold">From Date</td>
-                                                            <td>{{ $employeePlan->excessive_late_plan_from ? $employeePlan->excessive_late_plan_from->format('Y-m-d') : 'Not Set' }}
+                                                            <td>{{ ($employeePlan->excessive_late_plan_from ?? null) ? $employeePlan->excessive_late_plan_from->format('Y-m-d') : 'Not Set' }}
                                                             </td>
                                                         </tr>
                                                         {{--<tr>

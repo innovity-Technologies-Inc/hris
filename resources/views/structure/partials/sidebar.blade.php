@@ -40,13 +40,14 @@
                 @php
                     $isEmployeeType = auth()->user()->user_type === 'Employee';
                     $canViewEmployeeInfo = auth()->user()->can('employee-management.view');
+                    $canReviewProfile = auth()->user()->can('employee-management.profile-review');
                     $canSearchEmployee = auth()->user()->can('employee-management.view') && !$isEmployeeType;
                     $canBulkUploadEmployee = auth()->user()->can('employee-management.import');
-                    $showEmployeesMenu = $canViewEmployeeInfo || $canSearchEmployee || $canBulkUploadEmployee;
+                    $showEmployeesMenu = $canViewEmployeeInfo || $canReviewProfile || $canSearchEmployee || $canBulkUploadEmployee;
                 @endphp
                 @if($showEmployeesMenu)
                 <li>
-                    @if($isEmployeeType && !$canViewEmployeeInfo)
+                    @if($isEmployeeType && !$canViewEmployeeInfo && !$canReviewProfile)
                         @php
                             $employeeInfoUrl = auth()->user()->employee_id 
                                 ? route('employee.profile.general_informations', auth()->user()->employee_id) 
@@ -68,14 +69,23 @@
                             <ul class="nav-second-level">
                                 @if($canViewEmployeeInfo)
                                 <li>
-                                    <a class='tp-link @if (Route::is('employee.index')) menuitem-active @endif'
-                                        href='{{ route('employee.index') }}'>Employee Information</a>
+                                    @php
+                                        $empInfoUrl = ($isEmployeeType && auth()->user()->employee_id) 
+                                            ? route('employee.profile.general_informations', auth()->user()->employee_id) 
+                                            : route('employee.index');
+                                    @endphp
+                                    <a class='tp-link @if (Route::is('employee.index') || (Route::is('employee.profile.*') && $isEmployeeType)) menuitem-active @endif'
+                                        href='{{ $empInfoUrl }}'>Employee Information</a>
                                 </li>
+                                @endif
+
+                                @if($canReviewProfile)
                                 <li>
                                     <a class='tp-link @if (Route::is('employee.review.index')) menuitem-active @endif'
                                         href='{{ route('employee.review.index') }}'>Profile Review</a>
                                 </li>
                                 @endif
+
                                 @if($canSearchEmployee)
                                 <li>
                                     <a class='tp-link @if (Route::is('employee.employee')) menuitem-active @endif'
@@ -96,7 +106,7 @@
 
                 <!-- Attendance Menu -->
                 @php
-                    $canClockInOut = auth()->user()->can('attendance.view');
+                    $canClockInOut = auth()->user()->can('attendance.clock-in-out');
                     $canCreateAttendance = auth()->user()->can('attendance.create');
                     $canBulkUploadAttendance = auth()->user()->can('attendance.import');
                     $canRecords = auth()->user()->can('attendance.view');

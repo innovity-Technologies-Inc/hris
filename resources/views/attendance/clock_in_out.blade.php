@@ -24,17 +24,24 @@
                                     <div class="form-section">
                                         <h5 class="mb-4 text-dark fw-semibold">Employee Information</h5>
 
+                                        @php
+                                            $isEmployeeType = auth()->user()->user_type === 'Employee';
+                                            $loggedInEmployeeId = auth()->user()->employee_id;
+                                        @endphp
                                         <!-- Employee -->
                                         <div class="mb-4">
                                             <label class="form-label">Employee Name</label>
-                                            <select id="employeeSelect" name="employee_id" class="form-select">
+                                            <select id="employeeSelect" name="employee_id" class="form-select" @if($isEmployeeType) disabled @endif>
                                                 <option value="">Select Employee</option>
                                                 @foreach ($employees as $employee)
-                                                    <option value="{{ $employee->id }}">
+                                                    <option value="{{ $employee->id }}" {{ ($isEmployeeType && $loggedInEmployeeId == $employee->id) ? 'selected' : '' }}>
                                                         {{ $employee->full_name }} ({{ $employee->applicant_id }})
                                                     </option>
                                                 @endforeach
                                             </select>
+                                            @if($isEmployeeType)
+                                                <input type="hidden" name="employee_id" id="hidden_employee_id" value="{{ $loggedInEmployeeId }}">
+                                            @endif
                                         </div>
 
                                         <!-- Workstation -->

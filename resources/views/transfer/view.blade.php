@@ -122,7 +122,7 @@
                 @if($myApproval)
                 <div class="mt-4 p-3 border border-primary-20 rounded bg-primary-10">
                     <h6 class="text-white mb-3">Your Approval Required</h6>
-                    <button class="btn btn-success" onclick="approveCareer Movement()">Approve Request</button>
+                    <button class="btn btn-success" onclick="approveCareerMovement()">Approve Request</button>
                 </div>
                 @endif
                 @else
@@ -254,7 +254,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Approve Action
-    window.approveCareer Movement = function() {
+    window.approveCareerMovement = function() {
         Swal.fire({
             title: 'Approve Career Movement?',
             text: "Are you sure you want to approve this request?",

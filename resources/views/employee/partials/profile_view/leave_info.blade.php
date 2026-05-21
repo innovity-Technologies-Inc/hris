@@ -92,7 +92,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                @php($sl = 1)
+                                @php $sl = 1; @endphp
                                     @forelse($leaveHistory as $item)
                                         <tr>
                                             <td>{{ $sl++ }}</td>
@@ -113,22 +113,21 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                @php $status = $item->status ?? 'pending'; @endphp
-                                                @if($status == 'pending')
+                                                @if(($item->status ?? 'pending') == 'pending')
                                                     <span class="badge bg-warning text-dark">
-                                                        {{ ucwords($status) }}
+                                                        {{ ucwords($item->status ?? 'pending') }}
                                                     </span>
-                                                @elseif($status == 'approved')
+                                                @elseif(($item->status ?? 'pending') == 'approved')
                                                     <span class="badge bg-success">
-                                                        {{ ucwords($status) }}
+                                                        {{ ucwords($item->status ?? 'pending') }}
                                                     </span>
-                                                @elseif($status == 'rejected')
+                                                @elseif(($item->status ?? 'pending') == 'rejected')
                                                     <span class="badge bg-danger">
-                                                        {{ ucwords($status) }}
+                                                        {{ ucwords($item->status ?? 'pending') }}
                                                     </span>
                                                 @else
                                                     <span class="badge bg-info">
-                                                        {{ ucwords($status) }}
+                                                        {{ ucwords($item->status ?? 'pending') }}
                                                     </span>
                                                 @endif
                                             </td>

@@ -57,17 +57,17 @@
                                 </div>
                                 <p class="text-primary fw-semibold mb-2">{{ $history['company_name'] ?? $history['company'] ?? 'N/A' }}</p>
                                 
-                                @if(!empty($history['job_description']))
+                                @if(!empty($history['job_description'] ?? ''))
                                     <div class="mb-2">
                                         <small class="text-muted fw-bold text-uppercase">Description:</small>
-                                        <p class="text-muted small mb-0">{{ $history['job_description'] }}</p>
+                                        <p class="text-muted small mb-0">{{ $history['job_description'] ?? 'N/A' }}</p>
                                     </div>
                                 @endif
 
-                                @if(!empty($history['achievements']))
+                                @if(!empty($history['achievements'] ?? ''))
                                     <div>
                                         <small class="text-muted fw-bold text-uppercase">Achievements:</small>
-                                        <p class="text-muted small mb-0">{{ $history['achievements'] }}</p>
+                                        <p class="text-muted small mb-0">{{ $history['achievements'] ?? 'N/A' }}</p>
                                     </div>
                                 @endif
                             </div>

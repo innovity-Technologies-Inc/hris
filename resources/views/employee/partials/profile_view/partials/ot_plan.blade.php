@@ -285,9 +285,9 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php $sl = 1; @endphp
                                 @foreach ($previousOtPlans as $plan)
                                     @if ($plan->getPlan)
-                                        @php($sl = 1)
                                         <tr class="text-muted">
                                             <td><span
                                                     class="badge bg-secondary-subtle text-secondary">#{{ $sl++ }}</span>

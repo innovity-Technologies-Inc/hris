@@ -57,9 +57,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const tableBody = document.getElementById('transferTableBody');
     const pagination = document.getElementById('pagination');
 
-    fetchCareer Movements();
+    fetchCareerMovements();
 
-    function fetchCareer Movements(page = 1) {
+    function fetchCareerMovements(page = 1) {
         axios.get(`{{ route('transfer.api.list') }}?page=${page}`)
             .then(res => {
                 const transfers = res.data.data.data;
@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
         for (let i = 1; i <= meta.last_page; i++) {
             const li = document.createElement('li');
             li.className = `page-item ${meta.current_page === i ? 'active' : ''}`;
-            li.innerHTML = `<button class="page-link" onclick="window.fetchCareer Movements(${i})">${i}</button>`;
+            li.innerHTML = `<button class="page-link" onclick="window.fetchCareerMovements(${i})">${i}</button>`;
             ul.appendChild(li);
         }
 
@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Expose to global for onclick
-    window.fetchCareer Movements = fetchCareer Movements;
+    window.fetchCareerMovements = fetchCareerMovements;
 });
 </script>
 @endpush

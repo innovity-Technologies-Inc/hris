@@ -77,7 +77,7 @@
                                     </div>
                                     <div>
                                         <small class="text-muted d-block">Account Holder</small>
-                                        <strong>{{ $employeeData->account_holder_name }}</strong>
+                                        <strong>{{ $employeeData->account_holder_name ?? 'N/A' }}</strong>
                                     </div>
                                 </div>
                             </div>
@@ -88,19 +88,19 @@
                                     </div>
                                     <div>
                                         <small class="text-muted d-block">Account Number</small>
-                                        <strong class="text-monospace">{{ $employeeData->account_number }}</strong>
+                                        <strong class="text-monospace">{{ $employeeData->account_number ?? 'N/A' }}</strong>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <div class="d-flex align-items-center">
-                                    <div class="icon-circle me-3 {{ $employeeData->status == 'active' ? 'bg-light-success' : 'bg-light-danger' }}">
-                                        <i class="fas {{ $employeeData->status == 'active' ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
+                                    <div class="icon-circle me-3 {{ ($employeeData->status ?? '') == 'active' ? 'bg-light-success' : 'bg-light-danger' }}">
+                                        <i class="fas {{ ($employeeData->status ?? '') == 'active' ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
                                     </div>
                                     <div>
                                         <small class="text-muted d-block">Status</small>
-                                        <span class="badge {{ $employeeData->status == 'active' ? 'bg-success' : 'bg-danger' }}">
-                                            {{ ucfirst($employeeData->status) }}
+                                        <span class="badge {{ ($employeeData->status ?? '') == 'active' ? 'bg-success' : 'bg-danger' }}">
+                                            {{ ucfirst($employeeData->status ?? 'N/A') }}
                                         </span>
                                     </div>
                                 </div>

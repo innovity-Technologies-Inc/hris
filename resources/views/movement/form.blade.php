@@ -20,7 +20,7 @@
                     $loggedInEmployeeName = auth()->user()->employee?->full_name ?? auth()->user()->name;
                 @endphp
 
-                <form id="employeeTravel MovementForm"
+                <form id="employeeTravelMovementForm"
                       method="POST"
                       action="{{ isset($movement) ? route('movement.update', $movement->id) : route('movement.store') }}">
 

@@ -94,13 +94,13 @@
                                                                 @if(!empty($education['group_major']))
                                                                     <tr>
                                                                         <td class="fw-semibold">Group/Major</td>
-                                                                        <td>{{ $education['group_major'] }}</td>
+                                                                        <td>{{ $education['group_major'] ?? 'N/A' }}</td>
                                                                     </tr>
                                                                 @endif
                                                                 @if(!empty($education['board_university']))
                                                                     <tr>
                                                                         <td class="fw-semibold">Board/University</td>
-                                                                        <td>{{ $education['board_university'] }}</td>
+                                                                        <td>{{ $education['board_university'] ?? 'N/A' }}</td>
                                                                     </tr>
                                                                 @endif
                                                                 </tbody>
@@ -117,7 +117,7 @@
                                                                             Result/Grade
                                                                         </td>
                                                                         <td><span
-                                                                                class="badge bg-success">{{ $education['result_grade'] }}</span>
+                                                                                class="badge bg-success">{{ $education['result_grade'] ?? 'N/A' }}</span>
                                                                         </td>
                                                                     </tr>
                                                                 @endif
@@ -129,7 +129,7 @@
                                                                     <tr>
                                                                         <td class="fw-semibold">GPA/CGPA</td>
                                                                         <td><span
-                                                                                class="badge bg-info">{{ $education['gpa_cgpa'] }}</span>
+                                                                                class="badge bg-info">{{ $education['gpa_cgpa'] ?? 'N/A' }}</span>
                                                                         </td>
                                                                     </tr>
                                                                 @endif
@@ -213,7 +213,7 @@
                                                                 @if(!empty($experience['department']))
                                                                     <tr>
                                                                         <td class="fw-semibold">Department</td>
-                                                                        <td>{{ $experience['department'] }}</td>
+                                                                        <td>{{ $experience['department'] ?? 'N/A' }}</td>
                                                                     </tr>
                                                                 @endif
                                                                 </tbody>
@@ -250,7 +250,7 @@
                                                                 @if(!empty($experience['duration']))
                                                                     <tr>
                                                                         <td class="fw-semibold">Duration</td>
-                                                                        <td>{{ $experience['duration'] }}</td>
+                                                                        <td>{{ $experience['duration'] ?? 'N/A' }}</td>
                                                                     </tr>
                                                                 @endif
                                                                 </tbody>
@@ -262,7 +262,7 @@
                                                             <h5 class="fs-14 fw-semibold mb-2">Key Responsibilities</h5>
                                                             <div class="card bg-light border-0">
                                                                 <div class="card-body">
-                                                                    <p class="mb-0">{{ $experience['responsibility'] }}</p>
+                                                                    <p class="mb-0">{{ $experience['responsibility'] ?? 'N/A' }}</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -316,7 +316,7 @@
                                                     @if(!empty($training['duration']))
                                                         <div class="flex-shrink-0">
                                                             <span
-                                                                class="badge bg-success">{{ $training['duration'] }}</span>
+                                                                class="badge bg-success">{{ $training['duration'] ?? 'N/A' }}</span>
                                                         </div>
                                                     @endif
                                                 </div>
@@ -331,21 +331,21 @@
                                                                         <td class="fw-semibold" style="width: 40%;">
                                                                             Course Name
                                                                         </td>
-                                                                        <td>{{ $training['course_name'] }}</td>
+                                                                        <td>{{ $training['course_name'] ?? 'N/A' }}</td>
                                                                     </tr>
                                                                 @endif
                                                                 @if(!empty($training['training_code']))
                                                                     <tr>
                                                                         <td class="fw-semibold">Training Code</td>
                                                                         <td><span
-                                                                                class="badge bg-secondary">{{ $training['training_code'] }}</span>
+                                                                                class="badge bg-secondary">{{ $training['training_code'] ?? 'N/A' }}</span>
                                                                         </td>
                                                                     </tr>
                                                                 @endif
                                                                 @if(!empty($training['institute']))
                                                                     <tr>
                                                                         <td class="fw-semibold">Institute</td>
-                                                                        <td>{{ $training['institute'] }}</td>
+                                                                        <td>{{ $training['institute'] ?? 'N/A' }}</td>
                                                                     </tr>
                                                                 @endif
                                                                 </tbody>
@@ -363,12 +363,12 @@
                                                                         </td>
                                                                         <td>
                                                                             @if(!empty($training['location']) && !empty($training['country']))
-                                                                                {{ $training['location'] }}
-                                                                                , {{ $training['country'] }}
+                                                                                {{ $training['location'] ?? 'N/A' }}
+                                                                                , {{ $training['country'] ?? 'N/A' }}
                                                                             @elseif(!empty($training['location']))
-                                                                                {{ $training['location'] }}
+                                                                                {{ $training['location'] ?? 'N/A' }}
                                                                             @else
-                                                                                {{ $training['country'] }}
+                                                                                {{ $training['country'] ?? 'N/A' }}
                                                                             @endif
                                                                         </td>
                                                                     </tr>
@@ -376,7 +376,7 @@
                                                                 @if(!empty($training['duration']))
                                                                     <tr>
                                                                         <td class="fw-semibold">Duration</td>
-                                                                        <td>{{ $training['duration'] }}</td>
+                                                                        <td>{{ $training['duration'] ?? 'N/A' }}</td>
                                                                     </tr>
                                                                 @endif
                                                                 @if(!empty($training['from_date']) && !empty($training['to_date']))

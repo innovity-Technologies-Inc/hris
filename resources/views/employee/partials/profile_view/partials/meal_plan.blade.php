@@ -65,18 +65,18 @@
                                         <td>
                                             <span class="badge bg-light text-secondary">
                                                 <i
-                                                    class="mdi mdi-silverware-fork-knife me-1"></i>{{ $plan->getPlan->type }}
+                                                    class="mdi mdi-silverware-fork-knife me-1"></i>{{ $plan->getPlan->type ?? 'N/A' }}
                                             </span>
                                         </td>
-                                        <td><strong>{{ $plan->getPlan->name }}</strong></td>
+                                        <td><strong>{{ $plan->getPlan->name ?? 'N/A' }}</strong></td>
                                         <td><span class="text-success fw-semibold">{{ \App\HelperClass::getCurrency() }}
                                                 {{ number_format($plan->getPlan->cost ?? 0) }}</span>
                                         </td>
-                                        <td>{{ \Carbon\Carbon::parse($plan->from)->format('jS F Y') }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($plan->to)->format('jS F Y') }}</td>
+                                        <td>{{ !empty($plan->from) ? \Carbon\Carbon::parse($plan->from)->format('jS F Y') : 'N/A' }}</td>
+                                        <td>{{ !empty($plan->to) ? \Carbon\Carbon::parse($plan->to)->format('jS F Y') : 'N/A' }}</td>
                                         <td>
                                             <span class="badge bg-success">
-                                                <i class="mdi mdi-check-circle me-1"></i>{{ $plan->status }}
+                                                <i class="mdi mdi-check-circle me-1"></i>{{ $plan->status ?? 'N/A' }}
                                             </span>
                                         </td>
                                         <td class="text-center">

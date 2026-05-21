@@ -1,6 +1,7 @@
 {{-- Roster Plan Assignment Interface --}}
-@php($sl = 1)
-<div class="row">
+@php $sl = 1; @endphp
+<div class="row g-4">
+
     <div class="col-12">
         <div class="d-flex align-items-center justify-content-between mb-3">
             <div class="d-flex align-items-center">

@@ -45,7 +45,7 @@ class PermissionSeeder extends Seeder
             [
                 'name' => 'Attendance',
                 'icon' => 'clock',
-                'actions' => ['view', 'create', 'edit', 'delete', 'import']
+                'actions' => ['view', 'clock-in/out', 'create', 'edit', 'delete', 'import']
             ],
 
             [
@@ -202,6 +202,7 @@ class PermissionSeeder extends Seeder
             'leaves.view',
             'attendance.create',
             'attendance.view',
+            'attendance.clock-in-out',
             'movement.create',
             'movement.view',
             'transfers.create',

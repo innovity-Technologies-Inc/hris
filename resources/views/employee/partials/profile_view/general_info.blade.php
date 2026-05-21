@@ -68,31 +68,31 @@
                                             <tbody>
                                                 <tr>
                                                     <td class="fw-semibold" style="width: 40%;">First Name</td>
-                                                    <td>{{ $employee->first_name }}</td>
+                                                    <td>{{ $employee->first_name ?? 'N/A' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Middle Name</td>
-                                                    <td>{{ $employee->middle_name }}</td>
+                                                    <td>{{ $employee->middle_name ?? 'N/A' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Last Name</td>
-                                                    <td>{{ $employee->last_name }}</td>
+                                                    <td>{{ $employee->last_name ?? 'N/A' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Gender</td>
-                                                    <td>{{ $employee->gender }}</td>
+                                                    <td>{{ $employee->gender ?? 'N/A' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Marital Status</td>
-                                                    <td>{{ $employee->marital_status }}</td>
+                                                    <td>{{ $employee->marital_status ?? 'N/A' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Religion</td>
-                                                    <td>{{ $employee->religion }}</td>
+                                                    <td>{{ $employee->religion ?? 'N/A' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Nationality</td>
-                                                    <td>{{ $employee->nationality }}</td>
+                                                    <td>{{ $employee->nationality ?? 'N/A' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Blood Group</td>
@@ -100,13 +100,13 @@
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Height</td>
-                                                    <td>{{ $employee->height_feet }} Feet {{ $employee->height_inches }}
+                                                    <td>{{ $employee->height_feet ?? 0 }} Feet {{ $employee->height_inches ?? 0 }}
                                                         Inches
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Number of Children</td>
-                                                    <td>{{ $employee->children_count }}</td>
+                                                    <td>{{ $employee->children_count ?? 0 }}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -120,15 +120,15 @@
                                             <tbody>
                                                 <tr>
                                                     <td class="fw-semibold" style="width: 40%;">Father's Name</td>
-                                                    <td>{{ $employee->father_name }}</td>
+                                                    <td>{{ $employee->father_name ?? 'N/A' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Mother's Name</td>
-                                                    <td>{{ $employee->mother_name }}</td>
+                                                    <td>{{ $employee->mother_name ?? 'N/A' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Spouse's Name</td>
-                                                    <td>{{ $employee->spouse_name }}</td>
+                                                    <td>{{ $employee->spouse_name ?? 'N/A' }}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -147,15 +147,15 @@
                                             <tbody>
                                                 <tr>
                                                     <td class="fw-semibold" style="width: 40%;">Date of Birth</td>
-                                                    <td>{{ $employee->date_of_birth }}</td>
+                                                    <td>{{ $employee->date_of_birth ?? 'N/A' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Birth Country</td>
-                                                    <td>{{ $employee->birth_country }}</td>
+                                                    <td>{{ $employee->birth_country ?? 'N/A' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Birth Registration No</td>
-                                                    <td>{{ $employee->birth_reg_no }}</td>
+                                                    <td>{{ $employee->birth_reg_no ?? 'N/A' }}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -167,15 +167,15 @@
                                             <tbody>
                                                 <tr>
                                                     <td class="fw-semibold" style="width: 40%;">TIN Number</td>
-                                                    <td>{{ $employee->tin }}</td>
+                                                    <td>{{ $employee->tin ?? 'N/A' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">BGMEA ID</td>
-                                                    <td>{{ $employee->bgmea_id }}</td>
+                                                    <td>{{ $employee->bgmea_id ?? 'N/A' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Residency ID</td>
-                                                    <td>{{ $employee->residency_id_number }}</td>
+                                                    <td>{{ $employee->residency_id_number ?? 'N/A' }}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -189,19 +189,19 @@
                                             <tbody>
                                                 <tr>
                                                     <td class="fw-semibold" style="width: 40%;">Passport Number</td>
-                                                    <td>{{ $employee->passport_no }}</td>
+                                                    <td>{{ $employee->passport_no ?? 'N/A' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Passport Expiry</td>
-                                                    <td>{{ $employee->passport_expiry }}</td>
+                                                    <td>{{ $employee->passport_expiry ?? 'N/A' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Visa Expiry</td>
-                                                    <td>{{ $employee->visa_expiry }}</td>
+                                                    <td>{{ $employee->visa_expiry ?? 'N/A' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Work Permit Expiry</td>
-                                                    <td>{{ $employee->work_expiry }}</td>
+                                                    <td>{{ $employee->work_expiry ?? 'N/A' }}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -213,11 +213,11 @@
                                             <tbody>
                                                 <tr>
                                                     <td class="fw-semibold" style="width: 40%;">License Number</td>
-                                                    <td>{{ $employee->license_no }}</td>
+                                                    <td>{{ $employee->license_no ?? 'N/A' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">License Expiry</td>
-                                                    <td>{{ $employee->license_expiry }}</td>
+                                                    <td>{{ $employee->license_expiry ?? 'N/A' }}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -236,15 +236,15 @@
                                             <tbody>
                                                 <tr>
                                                     <td class="fw-semibold" style="width: 40%;">Personal Mobile</td>
-                                                    <td>{{ $employee->personal_mobile }}</td>
+                                                    <td>{{ $employee->personal_mobile ?? 'N/A' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Home Phone</td>
-                                                    <td>{{ $employee->home_phone }}</td>
+                                                    <td>{{ $employee->home_phone ?? 'N/A' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Personal Email</td>
-                                                    <td>{{ $employee->personal_email }}</td>
+                                                    <td>{{ $employee->personal_email ?? 'N/A' }}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -258,15 +258,15 @@
                                             <tbody>
                                                 <tr>
                                                     <td class="fw-semibold" style="width: 40%;">Work Mobile</td>
-                                                    <td>{{ $employee->work_mobile }}</td>
+                                                    <td>{{ $employee->work_mobile ?? 'N/A' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Work Phone</td>
-                                                    <td>{{ $employee->work_phone }}</td>
+                                                    <td>{{ $employee->work_phone ?? 'N/A' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-semibold">Work Email</td>
-                                                    <td>{{ $employee->work_email }}</td>
+                                                    <td>{{ $employee->work_email ?? 'N/A' }}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
