@@ -46,7 +46,7 @@
                 @endphp
                 @if($showEmployeesMenu)
                 <li>
-                    @if($isEmployeeType)
+                    @if($isEmployeeType && !$canViewEmployeeInfo)
                         @php
                             $employeeInfoUrl = auth()->user()->employee_id 
                                 ? route('employee.profile.general_informations', auth()->user()->employee_id) 

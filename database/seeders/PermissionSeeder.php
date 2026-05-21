@@ -195,6 +195,7 @@ class PermissionSeeder extends Seeder
         // Create Employee role and assign specific permissions
         $employeeRole = Role::firstOrCreate(['name' => 'Employee', 'guard_name' => 'web']);
         $employeeRole->syncPermissions([
+            'employee-management.view',
             'employee-management.create',
             'employee-management.edit',
             'leaves.create',
