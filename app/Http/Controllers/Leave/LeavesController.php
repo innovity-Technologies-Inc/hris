@@ -43,21 +43,26 @@ class LeavesController extends Controller
     }
 
     public function create(){
-        // Restricted for Employees
-        if (auth()->user()->user_type === 'Employee') {
-            abort(403, 'Unauthorized access.');
-        }
-
         $title = 'Leave Application';
         $section = 'Leave Management';
         $sub_section = 'Application';
-        $employees = Employee::where('status', 'active')->orderBy('full_name')->get();
+        
+        $isEmployee = auth()->user()->user_type === 'Employee';
+        
+        if ($isEmployee) {
+            $employees = Employee::where('id', auth()->user()->employee_id)->get();
+        } else {
+            $employees = Employee::where('status', 'active')->orderBy('full_name')->get();
+        }
+        
         return view('leave.create', compact('employees', 'title', 'section', 'sub_section'));
     }
 
     public function store(Request $request){
-        // Restricted for Employees
-        if (auth()->user()->user_type === 'Employee') {
+        $isEmployee = auth()->user()->user_type === 'Employee';
+        
+        // Security: Employees can only submit for themselves
+        if ($isEmployee && $request->input('employee_id') != auth()->user()->employee_id) {
             abort(403, 'Unauthorized access.');
         }
 
@@ -70,7 +75,7 @@ class LeavesController extends Controller
             'plan_id' => 'required',
             'from' => 'required|date',
             'to' => 'required|date',
-            'status' => 'required',
+            'status' => $isEmployee ? 'nullable' : 'required',
             'reason' => 'required',
             'leave_count' => 'required|integer|min:1'
         ]);
