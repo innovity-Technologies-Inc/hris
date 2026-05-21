@@ -13,7 +13,7 @@ class StoreTransferRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
+        $rules = [
             'employee_id' => 'required|exists:employees,id',
             'requested_company_id' => 'required|exists:companies,id',
             'requested_business_unit_id' => 'nullable|exists:company_locations,id',
@@ -23,5 +23,11 @@ class StoreTransferRequest extends FormRequest
             'requested_designation_id' => 'nullable|exists:designations,id',
             'remarks' => 'nullable|string|max:500',
         ];
+
+        if (auth()->check() && auth()->user()->user_type === 'Employee') {
+            $rules['employee_id'] = 'required|in:' . auth()->user()->employee_id;
+        }
+
+        return $rules;
     }
 }

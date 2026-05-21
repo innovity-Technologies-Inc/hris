@@ -11,19 +11,30 @@
                 </a>
             </div>
             <div class="card-body">
+                @php
+                    $isEmployee = auth()->user()->user_type === 'Employee';
+                    $loggedInEmployeeId = auth()->user()->employee_id;
+                    $loggedInEmployeeName = auth()->user()->employee?->full_name ?? auth()->user()->name;
+                @endphp
                 <form id="transferForm">
                     <div class="row g-3">
                         <!-- Employee Selection -->
-                        <div class="col-md-6">
-                            <label class="form-label">Target Employee <span class="text-danger">*</span></label>
-                            <select name="employee_id" id="employee_id" class="form-select select2" required>
+                        <div class="col-12">
+                            <label class="form-label">Employee <span class="text-danger">*</span></label>
+                            <select name="employee_id" id="employee_id" class="form-select select2" required @if($isEmployee) disabled @endif>
                                 <option value="">Select Employee</option>
+                                @if($isEmployee)
+                                    <option value="{{ $loggedInEmployeeId }}" selected>{{ $loggedInEmployeeName }}</option>
+                                @endif
                             </select>
+                            @if($isEmployee)
+                                <input type="hidden" name="employee_id" value="{{ $loggedInEmployeeId }}">
+                            @endif
                         </div>
                         
-                        <div class="col-md-6">
+                        <div class="col-12">
                             <label class="form-label">Remarks</label>
-                            <textarea name="remarks" class="form-control" rows="1"></textarea>
+                            <textarea name="remarks" class="form-control" rows="2"></textarea>
                         </div>
 
                         <hr class="my-4 text-white-50">
@@ -100,7 +111,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const transferForm = document.getElementById('transferForm');
 
     // Initial Fetch
+    @if(!$isEmployee)
     fetchEmployees();
+    @endif
     fetchCompanies();
     fetchDesignations();
 
