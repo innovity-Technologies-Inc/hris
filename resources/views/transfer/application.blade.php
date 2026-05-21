@@ -37,8 +37,10 @@
                             <textarea name="remarks" class="form-control" rows="2"></textarea>
                         </div>
 
-                        <hr class="my-4 text-white-50">
-                        <h6 class="text-white mb-3"><i data-feather="map-pin" class="me-2"></i>Requested Office Information</h6>
+                        <div class="col-12">
+                            <hr class="my-3 text-white-50">
+                            <h6 class="text-white mb-3"><i data-feather="map-pin" class="me-2"></i>Requested Office Information</h6>
+                        </div>
 
                         <!-- Cascading Dropdowns -->
                         <div class="col-md-4">
