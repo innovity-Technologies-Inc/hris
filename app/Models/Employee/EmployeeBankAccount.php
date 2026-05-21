@@ -2,6 +2,8 @@
 
 namespace App\Models\Employee;
 
+use App\Models\Company\Bank;
+use App\Models\Company\Branch;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\OrganizationScoped;
 
