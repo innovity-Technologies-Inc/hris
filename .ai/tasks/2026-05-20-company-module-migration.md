@@ -10,13 +10,13 @@ Migrate the Company module files to their respective sub-namespaces and update a
 - Verify with `php artisan optimize`.
 
 ## Sub-tasks
-- [ ] Move Controller files and update namespaces.
-- [ ] Move Model files and update namespaces.
-- [ ] Global search and replace Model references.
-- [ ] Global search and replace Controller references.
-- [ ] Update `routes/web.php`.
-- [ ] Run `php artisan optimize`.
-- [ ] Verify functionality.
+- [x] Move Controller files and update namespaces.
+- [x] Move Model files and update namespaces.
+- [x] Global search and replace Model references.
+- [x] Global search and replace Controller references.
+- [x] Update `routes/web.php`.
+- [x] Run `php artisan optimize`.
+- [x] Verify functionality.
 
 ## Replacements
 
