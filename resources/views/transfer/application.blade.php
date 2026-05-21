@@ -33,7 +33,7 @@
                         </div>
                         
                         <div class="col-12">
-                            <label class="form-label">Remarks</label>
+                            <label class="form-label">Remarks (Transfer Cause)</label>
                             <textarea name="remarks" class="form-control" rows="2"></textarea>
                         </div>
 
