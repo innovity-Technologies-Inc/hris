@@ -211,18 +211,21 @@ $(document).ready(function() {
         reset($(`#${prefix}_department_id`), 'Select Department');
         reset($(`#${prefix}_section_id`), 'Select Section');
 
-        $.get(`/get-divisions/${companyId}/${locationId}`, function (data) {
-            reset($(`#${prefix}_division_id`), 'Select Division');
-            if (!data.length) {
-                $(`#${prefix}_division_id`).html('<option value="">No division found</option>');
-            } else {
-                $.each(data, function (_, item) {
-                    $(`#${prefix}_division_id`).append(`<option value="${item.id}">${item.name}</option>`);
-                });
-            }
-            // Chain: Load departments after divisions
-            loadDepartments(prefix);
-        });
+        axios.get(`/get-divisions/${companyId}/${locationId}`)
+            .then(res => {
+                const data = res.data;
+                reset($(`#${prefix}_division_id`), 'Select Division');
+                if (!data.length) {
+                    $(`#${prefix}_division_id`).html('<option value="">No division found</option>');
+                } else {
+                    data.forEach(item => {
+                        $(`#${prefix}_division_id`).append(`<option value="${item.id}">${item.name}</option>`);
+                    });
+                }
+                // Chain: Load departments after divisions
+                loadDepartments(prefix);
+            })
+            .catch(err => console.error(err));
     }
 
     // -------------------------
@@ -238,18 +241,21 @@ $(document).ready(function() {
         loading($(`#${prefix}_department_id`));
         reset($(`#${prefix}_section_id`), 'Select Section');
 
-        $.get(`/get-departments/${companyId}/${locationId}/${divisionId}`, function (data) {
-            reset($(`#${prefix}_department_id`), 'Select Department');
-            if (!data.length) {
-                $(`#${prefix}_department_id`).html('<option value="">No department found</option>');
-            } else {
-                $.each(data, function (_, item) {
-                    $(`#${prefix}_department_id`).append(`<option value="${item.id}">${item.department_name}</option>`);
-                });
-            }
-            // Chain: Load sections after departments
-            loadSections(prefix);
-        });
+        axios.get(`/get-departments/${companyId}/${locationId}/${divisionId}`)
+            .then(res => {
+                const data = res.data;
+                reset($(`#${prefix}_department_id`), 'Select Department');
+                if (!data.length) {
+                    $(`#${prefix}_department_id`).html('<option value="">No department found</option>');
+                } else {
+                    data.forEach(item => {
+                        $(`#${prefix}_department_id`).append(`<option value="${item.id}">${item.department_name}</option>`);
+                    });
+                }
+                // Chain: Load sections after departments
+                loadSections(prefix);
+            })
+            .catch(err => console.error(err));
     }
 
     // -------------------------
@@ -265,16 +271,19 @@ $(document).ready(function() {
 
         loading($(`#${prefix}_section_id`));
 
-        $.get(`/get-sections/${companyId}/${locationId}/${divisionId}/${departmentId}`, function (data) {
-            reset($(`#${prefix}_section_id`), 'Select Section');
-            if (!data.length) {
-                $(`#${prefix}_section_id`).html('<option value="">No section found</option>');
-            } else {
-                $.each(data, function (_, item) {
-                    $(`#${prefix}_section_id`).append(`<option value="${item.id}">${item.name}</option>`);
-                });
-            }
-        });
+        axios.get(`/get-sections/${companyId}/${locationId}/${divisionId}/${departmentId}`)
+            .then(res => {
+                const data = res.data;
+                reset($(`#${prefix}_section_id`), 'Select Section');
+                if (!data.length) {
+                    $(`#${prefix}_section_id`).html('<option value="">No section found</option>');
+                } else {
+                    data.forEach(item => {
+                        $(`#${prefix}_section_id`).append(`<option value="${item.id}">${item.name}</option>`);
+                    });
+                }
+            })
+            .catch(err => console.error(err));
     }
 
     // -------------------------
@@ -292,18 +301,21 @@ $(document).ready(function() {
         @if(\App\HelperClass::getGeneralSetting()->branch_status == '1')
         loading($(`#${prefix}_business_unit_id`));
 
-        $.get(`/get-units/${companyId}`, function (data) {
-            reset($(`#${prefix}_business_unit_id`), 'Select Branch');
-            if (!data.length) {
-                $(`#${prefix}_business_unit_id`).html('<option value="">No branch found</option>');
-            } else {
-                $.each(data, function (_, item) {
-                    $(`#${prefix}_business_unit_id`).append(`<option value="${item.id}">${item.name}</option>`);
-                });
-            }
-            // Immediately load the full chain after branches
-            loadDivisions(prefix);
-        });
+        axios.get(`/get-units/${companyId}`)
+            .then(res => {
+                const data = res.data;
+                reset($(`#${prefix}_business_unit_id`), 'Select Branch');
+                if (!data.length) {
+                    $(`#${prefix}_business_unit_id`).html('<option value="">No branch found</option>');
+                } else {
+                    data.forEach(item => {
+                        $(`#${prefix}_business_unit_id`).append(`<option value="${item.id}">${item.name}</option>`);
+                    });
+                }
+                // Immediately load the full chain after branches
+                loadDivisions(prefix);
+            })
+            .catch(err => console.error(err));
         @else
         // No branch → directly load divisions + chain
         loadDivisions(prefix);
@@ -349,68 +361,75 @@ $(document).ready(function() {
 
     // Fetch Functions
     function fetchEmployees() {
-        $.get('{{ route('transfer.api.employees') }}', function(res) {
-            employeeSelect.html('<option value="">Select Employee</option>');
-            $.each(res.data, function(_, item) {
-                employeeSelect.append(`<option value="${item.id}">${item.full_name} (${item.applicant_id})</option>`);
-            });
-        });
+        axios.get('{{ route('transfer.api.employees') }}')
+            .then(res => {
+                employeeSelect.html('<option value="">Select Employee</option>');
+                res.data.data.forEach(item => {
+                    employeeSelect.append(`<option value="${item.id}">${item.full_name} (${item.applicant_id})</option>`);
+                });
+            })
+            .catch(err => console.error(err));
     }
 
     function fetchCompanies() {
-        $.get('{{ route('transfer.api.companies') }}', function(res) {
-            companySelect.html('<option value="">Select Company</option>');
-            $.each(res.data, function(_, item) {
-                companySelect.append(`<option value="${item.id}">${item.name}</option>`);
-            });
-        });
+        axios.get('{{ route('transfer.api.companies') }}')
+            .then(res => {
+                companySelect.html('<option value="">Select Company</option>');
+                res.data.data.forEach(item => {
+                    companySelect.append(`<option value="${item.id}">${item.name}</option>`);
+                });
+            })
+            .catch(err => console.error(err));
     }
 
     function fetchCurrentOfficeInfo(employeeId) {
-        $.get(`/get-office-info/${employeeId}`, function(info) {
-            if (info) {
-                const weight = {{ $levelWeight }};
-                
-                // 1. Company (Weight 1)
-                // If weight > 1, Company is locked to current
-                if (info.current_company_id && weight > 1) {
-                    companySelect.val(info.current_company_id).trigger('change');
-                    $('#hidden_company_id').val(info.current_company_id);
-                }
-                
-                // 2. Branch/Unit (Weight 2)
-                if (info.current_business_unit_id && weight > 2) {
-                    setTimeout(() => {
-                        unitSelect.val(info.current_business_unit_id).trigger('change');
-                        $('#hidden_unit_id').val(info.current_business_unit_id);
-                    }, 600);
-                }
+        axios.get(`/get-office-info/${employeeId}`)
+            .then(res => {
+                const info = res.data;
+                if (info) {
+                    const weight = {{ $levelWeight }};
+                    
+                    // 1. Company (Weight 1)
+                    // If weight > 1, Company is locked to current
+                    if (info.current_company_id && weight > 1) {
+                        companySelect.val(info.current_company_id).trigger('change');
+                        $('#hidden_company_id').val(info.current_company_id);
+                    }
+                    
+                    // 2. Branch/Unit (Weight 2)
+                    if (info.current_business_unit_id && weight > 2) {
+                        setTimeout(() => {
+                            unitSelect.val(info.current_business_unit_id).trigger('change');
+                            $('#hidden_unit_id').val(info.current_business_unit_id);
+                        }, 600);
+                    }
 
-                // 3. Division (Weight 3)
-                if (info.current_division_id && weight > 3) {
-                    setTimeout(() => {
-                        divisionSelect.val(info.current_division_id).trigger('change');
-                        $('#hidden_division_id').val(info.current_division_id);
-                    }, 1000);
-                }
+                    // 3. Division (Weight 3)
+                    if (info.current_division_id && weight > 3) {
+                        setTimeout(() => {
+                            divisionSelect.val(info.current_division_id).trigger('change');
+                            $('#hidden_division_id').val(info.current_division_id);
+                        }, 1000);
+                    }
 
-                // 4. Department (Weight 4)
-                if (info.current_department_id && weight > 4) {
-                    setTimeout(() => {
-                        departmentSelect.val(info.current_department_id).trigger('change');
-                        $('#hidden_department_id').val(info.current_department_id);
-                    }, 1400);
-                }
+                    // 4. Department (Weight 4)
+                    if (info.current_department_id && weight > 4) {
+                        setTimeout(() => {
+                            departmentSelect.val(info.current_department_id).trigger('change');
+                            $('#hidden_department_id').val(info.current_department_id);
+                        }, 1400);
+                    }
 
-                // 5. Section (Weight 5)
-                if (info.current_section_id && weight > 5) {
-                    setTimeout(() => {
-                        sectionSelect.val(info.current_section_id);
-                        $('#hidden_section_id').val(info.current_section_id);
-                    }, 1800);
+                    // 5. Section (Weight 5)
+                    if (info.current_section_id && weight > 5) {
+                        setTimeout(() => {
+                            sectionSelect.val(info.current_section_id);
+                            $('#hidden_section_id').val(info.current_section_id);
+                        }, 1800);
+                    }
                 }
-            }
-        });
+            })
+            .catch(err => console.error(err));
     }
 
     // Form Submission

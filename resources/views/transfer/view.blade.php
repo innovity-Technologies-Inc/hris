@@ -170,24 +170,73 @@
             </div>
             <div class="modal-body">
                 <div class="row g-3">
-                    <div class="col-md-12">
-                        <label class="small mb-1">Search & Select Authorities</label>
-                        <div class="input-group">
-                            <input type="text" id="authoritySearch" class="form-control" placeholder="Search by name or office...">
+                    <!-- User Type Filter -->
+                    <div class="col-md-4">
+                        <label class="small mb-1">User Type</label>
+                        <select id="filter_user_type" class="form-select form-select-sm">
+                            <option value="">All Types</option>
+                            <option value="Group">Group</option>
+                            <option value="Company">Company</option>
+                            <option value="Employee">Employee</option>
+                        </select>
+                    </div>
+                    <!-- Name Search -->
+                    <div class="col-md-8">
+                        <label class="small mb-1">Search by Name</label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" id="authoritySearch" class="form-control" placeholder="Type name...">
                             <button class="btn btn-primary" id="btnSearchAuthorities">Search</button>
                         </div>
                     </div>
+
+                    <!-- Organizational Filters -->
+                    <div class="col-md-4">
+                        <label class="small mb-1">Company</label>
+                        <select id="filter_company_id" class="form-select form-select-sm">
+                            <option value="">All Companies</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="small mb-1">Branch/Unit</label>
+                        <select id="filter_unit_id" class="form-select form-select-sm">
+                            <option value="">All Units</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="small mb-1">Division</label>
+                        <select id="filter_division_id" class="form-select form-select-sm">
+                            <option value="">All Divisions</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="small mb-1">Department</label>
+                        <select id="filter_department_id" class="form-select form-select-sm">
+                            <option value="">All Departments</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="small mb-1">Section</label>
+                        <select id="filter_section_id" class="form-select form-select-sm">
+                            <option value="">All Sections</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button class="btn btn-outline-secondary btn-sm w-100" id="btnClearFilters">
+                            <i data-feather="refresh-ccw" style="width: 12px;"></i> Clear Filters
+                        </button>
+                    </div>
                     
                     <div class="col-md-12">
-                        <div id="authoritiesList" class="list-group mt-2" style="max-height: 300px; overflow-y: auto;">
-                            <!-- Dynamically populated -->
+                        <div id="authoritiesList" class="list-group mt-2 border rounded" style="max-height: 250px; overflow-y: auto;">
+                            <div class="text-center py-4 text-muted small">Use filters to find authorities...</div>
                         </div>
                     </div>
 
                     <div class="col-md-12 mt-4">
-                        <h6 class="small">Selected Approvers</h6>
-                        <div id="selectedApprovers" class="d-flex flex-wrap gap-2 py-2">
+                        <h6 class="small fw-bold">Selected Approvers</h6>
+                        <div id="selectedApprovers" class="d-flex flex-wrap gap-2 py-2 border rounded bg-light min-h-50">
                             <!-- Chips -->
+                            <div class="text-muted small p-2 w-100 text-center" id="noApproversMsg">No approvers selected.</div>
                         </div>
                     </div>
                 </div>
@@ -204,81 +253,186 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+$(document).ready(function() {
     const transferId = '{{ $transfer->id }}';
-    const btnSearch = document.getElementById('btnSearchAuthorities');
-    const inputSearch = document.getElementById('authoritySearch');
-    const listContainer = document.getElementById('authoritiesList');
-    const selectedContainer = document.getElementById('selectedApprovers');
-    const btnSaveApprovers = document.getElementById('btnSaveApprovers');
-    const btnComplete = document.getElementById('btnComplete');
+    
+    // Filter Selects
+    const filterUserType = $('#filter_user_type');
+    const filterCompany = $('#filter_company_id');
+    const filterUnit = $('#filter_unit_id');
+    const filterDivision = $('#filter_division_id');
+    const filterDept = $('#filter_department_id');
+    const filterSection = $('#filter_section_id');
+    const inputSearch = $('#authoritySearch');
 
-    let selectedApproverIds = [];
+    const listContainer = $('#authoritiesList');
+    const selectedContainer = $('#selectedApprovers');
+    const noApproversMsg = $('#noApproversMsg');
 
+    let selectedApprovers = []; // Array of objects {id, name}
+
+    // -------------------------
+    // Initial Fetch for Filters
+    // -------------------------
+    fetchFilterData();
+
+    function fetchFilterData() {
+        axios.get('{{ route('transfer.api.companies') }}').then(res => {
+            populateSelect(filterCompany, res.data.data, 'All Companies');
+        });
+    }
+
+    function populateSelect($el, data, placeholder, labelKey = 'name') {
+        $el.html(`<option value="">${placeholder}</option>`);
+        data.forEach(item => {
+            $el.append(`<option value="${item.id}">${item[labelKey]}</option>`);
+        });
+    }
+
+    // Cascading for Filters
+    filterCompany.on('change', function() {
+        const companyId = $(this).val();
+        resetFilters(['unit', 'division', 'dept', 'section']);
+        if (companyId) {
+            axios.get(`/transfer/api/units/${companyId}`).then(res => populateSelect(filterUnit, res.data.data, 'All Units'));
+        }
+    });
+
+    filterUnit.on('change', function() {
+        const companyId = filterCompany.val();
+        const unitId = $(this).val() || 'null';
+        resetFilters(['division', 'dept', 'section']);
+        axios.get(`/transfer/api/divisions/${companyId}/${unitId}`).then(res => populateSelect(filterDivision, res.data.data, 'All Divisions'));
+    });
+
+    filterDivision.on('change', function() {
+        const companyId = filterCompany.val();
+        const unitId = filterUnit.val() || 'null';
+        const divisionId = $(this).val() || 'null';
+        resetFilters(['dept', 'section']);
+        axios.get(`/transfer/api/departments/${companyId}/${unitId}/${divisionId}`).then(res => populateSelect(filterDept, res.data.data, 'All Departments', 'department_name'));
+    });
+
+    filterDept.on('change', function() {
+        const companyId = filterCompany.val();
+        const unitId = filterUnit.val() || 'null';
+        const divisionId = filterDivision.val() || 'null';
+        const deptId = $(this).val() || 'null';
+        resetFilters(['section']);
+        axios.get(`/transfer/api/sections/${companyId}/${unitId}/${divisionId}/${deptId}`).then(res => populateSelect(filterSection, res.data.data, 'All Sections'));
+    });
+
+    function resetFilters(keys) {
+        if (keys.includes('unit')) filterUnit.html('<option value="">All Units</option>');
+        if (keys.includes('division')) filterDivision.html('<option value="">All Divisions</option>');
+        if (keys.includes('dept')) filterDept.html('<option value="">All Departments</option>');
+        if (keys.includes('section')) filterSection.html('<option value="">All Sections</option>');
+    }
+
+    $('#btnClearFilters').on('click', function() {
+        $('#filter_user_type').val('');
+        inputSearch.val('');
+        filterCompany.val('').trigger('change');
+    });
+
+    // -------------------------
     // Search Authorities
-    btnSearch.addEventListener('click', function() {
-        const query = inputSearch.value;
-        if (!query) return;
+    // -------------------------
+    $('#btnSearchAuthorities').on('click', function() {
+        const params = {
+            name: inputSearch.val(),
+            user_type: filterUserType.val(),
+            company_id: filterCompany.val(),
+            unit_id: filterUnit.val(),
+            division_id: filterDivision.val(),
+            department_id: filterDept.val(),
+            section_id: filterSection.val()
+        };
 
-        axios.get(`{{ route('transfer.api.search_authorities') }}?name=${query}`)
+        listContainer.html('<div class="text-center py-4 small">Searching...</div>');
+
+        axios.get('{{ route('transfer.api.search_authorities') }}', { params })
             .then(res => renderAuthorities(res.data.data))
-            .catch(err => console.error(err));
+            .catch(err => {
+                listContainer.html('<div class="text-center py-4 text-danger small">Error fetching results.</div>');
+            });
     });
 
     function renderAuthorities(users) {
-        listContainer.innerHTML = '';
+        listContainer.empty();
+        if (users.length === 0) {
+            listContainer.html('<div class="text-center py-4 text-muted small">No authorities found.</div>');
+            return;
+        }
+
         users.forEach(user => {
+            const office = user.employee && user.employee.office_info 
+                ? `${user.employee.office_info.get_current_company.name} / ${user.employee.office_info.get_current_business_unit?.name || 'N/A'}`
+                : user.user_type;
+
             const item = `
-                <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" onclick="window.selectApprover(${user.id}, '${user.name}')">
-                    <span>${user.name} <small class="text-muted">(${user.user_type})</small></span>
-                    <i data-feather="plus" style="width: 14px;"></i>
+                <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" 
+                    onclick="window.selectApprover(${user.id}, '${user.name}')">
+                    <div class="d-flex flex-column">
+                        <span class="fw-bold text-dark">${user.name}</span>
+                        <small class="text-muted" style="font-size: 11px;">${office}</small>
+                    </div>
+                    <i data-feather="plus-circle" class="text-primary" style="width: 16px;"></i>
                 </button>
             `;
-            listContainer.insertAdjacentHTML('beforeend', item);
+            listContainer.append(item);
         });
         feather.replace();
     }
 
     window.selectApprover = function(id, name) {
-        if (selectedApproverIds.includes(id)) return;
-        selectedApproverIds.push(id);
+        if (selectedApprovers.some(a => a.id === id)) return;
+        selectedApprovers.push({ id, name });
         renderSelected();
     };
 
     function renderSelected() {
-        selectedContainer.innerHTML = '';
-        selectedApproverIds.forEach(id => {
+        selectedContainer.empty();
+        if (selectedApprovers.length === 0) {
+            selectedContainer.append('<div class="text-muted small p-2 w-100 text-center" id="noApproversMsg">No approvers selected.</div>');
+            return;
+        }
+
+        selectedApprovers.forEach(app => {
             const chip = `
-                <span class="badge bg-info px-3 py-2 d-flex align-items-center gap-2">
-                    Approver ID: ${id}
-                    <i data-feather="x" style="width: 14px; cursor: pointer;" onclick="window.removeApprover(${id})"></i>
-                </span>
+                <div class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle px-3 py-2 d-flex align-items-center gap-2 rounded-pill">
+                    <i data-feather="user" style="width: 12px;"></i>
+                    <span>${app.name}</span>
+                    <i data-feather="x-circle" class="ms-1 cursor-pointer hover-danger" style="width: 14px;" onclick="window.removeApprover(${app.id})"></i>
+                </div>
             `;
-            selectedContainer.insertAdjacentHTML('beforeend', chip);
+            selectedContainer.append(chip);
         });
         feather.replace();
     }
 
     window.removeApprover = function(id) {
-        selectedApproverIds = selectedApproverIds.filter(sid => sid !== id);
+        selectedApprovers = selectedApprovers.filter(a => a.id !== id);
         renderSelected();
     };
 
     // Save Approvers
-    btnSaveApprovers.addEventListener('click', function() {
-        if (selectedApproverIds.length === 0) {
+    $('#btnSaveApprovers').on('click', function() {
+        if (selectedApprovers.length === 0) {
             Swal.fire('Error', 'Please select at least one approver.', 'error');
             return;
         }
 
-        axios.post(`{{ url('transfer/api/set-approvers') }}/${transferId}`, { approver_ids: selectedApproverIds })
+        const ids = selectedApprovers.map(a => a.id);
+        
+        axios.post(`{{ url('transfer/api/set-approvers') }}/${transferId}`, { approver_ids: ids })
             .then(res => {
                 Swal.fire('Success', res.data.message, 'success').then(() => location.reload());
             })
             .catch(err => Swal.fire('Error', 'Failed to save approvers.', 'error'));
     });
 
-    // Approve Action
+    // Approve & Complete logic
     window.approveCareerMovement = function() {
         Swal.fire({
             title: 'Approve Career Movement?',
@@ -297,7 +451,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
-    // Completion Action
+    const btnComplete = document.getElementById('btnComplete');
     if (btnComplete) {
         btnComplete.addEventListener('click', function() {
             Swal.fire({
@@ -319,4 +473,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+<style>
+    .cursor-pointer { cursor: pointer; }
+    .hover-danger:hover { color: #dc3545 !important; }
+    .min-h-50 { min-height: 50px; }
+</style>
 @endpush
