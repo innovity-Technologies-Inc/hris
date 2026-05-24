@@ -297,59 +297,101 @@ $(document).ready(function() {
         });
     }
 
+    // -------------------------
     // Cascading for Filters
+    // -------------------------
+    function loadFilterDivisions(prefix) {
+        const companyId = $(`#filter_company_id`).val();
+        if (!companyId) return;
+
+        const locationId = $(`#filter_unit_id`).val() || 'null';
+
+        loading($(`#filter_division_id`));
+        reset($(`#filter_department_id`), 'All Departments');
+        reset($(`#filter_section_id`), 'All Sections');
+
+        axios.get(`/get-divisions/${companyId}/${locationId}`)
+            .then(res => {
+                reset($(`#filter_division_id`), 'All Divisions');
+                populateSelect($(`#filter_division_id`), res.data, 'All Divisions');
+                searchAuthorities(); // Instant Load
+            });
+    }
+
+    function loadFilterDepartments(prefix) {
+        const companyId = $(`#filter_company_id`).val();
+        if (!companyId) return;
+
+        const locationId = $(`#filter_unit_id`).val() || 'null';
+        const divisionId = $(`#filter_division_id`).val() || 'null';
+
+        loading($(`#filter_department_id`));
+        reset($(`#filter_section_id`), 'All Sections');
+
+        axios.get(`/get-departments/${companyId}/${locationId}/${divisionId}`)
+            .then(res => {
+                reset($(`#filter_department_id`), 'All Departments');
+                populateSelect($(`#filter_department_id`), res.data, 'All Departments');
+                searchAuthorities(); // Instant Load
+            });
+    }
+
+    function loadFilterSections(prefix) {
+        const companyId = $(`#filter_company_id`).val();
+        if (!companyId) return;
+
+        const locationId = $(`#filter_unit_id`).val() || 'null';
+        const divisionId = $(`#filter_division_id`).val() || 'null';
+        const departmentId = $(`#filter_department_id`).val() || 'null';
+
+        loading($(`#filter_section_id`));
+
+        axios.get(`/get-sections/${companyId}/${locationId}/${divisionId}/${departmentId}`)
+            .then(res => {
+                reset($(`#filter_section_id`), 'All Sections');
+                populateSelect($(`#filter_section_id`), res.data, 'All Sections');
+                searchAuthorities(); // Instant Load
+            });
+    }
+
     filterCompany.on('change', function() {
         const companyId = $(this).val();
         resetFilters(['unit', 'division', 'dept', 'section']);
         if (companyId) {
             loading(filterUnit);
-            axios.get(`/transfer/api/units/${companyId}`).then(res => {
+            axios.get(`/get-units/${companyId}`).then(res => {
                 reset(filterUnit, 'All Units');
-                populateSelect(filterUnit, res.data.data, 'All Units');
+                populateSelect(filterUnit, res.data, 'All Units');
+                searchAuthorities(); // Instant Load
             });
+        } else {
+            searchAuthorities();
         }
     });
 
     filterUnit.on('change', function() {
-        const companyId = filterCompany.val();
-        const unitId = $(this).val() || 'null';
-        resetFilters(['division', 'dept', 'section']);
-        if (companyId) {
-            loading(filterDivision);
-            axios.get(`/transfer/api/divisions/${companyId}/${unitId}`).then(res => {
-                reset(filterDivision, 'All Divisions');
-                populateSelect(filterDivision, res.data.data, 'All Divisions');
-            });
-        }
+        loadFilterDivisions();
     });
 
     filterDivision.on('change', function() {
-        const companyId = filterCompany.val();
-        const unitId = filterUnit.val() || 'null';
-        const divisionId = $(this).val() || 'null';
-        resetFilters(['dept', 'section']);
-        if (companyId) {
-            loading(filterDept);
-            axios.get(`/transfer/api/departments/${companyId}/${unitId}/${divisionId}`).then(res => {
-                reset(filterDept, 'All Departments');
-                populateSelect(filterDept, res.data.data, 'All Departments'); // Fixed: use default 'name' as API aliases it
-            });
-        }
+        loadFilterDepartments();
     });
 
     filterDept.on('change', function() {
-        const companyId = filterCompany.val();
-        const unitId = filterUnit.val() || 'null';
-        const divisionId = filterDivision.val() || 'null';
-        const deptId = $(this).val() || 'null';
-        resetFilters(['section']);
-        if (companyId) {
-            loading(filterSection);
-            axios.get(`/transfer/api/sections/${companyId}/${unitId}/${divisionId}/${deptId}`).then(res => {
-                reset(filterSection, 'All Sections');
-                populateSelect(filterSection, res.data.data, 'All Sections');
-            });
-        }
+        loadFilterSections();
+    });
+
+    filterSection.on('change', function() {
+        searchAuthorities();
+    });
+
+    filterUserType.on('change', function() {
+        searchAuthorities();
+    });
+
+    inputSearch.on('input', function() {
+        // debounce search? For now simple input event
+        searchAuthorities();
     });
 
     function resetFilters(keys) {
@@ -363,16 +405,11 @@ $(document).ready(function() {
         $('#filter_user_type').val('');
         inputSearch.val('');
         filterCompany.val('').trigger('change');
-        setTimeout(searchAuthorities, 100);
     });
 
     // -------------------------
-    // Search Authorities (Live)
+    // Search Authorities
     // -------------------------
-    $('.live-filter').on('change input', function() {
-        searchAuthorities();
-    });
-
     function searchAuthorities() {
         const params = {
             name: inputSearch.val(),

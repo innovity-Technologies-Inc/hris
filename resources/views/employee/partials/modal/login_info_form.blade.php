@@ -72,7 +72,7 @@
 
             <div class="col-md-6 mb-3">
                 <label for="{{ $mode }}_user_type" class="form-label fw-bold" style="color: #974063;">User Type <span class="text-danger">*</span></label>
-                <select class="form-select" id="{{ $mode }}_user_type" name="user_type" required>
+                <select class="form-select user-type-select" id="{{ $mode }}_user_type" name="user_type" required>
                     <option value="">Select User Type</option>
                     @foreach(['Group', 'Company', 'Business Unit', 'Division', 'Department', 'Section', 'Employee'] as $type)
                         <option value="{{ $type }}" {{ (old('user_type', $currentUserType) == $type) ? 'selected' : '' }}>
@@ -80,6 +80,50 @@
                         </option>
                     @endforeach
                 </select>
+            </div>
+
+            <!-- Organizational Scoping for Non-Employee/Group Users -->
+            <div class="col-12 mt-2 organizational-scope-section" style="display: none;">
+                <div class="card shadow-none border bg-light bg-opacity-25 mb-0">
+                    <div class="card-body p-3">
+                        <h6 class="small fw-bold text-uppercase text-muted mb-3">Administrative Scope Settings</h6>
+                        <div class="row g-2">
+                            <div class="col-md-6 mb-2">
+                                <label class="small mb-1">Company</label>
+                                <select name="scope_company_id" id="{{ $mode }}_scope_company_id" class="form-select form-select-sm select2_list">
+                                    <option value="">Select Company</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="small mb-1">Branch/Unit</label>
+                                <select name="scope_unit_id" id="{{ $mode }}_scope_unit_id" class="form-select form-select-sm select2_list">
+                                    <option value="">Select Unit</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="small mb-1">Division</label>
+                                <select name="scope_division_id" id="{{ $mode }}_scope_division_id" class="form-select form-select-sm select2_list">
+                                    <option value="">Select Division</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="small mb-1">Department</label>
+                                <select name="scope_department_id" id="{{ $mode }}_scope_department_id" class="form-select form-select-sm select2_list">
+                                    <option value="">Select Department</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="small mb-1">Section</label>
+                                <select name="scope_section_id" id="{{ $mode }}_scope_section_id" class="form-select form-select-sm select2_list">
+                                    <option value="">Select Section</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mt-2 text-info small">
+                            <i class="fas fa-info-circle me-1"></i> These settings define the administrator's operational scope.
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="col-md-6 mb-3">
@@ -103,7 +147,7 @@
 
             <div class="col-12 mb-3">
                 <label for="{{ $mode }}_user_type" class="form-label fw-bold" style="color: #974063;">User Type <span class="text-danger">*</span></label>
-                <select class="form-select" id="{{ $mode }}_user_type" name="user_type" required>
+                <select class="form-select user-type-select" id="{{ $mode }}_user_type" name="user_type" required>
                     <option value="">Select User Type</option>
                     @foreach(['Group', 'Company', 'Business Unit', 'Division', 'Department', 'Section', 'Employee'] as $type)
                         <option value="{{ $type }}" {{ (old('user_type', $currentUserType) == $type) ? 'selected' : '' }}>
@@ -111,6 +155,47 @@
                         </option>
                     @endforeach
                 </select>
+            </div>
+
+            <!-- Organizational Scoping for Non-Employee/Group Users -->
+            <div class="col-12 mt-2 organizational-scope-section" style="display: none;">
+                <div class="card shadow-none border bg-light bg-opacity-25 mb-0">
+                    <div class="card-body p-3">
+                        <h6 class="small fw-bold text-uppercase text-muted mb-3">Administrative Scope Settings</h6>
+                        <div class="row g-2">
+                            <div class="col-md-6 mb-2">
+                                <label class="small mb-1">Company</label>
+                                <select name="scope_company_id" id="{{ $mode }}_scope_company_id" class="form-select form-select-sm select2_list">
+                                    <option value="">Select Company</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="small mb-1">Branch/Unit</label>
+                                <select name="scope_unit_id" id="{{ $mode }}_scope_unit_id" class="form-select form-select-sm select2_list">
+                                    <option value="">Select Unit</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="small mb-1">Division</label>
+                                <select name="scope_division_id" id="{{ $mode }}_scope_division_id" class="form-select form-select-sm select2_list">
+                                    <option value="">Select Division</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="small mb-1">Department</label>
+                                <select name="scope_department_id" id="{{ $mode }}_scope_department_id" class="form-select form-select-sm select2_list">
+                                    <option value="">Select Department</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="small mb-1">Section</label>
+                                <select name="scope_section_id" id="{{ $mode }}_scope_section_id" class="form-select form-select-sm select2_list">
+                                    <option value="">Select Section</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="col-12 mb-3">
@@ -147,7 +232,7 @@
                 <span class="input-group-text bg-light border-end-0"><i class="fas fa-lock" style="color: #974063;"></i></span>
                 <input type="password" class="form-control border-start-0" id="{{ $mode }}_password" name="password" 
                        placeholder="••••••••" {{ $mode === 'create' ? 'required' : '' }}>
-                <span class="input-group-text bg-white border-start-0"><i class="fas fa-eye password-toggle"></i></span>
+                <span class="input-group-text bg-white border-start-0 cursor-pointer"><i class="fas fa-eye password-toggle"></i></span>
             </div>
             @if($mode === 'edit')
                 <small class="text-muted mt-1 d-block"><i class="fas fa-info-circle me-1"></i>Leave blank to keep current password</small>
@@ -157,12 +242,132 @@
         <div class="col-md-6 mb-3">
             <label for="{{ $mode }}_password_confirmation" class="form-label fw-bold" style="color: #974063;">Confirm Password @if($mode === 'create') <span class="text-danger">*</span> @endif</label>
             <div class="input-group">
-                <span class="input-group-text bg-light border-end-0"><i class="fas fa-check-circle" style="color: #974063;"></i></span>
+                <span class="input-group-text bg-light border-end-0"><i class="fas fa-check-double" style="color: #974063;"></i></span>
                 <input type="password" class="form-control border-start-0" id="{{ $mode }}_password_confirmation" name="password_confirmation" 
                        placeholder="••••••••" {{ $mode === 'create' ? 'required' : '' }}>
-                <span class="input-group-text bg-white border-start-0"><i class="fas fa-eye password-toggle"></i></span>
+                <span class="input-group-text bg-white border-start-0 cursor-pointer"><i class="fas fa-eye password-toggle"></i></span>
             </div>
         </div>
     </div>
 </div>
 
+@push('scripts')
+<script>
+$(document).ready(function() {
+    const mode = '{{ $mode }}';
+    const userTypeSelect = $(`#${mode}_user_type`);
+    const scopeSection = $('.organizational-scope-section');
+    
+    const companySelect = $(`#${mode}_scope_company_id`);
+    const unitSelect = $(`#${mode}_scope_unit_id`);
+    const divisionSelect = $(`#${mode}_scope_division_id`);
+    const departmentSelect = $(`#${mode}_scope_department_id`);
+    const sectionSelect = $(`#${mode}_scope_section_id`);
+
+    function toggleScopeVisibility() {
+        const type = userTypeSelect.val();
+        if (type && type !== 'Employee' && type !== 'Group') {
+            scopeSection.show();
+            if (companySelect.children('option').length <= 1) {
+                fetchScopeCompanies();
+            }
+        } else {
+            scopeSection.hide();
+        }
+    }
+
+    userTypeSelect.on('change', toggleScopeVisibility);
+    toggleScopeVisibility(); 
+
+    function fetchScopeCompanies() {
+        axios.get('{{ route('transfer.api.companies') }}').then(res => {
+            populateSelect(companySelect, res.data.data, 'Select Company');
+            @if(isset($employee->officeInfo))
+                companySelect.val('{{ $employee->officeInfo->current_company_id }}').trigger('change');
+            @endif
+        });
+    }
+
+    function populateSelect($el, data, placeholder, labelKey = 'name') {
+        $el.html(`<option value="">${placeholder}</option>`);
+        data.forEach(item => {
+            $el.append(`<option value="${item.id}">${item[labelKey]}</option>`);
+        });
+    }
+
+    // Cascading Logic
+    companySelect.on('change', function() {
+        const companyId = $(this).val();
+        resetScopeFilters(['unit', 'division', 'dept', 'section']);
+        if (companyId) {
+            axios.get(`/get-units/${companyId}`).then(res => {
+                populateSelect(unitSelect, res.data, 'Select Unit');
+                @if(isset($employee->officeInfo))
+                if(unitSelect.val() === '') {
+                    unitSelect.val('{{ $employee->officeInfo->current_business_unit_id }}').trigger('change');
+                }
+                @endif
+            });
+        }
+    });
+
+    unitSelect.on('change', function() {
+        const companyId = companySelect.val();
+        const unitId = $(this).val() || 'null';
+        resetScopeFilters(['division', 'dept', 'section']);
+        if (companyId) {
+            axios.get(`/get-divisions/${companyId}/${unitId}`).then(res => {
+                populateSelect(divisionSelect, res.data, 'Select Division');
+                @if(isset($employee->officeInfo))
+                if(divisionSelect.val() === '') {
+                    divisionSelect.val('{{ $employee->officeInfo->current_division_id }}').trigger('change');
+                }
+                @endif
+            });
+        }
+    });
+
+    divisionSelect.on('change', function() {
+        const companyId = companySelect.val();
+        const unitId = unitSelect.val() || 'null';
+        const divisionId = $(this).val() || 'null';
+        resetScopeFilters(['dept', 'section']);
+        if (companyId) {
+            axios.get(`/get-departments/${companyId}/${unitId}/${divisionId}`).then(res => {
+                populateSelect(departmentSelect, res.data, 'Select Department');
+                @if(isset($employee->officeInfo))
+                if(departmentSelect.val() === '') {
+                    departmentSelect.val('{{ $employee->officeInfo->current_department_id }}').trigger('change');
+                }
+                @endif
+            });
+        }
+    });
+
+    departmentSelect.on('change', function() {
+        const companyId = companySelect.val();
+        const unitId = unitSelect.val() || 'null';
+        const divisionId = divisionSelect.val() || 'null';
+        const deptId = $(this).val() || 'null';
+        resetScopeFilters(['section']);
+        if (companyId) {
+            axios.get(`/get-sections/${companyId}/${unitId}/${divisionId}/${deptId}`).then(res => {
+                populateSelect(sectionSelect, res.data, 'Select Section');
+                @if(isset($employee->officeInfo))
+                if(sectionSelect.val() === '') {
+                    sectionSelect.val('{{ $employee->officeInfo->current_section_id }}');
+                }
+                @endif
+            });
+        }
+    });
+
+    function resetScopeFilters(keys) {
+        if (keys.includes('unit')) unitSelect.html('<option value="">Select Unit</option>');
+        if (keys.includes('division')) divisionSelect.html('<option value="">Select Division</option>');
+        if (keys.includes('dept')) departmentSelect.html('<option value="">Select Department</option>');
+        if (keys.includes('section')) sectionSelect.html('<option value="">Select Section</option>');
+    }
+});
+</script>
+@endpush

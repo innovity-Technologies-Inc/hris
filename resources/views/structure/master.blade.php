@@ -478,7 +478,7 @@
 
     <script>
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
+            window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/serviceworker.js')
                     .then(function(registration) {
                         console.log('ServiceWorker registered: ', registration);

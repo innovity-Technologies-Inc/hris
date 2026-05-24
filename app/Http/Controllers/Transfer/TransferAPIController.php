@@ -151,7 +151,11 @@ class TransferAPIController extends Controller
 
     public function searchAuthorities(Request $request)
     {
-        $query = User::with(['employee.officeInfo.getCurrentCompany', 'employee.officeInfo.getCurrentBusinessUnit']);
+        // Only return users who actually have the permission to approve
+        $query = User::permission('transfers.approve')
+            ->with(['employee.officeInfo' => function($q) {
+                $q->withoutGlobalScopes();
+            }, 'employee.officeInfo.getCurrentCompany', 'employee.officeInfo.getCurrentBusinessUnit']);
 
         if ($request->name) {
             $query->where('name', 'like', '%' . $request->name . '%');
@@ -164,6 +168,7 @@ class TransferAPIController extends Controller
         // Search in employee office info
         if ($request->company_id || $request->unit_id || $request->division_id || $request->department_id || $request->section_id) {
             $query->whereHas('employee.officeInfo', function($q) use ($request) {
+                $q->withoutGlobalScopes(); // Important: bypass scoping to find authorities from other scopes
                 if ($request->company_id) $q->where('current_company_id', $request->company_id);
                 if ($request->unit_id) $q->where('current_business_unit_id', $request->unit_id);
                 if ($request->division_id) $q->where('current_division_id', $request->division_id);
