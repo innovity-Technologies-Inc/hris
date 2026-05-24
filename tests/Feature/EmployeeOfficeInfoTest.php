@@ -23,11 +23,46 @@ beforeEach(function () {
         'address' => 'Test Address',
         'status' => 'active'
     ]);
-    $this->unit = CompanyLocation::create(['name' => 'Test Unit', 'company_id' => $this->company->id, 'location_address' => 'Test Addr', 'status' => 'active']);
-    $this->division = Division::create(['name' => 'Test Division', 'company_id' => $this->company->id, 'location_id' => $this->unit->id, 'status' => 'active', 'short_name' => 'TD']);
-    $this->department = Department::create(['department_name' => 'Test Dept', 'company_id' => $this->company->id, 'location_id' => $this->unit->id, 'division_id' => $this->division->id, 'status' => 'active', 'short_name' => 'TDEPT']);
-    $this->section = Section::create(['name' => 'Test Section', 'company_id' => $this->company->id, 'location_id' => $this->unit->id, 'division_id' => $this->division->id, 'department_id' => $this->department->id, 'status' => 'active', 'short_name' => 'TS']);
-    $this->designation = Designation::create(['company_designation' => 'Test Dev', 'designation_level' => 'Junior', 'status' => 'active']);
+    
+    $this->unit = CompanyLocation::create([
+        'name' => 'Test Unit', 
+        'company_id' => $this->company->id, 
+        'location_address' => 'Test Addr', 
+        'status' => 'active'
+    ]);
+    
+    $this->division = Division::create([
+        'name' => 'Test Division', 
+        'company_id' => $this->company->id, 
+        'location_id' => $this->unit->id, 
+        'status' => 'active', 
+        'short_name' => 'TD'
+    ]);
+    
+    $this->department = Department::create([
+        'department_name' => 'Test Dept', 
+        'company_id' => $this->company->id, 
+        'location_id' => $this->unit->id, 
+        'division_id' => $this->division->id, 
+        'status' => 'active', 
+        'short_name' => 'TDEPT'
+    ]);
+    
+    $this->section = Section::create([
+        'name' => 'Test Section', 
+        'company_id' => $this->company->id, 
+        'location_id' => $this->unit->id, 
+        'division_id' => $this->division->id, 
+        'department_id' => $this->department->id, 
+        'status' => 'active', 
+        'short_name' => 'TS'
+    ]);
+    
+    $this->designation = Designation::create([
+        'company_designation' => 'Test Dev', 
+        'designation_level' => 'Junior', 
+        'status' => 'active'
+    ]);
 
     $this->employee = Employee::create([
         'full_name' => 'John Doe',
@@ -39,7 +74,7 @@ beforeEach(function () {
     ]);
 });
 
-test('it can save and display employee office info correctly', function () {
+it('saves and displays employee office info correctly', function () {
     $data = [
         'employee_id' => $this->employee->id,
         'emp_type' => 'permanent',
@@ -60,30 +95,31 @@ test('it can save and display employee office info correctly', function () {
         'salary_type' => 'monthly',
     ];
 
-    $response = $this->post(route('employee.office_informations.store'), $data);
-    $response->assertStatus(302);
+    $this->post(route('employee.office_informations.store'), $data)
+        ->assertStatus(302);
 
     $officeInfo = EmployeeOfficeInfo::where('employee_id', $this->employee->id)->first();
-    expect($officeInfo)->not->toBeNull();
-    expect($officeInfo->joining_business_unit_id)->toBe($this->unit->id);
+    
+    expect($officeInfo)->not->toBeNull()
+        ->and($officeInfo->joining_business_unit_id)->toBe($this->unit->id);
 
     // Verify relations work and use the correct attribute names
-    expect($officeInfo->getJoiningBusinessUnit->name)->toBe('Test Unit');
-    expect($officeInfo->getJoiningDivision->name)->toBe('Test Division');
-    expect($officeInfo->getJoiningDepartment->department_name)->toBe('Test Dept');
-    expect($officeInfo->getJoiningSection->name)->toBe('Test Section');
-    expect($officeInfo->getJoiningDesignation->company_designation)->toBe('Test Dev');
+    expect($officeInfo->getJoiningBusinessUnit->name)->toBe('Test Unit')
+        ->and($officeInfo->getJoiningDivision->name)->toBe('Test Division')
+        ->and($officeInfo->getJoiningDepartment->department_name)->toBe('Test Dept')
+        ->and($officeInfo->getJoiningSection->name)->toBe('Test Section')
+        ->and($officeInfo->getJoiningDesignation->company_designation)->toBe('Test Dev');
 
     // Verify profile view renders without error and shows correct names
-    $viewResponse = $this->get(route('employee.profile.office_informations', $this->employee->id));
-    $viewResponse->assertStatus(200);
-    $viewResponse->assertSee('Test Unit');
-    $viewResponse->assertSee('Test Division');
-    $viewResponse->assertSee('Test Dept');
-    $viewResponse->assertSee('Test Section');
+    $this->get(route('employee.profile.office_informations', $this->employee->id))
+        ->assertStatus(200)
+        ->assertSee('Test Unit')
+        ->assertSee('Test Division')
+        ->assertSee('Test Dept')
+        ->assertSee('Test Section');
 });
 
-test('it can update employee office info correctly', function () {
+it('updates employee office info correctly', function () {
     $officeInfo = EmployeeOfficeInfo::create([
         'employee_id' => $this->employee->id,
         'emp_type' => 'permanent',
@@ -99,10 +135,11 @@ test('it can update employee office info correctly', function () {
         'salary_type' => 'monthly',
     ];
 
-    $response = $this->put(route('employee.office_informations.update', $officeInfo->id), $updateData);
-    $response->assertStatus(302);
+    $this->put(route('employee.office_informations.update', $officeInfo->id), $updateData)
+        ->assertStatus(302);
 
     $officeInfo->refresh();
-    expect($officeInfo->emp_type)->toBe('contractual');
-    expect($officeInfo->orientation_required)->toBe('yes');
+    
+    expect($officeInfo->emp_type)->toBe('contractual')
+        ->and($officeInfo->orientation_required)->toBe('yes');
 });
