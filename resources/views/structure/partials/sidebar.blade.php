@@ -48,18 +48,6 @@
                 </li>
                 @endif
 
-                @php
-                    $isEmployeeUser = auth()->user()->user_type === 'Employee';
-                @endphp
-                @if($isEmployeeUser || auth()->user()->can('employee-management.view'))
-                <li>
-                    <a href="{{ route('employee.dashboard') }}" class="@if (Route::is('employee.dashboard*')) menuitem-active @endif">
-                        <i data-feather="activity"></i>
-                        <span> Employee Dashboard </span>
-                    </a>
-                </li>
-                @endif
-
                 <!-- Employees Menu -->
                 @php
                     $isEmployeeType = auth()->user()->user_type === 'Employee';

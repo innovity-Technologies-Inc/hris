@@ -689,9 +689,9 @@
                             $('#key_department_id').html(
                                 '<option value="">No department found</option>');
                         } else {
-                            $.each(data, function(_, item) {
-                                $('#key_department_id').append(
-                                    `<option value="${item.id}">${item.department_name}</option>`
+                            $.each(data, function (key, item) {
+                                $('#department_id').append(
+                                    `<option value="${item.id}">${item.name || item.department_name}</option>`
                                 );
                             });
                         }

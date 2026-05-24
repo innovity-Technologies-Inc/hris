@@ -52,7 +52,8 @@ class DataController extends Controller
             $query->where('location_id', $location_id);
         }
 
-        return $query->select('id', 'name')->get();
+        $data = $query->select('id', 'name')->get();
+        return response()->json($data);
     }
 
     public function getDepartments($company_id, $location_id = null, $division_id = null)
@@ -70,7 +71,8 @@ class DataController extends Controller
             $query->where('division_id', $division_id);
         }
 
-        return $query->select('id', 'department_name', 'department_name as name')->get();
+        $data = $query->select('id', 'department_name', 'department_name as name')->get();
+        return response()->json($data);
     }
 
 
@@ -93,7 +95,8 @@ class DataController extends Controller
             $query->where('department_id', $department_id);
         }
 
-        return $query->select('id', 'name')->get();
+        $data = $query->select('id', 'name')->get();
+        return response()->json($data);
     }
 
     public function getEmployees($company_id, $location_id = null, $division_id = null, $department_id = null, $section_id = null)

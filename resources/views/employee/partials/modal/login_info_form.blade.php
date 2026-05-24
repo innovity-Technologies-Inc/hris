@@ -26,6 +26,7 @@
         <div class="col-md-6 mb-3">
             <label for="{{ $mode }}_user_type" class="form-label fw-bold" style="color: #974063;">User Type <span class="text-danger">*</span></label>
             <select class="form-select" id="{{ $mode }}_user_type" name="user_type" required>
+                <option value="">Select User Type</option>
                 @foreach(['Group', 'Company', 'Business Unit', 'Division', 'Department', 'Section', 'Employee'] as $type)
                     <option value="{{ $type }}" {{ (old('user_type', $currentUserType) == $type) ? 'selected' : '' }}>
                         {{ $type }}

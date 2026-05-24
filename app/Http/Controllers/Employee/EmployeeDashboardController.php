@@ -25,7 +25,7 @@ class EmployeeDashboardController extends Controller
         $user = Auth::user();
         
         if (!$user->employee_id) {
-            return redirect()->route('dashboard')->with([
+            return redirect()->route('dashboard.index')->with([
                 'message' => 'This account is not linked to an employee profile.',
                 'alert-type' => 'warning'
             ]);
