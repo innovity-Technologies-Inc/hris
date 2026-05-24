@@ -8,9 +8,15 @@
             <div class="card-body p-0">
                 <div class="row g-0">
                     <div class="col-md-auto bg-primary bg-opacity-10 p-4 text-center d-flex flex-column align-items-center justify-content-center border-end">
-                        <div class="avatar-xl mb-3">
-                            <img src="{{ $employee->profile_photo ? asset('storage/' . $employee->profile_photo) : asset('assets/images/users/user-1.jpg') }}" 
-                                 class="rounded-circle img-thumbnail shadow-sm" alt="profile-image" style="width: 100px; height: 100px; object-fit: cover;">
+                        <div class="mb-3">
+                            {!! \App\HelperClass::generateAvatar(
+                                $employee?->photo_path ?? null,
+                                $employee?->full_name,
+                                100,
+                                '#974063',
+                                'rounded-circle img-fluid avatar-xl img-thumbnail',
+                                $employee?->id,
+                            ) !!}
                         </div>
                         <h4 class="mb-1 fw-bold">{{ $employee->full_name }}</h4>
                         <p class="text-muted mb-0 small">{{ $employee->officeInfo->getCurrentDesignation->company_designation ?? 'N/A' }}</p>
@@ -66,8 +72,8 @@
                                     <div class="timeline-line bg-light position-absolute h-100" style="width: 2px; top: 40px; z-index: 1;"></div>
                                 @endif
                             </div>
-                            <div class="timeline-right pb-3">
-                                <div class="card border-0 bg-light bg-opacity-25 shadow-none mb-0">
+                            <div class="timeline-right pb-3 flex-grow-1">
+                                <div class="card border-0 bg-light bg-opacity-25 shadow-none mb-0 w-100">
                                     <div class="card-body p-3">
                                         <div class="d-flex justify-content-between align-items-start mb-1">
                                             <h6 class="fw-bold mb-0 text-dark">{{ $event['title'] }}</h6>
@@ -97,15 +103,39 @@
             </div>
             <div class="card-body">
                 <div class="mb-3">
+                    <label class="text-muted small d-block mb-1">Company</label>
+                    <div class="p-2 bg-light rounded border-start border-4 border-primary fw-medium">
+                        {{ $employee->officeInfo->getCurrentCompany->name ?? 'N/A' }}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="text-muted small d-block mb-1">Business Unit / Location</label>
+                    <div class="p-2 bg-light rounded border-start border-4 border-info fw-medium">
+                        {{ $employee->officeInfo->getCurrentBusinessUnit->name ?? 'N/A' }}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="text-muted small d-block mb-1">Division</label>
+                    <div class="p-2 bg-light rounded border-start border-4 border-secondary fw-medium">
+                        {{ $employee->officeInfo->getCurrentDivision->name ?? 'N/A' }}
+                    </div>
+                </div>
+                <div class="mb-3">
                     <label class="text-muted small d-block mb-1">Department</label>
                     <div class="p-2 bg-light rounded border-start border-4 border-primary fw-medium">
                         {{ $employee->officeInfo->getCurrentDepartment->department_name ?? 'N/A' }}
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label class="text-muted small d-block mb-1">Office Location</label>
+                    <label class="text-muted small d-block mb-1">Section</label>
                     <div class="p-2 bg-light rounded border-start border-4 border-info fw-medium">
-                        {{ $employee->officeInfo->getCurrentBusinessUnit->name ?? 'N/A' }}
+                        {{ $employee->officeInfo->getCurrentSection->name ?? 'N/A' }}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="text-muted small d-block mb-1">Current Designation</label>
+                    <div class="p-2 bg-light rounded border-start border-4 border-purple fw-medium">
+                        {{ $employee->officeInfo->getCurrentDesignation->company_designation ?? 'N/A' }}
                     </div>
                 </div>
                 <div>

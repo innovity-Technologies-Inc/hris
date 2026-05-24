@@ -39,7 +39,14 @@ class EmployeeDashboardController extends Controller
      */
     public function show($id)
     {
-        $employee = Employee::withoutGlobalScopes()->with(['officeInfo.getCurrentDesignation', 'officeInfo.getCurrentDepartment'])->findOrFail($id);
+        $employee = Employee::withoutGlobalScopes()->with([
+            'officeInfo.getCurrentCompany', 
+            'officeInfo.getCurrentBusinessUnit', 
+            'officeInfo.getCurrentDivision', 
+            'officeInfo.getCurrentDepartment', 
+            'officeInfo.getCurrentSection', 
+            'officeInfo.getCurrentDesignation'
+        ])->findOrFail($id);
         
         // Authorization: Employee can only see their own dashboard
         if (Auth::user()->user_type === 'Employee' && Auth::user()->employee_id != $id) {
