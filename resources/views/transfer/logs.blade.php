@@ -26,11 +26,8 @@
                             <!-- Employee Search -->
                             <div class="col-md-4">
                                 <label class="small fw-bold text-muted mb-1">Search Employee</label>
-                                <div class="input-group input-group-sm">
-                                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-                                    <input type="text" id="employee_search" class="form-control border-start-0 live-filter" 
-                                           placeholder="Name, ID, or System ID...">
-                                </div>
+                                <input type="text" id="employee_search" class="form-control form-control-sm live-filter" 
+                                       placeholder="Name, ID, or System ID...">
                             </div>
 
                             <!-- Organizational Filters -->
@@ -65,8 +62,8 @@
                                 </select>
                             </div>
                             <div class="col-md-3 d-flex align-items-end">
-                                <button class="btn btn-outline-secondary btn-sm w-100 rounded-pill" id="btnClearFilters">
-                                    <i class="bi bi-arrow-counterclockwise me-1"></i> Clear Filters
+                                <button class="btn btn-outline-danger btn-sm w-100" id="btnClearFilters" style="height: 31px; border-radius: 0.25rem;">
+                                    <i class="bi bi-trash3 me-1"></i> Clear All Filters
                                 </button>
                             </div>
                         </div>
@@ -144,7 +141,70 @@ $(document).ready(function() {
         });
     }
 
-    // Cascading Filter Logic
+    // -------------------------
+    // Structured Cascading Filters (Matching Office Info style)
+    // -------------------------
+    function loadFilterDivisions() {
+        const companyId = filterCompany.val();
+        if (!companyId) return;
+
+        const locationId = filterUnit.val() || 'null';
+
+        loading(filterDivision);
+        reset(filterDept, 'All Departments');
+        reset(filterSection, 'All Sections');
+
+        axios.get(`/get-divisions/${companyId}/${locationId}`)
+            .then(res => {
+                reset(filterDivision, 'All Divisions');
+                populateSelect(filterDivision, res.data, 'All Divisions');
+                // Chain: Load departments after divisions
+                loadFilterDepartments();
+            });
+    }
+
+    function loadFilterDepartments() {
+        const companyId = filterCompany.val();
+        if (!companyId) return;
+
+        const locationId = filterUnit.val() || 'null';
+        const divisionId = filterDivision.val() || 'null';
+
+        loading(filterDept);
+        reset(filterSection, 'All Sections');
+
+        axios.get(`/get-departments/${companyId}/${locationId}/${divisionId}`)
+            .then(res => {
+                reset(filterDept, 'All Departments');
+                const data = res.data;
+                data.forEach(item => {
+                    const name = item.name || item.department_name || 'N/A';
+                    filterDept.append(`<option value="${item.id}">${name}</option>`);
+                });
+                // Chain: Load sections after departments
+                loadFilterSections();
+            });
+    }
+
+    function loadFilterSections() {
+        const companyId = filterCompany.val();
+        if (!companyId) return;
+
+        const locationId = filterUnit.val() || 'null';
+        const divisionId = filterDivision.val() || 'null';
+        const departmentId = filterDept.val() || 'null';
+
+        loading(filterSection);
+
+        axios.get(`/get-sections/${companyId}/${locationId}/${divisionId}/${departmentId}`)
+            .then(res => {
+                reset(filterSection, 'All Sections');
+                populateSelect(filterSection, res.data, 'All Sections');
+                fetchCareerMovements(); // Final chain trigger search
+            });
+    }
+
+    // Event Listeners for Filters
     filterCompany.on('change', function() {
         const companyId = $(this).val();
         resetFilters(['unit', 'division', 'dept', 'section']);
@@ -153,60 +213,23 @@ $(document).ready(function() {
             axios.get(`/get-units/${companyId}`).then(res => {
                 reset(filterUnit, 'All Units');
                 populateSelect(filterUnit, res.data, 'All Units');
-                fetchCareerMovements();
+                loadFilterDivisions();
             });
         } else {
             fetchCareerMovements();
         }
     });
 
-    filterUnit.on('change', function() {
-        const companyId = filterCompany.val();
-        const unitId = $(this).val() || 'null';
-        resetFilters(['division', 'dept', 'section']);
-        if (companyId) {
-            loading(filterDivision);
-            axios.get(`/get-divisions/${companyId}/${unitId}`).then(res => {
-                reset(filterDivision, 'All Divisions');
-                populateSelect(filterDivision, res.data, 'All Divisions');
-                fetchCareerMovements();
-            });
-        }
-    });
-
-    filterDivision.on('change', function() {
-        const companyId = filterCompany.val();
-        const unitId = filterUnit.val() || 'null';
-        const divisionId = $(this).val() || 'null';
-        resetFilters(['dept', 'section']);
-        if (companyId) {
-            loading(filterDept);
-            axios.get(`/get-departments/${companyId}/${unitId}/${divisionId}`).then(res => {
-                reset(filterDept, 'All Departments');
-                populateSelect(filterDept, res.data, 'All Departments');
-                fetchCareerMovements();
-            });
-        }
-    });
-
-    filterDept.on('change', function() {
-        const companyId = filterCompany.val();
-        const unitId = filterUnit.val() || 'null';
-        const divisionId = filterDivision.val() || 'null';
-        const deptId = $(this).val() || 'null';
-        resetFilters(['section']);
-        if (companyId) {
-            loading(filterSection);
-            axios.get(`/get-sections/${companyId}/${unitId}/${divisionId}/${deptId}`).then(res => {
-                reset(filterSection, 'All Sections');
-                populateSelect(filterSection, res.data, 'All Sections');
-                fetchCareerMovements();
-            });
-        }
-    });
-
+    filterUnit.on('change', loadFilterDivisions);
+    filterDivision.on('change', loadFilterDepartments);
+    filterDept.on('change', loadFilterSections);
     filterSection.on('change', fetchCareerMovements);
-    filterEmployeeSearch.on('input', fetchCareerMovements);
+
+    filterEmployeeSearch.on('input', function() {
+        if (this.value.length > 2 || this.value.length === 0) {
+            fetchCareerMovements();
+        }
+    });
 
     function resetFilters(keys) {
         if (keys.includes('unit')) filterUnit.html('<option value="">All Units</option>');
