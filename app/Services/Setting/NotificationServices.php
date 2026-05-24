@@ -28,15 +28,14 @@ class NotificationServices
     public function getVisibleNotifications($user)
     {
         $userType = $user->user_type;
-        $employeeId = $user->employee_id;
         $employee = $user->employee()->with('officeInfo')->first();
 
-        return Notification::where(function ($query) use ($user, $userType, $employeeId, $employee) {
-            // 1. Employee type sees their own notifications
-            if ($userType === 'Employee') {
-                $query->where('user_type', 'Employee')
-                      ->where('user_id', $user->id);
-            }
+        return Notification::where(function ($query) use ($user, $userType, $employee) {
+            // 1. Direct targeted notifications (Always visible to the target)
+            $query->where(function($q) use ($user, $userType) {
+                $q->where('user_type', $userType)
+                  ->where('user_id', $user->id);
+            });
 
             // 2. HR type (Group users show notifications with user_type = 'hr')
             if ($userType === 'Group') {
@@ -44,7 +43,6 @@ class NotificationServices
             }
 
             // 3. Supervisor logic (Hierarchical)
-            // If a notification is for 'supervisor', it's visible to the level above the targeted user_id.
             $query->orWhere(function ($q) use ($user, $userType, $employee) {
                 $q->where('user_type', 'supervisor');
                 
