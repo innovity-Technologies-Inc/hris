@@ -173,18 +173,18 @@
                     <!-- User Type Filter -->
                     <div class="col-md-4">
                         <label class="small mb-1">User Type</label>
-                        <select id="filter_user_type" class="form-select form-select-sm">
+                        <select id="filter_user_type" class="form-select form-select-sm live-filter">
                             <option value="">All Types</option>
-                            <option value="Group">Group</option>
-                            <option value="Company">Company</option>
-                            <option value="Employee">Employee</option>
+                            @foreach(['Group', 'Company', 'Business Unit', 'Division', 'Department', 'Section', 'Employee'] as $type)
+                                <option value="{{ $type }}">{{ $type }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <!-- Name Search -->
                     <div class="col-md-8">
                         <label class="small mb-1">Search by Name</label>
                         <div class="input-group input-group-sm">
-                            <input type="text" id="authoritySearch" class="form-control" placeholder="Type name...">
+                            <input type="text" id="authoritySearch" class="form-control live-filter" placeholder="Type name...">
                             <button class="btn btn-primary" id="btnSearchAuthorities">Search</button>
                         </div>
                     </div>
@@ -192,31 +192,31 @@
                     <!-- Organizational Filters -->
                     <div class="col-md-4">
                         <label class="small mb-1">Company</label>
-                        <select id="filter_company_id" class="form-select form-select-sm">
+                        <select id="filter_company_id" class="form-select form-select-sm live-filter">
                             <option value="">All Companies</option>
                         </select>
                     </div>
                     <div class="col-md-4">
                         <label class="small mb-1">Branch/Unit</label>
-                        <select id="filter_unit_id" class="form-select form-select-sm">
+                        <select id="filter_unit_id" class="form-select form-select-sm live-filter">
                             <option value="">All Units</option>
                         </select>
                     </div>
                     <div class="col-md-4">
                         <label class="small mb-1">Division</label>
-                        <select id="filter_division_id" class="form-select form-select-sm">
+                        <select id="filter_division_id" class="form-select form-select-sm live-filter">
                             <option value="">All Divisions</option>
                         </select>
                     </div>
                     <div class="col-md-4">
                         <label class="small mb-1">Department</label>
-                        <select id="filter_department_id" class="form-select form-select-sm">
+                        <select id="filter_department_id" class="form-select form-select-sm live-filter">
                             <option value="">All Departments</option>
                         </select>
                     </div>
                     <div class="col-md-4">
                         <label class="small mb-1">Section</label>
-                        <select id="filter_section_id" class="form-select form-select-sm">
+                        <select id="filter_section_id" class="form-select form-select-sm live-filter">
                             <option value="">All Sections</option>
                         </select>
                     </div>
@@ -282,6 +282,14 @@ $(document).ready(function() {
         });
     }
 
+    function loading($el, text = 'Loading...') {
+        $el.prop('disabled', true).html(`<option value="">${text}</option>`);
+    }
+
+    function reset($el, text) {
+        $el.prop('disabled', false).html(`<option value="">${text}</option>`);
+    }
+
     function populateSelect($el, data, placeholder, labelKey = 'name') {
         $el.html(`<option value="">${placeholder}</option>`);
         data.forEach(item => {
@@ -294,7 +302,11 @@ $(document).ready(function() {
         const companyId = $(this).val();
         resetFilters(['unit', 'division', 'dept', 'section']);
         if (companyId) {
-            axios.get(`/transfer/api/units/${companyId}`).then(res => populateSelect(filterUnit, res.data.data, 'All Units'));
+            loading(filterUnit);
+            axios.get(`/transfer/api/units/${companyId}`).then(res => {
+                reset(filterUnit, 'All Units');
+                populateSelect(filterUnit, res.data.data, 'All Units');
+            });
         }
     });
 
@@ -302,7 +314,13 @@ $(document).ready(function() {
         const companyId = filterCompany.val();
         const unitId = $(this).val() || 'null';
         resetFilters(['division', 'dept', 'section']);
-        axios.get(`/transfer/api/divisions/${companyId}/${unitId}`).then(res => populateSelect(filterDivision, res.data.data, 'All Divisions'));
+        if (companyId) {
+            loading(filterDivision);
+            axios.get(`/transfer/api/divisions/${companyId}/${unitId}`).then(res => {
+                reset(filterDivision, 'All Divisions');
+                populateSelect(filterDivision, res.data.data, 'All Divisions');
+            });
+        }
     });
 
     filterDivision.on('change', function() {
@@ -310,7 +328,13 @@ $(document).ready(function() {
         const unitId = filterUnit.val() || 'null';
         const divisionId = $(this).val() || 'null';
         resetFilters(['dept', 'section']);
-        axios.get(`/transfer/api/departments/${companyId}/${unitId}/${divisionId}`).then(res => populateSelect(filterDept, res.data.data, 'All Departments', 'department_name'));
+        if (companyId) {
+            loading(filterDept);
+            axios.get(`/transfer/api/departments/${companyId}/${unitId}/${divisionId}`).then(res => {
+                reset(filterDept, 'All Departments');
+                populateSelect(filterDept, res.data.data, 'All Departments'); // Fixed: use default 'name' as API aliases it
+            });
+        }
     });
 
     filterDept.on('change', function() {
@@ -319,7 +343,13 @@ $(document).ready(function() {
         const divisionId = filterDivision.val() || 'null';
         const deptId = $(this).val() || 'null';
         resetFilters(['section']);
-        axios.get(`/transfer/api/sections/${companyId}/${unitId}/${divisionId}/${deptId}`).then(res => populateSelect(filterSection, res.data.data, 'All Sections'));
+        if (companyId) {
+            loading(filterSection);
+            axios.get(`/transfer/api/sections/${companyId}/${unitId}/${divisionId}/${deptId}`).then(res => {
+                reset(filterSection, 'All Sections');
+                populateSelect(filterSection, res.data.data, 'All Sections');
+            });
+        }
     });
 
     function resetFilters(keys) {
@@ -333,12 +363,17 @@ $(document).ready(function() {
         $('#filter_user_type').val('');
         inputSearch.val('');
         filterCompany.val('').trigger('change');
+        setTimeout(searchAuthorities, 100);
     });
 
     // -------------------------
-    // Search Authorities
+    // Search Authorities (Live)
     // -------------------------
-    $('#btnSearchAuthorities').on('click', function() {
+    $('.live-filter').on('change input', function() {
+        searchAuthorities();
+    });
+
+    function searchAuthorities() {
         const params = {
             name: inputSearch.val(),
             user_type: filterUserType.val(),
@@ -356,7 +391,9 @@ $(document).ready(function() {
             .catch(err => {
                 listContainer.html('<div class="text-center py-4 text-danger small">Error fetching results.</div>');
             });
-    });
+    }
+
+    $('#btnSearchAuthorities').on('click', searchAuthorities);
 
     function renderAuthorities(users) {
         listContainer.empty();
