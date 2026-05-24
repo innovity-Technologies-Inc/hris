@@ -7,6 +7,7 @@ use App\Models\Employee\EmployeeOfficeInfo;
 use App\Models\Transfer\Transfer;
 use App\Models\Transfer\TransferApproval;
 use App\Models\User;
+use App\Services\Setting\NotificationServices;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -17,6 +18,13 @@ use App\Notifications\Transfer\TransferCompletedNotification;
 
 class TransferServices
 {
+    protected $notificationService;
+
+    public function __construct(NotificationServices $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
+
     public function getEmployees()
     {
         return Employee::select('id', 'full_name', 'applicant_id')->get();
@@ -72,11 +80,19 @@ class TransferServices
                         'status' => 'pending',
                     ]);
 
-                    // Notify Approver
+                    // Notify Approver (System + Laravel)
                     $approver = User::find($approverId);
                     if ($approver) {
                         try {
                             $approver->notify(new TransferRequestedNotification($transfer));
+                            
+                            $this->notificationService->createNotification(
+                                $approver->user_type,
+                                $approver->id,
+                                'New Transfer Approval Required',
+                                'You have a pending transfer approval for ' . $transfer->employee->full_name,
+                                ['transfer_id' => $transfer->id]
+                            );
                         } catch (\Exception $ne) {
                             Log::warning('Failed to notify approver for transfer request: ' . $ne->getMessage(), [
                                 'transfer_id' => $transfer->id,
@@ -137,6 +153,27 @@ class TransferServices
                     Log::info('Transfer request fully approved.', ['transfer_id' => $transfer->id]);
                 }
 
+                // Notify Creator (System + Laravel)
+                try {
+                    $creator = User::find($transfer->created_by);
+                    if ($creator) {
+                        $creator->notify(new TransferApprovedNotification($transfer));
+
+                        $this->notificationService->createNotification(
+                            $creator->user_type,
+                            $creator->id,
+                            'Transfer Request Update',
+                            'An authority has approved your transfer request for ' . $transfer->employee->full_name,
+                            ['transfer_id' => $transfer->id]
+                        );
+                    }
+                } catch (\Exception $ne) {
+                    Log::warning('Failed to notify creator of approved transfer: ' . $ne->getMessage(), [
+                        'transfer_id' => $transfer->id,
+                        'creator_id' => $transfer->created_by
+                    ]);
+                }
+
                 return $transfer;
             });
         } catch (\Exception $e) {
@@ -184,11 +221,19 @@ class TransferServices
                     'completed_at' => now(),
                 ]);
 
-                // Notify Employee
+                // Notify Employee (System + Laravel)
                 try {
                     $employeeUser = User::where('employee_id', $transfer->employee_id)->first();
                     if ($employeeUser) {
                         $employeeUser->notify(new TransferCompletedNotification($transfer));
+
+                        $this->notificationService->createNotification(
+                            'Employee',
+                            $employeeUser->id,
+                            'Transfer Request Completed',
+                            'Your transfer request has been fully approved and completed.',
+                            ['transfer_id' => $transfer->id]
+                        );
                     }
                 } catch (\Exception $ne) {
                     Log::warning('Failed to notify employee of completed transfer: ' . $ne->getMessage(), [

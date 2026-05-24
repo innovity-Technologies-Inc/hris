@@ -27,7 +27,7 @@ class TransferController extends Controller
     {
         $title = 'Career Movement Details';
         $section = 'Career Movement';
-        $transfer = Transfer::with([
+        $transfer = Transfer::withoutGlobalScopes()->with([
             'employee.officeInfo',
             'currentCompany', 'currentBusinessUnit', 'currentDivision', 'currentDepartment', 'currentSection',
             'requestedCompany', 'requestedBusinessUnit', 'requestedDivision', 'requestedDepartment', 'requestedSection',

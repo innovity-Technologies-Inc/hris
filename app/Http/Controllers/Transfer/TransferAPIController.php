@@ -98,8 +98,10 @@ class TransferAPIController extends Controller
 
     public function list(Request $request)
     {
-        // Simple list for now, can be enhanced with FlexSearch logic
-        $transfers = Transfer::with(['employee', 'requestedCompany', 'requestedBusinessUnit'])
+        // Use withoutGlobalScopes to allow visibility across source/destination scopes
+        // Approvers need to see requests even if they are from a different branch/company
+        $transfers = Transfer::withoutGlobalScopes()
+            ->with(['employee', 'requestedCompany', 'requestedBusinessUnit'])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
             
@@ -117,7 +119,7 @@ class TransferAPIController extends Controller
         ]);
 
         try {
-            $transfer = Transfer::findOrFail($id);
+            $transfer = Transfer::withoutGlobalScopes()->findOrFail($id);
             $this->transferServices->setApprovers($transfer, $request->approver_ids);
             return response()->json(['success' => true, 'message' => 'Approvers assigned and notified.']);
         } catch (\Exception $e) {
@@ -128,7 +130,7 @@ class TransferAPIController extends Controller
     public function approve(Request $request, $id)
     {
         try {
-            $transfer = Transfer::findOrFail($id);
+            $transfer = Transfer::withoutGlobalScopes()->findOrFail($id);
             $this->transferServices->approveTransfer($transfer, auth()->user(), $request->remarks);
             return response()->json(['success' => true, 'message' => 'Transfer approved.']);
         } catch (\Exception $e) {
@@ -139,7 +141,7 @@ class TransferAPIController extends Controller
     public function complete($id)
     {
         try {
-            $transfer = Transfer::findOrFail($id);
+            $transfer = Transfer::withoutGlobalScopes()->findOrFail($id);
             $this->transferServices->completeTransfer($transfer);
             return response()->json(['success' => true, 'message' => 'Transfer completed and office info updated.']);
         } catch (\Exception $e) {
