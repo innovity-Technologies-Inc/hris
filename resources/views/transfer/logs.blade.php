@@ -27,7 +27,7 @@
                             <div class="col-md-4">
                                 <label class="small fw-bold text-muted mb-1">Search Employee</label>
                                 <input type="text" id="employee_search" class="form-control form-control-sm live-filter" 
-                                       placeholder="Name, ID, or System ID...">
+                                       placeholder="Name, ID, or System ID..." style="height: 31px;">
                             </div>
 
                             <!-- Organizational Filters -->
@@ -62,8 +62,8 @@
                                 </select>
                             </div>
                             <div class="col-md-3 d-flex align-items-end">
-                                <button class="btn btn-outline-danger btn-sm w-100" id="btnClearFilters" style="height: 31px; border-radius: 0.25rem;">
-                                    <i class="bi bi-trash3 me-1"></i> Clear All Filters
+                                <button class="btn btn-outline-danger btn-sm w-100" id="btnClearFilters" style="height: 31px; border-radius: 0.25rem; display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-trash3 me-1"></i> Clear Filters
                                 </button>
                             </div>
                         </div>
