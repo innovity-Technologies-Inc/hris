@@ -30,6 +30,90 @@ class TransferServices
         return Employee::select('id', 'full_name', 'applicant_id')->get();
     }
 
+    public function getTransferList(array $filters)
+    {
+        $user = auth()->user();
+        
+        $query = Transfer::withoutGlobalScopes()
+            ->with(['employee', 'requestedCompany', 'requestedBusinessUnit']);
+
+        // 1. Apply Scoping / Permissions manually since we bypassed global scopes
+        if ($user->user_type !== 'Group') {
+            $query->where(function($q) use ($user) {
+                // Own scope
+                $q->where(function($sq) use ($user) {
+                    $employee = $user->employee()->with('officeInfo')->first();
+                    if ($employee && $employee->officeInfo) {
+                        $office = $employee->officeInfo;
+                        if ($user->user_type === 'Company') $sq->where('current_company_id', $office->current_company_id);
+                        elseif ($user->user_type === 'Business Unit') $sq->where('current_business_unit_id', $office->current_business_unit_id);
+                        elseif ($user->user_type === 'Division') $sq->where('current_division_id', $office->current_division_id);
+                        elseif ($user->user_type === 'Department') $sq->where('current_department_id', $office->current_department_id);
+                        elseif ($user->user_type === 'Section') $sq->where('current_section_id', $office->current_section_id);
+                    }
+                    if ($user->user_type === 'Employee') {
+                        $sq->orWhere('employee_id', $user->employee_id);
+                    }
+                });
+
+                // OR Assigned Approver
+                $q->orWhereHas('approvals', function($aq) use ($user) {
+                    $aq->where('approver_id', $user->id);
+                });
+                
+                // OR Creator
+                $q->orWhere('created_by', $user->id);
+            });
+        }
+
+        // 2. Advanced Filters
+        if (!empty($filters['employee_search'])) {
+            $search = $filters['employee_search'];
+            $query->whereHas('employee', function($q) use ($search) {
+                $q->where('full_name', 'like', "%{$search}%")
+                  ->orWhere('applicant_id', 'like', "%{$search}%")
+                  ->orWhere('system_id', 'like', "%{$search}%");
+            });
+        }
+
+        if (!empty($filters['requested_company_id'])) $query->where('requested_company_id', $filters['requested_company_id']);
+        if (!empty($filters['requested_business_unit_id'])) $query->where('requested_business_unit_id', $filters['requested_business_unit_id']);
+        if (!empty($filters['requested_division_id'])) $query->where('requested_division_id', $filters['requested_division_id']);
+        if (!empty($filters['requested_department_id'])) $query->where('requested_department_id', $filters['requested_department_id']);
+        if (!empty($filters['requested_section_id'])) $query->where('requested_section_id', $filters['requested_section_id']);
+
+        return $query->orderBy('created_at', 'desc')->paginate(10);
+    }
+
+    public function searchAuthorities(array $filters)
+    {
+        $query = User::permission('transfers.approve')
+            ->with(['employee.officeInfo' => function($q) {
+                $q->withoutGlobalScopes();
+            }, 'employee.officeInfo.getCurrentCompany', 'employee.officeInfo.getCurrentBusinessUnit']);
+
+        if (!empty($filters['name'])) {
+            $query->where('name', 'like', '%' . $filters['name'] . '%');
+        }
+        
+        if (!empty($filters['user_type'])) {
+            $query->where('user_type', $filters['user_type']);
+        }
+
+        if (!empty($filters['company_id']) || !empty($filters['unit_id']) || !empty($filters['division_id']) || !empty($filters['department_id']) || !empty($filters['section_id'])) {
+            $query->whereHas('employee.officeInfo', function($q) use ($filters) {
+                $q->withoutGlobalScopes();
+                if (!empty($filters['company_id'])) $q->where('current_company_id', $filters['company_id']);
+                if (!empty($filters['unit_id'])) $q->where('current_business_unit_id', $filters['unit_id']);
+                if (!empty($filters['division_id'])) $q->where('current_division_id', $filters['division_id']);
+                if (!empty($filters['department_id'])) $q->where('current_department_id', $filters['department_id']);
+                if (!empty($filters['section_id'])) $q->where('current_section_id', $filters['section_id']);
+            });
+        }
+
+        return $query->limit(30)->get();
+    }
+
     public function storeTransfer(array $data)
     {
         try {

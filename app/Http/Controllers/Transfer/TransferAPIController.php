@@ -98,75 +98,15 @@ class TransferAPIController extends Controller
 
     public function list(Request $request)
     {
-        $user = auth()->user();
-        
-        // We use withoutGlobalScopes to manually handle the union of "In Scope" OR "Assigned Approver"
-        $query = Transfer::withoutGlobalScopes()
-            ->with(['employee', 'requestedCompany', 'requestedBusinessUnit']);
-
-        // 1. Apply Scoping / Permissions
-        if ($user->user_type !== 'Group') {
-            $query->where(function($q) use ($user) {
-                // Own scope (mirrors OrganizationScoped logic manually here to allow OR)
-                $q->where(function($sq) use ($user) {
-                    $employee = $user->employee()->with('officeInfo')->first();
-                    if ($employee && $employee->officeInfo) {
-                        $office = $employee->officeInfo;
-                        if ($user->user_type === 'Company') $sq->where('current_company_id', $office->current_company_id);
-                        elseif ($user->user_type === 'Business Unit') $sq->where('current_business_unit_id', $office->current_business_unit_id);
-                        elseif ($user->user_type === 'Division') $sq->where('current_division_id', $office->current_division_id);
-                        elseif ($user->user_type === 'Department') $sq->where('current_department_id', $office->current_department_id);
-                        elseif ($user->user_type === 'Section') $sq->where('current_section_id', $office->current_section_id);
-                    }
-                    if ($user->user_type === 'Employee') {
-                        $sq->orWhere('employee_id', $user->employee_id);
-                    }
-                });
-
-                // OR Assigned Approver (Cross-scope visibility)
-                $q->orWhereHas('approvals', function($aq) use ($user) {
-                    $aq->where('approver_id', $user->id);
-                });
-                
-                // OR Creator
-                $q->orWhere('created_by', $user->id);
-            });
+        try {
+            $transfers = $this->transferServices->getTransferList($request->all());
+            return response()->json([
+                'success' => true,
+                'data' => $transfers
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
-
-        // 2. Advanced Filters (Employee Name, Applicant ID, System ID)
-        if ($request->employee_search) {
-            $search = $request->employee_search;
-            $query->whereHas('employee', function($q) use ($search) {
-                $q->where('full_name', 'like', "%{$search}%")
-                  ->orWhere('applicant_id', 'like', "%{$search}%")
-                  ->orWhere('system_id', 'like', "%{$search}%");
-            });
-        }
-
-        // Requested Organization Data
-        if ($request->requested_company_id) {
-            $query->where('requested_company_id', $request->requested_company_id);
-        }
-        if ($request->requested_business_unit_id) {
-            $query->where('requested_business_unit_id', $request->requested_business_unit_id);
-        }
-        if ($request->requested_division_id) {
-            $query->where('requested_division_id', $request->requested_division_id);
-        }
-        if ($request->requested_department_id) {
-            $query->where('requested_department_id', $request->requested_department_id);
-        }
-        if ($request->requested_section_id) {
-            $query->where('requested_section_id', $request->requested_section_id);
-        }
-
-        $transfers = $query->orderBy('created_at', 'desc')
-            ->paginate(10);
-            
-        return response()->json([
-            'success' => true,
-            'data' => $transfers
-        ]);
     }
 
     public function setApprovers(Request $request, $id)
@@ -190,7 +130,6 @@ class TransferAPIController extends Controller
     {
         try {
             $transfer = Transfer::withoutGlobalScopes()->findOrFail($id);
-            Log::info('Approval attempt:', ['transfer_id' => $id, 'user_id' => auth()->id()]);
             $this->transferServices->approveTransfer($transfer, auth()->user(), $request->remarks);
             return response()->json(['success' => true, 'message' => 'Transfer approved.']);
         } catch (\Exception $e) {
@@ -213,37 +152,14 @@ class TransferAPIController extends Controller
 
     public function searchAuthorities(Request $request)
     {
-        // Only return users who actually have the permission to approve
-        $query = User::permission('transfers.approve')
-            ->with(['employee.officeInfo' => function($q) {
-                $q->withoutGlobalScopes();
-            }, 'employee.officeInfo.getCurrentCompany', 'employee.officeInfo.getCurrentBusinessUnit']);
-
-        if ($request->name) {
-            $query->where('name', 'like', '%' . $request->name . '%');
+        try {
+            $authorities = $this->transferServices->searchAuthorities($request->all());
+            return response()->json([
+                'success' => true,
+                'data' => $authorities
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
-        
-        if ($request->user_type) {
-            $query->where('user_type', $request->user_type);
-        }
-
-        // Search in employee office info
-        if ($request->company_id || $request->unit_id || $request->division_id || $request->department_id || $request->section_id) {
-            $query->whereHas('employee.officeInfo', function($q) use ($request) {
-                $q->withoutGlobalScopes(); // Important: bypass scoping to find authorities from other scopes
-                if ($request->company_id) $q->where('current_company_id', $request->company_id);
-                if ($request->unit_id) $q->where('current_business_unit_id', $request->unit_id);
-                if ($request->division_id) $q->where('current_division_id', $request->division_id);
-                if ($request->department_id) $q->where('current_department_id', $request->department_id);
-                if ($request->section_id) $q->where('current_section_id', $request->section_id);
-            });
-        }
-
-        $authorities = $query->limit(30)->get();
-
-        return response()->json([
-            'success' => true,
-            'data' => $authorities
-        ]);
     }
 }
