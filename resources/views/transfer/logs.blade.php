@@ -19,6 +19,60 @@
                     @endcan
                 </div>
 
+                <!-- Advanced Filters Section -->
+                <div class="card border-0 bg-light bg-opacity-50 rounded-4 mb-4">
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            <!-- Employee Search -->
+                            <div class="col-md-4">
+                                <label class="small fw-bold text-muted mb-1">Search Employee</label>
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                                    <input type="text" id="employee_search" class="form-control border-start-0 live-filter" 
+                                           placeholder="Name, ID, or System ID...">
+                                </div>
+                            </div>
+
+                            <!-- Organizational Filters -->
+                            <div class="col-md-4">
+                                <label class="small fw-bold text-muted mb-1">Company</label>
+                                <select id="filter_company_id" class="form-select form-select-sm live-filter select2_list">
+                                    <option value="">All Companies</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="small fw-bold text-muted mb-1">Branch/Unit</label>
+                                <select id="filter_unit_id" class="form-select form-select-sm live-filter select2_list">
+                                    <option value="">All Units</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="small fw-bold text-muted mb-1">Division</label>
+                                <select id="filter_division_id" class="form-select form-select-sm live-filter select2_list">
+                                    <option value="">All Divisions</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="small fw-bold text-muted mb-1">Department</label>
+                                <select id="filter_department_id" class="form-select form-select-sm live-filter select2_list">
+                                    <option value="">All Departments</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="small fw-bold text-muted mb-1">Section</label>
+                                <select id="filter_section_id" class="form-select form-select-sm live-filter select2_list">
+                                    <option value="">All Sections</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 d-flex align-items-end">
+                                <button class="btn btn-outline-secondary btn-sm w-100 rounded-pill" id="btnClearFilters">
+                                    <i class="bi bi-arrow-counterclockwise me-1"></i> Clear Filters
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="table-responsive">
                     <table class="table table-hover align-middle border-0">
                         <thead class="bg-light">
@@ -53,31 +107,152 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const tableBody = document.getElementById('transferTableBody');
-    const pagination = document.getElementById('pagination');
+$(document).ready(function() {
+    const tableBody = $('#transferTableBody');
+    const pagination = $('#pagination');
+    
+    // Filter Selects
+    const filterEmployeeSearch = $('#employee_search');
+    const filterCompany = $('#filter_company_id');
+    const filterUnit = $('#filter_unit_id');
+    const filterDivision = $('#filter_division_id');
+    const filterDept = $('#filter_department_id');
+    const filterSection = $('#filter_section_id');
 
+    // Initial Load
+    fetchFilterData();
     fetchCareerMovements();
 
+    function loading($el, text = 'Loading...') {
+        $el.prop('disabled', true).html(`<option value="">${text}</option>`);
+    }
+
+    function reset($el, text) {
+        $el.prop('disabled', false).html(`<option value="">${text}</option>`);
+    }
+
+    function populateSelect($el, data, placeholder, labelKey = 'name') {
+        $el.html(`<option value="">${placeholder}</option>`);
+        data.forEach(item => {
+            $el.append(`<option value="${item.id}">${item[labelKey]}</option>`);
+        });
+    }
+
+    function fetchFilterData() {
+        axios.get('{{ route('transfer.api.companies') }}').then(res => {
+            populateSelect(filterCompany, res.data.data, 'All Companies');
+        });
+    }
+
+    // Cascading Filter Logic
+    filterCompany.on('change', function() {
+        const companyId = $(this).val();
+        resetFilters(['unit', 'division', 'dept', 'section']);
+        if (companyId) {
+            loading(filterUnit);
+            axios.get(`/get-units/${companyId}`).then(res => {
+                reset(filterUnit, 'All Units');
+                populateSelect(filterUnit, res.data, 'All Units');
+                fetchCareerMovements();
+            });
+        } else {
+            fetchCareerMovements();
+        }
+    });
+
+    filterUnit.on('change', function() {
+        const companyId = filterCompany.val();
+        const unitId = $(this).val() || 'null';
+        resetFilters(['division', 'dept', 'section']);
+        if (companyId) {
+            loading(filterDivision);
+            axios.get(`/get-divisions/${companyId}/${unitId}`).then(res => {
+                reset(filterDivision, 'All Divisions');
+                populateSelect(filterDivision, res.data, 'All Divisions');
+                fetchCareerMovements();
+            });
+        }
+    });
+
+    filterDivision.on('change', function() {
+        const companyId = filterCompany.val();
+        const unitId = filterUnit.val() || 'null';
+        const divisionId = $(this).val() || 'null';
+        resetFilters(['dept', 'section']);
+        if (companyId) {
+            loading(filterDept);
+            axios.get(`/get-departments/${companyId}/${unitId}/${divisionId}`).then(res => {
+                reset(filterDept, 'All Departments');
+                populateSelect(filterDept, res.data, 'All Departments');
+                fetchCareerMovements();
+            });
+        }
+    });
+
+    filterDept.on('change', function() {
+        const companyId = filterCompany.val();
+        const unitId = filterUnit.val() || 'null';
+        const divisionId = filterDivision.val() || 'null';
+        const deptId = $(this).val() || 'null';
+        resetFilters(['section']);
+        if (companyId) {
+            loading(filterSection);
+            axios.get(`/get-sections/${companyId}/${unitId}/${divisionId}/${deptId}`).then(res => {
+                reset(filterSection, 'All Sections');
+                populateSelect(filterSection, res.data, 'All Sections');
+                fetchCareerMovements();
+            });
+        }
+    });
+
+    filterSection.on('change', fetchCareerMovements);
+    filterEmployeeSearch.on('input', fetchCareerMovements);
+
+    function resetFilters(keys) {
+        if (keys.includes('unit')) filterUnit.html('<option value="">All Units</option>');
+        if (keys.includes('division')) filterDivision.html('<option value="">All Divisions</option>');
+        if (keys.includes('dept')) filterDept.html('<option value="">All Departments</option>');
+        if (keys.includes('section')) filterSection.html('<option value="">All Sections</option>');
+    }
+
+    $('#btnClearFilters').on('click', function() {
+        filterEmployeeSearch.val('');
+        filterCompany.val('').trigger('change');
+    });
+
+    // -------------------------
+    // Main Fetch
+    // -------------------------
     function fetchCareerMovements(page = 1) {
-        axios.get(`{{ route('transfer.api.list') }}?page=${page}`)
+        const params = {
+            page: page,
+            employee_search: filterEmployeeSearch.val(),
+            requested_company_id: filterCompany.val(),
+            requested_business_unit_id: filterUnit.val(),
+            requested_division_id: filterDivision.val(),
+            requested_department_id: filterDept.val(),
+            requested_section_id: filterSection.val()
+        };
+
+        tableBody.html('<tr><td colspan="6" class="text-center py-5"><div class="spinner-border spinner-border-sm text-primary me-2"></div>Searching...</td></tr>');
+
+        axios.get('{{ route('transfer.api.list') }}', { params })
             .then(res => {
-                const transfers = res.data.data.data;
-                renderTable(transfers);
+                renderTable(res.data.data.data);
                 renderPagination(res.data.data);
             })
             .catch(err => {
-                tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-danger py-5">Failed to load data.</td></tr>';
+                tableBody.html('<tr><td colspan="6" class="text-center text-danger py-5">Failed to load data.</td></tr>');
             });
     }
 
     function renderTable(data) {
         if (data.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="6" class="text-center py-5 text-muted">No transfer records found.</td></tr>';
+            tableBody.html('<tr><td colspan="6" class="text-center py-5 text-muted">No transfer records found.</td></tr>');
             return;
         }
 
-        tableBody.innerHTML = '';
+        tableBody.empty();
         data.forEach((item, index) => {
             const statusBadge = getStatusBadge(item.status);
             const employeeName = item.employee ? item.employee.full_name : 'Unknown Employee';
@@ -112,7 +287,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </td>
                 </tr>
             `;
-            tableBody.insertAdjacentHTML('beforeend', row);
+            tableBody.append(row);
         });
         if (typeof feather !== 'undefined') feather.replace();
     }
@@ -128,22 +303,20 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function renderPagination(meta) {
-        pagination.innerHTML = '';
+        pagination.empty();
         if (meta.last_page <= 1) return;
 
-        const nav = document.createElement('nav');
-        const ul = document.createElement('ul');
-        ul.className = 'pagination pagination-sm mb-0';
+        const nav = $('<nav></nav>');
+        const ul = $('<ul class="pagination pagination-sm mb-0"></ul>');
 
         for (let i = 1; i <= meta.last_page; i++) {
-            const li = document.createElement('li');
-            li.className = `page-item ${meta.current_page === i ? 'active' : ''}`;
-            li.innerHTML = `<button class="page-link" onclick="window.fetchCareerMovements(${i})">${i}</button>`;
-            ul.appendChild(li);
+            const li = $(`<li class="page-item ${meta.current_page === i ? 'active' : ''}"></li>`);
+            li.append(`<button class="page-link" onclick="window.fetchCareerMovements(${i})">${i}</button>`);
+            ul.append(li);
         }
 
-        nav.appendChild(ul);
-        pagination.appendChild(nav);
+        nav.append(ul);
+        pagination.append(nav);
     }
 
     // Expose to global for onclick
