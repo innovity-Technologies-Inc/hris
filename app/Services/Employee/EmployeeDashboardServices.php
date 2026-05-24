@@ -20,11 +20,18 @@ class EmployeeDashboardServices
         $employee = Employee::findOrFail($employeeId);
         
         // Calculate Tenure
-        $joiningDate = $employee->officeInfo->date_of_join ? Carbon::parse($employee->officeInfo->date_of_join) : $employee->created_at;
+        $officeInfo = $employee->officeInfo;
+        $joiningDate = ($officeInfo && $officeInfo->date_of_join) ? Carbon::parse($officeInfo->date_of_join) : $employee->created_at;
         $now = Carbon::now();
         
-        $tenure = $joiningDate->diff($now);
-        $tenureString = "{$tenure->y}y {$tenure->m}m {$tenure->d}d";
+        $diff = $joiningDate->diff($now);
+        
+        $parts = [];
+        if ($diff->y > 0) $parts[] = $diff->y . 'y';
+        if ($diff->m > 0) $parts[] = $diff->m . 'm';
+        if ($diff->d > 0 || empty($parts)) $parts[] = $diff->d . 'd';
+        
+        $tenureString = implode(' ', $parts);
 
         // Aggregate Earnings from Payrolls
         $payrolls = Payroll::where('employee_id', $employeeId)->get();

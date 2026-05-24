@@ -22,7 +22,7 @@
                                 <div class="p-3 rounded-4 bg-light bg-opacity-50 border h-100">
                                     <label class="text-muted small text-uppercase fw-bold d-block mb-1">Serving Tenure</label>
                                     <h3 class="mb-0 text-primary fw-bold">{{ $stats['tenure'] }}</h3>
-                                    <small class="text-muted">Joined on {{ \Carbon\Carbon::parse($employee->date_of_join ?? $employee->created_at)->format('d M Y') }}</small>
+                                    <small class="text-muted">Joined on {{ \Carbon\Carbon::parse($employee->officeInfo->date_of_join ?? $employee->created_at)->format('d M Y') }}</small>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -117,13 +117,7 @@
             </div>
         </div>
 
-        <div class="card glass-card border-0 shadow-sm overflow-hidden" style="background: linear-gradient(135deg, #974063 0%, #d45d8a 100%);">
-            <div class="card-body text-center p-4">
-                <h5 class="text-white mb-3 fw-bold">Need Help?</h5>
-                <p class="text-white-50 small mb-4">If you have any queries regarding your journey or financial statistics, please contact HR.</p>
-                <a href="#" class="btn btn-light rounded-pill px-4 btn-sm fw-bold">Contact Support</a>
-            </div>
-        </div>
+
     </div>
 </div>
 
