@@ -9,12 +9,13 @@ This document outlines the mandatory testing procedures and documentation standa
     - **Unit Tests**: Use for isolated logic within Services or Helpers.
 
 ## 🗄️ Database Environment
-- **Default for Testing**: Always use **SQLite in-memory** (`:memory:`).
-- **Rationale**: Ensures maximum execution speed, complete isolation between test runs, and avoids conflicts with MySQL-specific configurations in the local environment.
+- **Default for Testing**: Always use the dedicated MySQL database named **`hrms_test`**.
+- **Rationale**: Ensures complete isolation from the production/development database (`hrms`) while maintaining feature parity with the target environment.
 - **Execution Command Template**:
   ```powershell
-  $env:DB_CONNECTION='sqlite'; $env:DB_DATABASE=':memory:'; php artisan test [path_to_test]
+  php artisan test [path_to_test]
   ```
+  (Note: Ensure `phpunit.xml` or `.env.testing` is correctly configured to point to `hrms_test`)
 
 ## 📝 Mandatory Test Logging
 Every time a test is requested, implemented, or executed, the `TEST_LOG.md` file in the project root must be updated.
@@ -30,5 +31,5 @@ Each entry in `TEST_LOG.md` must include:
 ## ✅ Completion Criteria
 A task involving code changes is not considered "Complete" until:
 1.  Relevant tests have been written or updated.
-2.  Tests pass in the SQLite in-memory environment.
+2.  Tests pass in the **`hrms_test`** environment.
 3.  The `TEST_LOG.md` has been updated with the latest results.

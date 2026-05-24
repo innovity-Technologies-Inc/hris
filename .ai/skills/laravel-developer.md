@@ -40,11 +40,11 @@ For every module, you MUST maintain dedicated subdirectories across:
 
 ### 4. Verification (Testing)
 Before considering a task complete, you MUST:
-1. **Write/Update Tests**: Use **Pest PHP** for all new tests. Ensure coverage for business logic and organizational scoping.
-2. **Execution Environment**: Always use **SQLite in-memory** (`:memory:`) for testing to ensure speed and isolation.
-3. **Command**: Use `$env:DB_CONNECTION='sqlite'; $env:DB_DATABASE=':memory:'; php artisan test` (or equivalent).
-4. **Mandatory Logging**: Update `TEST_LOG.md` with execution date, instruction, exact command, detailed results, and status.
-5. **Safety**: Ensure you NEVER run tests on the primary `hrms` database.
+1.  **Write/Update Tests**: Use **Pest PHP** for all new tests. All tests MUST follow Pest's functional syntax (using `it()`, `test()`, `expect()`, etc.).
+2.  **Execution Environment**: Always use the dedicated MySQL database named **`hrms_test`** for testing to ensure isolation and safety.
+3.  **Command**: Use `php artisan test` (ensure configuration points to `hrms_test`).
+4.  **Mandatory Logging**: Update `TEST_LOG.md` with execution date, instruction, exact command, detailed results, and status.
+5.  **Safety**: Ensure you NEVER run tests on the primary `hrms` database.
 
 ### 5. Post-Execution & Finalization
 After implementation and verification are complete:
