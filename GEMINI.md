@@ -5,6 +5,7 @@ This project is a comprehensive Human Resource Management System (HRMS) built wi
 ## 🚀 Post-Task Mandates
 - **Always Commit**: After completing a task, you MUST commit the changes with a descriptive message.
 - **Optimization**: After any code or configuration change, you MUST run `php artisan optimize` to clear and rebuild caches.
+- **CRITICAL**: NEVER run tests while the configuration is cached to the primary `hrms` database. Always run `php artisan config:clear` before testing.
 
 ## 🏗️ Architectural Overview
 - **Framework**: Laravel 12.

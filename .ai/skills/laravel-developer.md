@@ -42,12 +42,13 @@ For every module, you MUST maintain dedicated subdirectories across:
 Before considering a task complete, you MUST:
 1.  **Write/Update Tests**: Use **Pest PHP** for all new tests. All tests MUST follow Pest's functional syntax (using `it()`, `test()`, `expect()`, etc.).
 2.  **Execution Environment**: Always use the dedicated MySQL database named **`hrms_test`** for testing to ensure isolation and safety.
-3.  **Command**: ALWAYS use explicit environment variable overrides to prevent shell contamination:
+3.  **CRITICAL SAFETY**: You MUST run `php artisan config:clear` before every test run to ensure a cached `hrms` database name doesn't bypass shell overrides.
+4.  **Command**: ALWAYS use explicit environment variable overrides:
     ```powershell
-    $env:DB_CONNECTION='mysql'; $env:DB_DATABASE='hrms_test'; php artisan test
+    php artisan config:clear; $env:DB_CONNECTION='mysql'; $env:DB_DATABASE='hrms_test'; php artisan test
     ```
-4.  **Mandatory Logging**: Update `TEST_LOG.md` with execution date, instruction, exact command, detailed results, and status.
-5.  **Safety**: Ensure you NEVER run tests on the primary `hrms` database. The `tests/TestCase.php` contains a hard stop that will crash the test if `DB_DATABASE` is `hrms`.
+5.  **Mandatory Logging**: Update `TEST_LOG.md` with execution date, instruction, exact command, detailed results, and status.
+6.  **Safety**: Ensure you NEVER run tests on the primary `hrms` database. The `tests/TestCase.php` contains an absolute hard stop in `setUpTraits()` that will crash the test if the database is `hrms`.
 
 ### 5. Post-Execution & Finalization
 After implementation and verification are complete:
