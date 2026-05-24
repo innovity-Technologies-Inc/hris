@@ -368,6 +368,12 @@ Route::prefix('employees')->middleware('auth')->group(function () {
         });
     });
 
+    // Employee Dashboard & Timeline Routes
+    Route::controller(\App\Http\Controllers\Employee\EmployeeDashboardController::class)->group(function () {
+        Route::get('employee-dashboard', 'index')->name('employee.dashboard');
+        Route::get('employee-dashboard/{id}', 'show')->name('employee.dashboard.show');
+    });
+
     Route::controller(EmployeeProfileController::class)->group(function () {
         Route::get('profile/{id}/general-informations', 'profileView')->name('employee.profile.general_informations');
         Route::get('profile/{id}/office-informations', 'showOfficeInfo')->name('employee.profile.office_informations');

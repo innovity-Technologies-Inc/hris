@@ -21,7 +21,16 @@ class TransferApprovedNotification extends Notification
 
     public function via(object $notifiable): array
     {
-        return ['database']; // Keeping it simple for now, can add mail if needed
+        return ['mail', 'database'];
+    }
+
+    public function toMail(object $notifiable): MailMessage
+    {
+        return (new MailMessage)
+                    ->subject('Transfer Request Approved')
+                    ->line('Your transfer request for ' . $this->transfer->employee->full_name . ' has been approved by an authority.')
+                    ->action('View Request', url('/transfer/view/' . $this->transfer->id))
+                    ->line('Final completion will be processed by HR.');
     }
 
     public function toArray(object $notifiable): array

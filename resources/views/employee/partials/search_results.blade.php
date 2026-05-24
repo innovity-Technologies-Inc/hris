@@ -46,10 +46,16 @@
                             <td>{{ $employee->full_name }}</td>
                             @can('employee-management.view')
                                 <td>
-                                    <a href="{{ route('employee.profile.general_informations', $employee->id) }}"
-                                        class="btn btn-secondary btn-sm" title="View">
-                                        <i style="height: 12px; width: 12px" data-feather="eye"></i>
-                                    </a>
+                                    <div class="btn-group">
+                                        <a href="{{ route('employee.profile.general_informations', $employee->id) }}"
+                                            class="btn btn-secondary btn-sm" title="View Profile">
+                                            <i style="height: 12px; width: 12px" data-feather="eye"></i>
+                                        </a>
+                                        <a href="{{ route('employee.dashboard.show', $employee->id) }}"
+                                            class="btn btn-primary btn-sm" title="Employee Dashboard">
+                                            <i style="height: 12px; width: 12px" data-feather="activity"></i>
+                                        </a>
+                                    </div>
                                 </td>
                             @endcan
                         </tr>

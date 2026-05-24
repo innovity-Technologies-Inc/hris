@@ -73,6 +73,21 @@ Dedicated sub-system to define various HR policies:
 - **Adjustments**: Handle Promotions, Increments, and Bonus distributions.
 - **Structure**: Based on Salary Grades and Employee-specific breakdown.
 
+### 📊 Employee Personal Dashboard & Journey Timeline
+A dedicated analytical view providing a 360-degree overview of an employee's career and financial growth within the organization.
+- **Visual Analytics**: Beautiful "Glassmorphism" cards showing:
+    - **Serving Tenure**: Real-time calculation of years, months, and days of service.
+    - **Total Earnings**: Aggregate of all processed salaries and allowances.
+    - **Total Bonuses**: Cumulative sum of all performance and seasonal rewards.
+- **Career Journey Timeline**: A chronological, interactive vertical timeline capturing every significant milestone:
+    - **Onboarding**: The date of system entry and profile creation.
+    - **Profile Approval**: Official activation of the employee profile.
+    - **Career Movements**: History of requested and completed transfers across companies and branches.
+    - **Growth Milestones**: Trackable log of promotions and increments.
+- **Access Control**:
+    - **Employee Access**: Directly linked in the sidebar for personal tracking.
+    - **HR/Admin Access**: Integrated as a quick-action button in the main Employee Index, allowing for comprehensive audits.
+
 ### 🚐 Transport Module
 - **Assets**: Vehicle and Driver management.
 - **Operations**: Requisitions (applications), approvals, and allocations.

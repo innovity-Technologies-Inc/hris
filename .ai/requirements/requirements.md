@@ -73,6 +73,26 @@ A comprehensive Human Resource Management System (HRMS) built with Laravel 12, f
         - Include company branding, employee's tenure, designation, and current monthly salary breakdown.
         - Both Payslip and Salary Certificate should be viewable in the browser as PDFs.
 
+### 📊 Employee Personal Dashboard & Timeline
+- **Goal**: Provide employees and HR with a visual overview of an employee's journey and key financial/tenure statistics.
+- **Employee Personal Dashboard**:
+    *   **Access**: Linked in the sidebar immediately after the main Dashboard.
+    *   **Context**: For regular employees, it shows their own data. For HR/Admin, it can be accessed for any employee via the "Employee Information" index.
+    *   **Key Statistics**:
+        *   `Serving Years`: Calculated tenure from joining date.
+        *   `Total Earnings`: Aggregated salary from processed payrolls.
+        *   `Total Bonuses`: Aggregated bonus amounts.
+    *   **UI**: Modern "Glassmorphism" layout with descriptive cards.
+- **Employee Journey Timeline**:
+    *   **Visual Representation**: A vertical or horizontal timeline showing key milestones.
+    *   **Milestones**:
+        *   `Onboarding`: Date of profile creation.
+        *   `Profile Approval`: Date when status changed to active.
+        *   `Transfers`: History of requested and completed transfers.
+        *   `Promotions`: History of designation/level changes.
+        *   `Increments`: History of salary increases.
+    *   **Interactivity**: Tooltips or modals for more detail on each milestone.
+
 ### 🚐 Transport Services
 - Vehicle and Driver management.
 - Requisition and allocation workflows.
