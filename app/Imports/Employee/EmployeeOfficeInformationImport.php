@@ -101,19 +101,19 @@ class EmployeeOfficeInformationImport implements ToCollection
         return $record ? $record->id : null;
     }
 
-    private function getUnitId($model, $unit_name)
+    private function getUnitId($model, $name)
     {
-        if (empty($unit_name)) return null;
-        $unit_name = trim(strtolower($unit_name));
-        $record = $model::whereRaw('LOWER(unit_name) LIKE ?', ["%{$unit_name}%"])->first();
+        if (empty($name)) return null;
+        $name = trim(strtolower($name));
+        $record = $model::whereRaw('LOWER(name) LIKE ?', ["%{$name}%"])->first();
         return $record ? $record->id : null;
     }
 
-   private function getDivisionId($model, $division_name)
+   private function getDivisionId($model, $name)
     {
-        if (empty($division_name)) return null;
-        $division_name = trim(strtolower($division_name));
-        $record = $model::whereRaw('LOWER(division_name) LIKE ?', ["%{$division_name}%"])->first();
+        if (empty($name)) return null;
+        $name = trim(strtolower($name));
+        $record = $model::whereRaw('LOWER(name) LIKE ?', ["%{$name}%"])->first();
         return $record ? $record->id : null;
     }
 
@@ -124,11 +124,11 @@ private function getDepartmentId($model, $department_name)
         $record = $model::whereRaw('LOWER(department_name) LIKE ?', ["%{$department_name}%"])->first();
         return $record ? $record->id : null;
     }
-    private function getSectionId($model, $section_name)
+    private function getSectionId($model, $name)
     {
-        if (empty($section_name)) return null;
-        $section_name = trim(strtolower($section_name));
-        $record = $model::whereRaw('LOWER(section_name) LIKE ?', ["%{$section_name}%"])->first();
+        if (empty($name)) return null;
+        $name = trim(strtolower($name));
+        $record = $model::whereRaw('LOWER(name) LIKE ?', ["%{$name}%"])->first();
         return $record ? $record->id : null;
     }
     private function getDesignationId($model, $company_designation)

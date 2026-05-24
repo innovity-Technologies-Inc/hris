@@ -15,8 +15,11 @@ A comprehensive Human Resource Management System (HRMS) built with Laravel 12, f
 - Salary Breakdown management.
 - Movement (Transfers) and status tracking.
 - Dynamic ID Card generation with QR codes.
-- **Profile Review System**:
-    - Dedicated "Profile Review" page listing employees with `pending` status.
+- **Employee Office Information Inconsistencies**:
+    - Standardize naming across Models, Views, and Imports for Business Unit (Branch), Division, and Section (always use `name`).
+    - Fix bugs in the Office Info edit form (incorrect current company selection logic).
+    - Ensure all fields from the `employee_office_infos` table are correctly displayed in the profile view and editable in the form.
+- **Profile Review System**:    - Dedicated "Profile Review" page listing employees with `pending` status.
     - Profile View enhancement: "Review" button for pending employees.
     - Review Workflow:
         - Modal with options: `Incomplete` or `Accept`.

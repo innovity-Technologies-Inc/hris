@@ -431,7 +431,7 @@ class OrganizationStructureController extends Controller
     {
         $locations = CompanyLocation::where('status', 'active')
             ->where('company_id', $company_id)
-            ->get(['id', 'unit_name']);
+            ->get(['id', 'name']);
         return response()->json($locations);
     }
 
@@ -442,7 +442,7 @@ class OrganizationStructureController extends Controller
     {
         $divisions = Division::where('status', 'active')
             ->where('company_id', $company_id)
-            ->get(['id', 'division_name']);
+            ->get(['id', 'name']);
         return response()->json($divisions);
     }
 
@@ -464,7 +464,7 @@ class OrganizationStructureController extends Controller
     {
         $sections = Section::where('status', 'active')
             ->where('department_id', $department_id)
-            ->get(['id', 'section_name']);
+            ->get(['id', 'name']);
         return response()->json($sections);
     }
 

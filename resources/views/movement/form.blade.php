@@ -150,6 +150,7 @@
                     </div>
 
                     <!-- Allowances & Summary Section -->
+                    @if(!$isEmployee)
                     <div class="mb-5">
                         <div class="d-flex align-items-center mb-4">
                             <div class="bg-warning bg-opacity-10 rounded-circle p-3 me-3 d-inline-flex align-items-center justify-content-center">
@@ -198,7 +199,6 @@
                                     <div class="card-body p-4 text-center bg-dark text-white rounded-3">
                                         <small class="text-white-50 d-block mb-1">Calculated Distance</small>
                                         <div class="h3 mb-0 fw-bold"><span id="display_distance">{{ old('distance', $movement->distance ?? '0.00') }}</span> <small class="fs-6">KM</small></div>
-                                        <input type="hidden" id="covered_distance" name="distance" value="{{ old('distance', $movement->distance ?? '') }}">
                                     </div>
                                 </div>
                             </div>
@@ -228,13 +228,15 @@
                                 </div>
                             </div>
                         </div>
-
-                        {{-- Hidden DB Fields --}}
-                        <input type="hidden" name="total_days" id="total_days_input" value="{{ old('total_days', $movement->total_days ?? 0) }}">
-                        <input type="hidden" name="total_ta" id="total_ta_input" value="{{ old('total_ta', $movement->total_ta ?? 0) }}">
-                        <input type="hidden" name="total_da" id="total_da_input" value="{{ old('total_da', $movement->total_da ?? 0) }}">
-                        <input type="hidden" name="total_allowance" id="total_allowance_input" value="{{ old('total_allowance', $movement->total_allowance ?? 0) }}">
                     </div>
+                    @endif
+
+                    {{-- Always keep hidden inputs for backend logic --}}
+                    <input type="hidden" id="covered_distance" name="distance" value="{{ old('distance', $movement->distance ?? '') }}">
+                    <input type="hidden" name="total_days" id="total_days_input" value="{{ old('total_days', $movement->total_days ?? 0) }}">
+                    <input type="hidden" name="total_ta" id="total_ta_input" value="{{ old('total_ta', $movement->total_ta ?? 0) }}">
+                    <input type="hidden" name="total_da" id="total_da_input" value="{{ old('total_da', $movement->total_da ?? 0) }}">
+                    <input type="hidden" name="total_allowance" id="total_allowance_input" value="{{ old('total_allowance', $movement->total_allowance ?? 0) }}">
 
                     <!-- Action Buttons -->
                     <div class="d-flex justify-content-end gap-3 mt-4">
@@ -355,14 +357,23 @@
         }
 
         function calculateAllowance() {
-            const distance = parseFloat(document.getElementById('covered_distance').value) || 0;
+            const distanceInput = document.getElementById('covered_distance');
             const taPlan = document.getElementById('ta_plan_id');
             const daPlan = document.getElementById('da_plan_id');
-            const taRate = taPlan.selectedOptions[0]?.dataset.rate || 0;
-            const daRate = daPlan.selectedOptions[0]?.dataset.rate || 0;
+            
+            if (!distanceInput) return;
+            
+            const distance = parseFloat(distanceInput.value) || 0;
+            const taRate = taPlan ? (taPlan.selectedOptions[0]?.dataset.rate || 0) : 0;
+            const daRate = daPlan ? (daPlan.selectedOptions[0]?.dataset.rate || 0) : 0;
 
-            const from = new Date(document.getElementById('from_date').value);
-            const to = new Date(document.getElementById('to_date').value);
+            const fromDateInput = document.getElementById('from_date');
+            const toDateInput = document.getElementById('to_date');
+            
+            if (!fromDateInput || !toDateInput) return;
+
+            const from = new Date(fromDateInput.value);
+            const to = new Date(toDateInput.value);
 
             const days = (!isNaN(from) && !isNaN(to) && to >= from)
                 ? Math.max(1, Math.ceil((to - from) / 86400000))
@@ -372,11 +383,20 @@
             const totalDa = days * daRate;
             const total = totalTa + totalDa;
 
-            document.getElementById('total_days').textContent = days;
-            document.getElementById('total_ta').textContent = `৳${totalTa.toFixed(2)}`;
-            document.getElementById('total_da').textContent = `৳${totalDa.toFixed(2)}`;
-            document.getElementById('total_allowance').textContent = `৳${total.toFixed(2)}`;
+            // Update UI elements only if they exist
+            const totalDaysElem = document.getElementById('total_days');
+            if (totalDaysElem) totalDaysElem.textContent = days;
+            
+            const totalTaElem = document.getElementById('total_ta');
+            if (totalTaElem) totalTaElem.textContent = `৳${totalTa.toFixed(2)}`;
+            
+            const totalDaElem = document.getElementById('total_da');
+            if (totalDaElem) totalDaElem.textContent = `৳${totalDa.toFixed(2)}`;
+            
+            const totalAllowanceElem = document.getElementById('total_allowance');
+            if (totalAllowanceElem) totalAllowanceElem.textContent = `৳${total.toFixed(2)}`;
 
+            // Hidden inputs should always be updated
             document.getElementById('total_days_input').value = days;
             document.getElementById('total_ta_input').value = totalTa.toFixed(2);
             document.getElementById('total_da_input').value = totalDa.toFixed(2);

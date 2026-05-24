@@ -113,11 +113,11 @@
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Business Unit</td>
-                                            <td>{{$employee_office_info->getJoiningBusinessUnit->unit_name ?? 'N/A'}}</td>
+                                            <td>{{$employee_office_info->getJoiningBusinessUnit->name ?? 'N/A'}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Division</td>
-                                            <td>{{$employee_office_info->getJoiningDivision->division_name ?? 'N/A'}}</td>
+                                            <td>{{$employee_office_info->getJoiningDivision->name ?? 'N/A'}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Department</td>
@@ -164,11 +164,11 @@
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Business Unit</td>
-                                            <td>{{$employee_office_info->getCurrentBusinessUnit->unit_name ?? 'N/A'}}</td>
+                                            <td>{{$employee_office_info->getCurrentBusinessUnit->name ?? 'N/A'}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Division</td>
-                                            <td>{{$employee_office_info->getCurrentDivision->division_name ?? 'N/A'}}</td>
+                                            <td>{{$employee_office_info->getCurrentDivision->name ?? 'N/A'}}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-semibold">Department</td>

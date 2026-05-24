@@ -81,14 +81,14 @@
                     @if ($member->getBranchUnit)
                         <div class="col-md-6 mb-3">
                             <strong>Location:</strong>
-                            <p class="mb-0">{{ $member->getBranchUnit->unit_name }}</p>
+                            <p class="mb-0">{{ $member->getBranchUnit->name }}</p>
                         </div>
                     @endif
 
                     @if ($member->getDivision)
                         <div class="col-md-6 mb-3">
                             <strong>Division:</strong>
-                            <p class="mb-0">{{ $member->getDivision->division_name }}</p>
+                            <p class="mb-0">{{ $member->getDivision->name }}</p>
                         </div>
                     @endif
 
@@ -102,7 +102,7 @@
                     @if ($member->getSection)
                         <div class="col-md-6 mb-3">
                             <strong>Section:</strong>
-                            <p class="mb-0">{{ $member->getSection->section_name }}</p>
+                            <p class="mb-0">{{ $member->getSection->name }}</p>
                         </div>
                     @endif
 

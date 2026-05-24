@@ -251,7 +251,7 @@
                                         @foreach ($companies as $company)
                                             <option
                                                 value="{{ $company->id }}"
-                                                {{ old('joining_company_id', $employee_office_info->joining_company_id ?? '') == $company->id ? 'selected' : '' }}>
+                                                {{ old('current_company_id', $employee_office_info->current_company_id ?? '') == $company->id ? 'selected' : '' }}>
                                                 {{ $company->name }}
                                             </option>
                                         @endforeach
@@ -469,7 +469,7 @@
                                     <label for="promotion_cycle" class="form-label">Promotion Cycle</label>
                                     <input type="text"
                                         class="form-control @error('promotion_cycle') is-invalid @enderror"
-                                        id="promotion_cycle" name="promotion_cycle" value=" {{isset($employee_office_info) ? $employee_office_info->promotion_cycle :  old('promotion_cycle') }}"
+                                        id="promotion_cycle" name="promotion_cycle" value="{{isset($employee_office_info) ? $employee_office_info->promotion_cycle :  old('promotion_cycle') }}"
                                         placeholder="e.g., Annual">
                                     @error('promotion_cycle')
                                         <small class="text-danger">{{ $message }}</small>
@@ -480,7 +480,7 @@
                                     <label for="increment_cycle" class="form-label">Increment Cycle</label>
                                     <input type="text"
                                         class="form-control @error('increment_cycle') is-invalid @enderror"
-                                        id="increment_cycle" name="increment_cycle" value="{{ isset($employee_office_info) ? $employee_office_info->increment_cycle :  old('increment_cycle') }}"
+                                        id="increment_cycle" name="increment_cycle" value="{{isset($employee_office_info) ? $employee_office_info->increment_cycle :  old('increment_cycle') }}"
                                         placeholder="e.g., Annual">
                                     @error('increment_cycle')
                                         <small class="text-danger">{{ $message }}</small>

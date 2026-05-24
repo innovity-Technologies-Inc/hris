@@ -412,8 +412,8 @@ class EmployeeServices
         if (empty($employee_office_info)) {
             $employee_office_data = EmployeeOfficeInfo::create($validated);
         } else {
-            $employee_office_data = $employee_office_info->update($validated);
-
+            $employee_office_info->update($validated);
+            $employee_office_data = $employee_office_info->fresh();
         }
         return $employee_office_data;
     }
