@@ -87,7 +87,7 @@ class TransferServices
                             $approver->notify(new TransferRequestedNotification($transfer));
                             
                             $this->notificationService->createNotification(
-                                $approver->user_type === 'Group' ? 'hr' : $approver->user_type,
+                                $approver->user_type,
                                 $approver->id,
                                 'New Transfer Approval Required',
                                 'You have a pending transfer approval for ' . $transfer->employee->full_name,
@@ -160,7 +160,7 @@ class TransferServices
                         $creator->notify(new TransferApprovedNotification($transfer));
 
                         $this->notificationService->createNotification(
-                            $creator->user_type === 'Group' ? 'hr' : $creator->user_type,
+                            $creator->user_type,
                             $creator->id,
                             'Transfer Request Update',
                             'An authority has approved your transfer request for ' . $transfer->employee->full_name,

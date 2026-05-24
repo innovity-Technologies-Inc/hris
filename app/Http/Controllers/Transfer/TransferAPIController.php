@@ -64,7 +64,7 @@ class TransferAPIController extends Controller
         $query = Department::where('company_id', $companyId);
         if ($locationId !== 'null') $query->where('location_id', $locationId);
         if ($divisionId !== 'null') $query->where('division_id', $divisionId);
-        return response()->json(['success' => true, 'data' => $query->select('id', 'department_name as name')->get()]);
+        return response()->json(['success' => true, 'data' => $query->select('id', 'department_name', 'department_name as name')->get()]);
     }
 
     public function getSections($companyId, $locationId, $divisionId, $departmentId)

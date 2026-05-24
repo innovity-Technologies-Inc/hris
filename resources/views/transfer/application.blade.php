@@ -249,7 +249,7 @@ $(document).ready(function() {
                     $(`#${prefix}_department_id`).html('<option value="">No department found</option>');
                 } else {
                     data.forEach(item => {
-                        $(`#${prefix}_department_id`).append(`<option value="${item.id}">${item.department_name}</option>`);
+                        $(`#${prefix}_department_id`).append(`<option value="${item.id}">${item.name}</option>`);
                     });
                 }
                 // Chain: Load sections after departments

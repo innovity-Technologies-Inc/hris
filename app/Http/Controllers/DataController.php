@@ -70,7 +70,7 @@ class DataController extends Controller
             $query->where('division_id', $division_id);
         }
 
-        return $query->select('id', 'department_name as name')->get();
+        return $query->select('id', 'department_name', 'department_name as name')->get();
     }
 
 
