@@ -42,11 +42,11 @@
 
 **Goal**: Fix naming inconsistencies for Business Unit, Division, and Section across Models, Views, and Imports. Fix logic bugs in Office Info edit form.
 
-**Exact Command**: `$env:DB_CONNECTION='sqlite'; $env:DB_DATABASE=':memory:'; php artisan test tests/Feature/EmployeeOfficeInfoTest.php`
+**Exact Command**: `php artisan test tests/Feature/EmployeeOfficeInfoTest.php`
 
 **Results**:
-- `it can save and display employee office info correctly`: ✅ PASSED
-- `it can update employee office info correctly`: ✅ PASSED
+- `it can save and display employee office info correctly`: ✅ PASSED (using `hrms_test` database)
+- `it can update employee office info correctly`: ✅ PASSED (using `hrms_test` database)
 - `organizational unit naming (unit_name/division_name -> name) verified in profile view`: ✅ VERIFIED
 
 **Status**: ✅ SUCCESS
