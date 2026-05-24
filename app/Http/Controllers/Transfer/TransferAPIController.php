@@ -123,6 +123,7 @@ class TransferAPIController extends Controller
             $this->transferServices->setApprovers($transfer, $request->approver_ids);
             return response()->json(['success' => true, 'message' => 'Approvers assigned and notified.']);
         } catch (\Exception $e) {
+            Log::error('Transfer setApprovers failed: ' . $e->getMessage(), ['id' => $id, 'ids' => $request->approver_ids]);
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
@@ -131,9 +132,11 @@ class TransferAPIController extends Controller
     {
         try {
             $transfer = Transfer::withoutGlobalScopes()->findOrFail($id);
+            Log::info('Approval attempt:', ['transfer_id' => $id, 'user_id' => auth()->id()]);
             $this->transferServices->approveTransfer($transfer, auth()->user(), $request->remarks);
             return response()->json(['success' => true, 'message' => 'Transfer approved.']);
         } catch (\Exception $e) {
+            Log::error('Transfer approve failed: ' . $e->getMessage(), ['id' => $id, 'user_id' => auth()->id()]);
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
@@ -145,6 +148,7 @@ class TransferAPIController extends Controller
             $this->transferServices->completeTransfer($transfer);
             return response()->json(['success' => true, 'message' => 'Transfer completed and office info updated.']);
         } catch (\Exception $e) {
+            Log::error('Transfer complete failed: ' . $e->getMessage(), ['id' => $id]);
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }

@@ -83,9 +83,8 @@ class TransferServices
                     // Notify Approver (System + Laravel)
                     $approver = User::find($approverId);
                     if ($approver) {
+                        // 1. System Notification (Always save to DB)
                         try {
-                            $approver->notify(new TransferRequestedNotification($transfer));
-                            
                             $this->notificationService->createNotification(
                                 $approver->user_type,
                                 $approver->id,
@@ -93,8 +92,15 @@ class TransferServices
                                 'You have a pending transfer approval for ' . $transfer->employee->full_name,
                                 ['transfer_id' => $transfer->id]
                             );
+                        } catch (\Exception $e) {
+                            Log::error('System notification failed for approver: ' . $e->getMessage());
+                        }
+
+                        // 2. Laravel Notification (May fail due to Mail)
+                        try {
+                            $approver->notify(new TransferRequestedNotification($transfer));
                         } catch (\Exception $ne) {
-                            Log::warning('Failed to notify approver for transfer request: ' . $ne->getMessage(), [
+                            Log::warning('Laravel mail notification failed for approver: ' . $ne->getMessage(), [
                                 'transfer_id' => $transfer->id,
                                 'approver_id' => $approverId
                             ]);
@@ -124,9 +130,10 @@ class TransferServices
     {
         try {
             return DB::transaction(function () use ($transfer, $approver, $remarks) {
+                // Use withoutGlobalScopes to find the approval record
                 $approval = TransferApproval::where('transfer_id', $transfer->id)
                     ->where('approver_id', $approver->id)
-                    ->lockForUpdate() // Prevent race conditions
+                    ->lockForUpdate()
                     ->firstOrFail();
 
                 if ($approval->status !== 'pending') {
@@ -139,17 +146,17 @@ class TransferServices
                     'approved_at' => now(),
                 ]);
 
-                // Recalculate count to be safe from race conditions
+                // Recalculate count bypassing all scopes to ensure accuracy
                 $approvedCount = TransferApproval::where('transfer_id', $transfer->id)
                     ->where('status', 'approved')
                     ->count();
 
-                $transfer->update([
+                $transfer->withoutGlobalScopes()->update([
                     'current_approval_count' => $approvedCount
                 ]);
 
                 if ($approvedCount >= $transfer->approval_count_required) {
-                    $transfer->update(['status' => 'approved']);
+                    $transfer->withoutGlobalScopes()->update(['status' => 'approved']);
                     Log::info('Transfer request fully approved.', ['transfer_id' => $transfer->id]);
                 }
 
@@ -157,21 +164,28 @@ class TransferServices
                 try {
                     $creator = User::find($transfer->created_by);
                     if ($creator) {
-                        $creator->notify(new TransferApprovedNotification($transfer));
+                        // 1. System Notification
+                        try {
+                            $this->notificationService->createNotification(
+                                $creator->user_type,
+                                $creator->id,
+                                'Transfer Request Update',
+                                'An authority has approved your transfer request for ' . $transfer->employee->full_name,
+                                ['transfer_id' => $transfer->id]
+                            );
+                        } catch (\Exception $e) {
+                            Log::error('System notification failed for creator: ' . $e->getMessage());
+                        }
 
-                        $this->notificationService->createNotification(
-                            $creator->user_type,
-                            $creator->id,
-                            'Transfer Request Update',
-                            'An authority has approved your transfer request for ' . $transfer->employee->full_name,
-                            ['transfer_id' => $transfer->id]
-                        );
+                        // 2. Laravel Notification
+                        try {
+                            $creator->notify(new TransferApprovedNotification($transfer));
+                        } catch (\Exception $ne) {
+                            Log::warning('Laravel mail notification failed for creator: ' . $ne->getMessage());
+                        }
                     }
-                } catch (\Exception $ne) {
-                    Log::warning('Failed to notify creator of approved transfer: ' . $ne->getMessage(), [
-                        'transfer_id' => $transfer->id,
-                        'creator_id' => $transfer->created_by
-                    ]);
+                } catch (\Exception $ge) {
+                    Log::error('General notification error for creator: ' . $ge->getMessage());
                 }
 
                 return $transfer;
@@ -190,7 +204,7 @@ class TransferServices
     {
         try {
             return DB::transaction(function () use ($transfer) {
-                // Double check status and counts
+                // Double check status and counts bypassing all scopes
                 $approvedCount = TransferApproval::where('transfer_id', $transfer->id)
                     ->where('status', 'approved')
                     ->count();
@@ -205,7 +219,7 @@ class TransferServices
                 }
 
                 // Update Employee Office Info
-                $officeInfo = EmployeeOfficeInfo::where('employee_id', $transfer->employee_id)->firstOrFail();
+                $officeInfo = EmployeeOfficeInfo::withoutGlobalScopes()->where('employee_id', $transfer->employee_id)->firstOrFail();
                 $officeInfo->update([
                     'current_company_id' => $transfer->requested_company_id,
                     'current_business_unit_id' => $transfer->requested_business_unit_id,
@@ -215,7 +229,7 @@ class TransferServices
                     'current_designation_id' => $transfer->requested_designation_id ?? $officeInfo->current_designation_id,
                 ]);
 
-                $transfer->update([
+                $transfer->withoutGlobalScopes()->update([
                     'status' => 'completed',
                     'completed_by' => auth()->id(),
                     'completed_at' => now(),
@@ -225,21 +239,28 @@ class TransferServices
                 try {
                     $employeeUser = User::where('employee_id', $transfer->employee_id)->first();
                     if ($employeeUser) {
-                        $employeeUser->notify(new TransferCompletedNotification($transfer));
+                        // 1. System Notification
+                        try {
+                            $this->notificationService->createNotification(
+                                'Employee',
+                                $employeeUser->id,
+                                'Transfer Request Completed',
+                                'Your transfer request has been fully approved and completed.',
+                                ['transfer_id' => $transfer->id]
+                            );
+                        } catch (\Exception $e) {
+                            Log::error('System notification failed for employee: ' . $e->getMessage());
+                        }
 
-                        $this->notificationService->createNotification(
-                            'Employee',
-                            $employeeUser->id,
-                            'Transfer Request Completed',
-                            'Your transfer request has been fully approved and completed.',
-                            ['transfer_id' => $transfer->id]
-                        );
+                        // 2. Laravel Notification
+                        try {
+                            $employeeUser->notify(new TransferCompletedNotification($transfer));
+                        } catch (\Exception $ne) {
+                            Log::warning('Laravel mail notification failed for employee: ' . $ne->getMessage());
+                        }
                     }
-                } catch (\Exception $ne) {
-                    Log::warning('Failed to notify employee of completed transfer: ' . $ne->getMessage(), [
-                        'transfer_id' => $transfer->id,
-                        'employee_id' => $transfer->employee_id
-                    ]);
+                } catch (\Exception $ge) {
+                    Log::error('General notification error for employee: ' . $ge->getMessage());
                 }
 
                 return $transfer;

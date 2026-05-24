@@ -13,13 +13,24 @@ class NotificationServices
      */
     public function createNotification(string $userType, ?int $userId, string $title, string $message, array $data = []): Notification
     {
-        return Notification::create([
-            'user_type' => $userType,
-            'user_id' => $userId,
-            'title' => $title,
-            'message' => $message,
-            'data' => $data,
-        ]);
+        try {
+            $notification = Notification::create([
+                'user_type' => $userType,
+                'user_id' => $userId,
+                'title' => $title,
+                'message' => $message,
+                'data' => $data,
+            ]);
+            \Illuminate\Support\Facades\Log::info('Notification created successfully.', ['id' => $notification->id, 'user_id' => $userId]);
+            return $notification;
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('FAILED to create notification: ' . $e->getMessage(), [
+                'user_type' => $userType,
+                'user_id' => $userId,
+                'title' => $title
+            ]);
+            throw $e;
+        }
     }
 
     /**
