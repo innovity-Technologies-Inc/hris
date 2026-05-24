@@ -331,11 +331,7 @@ $(document).ready(function() {
         axios.get(`/get-departments/${companyId}/${locationId}/${divisionId}`)
             .then(res => {
                 reset($(`#filter_department_id`), 'All Departments');
-                const data = res.data;
-                data.forEach(item => {
-                    const name = item.name || item.department_name || 'N/A';
-                    $(`#filter_department_id`).append(`<option value="${item.id}">${name}</option>`);
-                });
+                populateSelect($(`#filter_department_id`), res.data, 'All Departments');
                 searchAuthorities(); // Instant Load
             });
     }
