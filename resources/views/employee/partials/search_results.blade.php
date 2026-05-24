@@ -46,7 +46,7 @@
                             <td>{{ $employee->full_name }}</td>
                             @can('employee-management.view')
                                 <td>
-                                    <div class="btn-group">
+                                    <div class="d-flex gap-2">
                                         <a href="{{ route('employee.profile.general_informations', $employee->id) }}"
                                             class="btn btn-secondary btn-sm" title="View Profile">
                                             <i style="height: 12px; width: 12px" data-feather="eye"></i>
