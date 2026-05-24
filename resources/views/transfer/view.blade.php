@@ -67,6 +67,29 @@
                     <p class="text-white mb-0">{{ $transfer->remarks }}</p>
                 </div>
                 @endif
+
+                <div class="mt-4 row g-3">
+                    <div class="col-md-6">
+                        <div class="p-2 border border-white-10 rounded bg-white-5">
+                            <label class="text-white-50 small d-block mb-1">Applied By</label>
+                            <span class="text-white">
+                                <i data-feather="user" class="me-1" style="width: 14px;"></i>
+                                {{ $transfer->creator->name }} on {{ $transfer->created_at->format('d M Y, h:i A') }}
+                            </span>
+                        </div>
+                    </div>
+                    @if($transfer->status === 'completed' && $transfer->completer)
+                    <div class="col-md-6">
+                        <div class="p-2 border border-success-20 rounded bg-success-10">
+                            <label class="text-success-50 small d-block mb-1">Finalized By</label>
+                            <span class="text-white">
+                                <i data-feather="check-circle" class="me-1" style="width: 14px;"></i>
+                                {{ $transfer->completer->name }} on {{ \Carbon\Carbon::parse($transfer->completed_at)->format('d M Y, h:i A') }}
+                            </span>
+                        </div>
+                    </div>
+                    @endif
+                </div>
             </div>
         </div>
     </div>

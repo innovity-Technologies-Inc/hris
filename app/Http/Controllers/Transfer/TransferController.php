@@ -31,7 +31,7 @@ class TransferController extends Controller
             'employee.officeInfo',
             'currentCompany', 'currentBusinessUnit', 'currentDivision', 'currentDepartment', 'currentSection',
             'requestedCompany', 'requestedBusinessUnit', 'requestedDivision', 'requestedDepartment', 'requestedSection',
-            'approvals.approver'
+            'approvals.approver', 'creator', 'completer'
         ])->findOrFail($id);
 
         return view('transfer.view', compact('title', 'section', 'transfer'));

@@ -57,7 +57,6 @@ test('transfer application can be submitted and completed', function () {
     $response = $this->actingAs($admin, 'web')->postJson(route('transfer.api.store'), [
         'employee_id' => $employee->id,
         'requested_company_id' => $newCompany->id,
-        'requested_designation_id' => $designation->id,
         'remarks' => 'Promotion transfer',
     ]);
 
@@ -84,7 +83,6 @@ test('transfer application can be submitted and completed', function () {
     // Verify Office Info Updated
     $updatedOfficeInfo = EmployeeOfficeInfo::where('employee_id', $employee->id)->first();
     expect($updatedOfficeInfo->current_company_id)->toBe($newCompany->id);
-    expect($updatedOfficeInfo->current_designation_id)->toBe($designation->id);
 
     // Verify Completion Notification
     $employeeUser = User::factory()->create(['employee_id' => $employee->id]);

@@ -171,6 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const divisionSelect = document.getElementById('requested_division_id');
     const departmentSelect = document.getElementById('requested_department_id');
     const sectionSelect = document.getElementById('requested_section_id');
+    const designationSelect = document.getElementById('requested_designation_id');
     const transferForm = document.getElementById('transferForm');
 
     // Initial Fetch
@@ -178,6 +179,7 @@ document.addEventListener('DOMContentLoaded', function() {
     fetchEmployees();
     @endif
     fetchCompanies();
+    fetchDesignations();
 
     // Event Listeners for Cascading
     @if(!$isEmployee)

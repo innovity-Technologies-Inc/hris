@@ -96,6 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </td>
                     <td>
                         <div class="text-dark fw-medium">${item.requested_company.name}</div>
+                        <small class="text-muted">${item.requested_business_unit ? item.requested_business_unit.name : 'N/A'}</small>
                     </td>
                     <td>${statusBadge}</td>
                     <td class="text-muted">${new Date(item.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</td>

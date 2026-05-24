@@ -99,7 +99,7 @@ class TransferAPIController extends Controller
     public function list(Request $request)
     {
         // Simple list for now, can be enhanced with FlexSearch logic
-        $transfers = Transfer::with(['employee', 'requestedCompany', 'requestedDesignation'])
+        $transfers = Transfer::with(['employee', 'requestedCompany', 'requestedBusinessUnit'])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
             
