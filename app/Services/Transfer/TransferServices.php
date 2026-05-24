@@ -24,120 +24,188 @@ class TransferServices
 
     public function storeTransfer(array $data)
     {
-        return DB::transaction(function () use ($data) {
-            $employee = Employee::with('officeInfo')->findOrFail($data['employee_id']);
-            $currentInfo = $employee->officeInfo;
+        try {
+            return DB::transaction(function () use ($data) {
+                $employee = Employee::with('officeInfo')->findOrFail($data['employee_id']);
+                $currentInfo = $employee->officeInfo;
 
-            $transfer = Transfer::create([
-                'employee_id' => $data['employee_id'],
-                'current_company_id' => $currentInfo->current_company_id ?? null,
-                'current_business_unit_id' => $currentInfo->current_business_unit_id ?? null,
-                'current_division_id' => $currentInfo->current_division_id ?? null,
-                'current_department_id' => $currentInfo->current_department_id ?? null,
-                'current_section_id' => $currentInfo->current_section_id ?? null,
-                'current_designation_id' => $currentInfo->current_designation_id ?? null,
-                'requested_company_id' => $data['requested_company_id'],
-                'requested_business_unit_id' => $data['requested_business_unit_id'] ?? null,
-                'requested_division_id' => $data['requested_division_id'] ?? null,
-                'requested_department_id' => $data['requested_department_id'] ?? null,
-                'requested_section_id' => $data['requested_section_id'] ?? null,
-                'requested_designation_id' => $data['requested_designation_id'] ?? null,
-                'remarks' => $data['remarks'] ?? null,
-                'created_by' => auth()->id(),
+                $transfer = Transfer::create([
+                    'employee_id' => $data['employee_id'],
+                    'current_company_id' => $currentInfo->current_company_id ?? null,
+                    'current_business_unit_id' => $currentInfo->current_business_unit_id ?? null,
+                    'current_division_id' => $currentInfo->current_division_id ?? null,
+                    'current_department_id' => $currentInfo->current_department_id ?? null,
+                    'current_section_id' => $currentInfo->current_section_id ?? null,
+                    'current_designation_id' => $currentInfo->current_designation_id ?? null,
+                    'requested_company_id' => $data['requested_company_id'],
+                    'requested_business_unit_id' => $data['requested_business_unit_id'] ?? null,
+                    'requested_division_id' => $data['requested_division_id'] ?? null,
+                    'requested_department_id' => $data['requested_department_id'] ?? null,
+                    'requested_section_id' => $data['requested_section_id'] ?? null,
+                    'requested_designation_id' => $data['requested_designation_id'] ?? null,
+                    'remarks' => $data['remarks'] ?? null,
+                    'created_by' => auth()->id(),
+                ]);
+
+                return $transfer;
+            });
+        } catch (\Exception $e) {
+            Log::error('Error storing transfer application: ' . $e->getMessage(), [
+                'data' => $data,
+                'user_id' => auth()->id(),
+                'trace' => $e->getTraceAsString()
             ]);
-
-            return $transfer;
-        });
+            throw $e;
+        }
     }
 
     public function setApprovers(Transfer $transfer, array $approverIds)
     {
-        return DB::transaction(function () use ($transfer, $approverIds) {
-            $transfer->approvals()->delete(); // Clear existing if any
+        try {
+            return DB::transaction(function () use ($transfer, $approverIds) {
+                $transfer->approvals()->delete(); // Clear existing if any
 
-            foreach ($approverIds as $approverId) {
-                TransferApproval::create([
-                    'transfer_id' => $transfer->id,
-                    'approver_id' => $approverId,
-                    'status' => 'pending',
+                foreach ($approverIds as $approverId) {
+                    TransferApproval::create([
+                        'transfer_id' => $transfer->id,
+                        'approver_id' => $approverId,
+                        'status' => 'pending',
+                    ]);
+
+                    // Notify Approver
+                    $approver = User::find($approverId);
+                    if ($approver) {
+                        try {
+                            $approver->notify(new TransferRequestedNotification($transfer));
+                        } catch (\Exception $ne) {
+                            Log::warning('Failed to notify approver for transfer request: ' . $ne->getMessage(), [
+                                'transfer_id' => $transfer->id,
+                                'approver_id' => $approverId
+                            ]);
+                        }
+                    }
+                }
+
+                $transfer->update([
+                    'approval_count_required' => count($approverIds),
+                    'current_approval_count' => 0,
+                    'status' => 'pending'
                 ]);
 
-                // Notify Approver
-                $approver = User::find($approverId);
-                if ($approver) {
-                    $approver->notify(new TransferRequestedNotification($transfer));
-                }
-            }
-
-            $transfer->update([
-                'approval_count_required' => count($approverIds),
-                'current_approval_count' => 0,
-                'status' => 'pending'
+                return $transfer;
+            });
+        } catch (\Exception $e) {
+            Log::error('Error setting approvers for transfer: ' . $e->getMessage(), [
+                'transfer_id' => $transfer->id,
+                'approver_ids' => $approverIds,
+                'trace' => $e->getTraceAsString()
             ]);
-
-            return $transfer;
-        });
+            throw $e;
+        }
     }
 
     public function approveTransfer(Transfer $transfer, User $approver, string $remarks = null)
     {
-        return DB::transaction(function () use ($transfer, $approver, $remarks) {
-            $approval = TransferApproval::where('transfer_id', $transfer->id)
-                ->where('approver_id', $approver->id)
-                ->firstOrFail();
+        try {
+            return DB::transaction(function () use ($transfer, $approver, $remarks) {
+                $approval = TransferApproval::where('transfer_id', $transfer->id)
+                    ->where('approver_id', $approver->id)
+                    ->lockForUpdate() // Prevent race conditions
+                    ->firstOrFail();
 
-            if ($approval->status !== 'pending') {
-                throw new \Exception('Already processed.');
-            }
+                if ($approval->status !== 'pending') {
+                    throw new \Exception('This approval request has already been processed.');
+                }
 
-            $approval->update([
-                'status' => 'approved',
-                'remarks' => $remarks,
-                'approved_at' => now(),
+                $approval->update([
+                    'status' => 'approved',
+                    'remarks' => $remarks,
+                    'approved_at' => now(),
+                ]);
+
+                // Recalculate count to be safe from race conditions
+                $approvedCount = TransferApproval::where('transfer_id', $transfer->id)
+                    ->where('status', 'approved')
+                    ->count();
+
+                $transfer->update([
+                    'current_approval_count' => $approvedCount
+                ]);
+
+                if ($approvedCount >= $transfer->approval_count_required) {
+                    $transfer->update(['status' => 'approved']);
+                    Log::info('Transfer request fully approved.', ['transfer_id' => $transfer->id]);
+                }
+
+                return $transfer;
+            });
+        } catch (\Exception $e) {
+            Log::error('Error approving transfer: ' . $e->getMessage(), [
+                'transfer_id' => $transfer->id,
+                'approver_id' => $approver->id,
+                'trace' => $e->getTraceAsString()
             ]);
-
-            $transfer->increment('current_approval_count');
-
-            if ($transfer->current_approval_count >= $transfer->approval_count_required) {
-                $transfer->update(['status' => 'approved']);
-                // Notify HR?
-            }
-
-            return $transfer;
-        });
+            throw $e;
+        }
     }
 
     public function completeTransfer(Transfer $transfer)
     {
-        return DB::transaction(function () use ($transfer) {
-            if ($transfer->status !== 'approved' && $transfer->approval_count_required > 0) {
-                throw new \Exception('All approvals required before completion.');
-            }
+        try {
+            return DB::transaction(function () use ($transfer) {
+                // Double check status and counts
+                $approvedCount = TransferApproval::where('transfer_id', $transfer->id)
+                    ->where('status', 'approved')
+                    ->count();
 
-            // Update Employee Office Info
-            $officeInfo = EmployeeOfficeInfo::where('employee_id', $transfer->employee_id)->firstOrFail();
-            $officeInfo->update([
-                'current_company_id' => $transfer->requested_company_id,
-                'current_business_unit_id' => $transfer->requested_business_unit_id,
-                'current_division_id' => $transfer->requested_division_id,
-                'current_department_id' => $transfer->requested_department_id,
-                'current_section_id' => $transfer->requested_section_id,
-                'current_designation_id' => $transfer->requested_designation_id ?? $officeInfo->current_designation_id,
+                if ($approvedCount < $transfer->approval_count_required) {
+                    Log::error('Attempted to complete transfer without all approvals.', [
+                        'transfer_id' => $transfer->id,
+                        'required' => $transfer->approval_count_required,
+                        'current' => $approvedCount
+                    ]);
+                    throw new \Exception('All approvals required before completion. (Found ' . $approvedCount . ' of ' . $transfer->approval_count_required . ')');
+                }
+
+                // Update Employee Office Info
+                $officeInfo = EmployeeOfficeInfo::where('employee_id', $transfer->employee_id)->firstOrFail();
+                $officeInfo->update([
+                    'current_company_id' => $transfer->requested_company_id,
+                    'current_business_unit_id' => $transfer->requested_business_unit_id,
+                    'current_division_id' => $transfer->requested_division_id,
+                    'current_department_id' => $transfer->requested_department_id,
+                    'current_section_id' => $transfer->requested_section_id,
+                    'current_designation_id' => $transfer->requested_designation_id ?? $officeInfo->current_designation_id,
+                ]);
+
+                $transfer->update([
+                    'status' => 'completed',
+                    'completed_by' => auth()->id(),
+                    'completed_at' => now(),
+                ]);
+
+                // Notify Employee
+                try {
+                    $employeeUser = User::where('employee_id', $transfer->employee_id)->first();
+                    if ($employeeUser) {
+                        $employeeUser->notify(new TransferCompletedNotification($transfer));
+                    }
+                } catch (\Exception $ne) {
+                    Log::warning('Failed to notify employee of completed transfer: ' . $ne->getMessage(), [
+                        'transfer_id' => $transfer->id,
+                        'employee_id' => $transfer->employee_id
+                    ]);
+                }
+
+                return $transfer;
+            });
+        } catch (\Exception $e) {
+            Log::error('Error completing transfer: ' . $e->getMessage(), [
+                'transfer_id' => $transfer->id,
+                'user_id' => auth()->id(),
+                'trace' => $e->getTraceAsString()
             ]);
-
-            $transfer->update([
-                'status' => 'completed',
-                'completed_by' => auth()->id(),
-                'completed_at' => now(),
-            ]);
-
-            // Notify Employee
-            $employeeUser = User::where('employee_id', $transfer->employee_id)->first();
-            if ($employeeUser) {
-                $employeeUser->notify(new TransferCompletedNotification($transfer));
-            }
-
-            return $transfer;
-        });
+            throw $e;
+        }
     }
 }
