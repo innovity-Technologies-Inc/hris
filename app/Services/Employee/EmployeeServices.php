@@ -21,6 +21,8 @@ use App\Models\Company\Section;
 use App\Models\Company\Tofsil;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Services\Setting\NotificationServices;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -31,6 +33,13 @@ use Illuminate\Support\Facades\Mail;
 
 class EmployeeServices
 {
+    protected $notificationService;
+
+    public function __construct(NotificationServices $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
+
     public function getEmployees()
     {
         $employees = Employee::latest()->paginate(10);
@@ -888,45 +897,67 @@ class EmployeeServices
         ]);
 
         try {
-            // 1. Create Employee
-            $employee = Employee::create([
-                'full_name' => $request->full_name,
-                'work_email' => $request->work_email,
-                'applicant_id' => $request->applicant_id,
-                'system_id' => $request->system_id,
-                'punch_card_no' => $request->punch_card_no,
-                'status' => 'incomplete',
-            ]);
+            return DB::transaction(function () use ($request) {
+                // 1. Create Employee
+                $employee = Employee::create([
+                    'full_name' => $request->full_name,
+                    'work_email' => $request->work_email,
+                    'applicant_id' => $request->applicant_id,
+                    'system_id' => $request->system_id,
+                    'punch_card_no' => $request->punch_card_no,
+                    'status' => 'active', // Default to active for manually created accounts
+                ]);
 
-            // 2. Create User
-            $user = User::create([
-                'name' => $request->full_name,
-                'email' => $request->work_email,
-                'password' => Hash::make($request->password),
-                'user_type' => $request->user_type,
-                'employee_id' => $employee->id,
-                'status' => 'incomplete',
-            ]);
+                // 2. Create User
+                $user = User::create([
+                    'name' => $request->full_name,
+                    'email' => $request->work_email,
+                    'password' => Hash::make($request->password),
+                    'user_type' => $request->user_type,
+                    'employee_id' => $employee->id,
+                    'status' => 'active',
+                ]);
 
-            // 3. Link User to Employee
-            $employee->update(['user_id' => $user->id]);
+                // 3. Link User to Employee
+                $employee->update(['user_id' => $user->id]);
 
-            // 4. Assign Role
-            if ($request->has('role') && !empty($request->role)) {
-                $user->assignRole($request->role);
-            }
+                // 4. Assign Role
+                if ($request->has('role') && !empty($request->role)) {
+                    $user->assignRole($request->role);
+                }
 
-            // 5. Send Email
-            Mail::to($request->work_email)->send(new EmployeeAccountCreated(
-                $request->full_name,
-                $request->work_email,
-                $request->password
-            ));
+                // 5. System Notification (Always save to DB)
+                try {
+                    $this->notificationService->createNotification(
+                        $user->user_type === 'Group' ? 'hr' : $user->user_type,
+                        $user->id,
+                        'Account Created',
+                        'Welcome! Your employee account has been successfully created.',
+                        ['employee_id' => $employee->id]
+                    );
+                } catch (\Exception $ne) {
+                    Log::warning('System notification failed during account creation: ' . $ne->getMessage());
+                }
 
-            return $user;
+                // 6. Send Email (Decoupled try-catch)
+                try {
+                    Mail::to($request->work_email)->send(new EmployeeAccountCreated(
+                        $request->full_name,
+                        $request->work_email,
+                        $request->password
+                    ));
+                } catch (\Exception $me) {
+                    Log::warning('Email delivery failed during account creation: ' . $me->getMessage());
+                    // We don't re-throw here so the transaction can still commit and the account is created
+                }
+
+                return $user;
+            });
 
         } catch (\Exception $e) {
-            Log::error('Error creating employee account: ' . $e->getMessage());
+            Log::error('Error creating employee account: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
             throw $e;
         }
     }
