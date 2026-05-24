@@ -7,89 +7,63 @@
         <div class="card shadow-lg border-0 rounded-4 my-4">
         <!-- Form Body -->
         <div class="card-body p-4 p-md-5">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="fs-4 fw-bold text-dark mb-0">Career Movement Application</h2>
-                <a href="{{ route('transfer.index') }}" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
-                    <i class="bi bi-list me-1"></i> View Logs
-                </a>
-            </div>
-
-            @php
-                $isEmployee = auth()->user()->user_type === 'Employee';
-                $loggedInEmployeeId = auth()->user()->employee_id;
-                $loggedInEmployeeName = auth()->user()->employee?->full_name ?? auth()->user()->name;
-                
-                // Level Weights
-                $levels = [
-                    'company' => 1,
-                    'business_unit' => 2,
-                    'division' => 3,
-                    'department' => 4,
-                    'section' => 5,
-                ];
-                
-                $currentLevel = $isEmployee ? ($setting->employee_transfer_level ?? 'company') : ($setting->supervisor_transfer_level ?? 'company');
-                $levelWeight = $levels[$currentLevel] ?? 1;
-            @endphp
-
-            <form id="transferForm">
-                <!-- Basic Information Section -->
-                <div class="mb-5">
-                    <div class="d-flex align-items-center mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div class="d-flex align-items-center">
                         <div class="bg-primary bg-opacity-10 rounded-circle p-3 me-3 d-inline-flex align-items-center justify-content-center">
-                            <i class="bi bi-person-badge text-primary fs-4"></i>
+                            <i class="bi bi-file-earmark-plus text-primary fs-4"></i>
                         </div>
-                        <h3 class="fs-5 fw-bold text-dark mb-0">Employee Information</h3>
+                        <h2 class="fs-4 fw-bold text-dark mb-0">New Career Movement Application</h2>
                     </div>
-
-                    <!-- Employee Selection -->
-                    <div class="card border shadow-sm mb-4">
-                        <div class="card-body p-4">
-                            <label for="employee_id" class="form-label fw-semibold text-dark mb-3 d-flex align-items-center">
-                                <i class="bi bi-person text-primary me-2 fs-5"></i>
-                                <span>Select Employee</span>
-                                <span class="badge bg-danger ms-2">Required</span>
-                            </label>
-                            <select name="employee_id" id="employee_id" class="form-select form-select-lg select2" required @if($isEmployee) disabled @endif>
-                                <option value="">Select Employee</option>
-                                @if($isEmployee)
-                                    <option value="{{ $loggedInEmployeeId }}" selected>{{ $loggedInEmployeeName }}</option>
-                                @endif
-                            </select>
-                            @if($isEmployee)
-                                <input type="hidden" name="employee_id" id="hidden_employee_id" value="{{ $loggedInEmployeeId }}">
-                            @endif
-                            <div class="form-text mt-2">
-                                <i class="bi bi-info-circle me-1"></i>
-                                Choose the employee whose office location will be updated.
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Remarks -->
-                    <div class="card border shadow-sm mb-4">
-                        <div class="card-body p-4">
-                            <label for="remarks" class="form-label fw-semibold text-dark mb-3 d-flex align-items-center">
-                                <i class="bi bi-chat-left-text text-info me-2 fs-5"></i>
-                                <span>Remarks (Career Movement Cause)</span>
-                            </label>
-                            <textarea name="remarks" id="remarks" class="form-control form-control-lg" rows="3" placeholder="Enter transfer reason or additional notes..."></textarea>
-                        </div>
-                    </div>
+                    <a href="{{ route('transfer.index') }}" class="btn btn-light rounded-pill px-4 shadow-sm">
+                        <i class="bi bi-arrow-left me-2"></i>Back to Logs
+                    </a>
                 </div>
 
-                <!-- Office Information Section -->
-                <div class="mb-5">
-                    <div class="d-flex align-items-center mb-4">
-                        <div class="bg-success bg-opacity-10 rounded-circle p-3 me-3 d-inline-flex align-items-center justify-content-center">
-                            <i class="bi bi-geo-alt text-success fs-4"></i>
-                        </div>
-                        <h3 class="fs-5 fw-bold text-dark mb-0">Requested Office Information</h3>
-                    </div>
+                <form id="transferForm">
+                    @csrf
+                    <div class="row g-4">
+                        <!-- Employee Information Section -->
+                        <div class="col-lg-5 border-end pe-lg-5">
+                            <div class="mb-4">
+                                <h5 class="fw-bold text-primary mb-3 border-bottom pb-2">Employee Selection</h5>
+                                <div class="mb-3">
+                                    <label for="employee_id" class="form-label fw-semibold">Select Employee <span class="text-danger">*</span></label>
+                                    @if($isEmployee)
+                                        <div class="p-3 bg-light rounded border border-primary-subtle d-flex align-items-center">
+                                            <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
+                                                <i class="bi bi-person-check text-primary"></i>
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold text-dark">{{ auth()->user()->employee->full_name }}</div>
+                                                <div class="text-muted small">{{ auth()->user()->employee->applicant_id }}</div>
+                                            </div>
+                                            <input type="hidden" name="employee_id" id="employee_id" value="{{ auth()->user()->employee_id }}">
+                                        </div>
+                                    @else
+                                        <select name="employee_id" id="employee_id" class="form-select select2_list" required>
+                                            <option value="">Choose Employee</option>
+                                        </select>
+                                    @endif
+                                </div>
+                                <div id="employeeInfo" class="mt-4 p-3 bg-light rounded border-start border-4 border-primary d-none">
+                                    <label class="small text-muted fw-bold text-uppercase mb-2 d-block">Current Placement</label>
+                                    <div id="currentPlacementDetails" class="small">
+                                        <!-- Populated via AJAX -->
+                                    </div>
+                                </div>
+                            </div>
 
-                    <div class="card border shadow-sm">
-                        <div class="card-body p-4">
-                            <div class="row g-4">
+                            <div class="mt-4 p-4 bg-primary bg-opacity-5 rounded-4 border border-primary-subtle">
+                                <h6 class="fw-bold text-primary mb-2">Note:</h6>
+                                <p class="small text-muted mb-0">Your request will undergo a multi-stage approval process by the relevant authorities. Ensure all requested data is accurate.</p>
+                            </div>
+                        </div>
+
+                        <!-- Movement Details Section -->
+                        <div class="col-lg-7 ps-lg-5">
+                            <h5 class="fw-bold text-primary mb-3 border-bottom pb-2">Requested Information</h5>
+                            
+                            <div class="row g-3">
                                 <!-- Company -->
                                 <div class="col-md-6">
                                     <label for="requested_company_id" class="form-label fw-semibold">Company <span class="text-danger">*</span></label>
@@ -135,27 +109,21 @@
                                     @if($levelWeight > 5) <input type="hidden" name="requested_section_id" id="hidden_section_id"> @endif
                                 </div>
                             </div>
+
+                            <div class="mt-4">
+                                <label for="remarks" class="form-label fw-semibold">Reason / Remarks</label>
+                                <textarea name="remarks" id="remarks" rows="4" class="form-control bg-light" placeholder="Explain the reason for this career movement..."></textarea>
+                            </div>
+
+                            <div class="mt-5 pt-3 d-flex justify-content-end gap-3">
+                                <button type="reset" class="btn btn-light btn-lg rounded-pill px-5">Reset</button>
+                                <button type="submit" class="btn btn-primary btn-lg rounded-pill px-5 shadow">Submit Application</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="d-flex justify-content-end gap-3 mt-4">
-                    <a href="{{ route('transfer.index') }}" class="btn btn-lg btn-outline-secondary px-4 px-md-5 rounded-3">
-                        <i class="bi bi-x-circle me-2"></i>Cancel
-                    </a>
-                    <button type="submit" class="btn btn-lg btn-dark px-4 px-md-5 rounded-3 shadow">
-                        <i class="bi bi-send-fill me-2"></i>Submit Application
-                    </button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
-    </div>
-
-    <!-- Footer Info -->
-    <div class="text-center mt-4 text-muted small">
-        <i class="bi bi-info-circle me-1"></i>
-        Applications will follow the configured approval workflow
     </div>
 </div>
 @endsection
@@ -196,6 +164,14 @@ $(document).ready(function() {
         } else {
             $el.prop('disabled', false).html(`<option value="">${text}</option>`);
         }
+    }
+
+    function populateSelect($el, data, placeholder, labelKey = 'name') {
+        reset($el, placeholder);
+        data.forEach(item => {
+            const label = item[labelKey] || item['name'] || 'N/A';
+            $el.append(`<option value="${item.id}">${label}</option>`);
+        });
     }
 
     // -------------------------
@@ -389,8 +365,17 @@ $(document).ready(function() {
                 if (info) {
                     const weight = {{ $levelWeight }};
                     
+                    // Show Current Placement in Sidebar
+                    $('#employeeInfo').removeClass('d-none');
+                    $('#currentPlacementDetails').html(`
+                        <div class="mb-1"><strong>Company:</strong> ${info.get_current_company?.name || 'N/A'}</div>
+                        <div class="mb-1"><strong>Unit:</strong> ${info.get_current_business_unit?.name || 'N/A'}</div>
+                        <div class="mb-1"><strong>Division:</strong> ${info.get_current_division?.name || 'N/A'}</div>
+                        <div class="mb-1"><strong>Dept:</strong> ${info.get_current_department?.department_name || 'N/A'}</div>
+                        <div class="mb-0"><strong>Section:</strong> ${info.get_current_section?.name || 'N/A'}</div>
+                    `);
+
                     // 1. Company (Weight 1)
-                    // If weight > 1, Company is locked to current
                     if (info.current_company_id && weight > 1) {
                         companySelect.val(info.current_company_id).trigger('change');
                         $('#hidden_company_id').val(info.current_company_id);
