@@ -6,7 +6,7 @@
     <div class="col-md-12">
         <div class="card glass-card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0 text-white">Career Movement Request Details: {{ $transfer->employee->full_name }}</h5>
+                <h5 class="card-title mb-0">Career Movement Request Details: {{ $transfer->employee->full_name }}</h5>
                 <div>
                     @if($transfer->status === 'approved' && auth()->user()->can('transfers.edit'))
                     <button class="btn btn-sm btn-success" id="btnComplete">
@@ -19,23 +19,23 @@
             <div class="card-body">
                 <div class="row">
                     <!-- Current Office Info -->
-                    <div class="col-md-6 border-end border-white-10">
-                        <h6 class="text-white-50 border-bottom border-white-10 pb-2 mb-3">Current Office Info</h6>
+                    <div class="col-md-6 border-end">
+                        <h6 class="text-muted border-bottom pb-2 mb-3">Current Office Info</h6>
                         <div class="info-item mb-2">
-                            <label class="text-white-50 small d-block">Company</label>
-                            <span class="text-white">{{ $transfer->currentCompany->name ?? 'N/A' }}</span>
+                            <label class="text-muted small d-block">Company</label>
+                            <span class="fw-medium">{{ $transfer->currentCompany->name ?? 'N/A' }}</span>
                         </div>
                         <div class="info-item mb-2">
-                            <label class="text-white-50 small d-block">Business Unit</label>
-                            <span class="text-white">{{ $transfer->currentBusinessUnit->name ?? 'N/A' }}</span>
+                            <label class="text-muted small d-block">Business Unit</label>
+                            <span class="fw-medium">{{ $transfer->currentBusinessUnit->name ?? 'N/A' }}</span>
                         </div>
                         <div class="info-item mb-2">
-                            <label class="text-white-50 small d-block">Division / Department</label>
-                            <span class="text-white">{{ $transfer->currentDivision->name ?? 'N/A' }} / {{ $transfer->currentDepartment->department_name ?? 'N/A' }}</span>
+                            <label class="text-muted small d-block">Division / Department</label>
+                            <span class="fw-medium">{{ $transfer->currentDivision->name ?? 'N/A' }} / {{ $transfer->currentDepartment->department_name ?? 'N/A' }}</span>
                         </div>
                         <div class="info-item mb-2">
-                            <label class="text-white-50 small d-block">Section</label>
-                            <span class="text-white">{{ $transfer->currentSection->name ?? 'N/A' }}</span>
+                            <label class="text-muted small d-block">Section</label>
+                            <span class="fw-medium">{{ $transfer->currentSection->name ?? 'N/A' }}</span>
                         </div>
                     </div>
 
@@ -43,36 +43,36 @@
                     <div class="col-md-6 ps-md-4">
                         <h6 class="text-primary border-bottom border-primary-20 pb-2 mb-3">Requested Office Info</h6>
                         <div class="info-item mb-2">
-                            <label class="text-white-50 small d-block">Company</label>
-                            <span class="text-white">{{ $transfer->requestedCompany->name ?? 'N/A' }}</span>
+                            <label class="text-muted small d-block">Company</label>
+                            <span class="fw-medium">{{ $transfer->requestedCompany->name ?? 'N/A' }}</span>
                         </div>
                         <div class="info-item mb-2">
-                            <label class="text-white-50 small d-block">Business Unit</label>
-                            <span class="text-white">{{ $transfer->requestedBusinessUnit->name ?? 'N/A' }}</span>
+                            <label class="text-muted small d-block">Business Unit</label>
+                            <span class="fw-medium">{{ $transfer->requestedBusinessUnit->name ?? 'N/A' }}</span>
                         </div>
                         <div class="info-item mb-2">
-                            <label class="text-white-50 small d-block">Division / Department</label>
-                            <span class="text-white">{{ $transfer->requestedDivision->name ?? 'N/A' }} / {{ $transfer->requestedDepartment->department_name ?? 'N/A' }}</span>
+                            <label class="text-muted small d-block">Division / Department</label>
+                            <span class="fw-medium">{{ $transfer->requestedDivision->name ?? 'N/A' }} / {{ $transfer->requestedDepartment->department_name ?? 'N/A' }}</span>
                         </div>
                         <div class="info-item mb-2">
-                            <label class="text-white-50 small d-block">Section</label>
-                            <span class="text-white">{{ $transfer->requestedSection->name ?? 'N/A' }}</span>
+                            <label class="text-muted small d-block">Section</label>
+                            <span class="fw-medium">{{ $transfer->requestedSection->name ?? 'N/A' }}</span>
                         </div>
                     </div>
                 </div>
 
                 @if($transfer->remarks)
-                <div class="mt-4 p-3 bg-white-5 rounded">
-                    <label class="text-white-50 small d-block">Employee Remarks</label>
-                    <p class="text-white mb-0">{{ $transfer->remarks }}</p>
+                <div class="mt-4 p-3 bg-light rounded">
+                    <label class="text-muted small d-block">Employee Remarks</label>
+                    <p class="mb-0">{{ $transfer->remarks }}</p>
                 </div>
                 @endif
 
                 <div class="mt-4 row g-3">
                     <div class="col-md-6">
-                        <div class="p-2 border border-white-10 rounded bg-white-5">
-                            <label class="text-white-50 small d-block mb-1">Applied By</label>
-                            <span class="text-white">
+                        <div class="p-2 border rounded bg-light">
+                            <label class="text-muted small d-block mb-1">Applied By</label>
+                            <span class="">
                                 <i data-feather="user" class="me-1" style="width: 14px;"></i>
                                 {{ $transfer->creator->name }} on {{ $transfer->created_at->format('d M Y, h:i A') }}
                             </span>
@@ -80,9 +80,9 @@
                     </div>
                     @if($transfer->status === 'completed' && $transfer->completer)
                     <div class="col-md-6">
-                        <div class="p-2 border border-success-20 rounded bg-success-10">
-                            <label class="text-success-50 small d-block mb-1">Finalized By</label>
-                            <span class="text-white">
+                        <div class="p-2 border border-success-subtle rounded bg-success-light">
+                            <label class="text-success small d-block mb-1">Finalized By</label>
+                            <span class="">
                                 <i data-feather="check-circle" class="me-1" style="width: 14px;"></i>
                                 {{ $transfer->completer->name }} on {{ \Carbon\Carbon::parse($transfer->completed_at)->format('d M Y, h:i A') }}
                             </span>
@@ -94,11 +94,12 @@
         </div>
     </div>
 
+    @if(auth()->user()->user_type !== 'Employee')
     <!-- Approval Workflow Section -->
     <div class="col-md-12">
         <div class="card glass-card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0 text-white">Approval Workflow</h5>
+                <h5 class="card-title mb-0">Approval Workflow</h5>
                 @if($transfer->status === 'pending' && $transfer->approval_count_required === 0 && auth()->user()->can('transfers.approve'))
                 <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#setupApproversModal">
                     <i data-feather="users" class="me-1"></i> Setup Approvers
@@ -108,7 +109,7 @@
             <div class="card-body">
                 @if($transfer->approval_count_required > 0)
                 <div class="table-responsive">
-                    <table class="table table-sm text-white">
+                    <table class="table table-sm">
                         <thead>
                             <tr>
                                 <th>Approver</th>
@@ -143,19 +144,20 @@
                     $myApproval = $transfer->approvals->where('approver_id', auth()->id())->where('status', 'pending')->first();
                 @endphp
                 @if($myApproval)
-                <div class="mt-4 p-3 border border-primary-20 rounded bg-primary-10">
-                    <h6 class="text-white mb-3">Your Approval Required</h6>
+                <div class="mt-4 p-3 border border-primary-subtle rounded bg-primary-light">
+                    <h6 class="mb-3">Your Approval Required</h6>
                     <button class="btn btn-success" onclick="approveCareerMovement()">Approve Request</button>
                 </div>
                 @endif
                 @else
-                <div class="text-center py-4 text-white-50">
+                <div class="text-center py-4 text-muted">
                     <p>No approval workflow configured yet.</p>
                 </div>
                 @endif
             </div>
         </div>
     </div>
+    @endif
 </div>
 
 <!-- Setup Approvers Modal -->
@@ -163,13 +165,13 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content glass-card">
             <div class="modal-header">
-                <h5 class="modal-title text-white">Setup Career Movement Approvers</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <h5 class="modal-title">Setup Career Movement Approvers</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <div class="row g-3">
                     <div class="col-md-12">
-                        <label class="text-white small mb-1">Search & Select Authorities</label>
+                        <label class="small mb-1">Search & Select Authorities</label>
                         <div class="input-group">
                             <input type="text" id="authoritySearch" class="form-control" placeholder="Search by name or office...">
                             <button class="btn btn-primary" id="btnSearchAuthorities">Search</button>
@@ -183,7 +185,7 @@
                     </div>
 
                     <div class="col-md-12 mt-4">
-                        <h6 class="text-white small">Selected Approvers</h6>
+                        <h6 class="small">Selected Approvers</h6>
                         <div id="selectedApprovers" class="d-flex flex-wrap gap-2 py-2">
                             <!-- Chips -->
                         </div>
@@ -227,8 +229,8 @@ document.addEventListener('DOMContentLoaded', function() {
         listContainer.innerHTML = '';
         users.forEach(user => {
             const item = `
-                <button class="list-group-item list-group-item-action bg-white-5 text-white border-white-10 d-flex justify-content-between" onclick="window.selectApprover(${user.id}, '${user.name}')">
-                    <span>${user.name} <small class="text-white-50">(${user.user_type})</small></span>
+                <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" onclick="window.selectApprover(${user.id}, '${user.name}')">
+                    <span>${user.name} <small class="text-muted">(${user.user_type})</small></span>
                     <i data-feather="plus" style="width: 14px;"></i>
                 </button>
             `;
