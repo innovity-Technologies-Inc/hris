@@ -10,6 +10,7 @@ use App\Models\Company\Department;
 use App\Models\Company\Section;
 use App\Models\Company\Designation;
 use App\Models\User;
+use App\Traits\OrganizationScoped;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Transfer extends Model
 {
-    use HasFactory;
+    use HasFactory, OrganizationScoped;
 
     protected $fillable = [
         'employee_id',

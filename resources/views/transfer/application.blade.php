@@ -93,7 +93,7 @@
                                 <!-- Company -->
                                 <div class="col-md-6">
                                     <label for="requested_company_id" class="form-label fw-semibold">Company <span class="text-danger">*</span></label>
-                                    <select name="requested_company_id" id="requested_company_id" class="form-select" required @if($levelWeight > 1) disabled @endif>
+                                    <select name="requested_company_id" id="requested_company_id" class="form-select select2_list" required @if($levelWeight > 1) disabled @endif>
                                         <option value="">Select Company</option>
                                     </select>
                                     @if($levelWeight > 1) <input type="hidden" name="requested_company_id" id="hidden_company_id"> @endif
@@ -102,7 +102,7 @@
                                 <!-- Business Unit -->
                                 <div class="col-md-6">
                                     <label for="requested_business_unit_id" class="form-label fw-semibold">Business Unit / Branch</label>
-                                    <select name="requested_business_unit_id" id="requested_business_unit_id" class="form-select" @if($levelWeight > 2) disabled @endif>
+                                    <select name="requested_business_unit_id" id="requested_business_unit_id" class="form-select select2_list" @if($levelWeight > 2) disabled @endif>
                                         <option value="">Select Business Unit</option>
                                     </select>
                                     @if($levelWeight > 2) <input type="hidden" name="requested_business_unit_id" id="hidden_unit_id"> @endif
@@ -111,7 +111,7 @@
                                 <!-- Division -->
                                 <div class="col-md-6">
                                     <label for="requested_division_id" class="form-label fw-semibold">Division</label>
-                                    <select name="requested_division_id" id="requested_division_id" class="form-select" @if($levelWeight > 3) disabled @endif>
+                                    <select name="requested_division_id" id="requested_division_id" class="form-select select2_list" @if($levelWeight > 3) disabled @endif>
                                         <option value="">Select Division</option>
                                     </select>
                                     @if($levelWeight > 3) <input type="hidden" name="requested_division_id" id="hidden_division_id"> @endif
@@ -120,7 +120,7 @@
                                 <!-- Department -->
                                 <div class="col-md-6">
                                     <label for="requested_department_id" class="form-label fw-semibold">Department</label>
-                                    <select name="requested_department_id" id="requested_department_id" class="form-select" @if($levelWeight > 4) disabled @endif>
+                                    <select name="requested_department_id" id="requested_department_id" class="form-select select2_list" @if($levelWeight > 4) disabled @endif>
                                         <option value="">Select Department</option>
                                     </select>
                                     @if($levelWeight > 4) <input type="hidden" name="requested_department_id" id="hidden_department_id"> @endif
@@ -129,7 +129,7 @@
                                 <!-- Section -->
                                 <div class="col-md-12">
                                     <label for="requested_section_id" class="form-label fw-semibold">Section</label>
-                                    <select name="requested_section_id" id="requested_section_id" class="form-select" @if($levelWeight > 5) disabled @endif>
+                                    <select name="requested_section_id" id="requested_section_id" class="form-select select2_list" @if($levelWeight > 5) disabled @endif>
                                         <option value="">Select Section</option>
                                     </select>
                                     @if($levelWeight > 5) <input type="hidden" name="requested_section_id" id="hidden_section_id"> @endif
@@ -163,170 +163,258 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+$(document).ready(function() {
     // Select Elements
-    const employeeSelect = document.getElementById('employee_id');
-    const companySelect = document.getElementById('requested_company_id');
-    const unitSelect = document.getElementById('requested_business_unit_id');
-    const divisionSelect = document.getElementById('requested_division_id');
-    const departmentSelect = document.getElementById('requested_department_id');
-    const sectionSelect = document.getElementById('requested_section_id');
-    const designationSelect = document.getElementById('requested_designation_id');
-    const transferForm = document.getElementById('transferForm');
+    const employeeSelect = $('#employee_id');
+    const companySelect = $('#requested_company_id');
+    const unitSelect = $('#requested_business_unit_id');
+    const divisionSelect = $('#requested_division_id');
+    const departmentSelect = $('#requested_department_id');
+    const sectionSelect = $('#requested_section_id');
 
-    // Initial Fetch
+    const levelWeight = {{ $levelWeight }};
+    const fieldWeights = {
+        'requested_company_id': 1,
+        'requested_business_unit_id': 2,
+        'requested_division_id': 3,
+        'requested_department_id': 4,
+        'requested_section_id': 5
+    };
+
+    function shouldBeDisabled(el) {
+        const id = $(el).attr('id');
+        return levelWeight > (fieldWeights[id] || 0);
+    }
+
+    function loading($el, text = 'Loading...') {
+        $el.prop('disabled', true).html(`<option value="">${text}</option>`);
+    }
+
+    function reset($el, text) {
+        if (shouldBeDisabled($el)) {
+            $el.prop('disabled', true);
+        } else {
+            $el.prop('disabled', false).html(`<option value="">${text}</option>`);
+        }
+    }
+
+    // -------------------------
+    // Load Divisions + Chain (Department + Section)
+    // -------------------------
+    function loadDivisions(prefix) {
+        const companyId = $(`#${prefix}_company_id`).val();
+        if (!companyId) return;
+
+        const locationId = $(`#${prefix}_business_unit_id`).val() || 'null';
+
+        loading($(`#${prefix}_division_id`));
+        reset($(`#${prefix}_department_id`), 'Select Department');
+        reset($(`#${prefix}_section_id`), 'Select Section');
+
+        $.get(`/get-divisions/${companyId}/${locationId}`, function (data) {
+            reset($(`#${prefix}_division_id`), 'Select Division');
+            if (!data.length) {
+                $(`#${prefix}_division_id`).html('<option value="">No division found</option>');
+            } else {
+                $.each(data, function (_, item) {
+                    $(`#${prefix}_division_id`).append(`<option value="${item.id}">${item.name}</option>`);
+                });
+            }
+            // Chain: Load departments after divisions
+            loadDepartments(prefix);
+        });
+    }
+
+    // -------------------------
+    // Load Departments + Chain (Section)
+    // -------------------------
+    function loadDepartments(prefix) {
+        const companyId = $(`#${prefix}_company_id`).val();
+        if (!companyId) return;
+
+        const locationId = $(`#${prefix}_business_unit_id`).val() || 'null';
+        const divisionId = $(`#${prefix}_division_id`).val() || 'null';
+
+        loading($(`#${prefix}_department_id`));
+        reset($(`#${prefix}_section_id`), 'Select Section');
+
+        $.get(`/get-departments/${companyId}/${locationId}/${divisionId}`, function (data) {
+            reset($(`#${prefix}_department_id`), 'Select Department');
+            if (!data.length) {
+                $(`#${prefix}_department_id`).html('<option value="">No department found</option>');
+            } else {
+                $.each(data, function (_, item) {
+                    $(`#${prefix}_department_id`).append(`<option value="${item.id}">${item.department_name}</option>`);
+                });
+            }
+            // Chain: Load sections after departments
+            loadSections(prefix);
+        });
+    }
+
+    // -------------------------
+    // Load Sections
+    // -------------------------
+    function loadSections(prefix) {
+        const companyId = $(`#${prefix}_company_id`).val();
+        if (!companyId) return;
+
+        const locationId = $(`#${prefix}_business_unit_id`).val() || 'null';
+        const divisionId = $(`#${prefix}_division_id`).val() || 'null';
+        const departmentId = $(`#${prefix}_department_id`).val() || 'null';
+
+        loading($(`#${prefix}_section_id`));
+
+        $.get(`/get-sections/${companyId}/${locationId}/${divisionId}/${departmentId}`, function (data) {
+            reset($(`#${prefix}_section_id`), 'Select Section');
+            if (!data.length) {
+                $(`#${prefix}_section_id`).html('<option value="">No section found</option>');
+            } else {
+                $.each(data, function (_, item) {
+                    $(`#${prefix}_section_id`).append(`<option value="${item.id}">${item.name}</option>`);
+                });
+            }
+        });
+    }
+
+    // -------------------------
+    // Company Change → Load Branch + Full Chain
+    // -------------------------
+    $('#requested_company_id').on('change', function () {
+        const prefix = 'requested';
+        const companyId = $(this).val();
+        if (!companyId) return;
+
+        reset($(`#${prefix}_division_id`), 'Select Division');
+        reset($(`#${prefix}_department_id`), 'Select Department');
+        reset($(`#${prefix}_section_id`), 'Select Section');
+
+        @if(\App\HelperClass::getGeneralSetting()->branch_status == '1')
+        loading($(`#${prefix}_business_unit_id`));
+
+        $.get(`/get-units/${companyId}`, function (data) {
+            reset($(`#${prefix}_business_unit_id`), 'Select Branch');
+            if (!data.length) {
+                $(`#${prefix}_business_unit_id`).html('<option value="">No branch found</option>');
+            } else {
+                $.each(data, function (_, item) {
+                    $(`#${prefix}_business_unit_id`).append(`<option value="${item.id}">${item.name}</option>`);
+                });
+            }
+            // Immediately load the full chain after branches
+            loadDivisions(prefix);
+        });
+        @else
+        // No branch → directly load divisions + chain
+        loadDivisions(prefix);
+        @endif
+    });
+
+    // -------------------------
+    // Branch Change → Reload Full Chain
+    // -------------------------
+    $('#requested_business_unit_id').on('change', function () {
+        loadDivisions('requested');
+    });
+
+    // -------------------------
+    // Division Change → Reload Department + Section
+    // -------------------------
+    $('#requested_division_id').on('change', function () {
+        loadDepartments('requested');
+    });
+
+    // -------------------------
+    // Department Change → Reload Section
+    // -------------------------
+    $('#requested_department_id').on('change', function () {
+        loadSections('requested');
+    });
+
+    // Initial Data Fetch
     @if(!$isEmployee)
     fetchEmployees();
     @endif
     fetchCompanies();
-    fetchDesignations();
 
-    // Event Listeners for Cascading
     @if(!$isEmployee)
-    employeeSelect.addEventListener('change', function() {
+    employeeSelect.on('change', function() {
         if (this.value) {
-            fetchOfficeInfo(this.value);
+            fetchCurrentOfficeInfo(this.value);
         }
     });
     @else
-    fetchOfficeInfo('{{ $loggedInEmployeeId }}');
+    fetchCurrentOfficeInfo('{{ $loggedInEmployeeId }}');
     @endif
-
-    companySelect.addEventListener('change', function() {
-        const companyId = this.value;
-        resetDropdowns([unitSelect, divisionSelect, departmentSelect, sectionSelect]);
-        if (companyId) {
-            fetchUnits(companyId);
-            fetchDivisions(companyId, 'null');
-            fetchDepartments(companyId, 'null', 'null');
-            fetchSections(companyId, 'null', 'null', 'null');
-        }
-    });
-
-    unitSelect.addEventListener('change', function() {
-        const companyId = companySelect.value;
-        const unitId = this.value || 'null';
-        resetDropdowns([divisionSelect, departmentSelect, sectionSelect]);
-        fetchDivisions(companyId, unitId);
-    });
-
-    divisionSelect.addEventListener('change', function() {
-        const companyId = companySelect.value;
-        const unitId = unitSelect.value || 'null';
-        const divisionId = this.value || 'null';
-        resetDropdowns([departmentSelect, sectionSelect]);
-        fetchDepartments(companyId, unitId, divisionId);
-    });
-
-    departmentSelect.addEventListener('change', function() {
-        const companyId = companySelect.value;
-        const unitId = unitSelect.value || 'null';
-        const divisionId = divisionSelect.value || 'null';
-        const departmentId = this.value || 'null';
-        resetDropdowns([sectionSelect]);
-        fetchSections(companyId, unitId, divisionId, departmentId);
-    });
 
     // Fetch Functions
     function fetchEmployees() {
-        axios.get('{{ route('transfer.api.employees') }}')
-            .then(res => populateSelect(employeeSelect, res.data.data, 'Select Employee', 'id', (item) => `${item.full_name} (${item.applicant_id})`))
-            .catch(err => console.error(err));
-    }
-
-    function fetchCompanies() {
-        axios.get('{{ route('transfer.api.companies') }}')
-            .then(res => populateSelect(companySelect, res.data.data, 'Select Company'))
-            .catch(err => console.error(err));
-    }
-
-    function fetchUnits(companyId) {
-        axios.get(`{{ url('transfer/api/units') }}/${companyId}`)
-            .then(res => populateSelect(unitSelect, res.data.data, 'Select Business Unit'))
-            .catch(err => console.error(err));
-    }
-
-    function fetchDivisions(companyId, unitId) {
-        axios.get(`{{ url('transfer/api/divisions') }}/${companyId}/${unitId}`)
-            .then(res => populateSelect(divisionSelect, res.data.data, 'Select Division'))
-            .catch(err => console.error(err));
-    }
-
-    function fetchDepartments(companyId, unitId, divisionId) {
-        axios.get(`{{ url('transfer/api/departments') }}/${companyId}/${unitId}/${divisionId}`)
-            .then(res => populateSelect(departmentSelect, res.data.data, 'Select Department'))
-            .catch(err => console.error(err));
-    }
-
-    function fetchSections(companyId, unitId, divisionId, departmentId) {
-        axios.get(`{{ url('transfer/api/sections') }}/${companyId}/${unitId}/${divisionId}/${departmentId}`)
-            .then(res => populateSelect(sectionSelect, res.data.data, 'Select Section'))
-            .catch(err => console.error(err));
-    }
-
-    function fetchOfficeInfo(employeeId) {
-        axios.get(`{{ url('get-office-info') }}/${employeeId}`)
-            .then(res => {
-                const info = res.data;
-                if (info) {
-                    const weight = {{ $levelWeight }};
-                    
-                    if (weight > 1) {
-                        setField(companySelect, 'hidden_company_id', info.current_company_id, info.get_current_company?.name);
-                        fetchUnits(info.current_company_id);
-                    }
-                    if (weight > 2) {
-                        setTimeout(() => {
-                            setField(unitSelect, 'hidden_unit_id', info.current_business_unit_id, info.get_current_business_unit?.name);
-                            fetchDivisions(info.current_company_id, info.current_business_unit_id || 'null');
-                        }, 500);
-                    }
-                    if (weight > 3) {
-                        setTimeout(() => {
-                            setField(divisionSelect, 'hidden_division_id', info.current_division_id, info.get_current_division?.name);
-                            fetchDepartments(info.current_company_id, info.current_business_unit_id || 'null', info.current_division_id || 'null');
-                        }, 1000);
-                    }
-                    if (weight > 4) {
-                        setTimeout(() => {
-                            setField(departmentSelect, 'hidden_department_id', info.current_department_id, info.get_current_department?.department_name);
-                            fetchSections(info.current_company_id, info.current_business_unit_id || 'null', info.current_division_id || 'null', info.current_department_id || 'null');
-                        }, 1500);
-                    }
-                    if (weight > 5) {
-                        setTimeout(() => {
-                            setField(sectionSelect, 'hidden_section_id', info.current_section_id, info.get_current_section?.name);
-                        }, 2000);
-                    }
-                }
-            })
-            .catch(err => console.error(err));
-    }
-
-    function setField(select, hiddenId, value, label) {
-        if (value) {
-            select.innerHTML = `<option value="${value}" selected>${label}</option>`;
-            const hidden = document.getElementById(hiddenId);
-            if (hidden) hidden.value = value;
-        }
-    }
-
-    // Helper Functions
-    function populateSelect(select, data, placeholder, valueKey = 'id', labelKey = 'name') {
-        select.innerHTML = `<option value="">${placeholder}</option>`;
-        data.forEach(item => {
-            const label = typeof labelKey === 'function' ? labelKey(item) : item[labelKey];
-            const option = new Option(label, item[valueKey]);
-            select.add(option);
+        $.get('{{ route('transfer.api.employees') }}', function(res) {
+            employeeSelect.html('<option value="">Select Employee</option>');
+            $.each(res.data, function(_, item) {
+                employeeSelect.append(`<option value="${item.id}">${item.full_name} (${item.applicant_id})</option>`);
+            });
         });
     }
 
-    function resetDropdowns(selects) {
-        selects.forEach(s => s.innerHTML = '<option value="">Select...</option>');
+    function fetchCompanies() {
+        $.get('{{ route('transfer.api.companies') }}', function(res) {
+            companySelect.html('<option value="">Select Company</option>');
+            $.each(res.data, function(_, item) {
+                companySelect.append(`<option value="${item.id}">${item.name}</option>`);
+            });
+        });
+    }
+
+    function fetchCurrentOfficeInfo(employeeId) {
+        $.get(`/get-office-info/${employeeId}`, function(info) {
+            if (info) {
+                const weight = {{ $levelWeight }};
+                
+                // 1. Company (Weight 1)
+                // If weight > 1, Company is locked to current
+                if (info.current_company_id && weight > 1) {
+                    companySelect.val(info.current_company_id).trigger('change');
+                    $('#hidden_company_id').val(info.current_company_id);
+                }
+                
+                // 2. Branch/Unit (Weight 2)
+                if (info.current_business_unit_id && weight > 2) {
+                    setTimeout(() => {
+                        unitSelect.val(info.current_business_unit_id).trigger('change');
+                        $('#hidden_unit_id').val(info.current_business_unit_id);
+                    }, 600);
+                }
+
+                // 3. Division (Weight 3)
+                if (info.current_division_id && weight > 3) {
+                    setTimeout(() => {
+                        divisionSelect.val(info.current_division_id).trigger('change');
+                        $('#hidden_division_id').val(info.current_division_id);
+                    }, 1000);
+                }
+
+                // 4. Department (Weight 4)
+                if (info.current_department_id && weight > 4) {
+                    setTimeout(() => {
+                        departmentSelect.val(info.current_department_id).trigger('change');
+                        $('#hidden_department_id').val(info.current_department_id);
+                    }, 1400);
+                }
+
+                // 5. Section (Weight 5)
+                if (info.current_section_id && weight > 5) {
+                    setTimeout(() => {
+                        sectionSelect.val(info.current_section_id);
+                        $('#hidden_section_id').val(info.current_section_id);
+                    }, 1800);
+                }
+            }
+        });
     }
 
     // Form Submission
-    transferForm.addEventListener('submit', function(e) {
+    $('#transferForm').on('submit', function(e) {
         e.preventDefault();
         const formData = new FormData(this);
         const data = Object.fromEntries(formData.entries());

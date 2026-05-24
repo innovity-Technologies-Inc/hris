@@ -80,6 +80,11 @@ document.addEventListener('DOMContentLoaded', function() {
         tableBody.innerHTML = '';
         data.forEach((item, index) => {
             const statusBadge = getStatusBadge(item.status);
+            const employeeName = item.employee ? item.employee.full_name : 'Unknown Employee';
+            const applicantId = item.employee ? item.employee.applicant_id : 'N/A';
+            const companyName = item.requested_company ? item.requested_company.name : 'Unknown Company';
+            const unitName = item.requested_business_unit ? item.requested_business_unit.name : 'N/A';
+
             const row = `
                 <tr>
                     <td class="ps-4 text-muted">${index + 1}</td>
@@ -89,14 +94,14 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <i class="bi bi-person text-secondary"></i>
                             </div>
                             <div>
-                                <div class="fw-bold text-dark">${item.employee.full_name}</div>
-                                <small class="text-muted">${item.employee.applicant_id}</small>
+                                <div class="fw-bold text-dark">${employeeName}</div>
+                                <small class="text-muted">${applicantId}</small>
                             </div>
                         </div>
                     </td>
                     <td>
-                        <div class="text-dark fw-medium">${item.requested_company.name}</div>
-                        <small class="text-muted">${item.requested_business_unit ? item.requested_business_unit.name : 'N/A'}</small>
+                        <div class="text-dark fw-medium">${companyName}</div>
+                        <small class="text-muted">${unitName}</small>
                     </td>
                     <td>${statusBadge}</td>
                     <td class="text-muted">${new Date(item.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
