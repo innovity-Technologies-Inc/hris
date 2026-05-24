@@ -59,7 +59,7 @@ class EmployeeDashboardServices
         $events = collect();
         $employee = Employee::findOrFail($employeeId);
 
-        // 1. Onboarding
+        // 1. Onboarding (Profile Creation)
         $events->push([
             'date' => $employee->created_at,
             'type' => 'onboarding',
@@ -69,7 +69,19 @@ class EmployeeDashboardServices
             'color' => 'primary'
         ]);
 
-        // 2. Profile Approval (using updated_at if active)
+        // 2. Official Joining Date
+        if ($employee->officeInfo && $employee->officeInfo->date_of_join) {
+            $events->push([
+                'date' => Carbon::parse($employee->officeInfo->date_of_join),
+                'type' => 'joining',
+                'title' => 'Joined Organization',
+                'description' => 'Official start date of employment.',
+                'icon' => 'briefcase',
+                'color' => 'info'
+            ]);
+        }
+
+        // 3. Profile Approval (using updated_at if active)
         if ($employee->status === 'active') {
             $events->push([
                 'date' => $employee->updated_at,

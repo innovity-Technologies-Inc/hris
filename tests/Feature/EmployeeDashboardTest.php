@@ -83,11 +83,15 @@ it('aggregates timeline events in correct order', function () {
     $service = app(\App\Services\Employee\EmployeeDashboardServices::class);
     $events = $service->getTimelineEvents($this->employee->id);
 
-    expect($events->count())->toBeGreaterThanOrEqual(3);
+    // Should have Onboarding, Joining, Promotion, Increment
+    expect($events->count())->toBeGreaterThanOrEqual(4);
     
-    // Sort by date desc: Increment (1y ago), Promotion (3y ago), Onboarding (today)
-    // Actually onboarding is today, so it should be FIRST in desc sort.
+    // Sort by date desc: Increment (1y ago), Promotion (3y ago), Joining (2020), Onboarding (today)
     expect($events[0]['type'])->toBe('onboarding'); 
+    
+    $joiningEvent = $events->firstWhere('type', 'joining');
+    expect($joiningEvent)->not->toBeNull()
+        ->and($joiningEvent['title'])->toBe('Joined Organization');
 });
 
 it('restricts employee dashboard access', function () {
