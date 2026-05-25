@@ -259,13 +259,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (data.education_info && data.education_info.educations && data.education_info.educations.length > 0) {
             sectionEdu.classList.remove('d-none');
             eduBody.innerHTML = data.education_info.educations.map(edu => `
-                <div class="col-md-4 mb-2">
-                    <div class="p-2 border rounded-3 bg-light-subtle h-100">
-                        <label class="mb-0">Degree</label><span class="fw-bold">${edu.education_title || 'N/A'}</span>
-                        <label class="mt-2 mb-0">Institute</label><span>${edu.institute || 'N/A'}</span>
-                        <div class="d-flex justify-content-between mt-2">
-                            <div><label class="mb-0">Year</label><span>${edu.passing_year || 'N/A'}</span></div>
-                            <div><label class="mb-0">Result</label><span>${edu.result_grade || 'N/A'}</span></div>
+                <div class="col-12 mb-3">
+                    <div class="p-3 border rounded-3 bg-light-subtle">
+                        <div class="row">
+                            <div class="col-md-6"><label class="mb-0">Degree / Certificate</label><span class="fw-bold">${edu.education_title || 'N/A'}</span></div>
+                            <div class="col-md-6"><label class="mb-0">Passing Year & Result</label><span>${edu.passing_year || 'N/A'} | ${edu.result_grade || 'N/A'}</span></div>
+                            <div class="col-12 mt-2"><label class="mb-0">Institute / Board / University</label><span>${edu.institute || 'N/A'} ${edu.board_university ? ' - ' + edu.board_university : ''}</span></div>
                         </div>
                     </div>
                 </div>
@@ -280,13 +279,13 @@ document.addEventListener('DOMContentLoaded', function() {
         if (data.education_info && data.education_info.trainings && data.education_info.trainings.length > 0) {
             sectionTrn.classList.remove('d-none');
             trnBody.innerHTML = data.education_info.trainings.map(trn => `
-                <div class="col-md-4 mb-2">
-                    <div class="p-2 border rounded-3 bg-light-subtle h-100">
-                        <label class="mb-0">Title</label><span class="fw-bold">${trn.training_title || 'N/A'}</span>
-                        <label class="mt-2 mb-0">Institute</label><span>${trn.institute || 'N/A'}</span>
-                        <div class="d-flex justify-content-between mt-2">
-                            <div><label class="mb-0">Duration</label><span>${trn.duration || 'N/A'}</span></div>
-                            <div><label class="mb-0">Year</label><span>${trn.to_date ? new Date(trn.to_date).getFullYear() : 'N/A'}</span></div>
+                <div class="col-12 mb-3">
+                    <div class="p-3 border rounded-3 bg-light-subtle">
+                        <div class="row">
+                            <div class="col-md-6"><label class="mb-0">Training Title</label><span class="fw-bold">${trn.training_title || 'N/A'}</span></div>
+                            <div class="col-md-3"><label class="mb-0">Duration</label><span>${trn.duration || 'N/A'}</span></div>
+                            <div class="col-md-3"><label class="mb-0">Year</label><span>${trn.to_date ? new Date(trn.to_date).getFullYear() : 'N/A'}</span></div>
+                            <div class="col-12 mt-2"><label class="mb-0">Institute & Location</label><span>${trn.institute || 'N/A'} ${trn.location ? ' - ' + trn.location : ''}</span></div>
                         </div>
                     </div>
                 </div>
@@ -301,11 +300,13 @@ document.addEventListener('DOMContentLoaded', function() {
         if (data.employment_history && data.employment_history.histories && data.employment_history.histories.length > 0) {
             sectionHistory.classList.remove('d-none');
             historyBody.innerHTML = data.employment_history.histories.map(h => `
-                <div class="col-md-4 mb-2">
-                    <div class="p-2 border rounded-3 bg-light-subtle h-100">
-                        <label class="mb-0">Company</label><span class="fw-bold">${h.company_name || 'N/A'}</span>
-                        <label class="mt-2 mb-0">Designation</label><span>${h.designation || 'N/A'}</span>
-                        <label class="mt-2 mb-0">Duration</label><span>${h.service_period || 'N/A'}</span>
+                <div class="col-12 mb-3">
+                    <div class="p-3 border rounded-3 bg-light-subtle">
+                        <div class="row">
+                            <div class="col-md-4"><label class="mb-0">Previous Company</label><span class="fw-bold">${h.company_name || 'N/A'}</span></div>
+                            <div class="col-md-4"><label class="mb-0">Designation</label><span>${h.designation || 'N/A'}</span></div>
+                            <div class="col-md-4"><label class="mb-0">Service Period / Duration</label><span>${h.service_period || 'N/A'}</span></div>
+                        </div>
                     </div>
                 </div>
             `).join('');

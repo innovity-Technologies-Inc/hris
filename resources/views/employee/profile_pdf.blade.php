@@ -71,10 +71,9 @@
         }
         .address-box {
             background-color: #fcfcfc;
-            padding: 8px;
+            padding: 10px;
             border: 1px solid #eee;
             border-radius: 3px;
-            min-height: 60px;
         }
         .footer {
             margin-top: 30px;
@@ -104,14 +103,16 @@
             vertical-align: top;
             padding: 0 10px;
         }
-        .entry-item {
-            margin-bottom: 8px;
-            padding-bottom: 5px;
-            border-bottom: 1px solid #eee;
+        .full-width-section {
+            width: 100%;
+            margin-bottom: 10px;
         }
-        .entry-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
+        .entry-card {
+            border: 1px solid #eee;
+            background-color: #f9f9f9;
+            padding: 8px;
+            margin-bottom: 8px;
+            border-radius: 3px;
         }
     </style>
 </head>
@@ -248,60 +249,62 @@
     </table>
     @endif
 
-    <!-- Education (Full Width Row) -->
+    <!-- Education Information (Full Row) -->
     @if($employee->educationInfo && count($employee->educationInfo->educations ?? []) > 0)
-    <div class="section-title">Education Information</div>
-    <div class="address-box">
-        <table style="width: 100%; border-collapse: collapse;">
-            <tr>
-                @foreach($employee->educationInfo->educations as $index => $edu)
-                    <td style="width: 33.33%; padding: 5px; vertical-align: top;">
-                        <strong>{{ $edu['education_title'] }}</strong><br>
-                        <span style="font-size: 8px; color: #666;">{{ $index + 1 }}. {{ $edu['institute'] }}</span><br>
-                        <span style="font-size: 8px;">Year: {{ $edu['passing_year'] }} | Result: {{ $edu['result_grade'] }}</span>
-                    </td>
-                    @if(($index + 1) % 3 == 0) </tr><tr> @endif
-                @endforeach
-            </tr>
-        </table>
+    <div class="full-width-section">
+        <div class="section-title">Education Information</div>
+        @foreach($employee->educationInfo->educations as $edu)
+            <div class="entry-card">
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="width: 50%;"><strong>Degree:</strong> {{ $edu['education_title'] }}</td>
+                        <td style="width: 50%;"><strong>Year & Result:</strong> {{ $edu['passing_year'] }} | {{ $edu['result_grade'] }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding-top: 5px;"><strong>Institute:</strong> {{ $edu['institute'] }}</td>
+                    </tr>
+                </table>
+            </div>
+        @endforeach
     </div>
     @endif
 
-    <!-- Training (Full Width Row) -->
+    <!-- Training Information (Full Row) -->
     @if($employee->educationInfo && count($employee->educationInfo->trainings ?? []) > 0)
-    <div class="section-title">Training Information</div>
-    <div class="address-box">
-        <table style="width: 100%; border-collapse: collapse;">
-            <tr>
-                @foreach($employee->educationInfo->trainings as $index => $trn)
-                    <td style="width: 33.33%; padding: 5px; vertical-align: top;">
-                        <strong>{{ $trn['training_title'] }}</strong><br>
-                        <span style="font-size: 8px; color: #666;">{{ $index + 1 }}. {{ $trn['institute'] }}</span><br>
-                        <span style="font-size: 8px;">Duration: {{ $trn['duration'] }} | Year: {{ $trn['to_date'] ? date('Y', strtotime($trn['to_date'])) : 'N/A' }}</span>
-                    </td>
-                    @if(($index + 1) % 3 == 0) </tr><tr> @endif
-                @endforeach
-            </tr>
-        </table>
+    <div class="full-width-section">
+        <div class="section-title">Training Information</div>
+        @foreach($employee->educationInfo->trainings as $trn)
+            <div class="entry-card">
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="width: 50%;"><strong>Training Title:</strong> {{ $trn['training_title'] }}</td>
+                        <td style="width: 25%;"><strong>Duration:</strong> {{ $trn['duration'] }}</td>
+                        <td style="width: 25%;"><strong>Year:</strong> {{ $trn['to_date'] ? date('Y', strtotime($trn['to_date'])) : 'N/A' }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" style="padding-top: 5px;"><strong>Institute:</strong> {{ $trn['institute'] }}</td>
+                    </tr>
+                </table>
+            </div>
+        @endforeach
     </div>
     @endif
 
-    <!-- Employment History (Full Width Row) -->
+    <!-- Employment History (Full Row) -->
     @if($employee->employmentHistory && count($employee->employmentHistory->histories ?? []) > 0)
-    <div class="section-title">Employment History</div>
-    <div class="address-box">
-        <table style="width: 100%; border-collapse: collapse;">
-            <tr>
-                @foreach($employee->employmentHistory->histories as $index => $history)
-                    <td style="width: 33.33%; padding: 5px; vertical-align: top;">
-                        <strong>{{ $history['company_name'] }}</strong><br>
-                        <span style="font-size: 8px; color: #666;">{{ $index + 1 }}. {{ $history['designation'] }}</span><br>
-                        <span style="font-size: 8px;">Duration: {{ $history['service_period'] }}</span>
-                    </td>
-                    @if(($index + 1) % 3 == 0) </tr><tr> @endif
-                @endforeach
-            </tr>
-        </table>
+    <div class="full-width-section">
+        <div class="section-title">Employment History</div>
+        @foreach($employee->employmentHistory->histories as $history)
+            <div class="entry-card">
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="width: 40%;"><strong>Company:</strong> {{ $history['company_name'] }}</td>
+                        <td style="width: 30%;"><strong>Designation:</strong> {{ $history['designation'] }}</td>
+                        <td style="width: 30%;"><strong>Duration:</strong> {{ $history['service_period'] }}</td>
+                    </tr>
+                </table>
+            </div>
+        @endforeach
     </div>
     @endif
 
