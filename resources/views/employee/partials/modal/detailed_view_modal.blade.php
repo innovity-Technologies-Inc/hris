@@ -334,11 +334,11 @@
                                     </div>
                                     <div class="card-body">
                                         <div class="row g-3">
-                                            <div class="col-12">
+                                            <div class="col-md-6 border-end">
                                                 <label>Active Policies</label>
                                                 <div id="detailed_policy_body"></div>
                                             </div>
-                                            <div class="col-12">
+                                            <div class="col-md-6">
                                                 <label>Current Assigned Plans</label>
                                                 <div id="detailed_plans_body"></div>
                                             </div>
@@ -357,11 +357,11 @@
                                     </div>
                                     <div class="card-body">
                                         <div class="row g-3">
-                                            <div class="col-12">
+                                            <div class="col-md-6 border-end">
                                                 <label>Leave Balances</label>
                                                 <div id="detailed_leave_info_body"></div>
                                             </div>
-                                            <div class="col-12">
+                                            <div class="col-md-6">
                                                 <label>Recent Leave History</label>
                                                 <div id="detailed_leave_history_body"></div>
                                             </div>
