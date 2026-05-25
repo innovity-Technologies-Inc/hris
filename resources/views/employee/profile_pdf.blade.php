@@ -391,9 +391,6 @@
         <span class="badge {{ $officeInfo->gratuity_eligible == 'yes' ? 'badge-success' : 'badge-danger' }}">Gratuity: {{ strtoupper($officeInfo->gratuity_eligible ?? 'no') }}</span>
         <span class="badge {{ $officeInfo->can_apply_loan == 'yes' ? 'badge-success' : 'badge-danger' }}">Loan: {{ strtoupper($officeInfo->can_apply_loan ?? 'no') }}</span>
         <span class="badge {{ $officeInfo->can_apply_advance == 'yes' ? 'badge-success' : 'badge-danger' }}">Advance: {{ strtoupper($officeInfo->can_apply_advance ?? 'no') }}</span>
-        @if($officeInfo->pf_eligible == 'yes')
-            <span style="font-size: 7px; margin-left: 5px;">(PF Effective: {{ $officeInfo->pf_effective_date ?? 'N/A' }})</span>
-        @endif
     </div>
     @endif
 
@@ -538,58 +535,57 @@
 
     <!-- 14. Policies & Assigned Plans -->
     <div style="page-break-inside: avoid;">
-        <table class="row-table" style="margin-top: 10px;">
-            <tr>
-                <td style="width: 50%;">
-                    <div class="section-title" style="margin-top: 0;">Active Policies</div>
-                    <div class="address-box">
-                        @php $elig = $employee->employeeEligibility; @endphp
-                        @if($elig)
-                            @if($elig->shift_plan_status === 'active') <span class="badge">Shift Plan</span> @endif
-                            @if($elig->leave_plan_status === 'active') <span class="badge">Leave Plan</span> @endif
-                            @if($elig->ot_plan_status === 'active') <span class="badge">OT Allowed</span> @endif
-                            @if($elig->roster_plans_status === 'active') <span class="badge">Roster Plan</span> @endif
-                            @if($elig->bonus_plan_status === 'active') <span class="badge">Bonus Eligible</span> @endif
-                            @if($elig->meal_plan_status === 'active') <span class="badge">Meal Plan</span> @endif
-                        @else
-                            No active policies
-                        @endif
-                    </div>
-                </td>
-                <td style="width: 50%;">
-                    <div class="section-title" style="margin-top: 0;">Assigned Plans</div>
-                    <div class="address-box">
-                        @forelse($employee->shift as $s) <div class="badge">{{ $s->name }} (Shift)</div> @empty @endforelse
-                        @forelse($employee->roster as $r) @if($r->status === 'active') <div class="badge">{{ $r->name }} (Roster)</div> @endif @empty @endforelse
-                    </div>
-                </td>
-            </tr>
-        </table>
+        <div class="section-title">Active Policies</div>
+        <div class="address-box">
+            @php $elig = $employee->employeeEligibility; @endphp
+            @if($elig)
+                @if($elig->shift_plan_status === 'active') <span class="badge">Shift Plan</span> @endif
+                @if($elig->leave_plan_status === 'active') <span class="badge">Leave Plan</span> @endif
+                @if($elig->ot_plan_status === 'active') <span class="badge">OT Allowed</span> @endif
+                @if($elig->roster_plans_status === 'active') <span class="badge">Roster Plan</span> @endif
+                @if($elig->bonus_plan_status === 'active') <span class="badge">Bonus Eligible</span> @endif
+                @if($elig->meal_plan_status === 'active') <span class="badge">Meal Plan</span> @endif
+            @else
+                No active policies
+            @endif
+        </div>
+
+        <div class="section-title">Assigned Plans</div>
+        <div class="address-box">
+            @forelse($employee->shift as $s) <div class="badge">{{ $s->name }} (Shift)</div> @empty @endforelse
+            @forelse($employee->roster as $r) @if($r->status === 'active') <div class="badge">{{ $r->name }} (Roster)</div> @endif @empty @endforelse
+            @if($employee->shift->isEmpty() && $employee->roster->where('status', 'active')->isEmpty())
+                No plans assigned
+            @endif
+        </div>
     </div>
 
     <!-- 15. Leave Summary -->
     @if($employee->leaveBalances->count() > 0 || $employee->leaveApplications->count() > 0)
     <div style="page-break-inside: avoid;">
-        <table class="row-table" style="margin-top: 10px;">
+        @if($employee->leaveBalances->count() > 0)
+        <div class="section-title">Leave Balance</div>
+        <table class="info-grid">
+            @foreach($employee->leaveBalances as $l)
             <tr>
-                <td style="width: 45%;">
-                    <div class="section-title" style="margin-top: 0;">Leave Balance</div>
-                    <table class="info-grid">
-                        @foreach($employee->leaveBalances as $l)
-                        <tr><td class="label" style="width: 70%;">{{ $l->leave_type }}</td><td class="value" style="width: 30%; text-align: right;">{{ $l->leave_count }} / {{ $l->total_leave }}</td></tr>
-                        @endforeach
-                    </table>
-                </td>
-                <td style="width: 55%;">
-                    <div class="section-title" style="margin-top: 0;">Recent Leave History</div>
-                    <table class="info-grid">
-                        @foreach($employee->leaveApplications->take(5) as $l)
-                        <tr><td class="label" style="width: 75%;">{{ $l->getPlan?->name }} ({{ $l->status }})</td><td class="value" style="width: 25%; text-align: right;">{{ $l->leave_count }}d</td></tr>
-                        @endforeach
-                    </table>
-                </td>
+                <td class="label" style="width: 40%;">{{ $l->leave_type }}</td>
+                <td class="value" style="width: 60%;">{{ $l->leave_count }} / {{ $l->total_leave }} (Taken / Total)</td>
             </tr>
+            @endforeach
         </table>
+        @endif
+
+        @if($employee->leaveApplications->count() > 0)
+        <div class="section-title">Recent Leave History</div>
+        <table class="info-grid">
+            @foreach($employee->leaveApplications->take(10) as $l)
+            <tr>
+                <td class="label" style="width: 40%;">{{ $l->getPlan?->name ?? 'Leave' }} ({{ strtoupper($l->status) }})</td>
+                <td class="value" style="width: 60%;">{{ $l->from }} to {{ $l->to }} ({{ $l->leave_count }} days)</td>
+            </tr>
+            @endforeach
+        </table>
+        @endif
     </div>
     @endif
 
