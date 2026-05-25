@@ -130,7 +130,25 @@ class EmployeeProfileController extends Controller
                 return response()->json(['success' => false, 'message' => 'Unauthorized access'], 403);
             }
 
-            $employee = $this->empServices->getEmployeeById($id);
+            $employee = Employee::with([
+                'officeInfo.getCurrentCompany', 
+                'officeInfo.getCurrentDesignation', 
+                'officeInfo.getCurrentDepartment', 
+                'officeInfo.getCurrentSection', 
+                'officeInfo.getCurrentDivision',
+                'educationInfo',
+                'employmentHistory',
+                'nomineeInfo',
+                'employeeEligibility',
+                'salaryBreakdown',
+                'bankAccount.getBank',
+                'bankAccount.getBranch',
+                'shift',
+                'roster',
+                'offDayPlan',
+                'leaveApplications.getPlan',
+                'leaveBalances'
+            ])->find($id);
 
             if (!$employee) {
                 return response()->json(['success' => false, 'message' => 'Employee not found'], 404);

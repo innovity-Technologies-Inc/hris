@@ -31,8 +31,21 @@ test('admin can fetch detailed employee profile json', function () {
                 'full_name',
                 'applicant_id',
                 'system_id',
+                'punch_card_no',
                 'personal_email',
-                'personal_mobile'
+                'personal_mobile',
+                'office_info',
+                'education_info',
+                'employment_history',
+                'nominee_info',
+                'employee_eligibility',
+                'salary_breakdown',
+                'bank_account',
+                'shift',
+                'roster',
+                'off_day_plan',
+                'leave_applications',
+                'leave_balances'
             ]
         ]);
 });

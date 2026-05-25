@@ -147,5 +147,20 @@ class Employee extends Model
     {
         return $this->activeIdCard()->first();
     }
+
+    public function bankAccount()
+    {
+        return $this->hasOne(EmployeeBankAccount::class, 'employee_id', 'id');
+    }
+
+    public function leaveApplications()
+    {
+        return $this->hasMany(\App\Models\Leave\Leave::class, 'employee_id', 'id');
+    }
+
+    public function leaveBalances()
+    {
+        return $this->hasMany(\App\Models\Leave\LeaveCount::class, 'employee_id', 'id');
+    }
 }
 

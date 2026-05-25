@@ -21,11 +21,27 @@ class EmployeeProfilePdfService
      */
     public function generateDetailedProfilePdf(int $employeeId): string
     {
-        $employee = Employee::findOrFail($employeeId);
+        $employee = Employee::with([
+                'officeInfo.getCurrentCompany', 
+                'officeInfo.getCurrentDesignation', 
+                'officeInfo.getCurrentDepartment', 
+                'officeInfo.getCurrentSection', 
+                'officeInfo.getCurrentDivision',
+                'educationInfo',
+                'employmentHistory',
+                'nomineeInfo',
+                'employeeEligibility',
+                'salaryBreakdown',
+                'bankAccount.getBank',
+                'bankAccount.getBranch',
+                'shift',
+                'roster',
+                'offDayPlan',
+                'leaveApplications.getPlan',
+                'leaveBalances'
+            ])->findOrFail($employeeId);
         
-        $officeInfo = EmployeeOfficeInfo::with(['getCurrentCompany', 'getCurrentDesignation', 'getCurrentDepartment', 'getCurrentSection', 'getCurrentDivision'])
-            ->where('employee_id', $employee->id)
-            ->first();
+        $officeInfo = $employee->officeInfo;
 
         $generalSettings = GeneralSetting::first();
         $currentCompany = $officeInfo?->getCurrentCompany;
