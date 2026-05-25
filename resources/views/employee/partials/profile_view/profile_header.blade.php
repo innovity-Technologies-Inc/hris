@@ -123,12 +123,18 @@
 @include('employee.partials.modal.review_profile_modal')
 @include('employee.partials.modal.detailed_view_modal')
 
+@push('scripts')
+<!-- Axios CDN -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const openDetailedViewBtn = document.getElementById('openDetailedView');
-    const detailedViewModal = new bootstrap.Modal(document.getElementById('detailedViewModal'));
+    const detailedViewModalElement = document.getElementById('detailedViewModal');
     
-    if (openDetailedViewBtn) {
+    if (openDetailedViewBtn && detailedViewModalElement) {
+        const detailedViewModal = new bootstrap.Modal(detailedViewModalElement);
+        
         openDetailedViewBtn.addEventListener('click', function() {
             detailedViewModal.show();
             fetchDetailedInfo();
@@ -144,7 +150,10 @@ document.addEventListener('DOMContentLoaded', function() {
         error.classList.add('d-none');
         content.classList.add('d-none');
 
-        axios.get('{{ route('employee.profile.detailed_json', $employee->id) }}')
+        // Use window.axios or axios
+        const ajax = window.axios || axios;
+
+        ajax.get('{{ route('employee.profile.detailed_json', $employee->id) }}')
             .then(response => {
                 if (response.data.success) {
                     populateModal(response.data.data);
@@ -235,4 +244,5 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+@endpush
 
