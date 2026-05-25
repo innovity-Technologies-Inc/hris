@@ -15,14 +15,12 @@ class EmployeeEducationExperienceTraining extends Model
     protected $fillable = [
         'employee_id',
         'educations',
-        'experiences',
         'trainings',
         'status',
     ];
 
     protected $casts = [
         'educations' => 'array',
-        'experiences' => 'array',
         'trainings' => 'array',
     ];
 

@@ -253,30 +253,53 @@ document.addEventListener('DOMContentLoaded', function() {
             sectionOffice.classList.add('d-none');
         }
 
-        // Education
+        // Education & Training (from EmployeeEducationExperienceTraining model)
         const sectionEdu = document.getElementById('section_education');
         const eduBody = document.getElementById('detailed_education_body');
-        if (data.education_info) {
+        if (data.education_info && data.education_info.educations && data.education_info.educations.length > 0) {
             sectionEdu.classList.remove('d-none');
-            eduBody.innerHTML = `
-                <div class="mb-2"><label>Degree</label><span>${data.education_info.degree_name || 'N/A'}</span></div>
-                <div class="mb-2"><label>Institute</label><span>${data.education_info.institute_name || 'N/A'}</span></div>
-                <div class="mb-0"><label>Passing Year</label><span>${data.education_info.passing_year || 'N/A'}</span></div>
-            `;
+            eduBody.innerHTML = data.education_info.educations.map(edu => `
+                <div class="mb-3 pb-2 border-bottom last-child-no-border">
+                    <div class="mb-1"><label>Degree</label><span>${edu.education_title || 'N/A'}</span></div>
+                    <div class="mb-1"><label>Institute</label><span>${edu.institute || 'N/A'}</span></div>
+                    <div class="row">
+                        <div class="col-6"><label>Year</label><span>${edu.passing_year || 'N/A'}</span></div>
+                        <div class="col-6"><label>Result</label><span>${edu.result_grade || 'N/A'}</span></div>
+                    </div>
+                </div>
+            `).join('');
         } else {
             sectionEdu.classList.add('d-none');
         }
 
-        // History
+        // Trainings
+        if (data.education_info && data.education_info.trainings && data.education_info.trainings.length > 0) {
+            eduBody.innerHTML += `
+                <div class="mt-3"><h6 class="fw-bold small text-uppercase" style="color: #974063">Trainings</h6></div>
+            ` + data.education_info.trainings.map(trn => `
+                <div class="mb-3 pb-2 border-bottom last-child-no-border">
+                    <div class="mb-1"><label>Title</label><span>${trn.training_title || 'N/A'}</span></div>
+                    <div class="mb-1"><label>Institute</label><span>${trn.institute || 'N/A'}</span></div>
+                    <div class="row">
+                        <div class="col-6"><label>Duration</label><span>${trn.duration || 'N/A'}</span></div>
+                        <div class="col-6"><label>Year</label><span>${trn.to_date ? new Date(trn.to_date).getFullYear() : 'N/A'}</span></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // History (from EmployeeEmploymentHistory model)
         const sectionHistory = document.getElementById('section_history');
         const historyBody = document.getElementById('detailed_history_body');
-        if (data.employment_history) {
+        if (data.employment_history && data.employment_history.histories && data.employment_history.histories.length > 0) {
             sectionHistory.classList.remove('d-none');
-            historyBody.innerHTML = `
-                <div class="mb-2"><label>Previous Company</label><span>${data.employment_history.company_name || 'N/A'}</span></div>
-                <div class="mb-2"><label>Designation</label><span>${data.employment_history.designation || 'N/A'}</span></div>
-                <div class="mb-0"><label>Duration</label><span>${data.employment_history.service_period || 'N/A'}</span></div>
-            `;
+            historyBody.innerHTML = data.employment_history.histories.map(h => `
+                <div class="mb-3 pb-2 border-bottom last-child-no-border">
+                    <div class="mb-1"><label>Company</label><span>${h.company_name || 'N/A'}</span></div>
+                    <div class="mb-1"><label>Designation</label><span>${h.designation || 'N/A'}</span></div>
+                    <div class="mb-0"><label>Duration</label><span>${h.service_period || 'N/A'}</span></div>
+                </div>
+            `).join('');
         } else {
             sectionHistory.classList.add('d-none');
         }

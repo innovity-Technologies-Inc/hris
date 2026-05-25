@@ -238,23 +238,35 @@
 
     <table class="row-table" style="margin-top: 15px;">
         <tr>
-            @if($employee->educationInfo)
+            @if($employee->educationInfo && (count($employee->educationInfo->educations ?? []) > 0 || count($employee->educationInfo->trainings ?? []) > 0))
             <td>
-                <div class="section-title" style="margin-top: 0;">Education</div>
+                <div class="section-title" style="margin-top: 0;">Education & Training</div>
                 <div class="address-box">
-                    <strong>Degree:</strong> {{ $employee->educationInfo->degree_name }}<br>
-                    <strong>Institute:</strong> {{ $employee->educationInfo->institute_name }}<br>
-                    <strong>Year:</strong> {{ $employee->educationInfo->passing_year }}
+                    @foreach($employee->educationInfo->educations ?? [] as $edu)
+                        <div style="margin-bottom: 5px; padding-bottom: 5px; border-bottom: 1px solid #eee;">
+                            <strong>{{ $edu['education_title'] }}</strong><br>
+                            {{ $edu['institute'] }} ({{ $edu['passing_year'] }})
+                        </div>
+                    @endforeach
+                    @foreach($employee->educationInfo->trainings ?? [] as $trn)
+                        <div style="margin-bottom: 5px; padding-bottom: 5px; border-bottom: 1px solid #eee;">
+                            <strong>{{ $trn['training_title'] }}</strong> (Training)<br>
+                            {{ $trn['institute'] }} ({{ $trn['duration'] }})
+                        </div>
+                    @endforeach
                 </div>
             </td>
             @endif
-            @if($employee->employmentHistory)
+            @if($employee->employmentHistory && count($employee->employmentHistory->histories ?? []) > 0)
             <td>
-                <div class="section-title" style="margin-top: 0;">Experience</div>
+                <div class="section-title" style="margin-top: 0;">Employment History</div>
                 <div class="address-box">
-                    <strong>Company:</strong> {{ $employee->employmentHistory->company_name }}<br>
-                    <strong>Designation:</strong> {{ $employee->employmentHistory->designation }}<br>
-                    <strong>Duration:</strong> {{ $employee->employmentHistory->service_period }}
+                    @foreach($employee->employmentHistory->histories as $history)
+                        <div style="margin-bottom: 5px; padding-bottom: 5px; border-bottom: 1px solid #eee;">
+                            <strong>{{ $history['company_name'] }}</strong><br>
+                            {{ $history['designation'] }} ({{ $history['service_period'] }})
+                        </div>
+                    @endforeach
                 </div>
             </td>
             @endif

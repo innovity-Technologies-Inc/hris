@@ -219,197 +219,6 @@
                 </div>
             </div>
 
-            <!-- Experience Section -->
-            <div class="row mt-3">
-                <div class="col-12">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
-                            <h5 class="card-title mb-0"><i class="mdi mdi-briefcase me-2"></i>Experience Information</h5>
-                            <button type="button" class="btn btn-sm btn-light" id="addExperienceRow">
-                                <i class="mdi mdi-plus"></i> Add Row
-                            </button>
-                        </div>
-                        <div class="card-body">
-                            <div id="experienceContainer">
-                                @php
-                                    $experiences = old('experiences', $employeeData->experiences ?? []);
-                                @endphp
-
-                                @if (empty($experiences))
-                                    <!-- Initial Empty Row -->
-                                    <div class="experience-row border rounded p-3 mb-3 bg-light" data-row="0">
-                                        <div class="row g-3">
-                                            <div class="col-md-4">
-                                                <label class="form-label">Company</label>
-                                                <input type="text"
-                                                    class="form-control @error('experiences.0.company') is-invalid @enderror"
-                                                    name="experiences[0][company]" placeholder="e.g., ABC Corporation Ltd"
-                                                    value="{{ old('experiences.0.company') }}">
-                                                @error('experiences.0.company')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label">Designation</label>
-                                                <input type="text"
-                                                    class="form-control @error('experiences.0.designation') is-invalid @enderror"
-                                                    name="experiences[0][designation]"
-                                                    placeholder="e.g., Senior Software Engineer"
-                                                    value="{{ old('experiences.0.designation') }}">
-                                                @error('experiences.0.designation')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label">Department</label>
-                                                <input type="text"
-                                                    class="form-control @error('experiences.0.department') is-invalid @enderror"
-                                                    name="experiences[0][department]" placeholder="e.g., IT Department"
-                                                    value="{{ old('experiences.0.department') }}">
-                                                @error('experiences.0.department')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label">Date From</label>
-                                                <input type="date"
-                                                    class="form-control @error('experiences.0.date_from') is-invalid @enderror"
-                                                    name="experiences[0][date_from]"
-                                                    value="{{ old('experiences.0.date_from') }}">
-                                                @error('experiences.0.date_from')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label">Date To</label>
-                                                <input type="date"
-                                                    class="form-control @error('experiences.0.date_to') is-invalid @enderror"
-                                                    name="experiences[0][date_to]"
-                                                    value="{{ old('experiences.0.date_to') }}">
-                                                @error('experiences.0.date_to')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label">Duration</label>
-                                                <input type="text"
-                                                    class="form-control @error('experiences.0.duration') is-invalid @enderror"
-                                                    name="experiences[0][duration]" placeholder="e.g., 2 years 6 months"
-                                                    value="{{ old('experiences.0.duration') }}">
-                                                @error('experiences.0.duration')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                            <div class="col-md-12">
-                                                <label class="form-label">Responsibility</label>
-                                                <textarea class="form-control @error('experiences.0.responsibility') is-invalid @enderror"
-                                                    name="experiences[0][responsibility]" rows="2"
-                                                    placeholder="Describe your key responsibilities and achievements">{{ old('experiences.0.responsibility') }}</textarea>
-                                                @error('experiences.0.responsibility')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-                                @else
-                                    <!-- Populated Rows -->
-                                    @foreach ($experiences as $index => $experience)
-                                        <div class="experience-row border rounded p-3 mb-3 bg-light position-relative"
-                                            data-row="{{ $index }}">
-                                            @if ($index > 0)
-                                                <button type="button"
-                                                    class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2"
-                                                    onclick="removeExperienceRow(this)">
-                                                    <i class="mdi mdi-delete"></i> Remove
-                                                </button>
-                                                <h6 class="text-info mb-3"><i
-                                                        class="mdi mdi-briefcase-outline me-1"></i>Experience
-                                                    {{ $index + 1 }}</h6>
-                                            @endif
-                                            <div class="row g-3">
-                                                <div class="col-md-4">
-                                                    <label class="form-label">Company</label>
-                                                    <input type="text"
-                                                        class="form-control @error('experiences.' . $index . '.company') is-invalid @enderror"
-                                                        name="experiences[{{ $index }}][company]"
-                                                        value="{{ old('experiences.' . $index . '.company', $experience['company'] ?? '') }}"
-                                                        placeholder="e.g., ABC Corporation Ltd">
-                                                    @error('experiences.' . $index . '.company')
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <label class="form-label">Designation</label>
-                                                    <input type="text"
-                                                        class="form-control @error('experiences.' . $index . '.designation') is-invalid @enderror"
-                                                        name="experiences[{{ $index }}][designation]"
-                                                        value="{{ old('experiences.' . $index . '.designation', $experience['designation'] ?? '') }}"
-                                                        placeholder="e.g., Senior Software Engineer">
-                                                    @error('experiences.' . $index . '.designation')
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <label class="form-label">Department</label>
-                                                    <input type="text"
-                                                        class="form-control @error('experiences.' . $index . '.department') is-invalid @enderror"
-                                                        name="experiences[{{ $index }}][department]"
-                                                        value="{{ old('experiences.' . $index . '.department', $experience['department'] ?? '') }}"
-                                                        placeholder="e.g., IT Department">
-                                                    @error('experiences.' . $index . '.department')
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <label class="form-label">Date From</label>
-                                                    <input type="date"
-                                                        class="form-control @error('experiences.' . $index . '.date_from') is-invalid @enderror"
-                                                        name="experiences[{{ $index }}][date_from]"
-                                                        value="{{ old('experiences.' . $index . '.date_from', $experience['date_from'] ?? '') }}">
-                                                    @error('experiences.' . $index . '.date_from')
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <label class="form-label">Date To</label>
-                                                    <input type="date"
-                                                        class="form-control @error('experiences.' . $index . '.date_to') is-invalid @enderror"
-                                                        name="experiences[{{ $index }}][date_to]"
-                                                        value="{{ old('experiences.' . $index . '.date_to', $experience['date_to'] ?? '') }}">
-                                                    @error('experiences.' . $index . '.date_to')
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <label class="form-label">Duration</label>
-                                                    <input type="text"
-                                                        class="form-control @error('experiences.' . $index . '.duration') is-invalid @enderror"
-                                                        name="experiences[{{ $index }}][duration]"
-                                                        value="{{ old('experiences.' . $index . '.duration', $experience['duration'] ?? '') }}"
-                                                        placeholder="e.g., 2 years 6 months">
-                                                    @error('experiences.' . $index . '.duration')
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <label class="form-label">Responsibility</label>
-                                                    <textarea class="form-control @error('experiences.' . $index . '.responsibility') is-invalid @enderror"
-                                                        name="experiences[{{ $index }}][responsibility]" rows="2"
-                                                        placeholder="Describe your key responsibilities and achievements">{{ old('experiences.' . $index . '.responsibility', $experience['responsibility'] ?? '') }}</textarea>
-                                                    @error('experiences.' . $index . '.responsibility')
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Training Section -->
             <div class="row mt-3">
                 <div class="col-12">
@@ -651,12 +460,9 @@
             <div class="row mt-4 mb-4">
                 <div class="col-12">
                     <div class="d-flex justify-content-end gap-2">
-                        <a href="#" class="btn btn-secondary">
+                        <a href="{{ route('employee.profile.education_information', $employee->id) }}" class="btn btn-secondary">
                             <i class="mdi mdi-arrow-left me-1"></i> Cancel
                         </a>
-                        <button type="button" id="previewBtn" class="btn btn-info text-white">
-                            <i class="mdi mdi-eye me-1"></i> Preview
-                        </button>
                         <button type="submit" class="btn btn-primary">
                             <i class="mdi mdi-content-save me-1"></i>
                             {{ isset($employeeData) ? 'Update Information' : 'Save Information' }}
@@ -666,26 +472,20 @@
             </div>
         </form>
     </div>
-    @include('employee.partials.preview_modal')
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Get existing data counts or start from 0
             const existingEducations = document.querySelectorAll('.education-row').length;
-            const existingExperiences = document.querySelectorAll('.experience-row').length;
             const existingTrainings = document.querySelectorAll('.training-row').length;
 
             let educationRowCount = existingEducations;
-            let experienceRowCount = existingExperiences;
             let trainingRowCount = existingTrainings;
             const maxRows = 10;
 
             // Check if we need to disable add buttons based on existing rows
             if (educationRowCount >= maxRows) {
                 document.getElementById('addEducationRow').disabled = true;
-            }
-            if (experienceRowCount >= maxRows) {
-                document.getElementById('addExperienceRow').disabled = true;
             }
             if (trainingRowCount >= maxRows) {
                 document.getElementById('addTrainingRow').disabled = true;
@@ -744,63 +544,6 @@
                 educationRowCount++;
 
                 if (educationRowCount >= maxRows) {
-                    this.disabled = true;
-                }
-            });
-
-            // Add Experience Row
-            document.getElementById('addExperienceRow').addEventListener('click', function() {
-                if (experienceRowCount >= maxRows) {
-                    alert(`Maximum ${maxRows} experience rows allowed`);
-                    return;
-                }
-
-                const container = document.getElementById('experienceContainer');
-                const newRow = document.createElement('div');
-                newRow.className = 'experience-row border rounded p-3 mb-3 bg-light position-relative';
-                newRow.setAttribute('data-row', experienceRowCount);
-
-                newRow.innerHTML = `
-                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2" onclick="removeExperienceRow(this)">
-                        <i class="mdi mdi-delete"></i> Remove
-                    </button>
-                    <h6 class="text-info mb-3"><i class="mdi mdi-briefcase-outline me-1"></i>Experience ${experienceRowCount + 1}</h6>
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <label class="form-label">Company</label>
-                            <input type="text" class="form-control" name="experiences[${experienceRowCount}][company]" placeholder="e.g., ABC Corporation Ltd">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Designation</label>
-                            <input type="text" class="form-control" name="experiences[${experienceRowCount}][designation]" placeholder="e.g., Senior Software Engineer">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Department</label>
-                            <input type="text" class="form-control" name="experiences[${experienceRowCount}][department]" placeholder="e.g., IT Department">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Date From</label>
-                            <input type="date" class="form-control" name="experiences[${experienceRowCount}][date_from]">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Date To</label>
-                            <input type="date" class="form-control" name="experiences[${experienceRowCount}][date_to]">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Duration</label>
-                            <input type="text" class="form-control" name="experiences[${experienceRowCount}][duration]" placeholder="e.g., 2 years 6 months">
-                        </div>
-                        <div class="col-md-12">
-                            <label class="form-label">Responsibility</label>
-                            <textarea class="form-control" name="experiences[${experienceRowCount}][responsibility]" rows="2" placeholder="Describe your key responsibilities and achievements"></textarea>
-                        </div>
-                    </div>
-                `;
-
-                container.appendChild(newRow);
-                experienceRowCount++;
-
-                if (experienceRowCount >= maxRows) {
                     this.disabled = true;
                 }
             });
@@ -878,29 +621,12 @@
                 document.getElementById('addEducationRow').disabled = false;
             };
 
-            window.removeExperienceRow = function(button) {
-                const row = button.closest('.experience-row');
-                row.remove();
-                experienceRowCount--;
-                document.getElementById('addExperienceRow').disabled = false;
-            };
-
             window.removeTrainingRow = function(button) {
                 const row = button.closest('.training-row');
                 row.remove();
                 trainingRowCount--;
                 document.getElementById('addTrainingRow').disabled = false;
             };
-
-            // Initialize Select2
-            if (typeof $.fn.select2 !== 'undefined') {
-                $('.select2').select2({
-                    theme: 'bootstrap-5',
-                    width: '100%',
-                    placeholder: 'Select Employee'
-                });
-            }
         });
     </script>
 @endsection
-

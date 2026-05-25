@@ -36,7 +36,6 @@ class EmployeeEducationInfoImport implements ToCollection, WithHeadingRow
                 $groupedData[$employeeId] = [
                     'employee_id' => $employeeId,
                     'educations' => [],
-                    'experiences' => [],
                     'trainings' => [],
                 ];
             }
@@ -50,17 +49,6 @@ class EmployeeEducationInfoImport implements ToCollection, WithHeadingRow
                 'result_grade' => $row['result_grade'] ?? null,
                 'passing_year' => $row['passing_year'] ?? null,
                 'gpa_cgpa' => $row['gpa_cgpa'] ?? null,
-            ];
-
-            // --- Experience ---
-            $experience = [
-                'company' => $row['company'] ?? null,
-                'designation' => $row['designation'] ?? null,
-                'department' => $row['department'] ?? null,
-                'date_from' => $this->parseDate($row['date_from'] ?? null),
-                'date_to' => $this->parseDate($row['date_to'] ?? null),
-                'duration' => $row['duration'] ?? null,
-                'responsibility' => $row['responsibility'] ?? null,
             ];
 
             // --- Training ---
@@ -78,7 +66,6 @@ class EmployeeEducationInfoImport implements ToCollection, WithHeadingRow
 
             // Push into group
             $groupedData[$employeeId]['educations'][] = $education;
-            $groupedData[$employeeId]['experiences'][] = $experience;
             $groupedData[$employeeId]['trainings'][] = $training;
         }
 
@@ -88,7 +75,6 @@ class EmployeeEducationInfoImport implements ToCollection, WithHeadingRow
                 ['employee_id' => $data['employee_id']],
                 [
                     'educations' => $data['educations'],
-                    'experiences' => $data['experiences'],
                     'trainings' => $data['trainings'],
                 ]
             );

@@ -78,10 +78,9 @@ class EmployeeEducationExperienceTrainingController extends Controller
 
         // Extract arrays from JSON columns (will be empty arrays if null)
         $educations = $employeeData->educations ?? [];
-        $experiences = $employeeData->experiences ?? [];
         $trainings = $employeeData->trainings ?? [];
 
-        return view('employee.profile', compact('employee', 'educations', 'experiences', 'trainings', 'title', 'section', 'sub_section', 'section_url', 'employeeData'));
+        return view('employee.profile', compact('employee', 'educations', 'trainings', 'title', 'section', 'sub_section', 'section_url', 'employeeData'));
     }
     public function edit($id)
     {
