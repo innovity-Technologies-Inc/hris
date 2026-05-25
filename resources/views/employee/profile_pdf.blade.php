@@ -104,6 +104,15 @@
             vertical-align: top;
             padding: 0 10px;
         }
+        .entry-item {
+            margin-bottom: 8px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        .entry-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
     </style>
 </head>
 <body>
@@ -168,17 +177,20 @@
 
     <table class="row-table" style="margin-top: 15px;">
         <tr>
-            <td style="width: 33.33%;">
+            <td style="width: 50%;">
                 <div class="section-title" style="margin-top: 0;">Document Identifiers</div>
                 <div class="address-box" style="min-height: 100px;">
-                    <strong>TIN:</strong> {{ $employee->tin ?? 'N/A' }}<br>
-                    <strong>Passport:</strong> {{ $employee->passport_no ?? 'N/A' }}<br>
-                    <strong>Expiry:</strong> {{ $employee->passport_expiry ? \Carbon\Carbon::parse($employee->passport_expiry)->format('d M, Y') : 'N/A' }}<br>
-                    <strong>NID/ResID:</strong> {{ $employee->residency_id_number ?? 'N/A' }}<br>
-                    <strong>License:</strong> {{ $employee->license_no ?? 'N/A' }}
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr><td style="width: 40%; font-weight: bold;">TIN:</td><td>{{ $employee->tin ?? 'N/A' }}</td></tr>
+                        <tr><td style="font-weight: bold;">Passport:</td><td>{{ $employee->passport_no ?? 'N/A' }}</td></tr>
+                        <tr><td style="font-weight: bold;">Passport Exp:</td><td>{{ $employee->passport_expiry ? \Carbon\Carbon::parse($employee->passport_expiry)->format('d M, Y') : 'N/A' }}</td></tr>
+                        <tr><td style="font-weight: bold;">NID / ResID:</td><td>{{ $employee->residency_id_number ?? 'N/A' }}</td></tr>
+                        <tr><td style="font-weight: bold;">License:</td><td>{{ $employee->license_no ?? 'N/A' }}</td></tr>
+                        <tr><td style="font-weight: bold;">Visa Exp:</td><td>{{ $employee->visa_expiry ? \Carbon\Carbon::parse($employee->visa_expiry)->format('d M, Y') : 'N/A' }}</td></tr>
+                    </table>
                 </div>
             </td>
-            <td style="width: 33.33%;">
+            <td style="width: 25%;">
                 <div class="section-title" style="margin-top: 0;">Present Address</div>
                 <div class="address-box" style="min-height: 100px;">
                     @php $present = (object) $employee->present_address; @endphp
@@ -189,7 +201,7 @@
                     {{ $present->country ?? '' }}
                 </div>
             </td>
-            <td style="width: 33.33%;">
+            <td style="width: 25%;">
                 <div class="section-title" style="margin-top: 0;">Permanent Address</div>
                 <div class="address-box" style="min-height: 100px;">
                     @if($employee->permanent_address && count($employee->permanent_address) > 0)
@@ -236,42 +248,62 @@
     </table>
     @endif
 
-    <table class="row-table" style="margin-top: 15px;">
-        <tr>
-            @if($employee->educationInfo && (count($employee->educationInfo->educations ?? []) > 0 || count($employee->educationInfo->trainings ?? []) > 0))
-            <td>
-                <div class="section-title" style="margin-top: 0;">Education & Training</div>
-                <div class="address-box">
-                    @foreach($employee->educationInfo->educations ?? [] as $edu)
-                        <div style="margin-bottom: 5px; padding-bottom: 5px; border-bottom: 1px solid #eee;">
-                            <strong>{{ $edu['education_title'] }}</strong><br>
-                            {{ $edu['institute'] }} ({{ $edu['passing_year'] }})
-                        </div>
-                    @endforeach
-                    @foreach($employee->educationInfo->trainings ?? [] as $trn)
-                        <div style="margin-bottom: 5px; padding-bottom: 5px; border-bottom: 1px solid #eee;">
-                            <strong>{{ $trn['training_title'] }}</strong> (Training)<br>
-                            {{ $trn['institute'] }} ({{ $trn['duration'] }})
-                        </div>
-                    @endforeach
-                </div>
-            </td>
-            @endif
-            @if($employee->employmentHistory && count($employee->employmentHistory->histories ?? []) > 0)
-            <td>
-                <div class="section-title" style="margin-top: 0;">Employment History</div>
-                <div class="address-box">
-                    @foreach($employee->employmentHistory->histories as $history)
-                        <div style="margin-bottom: 5px; padding-bottom: 5px; border-bottom: 1px solid #eee;">
-                            <strong>{{ $history['company_name'] }}</strong><br>
-                            {{ $history['designation'] }} ({{ $history['service_period'] }})
-                        </div>
-                    @endforeach
-                </div>
-            </td>
-            @endif
-        </tr>
-    </table>
+    <!-- Education (Full Width Row) -->
+    @if($employee->educationInfo && count($employee->educationInfo->educations ?? []) > 0)
+    <div class="section-title">Education Information</div>
+    <div class="address-box">
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+                @foreach($employee->educationInfo->educations as $index => $edu)
+                    <td style="width: 33.33%; padding: 5px; vertical-align: top;">
+                        <strong>{{ $edu['education_title'] }}</strong><br>
+                        <span style="font-size: 8px; color: #666;">{{ $index + 1 }}. {{ $edu['institute'] }}</span><br>
+                        <span style="font-size: 8px;">Year: {{ $edu['passing_year'] }} | Result: {{ $edu['result_grade'] }}</span>
+                    </td>
+                    @if(($index + 1) % 3 == 0) </tr><tr> @endif
+                @endforeach
+            </tr>
+        </table>
+    </div>
+    @endif
+
+    <!-- Training (Full Width Row) -->
+    @if($employee->educationInfo && count($employee->educationInfo->trainings ?? []) > 0)
+    <div class="section-title">Training Information</div>
+    <div class="address-box">
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+                @foreach($employee->educationInfo->trainings as $index => $trn)
+                    <td style="width: 33.33%; padding: 5px; vertical-align: top;">
+                        <strong>{{ $trn['training_title'] }}</strong><br>
+                        <span style="font-size: 8px; color: #666;">{{ $index + 1 }}. {{ $trn['institute'] }}</span><br>
+                        <span style="font-size: 8px;">Duration: {{ $trn['duration'] }} | Year: {{ $trn['to_date'] ? date('Y', strtotime($trn['to_date'])) : 'N/A' }}</span>
+                    </td>
+                    @if(($index + 1) % 3 == 0) </tr><tr> @endif
+                @endforeach
+            </tr>
+        </table>
+    </div>
+    @endif
+
+    <!-- Employment History (Full Width Row) -->
+    @if($employee->employmentHistory && count($employee->employmentHistory->histories ?? []) > 0)
+    <div class="section-title">Employment History</div>
+    <div class="address-box">
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+                @foreach($employee->employmentHistory->histories as $index => $history)
+                    <td style="width: 33.33%; padding: 5px; vertical-align: top;">
+                        <strong>{{ $history['company_name'] }}</strong><br>
+                        <span style="font-size: 8px; color: #666;">{{ $index + 1 }}. {{ $history['designation'] }}</span><br>
+                        <span style="font-size: 8px;">Duration: {{ $history['service_period'] }}</span>
+                    </td>
+                    @if(($index + 1) % 3 == 0) </tr><tr> @endif
+                @endforeach
+            </tr>
+        </table>
+    </div>
+    @endif
 
     <table class="row-table" style="margin-top: 15px;">
         <tr>
