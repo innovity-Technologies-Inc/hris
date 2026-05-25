@@ -10,6 +10,7 @@ use App\Models\Employee\Employee;
 use App\Models\Employee\EmployeeEligiblePlan;
 use App\Models\Employee\EmployeeOfficeInfo;
 use App\Services\Employee\EmployeeServices;
+use App\Services\Employee\EmployeeProfilePdfService;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -19,8 +20,11 @@ use Maatwebsite\Excel\Facades\Excel;
 class EmployeeProfileController extends Controller
 {
     protected $empServices;
-    public function __construct(EmployeeServices $empServices){
+    protected $pdfService;
+
+    public function __construct(EmployeeServices $empServices, EmployeeProfilePdfService $pdfService){
         $this->empServices = $empServices;
+        $this->pdfService = $pdfService;
     }
 
     public function index(Request $request, FlexSearch $flexsearch){
@@ -61,7 +65,7 @@ class EmployeeProfileController extends Controller
         }
 
         // Security check: Owner can view, or user with permission can view
-        $isOwner = auth()->user()->employee_id == $id || auth()->user()->id == $employee->user_id;
+        $isOwner = auth()->user()->employee_id == $id;
         $canViewAny = auth()->user()->can('employee-management.view');
 
         if (!$isOwner && !$canViewAny) {
@@ -100,7 +104,7 @@ class EmployeeProfileController extends Controller
         }
 
         // Security check: Owner can edit, or user with permission can edit
-        $isOwner = auth()->user()->id == $employee->user_id;
+        $isOwner = auth()->user()->employee_id == $id;
         $canEditAny = auth()->user()->can('employee-management.edit');
 
         if (!$isOwner && !$canEditAny) {
@@ -112,6 +116,71 @@ class EmployeeProfileController extends Controller
         return view('employee.general_informations.form', compact('title', 'section', 'sub_section', 'employee', 'employee_id', 'section_url', 'roles'));
     }
 
+    /**
+     * Get detailed employee profile as JSON for modal.
+     */
+    public function getDetailedProfileJson($id)
+    {
+        try {
+            // Security check: Owner can view, or user with permission can view
+            $isOwner = auth()->user()->employee_id == $id;
+            $canViewAny = auth()->user()->can('employee-management.view');
+
+            if (!$isOwner && !$canViewAny) {
+                return response()->json(['success' => false, 'message' => 'Unauthorized access'], 403);
+            }
+
+            $employee = $this->empServices->getEmployeeById($id);
+
+            if (!$employee) {
+                return response()->json(['success' => false, 'message' => 'Employee not found'], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => $employee
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error in getDetailedProfileJson: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Download detailed employee profile as PDF.
+     */
+    public function downloadDetailedProfilePdf($id)
+    {
+        $employee = $this->empServices->getEmployeeById($id);
+
+        if (!$employee) {
+            abort(404, 'Employee not found');
+        }
+
+        // Security check
+        $isOwner = auth()->user()->employee_id == $id || auth()->user()->id == $employee->user_id;
+        $canViewAny = auth()->user()->can('employee-management.view');
+
+        if (!$isOwner && !$canViewAny) {
+            abort(403, 'Unauthorized access');
+        }
+
+        try {
+            $pdfContent = $this->pdfService->generateDetailedProfilePdf($id);
+            $fileName = 'Employee_Profile_' . str_replace(' ', '_', $employee->full_name) . '.pdf';
+
+            return response($pdfContent)
+                ->header('Content-Type', 'application/pdf')
+                ->header('Content-Disposition', 'inline; filename="' . $fileName . '"');
+        } catch (\Exception $e) {
+            Log::error('Detailed Profile PDF generation failed: ' . $e->getMessage());
+            return redirect()->back()->with([
+                'alert-type' => 'error',
+                'message' => 'Failed to generate PDF: ' . $e->getMessage()
+            ]);
+        }
+    }
+
     public function generalInfoUpdate(Request $request, $id){
         $employee = $this->empServices->getEmployeeById($id);
         if (!$employee) {
@@ -119,7 +188,7 @@ class EmployeeProfileController extends Controller
         }
 
         // Security check: Owner can update, or user with permission can update
-        $isOwner = auth()->user()->id == $employee->user_id;
+        $isOwner = auth()->user()->employee_id == $id;
         $canEditAny = auth()->user()->can('employee-management.edit');
 
         if (!$isOwner && !$canEditAny) {
@@ -304,7 +373,7 @@ class EmployeeProfileController extends Controller
         }
 
         // Security check: Owner can view, or user with permission can view
-        $isOwner = auth()->user()->employee_id == $id || auth()->user()->id == $employee->user_id;
+        $isOwner = auth()->user()->employee_id == $id;
         $canViewAny = auth()->user()->can('employee-management.view');
 
         if (!$isOwner && !$canViewAny) {

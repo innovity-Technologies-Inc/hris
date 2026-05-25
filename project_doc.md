@@ -84,6 +84,10 @@ A dedicated analytical view providing a 360-degree overview of an employee's car
     - **Profile Approval**: Official activation of the employee profile.
     - **Career Movements**: History of requested and completed transfers across companies and branches.
     - **Growth Milestones**: Trackable log of promotions and increments.
+- **Detailed View & PDF Export**:
+    - **Interactive Modal**: A "Detailed View" button in the profile header opens a comprehensive modal displaying all employee fields (General, Contact, Document, Office, and Address).
+    - **Conditional Display**: The modal logic ensures only fields with data are shown, providing a clean and relevant view.
+    - **Professional PDF Export**: A branded, professionally formatted PDF of the detailed profile can be generated and downloaded directly from the modal, powered by `Spatie Browsershot`.
 - **Access Control**:
     - **Employee Access**: Directly linked in the sidebar for personal tracking.
     - **HR/Admin Access**: Integrated as a quick-action button in the main Employee Index, allowing for comprehensive audits.

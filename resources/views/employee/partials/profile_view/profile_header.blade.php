@@ -41,6 +41,11 @@
                                 </button>
                                 @endif
 
+                                <!-- Detailed View Button -->
+                                <button type="button" class="btn btn-primary d-flex align-items-center" id="openDetailedView">
+                                    <i class="mdi mdi-account-details me-1"></i> Detailed View
+                                </button>
+
                                 <!-- ID Card Action Button -->
                                 @include('employee.partials.id_card_button', ['employee' => $employee])
 
@@ -116,4 +121,118 @@
 
 @include('employee.partials.modal.edit_login_modal')
 @include('employee.partials.modal.review_profile_modal')
+@include('employee.partials.modal.detailed_view_modal')
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const openDetailedViewBtn = document.getElementById('openDetailedView');
+    const detailedViewModal = new bootstrap.Modal(document.getElementById('detailedViewModal'));
+    
+    if (openDetailedViewBtn) {
+        openDetailedViewBtn.addEventListener('click', function() {
+            detailedViewModal.show();
+            fetchDetailedInfo();
+        });
+    }
+
+    function fetchDetailedInfo() {
+        const loading = document.getElementById('modalLoading');
+        const error = document.getElementById('modalError');
+        const content = document.getElementById('modalContent');
+        
+        loading.classList.remove('d-none');
+        error.classList.add('d-none');
+        content.classList.add('d-none');
+
+        axios.get('{{ route('employee.profile.detailed_json', $employee->id) }}')
+            .then(response => {
+                if (response.data.success) {
+                    populateModal(response.data.data);
+                    loading.classList.add('d-none');
+                    content.classList.remove('d-none');
+                } else {
+                    showError(response.data.message || 'Failed to fetch details');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                showError('An error occurred while fetching details.');
+            });
+    }
+
+    function populateModal(data) {
+        // Set photo
+        const photo = document.getElementById('detailed_photo');
+        if (data.photo_path) {
+            photo.src = '{{ asset('storage') }}/' + data.photo_path;
+        } else {
+            photo.src = '{{ asset('assets/images/small/user-image.jpg') }}';
+        }
+
+        // Set basic info
+        document.getElementById('detailed_full_name').textContent = data.full_name;
+        document.getElementById('detailed_ids').textContent = `ID: ${data.applicant_id} | System ID: ${data.system_id}`;
+        
+        // Set contact info
+        document.getElementById('detailed_personal_email').textContent = data.personal_email || 'N/A';
+        document.getElementById('detailed_personal_mobile').textContent = data.personal_mobile || 'N/A';
+        document.getElementById('detailed_work_email').textContent = data.work_email || 'N/A';
+        document.getElementById('detailed_work_mobile').textContent = data.work_mobile || 'N/A';
+        
+        // Set personal info
+        document.getElementById('detailed_father_name').textContent = data.father_name || 'N/A';
+        document.getElementById('detailed_mother_name').textContent = data.mother_name || 'N/A';
+        document.getElementById('detailed_spouse_name').textContent = data.spouse_name || 'N/A';
+        document.getElementById('detailed_dob').textContent = data.date_of_birth ? new Date(data.date_of_birth).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'N/A';
+        document.getElementById('detailed_gender').textContent = data.gender || 'N/A';
+        document.getElementById('detailed_marital_status').textContent = data.marital_status || 'N/A';
+        document.getElementById('detailed_religion').textContent = data.religion || 'N/A';
+        document.getElementById('detailed_nationality').textContent = data.nationality || 'N/A';
+        document.getElementById('detailed_blood_group').textContent = data.blood_group || 'N/A';
+        
+        // Set documents
+        document.getElementById('detailed_tin').textContent = data.tin || 'N/A';
+        document.getElementById('detailed_passport_no').textContent = data.passport_no || 'N/A';
+        document.getElementById('detailed_passport_expiry').textContent = data.passport_expiry ? new Date(data.passport_expiry).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'N/A';
+        document.getElementById('detailed_residency_id').textContent = data.residency_id_number || 'N/A';
+        document.getElementById('detailed_license_no').textContent = data.license_no || 'N/A';
+        document.getElementById('detailed_license_expiry').textContent = data.license_expiry ? new Date(data.license_expiry).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'N/A';
+        
+        // Set address
+        if (data.present_address) {
+            const addr = typeof data.present_address === 'string' ? JSON.parse(data.present_address) : data.present_address;
+            document.getElementById('detailed_present_address').innerHTML = `
+                ${addr.address_line || ''}<br>
+                ${addr.village || ''}, ${addr.post_office || ''}<br>
+                ${addr.thana || ''}, ${addr.district || ''}<br>
+                ${addr.state || ''} - ${addr.zip_code || ''}<br>
+                ${addr.country || ''}
+            `;
+        }
+
+        if (data.permanent_address) {
+            const addr = typeof data.permanent_address === 'string' ? JSON.parse(data.permanent_address) : data.permanent_address;
+            document.getElementById('detailed_permanent_address').innerHTML = `
+                ${addr.address_line || ''}<br>
+                ${addr.village || ''}, ${addr.post_office || ''}<br>
+                ${addr.thana || ''}, ${addr.district || ''}<br>
+                ${addr.state || ''} - ${addr.zip_code || ''}<br>
+                ${addr.country || ''}
+            `;
+        } else {
+            document.getElementById('detailed_permanent_address').textContent = 'Same as Present Address';
+        }
+
+        // Set PDF link
+        document.getElementById('downloadPdfBtn').href = '{{ route('employee.profile.download_pdf', $employee->id) }}';
+    }
+
+    function showError(msg) {
+        document.getElementById('modalLoading').classList.add('d-none');
+        document.getElementById('modalContent').classList.add('d-none');
+        document.getElementById('modalError').classList.remove('d-none');
+        document.getElementById('errorMessage').textContent = msg;
+    }
+});
+</script>
 

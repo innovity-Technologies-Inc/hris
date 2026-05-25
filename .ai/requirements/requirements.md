@@ -195,6 +195,18 @@ A comprehensive Human Resource Management System (HRMS) built with Laravel 12, f
     - Update namespaces and imports for all moved files.
     - Run `php artisan optimize` after structural changes.
 
+### 📊 Employee Detailed View & PDF Export
+- **Goal**: Provide a comprehensive view of all employee data in a single modal and allow PDF export.
+- **Detailed View Modal**:
+    - **Trigger**: "Detailed View" button in the employee profile header.
+    - **Content**: Display all fields from the `employees` table (General Information, Contact, Documents, etc.).
+    - **Logic**: Only show fields that have data.
+    - **Styling**: Modern-clean layout, similar to a professional profile PDF.
+- **PDF Export**:
+    - **Trigger**: "Download PDF" button inside the Detailed View modal.
+    - **Content**: A professional PDF document of the detailed employee profile.
+    - **Implementation**: Use `Spatie Browsershot` (consistent with ID Card and Salary modules).
+
 ## Technical Constraints
 - **Framework**: Laravel 12.
 - **PHP Version**: 8.2+ (Strict Typing).
