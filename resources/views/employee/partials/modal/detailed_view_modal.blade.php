@@ -43,23 +43,23 @@
                             
                             <div class="row">
                                 <div class="col-md-6">
-                                    <p class="mb-1 text-muted small">Personal Email</p>
+                                    <p class="mb-1 text-muted small text-uppercase fw-bold" style="color: #974063">Personal Email</p>
                                     <p class="fw-semibold text-dark mb-3" id="detailed_personal_email"></p>
                                     
-                                    <p class="mb-1 text-muted small">Personal Mobile</p>
+                                    <p class="mb-1 text-muted small text-uppercase fw-bold" style="color: #974063">Personal Mobile</p>
                                     <p class="fw-semibold text-dark mb-3" id="detailed_personal_mobile"></p>
 
-                                    <p class="mb-1 text-muted small">Home Phone</p>
+                                    <p class="mb-1 text-muted small text-uppercase fw-bold" style="color: #974063">Home Phone</p>
                                     <p class="fw-semibold text-dark mb-3" id="detailed_home_phone"></p>
                                 </div>
                                 <div class="col-md-6">
-                                    <p class="mb-1 text-muted small">Work Email</p>
+                                    <p class="mb-1 text-muted small text-uppercase fw-bold" style="color: #974063">Work Email</p>
                                     <p class="fw-semibold text-dark mb-3" id="detailed_work_email"></p>
                                     
-                                    <p class="mb-1 text-muted small">Work Mobile</p>
+                                    <p class="mb-1 text-muted small text-uppercase fw-bold" style="color: #974063">Work Mobile</p>
                                     <p class="fw-semibold text-dark mb-3" id="detailed_work_mobile"></p>
 
-                                    <p class="mb-1 text-muted small">Work Phone</p>
+                                    <p class="mb-1 text-muted small text-uppercase fw-bold" style="color: #974063">Work Phone</p>
                                     <p class="fw-semibold text-dark mb-3" id="detailed_work_phone"></p>
                                 </div>
                             </div>
@@ -93,50 +93,46 @@
                             </div>
                         </div>
 
-                        <!-- Documents and Addresses Row -->
-                        <div class="row g-3 mb-3 d-flex align-items-stretch">
-                            <div class="col-md-6">
-                                <div class="card border shadow-none h-100">
-                                    <div class="card-header bg-light py-2">
-                                        <h6 class="mb-0 fw-bold">Documents & Identifiers</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row g-3">
-                                            <div class="col-md-6"><label>TIN</label><span id="detailed_tin"></span></div>
-                                            <div class="col-md-6"><label>NID / Residency ID</label><span id="detailed_residency_id"></span></div>
-                                            <div class="col-md-6"><label>Passport No</label><span id="detailed_passport_no"></span></div>
-                                            <div class="col-md-6"><label>Passport Expiry</label><span id="detailed_passport_expiry"></span></div>
-                                            <div class="col-md-6"><label>License No</label><span id="detailed_license_no"></span></div>
-                                            <div class="col-md-6"><label>License Expiry</label><span id="detailed_license_expiry"></span></div>
-                                            <div class="col-md-6"><label>Visa Expiry</label><span id="detailed_visa_expiry"></span></div>
-                                            <div class="col-md-6"><label>Work Expiry</label><span id="detailed_work_expiry"></span></div>
-                                        </div>
-                                    </div>
-                                </div>
+                        <!-- Documents Section (Full Row) -->
+                        <div class="card border shadow-none mb-3">
+                            <div class="card-header bg-light py-2">
+                                <h6 class="mb-0 fw-bold">Documents & Identifiers</h6>
                             </div>
-                            <div class="col-md-3">
-                                <div class="card border shadow-none h-100">
-                                    <div class="card-header bg-light py-2">
-                                        <h6 class="mb-0 fw-bold">Present Address</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <div id="detailed_present_address_fields"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="card border shadow-none h-100">
-                                    <div class="card-header bg-light py-2">
-                                        <h6 class="mb-0 fw-bold">Permanent Address</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <div id="detailed_permanent_address_fields"></div>
-                                    </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-md-3"><label>TIN</label><span id="detailed_tin"></span></div>
+                                    <div class="col-md-3"><label>NID / Residency ID</label><span id="detailed_residency_id"></span></div>
+                                    <div class="col-md-3"><label>Passport No</label><span id="detailed_passport_no"></span></div>
+                                    <div class="col-md-3"><label>Passport Expiry</label><span id="detailed_passport_expiry"></span></div>
+                                    <div class="col-md-3"><label>License No</label><span id="detailed_license_no"></span></div>
+                                    <div class="col-md-3"><label>License Expiry</label><span id="detailed_license_expiry"></span></div>
+                                    <div class="col-md-3"><label>Visa Expiry</label><span id="detailed_visa_expiry"></span></div>
+                                    <div class="col-md-3"><label>Work Expiry</label><span id="detailed_work_expiry"></span></div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Office Information Section -->
+                        <!-- Present Address Section (Full Row) -->
+                        <div class="card border shadow-none mb-3">
+                            <div class="card-header bg-light py-2">
+                                <h6 class="mb-0 fw-bold">Present Address</h6>
+                            </div>
+                            <div class="card-body">
+                                <div id="detailed_present_address_fields" class="row g-3"></div>
+                            </div>
+                        </div>
+
+                        <!-- Permanent Address Section (Full Row) -->
+                        <div class="card border shadow-none mb-3">
+                            <div class="card-header bg-light py-2">
+                                <h6 class="mb-0 fw-bold">Permanent Address</h6>
+                            </div>
+                            <div class="card-body">
+                                <div id="detailed_permanent_address_fields" class="row g-3"></div>
+                            </div>
+                        </div>
+
+                        <!-- Office Information Section (Full Row) -->
                         <div id="section_office_info" class="card border shadow-none mb-3">
                             <div class="card-header bg-light py-2">
                                 <h6 class="mb-0 fw-bold">Office Information</h6>
@@ -183,67 +179,59 @@
                             </div>
                         </div>
 
-                        <!-- Nominee & Bank Account Row -->
-                        <div class="row g-3 mb-3 d-flex align-items-stretch">
-                            <div class="col-md-6">
-                                <div id="section_nominee" class="card border shadow-none h-100">
-                                    <div class="card-header bg-light py-2">
-                                        <h6 class="mb-0 fw-bold">Nominee Information</h6>
-                                    </div>
-                                    <div class="card-body" id="detailed_nominee_body"></div>
-                                </div>
+                        <!-- Nominee Information (Full Row) -->
+                        <div id="section_nominee" class="card border shadow-none mb-3 d-none">
+                            <div class="card-header bg-light py-2">
+                                <h6 class="mb-0 fw-bold">Nominee Information</h6>
                             </div>
-                            <div class="col-md-6">
-                                <div id="section_bank" class="card border shadow-none h-100">
-                                    <div class="card-header bg-light py-2">
-                                        <h6 class="mb-0 fw-bold">Accounts Information</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row g-3">
-                                            <div class="col-md-6"><label>Bank</label><span id="detailed_bank_name"></span></div>
-                                            <div class="col-md-6"><label>Branch</label><span id="detailed_bank_branch"></span></div>
-                                            <div class="col-md-6"><label>Account Name</label><span id="detailed_account_name"></span></div>
-                                            <div class="col-md-6"><label>Account Number</label><span id="detailed_account_number"></span></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <div class="card-body" id="detailed_nominee_body"></div>
                         </div>
 
-                        <!-- Reference Address Section -->
-                        <div class="card border shadow-none mb-3">
+                        <!-- Accounts Information (Full Row) -->
+                        <div id="section_bank" class="card border shadow-none mb-3 d-none">
                             <div class="card-header bg-light py-2">
-                                <h6 class="mb-0 fw-bold">Reference Address</h6>
+                                <h6 class="mb-0 fw-bold">Accounts Information</h6>
                             </div>
                             <div class="card-body">
-                                <div id="detailed_reference_address_fields"></div>
-                            </div>
-                        </div>
-
-                        <!-- Policy & Salary Row -->
-                        <div class="row g-3 mb-3 d-flex align-items-stretch">
-                            <div class="col-md-6">
-                                <div id="section_policy" class="card border shadow-none h-100">
-                                    <div class="card-header bg-light py-2">
-                                        <h6 class="mb-0 fw-bold">Policy Tags</h6>
-                                    </div>
-                                    <div class="card-body" id="detailed_policy_body"></div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div id="section_salary" class="card border shadow-none h-100">
-                                    <div class="card-header bg-light py-2">
-                                        <h6 class="mb-0 fw-bold">Salary Breakdown</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row g-3" id="detailed_salary_body"></div>
-                                    </div>
+                                <div class="row g-3">
+                                    <div class="col-md-3"><label>Bank</label><span id="detailed_bank_name"></span></div>
+                                    <div class="col-md-3"><label>Branch</label><span id="detailed_bank_branch"></span></div>
+                                    <div class="col-md-3"><label>Account Name</label><span id="detailed_account_name"></span></div>
+                                    <div class="col-md-3"><label>Account Number</label><span id="detailed_account_number"></span></div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Current Plans Section -->
-                        <div id="section_plans" class="card border shadow-none mb-3">
+                        <!-- Reference Information Section (Full Row) -->
+                        <div class="card border shadow-none mb-3">
+                            <div class="card-header bg-light py-2">
+                                <h6 class="mb-0 fw-bold">Reference / Emergency Contact</h6>
+                            </div>
+                            <div class="card-body">
+                                <div id="detailed_reference_address_fields" class="row g-3"></div>
+                            </div>
+                        </div>
+
+                        <!-- Policy Tags (Full Row) -->
+                        <div id="section_policy" class="card border shadow-none mb-3 d-none">
+                            <div class="card-header bg-light py-2">
+                                <h6 class="mb-0 fw-bold">Policy Tags</h6>
+                            </div>
+                            <div class="card-body" id="detailed_policy_body"></div>
+                        </div>
+
+                        <!-- Salary Breakdown (Full Row) -->
+                        <div id="section_salary" class="card border shadow-none mb-3 d-none">
+                            <div class="card-header bg-light py-2">
+                                <h6 class="mb-0 fw-bold">Salary Breakdown</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3" id="detailed_salary_body"></div>
+                            </div>
+                        </div>
+
+                        <!-- Current Plans Section (Full Row) -->
+                        <div id="section_plans" class="card border shadow-none mb-3 d-none">
                             <div class="card-header bg-light py-2">
                                 <h6 class="mb-0 fw-bold">Current Plans</h6>
                             </div>
@@ -252,24 +240,20 @@
                             </div>
                         </div>
 
-                        <!-- Leave Balance & History Row -->
-                        <div class="row g-3 mb-3 d-flex align-items-stretch">
-                            <div class="col-md-6">
-                                <div id="section_leave_info" class="card border shadow-none h-100">
-                                    <div class="card-header bg-light py-2">
-                                        <h6 class="mb-0 fw-bold">Leave Info / Balance</h6>
-                                    </div>
-                                    <div class="card-body" id="detailed_leave_info_body"></div>
-                                </div>
+                        <!-- Leave Info / Balance (Full Row) -->
+                        <div id="section_leave_info" class="card border shadow-none mb-3 d-none">
+                            <div class="card-header bg-light py-2">
+                                <h6 class="mb-0 fw-bold">Leave Info / Balance</h6>
                             </div>
-                            <div class="col-md-6">
-                                <div id="section_leave_history" class="card border shadow-none h-100">
-                                    <div class="card-header bg-light py-2">
-                                        <h6 class="mb-0 fw-bold">Leave History</h6>
-                                    </div>
-                                    <div class="card-body" id="detailed_leave_history_body"></div>
-                                </div>
+                            <div class="card-body" id="detailed_leave_info_body"></div>
+                        </div>
+
+                        <!-- Leave History (Full Row) -->
+                        <div id="section_leave_history" class="card border shadow-none mb-3 d-none">
+                            <div class="card-header bg-light py-2">
+                                <h6 class="mb-0 fw-bold">Leave History</h6>
                             </div>
+                            <div class="card-body" id="detailed_leave_history_body"></div>
                         </div>
 
                     </div>

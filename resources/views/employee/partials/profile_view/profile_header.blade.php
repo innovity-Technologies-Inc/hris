@@ -219,27 +219,49 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Set addresses
         function renderAddressFields(addr) {
-            if (!addr) return '<p class="mb-0 text-muted">N/A</p>';
+            if (!addr) return '<div class="col-12"><p class="mb-0 text-muted">N/A</p></div>';
             const a = typeof addr === 'string' ? JSON.parse(addr) : addr;
-            if (Object.keys(a).length === 0) return '<p class="mb-0 text-muted">N/A</p>';
+            if (Object.keys(a).length === 0) return '<div class="col-12"><p class="mb-0 text-muted">N/A</p></div>';
             
             return `
-                <div class="mb-2"><label>Address Line</label><span>${a.address_line || 'N/A'}</span></div>
-                <div class="mb-2"><label>Village / Area</label><span>${a.village || 'N/A'}</span></div>
-                <div class="row g-2">
-                    <div class="col-6"><label>Post Office</label><span>${a.post_office || 'N/A'}</span></div>
-                    <div class="col-6"><label>Thana / Upazila</label><span>${a.thana || 'N/A'}</span></div>
-                    <div class="col-6"><label>District / City</label><span>${a.district || a.city || 'N/A'}</span></div>
-                    <div class="col-6"><label>State / Province</label><span>${a.state || 'N/A'}</span></div>
-                    <div class="col-6"><label>Zip Code</label><span>${a.zip_code || 'N/A'}</span></div>
-                    <div class="col-6"><label>Country</label><span>${a.country || 'N/A'}</span></div>
-                </div>
+                <div class="col-md-6 mb-2"><label>Address Line</label><span>${a.line_1 || a.address_line || 'N/A'}</span></div>
+                <div class="col-md-3 mb-2"><label>Village / Area</label><span>${a.village || 'N/A'}</span></div>
+                <div class="col-md-3 mb-2"><label>Post Office</label><span>${a.post_office || 'N/A'}</span></div>
+                <div class="col-md-3 mb-2"><label>Thana / Upazila</label><span>${a.thana || 'N/A'}</span></div>
+                <div class="col-md-3 mb-2"><label>District / City</label><span>${a.district || a.city || 'N/A'}</span></div>
+                <div class="col-md-2 mb-2"><label>Division</label><span>${a.division || 'N/A'}</span></div>
+                <div class="col-md-2 mb-2"><label>State / Province</label><span>${a.state || 'N/A'}</span></div>
+                <div class="col-md-2 mb-2"><label>Zip Code</label><span>${a.zip_code || 'N/A'}</span></div>
+                <div class="col-md-12"><label>Country</label><span>${a.country || 'N/A'}</span></div>
             `;
         }
 
         document.getElementById('detailed_present_address_fields').innerHTML = renderAddressFields(data.present_address);
         document.getElementById('detailed_permanent_address_fields').innerHTML = renderAddressFields(data.permanent_address || data.present_address);
-        document.getElementById('detailed_reference_address_fields').innerHTML = renderAddressFields(data.reference_address);
+        
+        // Special render for reference emergency contact
+        function renderReferenceFields(addr) {
+            if (!addr) return '<div class="col-12"><p class="mb-0 text-muted">N/A</p></div>';
+            const a = typeof addr === 'string' ? JSON.parse(addr) : addr;
+            if (Object.keys(a).length === 0) return '<div class="col-12"><p class="mb-0 text-muted">N/A</p></div>';
+
+            return `
+                <div class="col-md-3 mb-2"><label>Reference Name</label><span class="fw-bold text-dark">${a.reference_name || 'N/A'}</span></div>
+                <div class="col-md-3 mb-2"><label>Designation</label><span>${a.reference_designation || 'N/A'}</span></div>
+                <div class="col-md-2 mb-2"><label>Phone</label><span>${a.phone || 'N/A'}</span></div>
+                <div class="col-md-2 mb-2"><label>Mobile</label><span>${a.mobile || 'N/A'}</span></div>
+                <div class="col-md-2 mb-2"><label>Email</label><span>${a.email || 'N/A'}</span></div>
+                <div class="col-12 mt-2 border-top pt-2"><label class="small text-muted">Address Details</label></div>
+                <div class="col-md-6 mb-2"><label>Address Line</label><span>${a.line_1 || a.address_line || 'N/A'}</span></div>
+                <div class="col-md-3 mb-2"><label>Village</label><span>${a.village || 'N/A'}</span></div>
+                <div class="col-md-3 mb-2"><label>Post Office</label><span>${a.post_office || 'N/A'}</span></div>
+                <div class="col-md-3 mb-2"><label>Thana</label><span>${a.thana || 'N/A'}</span></div>
+                <div class="col-md-3 mb-2"><label>District</label><span>${a.district || 'N/A'}</span></div>
+                <div class="col-md-2 mb-2"><label>Zip Code</label><span>${a.zip_code || 'N/A'}</span></div>
+                <div class="col-md-4 mb-2"><label>Country</label><span>${a.country || 'N/A'}</span></div>
+            `;
+        }
+        document.getElementById('detailed_reference_address_fields').innerHTML = renderReferenceFields(data.reference_address);
 
         // Office Info
         const sectionOffice = document.getElementById('section_office_info');
