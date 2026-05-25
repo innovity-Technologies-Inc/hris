@@ -185,8 +185,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Set contact info
         document.getElementById('detailed_personal_email').textContent = data.personal_email || 'N/A';
         document.getElementById('detailed_personal_mobile').textContent = data.personal_mobile || 'N/A';
+        document.getElementById('detailed_home_phone').textContent = data.home_phone || 'N/A';
         document.getElementById('detailed_work_email').textContent = data.work_email || 'N/A';
         document.getElementById('detailed_work_mobile').textContent = data.work_mobile || 'N/A';
+        document.getElementById('detailed_work_phone').textContent = data.work_phone || 'N/A';
         
         // Set personal info
         document.getElementById('detailed_father_name').textContent = data.father_name || 'N/A';
@@ -198,7 +200,12 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('detailed_religion').textContent = data.religion || 'N/A';
         document.getElementById('detailed_nationality').textContent = data.nationality || 'N/A';
         document.getElementById('detailed_blood_group').textContent = data.blood_group || 'N/A';
+        document.getElementById('detailed_height').textContent = data.height_feet ? `${data.height_feet}' ${data.height_inches}"` : 'N/A';
+        document.getElementById('detailed_children_count').textContent = data.children_count || '0';
+        document.getElementById('detailed_birth_country').textContent = data.birth_country || 'N/A';
+        document.getElementById('detailed_birth_reg_no').textContent = data.birth_reg_no || 'N/A';
         document.getElementById('detailed_punch_card_no').textContent = data.punch_card_no || 'N/A';
+        document.getElementById('detailed_status').textContent = data.status || 'active';
         
         // Set documents
         document.getElementById('detailed_tin').textContent = data.tin || 'N/A';
@@ -207,33 +214,30 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('detailed_residency_id').textContent = data.residency_id_number || 'N/A';
         document.getElementById('detailed_license_no').textContent = data.license_no || 'N/A';
         document.getElementById('detailed_license_expiry').textContent = data.license_expiry ? new Date(data.license_expiry).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'N/A';
+        document.getElementById('detailed_visa_expiry').textContent = data.visa_expiry ? new Date(data.visa_expiry).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'N/A';
+        document.getElementById('detailed_work_expiry').textContent = data.work_expiry ? new Date(data.work_expiry).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'N/A';
         
         // Set address
-        let presentAddrHtml = 'N/A';
-        if (data.present_address) {
-            const addr = typeof data.present_address === 'string' ? JSON.parse(data.present_address) : data.present_address;
-            presentAddrHtml = `
-                ${addr.address_line || ''}<br>
-                ${addr.village || ''}, ${addr.post_office || ''}<br>
-                ${addr.thana || ''}, ${addr.district || ''}<br>
-                ${addr.state || ''} - ${addr.zip_code || ''}<br>
-                ${addr.country || ''}
+        function formatAddress(addr) {
+            if (!addr) return null;
+            const a = typeof addr === 'string' ? JSON.parse(addr) : addr;
+            if (Object.keys(a).length === 0) return null;
+            return `
+                ${a.address_line || ''}<br>
+                ${a.village || ''}, ${a.post_office || ''}<br>
+                ${a.thana || ''}, ${a.district || ''}<br>
+                ${a.state || ''} - ${a.zip_code || ''}<br>
+                ${a.country || ''}
             `;
         }
-        document.getElementById('detailed_present_address').innerHTML = presentAddrHtml;
 
-        if (data.permanent_address && Object.keys(data.permanent_address).length > 0) {
-            const addr = typeof data.permanent_address === 'string' ? JSON.parse(data.permanent_address) : data.permanent_address;
-            document.getElementById('detailed_permanent_address').innerHTML = `
-                ${addr.address_line || ''}<br>
-                ${addr.village || ''}, ${addr.post_office || ''}<br>
-                ${addr.thana || ''}, ${addr.district || ''}<br>
-                ${addr.state || ''} - ${addr.zip_code || ''}<br>
-                ${addr.country || ''}
-            `;
-        } else {
-            document.getElementById('detailed_permanent_address').innerHTML = presentAddrHtml;
-        }
+        const presentAddrHtml = formatAddress(data.present_address) || 'N/A';
+        const permanentAddrHtml = formatAddress(data.permanent_address) || presentAddrHtml;
+        const referenceAddrHtml = formatAddress(data.reference_address) || 'N/A';
+
+        document.getElementById('detailed_present_address').innerHTML = presentAddrHtml;
+        document.getElementById('detailed_permanent_address').innerHTML = permanentAddrHtml;
+        document.getElementById('detailed_reference_address').innerHTML = referenceAddrHtml;
 
         // Office Info
         const sectionOffice = document.getElementById('section_office_info');
@@ -328,10 +332,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (data.salary_breakdown) {
             sectionSalary.classList.remove('d-none');
             salaryBody.innerHTML = `
-                <div class="col-6 mb-2"><label>Gross Salary</label><span>${data.salary_breakdown.gross_salary || '0'}</span></div>
-                <div class="col-6 mb-2"><label>Basic Salary</label><span>${data.salary_breakdown.basic_salary || '0'}</span></div>
-                <div class="col-6 mb-2"><label>House Rent</label><span>${data.salary_breakdown.house_rent || '0'}</span></div>
-                <div class="col-6 mb-0"><label>Medical</label><span>${data.salary_breakdown.medical_allowance || '0'}</span></div>
+                <div class="col-md-6 mb-2"><label>Gross Salary</label><span>${data.salary_breakdown.gross_salary || '0'}</span></div>
+                <div class="col-md-6 mb-2"><label>Basic Salary</label><span>${data.salary_breakdown.basic_salary || '0'}</span></div>
+                <div class="col-md-6 mb-2"><label>House Rent</label><span>${data.salary_breakdown.house_rent || '0'}</span></div>
+                <div class="col-md-6 mb-0"><label>Medical</label><span>${data.salary_breakdown.medical_allowance || '0'}</span></div>
             `;
         } else {
             sectionSalary.classList.add('d-none');

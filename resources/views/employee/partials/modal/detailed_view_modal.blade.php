@@ -48,6 +48,9 @@
                                     
                                     <p class="mb-1 text-muted small">Personal Mobile</p>
                                     <p class="fw-semibold text-dark mb-3" id="detailed_personal_mobile"></p>
+
+                                    <p class="mb-1 text-muted small">Home Phone</p>
+                                    <p class="fw-semibold text-dark mb-3" id="detailed_home_phone"></p>
                                 </div>
                                 <div class="col-md-6">
                                     <p class="mb-1 text-muted small">Work Email</p>
@@ -55,53 +58,65 @@
                                     
                                     <p class="mb-1 text-muted small">Work Mobile</p>
                                     <p class="fw-semibold text-dark mb-3" id="detailed_work_mobile"></p>
+
+                                    <p class="mb-1 text-muted small">Work Phone</p>
+                                    <p class="fw-semibold text-dark mb-3" id="detailed_work_phone"></p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="hando-main-sections">
-                        <!-- Personal Info Section -->
+                        <!-- Personal Info Section (Full Width Row) -->
                         <div class="card border shadow-none mb-3">
                             <div class="card-header bg-light py-2">
                                 <h6 class="mb-0 fw-bold">Personal Information</h6>
                             </div>
                             <div class="card-body">
                                 <div class="row g-3">
-                                    <div class="col-md-4"><label>Father's Name</label><span id="detailed_father_name"></span></div>
-                                    <div class="col-md-4"><label>Mother's Name</label><span id="detailed_mother_name"></span></div>
-                                    <div class="col-md-4"><label>Spouse Name</label><span id="detailed_spouse_name"></span></div>
-                                    <div class="col-md-4"><label>Date of Birth</label><span id="detailed_dob"></span></div>
-                                    <div class="col-md-4"><label>Gender</label><span id="detailed_gender"></span></div>
-                                    <div class="col-md-4"><label>Marital Status</label><span id="detailed_marital_status"></span></div>
-                                    <div class="col-md-4"><label>Religion</label><span id="detailed_religion"></span></div>
-                                    <div class="col-md-4"><label>Nationality</label><span id="detailed_nationality"></span></div>
-                                    <div class="col-md-4"><label>Blood Group</label><span id="detailed_blood_group"></span></div>
-                                    <div class="col-md-4"><label>Punch Card No</label><span id="detailed_punch_card_no"></span></div>
+                                    <div class="col-md-3"><label>Father's Name</label><span id="detailed_father_name"></span></div>
+                                    <div class="col-md-3"><label>Mother's Name</label><span id="detailed_mother_name"></span></div>
+                                    <div class="col-md-3"><label>Spouse Name</label><span id="detailed_spouse_name"></span></div>
+                                    <div class="col-md-3"><label>Date of Birth</label><span id="detailed_dob"></span></div>
+                                    <div class="col-md-3"><label>Gender</label><span id="detailed_gender"></span></div>
+                                    <div class="col-md-3"><label>Marital Status</label><span id="detailed_marital_status"></span></div>
+                                    <div class="col-md-3"><label>Religion</label><span id="detailed_religion"></span></div>
+                                    <div class="col-md-3"><label>Nationality</label><span id="detailed_nationality"></span></div>
+                                    <div class="col-md-3"><label>Blood Group</label><span id="detailed_blood_group"></span></div>
+                                    <div class="col-md-3"><label>Height</label><span id="detailed_height"></span></div>
+                                    <div class="col-md-3"><label>Children Count</label><span id="detailed_children_count"></span></div>
+                                    <div class="col-md-3"><label>Birth Country</label><span id="detailed_birth_country"></span></div>
+                                    <div class="col-md-3"><label>Birth Reg No</label><span id="detailed_birth_reg_no"></span></div>
+                                    <div class="col-md-3"><label>Punch Card No</label><span id="detailed_punch_card_no"></span></div>
+                                    <div class="col-md-3"><label>Status</label><span id="detailed_status"></span></div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Equal Height Row for Documents and Addresses -->
+                        <!-- Documents (6) and Addresses (3+3) Row (Full Width Total) -->
                         <div class="row g-3 mb-3 d-flex align-items-stretch">
-                            <!-- Documents Section -->
-                            <div class="col-md-4">
+                            <!-- Documents Section (Wide) -->
+                            <div class="col-md-6">
                                 <div class="card border shadow-none h-100">
                                     <div class="card-header bg-light py-2">
-                                        <h6 class="mb-0 fw-bold">Document Identifiers</h6>
+                                        <h6 class="mb-0 fw-bold">Documents & Identifiers</h6>
                                     </div>
                                     <div class="card-body">
-                                        <div class="mb-2"><label class="d-block">TIN</label><span id="detailed_tin"></span></div>
-                                        <div class="mb-2"><label class="d-block">Passport No</label><span id="detailed_passport_no"></span></div>
-                                        <div class="mb-2"><label class="d-block">Passport Expiry</label><span id="detailed_passport_expiry"></span></div>
-                                        <div class="mb-2"><label class="d-block">NID / Residency ID</label><span id="detailed_residency_id"></span></div>
-                                        <div class="mb-2"><label class="d-block">License No</label><span id="detailed_license_no"></span></div>
-                                        <div class="mb-0"><label class="d-block">License Expiry</label><span id="detailed_license_expiry"></span></div>
+                                        <div class="row g-3">
+                                            <div class="col-md-6"><label>TIN</label><span id="detailed_tin"></span></div>
+                                            <div class="col-md-6"><label>NID / Residency ID</label><span id="detailed_residency_id"></span></div>
+                                            <div class="col-md-6"><label>Passport No</label><span id="detailed_passport_no"></span></div>
+                                            <div class="col-md-6"><label>Passport Expiry</label><span id="detailed_passport_expiry"></span></div>
+                                            <div class="col-md-6"><label>License No</label><span id="detailed_license_no"></span></div>
+                                            <div class="col-md-6"><label>License Expiry</label><span id="detailed_license_expiry"></span></div>
+                                            <div class="col-md-6"><label>Visa Expiry</label><span id="detailed_visa_expiry"></span></div>
+                                            <div class="col-md-6"><label>Work Expiry</label><span id="detailed_work_expiry"></span></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <!-- Present Address Section -->
-                            <div class="col-md-4">
+                            <!-- Present Address (Narrow) -->
+                            <div class="col-md-3">
                                 <div class="card border shadow-none h-100">
                                     <div class="card-header bg-light py-2">
                                         <h6 class="mb-0 fw-bold">Present Address</h6>
@@ -111,8 +126,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Permanent Address Section -->
-                            <div class="col-md-4">
+                            <!-- Permanent Address (Narrow) -->
+                            <div class="col-md-3">
                                 <div class="card border shadow-none h-100">
                                     <div class="card-header bg-light py-2">
                                         <h6 class="mb-0 fw-bold">Permanent Address</h6>
@@ -124,8 +139,8 @@
                             </div>
                         </div>
 
-                        <!-- Office Information Section -->
-                        <div id="section_office_info" class="card border shadow-none mb-3 d-none">
+                        <!-- Office Information Section (Full Width Row) -->
+                        <div id="section_office_info" class="card border shadow-none mb-3">
                             <div class="card-header bg-light py-2">
                                 <h6 class="mb-0 fw-bold">Office Information</h6>
                             </div>
@@ -141,10 +156,10 @@
                             </div>
                         </div>
 
-                        <!-- Education & History Section -->
+                        <!-- Education & History (Full Width Row - Equal Columns) -->
                         <div class="row g-3 mb-3 d-flex align-items-stretch">
                             <div class="col-md-6">
-                                <div id="section_education" class="card border shadow-none h-100 d-none">
+                                <div id="section_education" class="card border shadow-none h-100">
                                     <div class="card-header bg-light py-2">
                                         <h6 class="mb-0 fw-bold">Education Information</h6>
                                     </div>
@@ -152,7 +167,7 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div id="section_history" class="card border shadow-none h-100 d-none">
+                                <div id="section_history" class="card border shadow-none h-100">
                                     <div class="card-header bg-light py-2">
                                         <h6 class="mb-0 fw-bold">Employment History</h6>
                                     </div>
@@ -161,10 +176,10 @@
                             </div>
                         </div>
 
-                        <!-- Nominee & Bank Section -->
+                        <!-- Nominee & Bank Account (Full Width Row - Equal Columns) -->
                         <div class="row g-3 mb-3 d-flex align-items-stretch">
                             <div class="col-md-6">
-                                <div id="section_nominee" class="card border shadow-none h-100 d-none">
+                                <div id="section_nominee" class="card border shadow-none h-100">
                                     <div class="card-header bg-light py-2">
                                         <h6 class="mb-0 fw-bold">Nominee Information</h6>
                                     </div>
@@ -172,24 +187,36 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div id="section_bank" class="card border shadow-none h-100 d-none">
+                                <div id="section_bank" class="card border shadow-none h-100">
                                     <div class="card-header bg-light py-2">
                                         <h6 class="mb-0 fw-bold">Accounts Information</h6>
                                     </div>
                                     <div class="card-body">
-                                        <div class="mb-2"><label class="d-block">Bank</label><span id="detailed_bank_name"></span></div>
-                                        <div class="mb-2"><label class="d-block">Branch</label><span id="detailed_bank_branch"></span></div>
-                                        <div class="mb-2"><label class="d-block">Account Name</label><span id="detailed_account_name"></span></div>
-                                        <div class="mb-0"><label class="d-block">Account Number</label><span id="detailed_account_number"></span></div>
+                                        <div class="row g-3">
+                                            <div class="col-md-6"><label>Bank</label><span id="detailed_bank_name"></span></div>
+                                            <div class="col-md-6"><label>Branch</label><span id="detailed_bank_branch"></span></div>
+                                            <div class="col-md-6"><label>Account Name</label><span id="detailed_account_name"></span></div>
+                                            <div class="col-md-6"><label>Account Number</label><span id="detailed_account_number"></span></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Policy & Salary Section -->
+                        <!-- Reference Address Section (Full Width Row) -->
+                        <div class="card border shadow-none mb-3">
+                            <div class="card-header bg-light py-2">
+                                <h6 class="mb-0 fw-bold">Reference Address</h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="mb-0 text-dark" id="detailed_reference_address"></p>
+                            </div>
+                        </div>
+
+                        <!-- Policy & Salary (Full Width Row - Equal Columns) -->
                         <div class="row g-3 mb-3 d-flex align-items-stretch">
                             <div class="col-md-6">
-                                <div id="section_policy" class="card border shadow-none h-100 d-none">
+                                <div id="section_policy" class="card border shadow-none h-100">
                                     <div class="card-header bg-light py-2">
                                         <h6 class="mb-0 fw-bold">Policy Tags</h6>
                                     </div>
@@ -197,19 +224,19 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div id="section_salary" class="card border shadow-none h-100 d-none">
+                                <div id="section_salary" class="card border shadow-none h-100">
                                     <div class="card-header bg-light py-2">
                                         <h6 class="mb-0 fw-bold">Salary Breakdown</h6>
                                     </div>
                                     <div class="card-body">
-                                        <div class="row" id="detailed_salary_body"></div>
+                                        <div class="row g-3" id="detailed_salary_body"></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Current Plans Section -->
-                        <div id="section_plans" class="card border shadow-none mb-3 d-none">
+                        <!-- Current Plans (Full Width Row) -->
+                        <div id="section_plans" class="card border shadow-none mb-3">
                             <div class="card-header bg-light py-2">
                                 <h6 class="mb-0 fw-bold">Current Plans</h6>
                             </div>
@@ -218,10 +245,10 @@
                             </div>
                         </div>
 
-                        <!-- Leave Section -->
+                        <!-- Leave Balance & History (Full Width Row - Equal Columns) -->
                         <div class="row g-3 mb-3 d-flex align-items-stretch">
                             <div class="col-md-6">
-                                <div id="section_leave_info" class="card border shadow-none h-100 d-none">
+                                <div id="section_leave_info" class="card border shadow-none h-100">
                                     <div class="card-header bg-light py-2">
                                         <h6 class="mb-0 fw-bold">Leave Info / Balance</h6>
                                     </div>
@@ -229,7 +256,7 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div id="section_leave_history" class="card border shadow-none h-100 d-none">
+                                <div id="section_leave_history" class="card border shadow-none h-100">
                                     <div class="card-header bg-light py-2">
                                         <h6 class="mb-0 fw-bold">Leave History</h6>
                                     </div>
@@ -257,15 +284,17 @@
     .hando-main-sections label {
         color: #974063 !important;
         font-weight: 600;
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         margin-bottom: 2px;
+        text-transform: uppercase;
     }
     .hando-main-sections span {
         display: block;
         color: #333;
         font-weight: 500;
+        font-size: 0.9rem;
     }
     .hando-main-sections .card-body {
-        padding: 1.25rem;
+        padding: 1rem;
     }
 </style>
