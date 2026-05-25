@@ -217,27 +217,29 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('detailed_visa_expiry').textContent = data.visa_expiry ? new Date(data.visa_expiry).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'N/A';
         document.getElementById('detailed_work_expiry').textContent = data.work_expiry ? new Date(data.work_expiry).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'N/A';
         
-        // Set address
-        function formatAddress(addr) {
-            if (!addr) return null;
+        // Set addresses
+        function renderAddressFields(addr) {
+            if (!addr) return '<p class="mb-0 text-muted">N/A</p>';
             const a = typeof addr === 'string' ? JSON.parse(addr) : addr;
-            if (Object.keys(a).length === 0) return null;
+            if (Object.keys(a).length === 0) return '<p class="mb-0 text-muted">N/A</p>';
+            
             return `
-                ${a.address_line || ''}<br>
-                ${a.village || ''}, ${a.post_office || ''}<br>
-                ${a.thana || ''}, ${a.district || ''}<br>
-                ${a.state || ''} - ${a.zip_code || ''}<br>
-                ${a.country || ''}
+                <div class="mb-2"><label>Address Line</label><span>${a.address_line || 'N/A'}</span></div>
+                <div class="mb-2"><label>Village / Area</label><span>${a.village || 'N/A'}</span></div>
+                <div class="row g-2">
+                    <div class="col-6"><label>Post Office</label><span>${a.post_office || 'N/A'}</span></div>
+                    <div class="col-6"><label>Thana / Upazila</label><span>${a.thana || 'N/A'}</span></div>
+                    <div class="col-6"><label>District / City</label><span>${a.district || a.city || 'N/A'}</span></div>
+                    <div class="col-6"><label>State / Province</label><span>${a.state || 'N/A'}</span></div>
+                    <div class="col-6"><label>Zip Code</label><span>${a.zip_code || 'N/A'}</span></div>
+                    <div class="col-6"><label>Country</label><span>${a.country || 'N/A'}</span></div>
+                </div>
             `;
         }
 
-        const presentAddrHtml = formatAddress(data.present_address) || 'N/A';
-        const permanentAddrHtml = formatAddress(data.permanent_address) || presentAddrHtml;
-        const referenceAddrHtml = formatAddress(data.reference_address) || 'N/A';
-
-        document.getElementById('detailed_present_address').innerHTML = presentAddrHtml;
-        document.getElementById('detailed_permanent_address').innerHTML = permanentAddrHtml;
-        document.getElementById('detailed_reference_address').innerHTML = referenceAddrHtml;
+        document.getElementById('detailed_present_address_fields').innerHTML = renderAddressFields(data.present_address);
+        document.getElementById('detailed_permanent_address_fields').innerHTML = renderAddressFields(data.permanent_address || data.present_address);
+        document.getElementById('detailed_reference_address_fields').innerHTML = renderAddressFields(data.reference_address);
 
         // Office Info
         const sectionOffice = document.getElementById('section_office_info');
@@ -253,18 +255,21 @@ document.addEventListener('DOMContentLoaded', function() {
             sectionOffice.classList.add('d-none');
         }
 
-        // Education (from EmployeeEducationExperienceTraining model)
+        // Education
         const sectionEdu = document.getElementById('section_education');
         const eduBody = document.getElementById('detailed_education_body');
         if (data.education_info && data.education_info.educations && data.education_info.educations.length > 0) {
             sectionEdu.classList.remove('d-none');
             eduBody.innerHTML = data.education_info.educations.map(edu => `
-                <div class="col-12 mb-3">
+                <div class="col-12 mb-2">
                     <div class="p-3 border rounded-3 bg-light-subtle">
-                        <div class="row">
-                            <div class="col-md-6"><label class="mb-0">Degree / Certificate</label><span class="fw-bold">${edu.education_title || 'N/A'}</span></div>
-                            <div class="col-md-6"><label class="mb-0">Passing Year & Result</label><span>${edu.passing_year || 'N/A'} | ${edu.result_grade || 'N/A'}</span></div>
-                            <div class="col-12 mt-2"><label class="mb-0">Institute / Board / University</label><span>${edu.institute || 'N/A'} ${edu.board_university ? ' - ' + edu.board_university : ''}</span></div>
+                        <div class="row g-3">
+                            <div class="col-md-4"><label>Degree / Title</label><span class="fw-bold text-primary">${edu.education_title || 'N/A'}</span></div>
+                            <div class="col-md-4"><label>Institute / University</label><span>${edu.institute || 'N/A'}</span></div>
+                            <div class="col-md-4"><label>Board</label><span>${edu.board_university || 'N/A'}</span></div>
+                            <div class="col-md-4"><label>Group / Major</label><span>${edu.group_major || 'N/A'}</span></div>
+                            <div class="col-md-4"><label>Passing Year</label><span>${edu.passing_year || 'N/A'}</span></div>
+                            <div class="col-md-4"><label>Result & GPA</label><span>${edu.result_grade || 'N/A'} ${edu.gpa_cgpa ? '(' + edu.gpa_cgpa + ')' : ''}</span></div>
                         </div>
                     </div>
                 </div>
@@ -273,19 +278,22 @@ document.addEventListener('DOMContentLoaded', function() {
             sectionEdu.classList.add('d-none');
         }
 
-        // Training (from EmployeeEducationExperienceTraining model)
+        // Training
         const sectionTrn = document.getElementById('section_training');
         const trnBody = document.getElementById('detailed_training_body');
         if (data.education_info && data.education_info.trainings && data.education_info.trainings.length > 0) {
             sectionTrn.classList.remove('d-none');
             trnBody.innerHTML = data.education_info.trainings.map(trn => `
-                <div class="col-12 mb-3">
+                <div class="col-12 mb-2">
                     <div class="p-3 border rounded-3 bg-light-subtle">
-                        <div class="row">
-                            <div class="col-md-6"><label class="mb-0">Training Title</label><span class="fw-bold">${trn.training_title || 'N/A'}</span></div>
-                            <div class="col-md-3"><label class="mb-0">Duration</label><span>${trn.duration || 'N/A'}</span></div>
-                            <div class="col-md-3"><label class="mb-0">Year</label><span>${trn.to_date ? new Date(trn.to_date).getFullYear() : 'N/A'}</span></div>
-                            <div class="col-12 mt-2"><label class="mb-0">Institute & Location</label><span>${trn.institute || 'N/A'} ${trn.location ? ' - ' + trn.location : ''}</span></div>
+                        <div class="row g-3">
+                            <div class="col-md-4"><label>Training Title</label><span class="fw-bold text-warning">${trn.training_title || 'N/A'}</span></div>
+                            <div class="col-md-4"><label>Course Name</label><span>${trn.course_name || 'N/A'}</span></div>
+                            <div class="col-md-4"><label>Training Code</label><span>${trn.training_code || 'N/A'}</span></div>
+                            <div class="col-md-6"><label>Institute & Location</label><span>${trn.institute || 'N/A'} ${trn.location ? '(' + trn.location + ')' : ''}</span></div>
+                            <div class="col-md-2"><label>Country</label><span>${trn.country || 'N/A'}</span></div>
+                            <div class="col-md-2"><label>Duration</label><span>${trn.duration || 'N/A'}</span></div>
+                            <div class="col-md-2"><label>Dates</label><span>${trn.from_date || 'N/A'} to ${trn.to_date || 'N/A'}</span></div>
                         </div>
                     </div>
                 </div>
@@ -294,18 +302,20 @@ document.addEventListener('DOMContentLoaded', function() {
             sectionTrn.classList.add('d-none');
         }
 
-        // History (from EmployeeEmploymentHistory model)
+        // History
         const sectionHistory = document.getElementById('section_history');
         const historyBody = document.getElementById('detailed_history_body');
         if (data.employment_history && data.employment_history.histories && data.employment_history.histories.length > 0) {
             sectionHistory.classList.remove('d-none');
             historyBody.innerHTML = data.employment_history.histories.map(h => `
-                <div class="col-12 mb-3">
+                <div class="col-12 mb-2">
                     <div class="p-3 border rounded-3 bg-light-subtle">
-                        <div class="row">
-                            <div class="col-md-4"><label class="mb-0">Previous Company</label><span class="fw-bold">${h.company_name || 'N/A'}</span></div>
-                            <div class="col-md-4"><label class="mb-0">Designation</label><span>${h.designation || 'N/A'}</span></div>
-                            <div class="col-md-4"><label class="mb-0">Service Period / Duration</label><span>${h.service_period || 'N/A'}</span></div>
+                        <div class="row g-3">
+                            <div class="col-md-4"><label>Company Name</label><span class="fw-bold text-info">${h.company_name || 'N/A'}</span></div>
+                            <div class="col-md-4"><label>Designation</label><span>${h.designation || 'N/A'}</span></div>
+                            <div class="col-md-4"><label>Period</label><span>${h.joining_date || 'N/A'} to ${h.end_date || 'Present'}</span></div>
+                            <div class="col-md-6"><label>Job Description</label><span>${h.job_description || 'N/A'}</span></div>
+                            <div class="col-md-6"><label>Achievements</label><span>${h.achievements || 'N/A'}</span></div>
                         </div>
                     </div>
                 </div>

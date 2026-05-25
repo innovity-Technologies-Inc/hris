@@ -10,7 +10,7 @@
         }
         body {
             font-family: 'Helvetica', 'Arial', sans-serif;
-            font-size: 10px;
+            font-size: 9px;
             color: #333;
             line-height: 1.4;
             margin: 0;
@@ -20,35 +20,35 @@
         .header-table {
             width: 100%;
             border-bottom: 2px solid #974063;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             padding-bottom: 10px;
         }
         .company-name {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             color: #974063;
             margin: 0;
         }
         .company-details {
-            font-size: 9px;
+            font-size: 8px;
             color: #666;
             margin: 0;
         }
         .profile-photo {
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
             border: 2px solid #f0f0f0;
-            border-radius: 6px;
+            border-radius: 4px;
             object-fit: cover;
         }
         .section-title {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
             color: #fff;
             background-color: #974063;
-            padding: 4px 8px;
-            margin: 15px 0 8px 0;
-            border-radius: 3px;
+            padding: 3px 6px;
+            margin: 12px 0 6px 0;
+            border-radius: 2px;
             text-transform: uppercase;
         }
         .info-grid {
@@ -56,7 +56,7 @@
             border-collapse: collapse;
         }
         .info-grid td {
-            padding: 4px 0;
+            padding: 3px 0;
             border-bottom: 1px solid #f9f9f9;
             vertical-align: top;
         }
@@ -71,26 +71,26 @@
         }
         .address-box {
             background-color: #fcfcfc;
-            padding: 10px;
+            padding: 8px;
             border: 1px solid #eee;
-            border-radius: 3px;
+            border-radius: 2px;
         }
         .footer {
-            margin-top: 30px;
+            margin-top: 25px;
             text-align: center;
-            font-size: 8px;
+            font-size: 7px;
             color: #999;
             border-top: 1px solid #eee;
-            padding-top: 8px;
+            padding-top: 6px;
         }
         .badge {
             display: inline-block;
-            padding: 2px 5px;
+            padding: 1px 4px;
             background-color: #f0f0f0;
             border: 1px solid #ddd;
-            border-radius: 3px;
-            margin-right: 3px;
-            font-size: 8px;
+            border-radius: 2px;
+            margin-right: 2px;
+            font-size: 7px;
         }
         .row-table {
             width: 100%;
@@ -105,14 +105,14 @@
         }
         .full-width-section {
             width: 100%;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         .entry-card {
             border: 1px solid #eee;
             background-color: #f9f9f9;
-            padding: 8px;
-            margin-bottom: 8px;
-            border-radius: 3px;
+            padding: 6px;
+            margin-bottom: 6px;
+            border-radius: 2px;
         }
     </style>
 </head>
@@ -123,13 +123,13 @@
                 <h1 class="company-name">{{ $companyInfo->name }}</h1>
                 <p class="company-details">{{ $companyInfo->address }}</p>
                 <p class="company-details">Phone: {{ $companyInfo->phone }} | Email: {{ $companyInfo->email }}</p>
-                <h2 style="margin-top: 10px; color: #444; font-size: 14px;">EMPLOYEE DETAILED PROFILE</h2>
+                <h2 style="margin-top: 8px; color: #444; font-size: 12px;">EMPLOYEE DETAILED PROFILE</h2>
             </td>
             <td style="width: 30%; text-align: right;">
                 @if($employee->photo_path)
                     <img src="{{ public_path('storage/' . $employee->photo_path) }}" class="profile-photo" alt="Photo">
                 @else
-                    <div style="width: 80px; height: 80px; background-color: #eee; border-radius: 6px; display: inline-block; line-height: 80px; text-align: center; color: #999;">NO PHOTO</div>
+                    <div style="width: 70px; height: 70px; background-color: #eee; border-radius: 4px; display: inline-block; line-height: 70px; text-align: center; color: #999;">NO PHOTO</div>
                 @endif
             </td>
         </tr>
@@ -139,48 +139,45 @@
     <div class="section-title">Personal Information</div>
     <table class="info-grid">
         <tr>
-            <td class="label">Full Name</td>
-            <td class="value">{{ $employee->full_name }}</td>
-            <td class="label">Employee ID</td>
-            <td class="value">{{ $employee->applicant_id }}</td>
+            <td class="label">Full Name</td><td class="value">{{ $employee->full_name }}</td>
+            <td class="label">Employee ID</td><td class="value">{{ $employee->applicant_id }}</td>
         </tr>
         <tr>
-            <td class="label">Father's Name</td>
-            <td class="value">{{ $employee->father_name }}</td>
-            <td class="label">System ID</td>
-            <td class="value">{{ $employee->system_id }}</td>
+            <td class="label">Father's Name</td><td class="value">{{ $employee->father_name }}</td>
+            <td class="label">System ID</td><td class="value">{{ $employee->system_id }}</td>
         </tr>
         <tr>
-            <td class="label">Mother's Name</td>
-            <td class="value">{{ $employee->mother_name }}</td>
-            <td class="label">Punch Card No</td>
-            <td class="value">{{ $employee->punch_card_no ?? 'N/A' }}</td>
+            <td class="label">Mother's Name</td><td class="value">{{ $employee->mother_name }}</td>
+            <td class="label">Punch Card No</td><td class="value">{{ $employee->punch_card_no ?? 'N/A' }}</td>
         </tr>
         <tr>
-            <td class="label">Date of Birth</td>
-            <td class="value">{{ \Carbon\Carbon::parse($employee->date_of_birth)->format('d M, Y') }}</td>
-            <td class="label">Gender</td>
-            <td class="value">{{ $employee->gender }}</td>
+            <td class="label">Date of Birth</td><td class="value">{{ \Carbon\Carbon::parse($employee->date_of_birth)->format('d M, Y') }}</td>
+            <td class="label">Gender</td><td class="value">{{ $employee->gender }}</td>
         </tr>
         <tr>
-            <td class="label">Marital Status</td>
-            <td class="value">{{ $employee->marital_status ?? 'N/A' }}</td>
-            <td class="label">Religion</td>
-            <td class="value">{{ $employee->religion }}</td>
+            <td class="label">Marital Status</td><td class="value">{{ $employee->marital_status ?? 'N/A' }}</td>
+            <td class="label">Religion</td><td class="value">{{ $employee->religion }}</td>
         </tr>
         <tr>
-            <td class="label">Nationality</td>
-            <td class="value">{{ $employee->nationality }}</td>
-            <td class="label">Blood Group</td>
-            <td class="value">{{ $employee->blood_group ?? 'N/A' }}</td>
+            <td class="label">Nationality</td><td class="value">{{ $employee->nationality }}</td>
+            <td class="label">Blood Group</td><td class="value">{{ $employee->blood_group ?? 'N/A' }}</td>
+        </tr>
+        <tr>
+            <td class="label">Birth Country</td><td class="value">{{ $employee->birth_country ?? 'N/A' }}</td>
+            <td class="label">Birth Reg No</td><td class="value">{{ $employee->birth_reg_no ?? 'N/A' }}</td>
+        </tr>
+        <tr>
+            <td class="label">Height</td><td class="value">{{ $employee->height_feet ? $employee->height_feet . "' " . $employee->height_inches . "\"" : 'N/A' }}</td>
+            <td class="label">Status</td><td class="value">{{ $employee->status }}</td>
         </tr>
     </table>
 
-    <table class="row-table" style="margin-top: 15px;">
+    <!-- Documents & Addresses (Equal height-ish) -->
+    <table class="row-table" style="margin-top: 10px;">
         <tr>
             <td style="width: 50%;">
                 <div class="section-title" style="margin-top: 0;">Document Identifiers</div>
-                <div class="address-box" style="min-height: 100px;">
+                <div class="address-box" style="min-height: 120px;">
                     <table style="width: 100%; border-collapse: collapse;">
                         <tr><td style="width: 40%; font-weight: bold;">TIN:</td><td>{{ $employee->tin ?? 'N/A' }}</td></tr>
                         <tr><td style="font-weight: bold;">Passport:</td><td>{{ $employee->passport_no ?? 'N/A' }}</td></tr>
@@ -188,37 +185,39 @@
                         <tr><td style="font-weight: bold;">NID / ResID:</td><td>{{ $employee->residency_id_number ?? 'N/A' }}</td></tr>
                         <tr><td style="font-weight: bold;">License:</td><td>{{ $employee->license_no ?? 'N/A' }}</td></tr>
                         <tr><td style="font-weight: bold;">Visa Exp:</td><td>{{ $employee->visa_expiry ? \Carbon\Carbon::parse($employee->visa_expiry)->format('d M, Y') : 'N/A' }}</td></tr>
+                        <tr><td style="font-weight: bold;">Work Exp:</td><td>{{ $employee->work_expiry ? \Carbon\Carbon::parse($employee->work_expiry)->format('d M, Y') : 'N/A' }}</td></tr>
                     </table>
                 </div>
             </td>
             <td style="width: 25%;">
                 <div class="section-title" style="margin-top: 0;">Present Address</div>
-                <div class="address-box" style="min-height: 100px;">
+                <div class="address-box" style="min-height: 120px;">
                     @php $present = (object) $employee->present_address; @endphp
-                    {{ $present->address_line ?? '' }}<br>
-                    {{ $present->village ?? '' }}, {{ $present->post_office ?? '' }}<br>
-                    {{ $present->thana ?? '' }}, {{ $present->district ?? '' }}<br>
-                    {{ $present->state ?? '' }} - {{ $present->zip_code ?? '' }}<br>
-                    {{ $present->country ?? '' }}
+                    <strong>Line:</strong> {{ $present->address_line ?? 'N/A' }}<br>
+                    <strong>Village:</strong> {{ $present->village ?? 'N/A' }}<br>
+                    <strong>PO:</strong> {{ $present->post_office ?? 'N/A' }}<br>
+                    <strong>Thana:</strong> {{ $present->thana ?? 'N/A' }}<br>
+                    <strong>Dist:</strong> {{ $present->district ?? 'N/A' }}<br>
+                    <strong>State:</strong> {{ $present->state ?? 'N/A' }}<br>
+                    <strong>Zip:</strong> {{ $present->zip_code ?? 'N/A' }}<br>
+                    <strong>Country:</strong> {{ $present->country ?? 'N/A' }}
                 </div>
             </td>
             <td style="width: 25%;">
                 <div class="section-title" style="margin-top: 0;">Permanent Address</div>
-                <div class="address-box" style="min-height: 100px;">
-                    @if($employee->permanent_address && count($employee->permanent_address) > 0)
-                        @php $permanent = (object) $employee->permanent_address; @endphp
-                        {{ $permanent->address_line ?? '' }}<br>
-                        {{ $permanent->village ?? '' }}, {{ $permanent->post_office ?? '' }}<br>
-                        {{ $permanent->thana ?? '' }}, {{ $permanent->district ?? '' }}<br>
-                        {{ $permanent->state ?? '' }} - {{ $permanent->zip_code ?? '' }}<br>
-                        {{ $permanent->country ?? '' }}
-                    @else
-                        {{ $present->address_line ?? '' }}<br>
-                        {{ $present->village ?? '' }}, {{ $present->post_office ?? '' }}<br>
-                        {{ $present->thana ?? '' }}, {{ $present->district ?? '' }}<br>
-                        {{ $present->state ?? '' }} - {{ $present->zip_code ?? '' }}<br>
-                        {{ $present->country ?? '' }}
-                    @endif
+                <div class="address-box" style="min-height: 120px;">
+                    @php 
+                        $perm = (object) ($employee->permanent_address ?? $employee->present_address); 
+                        if (empty($employee->permanent_address)) $perm = (object) $employee->present_address;
+                    @endphp
+                    <strong>Line:</strong> {{ $perm->address_line ?? 'N/A' }}<br>
+                    <strong>Village:</strong> {{ $perm->village ?? 'N/A' }}<br>
+                    <strong>PO:</strong> {{ $perm->post_office ?? 'N/A' }}<br>
+                    <strong>Thana:</strong> {{ $perm->thana ?? 'N/A' }}<br>
+                    <strong>Dist:</strong> {{ $perm->district ?? 'N/A' }}<br>
+                    <strong>State:</strong> {{ $perm->state ?? 'N/A' }}<br>
+                    <strong>Zip:</strong> {{ $perm->zip_code ?? 'N/A' }}<br>
+                    <strong>Country:</strong> {{ $perm->country ?? 'N/A' }}
                 </div>
             </td>
         </tr>
@@ -229,27 +228,21 @@
     <div class="section-title">Office Information</div>
     <table class="info-grid">
         <tr>
-            <td class="label">Company</td>
-            <td class="value">{{ $officeInfo->getCurrentCompany?->name ?? 'N/A' }}</td>
-            <td class="label">Designation</td>
-            <td class="value">{{ $officeInfo->getCurrentDesignation?->name ?? 'N/A' }}</td>
+            <td class="label">Company</td><td class="value">{{ $officeInfo->getCurrentCompany?->name ?? 'N/A' }}</td>
+            <td class="label">Designation</td><td class="value">{{ $officeInfo->getCurrentDesignation?->name ?? 'N/A' }}</td>
         </tr>
         <tr>
-            <td class="label">Department</td>
-            <td class="value">{{ $officeInfo->getCurrentDepartment?->name ?? 'N/A' }}</td>
-            <td class="label">Division</td>
-            <td class="value">{{ $officeInfo->getCurrentDivision?->name ?? 'N/A' }}</td>
+            <td class="label">Department</td><td class="value">{{ $officeInfo->getCurrentDepartment?->name ?? 'N/A' }}</td>
+            <td class="label">Division</td><td class="value">{{ $officeInfo->getCurrentDivision?->name ?? 'N/A' }}</td>
         </tr>
         <tr>
-            <td class="label">Section</td>
-            <td class="value">{{ $officeInfo->getCurrentSection?->name ?? 'N/A' }}</td>
-            <td class="label">Date of Join</td>
-            <td class="value">{{ $officeInfo->date_of_join ? \Carbon\Carbon::parse($officeInfo->date_of_join)->format('d M, Y') : 'N/A' }}</td>
+            <td class="label">Section</td><td class="value">{{ $officeInfo->getCurrentSection?->name ?? 'N/A' }}</td>
+            <td class="label">Date of Join</td><td class="value">{{ $officeInfo->date_of_join ? \Carbon\Carbon::parse($officeInfo->date_of_join)->format('d M, Y') : 'N/A' }}</td>
         </tr>
     </table>
     @endif
 
-    <!-- Education Information (Full Row) -->
+    <!-- Education Information (Full Row List) -->
     @if($employee->educationInfo && count($employee->educationInfo->educations ?? []) > 0)
     <div class="full-width-section">
         <div class="section-title">Education Information</div>
@@ -257,11 +250,14 @@
             <div class="entry-card">
                 <table style="width: 100%;">
                     <tr>
-                        <td style="width: 50%;"><strong>Degree:</strong> {{ $edu['education_title'] }}</td>
-                        <td style="width: 50%;"><strong>Year & Result:</strong> {{ $edu['passing_year'] }} | {{ $edu['result_grade'] }}</td>
+                        <td style="width: 33%;"><strong>Title:</strong> {{ $edu['education_title'] ?? 'N/A' }}</td>
+                        <td style="width: 33%;"><strong>Institute:</strong> {{ $edu['institute'] ?? 'N/A' }}</td>
+                        <td style="width: 34%;"><strong>Board:</strong> {{ $edu['board_university'] ?? 'N/A' }}</td>
                     </tr>
                     <tr>
-                        <td colspan="2" style="padding-top: 5px;"><strong>Institute:</strong> {{ $edu['institute'] }}</td>
+                        <td style="padding-top: 4px;"><strong>Major:</strong> {{ $edu['group_major'] ?? 'N/A' }}</td>
+                        <td style="padding-top: 4px;"><strong>Year:</strong> {{ $edu['passing_year'] ?? 'N/A' }}</td>
+                        <td style="padding-top: 4px;"><strong>Result:</strong> {{ $edu['result_grade'] ?? 'N/A' }} {{ isset($edu['gpa_cgpa']) ? '('.$edu['gpa_cgpa'].')' : '' }}</td>
                     </tr>
                 </table>
             </div>
@@ -269,7 +265,7 @@
     </div>
     @endif
 
-    <!-- Training Information (Full Row) -->
+    <!-- Training Information (Full Row List) -->
     @if($employee->educationInfo && count($employee->educationInfo->trainings ?? []) > 0)
     <div class="full-width-section">
         <div class="section-title">Training Information</div>
@@ -277,12 +273,12 @@
             <div class="entry-card">
                 <table style="width: 100%;">
                     <tr>
-                        <td style="width: 50%;"><strong>Training Title:</strong> {{ $trn['training_title'] }}</td>
-                        <td style="width: 25%;"><strong>Duration:</strong> {{ $trn['duration'] }}</td>
-                        <td style="width: 25%;"><strong>Year:</strong> {{ $trn['to_date'] ? date('Y', strtotime($trn['to_date'])) : 'N/A' }}</td>
+                        <td style="width: 50%;"><strong>Title:</strong> {{ $trn['training_title'] ?? 'N/A' }}</td>
+                        <td style="width: 50%;"><strong>Course:</strong> {{ $trn['course_name'] ?? 'N/A' }}</td>
                     </tr>
                     <tr>
-                        <td colspan="3" style="padding-top: 5px;"><strong>Institute:</strong> {{ $trn['institute'] }}</td>
+                        <td style="padding-top: 4px;"><strong>Institute:</strong> {{ $trn['institute'] ?? 'N/A' }} ({{ $trn['location'] ?? 'N/A' }})</td>
+                        <td style="padding-top: 4px;"><strong>Duration:</strong> {{ $trn['duration'] ?? 'N/A' }} | <strong>Dates:</strong> {{ $trn['from_date'] ?? 'N/A' }} to {{ $trn['to_date'] ?? 'N/A' }}</td>
                     </tr>
                 </table>
             </div>
@@ -290,7 +286,7 @@
     </div>
     @endif
 
-    <!-- Employment History (Full Row) -->
+    <!-- Employment History (Full Row List) -->
     @if($employee->employmentHistory && count($employee->employmentHistory->histories ?? []) > 0)
     <div class="full-width-section">
         <div class="section-title">Employment History</div>
@@ -298,118 +294,137 @@
             <div class="entry-card">
                 <table style="width: 100%;">
                     <tr>
-                        <td style="width: 40%;"><strong>Company:</strong> {{ $history['company_name'] }}</td>
-                        <td style="width: 30%;"><strong>Designation:</strong> {{ $history['designation'] }}</td>
-                        <td style="width: 30%;"><strong>Duration:</strong> {{ $history['service_period'] }}</td>
+                        <td style="width: 40%;"><strong>Company:</strong> {{ $history['company_name'] ?? 'N/A' }}</td>
+                        <td style="width: 30%;"><strong>Designation:</strong> {{ $history['designation'] ?? 'N/A' }}</td>
+                        <td style="width: 30%;"><strong>Dates:</strong> {{ $history['joining_date'] ?? 'N/A' }} to {{ $history['end_date'] ?? 'Present' }}</td>
                     </tr>
+                    @if(!empty($history['job_description']))
+                    <tr><td colspan="3" style="padding-top: 4px;"><strong>Description:</strong> {{ $history['job_description'] }}</td></tr>
+                    @endif
+                    @if(!empty($history['achievements']))
+                    <tr><td colspan="3" style="padding-top: 4px;"><strong>Achievements:</strong> {{ $history['achievements'] }}</td></tr>
+                    @endif
                 </table>
             </div>
         @endforeach
     </div>
     @endif
 
-    <table class="row-table" style="margin-top: 15px;">
+    <!-- Nominee & Bank Account -->
+    <table class="row-table" style="margin-top: 10px;">
         <tr>
-            @if($employee->nomineeInfo)
-            <td>
-                <div class="section-title" style="margin-top: 0;">Nominee</div>
+            <td style="width: 50%;">
+                <div class="section-title" style="margin-top: 0;">Nominee Information</div>
+                @if($employee->nomineeInfo)
                 <div class="address-box">
                     <strong>Name:</strong> {{ $employee->nomineeInfo->nominee_name }}<br>
                     <strong>Relation:</strong> {{ $employee->nomineeInfo->relation }}<br>
-                    <strong>Mobile:</strong> {{ $employee->nomineeInfo->nominee_mobile }}
+                    <strong>Mobile:</strong> {{ $employee->nomineeInfo->nominee_mobile }}<br>
+                    <strong>Gender:</strong> {{ $employee->nomineeInfo->gender }}<br>
+                    <strong>DOB:</strong> {{ \Carbon\Carbon::parse($employee->nomineeInfo->date_of_birth)->format('d M, Y') }}
                 </div>
+                @else
+                <div class="address-box">N/A</div>
+                @endif
             </td>
-            @endif
-            @if($employee->bankAccount)
-            <td>
+            <td style="width: 50%;">
                 <div class="section-title" style="margin-top: 0;">Bank Account</div>
+                @if($employee->bankAccount)
                 <div class="address-box">
                     <strong>Bank:</strong> {{ $employee->bankAccount->getBank?->name }}<br>
+                    <strong>Branch:</strong> {{ $employee->bankAccount->getBranch?->name }}<br>
                     <strong>A/C Name:</strong> {{ $employee->bankAccount->account_holder_name }}<br>
                     <strong>A/C No:</strong> {{ $employee->bankAccount->account_number }}
                 </div>
+                @else
+                <div class="address-box">N/A</div>
+                @endif
             </td>
-            @endif
         </tr>
     </table>
 
+    <!-- Reference Address -->
+    <div class="section-title">Reference Address</div>
+    <div class="address-box">
+        @if($employee->reference_address)
+            @php $ref = (object) $employee->reference_address; @endphp
+            <strong>Line:</strong> {{ $ref->address_line ?? 'N/A' }} | 
+            <strong>Village:</strong> {{ $ref->village ?? 'N/A' }} | 
+            <strong>Thana:</strong> {{ $ref->thana ?? 'N/A' }} | 
+            <strong>Dist:</strong> {{ $ref->district ?? 'N/A' }} | 
+            <strong>Zip:</strong> {{ $ref->zip_code ?? 'N/A' }} | 
+            <strong>Country:</strong> {{ $ref->country ?? 'N/A' }}
+        @else
+            N/A
+        @endif
+    </div>
+
+    <!-- Salary Breakdown -->
     @if($employee->salaryBreakdown)
     <div class="section-title">Salary Breakdown</div>
     <table class="info-grid">
         <tr>
-            <td class="label">Gross Salary</td>
-            <td class="value">{{ $employee->salaryBreakdown->gross_salary }}</td>
-            <td class="label">Basic Salary</td>
-            <td class="value">{{ $employee->salaryBreakdown->basic_salary }}</td>
+            <td class="label">Gross Salary</td><td class="value">{{ $employee->salaryBreakdown->gross_salary }}</td>
+            <td class="label">Basic Salary</td><td class="value">{{ $employee->salaryBreakdown->basic_salary }}</td>
         </tr>
         <tr>
-            <td class="label">House Rent</td>
-            <td class="value">{{ $employee->salaryBreakdown->house_rent }}</td>
-            <td class="label">Medical</td>
-            <td class="value">{{ $employee->salaryBreakdown->medical_allowance }}</td>
+            <td class="label">House Rent</td><td class="value">{{ $employee->salaryBreakdown->house_rent }}</td>
+            <td class="label">Medical</td><td class="value">{{ $employee->salaryBreakdown->medical_allowance }}</td>
         </tr>
     </table>
     @endif
 
-    <div style="page-break-inside: avoid;">
-        <table class="row-table" style="margin-top: 15px;">
-            <tr>
-                <td style="width: 50%;">
-                    <div class="section-title" style="margin-top: 0;">Policy Tags</div>
-                    <div class="address-box">
-                        @php $elig = $employee->employeeEligibility; @endphp
-                        @if($elig)
-                            @if($elig->shift_plan_status === 'active') <span class="badge">Shift Plan</span> @endif
-                            @if($elig->leave_plan_status === 'active') <span class="badge">Leave Plan</span> @endif
-                            @if($elig->ot_plan_status === 'active') <span class="badge">OT Plan</span> @endif
-                            @if($elig->roster_plans_status === 'active') <span class="badge">Roster Plan</span> @endif
-                            @if($elig->bonus_plan_status === 'active') <span class="badge">Bonus Plan</span> @endif
-                            @if($elig->meal_plan_status === 'active') <span class="badge">Meal Plan</span> @endif
-                        @else
-                            No active policies
-                        @endif
-                    </div>
-                </td>
-                <td style="width: 50%;">
-                    <div class="section-title" style="margin-top: 0;">Current Plans</div>
-                    <div class="address-box">
-                        @foreach($employee->shift as $s) <strong>Shift:</strong> {{ $s->name }}<br> @endforeach
-                        @foreach($employee->roster as $r) @if($r->status === 'active') <strong>Roster:</strong> {{ $r->name }}<br> @endif @endforeach
-                    </div>
-                </td>
-            </tr>
-        </table>
-    </div>
+    <!-- Policies & Plans -->
+    <table class="row-table" style="margin-top: 10px;">
+        <tr>
+            <td style="width: 50%;">
+                <div class="section-title" style="margin-top: 0;">Policy Tags</div>
+                <div class="address-box">
+                    @php $elig = $employee->employeeEligibility; @endphp
+                    @if($elig)
+                        @if($elig->shift_plan_status === 'active') <span class="badge">Shift Plan</span> @endif
+                        @if($elig->leave_plan_status === 'active') <span class="badge">Leave Plan</span> @endif
+                        @if($elig->ot_plan_status === 'active') <span class="badge">OT Plan</span> @endif
+                        @if($elig->roster_plans_status === 'active') <span class="badge">Roster Plan</span> @endif
+                        @if($elig->bonus_plan_status === 'active') <span class="badge">Bonus Plan</span> @endif
+                        @if($elig->meal_plan_status === 'active') <span class="badge">Meal Plan</span> @endif
+                    @else
+                        No active policies
+                    @endif
+                </div>
+            </td>
+            <td style="width: 50%;">
+                <div class="section-title" style="margin-top: 0;">Current Plans</div>
+                <div class="address-box">
+                    @foreach($employee->shift as $s) <strong>Shift:</strong> {{ $s->name }}<br> @endforeach
+                    @foreach($employee->roster as $r) @if($r->status === 'active') <strong>Roster:</strong> {{ $r->name }}<br> @endif @endforeach
+                </div>
+            </td>
+        </tr>
+    </table>
 
+    <!-- Leave Balance & History -->
     @if($employee->leaveBalances->count() > 0 || $employee->leaveApplications->count() > 0)
-    <div style="page-break-inside: avoid;">
-        <table class="row-table" style="margin-top: 15px;">
-            <tr>
-                <td>
-                    <div class="section-title" style="margin-top: 0;">Leave Balance</div>
-                    <table class="info-grid">
-                        @foreach($employee->leaveBalances as $l)
-                        <tr>
-                            <td class="label" style="width: 60%;">{{ $l->leave_type }}</td>
-                            <td class="value" style="width: 40%; text-align: right;">{{ $l->leave_count }} / {{ $l->total_leave }}</td>
-                        </tr>
-                        @endforeach
-                    </table>
-                </td>
-                <td>
-                    <div class="section-title" style="margin-top: 0;">Recent Leave History</div>
-                    <table class="info-grid">
-                        @foreach($employee->leaveApplications->take(5) as $l)
-                        <tr>
-                            <td class="label" style="width: 70%;">{{ $l->getPlan?->name }} ({{ $l->status }})</td>
-                            <td class="value" style="width: 30%; text-align: right;">{{ $l->leave_count }} days</td>
-                        </tr>
-                        @endforeach
-                    </table>
-                </td>
-            </tr>
-        </table>
-    </div>
+    <table class="row-table" style="margin-top: 10px; page-break-inside: avoid;">
+        <tr>
+            <td>
+                <div class="section-title" style="margin-top: 0;">Leave Balance</div>
+                <table class="info-grid">
+                    @foreach($employee->leaveBalances as $l)
+                    <tr><td class="label" style="width: 70%;">{{ $l->leave_type }}</td><td class="value" style="width: 30%; text-align: right;">{{ $l->leave_count }} / {{ $l->total_leave }}</td></tr>
+                    @endforeach
+                </table>
+            </td>
+            <td>
+                <div class="section-title" style="margin-top: 0;">Leave History</div>
+                <table class="info-grid">
+                    @foreach($employee->leaveApplications->take(5) as $l)
+                    <tr><td class="label" style="width: 80%;">{{ $l->getPlan?->name }} ({{ $l->status }})</td><td class="value" style="width: 20%; text-align: right;">{{ $l->leave_count }}d</td></tr>
+                    @endforeach
+                </table>
+            </td>
+        </tr>
+    </table>
     @endif
 
     <div class="footer">

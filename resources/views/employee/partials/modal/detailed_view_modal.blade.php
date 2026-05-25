@@ -120,7 +120,7 @@
                                         <h6 class="mb-0 fw-bold">Present Address</h6>
                                     </div>
                                     <div class="card-body">
-                                        <p class="mb-0 text-dark" id="detailed_present_address"></p>
+                                        <div id="detailed_present_address_fields"></div>
                                     </div>
                                 </div>
                             </div>
@@ -130,7 +130,7 @@
                                         <h6 class="mb-0 fw-bold">Permanent Address</h6>
                                     </div>
                                     <div class="card-body">
-                                        <p class="mb-0 text-dark" id="detailed_permanent_address"></p>
+                                        <div id="detailed_permanent_address_fields"></div>
                                     </div>
                                 </div>
                             </div>
@@ -216,7 +216,7 @@
                                 <h6 class="mb-0 fw-bold">Reference Address</h6>
                             </div>
                             <div class="card-body">
-                                <p class="mb-0 text-dark" id="detailed_reference_address"></p>
+                                <div id="detailed_reference_address_fields"></div>
                             </div>
                         </div>
 
