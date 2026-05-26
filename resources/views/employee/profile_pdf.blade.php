@@ -564,31 +564,33 @@
         </table>
     </div>
 
-    <!-- 15. Leave Summary -->
-    @if($employee->leaveBalances->count() > 0 || $employee->leaveApplications->count() > 0)
+    <!-- 15. Leave Balance & History -->
     <div style="page-break-inside: avoid;">
         <table class="row-table" style="margin-top: 10px;">
             <tr>
                 <td style="width: 45%;">
+                    @if($employee->leaveBalances->count() > 0)
                     <div class="section-title" style="margin-top: 0;">Leave Balance</div>
                     <table class="info-grid">
                         @foreach($employee->leaveBalances as $l)
                         <tr><td class="label" style="width: 70%;">{{ $l->leave_type }}</td><td class="value" style="width: 30%; text-align: right;">{{ $l->leave_count }} / {{ $l->total_leave }}</td></tr>
                         @endforeach
                     </table>
+                    @endif
                 </td>
                 <td style="width: 55%;">
+                    @if($employee->leaveApplications->count() > 0)
                     <div class="section-title" style="margin-top: 0;">Recent Leave History</div>
                     <table class="info-grid">
                         @foreach($employee->leaveApplications->take(10) as $l)
-                        <tr><td class="label" style="width: 75%;">{{ $l->getPlan?->name }} ({{ $l->status }})</td><td class="value" style="width: 25%; text-align: right;">{{ $l->leave_count }}d</td></tr>
+                        <tr><td class="label" style="width: 75%;">{{ $l->getPlan?->name ?? 'Leave' }} ({{ strtoupper($l->status) }})</td><td class="value" style="width: 25%; text-align: right;">{{ $l->leave_count }}d</td></tr>
                         @endforeach
                     </table>
+                    @endif
                 </td>
             </tr>
         </table>
     </div>
-    @endif
 
     <div class="footer">
         Generated on {{ date('d M, Y H:i:s') }} | {{ $companyInfo->name }} HRMS | Page 1
