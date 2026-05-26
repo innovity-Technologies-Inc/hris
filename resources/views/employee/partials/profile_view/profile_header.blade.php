@@ -89,6 +89,11 @@
                     </button>
                     @endif
 
+                    <!-- Summary View Button -->
+                    <button type="button" class="btn btn-warning d-flex align-items-center text-dark fw-semibold" id="openSummaryView">
+                        <i class="mdi mdi-text-box-search-outline me-1 fs-18"></i> Summary View
+                    </button>
+
                     <!-- Detailed View Button -->
                     <button type="button" class="btn btn-primary d-flex align-items-center px-4" id="openDetailedView">
                         <i class="mdi mdi-account-details me-1 fs-18"></i> Detailed View
@@ -134,11 +139,13 @@
 @include('employee.partials.modal.edit_login_modal')
 @include('employee.partials.modal.review_profile_modal')
 @include('employee.partials.modal.detailed_view_modal')
+@include('employee.partials.modal.summary_view_modal')
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // --- Detailed View Logic ---
     const openDetailedViewBtn = document.getElementById('openDetailedView');
     const detailedViewModalElement = document.getElementById('detailedViewModal');
     
@@ -146,14 +153,27 @@ document.addEventListener('DOMContentLoaded', function() {
         const detailedViewModal = new bootstrap.Modal(detailedViewModalElement);
         openDetailedViewBtn.addEventListener('click', function() {
             detailedViewModal.show();
-            fetchDetailedInfo();
+            fetchInfo(populateDetailedModal, 'detailed');
         });
     }
 
-    function fetchDetailedInfo() {
-        const loading = document.getElementById('modalLoading');
-        const error = document.getElementById('modalError');
-        const content = document.getElementById('modalContent');
+    // --- Summary View Logic ---
+    const openSummaryViewBtn = document.getElementById('openSummaryView');
+    const summaryViewModalElement = document.getElementById('summaryViewModal');
+    
+    if (openSummaryViewBtn && summaryViewModalElement) {
+        const summaryViewModal = new bootstrap.Modal(summaryViewModalElement);
+        openSummaryViewBtn.addEventListener('click', function() {
+            summaryViewModal.show();
+            fetchInfo(populateSummaryModal, 'summary');
+        });
+    }
+
+    function fetchInfo(populateFn, type) {
+        const loading = document.getElementById(type + 'Loading');
+        const error = document.getElementById(type + 'Error');
+        const content = document.getElementById(type + 'Content');
+        
         loading.classList.remove('d-none');
         error.classList.add('d-none');
         content.classList.add('d-none');
@@ -162,15 +182,76 @@ document.addEventListener('DOMContentLoaded', function() {
         ajax.get('{{ route('employee.profile.detailed_json', $employee->id) }}')
             .then(response => {
                 if (response.data.success) {
-                    populateModal(response.data.data);
+                    populateFn(response.data.data);
                     loading.classList.add('d-none');
                     content.classList.remove('d-none');
-                } else { showError(response.data.message || 'Failed to fetch details'); }
+                } else { showError(type, response.data.message || 'Failed to fetch details'); }
             })
-            .catch(err => { console.error(err); showError('An error occurred while fetching details.'); });
+            .catch(err => { console.error(err); showError(type, 'An error occurred while fetching details.'); });
     }
 
-    function populateModal(data) {
+    function populateSummaryModal(data) {
+        // Basic Info
+        const photo = document.getElementById('summary_photo');
+        photo.src = data.photo_path ? '{{ asset('storage') }}/' + data.photo_path : '{{ asset('assets/images/small/user-image.jpg') }}';
+        document.getElementById('summary_full_name').textContent = data.full_name;
+        document.getElementById('summary_basic_identifiers').textContent = `ID: ${data.applicant_id || 'N/A'} | System ID: ${data.system_id || 'N/A'} | mobile: ${data.personal_mobile || 'N/A'}`;
+
+        // Office Info (Current Only)
+        if (data.office_info) {
+            const oi = data.office_info;
+            document.getElementById('summary_current_company').textContent = oi.get_current_company?.name || 'N/A';
+            document.getElementById('summary_current_dept_section').textContent = `${oi.get_current_department?.department_name || 'N/A'} / ${oi.get_current_section?.name || 'N/A'}`;
+            document.getElementById('summary_current_designation').textContent = oi.get_current_designation?.company_designation || 'N/A';
+            document.getElementById('summary_join_date').textContent = oi.date_of_join || 'N/A';
+        }
+
+        // Salary (Gross Only)
+        if (data.salary_breakdown) {
+            const cur = (data.currency && data.currency !== 'N/A') ? data.currency : '';
+            const gross = parseFloat(data.salary_breakdown.gross_salary || 0).toLocaleString(undefined, {minimumFractionDigits: 2});
+            document.getElementById('summary_gross_salary').textContent = `${gross} ${cur}`;
+        }
+
+        // Experience (Calculate Total Years)
+        let totalYears = 0;
+        if (data.employment_history?.histories?.length > 0) {
+            data.employment_history.histories.forEach(h => {
+                const start = new Date(h.joining_date || h.from_date);
+                const end = h.end_date || h.to_date ? new Date(h.end_date || h.to_date) : new Date();
+                if (!isNaN(start) && !isNaN(end)) {
+                    totalYears += (end - start) / (1000 * 60 * 60 * 24 * 365.25);
+                }
+            });
+        }
+        document.getElementById('summary_total_experience').textContent = totalYears > 0 ? `${totalYears.toFixed(1)} Years` : 'No history found';
+
+        // Education (First/Highest Only)
+        if (data.education_info?.educations?.length > 0) {
+            document.getElementById('summary_education_title').textContent = data.education_info.educations[0].education_title || 'N/A';
+        } else {
+            document.getElementById('summary_education_title').textContent = 'No records';
+        }
+
+        // Trainings (Titles Only)
+        const trnBody = document.getElementById('summary_training_titles');
+        if (data.education_info?.trainings?.length > 0) {
+            trnBody.innerHTML = data.education_info.trainings.map(t => `<span class="badge bg-soft-info text-info border border-info-subtle p-2">${t.training_title}</span>`).join('');
+        } else {
+            trnBody.innerHTML = '<span class="text-muted small italic">No training records found</span>';
+        }
+
+        // Nominee (Name & Relation Only)
+        if (data.nominee_info) {
+            document.getElementById('summary_nominee_name').textContent = data.nominee_info.nominee_name || 'N/A';
+            document.getElementById('summary_nominee_relation').textContent = data.nominee_info.relation || 'N/A';
+        } else {
+            document.getElementById('summary_nominee_name').textContent = 'N/A';
+            document.getElementById('summary_nominee_relation').textContent = 'N/A';
+        }
+    }
+
+    function populateDetailedModal(data) {
         const photo = document.getElementById('detailed_photo');
         photo.src = data.photo_path ? '{{ asset('storage') }}/' + data.photo_path : '{{ asset('assets/images/small/user-image.jpg') }}';
 
@@ -362,11 +443,11 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('downloadPdfBtn').href = '{{ route('employee.profile.download_pdf', $employee->id) }}';
     }
 
-    function showError(msg) {
-        document.getElementById('modalLoading').classList.add('d-none');
-        document.getElementById('modalContent').classList.add('d-none');
-        document.getElementById('modalError').classList.remove('d-none');
-        document.getElementById('errorMessage').textContent = msg;
+    function showError(type, msg) {
+        document.getElementById(type + 'Loading').classList.add('d-none');
+        document.getElementById(type + 'Content').classList.add('d-none');
+        document.getElementById(type + 'Error').classList.remove('d-none');
+        document.getElementById(type + 'ErrorMessage').textContent = msg;
     }
 });
 </script>
