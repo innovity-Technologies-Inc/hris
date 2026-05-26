@@ -145,137 +145,105 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // --- Detailed View Logic ---
+    // --- Unified Fetch Logic ---
     const openDetailedViewBtn = document.getElementById('openDetailedView');
     const detailedViewModalElement = document.getElementById('detailedViewModal');
-    
     if (openDetailedViewBtn && detailedViewModalElement) {
-        const detailedViewModal = new bootstrap.Modal(detailedViewModalElement);
-        openDetailedViewBtn.addEventListener('click', function() {
-            detailedViewModal.show();
-            fetchInfo(populateDetailedModal, 'detailed');
-        });
+        const modal = new bootstrap.Modal(detailedViewModalElement);
+        openDetailedViewBtn.addEventListener('click', () => { modal.show(); fetchInfo(populateDetailedModal, 'detailed'); });
     }
 
-    // --- Summary View Logic ---
     const openSummaryViewBtn = document.getElementById('openSummaryView');
     const summaryViewModalElement = document.getElementById('summaryViewModal');
-    
     if (openSummaryViewBtn && summaryViewModalElement) {
-        const summaryViewModal = new bootstrap.Modal(summaryViewModalElement);
-        openSummaryViewBtn.addEventListener('click', function() {
-            summaryViewModal.show();
-            fetchInfo(populateSummaryModal, 'summary');
-        });
+        const modal = new bootstrap.Modal(summaryViewModalElement);
+        openSummaryViewBtn.addEventListener('click', () => { modal.show(); fetchInfo(populateSummaryModal, 'summary'); });
     }
 
     function fetchInfo(populateFn, type) {
         const loading = document.getElementById(type + 'Loading');
         const error = document.getElementById(type + 'Error');
         const content = document.getElementById(type + 'Content');
-        
-        loading.classList.remove('d-none');
-        error.classList.add('d-none');
-        content.classList.add('d-none');
+        loading.classList.remove('d-none'); error.classList.add('d-none'); content.classList.add('d-none');
 
         const ajax = window.axios || axios;
         ajax.get('{{ route('employee.profile.detailed_json', $employee->id) }}')
-            .then(response => {
-                if (response.data.success) {
-                    populateFn(response.data.data);
-                    loading.classList.add('d-none');
-                    content.classList.remove('d-none');
-                } else { showError(type, response.data.message || 'Failed to fetch details'); }
+            .then(res => {
+                const response = res.data;
+                if (response.success) {
+                    populateFn(response.data);
+                    loading.classList.add('d-none'); content.classList.remove('d-none');
+                } else { showError(type, response.message || 'Failed to fetch details'); }
             })
             .catch(err => { console.error(err); showError(type, 'An error occurred while fetching details.'); });
     }
 
     function populateSummaryModal(data) {
-        // Basic Info
         const photo = document.getElementById('summary_photo');
         photo.src = data.photo_path ? '{{ asset('storage') }}/' + data.photo_path : '{{ asset('assets/images/small/user-image.jpg') }}';
         document.getElementById('summary_full_name').textContent = data.full_name;
         document.getElementById('summary_basic_identifiers').textContent = `ID: ${data.applicant_id || 'N/A'} | System ID: ${data.system_id || 'N/A'}`;
 
-        // General Information
         document.getElementById('summary_personal_mobile').textContent = data.personal_mobile || 'N/A';
         document.getElementById('summary_personal_email').textContent = data.personal_email || 'N/A';
         document.getElementById('summary_nid').textContent = data.residency_id_number || 'N/A';
         document.getElementById('summary_dob').textContent = data.date_of_birth || 'N/A';
 
-        // Office Info (Current Only)
         if (data.office_info) {
             const oi = data.office_info;
             document.getElementById('summary_header_designation').textContent = oi.get_current_designation?.company_designation || 'N/A';
             document.getElementById('summary_current_company').textContent = oi.get_current_company?.name || 'N/A';
-            document.getElementById('summary_current_dept_section').textContent = `${oi.get_current_department?.department_name || 'N/A'} / ${oi.get_current_section?.name || 'N/A'}`;
             document.getElementById('summary_current_designation').textContent = oi.get_current_designation?.company_designation || 'N/A';
+            document.getElementById('summary_current_dept_section').textContent = `${oi.get_current_department?.department_name || 'N/A'} / ${oi.get_current_section?.name || 'N/A'}`;
             document.getElementById('summary_join_date').textContent = oi.date_of_join || 'N/A';
         }
 
-        // Salary (Gross Only)
         if (data.salary_breakdown) {
             const cur = (data.currency && data.currency !== 'N/A') ? data.currency : '';
-            const gross = parseFloat(data.salary_breakdown.gross_salary || 0).toLocaleString(undefined, {minimumFractionDigits: 2});
-            document.getElementById('summary_gross_salary').textContent = `${gross} ${cur}`;
+            document.getElementById('summary_gross_salary').textContent = `${parseFloat(data.salary_breakdown.gross_salary || 0).toLocaleString(undefined, {minimumFractionDigits: 2})} ${cur}`;
         }
 
-        // Policies & Plans
         const policyBody = document.getElementById('summary_policy_body');
         if (data.employee_eligibility) {
             const e = data.employee_eligibility; let t = [];
             if (e.shift_plan_status === 'active') t.push('Shift'); if (e.leave_plan_status === 'active') t.push('Leave');
             if (e.ot_plan_status === 'active') t.push('OT'); if (e.roster_plans_status === 'active') t.push('Roster');
-            policyBody.innerHTML = t.length > 0 ? t.map(x => `<span class="badge badge-soft-primary border border-primary-subtle p-1" style="font-size:0.65rem">${x}</span>`).join('') : '<p class="data-value text-muted">No active policies</p>';
+            policyBody.innerHTML = t.length > 0 ? t.map(x => `<span class="badge badge-soft-primary border border-primary-subtle p-1" style="font-size:0.65rem">${x} Plan</span>`).join('') : '<p class="text-muted small italic">No active policies</p>';
         }
 
         const bPlans = document.getElementById('summary_plans_body'); let hPlans = '';
-        if (data.shift?.length > 0) data.shift.forEach(s => hPlans += `<div class="p-1 border-bottom small fw-bold text-dark"><i class="mdi mdi-clock-outline me-1 text-primary"></i>${s.name || 'N/A'}</div>`);
-        if (data.roster?.length > 0) data.roster.filter(r => r.status === 'active').forEach(r => hPlans += `<div class="p-1 border-bottom small fw-bold text-dark"><i class="mdi mdi-calendar-refresh me-1 text-info"></i>${r.name || 'N/A'}</div>`);
+        if (data.shift?.length > 0) data.shift.forEach(s => hPlans += `<div class="p-1 border-bottom small fw-bold text-dark"><i class="mdi mdi-clock-outline me-1 text-primary"></i>${s.name}</div>`);
+        if (data.roster?.length > 0) data.roster.filter(r => r.status === 'active').forEach(r => hPlans += `<div class="p-1 border-bottom small fw-bold text-dark"><i class="mdi mdi-calendar-refresh me-1 text-info"></i>${r.name}</div>`);
         bPlans.innerHTML = hPlans || '<p class="text-muted small">No plans assigned</p>';
 
-        // Experience (Calculate Total Years)
         let totalYears = 0;
         if (data.employment_history?.histories?.length > 0) {
             data.employment_history.histories.forEach(h => {
                 const start = new Date(h.joining_date || h.from_date);
                 const end = h.end_date || h.to_date ? new Date(h.end_date || h.to_date) : new Date();
-                if (!isNaN(start) && !isNaN(end)) {
-                    totalYears += (end - start) / (1000 * 60 * 60 * 24 * 365.25);
-                }
+                if (!isNaN(start) && !isNaN(end)) { totalYears += (end - start) / (1000 * 60 * 60 * 24 * 365.25); }
             });
         }
         document.getElementById('summary_total_experience').textContent = totalYears > 0 ? `${totalYears.toFixed(1)} Years` : 'No history found';
 
-        // Education (First/Highest Only)
         if (data.education_info?.educations?.length > 0) {
             document.getElementById('summary_education_title').textContent = data.education_info.educations[0].education_title || 'N/A';
-        } else {
-            document.getElementById('summary_education_title').textContent = 'No records';
-        }
+        } else { document.getElementById('summary_education_title').textContent = 'No records'; }
 
-        // Trainings (Titles Only)
         const trnBody = document.getElementById('summary_training_titles');
         if (data.education_info?.trainings?.length > 0) {
             trnBody.innerHTML = data.education_info.trainings.map(t => `<span class="badge bg-soft-info text-info border border-info-subtle p-2">${t.training_title}</span>`).join('');
-        } else {
-            trnBody.innerHTML = '<span class="text-muted small italic">No training records found</span>';
-        }
+        } else { trnBody.innerHTML = '<span class="text-muted small italic">No training records found</span>'; }
 
-        // Nominee (Name & Relation Only)
         if (data.nominee_info) {
             document.getElementById('summary_nominee_name').textContent = data.nominee_info.nominee_name || 'N/A';
             document.getElementById('summary_nominee_relation').textContent = data.nominee_info.relation || 'N/A';
-        } else {
-            document.getElementById('summary_nominee_name').textContent = 'N/A';
-            document.getElementById('summary_nominee_relation').textContent = 'N/A';
-        }
+        } else { document.getElementById('summary_nominee_name').textContent = 'N/A'; document.getElementById('summary_nominee_relation').textContent = 'N/A'; }
     }
 
     function populateDetailedModal(data) {
         const photo = document.getElementById('detailed_photo');
         photo.src = data.photo_path ? '{{ asset('storage') }}/' + data.photo_path : '{{ asset('assets/images/small/user-image.jpg') }}';
-
         document.getElementById('detailed_full_name').textContent = data.full_name;
         document.getElementById('detailed_ids').textContent = `Applicant ID: ${data.applicant_id || 'N/A'} | System ID: ${data.system_id || 'N/A'} | Punch Card: ${data.punch_card_no || 'N/A'}`;
         document.getElementById('detailed_header_mobile').textContent = data.personal_mobile || 'N/A';
@@ -297,7 +265,6 @@ document.addEventListener('DOMContentLoaded', function() {
             'detailed_personal_email': data.personal_email, 'detailed_work_mobile': data.work_mobile,
             'detailed_work_phone': data.work_phone, 'detailed_work_email': data.work_email
         };
-
         for (let id in fields) { if (document.getElementById(id)) document.getElementById(id).textContent = fields[id] || 'N/A'; }
 
         function renderAddressFields(addr) {
@@ -401,8 +368,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const sNom = document.getElementById('section_nominee'), bNom = document.getElementById('detailed_nominee_body');
         if (data.nominee_info) {
-            const n = data.nominee_info;
-            sNom.classList.remove('d-none');
+            const n = data.nominee_info; sNom.classList.remove('d-none');
             bNom.innerHTML = `<div class="row g-3">
                 <div class="col-md-3"><label class="data-label">Nominee Name</label><span class="data-value fw-bold">${n.nominee_name || 'N/A'}</span></div>
                 <div class="col-md-3"><label class="data-label">Relation</label><span class="data-value">${n.relation || 'N/A'}</span></div>
