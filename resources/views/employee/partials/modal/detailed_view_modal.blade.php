@@ -26,9 +26,9 @@
                 <!-- Content State -->
                 <div id="modalContent" class="d-none">
                     
-                    <!-- 1. Header Information (Full Width Row) -->
-                    <div class="row mx-0">
-                        <div class="col-12 px-0">
+                    <!-- 1. Header Information (Full Row) -->
+                    <div class="row">
+                        <div class="col-12">
                             <div class="card border shadow-none mb-3">
                                 <div class="card-body">
                                     <div class="row align-items-center">
@@ -39,14 +39,8 @@
                                             <h3 class="fw-bold text-dark mb-1" id="detailed_full_name"></h3>
                                             <p class="text-muted mb-2" id="detailed_ids"></p>
                                             <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-md-start">
-                                                <span class="small d-inline-flex align-items-center gap-1">
-                                                    <i class="mdi mdi-phone text-primary"></i>
-                                                    <span id="detailed_header_mobile" class="d-inline"></span>
-                                                </span>
-                                                <span class="small d-inline-flex align-items-center gap-1">
-                                                    <i class="mdi mdi-email text-primary"></i>
-                                                    <span id="detailed_header_email" class="d-inline"></span>
-                                                </span>
+                                                <span class="small d-inline-flex align-items-center"><i class="mdi mdi-phone text-primary me-1"></i><span id="detailed_header_mobile"></span></span>
+                                                <span class="small d-inline-flex align-items-center"><i class="mdi mdi-email text-primary me-1"></i><span id="detailed_header_email"></span></span>
                                             </div>
                                         </div>
                                         <div class="col-md-3 text-center text-md-end mt-3 mt-md-0">
@@ -62,9 +56,9 @@
 
                     <div class="hando-main-sections">
                         
-                        <!-- 2. Personal Information (Full Width Row) -->
-                        <div class="row mx-0">
-                            <div class="col-12 px-0">
+                        <!-- 2. Personal Information (Full Row) -->
+                        <div class="row">
+                            <div class="col-12">
                                 <div class="card border shadow-none mb-3">
                                     <div class="card-header bg-light py-2">
                                         <h6 class="mb-0 fw-bold">Personal Information</h6>
@@ -91,9 +85,9 @@
                             </div>
                         </div>
 
-                        <!-- 3. Birth & Identification Documents (Full Width Row) -->
-                        <div class="row mx-0">
-                            <div class="col-12 px-0">
+                        <!-- 3. Birth & Identification Documents (Full Row) -->
+                        <div class="row">
+                            <div class="col-12">
                                 <div class="card border shadow-none mb-3">
                                     <div class="card-header bg-light py-2">
                                         <h6 class="mb-0 fw-bold">Birth & Identification Documents</h6>
@@ -118,9 +112,9 @@
                             </div>
                         </div>
 
-                        <!-- 4. Contact Information (Full Width Row) -->
-                        <div class="row mx-0">
-                            <div class="col-12 px-0">
+                        <!-- 4. Contact Information (Full Row) -->
+                        <div class="row">
+                            <div class="col-12">
                                 <div class="card border shadow-none mb-3">
                                     <div class="card-header bg-light py-2">
                                         <h6 class="mb-0 fw-bold">Contact Information</h6>
@@ -139,9 +133,9 @@
                             </div>
                         </div>
 
-                        <!-- 5. Present Address (Full Width Row) -->
-                        <div class="row mx-0">
-                            <div class="col-12 px-0">
+                        <!-- 5. Present Address (Full Row) -->
+                        <div class="row">
+                            <div class="col-12">
                                 <div class="card border shadow-none mb-3">
                                     <div class="card-header bg-light py-2">
                                         <h6 class="mb-0 fw-bold">Present Address</h6>
@@ -153,9 +147,9 @@
                             </div>
                         </div>
 
-                        <!-- 6. Permanent Address (Full Width Row) -->
-                        <div class="row mx-0">
-                            <div class="col-12 px-0">
+                        <!-- 6. Permanent Address (Full Row) -->
+                        <div class="row">
+                            <div class="col-12">
                                 <div class="card border shadow-none mb-3">
                                     <div class="card-header bg-light py-2">
                                         <h6 class="mb-0 fw-bold">Permanent Address</h6>
@@ -167,9 +161,9 @@
                             </div>
                         </div>
 
-                        <!-- 7. Reference Information (Full Width Row) -->
-                        <div class="row mx-0">
-                            <div class="col-12 px-0">
+                        <!-- 7. Reference Information (Full Row) -->
+                        <div class="row">
+                            <div class="col-12">
                                 <div class="card border shadow-none mb-3">
                                     <div class="card-header bg-light py-2">
                                         <h6 class="mb-0 fw-bold">Reference / Emergency Contact</h6>
@@ -181,9 +175,9 @@
                             </div>
                         </div>
 
-                        <!-- 8. Office Information (Full Width Row) -->
-                        <div class="row mx-0">
-                            <div class="col-12 px-0">
+                        <!-- 8. Office Information (Full Row) -->
+                        <div class="row">
+                            <div class="col-12">
                                 <div id="section_office_info_card" class="card border shadow-none mb-3">
                                     <div class="card-header bg-light py-2">
                                         <h6 class="mb-0 fw-bold">Office Information</h6>
@@ -241,9 +235,9 @@
                             </div>
                         </div>
 
-                        <!-- 9. Education Information (Full Width Row) -->
-                        <div class="row mx-0">
-                            <div class="col-12 px-0">
+                        <!-- 9. Education Information (Full Row) -->
+                        <div class="row">
+                            <div class="col-12">
                                 <div id="section_education" class="card border shadow-none mb-3 d-none">
                                     <div class="card-header bg-light py-2">
                                         <h6 class="mb-0 fw-bold">Education Information</h6>
@@ -255,9 +249,9 @@
                             </div>
                         </div>
 
-                        <!-- 10. Training Information (Full Width Row) -->
-                        <div class="row mx-0">
-                            <div class="col-12 px-0">
+                        <!-- 10. Training Information (Full Row) -->
+                        <div class="row">
+                            <div class="col-12">
                                 <div id="section_training" class="card border shadow-none mb-3 d-none">
                                     <div class="card-header bg-light py-2">
                                         <h6 class="mb-0 fw-bold">Training Information</h6>
@@ -269,9 +263,9 @@
                             </div>
                         </div>
 
-                        <!-- 11. Employment History (Full Width Row) -->
-                        <div class="row mx-0">
-                            <div class="col-12 px-0">
+                        <!-- 11. Employment History (Full Row) -->
+                        <div class="row">
+                            <div class="col-12">
                                 <div id="section_history" class="card border shadow-none mb-3 d-none">
                                     <div class="card-header bg-light py-2">
                                         <h6 class="mb-0 fw-bold">Employment History</h6>
@@ -283,9 +277,9 @@
                             </div>
                         </div>
 
-                        <!-- 12. Nominee Information (Full Width Row) -->
-                        <div class="row mx-0">
-                            <div class="col-12 px-0">
+                        <!-- 12. Nominee Information (Full Row) -->
+                        <div class="row">
+                            <div class="col-12">
                                 <div id="section_nominee" class="card border shadow-none mb-3 d-none">
                                     <div class="card-header bg-light py-2">
                                         <h6 class="mb-0 fw-bold">Nominee Information</h6>
@@ -297,9 +291,9 @@
                             </div>
                         </div>
 
-                        <!-- 13. Bank Account Information (Full Width Row) -->
-                        <div class="row mx-0">
-                            <div class="col-12 px-0">
+                        <!-- 13. Bank Account Information (Full Row) -->
+                        <div class="row">
+                            <div class="col-12">
                                 <div id="section_bank" class="card border shadow-none mb-3 d-none">
                                     <div class="card-header bg-light py-2">
                                         <h6 class="mb-0 fw-bold">Accounts Information</h6>
@@ -318,9 +312,9 @@
                             </div>
                         </div>
 
-                        <!-- 14. Salary Breakdown (Full Width Row) -->
-                        <div class="row mx-0">
-                            <div class="col-12 px-0">
+                        <!-- 14. Salary Breakdown (Full Row) -->
+                        <div class="row">
+                            <div class="col-12">
                                 <div id="section_salary" class="card border shadow-none mb-3 d-none">
                                     <div class="card-header bg-light py-2">
                                         <h6 class="mb-0 fw-bold">Salary Breakdown</h6>
@@ -332,9 +326,9 @@
                             </div>
                         </div>
 
-                        <!-- 15. Policies & Current Plans (Full Width Row) -->
-                        <div class="row mx-0">
-                            <div class="col-12 px-0">
+                        <!-- 15. Policies & Current Plans (Full Row) -->
+                        <div class="row">
+                            <div class="col-12">
                                 <div class="card border shadow-none mb-3">
                                     <div class="card-header bg-light py-2">
                                         <h6 class="mb-0 fw-bold">Policies & Current Plans</h6>
@@ -355,9 +349,9 @@
                             </div>
                         </div>
 
-                        <!-- 16. Leave Information (Full Width Row) -->
-                        <div class="row mx-0">
-                            <div class="col-12 px-0">
+                        <!-- 16. Leave Information (Full Row) -->
+                        <div class="row">
+                            <div class="col-12">
                                 <div class="card border shadow-none mb-3">
                                     <div class="card-header bg-light py-2">
                                         <h6 class="mb-0 fw-bold">Leave Information</h6>
@@ -394,7 +388,8 @@
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.2);
     }
-    #detailedViewModalBody label {
+    /* Scope only to hando-main-sections to avoid header icon misalignment */
+    .hando-main-sections label {
         color: #974063 !important;
         font-weight: 600;
         font-size: 0.7rem;
@@ -403,20 +398,11 @@
         letter-spacing: 0.5px;
         display: block;
     }
-    #detailedViewModalBody .hando-main-sections span {
+    .hando-main-sections span {
         display: block;
         color: #333;
         font-weight: 500;
         font-size: 0.85rem;
-    }
-    /* Fixed Icon Alignment: Ensure icons and text stay side-by-side in header */
-    #detailedViewModalBody .row .card-body .row .col-md-7 .d-inline-flex {
-        display: inline-flex !important;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    #detailedViewModalBody .row .card-body .row .col-md-7 span.d-inline {
-        display: inline !important;
     }
     .card-body {
         padding: 1.25rem;
