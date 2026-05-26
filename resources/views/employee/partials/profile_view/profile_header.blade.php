@@ -378,11 +378,26 @@ document.addEventListener('DOMContentLoaded', function() {
             const s = data.salary_breakdown;
             const currency = (data.currency && data.currency !== 'N/A') ? data.currency : '';
             function fmt(val) { return parseFloat(val || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}); }
+            
+            const benefits = [
+                parseFloat(s.house_allowance || 0),
+                parseFloat(s.transport_allowance || 0),
+                parseFloat(s.food_allowance || 0),
+                parseFloat(s.medical_allowance || 0),
+                parseFloat(s.other_earnings || 0)
+            ];
+            const totalBenefits = benefits.reduce((a, b) => a + b, 0);
+
             salaryBody.innerHTML = `
-                <div class="col-md-3"><label class="data-label">Basic Salary</label><span class="data-value fw-bold">${fmt(s.basic_salary)} ${currency}</span></div>
-                <div class="col-md-3"><label class="data-label">House Allowance</label><span class="data-value">${fmt(s.house_allowance)} ${currency}</span></div>
-                <div class="col-md-3"><label class="data-label">Transport Allowance</label><span class="data-value">${fmt(s.transport_allowance)} ${currency}</span></div>
-                <div class="col-md-3"><label class="data-label">Gross Salary</label><span class="data-value fw-bold fs-5 text-primary">${fmt(s.gross_salary)} ${currency}</span></div>
+                <div class="col-md-4"><label class="data-label">Basic Salary</label><span class="data-value fw-bold text-dark">${fmt(s.basic_salary)} ${currency}</span></div>
+                <div class="col-md-4"><label class="data-label">House Allowance</label><span class="data-value">${fmt(s.house_allowance)} ${currency}</span></div>
+                <div class="col-md-4"><label class="data-label">Transport Allowance</label><span class="data-value">${fmt(s.transport_allowance)} ${currency}</span></div>
+                <div class="col-md-4"><label class="data-label">Food Allowance</label><span class="data-value">${fmt(s.food_allowance)} ${currency}</span></div>
+                <div class="col-md-4"><label class="data-label">Medical Allowance</label><span class="data-value">${fmt(s.medical_allowance)} ${currency}</span></div>
+                <div class="col-md-4"><label class="data-label">Other Earnings</label><span class="data-value">${fmt(s.other_earnings)} ${currency}</span></div>
+                <div class="col-12"><hr class="my-1"></div>
+                <div class="col-md-6"><label class="data-label text-primary">Total Allowances & Benefits</label><span class="data-value fw-bold text-primary">${fmt(totalBenefits)} ${currency}</span></div>
+                <div class="col-md-6"><label class="data-label text-dark fw-bold">Gross Salary</label><span class="data-value fw-bold fs-5 text-dark">${fmt(s.gross_salary)} ${currency}</span></div>
             `;
         } else {
             sectionSalary.classList.add('d-none');
