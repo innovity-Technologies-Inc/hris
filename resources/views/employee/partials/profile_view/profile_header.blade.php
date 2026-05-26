@@ -195,11 +195,18 @@ document.addEventListener('DOMContentLoaded', function() {
         const photo = document.getElementById('summary_photo');
         photo.src = data.photo_path ? '{{ asset('storage') }}/' + data.photo_path : '{{ asset('assets/images/small/user-image.jpg') }}';
         document.getElementById('summary_full_name').textContent = data.full_name;
-        document.getElementById('summary_basic_identifiers').textContent = `ID: ${data.applicant_id || 'N/A'} | System ID: ${data.system_id || 'N/A'} | mobile: ${data.personal_mobile || 'N/A'}`;
+        document.getElementById('summary_basic_identifiers').textContent = `ID: ${data.applicant_id || 'N/A'} | System ID: ${data.system_id || 'N/A'}`;
+
+        // General Information
+        document.getElementById('summary_personal_mobile').textContent = data.personal_mobile || 'N/A';
+        document.getElementById('summary_personal_email').textContent = data.personal_email || 'N/A';
+        document.getElementById('summary_nid').textContent = data.residency_id_number || 'N/A';
+        document.getElementById('summary_dob').textContent = data.date_of_birth || 'N/A';
 
         // Office Info (Current Only)
         if (data.office_info) {
             const oi = data.office_info;
+            document.getElementById('summary_header_designation').textContent = oi.get_current_designation?.company_designation || 'N/A';
             document.getElementById('summary_current_company').textContent = oi.get_current_company?.name || 'N/A';
             document.getElementById('summary_current_dept_section').textContent = `${oi.get_current_department?.department_name || 'N/A'} / ${oi.get_current_section?.name || 'N/A'}`;
             document.getElementById('summary_current_designation').textContent = oi.get_current_designation?.company_designation || 'N/A';
@@ -212,6 +219,20 @@ document.addEventListener('DOMContentLoaded', function() {
             const gross = parseFloat(data.salary_breakdown.gross_salary || 0).toLocaleString(undefined, {minimumFractionDigits: 2});
             document.getElementById('summary_gross_salary').textContent = `${gross} ${cur}`;
         }
+
+        // Policies & Plans
+        const policyBody = document.getElementById('summary_policy_body');
+        if (data.employee_eligibility) {
+            const e = data.employee_eligibility; let t = [];
+            if (e.shift_plan_status === 'active') t.push('Shift'); if (e.leave_plan_status === 'active') t.push('Leave');
+            if (e.ot_plan_status === 'active') t.push('OT'); if (e.roster_plans_status === 'active') t.push('Roster');
+            policyBody.innerHTML = t.length > 0 ? t.map(x => `<span class="badge badge-soft-primary border border-primary-subtle p-1" style="font-size:0.65rem">${x}</span>`).join('') : '<p class="data-value text-muted">No active policies</p>';
+        }
+
+        const bPlans = document.getElementById('summary_plans_body'); let hPlans = '';
+        if (data.shift?.length > 0) data.shift.forEach(s => hPlans += `<div class="p-1 border-bottom small fw-bold text-dark"><i class="mdi mdi-clock-outline me-1 text-primary"></i>${s.name || 'N/A'}</div>`);
+        if (data.roster?.length > 0) data.roster.filter(r => r.status === 'active').forEach(r => hPlans += `<div class="p-1 border-bottom small fw-bold text-dark"><i class="mdi mdi-calendar-refresh me-1 text-info"></i>${r.name || 'N/A'}</div>`);
+        bPlans.innerHTML = hPlans || '<p class="text-muted small">No plans assigned</p>';
 
         // Experience (Calculate Total Years)
         let totalYears = 0;

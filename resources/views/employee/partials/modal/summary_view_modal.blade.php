@@ -34,64 +34,79 @@
                                         <div class="col-md-1 text-center">
                                             <img id="summary_photo" src="" alt="Photo" class="img-fluid rounded-circle border" style="width: 60px; height: 60px; object-fit: cover;">
                                         </div>
-                                        <div class="col-md-11">
+                                        <div class="col-md-7">
                                             <h4 class="fw-bold text-dark mb-0" id="summary_full_name"></h4>
                                             <p class="text-muted mb-0 small" id="summary_basic_identifiers"></p>
                                         </div>
+                                        <div class="col-md-4 text-md-end">
+                                            <div class="d-inline-block text-start p-2 bg-white rounded border shadow-sm">
+                                                <label class="data-label text-primary">Current Designation</label>
+                                                <span class="data-value fw-bold text-dark" id="summary_header_designation"></span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- 2. Office Information (Current Only) -->
-                        <div class="col-md-6">
+                        <!-- 2. General Information (Important Data) -->
+                        <div class="col-md-4">
                             <div class="card border shadow-none h-100">
-                                <div class="card-header bg-light py-2"><h6 class="mb-0 fw-bold small text-uppercase">Current Office Information</h6></div>
+                                <div class="card-header bg-light py-2"><h6 class="mb-0 fw-bold small text-uppercase">General Information</h6></div>
                                 <div class="card-body">
-                                    <div class="mb-2"><label class="data-label">Current Company</label><span class="data-value fw-bold" id="summary_current_company"></span></div>
-                                    <div class="mb-2"><label class="data-label">Department / Section</label><span class="data-value" id="summary_current_dept_section"></span></div>
-                                    <div class="mb-2"><label class="data-label">Current Designation</label><span class="data-value" id="summary_current_designation"></span></div>
-                                    <div class="mb-0"><label class="data-label">Join Date</label><span class="data-value" id="summary_join_date"></span></div>
+                                    <div class="mb-2"><label class="data-label">Personal Mobile</label><span class="data-value" id="summary_personal_mobile"></span></div>
+                                    <div class="mb-2"><label class="data-label">Personal Email</label><span class="data-value" id="summary_personal_email"></span></div>
+                                    <div class="mb-2"><label class="data-label">NID / residency ID</label><span class="data-value" id="summary_nid"></span></div>
+                                    <div class="mb-0"><label class="data-label">Date of Birth</label><span class="data-value" id="summary_dob"></span></div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- 3. Compensation & Career -->
+                        <!-- 3. Office Information (Current Only) -->
+                        <div class="col-md-4">
+                            <div class="card border shadow-none h-100">
+                                <div class="card-header bg-light py-2"><h6 class="mb-0 fw-bold small text-uppercase">Current Office</h6></div>
+                                <div class="card-body">
+                                    <div class="mb-2"><label class="data-label">Company</label><span class="data-value fw-bold" id="summary_current_company"></span></div>
+                                    <div class="mb-2"><label class="data-label">Department / Section</label><span class="data-value" id="summary_current_dept_section"></span></div>
+                                    <div class="mb-2"><label class="data-label">Join Date</label><span class="data-value" id="summary_join_date"></span></div>
+                                    <div class="mb-0"><label class="data-label">Gross Salary</label><span class="data-value fw-bold text-primary" id="summary_gross_salary"></span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4. Policies & Active Plans -->
+                        <div class="col-md-4">
+                            <div class="card border shadow-none h-100">
+                                <div class="card-header bg-light py-2"><h6 class="mb-0 fw-bold small text-uppercase">Active Policies & Plans</h6></div>
+                                <div class="card-body">
+                                    <label class="data-label">Policy Tags</label>
+                                    <div id="summary_policy_body" class="mb-3 d-flex flex-wrap gap-1"></div>
+                                    
+                                    <label class="data-label">Assigned Plans</label>
+                                    <div id="summary_plans_body" class="d-flex flex-column gap-1"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 5. Education & Experience -->
                         <div class="col-md-6">
                             <div class="card border shadow-none h-100">
-                                <div class="card-header bg-light py-2"><h6 class="mb-0 fw-bold small text-uppercase">Financial & Experience Overview</h6></div>
+                                <div class="card-header bg-light py-2"><h6 class="mb-0 fw-bold small text-uppercase">Education & Career</h6></div>
                                 <div class="card-body">
                                     <div class="mb-3">
-                                        <label class="data-label">Gross Salary</label>
-                                        <span class="data-value fw-bold fs-4 text-primary" id="summary_gross_salary"></span>
+                                        <label class="data-label">Qualification</label>
+                                        <span class="data-value fw-bold" id="summary_education_title"></span>
                                     </div>
-                                    <div class="mb-0">
-                                        <label class="data-label text-dark">Total Professional Experience</label>
-                                        <span class="data-value fw-bold fs-5 text-dark" id="summary_total_experience"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 4. Education (First Record Only) -->
-                        <div class="col-md-6">
-                            <div class="card border shadow-none h-100">
-                                <div class="card-header bg-light py-2"><h6 class="mb-0 fw-bold small text-uppercase">Educational Qualification</h6></div>
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center">
-                                        <div class="avatar-sm bg-soft-info rounded p-2 me-3">
-                                            <i class="mdi mdi-school fs-20 text-info"></i>
-                                        </div>
-                                        <div>
-                                            <label class="data-label">Highest / First Education</label>
-                                            <span class="data-value fw-bold" id="summary_education_title"></span>
-                                        </div>
+                                    <div>
+                                        <label class="data-label">Total Professional Experience</label>
+                                        <span class="data-value fw-bold" id="summary_total_experience"></span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- 5. Trainings (Titles Only) -->
+                        <!-- 6. Trainings (Titles Only) -->
                         <div class="col-md-6">
                             <div class="card border shadow-none h-100">
                                 <div class="card-header bg-light py-2"><h6 class="mb-0 fw-bold small text-uppercase">Professional Trainings</h6></div>
@@ -101,7 +116,7 @@
                             </div>
                         </div>
 
-                        <!-- 6. Nominee (Name & Relation Only) -->
+                        <!-- 7. Nominee (Name & Relation Only) -->
                         <div class="col-12">
                             <div class="card border shadow-none">
                                 <div class="card-header bg-light py-2"><h6 class="mb-0 fw-bold small text-uppercase">Nominee Summary</h6></div>
@@ -143,9 +158,13 @@
         display: block;
         color: #333;
         font-weight: 500;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
     }
     .bg-soft-info {
         background-color: rgba(64, 187, 231, 0.1);
+    }
+    .badge-soft-primary {
+        background-color: rgba(151, 64, 99, 0.1);
+        color: #974063;
     }
 </style>
