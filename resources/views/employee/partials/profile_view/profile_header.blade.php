@@ -124,9 +124,7 @@
 @include('employee.partials.modal.detailed_view_modal')
 
 @push('scripts')
-<!-- Axios CDN -->
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const openDetailedViewBtn = document.getElementById('openDetailedView');
@@ -134,7 +132,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (openDetailedViewBtn && detailedViewModalElement) {
         const detailedViewModal = new bootstrap.Modal(detailedViewModalElement);
-        
         openDetailedViewBtn.addEventListener('click', function() {
             detailedViewModal.show();
             fetchDetailedInfo();
@@ -145,163 +142,102 @@ document.addEventListener('DOMContentLoaded', function() {
         const loading = document.getElementById('modalLoading');
         const error = document.getElementById('modalError');
         const content = document.getElementById('modalContent');
-        
         loading.classList.remove('d-none');
         error.classList.add('d-none');
         content.classList.add('d-none');
 
         const ajax = window.axios || axios;
-
         ajax.get('{{ route('employee.profile.detailed_json', $employee->id) }}')
             .then(response => {
                 if (response.data.success) {
                     populateModal(response.data.data);
                     loading.classList.add('d-none');
                     content.classList.remove('d-none');
-                } else {
-                    showError(response.data.message || 'Failed to fetch details');
-                }
+                } else { showError(response.data.message || 'Failed to fetch details'); }
             })
-            .catch(err => {
-                console.error(err);
-                showError('An error occurred while fetching details.');
-            });
+            .catch(err => { console.error(err); showError('An error occurred while fetching details.'); });
     }
 
     function populateModal(data) {
-        // Set photo
         const photo = document.getElementById('detailed_photo');
-        if (data.photo_path) {
-            photo.src = '{{ asset('storage') }}/' + data.photo_path;
-        } else {
-            photo.src = '{{ asset('assets/images/small/user-image.jpg') }}';
-        }
+        photo.src = data.photo_path ? '{{ asset('storage') }}/' + data.photo_path : '{{ asset('assets/images/small/user-image.jpg') }}';
 
-        // Set basic info
         document.getElementById('detailed_full_name').textContent = data.full_name;
+        document.getElementById('detailed_ids').textContent = `Applicant ID: ${data.applicant_id || 'N/A'} | System ID: ${data.system_id || 'N/A'} | Punch Card: ${data.punch_card_no || 'N/A'}`;
         document.getElementById('detailed_header_mobile').textContent = data.personal_mobile || 'N/A';
         document.getElementById('detailed_header_email').textContent = data.personal_email || 'N/A';
 
-        // Static Fields with specific data classes
         const fields = {
-            'detailed_first_name': data.first_name,
-            'detailed_middle_name': data.middle_name,
-            'detailed_last_name': data.last_name,
-            'detailed_gender': data.gender,
-            'detailed_marital_status': data.marital_status,
-            'detailed_religion': data.religion,
-            'detailed_nationality': data.nationality,
-            'detailed_blood_group': data.blood_group,
+            'detailed_first_name': data.first_name, 'detailed_middle_name': data.middle_name, 'detailed_last_name': data.last_name,
+            'detailed_gender': data.gender, 'detailed_marital_status': data.marital_status, 'detailed_religion': data.religion,
+            'detailed_nationality': data.nationality, 'detailed_blood_group': data.blood_group,
             'detailed_height': (data.height_feet || 0) + "' " + (data.height_inches || 0) + '"',
-            'detailed_children_count': data.children_count || '0',
-            'detailed_father_name': data.father_name,
-            'detailed_mother_name': data.mother_name,
-            'detailed_spouse_name': data.spouse_name,
-            'detailed_status': data.status,
-            'detailed_dob': data.date_of_birth,
-            'detailed_birth_country': data.birth_country,
-            'detailed_birth_reg_no': data.birth_reg_no,
-            'detailed_tin': data.tin,
-            'detailed_bgmea_id': data.bgmea_id,
-            'detailed_residency_id': data.residency_id_number,
-            'detailed_passport_no': data.passport_no,
-            'detailed_passport_expiry': data.passport_expiry,
-            'detailed_visa_expiry': data.visa_expiry,
-            'detailed_work_expiry': data.work_expiry,
-            'detailed_license_no': data.license_no,
-            'detailed_license_expiry': data.license_expiry,
-            'detailed_personal_mobile': data.personal_mobile,
-            'detailed_home_phone': data.home_phone,
-            'detailed_personal_email': data.personal_email,
-            'detailed_work_mobile': data.work_mobile,
-            'detailed_work_phone': data.work_phone,
-            'detailed_work_email': data.work_email
+            'detailed_children_count': data.children_count || '0', 'detailed_father_name': data.father_name,
+            'detailed_mother_name': data.mother_name, 'detailed_spouse_name': data.spouse_name, 'detailed_status': data.status,
+            'detailed_dob': data.date_of_birth, 'detailed_birth_country': data.birth_country, 'detailed_birth_reg_no': data.birth_reg_no,
+            'detailed_tin': data.tin, 'detailed_bgmea_id': data.bgmea_id, 'detailed_residency_id': data.residency_id_number,
+            'detailed_passport_no': data.passport_no, 'detailed_passport_expiry': data.passport_expiry,
+            'detailed_visa_expiry': data.visa_expiry, 'detailed_work_expiry': data.work_expiry,
+            'detailed_license_no': data.license_no, 'detailed_license_expiry': data.license_expiry,
+            'detailed_personal_mobile': data.personal_mobile, 'detailed_home_phone': data.home_phone,
+            'detailed_personal_email': data.personal_email, 'detailed_work_mobile': data.work_mobile,
+            'detailed_work_phone': data.work_phone, 'detailed_work_email': data.work_email
         };
 
-        for (let id in fields) {
-            const el = document.getElementById(id);
-            if (el) el.textContent = fields[id] || 'N/A';
-        }
+        for (let id in fields) { if (document.getElementById(id)) document.getElementById(id).textContent = fields[id] || 'N/A'; }
 
-        // 5 & 6. Addresses
         function renderAddressFields(addr) {
             if (!addr) return '<div class="col-12"><p class="data-value text-muted">N/A</p></div>';
             const a = typeof addr === 'string' ? JSON.parse(addr) : addr;
-            if (Object.keys(a).length === 0) return '<div class="col-12"><p class="data-value text-muted">N/A</p></div>';
-            
             return `
-                <div class="col-md-6"><label class="data-label">Address Line 1</label><span class="data-value">${a.line_1 || a.address_line || 'N/A'}</span></div>
-                <div class="col-md-3"><label class="data-label">Village</label><span class="data-value">${a.village || 'N/A'}</span></div>
-                <div class="col-md-3"><label class="data-label">Post Office</label><span class="data-value">${a.post_office || 'N/A'}</span></div>
-                <div class="col-md-3"><label class="data-label">Thana / Upazila</label><span class="data-value">${a.thana || 'N/A'}</span></div>
-                <div class="col-md-3"><label class="data-label">District</label><span class="data-value">${a.district || 'N/A'}</span></div>
-                <div class="col-md-2"><label class="data-label">Division</label><span class="data-value">${a.division || 'N/A'}</span></div>
-                <div class="col-md-2"><label class="data-label">State</label><span class="data-value">${a.state || 'N/A'}</span></div>
-                <div class="col-md-2"><label class="data-label">Zip Code</label><span class="data-value">${a.zip_code || 'N/A'}</span></div>
+                <div class="col-md-6 mb-2"><label class="data-label">Address Line 1</label><span class="data-value">${a.line_1 || a.address_line || 'N/A'}</span></div>
+                <div class="col-md-3 mb-2"><label class="data-label">Village</label><span class="data-value">${a.village || 'N/A'}</span></div>
+                <div class="col-md-3 mb-2"><label class="data-label">Post Office</label><span class="data-value">${a.post_office || 'N/A'}</span></div>
+                <div class="col-md-3 mb-2"><label class="data-label">Thana / Upazila</label><span class="data-value">${a.thana || 'N/A'}</span></div>
+                <div class="col-md-3 mb-2"><label class="data-label">District</label><span class="data-value">${a.district || 'N/A'}</span></div>
+                <div class="col-md-2 mb-2"><label class="data-label">Division</label><span class="data-value">${a.division || 'N/A'}</span></div>
+                <div class="col-md-2 mb-2"><label class="data-label">State</label><span class="data-value">${a.state || 'N/A'}</span></div>
+                <div class="col-md-2 mb-2"><label class="data-label">Zip Code</label><span class="data-value">${a.zip_code || 'N/A'}</span></div>
                 <div class="col-md-12"><label class="data-label">Country</label><span class="data-value">${a.country || 'N/A'}</span></div>
             `;
         }
         document.getElementById('detailed_present_address_fields').innerHTML = renderAddressFields(data.present_address);
         document.getElementById('detailed_permanent_address_fields').innerHTML = renderAddressFields(data.permanent_address || data.present_address);
 
-        // 7. Reference Information
         function renderReferenceFields(addr) {
             if (!addr) return '<div class="col-12"><p class="data-value text-muted">N/A</p></div>';
             const a = typeof addr === 'string' ? JSON.parse(addr) : addr;
             return `
-                <div class="col-md-3"><label class="data-label">Reference ID</label><span class="data-value">${a.emp_id || 'N/A'}</span></div>
-                <div class="col-md-3"><label class="data-label">Reference Name</label><span class="data-value fw-bold">${a.reference_name || 'N/A'}</span></div>
-                <div class="col-md-3"><label class="data-label">Designation</label><span class="data-value">${a.reference_designation || 'N/A'}</span></div>
-                <div class="col-md-3"><label class="data-label">Phone / Mobile</label><span class="data-value">${a.phone || a.mobile || 'N/A'}</span></div>
-                <div class="col-md-3"><label class="data-label">Email</label><span class="data-value">${a.email || 'N/A'}</span></div>
-                <div class="col-md-9"><label class="data-label">Address</label><span class="data-value">${a.line_1 || a.address_line || 'N/A'}, ${a.village || ''}, ${a.thana || ''}, ${a.district || ''}, ${a.country || ''}</span></div>
+                <div class="col-md-3 mb-2"><label class="data-label">Reference ID</label><span class="data-value">${a.emp_id || 'N/A'}</span></div>
+                <div class="col-md-3 mb-2"><label class="data-label">Reference Name</label><span class="data-value fw-bold text-dark">${a.reference_name || 'N/A'}</span></div>
+                <div class="col-md-3 mb-2"><label class="data-label">Designation</label><span class="data-value">${a.reference_designation || 'N/A'}</span></div>
+                <div class="col-md-3 mb-2"><label class="data-label">Phone / Mobile</label><span class="data-value">${a.phone || a.mobile || 'N/A'}</span></div>
+                <div class="col-md-3 mb-2"><label class="data-label">Email</label><span class="data-value">${a.email || 'N/A'}</span></div>
+                <div class="col-md-9 mb-2"><label class="data-label">Address</label><span class="data-value">${a.line_1 || a.address_line || 'N/A'}, ${a.village || ''}, ${a.thana || ''}, ${a.district || ''}, ${a.country || ''}</span></div>
             `;
         }
         document.getElementById('detailed_reference_address_fields').innerHTML = renderReferenceFields(data.reference_address);
 
-        // 8. Office Information
         if (data.office_info) {
             const oi = data.office_info;
             const officeFields = {
-                'detailed_emp_type': oi.emp_type,
-                'detailed_hr_file_no': oi.hr_file_no,
-                'detailed_pay_grade': oi.get_grade?.name,
-                'detailed_tofsil': oi.get_tofsil?.name,
-                'detailed_file_note': oi.file_note,
-                'detailed_joining_company': oi.get_joining_company?.name,
-                'detailed_joining_bu': oi.get_joining_business_unit?.name,
-                'detailed_joining_division': oi.get_joining_division?.name,
-                'detailed_joining_department': oi.get_joining_department?.department_name,
-                'detailed_joining_section': oi.get_joining_section?.name,
-                'detailed_joining_designation': oi.get_joining_designation?.company_designation,
-                'detailed_join_date': oi.date_of_join,
-                'detailed_current_company': oi.get_current_company?.name,
-                'detailed_current_bu': oi.get_current_business_unit?.name,
-                'detailed_current_division': oi.get_current_division?.name,
-                'detailed_current_department': oi.get_current_department?.department_name,
-                'detailed_current_section': oi.get_current_section?.name,
-                'detailed_current_designation': oi.get_current_designation?.company_designation,
-                'detailed_orientation_required': oi.orientation_required,
-                'detailed_orientation_from': oi.orientation_from,
-                'detailed_orientation_to': oi.orientation_to,
-                'detailed_orientation_type': oi.orientation_type,
-                'detailed_orientation_days': oi.orientation_days,
-                'detailed_confirmation_date': oi.confirmation_date,
-                'detailed_probation': (oi.probation_duration || 0) + ' Days',
-                'detailed_next_promotion': oi.next_promotion_date,
-                'detailed_promotion_cycle': oi.promotion_cycle,
-                'detailed_increment_cycle': oi.increment_cycle,
-                'detailed_salary_type': oi.salary_type,
-                'detailed_weekends': (oi.weekends || []).join(', '),
-                'detailed_alternate_off': (oi.alternate_off_day || []).join(', '),
-                'detailed_pf_effective': oi.pf_effective_date
+                'detailed_emp_type': oi.emp_type, 'detailed_hr_file_no': oi.hr_file_no, 'detailed_pay_grade': oi.get_grade?.name,
+                'detailed_tofsil': oi.get_tofsil?.name, 'detailed_file_note': oi.file_note, 'detailed_joining_company': oi.get_joining_company?.name,
+                'detailed_joining_bu': oi.get_joining_business_unit?.name, 'detailed_joining_division': oi.get_joining_division?.name,
+                'detailed_joining_department': oi.get_joining_department?.department_name, 'detailed_joining_section': oi.get_joining_section?.name,
+                'detailed_joining_designation': oi.get_joining_designation?.company_designation, 'detailed_join_date': oi.date_of_join,
+                'detailed_current_company': oi.get_current_company?.name, 'detailed_current_bu': oi.get_current_business_unit?.name,
+                'detailed_current_division': oi.get_current_division?.name, 'detailed_current_department': oi.get_current_department?.department_name,
+                'detailed_current_section': oi.get_current_section?.name, 'detailed_current_designation': oi.get_current_designation?.company_designation,
+                'detailed_orientation_required': oi.orientation_required, 'detailed_orientation_from': oi.orientation_from,
+                'detailed_orientation_to': oi.orientation_to, 'detailed_orientation_type': oi.orientation_type,
+                'detailed_orientation_days': oi.orientation_days, 'detailed_confirmation_date': oi.confirmation_date,
+                'detailed_probation': (oi.probation_duration || 0) + ' Days', 'detailed_next_promotion': oi.next_promotion_date,
+                'detailed_promotion_cycle': oi.promotion_cycle, 'detailed_increment_cycle': oi.increment_cycle,
+                'detailed_salary_type': oi.salary_type, 'detailed_weekends': (oi.weekends || []).join(', '),
+                'detailed_alternate_off': (oi.alternate_off_day || []).join(', '), 'detailed_pf_effective': oi.pf_effective_date
             };
-
-            for (let id in officeFields) {
-                const el = document.getElementById(id);
-                if (el) el.textContent = officeFields[id] || 'N/A';
-            }
-
+            for (let id in officeFields) { if (document.getElementById(id)) document.getElementById(id).textContent = officeFields[id] || 'N/A'; }
             document.getElementById('detailed_ot_allowed').innerHTML = oi.ot_allowed === 'yes' ? '<span class="badge badge-soft-success">Yes</span>' : '<span class="badge badge-soft-danger">No</span>';
             document.getElementById('detailed_pf_eligible').innerHTML = oi.pf_eligible === 'yes' ? '<span class="badge badge-soft-success">Yes</span>' : '<span class="badge badge-soft-danger">No</span>';
             document.getElementById('detailed_transport_eligible').innerHTML = oi.transport_eligible === 'yes' ? '<span class="badge badge-soft-success">Yes</span>' : '<span class="badge badge-soft-danger">No</span>';
@@ -310,137 +246,92 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('detailed_can_advance').innerHTML = oi.can_apply_advance === 'yes' ? '<span class="badge badge-soft-success">Yes</span>' : '<span class="badge badge-soft-danger">No</span>';
         }
 
-        // Dynamic Lists
-        function populateList(sectionId, bodyId, dataList, mapper) {
-            const section = document.getElementById(sectionId);
-            const body = document.getElementById(bodyId);
-            if (dataList && dataList.length > 0) {
-                section.classList.remove('d-none');
-                body.innerHTML = dataList.map(mapper).join('');
-            } else {
-                section.classList.add('d-none');
-            }
-        }
+        const populateDynamicList = (sId, bId, list, mapper) => {
+            const s = document.getElementById(sId), b = document.getElementById(bId);
+            if (list && list.length > 0) { s.classList.remove('d-none'); b.innerHTML = list.map(mapper).join(''); } else { s.classList.add('d-none'); }
+        };
 
-        populateList('section_education', 'detailed_education_body', data.education_info?.educations, edu => `
-            <div class="col-12 border-bottom mb-2 pb-2">
-                <div class="row g-2">
-                    <div class="col-md-4"><label class="data-label">Title</label><span class="data-value fw-bold">${edu.education_title || 'N/A'}</span></div>
-                    <div class="col-md-4"><label class="data-label">Institute</label><span class="data-value">${edu.institute || 'N/A'}</span></div>
-                    <div class="col-md-2"><label class="data-label">Year</label><span class="data-value">${edu.passing_year || 'N/A'}</span></div>
-                    <div class="col-md-2"><label class="data-label">Result</label><span class="data-value">${edu.result_grade || 'N/A'}</span></div>
-                </div>
-            </div>
+        populateDynamicList('section_education', 'detailed_education_body', data.education_info?.educations, e => `
+            <div class="col-12 border-bottom mb-2 pb-2"><div class="row g-2">
+                <div class="col-md-4"><label class="data-label">Title</label><span class="data-value fw-bold">${e.education_title || 'N/A'}</span></div>
+                <div class="col-md-4"><label class="data-label">Institute</label><span class="data-value">${e.institute || 'N/A'}</span></div>
+                <div class="col-md-4"><label class="data-label">Board/Group</label><span class="data-value">${e.board_university || ''} / ${e.group_major || ''}</span></div>
+                <div class="col-md-4"><label class="data-label">Year/Result</label><span class="data-value">${e.passing_year || ''} - ${e.result_grade || ''} (${e.gpa_cgpa || ''})</span></div>
+            </div></div>
         `);
 
-        populateList('section_training', 'detailed_training_body', data.education_info?.trainings, trn => `
-            <div class="col-12 border-bottom mb-2 pb-2">
-                <div class="row g-2">
-                    <div class="col-md-4"><label class="data-label">Title</label><span class="data-value fw-bold">${trn.training_title || 'N/A'}</span></div>
-                    <div class="col-md-4"><label class="data-label">Institute</label><span class="data-value">${trn.institute || 'N/A'}</span></div>
-                    <div class="col-md-4"><label class="data-label">Duration</label><span class="data-value">${trn.duration || 'N/A'}</span></div>
-                </div>
-            </div>
+        populateDynamicList('section_training', 'detailed_training_body', data.education_info?.trainings, t => `
+            <div class="col-12 border-bottom mb-2 pb-2"><div class="row g-2">
+                <div class="col-md-4"><label class="data-label">Title</label><span class="data-value fw-bold">${t.training_title || 'N/A'}</span></div>
+                <div class="col-md-4"><label class="data-label">Course/Code</label><span class="data-value">${t.course_name || ''} (${t.training_code || ''})</span></div>
+                <div class="col-md-4"><label class="data-label">Institute/Loc</label><span class="data-value">${t.institute || ''} (${t.location || ''}, ${t.country || ''})</span></div>
+                <div class="col-md-4"><label class="data-label">Duration/Period</label><span class="data-value">${t.duration || ''} (${t.from_date || ''} - ${t.to_date || ''})</span></div>
+            </div></div>
         `);
 
-        populateList('section_history', 'detailed_history_body', data.employment_history?.histories, h => `
-            <div class="col-12 border-bottom mb-2 pb-2">
-                <div class="row g-2">
-                    <div class="col-md-4"><label class="data-label">Company</label><span class="data-value fw-bold text-info">${h.company_name || h.company || 'N/A'}</span></div>
-                    <div class="col-md-4"><label class="data-label">Designation</label><span class="data-value">${h.designation || 'N/A'}</span></div>
-                    <div class="col-md-4"><label class="data-label">Duration</label><span class="data-value">${h.joining_date || h.from_date || 'N/A'} to ${h.end_date || h.to_date || 'Present'}</span></div>
-                </div>
-            </div>
+        populateDynamicList('section_history', 'detailed_history_body', data.employment_history?.histories, h => `
+            <div class="col-12 border-bottom mb-2 pb-2"><div class="row g-2">
+                <div class="col-md-4"><label class="data-label">Company</label><span class="data-value fw-bold text-info">${h.company_name || h.company || 'N/A'}</span></div>
+                <div class="col-md-4"><label class="data-label">Designation</label><span class="data-value">${h.designation || 'N/A'}</span></div>
+                <div class="col-md-4"><label class="data-label">Period</label><span class="data-value">${h.joining_date || h.from_date || ''} to ${h.end_date || h.to_date || 'Present'}</span></div>
+                <div class="col-12"><label class="data-label">Job Desc / Achievements</label><span class="data-value small text-muted">${h.job_description || ''} <br> ${h.achievements || ''}</span></div>
+            </div></div>
         `);
 
-        const sectionNominee = document.getElementById('section_nominee');
-        const nomineeBody = document.getElementById('detailed_nominee_body');
+        const sNom = document.getElementById('section_nominee'), bNom = document.getElementById('detailed_nominee_body');
         if (data.nominee_info) {
-            sectionNominee.classList.remove('d-none');
             const n = data.nominee_info;
-            nomineeBody.innerHTML = `
-                <div class="row g-3">
-                    <div class="col-md-3"><label class="data-label">Nominee Name</label><span class="data-value fw-bold">${n.nominee_name || 'N/A'}</span></div>
-                    <div class="col-md-3"><label class="data-label">Relation</label><span class="data-value">${n.relation || 'N/A'}</span></div>
-                    <div class="col-md-3"><label class="data-label">Mobile</label><span class="data-value">${n.mobile || 'N/A'}</span></div>
-                    <div class="col-md-3"><label class="data-label">NID</label><span class="data-value">${n.nid || 'N/A'}</span></div>
-                </div>
-            `;
-        } else {
-            sectionNominee.classList.add('d-none');
-        }
+            sNom.classList.remove('d-none');
+            bNom.innerHTML = `<div class="row g-3">
+                <div class="col-md-3"><label class="data-label">Name</label><span class="data-value fw-bold">${n.nominee_name || 'N/A'}</span></div>
+                <div class="col-md-3"><label class="data-label">Relation</label><span class="data-value">${n.relation || 'N/A'}</span></div>
+                <div class="col-md-3"><label class="data-label">Contact</label><span class="data-value">${n.mobile || ''} ${n.phone || ''}</span></div>
+                <div class="col-md-3"><label class="data-label">Gender/DOB</label><span class="data-value">${n.gender || ''} / ${n.date_of_birth || ''}</span></div>
+                <div class="col-md-3"><label class="data-label">NID/Birth Reg</label><span class="data-value">${n.nid || ''} / ${n.birth_reg_no || ''}</span></div>
+                <div class="col-md-3"><label class="data-label">Religion/Nationality</label><span class="data-value">${n.religion || ''} / ${n.nationality || ''}</span></div>
+                <div class="col-12"><label class="data-label">Address</label><span class="data-value">${n.present_address_line || ''}, ${n.village || ''}, ${n.thana || ''}, ${n.district || ''}, ${n.country || ''}</span></div>
+            </div>`;
+        } else { sNom.classList.add('d-none'); }
 
-        // Salary
-        const sectionSalary = document.getElementById('section_salary');
-        const salaryBody = document.getElementById('detailed_salary_body');
+        const sSal = document.getElementById('section_salary'), bSal = document.getElementById('detailed_salary_body');
         if (data.salary_breakdown) {
-            sectionSalary.classList.remove('d-none');
-            const s = data.salary_breakdown;
-            const currency = (data.currency && data.currency !== 'N/A') ? data.currency : '';
-            function fmt(val) { return parseFloat(val || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}); }
-            
-            const benefits = [
-                parseFloat(s.house_allowance || 0),
-                parseFloat(s.transport_allowance || 0),
-                parseFloat(s.food_allowance || 0),
-                parseFloat(s.medical_allowance || 0),
-                parseFloat(s.other_earnings || 0)
-            ];
-            const totalBenefits = benefits.reduce((a, b) => a + b, 0);
-
-            salaryBody.innerHTML = `
-                <div class="col-md-4"><label class="data-label">Basic Salary</label><span class="data-value fw-bold text-dark">${fmt(s.basic_salary)} ${currency}</span></div>
-                <div class="col-md-4"><label class="data-label">House Allowance</label><span class="data-value">${fmt(s.house_allowance)} ${currency}</span></div>
-                <div class="col-md-4"><label class="data-label">Transport Allowance</label><span class="data-value">${fmt(s.transport_allowance)} ${currency}</span></div>
-                <div class="col-md-4"><label class="data-label">Food Allowance</label><span class="data-value">${fmt(s.food_allowance)} ${currency}</span></div>
-                <div class="col-md-4"><label class="data-label">Medical Allowance</label><span class="data-value">${fmt(s.medical_allowance)} ${currency}</span></div>
-                <div class="col-md-4"><label class="data-label">Other Earnings</label><span class="data-value">${fmt(s.other_earnings)} ${currency}</span></div>
+            const s = data.salary_breakdown, cur = (data.currency && data.currency !== 'N/A') ? data.currency : '';
+            const fmt = v => parseFloat(v || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            const totB = [s.house_allowance, s.transport_allowance, s.food_allowance, s.medical_allowance, s.other_earnings].reduce((a, b) => a + parseFloat(b || 0), 0);
+            sSal.classList.remove('d-none');
+            bSal.innerHTML = `
+                <div class="col-md-4"><label class="data-label">Basic Salary</label><span class="data-value fw-bold text-dark">${fmt(s.basic_salary)} ${cur}</span></div>
+                <div class="col-md-4"><label class="data-label">House Allowance</label><span class="data-value">${fmt(s.house_allowance)} ${cur}</span></div>
+                <div class="col-md-4"><label class="data-label">Transport Allowance</label><span class="data-value">${fmt(s.transport_allowance)} ${cur}</span></div>
+                <div class="col-md-4"><label class="data-label">Food Allowance</label><span class="data-value">${fmt(s.food_allowance)} ${cur}</span></div>
+                <div class="col-md-4"><label class="data-label">Medical Allowance</label><span class="data-value">${fmt(s.medical_allowance)} ${cur}</span></div>
+                <div class="col-md-4"><label class="data-label">Other Earnings</label><span class="data-value">${fmt(s.other_earnings)} ${cur}</span></div>
                 <div class="col-12"><hr class="my-1"></div>
-                <div class="col-md-6"><label class="data-label text-primary">Total Allowances & Benefits</label><span class="data-value fw-bold text-primary">${fmt(totalBenefits)} ${currency}</span></div>
-                <div class="col-md-6"><label class="data-label text-dark fw-bold">Gross Salary</label><span class="data-value fw-bold fs-5 text-dark">${fmt(s.gross_salary)} ${currency}</span></div>
+                <div class="col-md-6"><label class="data-label text-primary">Total Benefits</label><span class="data-value fw-bold text-primary">${fmt(totB)} ${cur}</span></div>
+                <div class="col-md-6"><label class="data-label text-dark fw-bold">Gross Salary</label><span class="data-value fw-bold fs-5 text-dark">${fmt(s.gross_salary)} ${cur}</span></div>
             `;
-        } else {
-            sectionSalary.classList.add('d-none');
-        }
+        } else { sSal.classList.add('d-none'); }
 
-        // Policies & Leave
         const policyBody = document.getElementById('detailed_policy_body');
         if (data.employee_eligibility) {
-            const elig = data.employee_eligibility;
-            let tags = [];
-            if (elig.shift_plan_status === 'active') tags.push('Shift');
-            if (elig.leave_plan_status === 'active') tags.push('Leave');
-            if (elig.ot_plan_status === 'active') tags.push('OT');
-            if (elig.roster_plans_status === 'active') tags.push('Roster');
-            policyBody.innerHTML = tags.length > 0 ? tags.map(t => `<span class="badge bg-soft-primary text-primary me-2 mb-2 p-2">${t} Plan</span>`).join('') : '<p class="data-value text-muted">No active policies</p>';
+            const e = data.employee_eligibility; let t = [];
+            if (e.shift_plan_status === 'active') t.push('Shift'); if (e.leave_plan_status === 'active') t.push('Leave');
+            if (e.ot_plan_status === 'active') t.push('OT'); if (e.roster_plans_status === 'active') t.push('Roster');
+            policyBody.innerHTML = t.length > 0 ? t.map(x => `<span class="badge bg-soft-primary text-primary me-2 mb-2 p-2">${x} Plan</span>`).join('') : '<p class="data-value text-muted">No active policies</p>';
         }
 
-        const leaveInfoBody = document.getElementById('detailed_leave_info_body');
-        if (data.leave_balances && data.leave_balances.length > 0) {
-            leaveInfoBody.innerHTML = data.leave_balances.map(l => `
-                <div class="d-flex justify-content-between align-items-center p-1 border-bottom">
-                    <span class="data-value fw-semibold">${l.leave_type}</span>
-                    <span class="badge bg-primary rounded-pill">${l.leave_count} / ${l.total_leave}</span>
-                </div>
-            `).join('');
-        } else {
-            leaveInfoBody.innerHTML = '<p class="data-value text-muted">No leave balances found</p>';
-        }
+        const bPlans = document.getElementById('detailed_plans_body'); let hPlans = '';
+        if (data.shift?.length > 0) data.shift.forEach(s => hPlans += `<div class="p-2 border rounded mb-2"><span class="data-value small text-muted d-block">Active Shift</span><span class="data-value fw-bold text-dark">${s.name || 'N/A'}</span></div>`);
+        if (data.roster?.length > 0) data.roster.filter(r => r.status === 'active').forEach(r => hPlans += `<div class="p-2 border rounded mb-2"><span class="data-value small text-muted d-block">Active Roster</span><span class="data-value fw-bold text-dark">${r.name || 'N/A'}</span></div>`);
+        bPlans.innerHTML = hPlans || '<p class="text-muted">No plans assigned</p>';
 
-        const leaveHistoryBody = document.getElementById('detailed_leave_history_body');
-        if (data.leave_applications && data.leave_applications.length > 0) {
-            leaveHistoryBody.innerHTML = data.leave_applications.slice(0, 5).map(l => `
-                <div class="p-1 border-bottom mb-1">
-                    <div class="d-flex justify-content-between">
-                        <span class="data-value fw-bold">${l.get_plan?.name || 'Leave'}</span>
-                        <span class="badge ${l.status === 'approved' ? 'bg-success' : 'bg-warning'}">${l.status}</span>
-                    </div>
-                    <div class="data-value small text-muted">${l.from} to ${l.to}</div>
-                </div>
-            `).join('');
-        } else {
-            leaveHistoryBody.innerHTML = '<p class="data-value text-muted">No recent history</p>';
-        }
+        const bLInfo = document.getElementById('detailed_leave_info_body');
+        if (data.leave_balances?.length > 0) bLInfo.innerHTML = data.leave_balances.map(l => `<div class="d-flex justify-content-between align-items-center p-2 border-bottom"><span class="data-value fw-semibold text-dark">${l.leave_type}</span><span class="badge bg-primary rounded-pill px-3">${l.leave_count} / ${l.total_leave}</span></div>`).join('');
+        else bLInfo.innerHTML = '<p class="text-muted">No balances</p>';
+
+        const bLHist = document.getElementById('detailed_leave_history_body');
+        if (data.leave_applications?.length > 0) bLHist.innerHTML = data.leave_applications.slice(0, 5).map(l => `<div class="p-2 border rounded mb-2 bg-light-subtle"><div class="d-flex justify-content-between"><span class="data-value fw-bold text-dark">${l.get_plan?.name || 'Leave'}</span><span class="badge ${l.status === 'approved' ? 'bg-success' : 'bg-warning'}">${l.status}</span></div><div class="data-value small text-muted">${l.from} to ${l.to} (${l.leave_count} days)</div></div>`).join('');
+        else bLHist.innerHTML = '<p class="text-muted">No recent history</p>';
 
         document.getElementById('downloadPdfBtn').href = '{{ route('employee.profile.download_pdf', $employee->id) }}';
     }
