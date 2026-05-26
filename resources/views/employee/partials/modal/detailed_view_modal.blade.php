@@ -55,7 +55,7 @@
 
                     <div class="hando-main-sections">
                         
-                        <!-- 2. Personal Information (Full Row Card) -->
+                        <!-- 2. Personal Information -->
                         <div class="row">
                             <div class="col-12">
                                 <div class="card border shadow-none mb-3">
@@ -84,7 +84,7 @@
                             </div>
                         </div>
 
-                        <!-- 3. Birth & Identification Documents (Full Row Card) -->
+                        <!-- 3. Birth & Identification Documents -->
                         <div class="row">
                             <div class="col-12">
                                 <div class="card border shadow-none mb-3">
@@ -111,7 +111,7 @@
                             </div>
                         </div>
 
-                        <!-- 4. Contact Information (Full Row Card) -->
+                        <!-- 4. Contact Information -->
                         <div class="row">
                             <div class="col-12">
                                 <div class="card border shadow-none mb-3">
@@ -132,7 +132,7 @@
                             </div>
                         </div>
 
-                        <!-- 5. Present Address (Full Row Card) -->
+                        <!-- 5. Present Address -->
                         <div class="row">
                             <div class="col-12">
                                 <div class="card border shadow-none mb-3">
@@ -146,7 +146,7 @@
                             </div>
                         </div>
 
-                        <!-- 6. Permanent Address (Full Row Card) -->
+                        <!-- 6. Permanent Address -->
                         <div class="row">
                             <div class="col-12">
                                 <div class="card border shadow-none mb-3">
@@ -160,7 +160,7 @@
                             </div>
                         </div>
 
-                        <!-- 7. Reference Information (Full Row Card) -->
+                        <!-- 7. Reference Information -->
                         <div class="row">
                             <div class="col-12">
                                 <div class="card border shadow-none mb-3">
@@ -174,7 +174,7 @@
                             </div>
                         </div>
 
-                        <!-- 8. Office Information (Full Row Card) -->
+                        <!-- 8. Office Information -->
                         <div class="row">
                             <div class="col-12">
                                 <div id="section_office_info_card" class="card border shadow-none mb-3">
@@ -183,7 +183,6 @@
                                     </div>
                                     <div class="card-body">
                                         <div class="row g-3">
-                                            <!-- Payroll Info -->
                                             <div class="col-md-3"><label>Employee Type</label><span id="detailed_emp_type"></span></div>
                                             <div class="col-md-3"><label>HR File Number</label><span id="detailed_hr_file_no"></span></div>
                                             <div class="col-md-3"><label>Pay Grade</label><span id="detailed_pay_grade"></span></div>
@@ -234,7 +233,7 @@
                             </div>
                         </div>
 
-                        <!-- 9. Education Information (Full Row Card) -->
+                        <!-- 9. Education Information -->
                         <div class="row">
                             <div class="col-12">
                                 <div id="section_education" class="card border shadow-none mb-3 d-none">
@@ -248,7 +247,7 @@
                             </div>
                         </div>
 
-                        <!-- 10. Training Information (Full Row Card) -->
+                        <!-- 10. Training Information -->
                         <div class="row">
                             <div class="col-12">
                                 <div id="section_training" class="card border shadow-none mb-3 d-none">
@@ -262,7 +261,7 @@
                             </div>
                         </div>
 
-                        <!-- 11. Employment History (Full Row Card) -->
+                        <!-- 11. Employment History -->
                         <div class="row">
                             <div class="col-12">
                                 <div id="section_history" class="card border shadow-none mb-3 d-none">
@@ -276,7 +275,7 @@
                             </div>
                         </div>
 
-                        <!-- 12. Nominee Information (Full Row Card) -->
+                        <!-- 12. Nominee Information -->
                         <div class="row">
                             <div class="col-12">
                                 <div id="section_nominee" class="card border shadow-none mb-3 d-none">
@@ -290,7 +289,7 @@
                             </div>
                         </div>
 
-                        <!-- 13. Bank Account Information (Full Row Card) -->
+                        <!-- 13. Bank Account Information -->
                         <div class="row">
                             <div class="col-12">
                                 <div id="section_bank" class="card border shadow-none mb-3 d-none">
@@ -311,7 +310,7 @@
                             </div>
                         </div>
 
-                        <!-- 14. Salary Breakdown (Full Row Card) -->
+                        <!-- 14. Salary Breakdown -->
                         <div class="row">
                             <div class="col-12">
                                 <div id="section_salary" class="card border shadow-none mb-3 d-none">
@@ -325,7 +324,7 @@
                             </div>
                         </div>
 
-                        <!-- 15. Policy Tags & Current Plans (Full Row Card) -->
+                        <!-- 15. Policies & Current Plans -->
                         <div class="row">
                             <div class="col-12">
                                 <div class="card border shadow-none mb-3">
@@ -348,7 +347,7 @@
                             </div>
                         </div>
 
-                        <!-- 16. Leave Balance & History (Full Row Card) -->
+                        <!-- 16. Leave Information -->
                         <div class="row">
                             <div class="col-12">
                                 <div class="card border shadow-none mb-3">
@@ -394,6 +393,7 @@
         margin-bottom: 2px;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+        display: block;
     }
     .hando-main-sections span {
         display: block;
