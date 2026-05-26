@@ -21,11 +21,11 @@
                             <p class="my-1 text-muted fs-16">
                                 {{--                                        Senior Software Engineer - --}}
                                 Employee ID: {{ $employee?->applicant_id ?? 'N/A' }}</p>
-                            <span class="fs-15">
+                            <span class="fs-15 d-inline-flex align-items-center flex-wrap">
                                 <i class="mdi mdi-phone me-2 align-middle"></i>
-                                <span>{{ $employee?->personal_mobile ?? 'N/A' }}</span>
+                                <span class="d-inline">{{ $employee?->personal_mobile ?? 'N/A' }}</span>
                                 <i class="mdi mdi-email ms-3 me-2 align-middle"></i>
-                                <span>{{ $employee?->personal_email ?? 'N/A' }}</span>
+                                <span class="d-inline">{{ $employee?->personal_email ?? 'N/A' }}</span>
                             </span>
                         </div>
                         <div class="ms-auto">
