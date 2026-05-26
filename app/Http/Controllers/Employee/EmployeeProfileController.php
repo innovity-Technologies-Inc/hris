@@ -131,11 +131,20 @@ class EmployeeProfileController extends Controller
             }
 
             $employee = Employee::with([
+                'officeInfo.getJoiningCompany', 
+                'officeInfo.getJoiningBusinessUnit', 
+                'officeInfo.getJoiningDivision', 
+                'officeInfo.getJoiningDepartment', 
+                'officeInfo.getJoiningSection', 
+                'officeInfo.getJoiningDesignation', 
                 'officeInfo.getCurrentCompany', 
-                'officeInfo.getCurrentDesignation', 
+                'officeInfo.getCurrentBusinessUnit', 
+                'officeInfo.getCurrentDivision', 
                 'officeInfo.getCurrentDepartment', 
                 'officeInfo.getCurrentSection', 
-                'officeInfo.getCurrentDivision',
+                'officeInfo.getCurrentDesignation', 
+                'officeInfo.getGrade',
+                'officeInfo.getTofsil',
                 'educationInfo',
                 'employmentHistory',
                 'nomineeInfo',
