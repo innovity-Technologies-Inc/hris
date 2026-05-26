@@ -253,28 +253,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
         populateDynamicList('section_education', 'detailed_education_body', data.education_info?.educations, e => `
             <div class="col-12 border-bottom mb-2 pb-2"><div class="row g-2">
-                <div class="col-md-4"><label class="data-label">Title</label><span class="data-value fw-bold">${e.education_title || 'N/A'}</span></div>
-                <div class="col-md-4"><label class="data-label">Institute</label><span class="data-value">${e.institute || 'N/A'}</span></div>
-                <div class="col-md-4"><label class="data-label">Board/Group</label><span class="data-value">${e.board_university || ''} / ${e.group_major || ''}</span></div>
-                <div class="col-md-4"><label class="data-label">Year/Result</label><span class="data-value">${e.passing_year || ''} - ${e.result_grade || ''} (${e.gpa_cgpa || ''})</span></div>
+                <div class="col-md-3"><label class="data-label">Education Title</label><span class="data-value fw-bold">${e.education_title || 'N/A'}</span></div>
+                <div class="col-md-3"><label class="data-label">Institute</label><span class="data-value">${e.institute || 'N/A'}</span></div>
+                <div class="col-md-2"><label class="data-label">Board / University</label><span class="data-value">${e.board_university || 'N/A'}</span></div>
+                <div class="col-md-2"><label class="data-label">Group / Major</label><span class="data-value">${e.group_major || 'N/A'}</span></div>
+                <div class="col-md-1"><label class="data-label">Year</label><span class="data-value">${e.passing_year || 'N/A'}</span></div>
+                <div class="col-md-1"><label class="data-label">Result</label><span class="data-value">${e.result_grade || 'N/A'} (${e.gpa_cgpa || '0.00'})</span></div>
             </div></div>
         `);
 
         populateDynamicList('section_training', 'detailed_training_body', data.education_info?.trainings, t => `
             <div class="col-12 border-bottom mb-2 pb-2"><div class="row g-2">
-                <div class="col-md-4"><label class="data-label">Title</label><span class="data-value fw-bold">${t.training_title || 'N/A'}</span></div>
-                <div class="col-md-4"><label class="data-label">Course/Code</label><span class="data-value">${t.course_name || ''} (${t.training_code || ''})</span></div>
-                <div class="col-md-4"><label class="data-label">Institute/Loc</label><span class="data-value">${t.institute || ''} (${t.location || ''}, ${t.country || ''})</span></div>
-                <div class="col-md-4"><label class="data-label">Duration/Period</label><span class="data-value">${t.duration || ''} (${t.from_date || ''} - ${t.to_date || ''})</span></div>
+                <div class="col-md-3"><label class="data-label">Training Title</label><span class="data-value fw-bold">${t.training_title || 'N/A'}</span></div>
+                <div class="col-md-3"><label class="data-label">Course Name</label><span class="data-value">${t.course_name || 'N/A'}</span></div>
+                <div class="col-md-2"><label class="data-label">Code</label><span class="data-value">${t.training_code || 'N/A'}</span></div>
+                <div class="col-md-2"><label class="data-label">Institute</label><span class="data-value">${t.institute || 'N/A'}</span></div>
+                <div class="col-md-2"><label class="data-label">Location / Country</label><span class="data-value">${t.location || ''} ${t.country || ''}</span></div>
             </div></div>
         `);
 
         populateDynamicList('section_history', 'detailed_history_body', data.employment_history?.histories, h => `
             <div class="col-12 border-bottom mb-2 pb-2"><div class="row g-2">
-                <div class="col-md-4"><label class="data-label">Company</label><span class="data-value fw-bold text-info">${h.company_name || h.company || 'N/A'}</span></div>
+                <div class="col-md-4"><label class="data-label">Previous Company</label><span class="data-value fw-bold text-info">${h.company_name || h.company || 'N/A'}</span></div>
                 <div class="col-md-4"><label class="data-label">Designation</label><span class="data-value">${h.designation || 'N/A'}</span></div>
-                <div class="col-md-4"><label class="data-label">Period</label><span class="data-value">${h.joining_date || h.from_date || ''} to ${h.end_date || h.to_date || 'Present'}</span></div>
-                <div class="col-12"><label class="data-label">Job Desc / Achievements</label><span class="data-value small text-muted">${h.job_description || ''} <br> ${h.achievements || ''}</span></div>
+                <div class="col-md-2"><label class="data-label">Join Date</label><span class="data-value">${h.joining_date || h.from_date || 'N/A'}</span></div>
+                <div class="col-md-2"><label class="data-label">End Date</label><span class="data-value">${h.end_date || h.to_date || 'Present'}</span></div>
+                <div class="col-12 mt-1"><label class="data-label">Description / Achievements</label><span class="data-value small text-muted">${h.job_description || ''} <br> ${h.achievements || ''}</span></div>
             </div></div>
         `);
 
@@ -285,11 +289,18 @@ document.addEventListener('DOMContentLoaded', function() {
             bNom.innerHTML = `<div class="row g-3">
                 <div class="col-md-3"><label class="data-label">Name</label><span class="data-value fw-bold">${n.nominee_name || 'N/A'}</span></div>
                 <div class="col-md-3"><label class="data-label">Relation</label><span class="data-value">${n.relation || 'N/A'}</span></div>
-                <div class="col-md-3"><label class="data-label">Contact</label><span class="data-value">${n.mobile || ''} ${n.phone || ''}</span></div>
-                <div class="col-md-3"><label class="data-label">Gender/DOB</label><span class="data-value">${n.gender || ''} / ${n.date_of_birth || ''}</span></div>
-                <div class="col-md-3"><label class="data-label">NID/Birth Reg</label><span class="data-value">${n.nid || ''} / ${n.birth_reg_no || ''}</span></div>
-                <div class="col-md-3"><label class="data-label">Religion/Nationality</label><span class="data-value">${n.religion || ''} / ${n.nationality || ''}</span></div>
-                <div class="col-12"><label class="data-label">Address</label><span class="data-value">${n.present_address_line || ''}, ${n.village || ''}, ${n.thana || ''}, ${n.district || ''}, ${n.country || ''}</span></div>
+                <div class="col-md-3"><label class="data-label">Mobile</label><span class="data-value">${n.nominee_mobile || 'N/A'}</span></div>
+                <div class="col-md-3"><label class="data-label">Phone</label><span class="data-value">${n.phone || 'N/A'}</span></div>
+                <div class="col-md-3"><label class="data-label">Gender</label><span class="data-value">${n.gender || 'N/A'}</span></div>
+                <div class="col-md-3"><label class="data-label">DOB</label><span class="data-value">${n.date_of_birth || 'N/A'}</span></div>
+                <div class="col-md-3"><label class="data-label">NID</label><span class="data-value">${n.nid || 'N/A'}</span></div>
+                <div class="col-md-3"><label class="data-label">Birth Reg No</label><span class="data-value">${n.birth_reg_no || 'N/A'}</span></div>
+                <div class="col-md-3"><label class="data-label">Religion</label><span class="data-value">${n.religion || 'N/A'}</span></div>
+                <div class="col-md-3"><label class="data-label">Nationality</label><span class="data-value">${n.nationality || 'N/A'}</span></div>
+                <div class="col-md-3"><label class="data-label">Marital Status</label><span class="data-value">${n.marital_status || 'N/A'}</span></div>
+                <div class="col-md-3"><label class="data-label">Blood Group</label><span class="data-value">${n.blood_group || 'N/A'}</span></div>
+                <div class="col-12"><hr class="my-1"></div>
+                <div class="col-md-12"><label class="data-label">Address</label><span class="data-value">${n.present_address_line || ''}, ${n.village || ''}, ${n.thana || ''}, ${n.district || ''}, ${n.country || ''}</span></div>
             </div>`;
         } else { sNom.classList.add('d-none'); }
 
@@ -307,7 +318,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="col-md-4"><label class="data-label">Medical Allowance</label><span class="data-value">${fmt(s.medical_allowance)} ${cur}</span></div>
                 <div class="col-md-4"><label class="data-label">Other Earnings</label><span class="data-value">${fmt(s.other_earnings)} ${cur}</span></div>
                 <div class="col-12"><hr class="my-1"></div>
-                <div class="col-md-6"><label class="data-label text-primary">Total Benefits</label><span class="data-value fw-bold text-primary">${fmt(totB)} ${cur}</span></div>
+                <div class="col-md-6"><label class="data-label text-primary">Total Allowances & Benefits</label><span class="data-value fw-bold text-primary">${fmt(totB)} ${cur}</span></div>
                 <div class="col-md-6"><label class="data-label text-dark fw-bold">Gross Salary</label><span class="data-value fw-bold fs-5 text-dark">${fmt(s.gross_salary)} ${cur}</span></div>
             `;
         } else { sSal.classList.add('d-none'); }
