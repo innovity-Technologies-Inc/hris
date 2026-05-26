@@ -636,6 +636,7 @@ class EmployeeServices
         $validated = $request->validate([
             'employee_id' => 'required|integer|exists:employees,id',
             'nominee_name' => 'required|string|max:255',
+            'relation' => 'required|string|max:100',
             'father_name' => 'nullable|string|max:255',
             'mother_name' => 'nullable|string|max:255',
             'spouse_name' => 'nullable|string|max:255',

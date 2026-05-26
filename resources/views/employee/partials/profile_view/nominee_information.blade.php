@@ -73,6 +73,10 @@
                                                 <td>{{ $employee_nominee_info->nominee_name ?? 'N/A' }}</td>
                                             </tr>
                                             <tr>
+                                                <td class="fw-semibold">Relation</td>
+                                                <td>{{ $employee_nominee_info->relation ?? 'N/A' }}</td>
+                                            </tr>
+                                            <tr>
                                                 <td class="fw-semibold">Gender</td>
                                                 <td><span
                                                         class="badge bg-info">{{ $employee_nominee_info->gender ?? 'N/A' }}</span>

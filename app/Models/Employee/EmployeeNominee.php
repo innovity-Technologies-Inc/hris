@@ -16,6 +16,7 @@ class EmployeeNominee extends Model
     protected $fillable = [
         'employee_id',
         'nominee_name',
+        'relation',
         'father_name',
         'mother_name',
         'spouse_name',

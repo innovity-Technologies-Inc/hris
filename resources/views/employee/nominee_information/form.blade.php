@@ -41,6 +41,17 @@
                                 </div>
 
                                 <div class="col-lg-4 mb-3">
+                                    <label for="relation" class="form-label">Relation <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control @error('relation') is-invalid @enderror"
+                                           id="relation" name="relation"
+                                           value="{{ isset($employee_nominee_info) ? $employee_nominee_info->relation : old('relation') }}"
+                                           required>
+                                    @error('relation')
+                                    <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+
+                                <div class="col-lg-4 mb-3">
                                     <label class="form-label d-block">Gender <span class="text-danger">*</span></label>
                                     <select class="form-select @error('gender') is-invalid @enderror" name="gender"
                                             id="gender">
