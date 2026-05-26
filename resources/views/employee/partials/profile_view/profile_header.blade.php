@@ -107,15 +107,24 @@
 <!-- System Identifiers Card -->
 <div class="row">
     <div class="col-12">
-        <div class="card border shadow-none mb-3">
-            <div class="card-header bg-light py-2">
-                <h6 class="mb-0 fw-bold">System Identifiers</h6>
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">System Identifiers</h5>
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-4"><label class="data-label">Employee ID</label><span class="data-value">{{ $employee?->applicant_id ?? 'N/A' }}</span></div>
-                    <div class="col-md-4"><label class="data-label">System ID</label><span class="data-value">{{ $employee?->system_id ?? 'N/A' }}</span></div>
-                    <div class="col-md-4"><label class="data-label">Punch Card No</label><span class="data-value">{{ $employee?->punch_card_no ?? 'N/A' }}</span></div>
+                    <div class="col-md-4">
+                        <p class="mb-2"><strong>Employee ID:</strong></p>
+                        <p class="text-muted">{{ $employee?->applicant_id ?? 'N/A' }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="mb-2"><strong>System ID:</strong></p>
+                        <p class="text-muted">{{ $employee?->system_id ?? 'N/A' }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="mb-2"><strong>Punch Card No:</strong></p>
+                        <p class="text-muted">{{ $employee?->punch_card_no ?? 'N/A' }}</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -261,7 +270,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="col-md-2"><label class="data-label">Board / University</label><span class="data-value">${e.board_university || 'N/A'}</span></div>
                 <div class="col-md-2"><label class="data-label">Group / Major</label><span class="data-value">${e.group_major || 'N/A'}</span></div>
                 <div class="col-md-1"><label class="data-label">Year</label><span class="data-value">${e.passing_year || 'N/A'}</span></div>
-                <div class="col-md-1"><label class="data-label">Result</label><span class="data-value">${e.result_grade || 'N/A'} (${e.gpa_cgpa || '0.00'})</span></div>
+                <div class="col-md-1"><label class="data-label">Result</label><span class="data-value">${e.result_grade || 'N/A'}</span></div>
+                <div class="col-md-1"><label class="data-label">GPA / CGPA</label><span class="data-value">${e.gpa_cgpa || '0.00'}</span></div>
             </div></div>
         `);
 
@@ -271,7 +281,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="col-md-3"><label class="data-label">Course Name</label><span class="data-value">${t.course_name || 'N/A'}</span></div>
                 <div class="col-md-2"><label class="data-label">Code</label><span class="data-value">${t.training_code || 'N/A'}</span></div>
                 <div class="col-md-2"><label class="data-label">Institute</label><span class="data-value">${t.institute || 'N/A'}</span></div>
-                <div class="col-md-2"><label class="data-label">Location / Country</label><span class="data-value">${t.location || ''} ${t.country || ''}</span></div>
+                <div class="col-md-1"><label class="data-label">Location</label><span class="data-value">${t.location || 'N/A'}</span></div>
+                <div class="col-md-1"><label class="data-label">Country</label><span class="data-value">${t.country || 'N/A'}</span></div>
+                <div class="col-md-2"><label class="data-label">Duration</label><span class="data-value">${t.duration || 'N/A'}</span></div>
             </div></div>
         `);
 
@@ -290,16 +302,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const n = data.nominee_info;
             sNom.classList.remove('d-none');
             bNom.innerHTML = `<div class="row g-3">
-                <div class="col-md-3"><label class="data-label">Name</label><span class="data-value fw-bold">${n.nominee_name || 'N/A'}</span></div>
+                <div class="col-md-3"><label class="data-label">Nominee Name</label><span class="data-value fw-bold">${n.nominee_name || 'N/A'}</span></div>
                 <div class="col-md-3"><label class="data-label">Relation</label><span class="data-value">${n.relation || 'N/A'}</span></div>
                 <div class="col-md-3"><label class="data-label">Mobile</label><span class="data-value">${n.nominee_mobile || 'N/A'}</span></div>
                 <div class="col-md-3"><label class="data-label">Phone</label><span class="data-value">${n.phone || 'N/A'}</span></div>
-                <div class="col-md-3"><label class="data-label">Gender</label><span class="data-value">${n.gender || 'N/A'}</span></div>
-                <div class="col-md-3"><label class="data-label">DOB</label><span class="data-value">${n.date_of_birth || 'N/A'}</span></div>
-                <div class="col-md-3"><label class="data-label">NID</label><span class="data-value">${n.nid || 'N/A'}</span></div>
-                <div class="col-md-3"><label class="data-label">Birth Reg No</label><span class="data-value">${n.birth_reg_no || 'N/A'}</span></div>
-                <div class="col-md-3"><label class="data-label">Religion</label><span class="data-value">${n.religion || 'N/A'}</span></div>
-                <div class="col-md-3"><label class="data-label">Nationality</label><span class="data-value">${n.nationality || 'N/A'}</span></div>
+                <div class="col-md-2"><label class="data-label">Gender</label><span class="data-value">${n.gender || 'N/A'}</span></div>
+                <div class="col-md-2"><label class="data-label">DOB</label><span class="data-value">${n.date_of_birth || 'N/A'}</span></div>
+                <div class="col-md-2"><label class="data-label">NID</label><span class="data-value">${n.nid || 'N/A'}</span></div>
+                <div class="col-md-2"><label class="data-label">Birth Reg No</label><span class="data-value">${n.birth_reg_no || 'N/A'}</span></div>
+                <div class="col-md-2"><label class="data-label">Religion</label><span class="data-value">${n.religion || 'N/A'}</span></div>
+                <div class="col-md-2"><label class="data-label">Nationality</label><span class="data-value">${n.nationality || 'N/A'}</span></div>
                 <div class="col-md-3"><label class="data-label">Marital Status</label><span class="data-value">${n.marital_status || 'N/A'}</span></div>
                 <div class="col-md-3"><label class="data-label">Blood Group</label><span class="data-value">${n.blood_group || 'N/A'}</span></div>
                 <div class="col-12"><hr class="my-1"></div>
