@@ -68,6 +68,7 @@
                                 <div class="card-header bg-light py-2"><h6 class="mb-0 fw-bold small text-uppercase">Current Office</h6></div>
                                 <div class="card-body">
                                     <div class="mb-2"><label class="data-label">Company</label><span class="data-value fw-bold" id="summary_current_company"></span></div>
+                                    <div class="mb-2"><label class="data-label">Designation</label><span class="data-value" id="summary_current_designation"></span></div>
                                     <div class="mb-2"><label class="data-label">Department / Section</label><span class="data-value" id="summary_current_dept_section"></span></div>
                                     <div class="mb-2"><label class="data-label">Join Date</label><span class="data-value" id="summary_join_date"></span></div>
                                     <div class="mb-0"><label class="data-label">Gross Salary</label><span class="data-value fw-bold text-primary" id="summary_gross_salary"></span></div>
@@ -145,6 +146,11 @@
 </div>
 
 <style>
+    .glass-modal {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
     #summaryViewModalBody .data-label {
         color: #974063 !important;
         font-weight: 600;
