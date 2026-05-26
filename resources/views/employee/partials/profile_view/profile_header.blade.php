@@ -229,15 +229,15 @@ document.addEventListener('DOMContentLoaded', function() {
             if (Object.keys(a).length === 0) return '<div class="col-12"><p class="mb-0 text-muted">N/A</p></div>';
             
             return `
-                <div class="col-md-6 mb-2"><label>Address Line 1</label><span>${a.line_1 || a.address_line || 'N/A'}</span></div>
-                <div class="col-md-3 mb-2"><label>Village</label><span>${a.village || 'N/A'}</span></div>
-                <div class="col-md-3 mb-2"><label>Post Office</label><span>${a.post_office || 'N/A'}</span></div>
-                <div class="col-md-3 mb-2"><label>Thana / Upazila</label><span>${a.thana || 'N/A'}</span></div>
-                <div class="col-md-3 mb-2"><label>District</label><span>${a.district || 'N/A'}</span></div>
-                <div class="col-md-2 mb-2"><label>Division</label><span>${a.division || 'N/A'}</span></div>
-                <div class="col-md-2 mb-2"><label>State</label><span>${a.state || 'N/A'}</span></div>
-                <div class="col-md-2 mb-2"><label>Zip Code</label><span>${a.zip_code || 'N/A'}</span></div>
-                <div class="col-md-12"><label>Country</label><span>${a.country || 'N/A'}</span></div>
+                <div class="col-md-6 mb-2"><label class="data-label">Address Line 1</label><span class="data-value">${a.line_1 || a.address_line || 'N/A'}</span></div>
+                <div class="col-md-3 mb-2"><label class="data-label">Village</label><span class="data-value">${a.village || 'N/A'}</span></div>
+                <div class="col-md-3 mb-2"><label class="data-label">Post Office</label><span class="data-value">${a.post_office || 'N/A'}</span></div>
+                <div class="col-md-3 mb-2"><label class="data-label">Thana / Upazila</label><span class="data-value">${a.thana || 'N/A'}</span></div>
+                <div class="col-md-3 mb-2"><label class="data-label">District</label><span class="data-value">${a.district || 'N/A'}</span></div>
+                <div class="col-md-2 mb-2"><label class="data-label">Division</label><span class="data-value">${a.division || 'N/A'}</span></div>
+                <div class="col-md-2 mb-2"><label class="data-label">State</label><span class="data-value">${a.state || 'N/A'}</span></div>
+                <div class="col-md-2 mb-2"><label class="data-label">Zip Code</label><span class="data-value">${a.zip_code || 'N/A'}</span></div>
+                <div class="col-md-12"><label class="data-label">Country</label><span class="data-value">${a.country || 'N/A'}</span></div>
             `;
         }
 
@@ -251,12 +251,12 @@ document.addEventListener('DOMContentLoaded', function() {
             if (Object.keys(a).length === 0) return '<div class="col-12"><p class="mb-0 text-muted">N/A</p></div>';
 
             return `
-                <div class="col-md-3 mb-2"><label>Reference ID</label><span>${a.emp_id || 'N/A'}</span></div>
-                <div class="col-md-3 mb-2"><label>Reference Name</label><span class="fw-bold text-dark">${a.reference_name || 'N/A'}</span></div>
-                <div class="col-md-3 mb-2"><label>Designation</label><span>${a.reference_designation || 'N/A'}</span></div>
-                <div class="col-md-3 mb-2"><label>Phone / Mobile</label><span>${a.phone || a.mobile || 'N/A'}</span></div>
-                <div class="col-md-3 mb-2"><label>Email</label><span>${a.email || 'N/A'}</span></div>
-                <div class="col-md-9 mb-2"><label>Address</label><span>${a.line_1 || a.address_line || 'N/A'}, ${a.village || ''}, ${a.thana || ''}, ${a.district || ''}, ${a.state || ''} ${a.zip_code || ''}, ${a.country || ''}</span></div>
+                <div class="col-md-3 mb-2"><label class="data-label">Reference ID</label><span class="data-value">${a.emp_id || 'N/A'}</span></div>
+                <div class="col-md-3 mb-2"><label class="data-label">Reference Name</label><span class="data-value fw-bold text-dark">${a.reference_name || 'N/A'}</span></div>
+                <div class="col-md-3 mb-2"><label class="data-label">Designation</label><span class="data-value">${a.reference_designation || 'N/A'}</span></div>
+                <div class="col-md-3 mb-2"><label class="data-label">Phone / Mobile</label><span class="data-value">${a.phone || a.mobile || 'N/A'}</span></div>
+                <div class="col-md-3 mb-2"><label class="data-label">Email</label><span class="data-value">${a.email || 'N/A'}</span></div>
+                <div class="col-md-9 mb-2"><label class="data-label">Address</label><span class="data-value">${a.line_1 || a.address_line || 'N/A'}, ${a.village || ''}, ${a.thana || ''}, ${a.district || ''}, ${a.state || ''} ${a.zip_code || ''}, ${a.country || ''}</span></div>
             `;
         }
         document.getElementById('detailed_reference_address_fields').innerHTML = renderReferenceFields(data.reference_address);
@@ -319,13 +319,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="col-12">
                     <div class="p-3 border rounded bg-light-subtle mb-2">
                         <div class="row g-2">
-                            <div class="col-md-4"><label>Education Title</label><span class="fw-bold text-dark">${edu.education_title || 'N/A'}</span></div>
-                            <div class="col-md-4"><label>Institute</label><span>${edu.institute || 'N/A'}</span></div>
-                            <div class="col-md-4"><label>Group/Major</label><span>${edu.group_major || 'N/A'}</span></div>
-                            <div class="col-md-4"><label>Board/University</label><span>${edu.board_university || 'N/A'}</span></div>
-                            <div class="col-md-2"><label>Year</label><span>${edu.passing_year || 'N/A'}</span></div>
-                            <div class="col-md-2"><label>Result</label><span>${edu.result_grade || 'N/A'}</span></div>
-                            <div class="col-md-2"><label>GPA/CGPA</label><span>${edu.gpa_cgpa || 'N/A'}</span></div>
+                            <div class="col-md-4"><label class="data-label">Education Title</label><span class="data-value fw-bold text-dark">${edu.education_title || 'N/A'}</span></div>
+                            <div class="col-md-4"><label class="data-label">Institute</label><span class="data-value">${edu.institute || 'N/A'}</span></div>
+                            <div class="col-md-4"><label class="data-label">Group/Major</label><span class="data-value">${edu.group_major || 'N/A'}</span></div>
+                            <div class="col-md-4"><label class="data-label">Board/University</label><span class="data-value">${edu.board_university || 'N/A'}</span></div>
+                            <div class="col-md-2"><label class="data-label">Year</label><span class="data-value">${edu.passing_year || 'N/A'}</span></div>
+                            <div class="col-md-2"><label class="data-label">Result</label><span class="data-value">${edu.result_grade || 'N/A'}</span></div>
+                            <div class="col-md-2"><label class="data-label">GPA/CGPA</label><span class="data-value">${edu.gpa_cgpa || 'N/A'}</span></div>
                         </div>
                     </div>
                 </div>
@@ -343,14 +343,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="col-12">
                     <div class="p-3 border rounded bg-light-subtle mb-2">
                         <div class="row g-2">
-                            <div class="col-md-4"><label>Training Title</label><span class="fw-bold text-dark">${trn.training_title || 'N/A'}</span></div>
-                            <div class="col-md-4"><label>Course Name</label><span>${trn.course_name || 'N/A'}</span></div>
-                            <div class="col-md-4"><label>Training Code</label><span>${trn.training_code || 'N/A'}</span></div>
-                            <div class="col-md-4"><label>Institute</label><span>${trn.institute || 'N/A'}</span></div>
-                            <div class="col-md-2"><label>Country</label><span>${trn.country || 'N/A'}</span></div>
-                            <div class="col-md-2"><label>Location</label><span>${trn.location || 'N/A'}</span></div>
-                            <div class="col-md-2"><label>Duration</label><span>${trn.duration || 'N/A'}</span></div>
-                            <div class="col-md-2"><label>From - To</label><span>${trn.from_date || ''} to ${trn.to_date || ''}</span></div>
+                            <div class="col-md-4"><label class="data-label">Training Title</label><span class="data-value fw-bold text-dark">${trn.training_title || 'N/A'}</span></div>
+                            <div class="col-md-4"><label class="data-label">Course Name</label><span class="data-value">${trn.course_name || 'N/A'}</span></div>
+                            <div class="col-md-4"><label class="data-label">Training Code</label><span class="data-value">${trn.training_code || 'N/A'}</span></div>
+                            <div class="col-md-4"><label class="data-label">Institute</label><span class="data-value">${trn.institute || 'N/A'}</span></div>
+                            <div class="col-md-2"><label class="data-label">Country</label><span class="data-value">${trn.country || 'N/A'}</span></div>
+                            <div class="col-md-2"><label class="data-label">Location</label><span class="data-value">${trn.location || 'N/A'}</span></div>
+                            <div class="col-md-2"><label class="data-label">Duration</label><span class="data-value">${trn.duration || 'N/A'}</span></div>
+                            <div class="col-md-2"><label class="data-label">From - To</label><span class="data-value">${trn.from_date || ''} to ${trn.to_date || ''}</span></div>
                         </div>
                     </div>
                 </div>
@@ -368,11 +368,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="col-12">
                     <div class="p-3 border rounded bg-light-subtle mb-2">
                         <div class="row g-2">
-                            <div class="col-md-4"><label>Previous Company</label><span class="fw-bold text-info">${h.company_name || h.company || 'N/A'}</span></div>
-                            <div class="col-md-4"><label>Designation</label><span>${h.designation || 'N/A'}</span></div>
-                            <div class="col-md-4"><label>Duration</label><span>${h.joining_date || h.from_date || 'N/A'} to ${h.end_date || h.to_date || 'Present'}</span></div>
-                            <div class="col-md-12 mt-1"><label>Job Description</label><span class="small text-muted">${h.job_description || 'N/A'}</span></div>
-                            <div class="col-md-12"><label>Achievements</label><span class="small text-muted">${h.achievements || 'N/A'}</span></div>
+                            <div class="col-md-4"><label class="data-label">Previous Company</label><span class="data-value fw-bold text-info">${h.company_name || h.company || 'N/A'}</span></div>
+                            <div class="col-md-4"><label class="data-label">Designation</label><span class="data-value">${h.designation || 'N/A'}</span></div>
+                            <div class="col-md-4"><label class="data-label">Duration</label><span class="data-value">${h.joining_date || h.from_date || 'N/A'} to ${h.end_date || h.to_date || 'Present'}</span></div>
+                            <div class="col-md-12 mt-1"><label class="data-label">Job Description</label><span class="data-value small text-muted">${h.job_description || 'N/A'}</span></div>
+                            <div class="col-md-12"><label class="data-label">Achievements</label><span class="data-value small text-muted">${h.achievements || 'N/A'}</span></div>
                         </div>
                     </div>
                 </div>
@@ -388,27 +388,29 @@ document.addEventListener('DOMContentLoaded', function() {
             sectionNominee.classList.remove('d-none');
             const n = data.nominee_info;
             nomineeBody.innerHTML = `
-                <div class="col-md-3"><label>Nominee Name</label><span class="fw-bold text-dark">${n.nominee_name || 'N/A'}</span></div>
-                <div class="col-md-3"><label>Relation</label><span>${n.relation || 'N/A'}</span></div>
-                <div class="col-md-3"><label>Mobile</label><span>${n.mobile || 'N/A'}</span></div>
-                <div class="col-md-3"><label>Phone</label><span>${n.phone || 'N/A'}</span></div>
-                <div class="col-md-3"><label>Gender</label><span>${n.gender || 'N/A'}</span></div>
-                <div class="col-md-3"><label>DOB</label><span>${n.date_of_birth || 'N/A'}</span></div>
-                <div class="col-md-3"><label>NID</label><span>${n.nid || 'N/A'}</span></div>
-                <div class="col-md-3"><label>Birth Reg No</label><span>${n.birth_reg_no || 'N/A'}</span></div>
-                <div class="col-md-3"><label>Blood Group</label><span>${n.blood_group || 'N/A'}</span></div>
-                <div class="col-md-3"><label>Religion</label><span>${n.religion || 'N/A'}</span></div>
-                <div class="col-md-3"><label>Nationality</label><span>${n.nationality || 'N/A'}</span></div>
-                <div class="col-md-3"><label>Marital Status</label><span>${n.marital_status || 'N/A'}</span></div>
-                <div class="col-12"><hr class="my-1"></div>
-                <div class="col-md-12"><label>Address Line</label><span>${n.present_address_line || 'N/A'}</span></div>
-                <div class="col-md-3"><label>Village</label><span>${n.village || 'N/A'}</span></div>
-                <div class="col-md-3"><label>Post Office</label><span>${n.post_office || 'N/A'}</span></div>
-                <div class="col-md-3"><label>Thana/Upazila</label><span>${n.thana || 'N/A'}</span></div>
-                <div class="col-md-3"><label>District</label><span>${n.district || 'N/A'}</span></div>
-                <div class="col-md-3"><label>State/Division</label><span>${n.state || 'N/A'}</span></div>
-                <div class="col-md-3"><label>Zip Code</label><span>${n.zip_code || 'N/A'}</span></div>
-                <div class="col-md-3"><label>Country</label><span>${n.country || 'N/A'}</span></div>
+                <div class="row g-3">
+                    <div class="col-md-3"><label class="data-label">Nominee Name</label><span class="data-value fw-bold text-dark">${n.nominee_name || 'N/A'}</span></div>
+                    <div class="col-md-3"><label class="data-label">Relation</label><span class="data-value">${n.relation || 'N/A'}</span></div>
+                    <div class="col-md-3"><label class="data-label">Mobile</label><span class="data-value">${n.mobile || 'N/A'}</span></div>
+                    <div class="col-md-3"><label class="data-label">Phone</label><span class="data-value">${n.phone || 'N/A'}</span></div>
+                    <div class="col-md-3"><label class="data-label">Gender</label><span class="data-value">${n.gender || 'N/A'}</span></div>
+                    <div class="col-md-3"><label class="data-label">DOB</label><span class="data-value">${n.date_of_birth || 'N/A'}</span></div>
+                    <div class="col-md-3"><label class="data-label">NID</label><span class="data-value">${n.nid || 'N/A'}</span></div>
+                    <div class="col-md-3"><label class="data-label">Birth Reg No</label><span class="data-value">${n.birth_reg_no || 'N/A'}</span></div>
+                    <div class="col-md-3"><label class="data-label">Blood Group</label><span class="data-value">${n.blood_group || 'N/A'}</span></div>
+                    <div class="col-md-3"><label class="data-label">Religion</label><span class="data-value">${n.religion || 'N/A'}</span></div>
+                    <div class="col-md-3"><label class="data-label">Nationality</label><span class="data-value">${n.nationality || 'N/A'}</span></div>
+                    <div class="col-md-3"><label class="data-label">Marital Status</label><span class="data-value">${n.marital_status || 'N/A'}</span></div>
+                    <div class="col-12"><hr class="my-1"></div>
+                    <div class="col-md-12"><label class="data-label">Address Line</label><span class="data-value">${n.present_address_line || 'N/A'}</span></div>
+                    <div class="col-md-3"><label class="data-label">Village</label><span class="data-value">${n.village || 'N/A'}</span></div>
+                    <div class="col-md-3"><label class="data-label">Post Office</label><span class="data-value">${n.post_office || 'N/A'}</span></div>
+                    <div class="col-md-3"><label class="data-label">Thana/Upazila</label><span class="data-value">${n.thana || 'N/A'}</span></div>
+                    <div class="col-md-3"><label class="data-label">District</label><span class="data-value">${n.district || 'N/A'}</span></div>
+                    <div class="col-md-3"><label class="data-label">State/Division</label><span class="data-value">${n.state || 'N/A'}</span></div>
+                    <div class="col-md-3"><label class="data-label">Zip Code</label><span class="data-value">${n.zip_code || 'N/A'}</span></div>
+                    <div class="col-md-3"><label class="data-label">Country</label><span class="data-value">${n.country || 'N/A'}</span></div>
+                </div>
             `;
         } else {
             sectionNominee.classList.add('d-none');
@@ -436,13 +438,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const s = data.salary_breakdown;
             const currency = s.currency || 'N/A';
             salaryBody.innerHTML = `
-                <div class="col-md-3"><label>Basic Salary</label><span class="fw-bold text-dark">${s.basic_salary || 0} ${currency}</span></div>
-                <div class="col-md-3"><label>House Allowance</label><span>${s.house_allowance || 0} ${currency}</span></div>
-                <div class="col-md-3"><label>Transport Allowance</label><span>${s.transport_allowance || 0} ${currency}</span></div>
-                <div class="col-md-3"><label>Food Allowance</label><span>${s.food_allowance || 0} ${currency}</span></div>
-                <div class="col-md-3"><label>Medical Allowance</label><span>${s.medical_allowance || 0} ${currency}</span></div>
-                <div class="col-md-3"><label>Other Earnings</label><span>${s.other_earnings || 0} ${currency}</span></div>
-                <div class="col-md-6"><label class="text-dark fw-bold">Gross Salary</label><span class="fw-bold fs-5 text-dark">${s.gross_salary || 0} ${currency}</span></div>
+                <div class="col-md-3"><label class="data-label">Basic Salary</label><span class="data-value fw-bold text-dark">${s.basic_salary || 0} ${currency}</span></div>
+                <div class="col-md-3"><label class="data-label">House Allowance</label><span class="data-value">${s.house_allowance || 0} ${currency}</span></div>
+                <div class="col-md-3"><label class="data-label">Transport Allowance</label><span class="data-value">${s.transport_allowance || 0} ${currency}</span></div>
+                <div class="col-md-3"><label class="data-label">Food Allowance</label><span class="data-value">${s.food_allowance || 0} ${currency}</span></div>
+                <div class="col-md-3"><label class="data-label">Medical Allowance</label><span class="data-value">${s.medical_allowance || 0} ${currency}</span></div>
+                <div class="col-md-3"><label class="data-label">Other Earnings</label><span class="data-value">${s.other_earnings || 0} ${currency}</span></div>
+                <div class="col-md-6"><label class="data-label text-dark fw-bold">Gross Salary</label><span class="data-value fw-bold fs-5 text-dark">${s.gross_salary || 0} ${currency}</span></div>
             `;
         } else {
             sectionSalary.classList.add('d-none');
@@ -466,10 +468,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const plansBody = document.getElementById('detailed_plans_body');
         let plansHtml = '';
         if (data.shift && data.shift.length > 0) {
-            data.shift.forEach(s => plansHtml += `<div class="p-2 border rounded mb-2"><span class="small text-muted d-block">Active Shift</span><span class="fw-bold text-dark">${s.name || 'N/A'}</span></div>`);
+            data.shift.forEach(s => plansHtml += `<div class="p-2 border rounded mb-2"><span class="data-value small text-muted d-block">Active Shift</span><span class="data-value fw-bold text-dark">${s.name || 'N/A'}</span></div>`);
         }
         if (data.roster && data.roster.length > 0) {
-            data.roster.filter(r => r.status === 'active').forEach(r => plansHtml += `<div class="p-2 border rounded mb-2"><span class="small text-muted d-block">Active Roster</span><span class="fw-bold text-dark">${r.name || 'N/A'}</span></div>`);
+            data.roster.filter(r => r.status === 'active').forEach(r => plansHtml += `<div class="p-2 border rounded mb-2"><span class="data-value small text-muted d-block">Active Roster</span><span class="data-value fw-bold text-dark">${r.name || 'N/A'}</span></div>`);
         }
         plansBody.innerHTML = plansHtml || '<p class="text-muted">No plans assigned</p>';
 
@@ -478,7 +480,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (data.leave_balances && data.leave_balances.length > 0) {
             leaveInfoBody.innerHTML = data.leave_balances.map(l => `
                 <div class="d-flex justify-content-between align-items-center p-2 border-bottom">
-                    <span class="fw-semibold text-dark">${l.leave_type || 'Leave'}</span>
+                    <span class="data-value fw-semibold text-dark">${l.leave_type || 'Leave'}</span>
                     <span class="badge bg-primary rounded-pill px-3">${l.leave_count || 0} / ${l.total_leave || 0}</span>
                 </div>
             `).join('');
@@ -491,10 +493,10 @@ document.addEventListener('DOMContentLoaded', function() {
             leaveHistoryBody.innerHTML = data.leave_applications.slice(0, 5).map(l => `
                 <div class="p-2 border rounded mb-2 bg-light-subtle">
                     <div class="d-flex justify-content-between mb-1">
-                        <span class="fw-bold text-dark">${l.get_plan?.name || 'Leave'}</span>
+                        <span class="data-value fw-bold text-dark">${l.get_plan?.name || 'Leave'}</span>
                         <span class="badge ${l.status === 'approved' ? 'bg-success' : (l.status === 'pending' ? 'bg-warning' : 'bg-danger')}">${l.status}</span>
                     </div>
-                    <div class="small text-muted"><i class="mdi mdi-calendar-range me-1"></i>${l.from} to ${l.to} (${l.leave_count} days)</div>
+                    <div class="data-value small text-muted"><i class="mdi mdi-calendar-range me-1"></i>${l.from} to ${l.to} (${l.leave_count} days)</div>
                 </div>
             `).join('');
         } else {
