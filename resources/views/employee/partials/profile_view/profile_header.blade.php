@@ -19,7 +19,6 @@
                             <h4 class="m-0 text-dark fs-20 mt-2 mt-md-0">{{ $employee?->first_name ?? 'N/A' }}
                                 {{ $employee?->middle_name ?? '' }} {{ $employee?->last_name ?? '' }}</h4>
                             <p class="my-1 text-muted fs-16">
-                                {{--                                        Senior Software Engineer - --}}
                                 Employee ID: {{ $employee?->applicant_id ?? 'N/A' }}</p>
                             <span class="fs-15 d-inline-flex align-items-center flex-wrap">
                                 <i class="mdi mdi-phone me-2 align-middle"></i>
@@ -30,58 +29,38 @@
                         </div>
                         <div class="ms-auto">
                             <div class="d-flex align-items-center gap-3">
-                                @php
-                                    $isOwner = isset($employee) && (auth()->user()->employee_id == $employee->id || auth()->user()->id == $employee->user_id);
-                                    $canEdit = auth()->user()->can('employee-management.edit');
-                                @endphp
-                                <!-- Edit Login Info Button -->
-                                @if($isOwner || $canEdit)
-                                <button type="button" class="btn text-white d-flex align-items-center" style="background-color: #974063;" data-bs-toggle="modal" data-bs-target="#editLoginInfoModal">
-                                    <i class="mdi mdi-account-key me-1"></i> Edit Login Info
-                                </button>
-                                @endif
-
-                                <!-- Detailed View Button -->
-                                <button type="button" class="btn btn-primary d-flex align-items-center" id="openDetailedView">
-                                    <i class="mdi mdi-account-details me-1"></i> Detailed View
-                                </button>
-
-                                <!-- ID Card Action Button -->
-                                @include('employee.partials.id_card_button', ['employee' => $employee])
-
-                                <!-- Status Toggle -->
                                 @if(auth()->user()->can('employee-management.edit') && auth()->user()->user_type !== 'Employee')
-                                @if($employee?->status === 'pending')
-                                <button type="button" class="btn btn-info text-white d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#reviewProfileModal">
-                                    <i class="mdi mdi-clipboard-check me-1"></i> Review Profile
-                                </button>
-                                @endif
-                                <div class="d-flex align-items-center">
-                                    <span class="me-2 fw-semibold">Status:</span>
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" id="employeeStatusToggle"
-                                            {{ $employee?->status == 'active' ? 'checked' : '' }}
-                                            style="width: 3rem; height: 1.5rem; cursor: pointer;">
-                                        <label class="form-check-label ms-2 fw-bold" for="employeeStatusToggle"
-                                            id="statusLabel"
-                                            style="color: {{ $employee?->status == 'active' ? '#28a745' : '#dc3545' }};">
-                                            {{ ucfirst($employee?->status ?? 'active') }}
-                                        </label>
+                                    @if($employee?->status === 'pending')
+                                    <button type="button" class="btn btn-info text-white d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#reviewProfileModal">
+                                        <i class="mdi mdi-clipboard-check me-1"></i> Review Profile
+                                    </button>
+                                    @endif
+                                    <div class="d-flex align-items-center">
+                                        <span class="me-2 fw-semibold">Status:</span>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="employeeStatusToggle"
+                                                {{ $employee?->status == 'active' ? 'checked' : '' }}
+                                                style="width: 3rem; height: 1.5rem; cursor: pointer;">
+                                            <label class="form-check-label ms-2 fw-bold" for="employeeStatusToggle"
+                                                id="statusLabel"
+                                                style="color: {{ $employee?->status == 'active' ? '#28a745' : '#dc3545' }};">
+                                                {{ ucfirst($employee?->status ?? 'active') }}
+                                            </label>
+                                        </div>
                                     </div>
-                                </div>
                                 @else
-                                <div class="d-flex align-items-center">
-                                    <span class="me-2 fw-semibold">Status:</span>
-                                    @php
-                                        $statusClass = 'bg-success';
-                                        if ($employee?->status == 'inactive') $statusClass = 'bg-danger';
-                                        elseif ($employee?->status == 'incomplete') $statusClass = 'bg-warning text-dark';
-                                        elseif ($employee?->status == 'pending') $statusClass = 'bg-info';
-                                    @endphp
-                                    <span class="badge rounded-pill {{ $statusClass }} px-3 py-2">
-                                        {{ ucfirst($employee?->status ?? 'active') }}
-                                    </span>
-                                </div>
+                                    <div class="d-flex align-items-center">
+                                        <span class="me-2 fw-semibold">Status:</span>
+                                        @php
+                                            $statusClass = 'bg-success';
+                                            if ($employee?->status == 'inactive') $statusClass = 'bg-danger';
+                                            elseif ($employee?->status == 'incomplete') $statusClass = 'bg-warning text-dark';
+                                            elseif ($employee?->status == 'pending') $statusClass = 'bg-info';
+                                        @endphp
+                                        <span class="badge rounded-pill {{ $statusClass }} px-3 py-2">
+                                            {{ ucfirst($employee?->status ?? 'active') }}
+                                        </span>
+                                    </div>
                                 @endif
                             </div>
                         </div>
@@ -92,27 +71,51 @@
     </div>
 </div>
 
+<!-- Employee Action Center -->
+<div class="row">
+    <div class="col-12">
+        <div class="card border shadow-none mb-3">
+            <div class="card-body p-3">
+                <div class="d-flex flex-wrap align-items-center gap-3">
+                    @php
+                        $isOwner = isset($employee) && (auth()->user()->employee_id == $employee->id || auth()->user()->id == $employee->user_id);
+                        $canEdit = auth()->user()->can('employee-management.edit');
+                    @endphp
+                    
+                    <!-- Edit Login Info Button -->
+                    @if($isOwner || $canEdit)
+                    <button type="button" class="btn text-white d-flex align-items-center" style="background-color: #974063;" data-bs-toggle="modal" data-bs-target="#editLoginInfoModal">
+                        <i class="mdi mdi-account-key me-1 fs-18"></i> Edit Login Info
+                    </button>
+                    @endif
+
+                    <!-- Detailed View Button -->
+                    <button type="button" class="btn btn-primary d-flex align-items-center px-4" id="openDetailedView">
+                        <i class="mdi mdi-account-details me-1 fs-18"></i> Detailed View
+                    </button>
+
+                    <!-- ID Card Action Button -->
+                    <div class="ms-md-auto">
+                        @include('employee.partials.id_card_button', ['employee' => $employee])
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- System Identifiers Card -->
 <div class="row">
     <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title mb-0">System Identifiers</h5>
+        <div class="card border shadow-none mb-3">
+            <div class="card-header bg-light py-2">
+                <h6 class="mb-0 fw-bold">System Identifiers</h6>
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-4">
-                        <p class="mb-2"><strong>Employee ID:</strong></p>
-                        <p class="text-muted">{{ $employee?->applicant_id ?? 'N/A' }}</p>
-                    </div>
-                    <div class="col-md-4">
-                        <p class="mb-2"><strong>System ID:</strong></p>
-                        <p class="text-muted">{{ $employee?->system_id ?? 'N/A' }}</p>
-                    </div>
-                    <div class="col-md-4">
-                        <p class="mb-2"><strong>Punch Card No:</strong></p>
-                        <p class="text-muted">{{ $employee?->punch_card_no ?? 'N/A' }}</p>
-                    </div>
+                    <div class="col-md-4"><label class="data-label">Employee ID</label><span class="data-value">{{ $employee?->applicant_id ?? 'N/A' }}</span></div>
+                    <div class="col-md-4"><label class="data-label">System ID</label><span class="data-value">{{ $employee?->system_id ?? 'N/A' }}</span></div>
+                    <div class="col-md-4"><label class="data-label">Punch Card No</label><span class="data-value">{{ $employee?->punch_card_no ?? 'N/A' }}</span></div>
                 </div>
             </div>
         </div>
