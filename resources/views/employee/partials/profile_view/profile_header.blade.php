@@ -212,8 +212,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         const bPlans = document.getElementById('summary_plans_body'); let hPlans = '';
-        if (data.shift?.length > 0) data.shift.forEach(s => hPlans += `<div class="p-1 border-bottom small fw-bold text-dark"><i class="mdi mdi-clock-outline me-1 text-primary"></i>${s.name}</div>`);
-        if (data.roster?.length > 0) data.roster.filter(r => r.status === 'active').forEach(r => hPlans += `<div class="p-1 border-bottom small fw-bold text-dark"><i class="mdi mdi-calendar-refresh me-1 text-info"></i>${r.name}</div>`);
+        if (data.shift?.length > 0) data.shift.forEach(s => hPlans += `<div class="p-1 border-bottom small fw-bold text-dark"><i class="mdi mdi-clock-outline me-1 text-primary"></i>${s.get_plan?.name || 'N/A'}</div>`);
+        if (data.roster?.length > 0) data.roster.filter(r => r.status === 'active').forEach(r => hPlans += `<div class="p-1 border-bottom small fw-bold text-dark"><i class="mdi mdi-calendar-refresh me-1 text-info"></i>${r.get_plan?.name || 'N/A'}</div>`);
         bPlans.innerHTML = hPlans || '<p class="text-muted small">No plans assigned</p>';
 
         let totalYears = 0;
@@ -415,8 +415,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         const bPlans = document.getElementById('detailed_plans_body'); let hPlans = '';
-        if (data.shift?.length > 0) data.shift.forEach(s => hPlans += `<div class="p-2 border rounded mb-2"><span class="data-value small text-muted d-block">Active Shift</span><span class="data-value fw-bold text-dark">${s.name || 'N/A'}</span></div>`);
-        if (data.roster?.length > 0) data.roster.filter(r => r.status === 'active').forEach(r => hPlans += `<div class="p-2 border rounded mb-2"><span class="data-value small text-muted d-block">Active Roster</span><span class="data-value fw-bold text-dark">${r.name || 'N/A'}</span></div>`);
+        if (data.shift?.length > 0) data.shift.forEach(s => hPlans += `<div class="p-2 border rounded mb-2"><span class="data-value small text-muted d-block">Active Shift</span><span class="data-value fw-bold text-dark">${s.get_plan?.name || 'N/A'}</span></div>`);
+        if (data.roster?.length > 0) data.roster.filter(r => r.status === 'active').forEach(r => hPlans += `<div class="p-2 border rounded mb-2"><span class="data-value small text-muted d-block">Active Roster</span><span class="data-value fw-bold text-dark">${r.get_plan?.name || 'N/A'}</span></div>`);
         bPlans.innerHTML = hPlans || '<p class="text-muted">No plans assigned</p>';
 
         const bLInfo = document.getElementById('detailed_leave_info_body');

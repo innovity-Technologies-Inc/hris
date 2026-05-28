@@ -17,7 +17,7 @@
         .label { font-weight: bold; color: #974063; width: 20%; font-size: 7px; text-transform: uppercase; }
         .value { color: #222; width: 30%; font-weight: 500; }
         .address-box { background-color: #fcfcfc; padding: 6px; border: 1px solid #eee; border-radius: 2px; width: 100%; margin-bottom: 5px; }
-        .footer { margin-top: 15px; text-align: center; font-size: 6px; color: #999; border-top: 1px solid #eee; padding-top: 4px; }
+        .footer { margin-top: 15px; text-align: center; font-size: 6px; color: #999; border-top: 1px solid #eee; padding-top: 4px; } 
         .badge { display: inline-block; padding: 1px 3px; background-color: #f0f0f0; border: 1px solid #ddd; border-radius: 2px; margin-right: 2px; font-size: 6px; }
         .badge-success { background-color: #d4edda; color: #155724; border-color: #c3e6cb; }
         .badge-danger { background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; }
@@ -85,11 +85,10 @@
     <div class="address-box">
         @php $present = (object) $employee->present_address; @endphp
         <table class="info-grid">
-            <tr><td class="label">Address Line</td><td class="value" colspan="3">{{ $present->line_1 ?? $present->address_line ?? 'N/A' }}</td></tr>
-            <tr><td class="label">Village</td><td class="value">{{ $present->village ?? 'N/A' }}</td><td class="label">Post Office</td><td class="value">{{ $present->post_office ?? 'N/A' }}</td></tr>
-            <tr><td class="label">Thana</td><td class="value">{{ $present->thana ?? 'N/A' }}</td><td class="label">District</td><td class="value">{{ $present->district ?? 'N/A' }}</td></tr>
-            <tr><td class="label">Division</td><td class="value">{{ $present->division ?? 'N/A' }}</td><td class="label">State</td><td class="value">{{ $present->state ?? 'N/A' }}</td></tr>
-            <tr><td class="label">Zip Code</td><td class="value">{{ $present->zip_code ?? 'N/A' }}</td><td class="label">Country</td><td class="value">{{ $present->country ?? 'N/A' }}</td></tr>
+            <tr><td class="label">Address Line</td><td class="value">{{ $present->line_1 ?? $present->address_line ?? 'N/A' }}</td><td class="label">Village</td><td class="value">{{ $present->village ?? 'N/A' }}</td></tr>
+            <tr><td class="label">Post Office</td><td class="value">{{ $present->post_office ?? 'N/A' }}</td><td class="label">Thana</td><td class="value">{{ $present->thana ?? 'N/A' }}</td></tr>
+            <tr><td class="label">District</td><td class="value">{{ $present->district ?? 'N/A' }}</td><td class="label">Division</td><td class="value">{{ $present->division ?? 'N/A' }}</td></tr>
+            <tr><td class="label">State</td><td class="value">{{ $present->state ?? 'N/A' }}</td><td class="label">Zip / Country</td><td class="value">{{ $present->zip_code ?? '' }} {{ $present->country ?? 'N/A' }}</td></tr>
         </table>
     </div>
 
@@ -98,11 +97,10 @@
     <div class="address-box">
         @php $perm = (object) ($employee->permanent_address ?? $employee->present_address); @endphp
         <table class="info-grid">
-            <tr><td class="label">Address Line</td><td class="value" colspan="3">{{ $perm->line_1 ?? $perm->address_line ?? 'N/A' }}</td></tr>
-            <tr><td class="label">Village</td><td class="value">{{ $perm->village ?? 'N/A' }}</td><td class="label">Post Office</td><td class="value">{{ $perm->post_office ?? 'N/A' }}</td></tr>
-            <tr><td class="label">Thana</td><td class="value">{{ $perm->thana ?? 'N/A' }}</td><td class="label">District</td><td class="value">{{ $perm->district ?? 'N/A' }}</td></tr>
-            <tr><td class="label">Division</td><td class="value">{{ $perm->division ?? 'N/A' }}</td><td class="label">State</td><td class="value">{{ $perm->state ?? 'N/A' }}</td></tr>
-            <tr><td class="label">Zip Code</td><td class="value">{{ $perm->zip_code ?? 'N/A' }}</td><td class="label">Country</td><td class="value">{{ $perm->country ?? 'N/A' }}</td></tr>
+            <tr><td class="label">Address Line</td><td class="value">{{ $perm->line_1 ?? $perm->address_line ?? 'N/A' }}</td><td class="label">Village</td><td class="value">{{ $perm->village ?? 'N/A' }}</td></tr>
+            <tr><td class="label">Post Office</td><td class="value">{{ $perm->post_office ?? 'N/A' }}</td><td class="label">Thana</td><td class="value">{{ $perm->thana ?? 'N/A' }}</td></tr>
+            <tr><td class="label">District</td><td class="value">{{ $perm->district ?? 'N/A' }}</td><td class="label">Division</td><td class="value">{{ $perm->division ?? 'N/A' }}</td></tr>
+            <tr><td class="label">State</td><td class="value">{{ $perm->state ?? 'N/A' }}</td><td class="label">Zip / Country</td><td class="value">{{ $perm->zip_code ?? '' }} {{ $perm->country ?? 'N/A' }}</td></tr>
         </table>
     </div>
 
@@ -115,7 +113,7 @@
                 <tr><td class="label">Name</td><td class="value">{{ $ref->reference_name ?? 'N/A' }}</td><td class="label">Ref ID</td><td class="value">{{ $ref->emp_id ?? 'N/A' }}</td></tr>
                 <tr><td class="label">Designation</td><td class="value">{{ $ref->reference_designation ?? 'N/A' }}</td><td class="label">Contact</td><td class="value">{{ $ref->mobile ?? $ref->phone ?? 'N/A' }}</td></tr>
                 <tr><td class="label">Email</td><td class="value" colspan="3">{{ $ref->email ?? 'N/A' }}</td></tr>
-                <tr><td class="label">Address</td><td class="value" colspan="3">{{ $ref->line_1 ?? $ref->address_line ?? '' }}, {{ $ref->village ?? '' }}, {{ $ref->thana ?? '' }}, {{ $ref->district ?? '' }}, {{ $ref->state ?? '' }}, {{ $ref->country ?? '' }}</td></tr>
+                <tr><td class="label">Address</td><td class="value" colspan="3">{{ $ref->line_1 ?? $ref->address_line ?? '' }}, {{ $ref->village ?? '' }}, {{ $ref->thana ?? '' }}, {{ $ref->district ?? '' }}, {{ $ref->country ?? '' }}</td></tr>
             </table>
         @else
             N/A
@@ -133,9 +131,9 @@
     </table>
     <div class="sub-header">Joining Details</div>
     <table class="info-grid">
-        <tr><td class="label">Company</td><td class="value">{{ $officeInfo->getJoiningCompany?->name ?? 'N/A' }}</td><td class="label">Business Unit</td><td class="value">{{ $officeInfo->getJoiningBusinessUnit?->name ?? 'N/A' }}</td></tr>
-        <tr><td class="label">Division</td><td class="value">{{ $officeInfo->getJoiningDivision?->name ?? 'N/A' }}</td><td class="label">Department</td><td class="value">{{ $officeInfo->getJoiningDepartment?->department_name ?? 'N/A' }}</td></tr>
-        <tr><td class="label">Section</td><td class="value">{{ $officeInfo->getJoiningSection?->name ?? 'N/A' }}</td><td class="label">Designation</td><td class="value">{{ $officeInfo->getJoiningDesignation?->company_designation ?? 'N/A' }}</td></tr>
+        <tr><td class="label">Joining Company</td><td class="value">{{ $officeInfo->getJoiningCompany?->name ?? 'N/A' }}</td><td class="label">Business Unit</td><td class="value">{{ $officeInfo->getJoiningBusinessUnit?->name ?? 'N/A' }}</td></tr>
+        <tr><td class="label">Joining Division</td><td class="value">{{ $officeInfo->getJoiningDivision?->name ?? 'N/A' }}</td><td class="label">Department</td><td class="value">{{ $officeInfo->getJoiningDepartment?->department_name ?? 'N/A' }}</td></tr>
+        <tr><td class="label">Joining Section</td><td class="value">{{ $officeInfo->getJoiningSection?->name ?? 'N/A' }}</td><td class="label">Designation</td><td class="value">{{ $officeInfo->getJoiningDesignation?->company_designation ?? 'N/A' }}</td></tr>        
         <tr><td class="label">Date of Join</td><td class="value">{{ $officeInfo->date_of_join ?? 'N/A' }}</td><td></td><td></td></tr>
     </table>
     <div class="sub-header">Current Position</div>
@@ -173,9 +171,8 @@
         <div class="entry-card">
             <table class="info-grid">
                 <tr><td class="label">Title</td><td class="value">{{ $edu['education_title'] ?? 'N/A' }}</td><td class="label">Institute</td><td class="value">{{ $edu['institute'] ?? 'N/A' }}</td></tr>
-                <tr><td class="label">Board / Univ</td><td class="value">{{ $edu['board_university'] ?? 'N/A' }}</td><td class="label">Group / Major</td><td class="value">{{ $edu['group_major'] ?? 'N/A' }}</td></tr>
-                <tr><td class="label">Year</td><td class="value">{{ $edu['passing_year'] ?? 'N/A' }}</td><td class="label">Result</td><td class="value">{{ $edu['result_grade'] ?? 'N/A' }}</td></tr>
-                <tr><td class="label">GPA / CGPA</td><td class="value">{{ $edu['gpa_cgpa'] ?? '0.00' }}</td><td></td><td></td></tr>
+                <tr><td class="label">Board</td><td class="value">{{ $edu['board_university'] ?? 'N/A' }}</td><td class="label">Major</td><td class="value">{{ $edu['group_major'] ?? 'N/A' }}</td></tr>
+                <tr><td class="label">Passing Year</td><td class="value">{{ $edu['passing_year'] ?? 'N/A' }}</td><td class="label">Result</td><td class="value">{{ $edu['result_grade'] ?? 'N/A' }} ({{ $edu['gpa_cgpa'] ?? '0.00' }})</td></tr>
             </table>
         </div>
     @endforeach
@@ -190,7 +187,7 @@
                 <tr><td class="label">Title</td><td class="value">{{ $trn['training_title'] ?? 'N/A' }}</td><td class="label">Course</td><td class="value">{{ $trn['course_name'] ?? 'N/A' }}</td></tr>
                 <tr><td class="label">Code</td><td class="value">{{ $trn['training_code'] ?? 'N/A' }}</td><td class="label">Institute</td><td class="value">{{ $trn['institute'] ?? 'N/A' }}</td></tr>
                 <tr><td class="label">Location</td><td class="value">{{ $trn['location'] ?? 'N/A' }}</td><td class="label">Country</td><td class="value">{{ $trn['country'] ?? 'N/A' }}</td></tr>
-                <tr><td class="label">Duration</td><td class="value" colspan="3">{{ $trn['duration'] ?? 'N/A' }} ({{ $trn['from_date'] ?? '' }} - {{ $trn['to_date'] ?? '' }})</td></tr>
+                <tr><td class="label">Duration</td><td class="value">{{ $trn['duration'] ?? 'N/A' }}</td><td class="label">Period</td><td class="value">{{ $trn['from_date'] ?? '' }} - {{ $trn['to_date'] ?? '' }}</td></tr>
             </table>
         </div>
     @endforeach
@@ -203,12 +200,12 @@
         <div class="entry-card">
             <table class="info-grid">
                 <tr><td class="label">Company</td><td class="value">{{ $history['company_name'] ?? $history['company'] ?? 'N/A' }}</td><td class="label">Designation</td><td class="value">{{ $history['designation'] ?? 'N/A' }}</td></tr>
-                <tr><td class="label">Join Date</td><td class="value">{{ $history['joining_date'] ?? $history['from_date'] ?? 'N/A' }}</td><td class="label">End Date</td><td class="value">{{ $history['end_date'] ?? $history['to_date'] ?? 'Present' }}</td></tr>
+                <tr><td class="label">Join Date</td><td class="value">{{ $history['joining_date'] ?? $history['from_date'] ?? 'N/A' }}</td><td class="label">End Date</td><td class="value">{{ $history['end_date'] ?? $history['to_date'] ?? 'Present' }}</td></tr>      
                 @if(!empty($history['job_description']))
-                <tr><td class="label">Description</td><td class="value" colspan="3">{{ $history['job_description'] }}</td></tr>
+                <tr><td class="label">Description</td><td class="value" colspan="3">{{ $history['job_description'] }}</td></tr>      
                 @endif
                 @if(!empty($history['achievements']))
-                <tr><td class="label">Achievements</td><td class="value" colspan="3">{{ $history['achievements'] }}</td></tr>
+                <tr><td class="label">Achievements</td><td class="value" colspan="3">{{ $history['achievements'] }}</td></tr>        
                 @endif
             </table>
         </div>
@@ -247,9 +244,9 @@
     @if($employee->salaryBreakdown)
     <div class="section-title">Salary Breakdown</div>
     <table class="info-grid">
-        @php 
-            $s = $employee->salaryBreakdown; 
-            $cur = $employee->currency ?? ''; 
+        @php
+            $s = $employee->salaryBreakdown;
+            $cur = $employee->currency ?? '';
             $totB = array_sum([$s->house_allowance ?? 0, $s->transport_allowance ?? 0, $s->food_allowance ?? 0, $s->medical_allowance ?? 0, $s->other_earnings ?? 0]);
         @endphp
         <tr><td class="label">Basic Salary</td><td class="value">{{ number_format($s->basic_salary ?? 0, 2) }} {{ $cur }}</td><td class="label">House Allow</td><td class="value">{{ number_format($s->house_allowance ?? 0, 2) }} {{ $cur }}</td></tr>
@@ -264,7 +261,7 @@
     <div class="address-box">
         @php $elig = $employee->employeeEligibility; @endphp
         @if($elig)
-            <p style="margin-bottom: 5px;"><strong>Active Policies:</strong> 
+            <p style="margin-bottom: 5px;"><strong>Active Policies:</strong>
             @if($elig->shift_plan_status === 'active') <span class="badge">Shift</span> @endif
             @if($elig->leave_plan_status === 'active') <span class="badge">Leave</span> @endif
             @if($elig->ot_plan_status === 'active') <span class="badge">OT</span> @endif
@@ -274,9 +271,9 @@
             </p>
         @endif
         @if($employee->shift->count() > 0 || $employee->roster->where('status', 'active')->count() > 0)
-            <p><strong>Assigned Plans:</strong> 
-            @foreach($employee->shift as $s) <span class="badge">{{ $s->name }} (Shift)</span> @endforeach
-            @foreach($employee->roster->where('status', 'active') as $r) <span class="badge">{{ $r->name }} (Roster)</span> @endforeach
+            <p><strong>Assigned Plans:</strong>
+            @foreach($employee->shift as $s) <span class="badge">{{ $s->getPlan?->name }} (Shift)</span> @endforeach
+            @foreach($employee->roster->where('status', 'active') as $r) <span class="badge">{{ $r->getPlan?->name }} (Roster)</span> @endforeach
             </p>
         @endif
     </div>

@@ -152,8 +152,8 @@ class EmployeeProfileController extends Controller
                 'salaryBreakdown',
                 'bankAccount.getBank',
                 'bankAccount.getBranch',
-                'shift',
-                'roster',
+                'shift.getPlan',
+                'roster.getPlan',
                 'offDayPlan',
                 'leaveApplications.getPlan',
                 'leaveBalances'
