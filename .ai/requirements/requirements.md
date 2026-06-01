@@ -207,6 +207,29 @@ A comprehensive Human Resource Management System (HRMS) built with Laravel 12, f
     - **Content**: A professional PDF document of the detailed employee profile.
     - **Implementation**: Use `Spatie Browsershot` (consistent with ID Card and Salary modules).
 
+### 🆔 NID Verification Module
+- **Goal**: Verify employee National ID (NID) against a verification service and display verification status.
+- **UI Integration**:
+    - Add a "NID Verification" button in the employee profile header action center, positioned beside the "Summary View" button.
+    - The button is only visible to users who are NOT type 'Employee' and have the `nid verification` permission.
+- **Verification Workflow**:
+    - Clicking the button opens a modal.
+    - **Modal Content**:
+        - A read-only input box showing the employee's NID number.
+        - A "Verify NID" button.
+    - **Process**:
+        - Clicking "Verify NID" calls an API endpoint.
+        - **Initial Implementation**: Use a dummy verification function that simulates an API call and returns a success response after a short delay.
+        - On success: Show a success message and update the employee's verification status in the database.
+- **Verification Status & Badge**:
+    - Add a "Verified" badge (with a checkmark icon) in the employee profile header next to their name if NID is verified.
+- **Access Control**:
+    - New permission: `nid verification` under employee management.
+    - Restricted for `user_type = 'Employee'`.
+- **Database Changes**:
+    - Add `nid` column to the `employees` table (if not exists).
+    - Add `is_nid_verified` boolean column to the `employees` table.
+
 ## Technical Constraints
 - **Framework**: Laravel 12.
 - **PHP Version**: 8.2+ (Strict Typing).

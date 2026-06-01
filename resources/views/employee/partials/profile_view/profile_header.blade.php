@@ -16,8 +16,14 @@
                             ) !!}
                         </div>
                         <div class="overflow-hidden ms-md-4 ms-0">
-                            <h4 class="m-0 text-dark fs-20 mt-2 mt-md-0">{{ $employee?->first_name ?? 'N/A' }}
-                                {{ $employee?->middle_name ?? '' }} {{ $employee?->last_name ?? '' }}</h4>
+                            <h4 class="m-0 text-dark fs-20 mt-2 mt-md-0">
+                                {{ $employee?->first_name ?? 'N/A' }} {{ $employee?->middle_name ?? '' }} {{ $employee?->last_name ?? '' }}
+                                @if($employee?->is_nid_verified)
+                                    <span class="badge bg-success ms-1 p-1 rounded-circle" title="NID Verified">
+                                        <i class="mdi mdi-check text-white fs-12"></i>
+                                    </span>
+                                @endif
+                            </h4>
                             <p class="my-1 text-muted fs-16">
                                 Employee ID: {{ $employee?->applicant_id ?? 'N/A' }}</p>
                             <span class="fs-15 d-inline-flex align-items-center flex-wrap">
@@ -94,6 +100,13 @@
                         <i class="mdi mdi-text-box-search-outline me-1 fs-18"></i> Summary View
                     </button>
 
+                    <!-- NID Verification Button -->
+                    @if(auth()->user()->can('employee-management.nid-verification') && auth()->user()->user_type !== 'Employee')
+                    <button type="button" class="btn btn-info text-white d-flex align-items-center fw-semibold" data-bs-toggle="modal" data-bs-target="#nidVerificationModal">
+                        <i class="mdi mdi-card-account-details-outline me-1 fs-18"></i> NID Verification
+                    </button>
+                    @endif
+
                     <!-- Detailed View Button -->
                     <button type="button" class="btn btn-primary d-flex align-items-center px-4" id="openDetailedView">
                         <i class="mdi mdi-account-details me-1 fs-18"></i> Detailed View
@@ -140,6 +153,7 @@
 @include('employee.partials.modal.review_profile_modal')
 @include('employee.partials.modal.detailed_view_modal')
 @include('employee.partials.modal.summary_view_modal')
+@include('employee.partials.modal.nid_verification_modal')
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

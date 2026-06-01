@@ -42,6 +42,8 @@ class Employee extends Model
         'visa_expiry',
         'work_expiry',
         'residency_id_number',
+        'nid',
+        'is_nid_verified',
         'date_of_birth',
         'birth_country',
         'birth_reg_no',
@@ -67,6 +69,7 @@ class Employee extends Model
         'present_address' => 'array',
         'permanent_address' => 'array',
         'reference_address' => 'array',
+        'is_nid_verified' => 'boolean',
     ];
 
     public function shift(){

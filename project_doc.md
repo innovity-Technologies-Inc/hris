@@ -97,6 +97,15 @@ A dedicated analytical view providing a 360-degree overview of an employee's car
 - **Operations**: Requisitions (applications), approvals, and allocations.
 - **Tracking**: History of vehicle assignments and driver activities.
 
+### 🆔 NID Verification Module
+- **Purpose**: Verify employee National ID (NID) against a verification service.
+- **Workflow**:
+    - "NID Verification" button in the profile header (restricted to authorized roles).
+    - Modal display of employee's NID number.
+    - Asynchronous verification via dummy API (simulating EC verification).
+    - Dynamic "Verified" badge display on the profile header upon success.
+- **Access Control**: Requires `nid verification` permission and `user_type != 'Employee'`.
+
 ---
 
 ## 🔐 Security & Access Control

@@ -64,17 +64,16 @@
 
 **Status**: ✅ SUCCESS
 
-## 2026-05-25 (Final Styling & Layout Correction)
+## 2026-06-01 (NID Verification Module)
 
-**Goal**: Standardize the Detailed View Modal and PDF to ensure each section card occupies the full row width, with fields restored to their multi-column grid layout for professional consistency.
+**Goal**: Implement NID verification with dummy API, modal UI, and permission-based access control.
 
-**Exact Command**: Manual verification of `detailed_view_modal.blade.php` and `profile_pdf.blade.php` against user requirements.
+**Exact Command**: `php artisan config:clear; $env:DB_CONNECTION='sqlite'; $env:DB_DATABASE=':memory:'; php artisan test tests/Feature/Employee/NIDVerificationTest.php`
 
 **Results**:
-- `Every section card wrapped in its own row (col-12)`: ✅ VERIFIED
-- `Internal field grids restored (col-md-3/4/6)`: ✅ VERIFIED
-- `Side-by-side sub-sections restored for Policies and Leave`: ✅ VERIFIED
-- `PDF Template synchronized with modal structure`: ✅ VERIFIED
+- `it allows authorized users to verify NID`: ✅ PASSED
+- `it denies NID verification for users without permission`: ✅ PASSED
+- `it denies NID verification for Employee user type even with permission`: ✅ PASSED
 
 **Status**: ✅ SUCCESS
 

@@ -374,11 +374,13 @@ Route::prefix('employees')->middleware('auth')->group(function () {
         Route::get('employee-dashboard/{id}', 'show')->name('employee.dashboard.show');
     });
 
+    Route::post('profile/{id}/verify-nid', [\App\Http\Controllers\Employee\NIDVerificationController::class, 'verify'])->name('employee.profile.verify_nid');
+
     Route::controller(EmployeeProfileController::class)->group(function () {
         Route::get('profile/{id}/general-informations', 'profileView')->name('employee.profile.general_informations');
         Route::get('profile/{id}/office-informations', 'showOfficeInfo')->name('employee.profile.office_informations');
         Route::get('profile/{id}/detailed-json', 'getDetailedProfileJson')->name('employee.profile.detailed_json');
-        Route::get('profile/{id}/download-pdf', 'downloadDetailedProfilePdf')->name('employee.profile.download_pdf');
+        Route::get('profile/{id}/download-pdf', 'downloadProfilePdf')->name('employee.profile.download_pdf');
 
         Route::middleware('permission:employee-management.view')->group(function () {
             Route::get('/', 'index')->name('employee.index');
