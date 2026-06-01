@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
             spinner.classList.remove('d-none');
             icon.classList.add('d-none');
 
-            axios.post(`{{ route('employee.profile.verify_nid', '') }}/${employeeId}`)
+            axios.post("{{ route('employee.profile.verify_nid', $employee->id) }}")
                 .then(response => {
                     if (response.data.success) {
                         Swal.fire({
