@@ -177,6 +177,10 @@
                                                     <td class="fw-semibold">Residency ID</td>
                                                     <td>{{ $employee->residency_id_number ?? 'N/A' }}</td>
                                                 </tr>
+                                                <tr>
+                                                    <td class="fw-semibold">National ID (NID)</td>
+                                                    <td>{{ $employee->nid ?? 'N/A' }}</td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>

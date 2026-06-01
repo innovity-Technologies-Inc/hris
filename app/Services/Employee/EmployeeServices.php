@@ -147,6 +147,7 @@ class EmployeeServices
             'visa_expiry' => 'nullable|date|after:today',
             'work_expiry' => 'nullable|date|after:today',
             'residency_id_number' => 'nullable|string|max:255',
+            'nid' => 'nullable|string|max:255',
 
             // Birth Information
             'date_of_birth' => 'required|date|before:today',
