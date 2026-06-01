@@ -19,8 +19,8 @@
                             <h4 class="m-0 text-dark fs-20 mt-2 mt-md-0">
                                 {{ $employee?->first_name ?? 'N/A' }} {{ $employee?->middle_name ?? '' }} {{ $employee?->last_name ?? '' }}
                                 @if($employee?->is_nid_verified)
-                                    <span class="badge bg-success ms-1 p-1 rounded-circle" title="NID Verified">
-                                        <i class="mdi mdi-check text-white fs-12"></i>
+                                    <span class="badge bg-success ms-1 d-inline-flex align-items-center px-2 py-1" title="NID Verified">
+                                        <i class="mdi mdi-check-circle-outline me-1 fs-14"></i> Verified
                                     </span>
                                 @endif
                             </h4>
@@ -100,17 +100,17 @@
                         <i class="mdi mdi-text-box-search-outline me-1 fs-18"></i> Summary View
                     </button>
 
-                    <!-- NID Verification Button -->
-                    @if(auth()->user()->can('employee-management.nid-verification') && auth()->user()->user_type !== 'Employee')
-                    <button type="button" class="btn btn-info text-white d-flex align-items-center fw-semibold" data-bs-toggle="modal" data-bs-target="#nidVerificationModal">
-                        <i class="mdi mdi-card-account-details-outline me-1 fs-18"></i> NID Verification
-                    </button>
-                    @endif
-
                     <!-- Detailed View Button -->
                     <button type="button" class="btn btn-primary d-flex align-items-center px-4" id="openDetailedView">
                         <i class="mdi mdi-account-details me-1 fs-18"></i> Detailed View
                     </button>
+
+                    <!-- NID Verification Button -->
+                    @if(auth()->user()->can('employee-management.nid-verification') && auth()->user()->user_type !== 'Employee' && !$employee?->is_nid_verified)
+                    <button type="button" class="btn btn-info text-white d-flex align-items-center fw-semibold" data-bs-toggle="modal" data-bs-target="#nidVerificationModal">
+                        <i class="mdi mdi-card-account-details-outline me-1 fs-18"></i> NID Verification
+                    </button>
+                    @endif
 
                     <!-- ID Card Action Button -->
                     <div class="ms-md-auto">
