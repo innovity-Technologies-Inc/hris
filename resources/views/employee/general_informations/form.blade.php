@@ -383,6 +383,17 @@
 
                             <div class="row">
                                 <div class="col-lg-4 mb-3">
+                                    <label for="nid" class="form-label">National ID (NID)</label>
+                                    <input type="text"
+                                        class="form-control @error('nid') is-invalid @enderror"
+                                        id="nid" name="nid"
+                                        value="{{ isset($employee) ? $employee->nid : old('nid') }}">
+                                    @error('nid')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+
+                                <div class="col-lg-4 mb-3">
                                     <label for="license_no" class="form-label">License Number</label>
                                     <input type="text" class="form-control @error('license_no') is-invalid @enderror"
                                         id="license_no" name="license_no"
@@ -402,7 +413,6 @@
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
-
                             </div>
 
                             <div class="row">
@@ -433,17 +443,6 @@
                                         id="residency_id_number" name="residency_id_number"
                                         value="{{ isset($employee) ? $employee->residency_id_number : old('residency_id_number') }}">
                                     @error('residency_id_number')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-
-                                <div class="col-lg-4 mb-3">
-                                    <label for="nid" class="form-label">National ID (NID)</label>
-                                    <input type="text"
-                                        class="form-control @error('nid') is-invalid @enderror"
-                                        id="nid" name="nid"
-                                        value="{{ isset($employee) ? $employee->nid : old('nid') }}">
-                                    @error('nid')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
