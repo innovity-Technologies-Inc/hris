@@ -415,7 +415,7 @@ Route::prefix('employees')->middleware('auth')->group(function () {
     });
 
     Route::get('reports', [\App\Http\Controllers\Employee\EmployeeReportController::class, 'index'])->name('employee.reports');
-    Route::get('reports/hierarchy-data/{type}', [\App\Http\Controllers\Employee\EmployeeReportController::class, 'getFilteredHierarchyData'])->name('employee.reports.filtered_data');
+    Route::get('reports/drill-down', [\App\Http\Controllers\Employee\EmployeeReportController::class, 'getHierarchyDrillDown'])->name('employee.reports.drill_down');
 
     // Employee ID Card Routes
     Route::controller(\App\Http\Controllers\Employee\EmployeeIdCardController::class)->group(function () {

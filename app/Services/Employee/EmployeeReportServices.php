@@ -64,79 +64,78 @@ class EmployeeReportServices
     }
 
     /**
-     * Get Company-wise employee distribution.
+     * Get data for progressive hierarchy drill-down.
      */
-    public function getCompanyDistribution(): array
-    {
-        $data = EmployeeOfficeInfo::with('getCurrentCompany')
-            ->select('current_company_id', DB::raw('count(*) as count'))
-            ->groupBy('current_company_id')
-            ->get();
-
-        return [
-            'labels' => $data->map(fn($item) => $item->getCurrentCompany->name ?? 'Unknown')->toArray(),
-            'data' => $data->pluck('count')->toArray(),
-        ];
-    }
-
-    /**
-     * Get Hierarchy-wise distribution (Branches/Divisions/Departments/Sections).
-     */
-    public function getHierarchyDistribution(string $type = 'division', array $filters = []): array
+    public function getDrillDownData(string $level = 'company', ?int $parentId = null): array
     {
         $mapping = [
-            'branch' => [
+            'company' => [
+                'relation' => 'getCurrentCompany',
+                'column' => 'current_company_id',
+                'labelCol' => 'name',
+                'title' => 'Company-wise Distribution',
+                'nextLevel' => 'business_unit',
+                'parentFilter' => null
+            ],
+            'business_unit' => [
                 'relation' => 'getCurrentBusinessUnit',
                 'column' => 'current_business_unit_id',
-                'labelCol' => 'name'
+                'labelCol' => 'name',
+                'title' => 'Business Unit Distribution',
+                'nextLevel' => 'division',
+                'parentFilter' => 'current_company_id'
             ],
             'division' => [
                 'relation' => 'getCurrentDivision',
                 'column' => 'current_division_id',
-                'labelCol' => 'name'
+                'labelCol' => 'name',
+                'title' => 'Division Breakdown',
+                'nextLevel' => 'department',
+                'parentFilter' => 'current_business_unit_id' // Drill down from BU
             ],
             'department' => [
                 'relation' => 'getCurrentDepartment',
                 'column' => 'current_department_id',
-                'labelCol' => 'department_name'
+                'labelCol' => 'department_name',
+                'title' => 'Department Breakdown',
+                'nextLevel' => 'section',
+                'parentFilter' => 'current_division_id'
             ],
             'section' => [
                 'relation' => 'getCurrentSection',
                 'column' => 'current_section_id',
-                'labelCol' => 'name'
+                'labelCol' => 'name',
+                'title' => 'Section Breakdown',
+                'nextLevel' => null,
+                'parentFilter' => 'current_department_id'
             ],
         ];
 
-        if (!array_key_exists($type, $mapping)) {
-            return ['labels' => [], 'data' => []];
+        if (!array_key_exists($level, $mapping)) {
+            return ['labels' => [], 'data' => [], 'ids' => []];
         }
 
-        $relation = $mapping[$type]['relation'];
-        $column = $mapping[$type]['column'];
-        $labelCol = $mapping[$type]['labelCol'];
+        $config = $mapping[$level];
+        $relation = $config['relation'];
+        $column = $config['column'];
+        $labelCol = $config['labelCol'];
 
         $query = EmployeeOfficeInfo::with($relation)
             ->select($column, DB::raw('count(*) as count'))
             ->whereNotNull($column);
 
-        if (!empty($filters['company_id'])) {
-            $query->where('current_company_id', $filters['company_id']);
-        }
-        if (!empty($filters['business_unit_id'])) {
-            $query->where('current_business_unit_id', $filters['business_unit_id']);
-        }
-        if (!empty($filters['division_id'])) {
-            $query->where('current_division_id', $filters['division_id']);
-        }
-        if (!empty($filters['department_id'])) {
-            $query->where('current_department_id', $filters['department_id']);
+        if ($parentId && $config['parentFilter']) {
+            $query->where($config['parentFilter'], $parentId);
         }
 
         $data = $query->groupBy($column)->get();
 
         return [
+            'title' => $config['title'],
+            'next_level' => $config['nextLevel'],
             'labels' => $data->map(fn($item) => $item->$relation->{$labelCol} ?? 'Unknown')->toArray(),
             'data' => $data->pluck('count')->toArray(),
+            'ids' => $data->pluck($column)->toArray(), // Need IDs for the next drill-down click
         ];
     }
 

@@ -123,82 +123,24 @@
     </div>
 
     <div class="row">
-        {{-- Dynamic Hierarchy Breakdown --}}
-        @foreach($dynamicHierarchies as $key => $hierarchy)
-            <div class="col-lg-6 mb-4">
-                <div class="card shadow-sm border-0 rounded-3 h-100">
-                    <div class="card-header bg-transparent border-0 pt-4 px-4 d-flex justify-content-between align-items-center">
-                        <h5 class="fw-bold mb-0">
-                            <i class="mdi {{ $hierarchy['icon'] }} text-{{ $hierarchy['color'] }} me-2"></i> {{ $hierarchy['title'] }}
-                        </h5>
-                    </div>
-                    <div class="card-body p-4 pt-0">
-                        {{-- Dynamic Filters --}}
-                        @if(auth()->user()->user_type === 'Group')
-                            <div class="row g-2 mb-4 mt-2 filter-container" data-chart-key="{{ $key }}">
-                                {{-- Company Filter (Appears in all) --}}
-                                <div class="col">
-                                    <select class="form-select form-select-sm filter-company">
-                                        <option value="">All Companies</option>
-                                        @foreach($filterOptions['companies'] as $id => $name)
-                                            <option value="{{ $id }}">{{ $name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                {{-- BU Filter (Appears in Division, Department, Section) --}}
-                                @if(in_array($key, ['division', 'department', 'section']))
-                                    <div class="col">
-                                        <select class="form-select form-select-sm filter-bu">
-                                            <option value="">All Business Units</option>
-                                            @foreach($filterOptions['businessUnits'] as $id => $name)
-                                                <option value="{{ $id }}">{{ $name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                @endif
-
-                                {{-- Division Filter (Appears in Department, Section) --}}
-                                @if(in_array($key, ['department', 'section']))
-                                    <div class="col">
-                                        <select class="form-select form-select-sm filter-division">
-                                            <option value="">All Divisions</option>
-                                            @foreach($filterOptions['divisions'] as $id => $name)
-                                                <option value="{{ $id }}">{{ $name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                @endif
-
-                                {{-- Department Filter (Appears only in Section) --}}
-                                @if($key === 'section')
-                                    <div class="col">
-                                        <select class="form-select form-select-sm filter-department">
-                                            <option value="">All Departments</option>
-                                            @foreach($filterOptions['departments'] as $id => $name)
-                                                <option value="{{ $id }}">{{ $name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                @endif
-                            </div>
-                        @else
-                            {{-- Non-Group Users get predefined scopes and no filter UI --}}
-                            <div class="mb-4 mt-2 filter-container d-none" data-chart-key="{{ $key }}">
-                                <input type="hidden" class="filter-company" value="">
-                                <input type="hidden" class="filter-bu" value="">
-                                <input type="hidden" class="filter-division" value="">
-                                <input type="hidden" class="filter-department" value="">
-                            </div>
-                        @endif
-
-                        <div style="height: 250px; position: relative;">
-                            <canvas id="{{ $key }}Chart"></canvas>
-                        </div>
+        {{-- Drill-Down Analytics Section --}}
+        <div class="col-lg-12 mb-4">
+            <div class="card shadow-sm border-0 rounded-3 h-100">
+                <div class="card-header bg-transparent border-0 pt-4 px-4 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0" id="drillDownTitle">
+                        <i class="mdi mdi-chart-bar text-primary me-2"></i> Company-wise Distribution
+                    </h5>
+                    <button class="btn btn-sm btn-outline-secondary d-none" id="btnBackDrillDown">
+                        <i class="mdi mdi-arrow-left me-1"></i> Back
+                    </button>
+                </div>
+                <div class="card-body p-4">
+                    <div style="height: 350px; position: relative;">
+                        <canvas id="drillDownChart"></canvas>
                     </div>
                 </div>
             </div>
-        @endforeach
+        </div>
     </div>
 
     <div class="row">
@@ -350,203 +292,89 @@
                 }
             });
 
-            // Company Distribution Chart
-            const companyCtx = document.getElementById('companyDistChart').getContext('2d');
-            new Chart(companyCtx, {
-                type: 'pie',
-                data: {
-                    labels: {!! json_encode($companyDist['labels']) !!},
-                    datasets: [{
-                        data: {!! json_encode($companyDist['data']) !!},
-                        backgroundColor: chartColors,
-                        borderWidth: 0
-                    }]
-                },
-                options: commonOptions
-            });
-
-            // Dynamic Hierarchy Charts
-            const dynamicHierarchies = {!! json_encode($dynamicHierarchies) !!};
-            const hierarchyCharts = {};
+            // Drill-Down Chart Implementation
+            const drillDownCtx = document.getElementById('drillDownChart');
+            let drillDownChartInstance = null;
             
-            Object.keys(dynamicHierarchies).forEach(key => {
-                const hierarchy = dynamicHierarchies[key];
-                const ctx = document.getElementById(key + 'Chart');
-                
-                if (ctx) {
-                    let chartConfig = {
-                        type: hierarchy.chartType,
-                        data: {
-                            labels: hierarchy.data.labels,
-                            datasets: [{
-                                label: 'Employees',
-                                data: hierarchy.data.data,
-                                backgroundColor: hierarchy.chartType === 'bar' ? 'rgba(52, 152, 219, 0.6)' : chartColors,
-                                borderColor: hierarchy.chartType === 'bar' ? 'rgb(52, 152, 219)' : 'transparent',
-                                borderWidth: hierarchy.chartType === 'bar' ? 1 : 0,
-                                borderRadius: hierarchy.chartType === 'bar' ? 6 : 0
-                            }]
-                        },
-                        options: { ...commonOptions }
-                    };
+            // State tracking
+            let drillDownHistory = []; // Array of objects: { level, parentId, title }
+            const defaultLevel = 'company';
 
-                    if (hierarchy.chartType === 'bar') {
-                        chartConfig.options.scales = {
-                            y: { beginAtZero: true, ticks: { precision: 0 } }
-                        };
-                    }
+            const btnBack = document.getElementById('btnBackDrillDown');
+            const titleEl = document.getElementById('drillDownTitle');
 
-                    hierarchyCharts[key] = new Chart(ctx.getContext('2d'), chartConfig);
-                }
-            });
+            function renderDrillDownChart(level, parentId = null) {
+                // Show loading state if desired
 
-            // Handle Filter Changes
-            function updateChartData(container, chartKey) {
-                const company_id = container.querySelector('.filter-company')?.value || '';
-                const business_unit_id = container.querySelector('.filter-bu')?.value || '';
-                const division_id = container.querySelector('.filter-division')?.value || '';
-                const department_id = container.querySelector('.filter-department')?.value || '';
-
-                const baseUrl = "{{ route('employee.reports.filtered_data', ['type' => ':type']) }}";
-                const url = baseUrl.replace(':type', chartKey);
-
-                axios.get(url, {
-                    params: { company_id, business_unit_id, division_id, department_id }
+                axios.get('{{ route("employee.reports.drill_down") }}', {
+                    params: { level: level, parent_id: parentId }
                 }).then(response => {
                     const data = response.data;
-                    if (hierarchyCharts[chartKey]) {
-                        hierarchyCharts[chartKey].data.labels = data.labels;
-                        hierarchyCharts[chartKey].data.datasets[0].data = data.data;
-                        hierarchyCharts[chartKey].update();
+
+                    titleEl.innerHTML = `<i class="mdi mdi-chart-bar text-primary me-2"></i> ${data.title}`;
+
+                    if (drillDownHistory.length > 0) {
+                        btnBack.classList.remove('d-none');
+                    } else {
+                        btnBack.classList.add('d-none');
                     }
-                }).catch(error => console.error('Error fetching filtered data:', error));
+
+                    if (drillDownChartInstance) {
+                        drillDownChartInstance.destroy();
+                    }
+
+                    drillDownChartInstance = new Chart(drillDownCtx.getContext('2d'), {
+                        type: 'bar', // Using bar for clarity in drill-downs
+                        data: {
+                            labels: data.labels,
+                            datasets: [{
+                                label: 'Employees',
+                                data: data.data,
+                                backgroundColor: 'rgba(52, 152, 219, 0.7)',
+                                borderColor: 'rgb(52, 152, 219)',
+                                borderWidth: 1,
+                                borderRadius: 6
+                            }]
+                        },
+                        options: {
+                            ...commonOptions,
+                            scales: {
+                                y: { beginAtZero: true, ticks: { precision: 0 } }
+                            },
+                            onClick: (event, elements) => {
+                                if (elements.length > 0 && data.next_level) {
+                                    const index = elements[0].index;
+                                    const clickedId = data.ids[index];
+                                    const clickedLabel = data.labels[index];
+
+                                    // Push current state to history before drilling down
+                                    drillDownHistory.push({
+                                        level: level,
+                                        parentId: parentId,
+                                        title: data.title
+                                    });
+
+                                    // Drill down
+                                    renderDrillDownChart(data.next_level, clickedId);
+                                }
+                            },
+                            // Add a hover effect to show it's clickable
+                            onHover: (event, chartElement) => {
+                                event.native.target.style.cursor = chartElement[0] && data.next_level ? 'pointer' : 'default';
+                            }
+                        }
+                    });
+                }).catch(error => console.error('Error fetching drill-down data:', error));
             }
 
-            function loadOptions(selectElement, url, defaultText, callback) {
-                if (!selectElement) {
-                    if (callback) callback();
-                    return;
-                }
+            // Initial Render
+            renderDrillDownChart(defaultLevel);
 
-                selectElement.innerHTML = `<option value="">Loading...</option>`;
-                selectElement.disabled = true;
-
-                axios.get(url).then(response => {
-                    let html = `<option value="">${defaultText}</option>`;
-                    if (response.data && response.data.length > 0) {
-                        response.data.forEach(item => {
-                            let id = item.id;
-                            let name = item.name || item.department_name;
-                            html += `<option value="${id}">${name}</option>`;
-                        });
-                    }
-                    selectElement.innerHTML = html;
-                    selectElement.disabled = false;
-                    if (callback) callback();
-                }).catch(error => {
-                    console.error('Error updating dropdown:', error);
-                    selectElement.innerHTML = `<option value="">${defaultText}</option>`;
-                    selectElement.disabled = false;
-                    if (callback) callback();
-                });
-            }
-
-            document.querySelectorAll('.filter-container').forEach(container => {
-                const chartKey = container.getAttribute('data-chart-key');
-
-                const companySelect = container.querySelector('.filter-company');
-                const buSelect = container.querySelector('.filter-bu');
-                const divSelect = container.querySelector('.filter-division');
-                const deptSelect = container.querySelector('.filter-department');
-
-                if (companySelect) {
-                    companySelect.addEventListener('change', function () {
-                        const companyId = this.value;
-
-                        if (buSelect) { buSelect.innerHTML = '<option value="">All Business Units</option>'; buSelect.value = ''; }
-                        if (divSelect) { divSelect.innerHTML = '<option value="">All Divisions</option>'; divSelect.value = ''; }
-                        if (deptSelect) { deptSelect.innerHTML = '<option value="">All Departments</option>'; deptSelect.value = ''; }
-
-                        updateChartData(container, chartKey);
-
-                        if (!companyId) return;
-
-                        if (buSelect) {
-                            loadOptions(buSelect, `/get-units/${companyId}`, 'All Business Units', () => {
-                                loadDivisions();
-                            });
-                        } else {
-                            loadDivisions();
-                        }
-
-                        function loadDivisions() {
-                            if (divSelect) {
-                                const locationId = buSelect ? (buSelect.value || 'null') : 'null';
-                                loadOptions(divSelect, `/get-divisions/${companyId}/${locationId}`, 'All Divisions', () => {
-                                    loadDepartments();
-                                });
-                            } else {
-                                loadDepartments();
-                            }
-                        }
-
-                        function loadDepartments() {
-                            if (deptSelect) {
-                                const locationId = buSelect ? (buSelect.value || 'null') : 'null';
-                                const divisionId = divSelect ? (divSelect.value || 'null') : 'null';
-                                loadOptions(deptSelect, `/get-departments/${companyId}/${locationId}/${divisionId}`, 'All Departments');
-                            }
-                        }
-                    });
-                }
-
-                if (buSelect) {
-                    buSelect.addEventListener('change', function () {
-                        const companyId = companySelect ? (companySelect.value || 'null') : 'null';
-                        const locationId = this.value || 'null';
-
-                        if (divSelect) { divSelect.innerHTML = '<option value="">All Divisions</option>'; divSelect.value = ''; }
-                        if (deptSelect) { deptSelect.innerHTML = '<option value="">All Departments</option>'; deptSelect.value = ''; }
-
-                        updateChartData(container, chartKey);
-
-                        if (divSelect) {
-                            loadOptions(divSelect, `/get-divisions/${companyId}/${locationId}`, 'All Divisions', () => {
-                                loadDepartments();
-                            });
-                        } else {
-                            loadDepartments();
-                        }
-
-                        function loadDepartments() {
-                            if (deptSelect) {
-                                const divisionId = divSelect ? (divSelect.value || 'null') : 'null';
-                                loadOptions(deptSelect, `/get-departments/${companyId}/${locationId}/${divisionId}`, 'All Departments');
-                            }
-                        }
-                    });
-                }
-
-                if (divSelect) {
-                    divSelect.addEventListener('change', function () {
-                        const companyId = companySelect ? (companySelect.value || 'null') : 'null';
-                        const locationId = buSelect ? (buSelect.value || 'null') : 'null';
-                        const divisionId = this.value || 'null';
-
-                        if (deptSelect) { deptSelect.innerHTML = '<option value="">All Departments</option>'; deptSelect.value = ''; }
-
-                        updateChartData(container, chartKey);
-
-                        if (deptSelect) {
-                            loadOptions(deptSelect, `/get-departments/${companyId}/${locationId}/${divisionId}`, 'All Departments');
-                        }
-                    });
-                }
-
-                if (deptSelect) {
-                    deptSelect.addEventListener('change', function () {
-                        updateChartData(container, chartKey);
-                    });
+            // Handle Back Button
+            btnBack.addEventListener('click', function() {
+                if (drillDownHistory.length > 0) {
+                    const previousState = drillDownHistory.pop();
+                    renderDrillDownChart(previousState.level, previousState.parentId);
                 }
             });
         });

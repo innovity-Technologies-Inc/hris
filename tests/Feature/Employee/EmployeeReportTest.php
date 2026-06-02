@@ -63,7 +63,7 @@ it('calculates company distribution', function () {
         'current_company_id' => $company->id
     ]);
 
-    $dist = $this->reportService->getCompanyDistribution();
+    $dist = $this->reportService->getDrillDownData('company');
 
     expect($dist['labels'])->toContain('Tech Corp');
 });
