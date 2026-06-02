@@ -123,37 +123,23 @@
     </div>
 
     <div class="row">
-        {{-- Hierarchy Breakdown (Divisions) --}}
-        <div class="col-lg-6 mb-4">
-            <div class="card shadow-sm border-0 rounded-3 h-100">
-                <div class="card-header bg-transparent border-0 pt-4 px-4">
-                    <h5 class="fw-bold mb-0">
-                        <i class="mdi mdi-sitemap text-purple me-2"></i> Division Breakdown
-                    </h5>
-                </div>
-                <div class="card-body p-4">
-                    <div style="height: 250px;">
-                        <canvas id="divisionChart"></canvas>
+        {{-- Dynamic Hierarchy Breakdown --}}
+        @foreach($dynamicHierarchies as $key => $hierarchy)
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow-sm border-0 rounded-3 h-100">
+                    <div class="card-header bg-transparent border-0 pt-4 px-4">
+                        <h5 class="fw-bold mb-0">
+                            <i class="mdi {{ $hierarchy['icon'] }} text-{{ $hierarchy['color'] }} me-2"></i> {{ $hierarchy['title'] }}
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div style="height: 250px;">
+                            <canvas id="{{ $key }}Chart"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        {{-- Hierarchy Breakdown (Departments) --}}
-        <div class="col-lg-6 mb-4">
-            <div class="card shadow-sm border-0 rounded-3 h-100">
-                <div class="card-header bg-transparent border-0 pt-4 px-4">
-                    <h5 class="fw-bold mb-0">
-                        <i class="mdi mdi-domain text-warning me-2"></i> Department Breakdown
-                    </h5>
-                </div>
-                <div class="card-body p-4">
-                    <div style="height: 250px;">
-                        <canvas id="deptChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @endforeach
     </div>
 
     <div class="row">
@@ -320,41 +306,37 @@
                 options: commonOptions
             });
 
-            // Division Chart
-            const divCtx = document.getElementById('divisionChart').getContext('2d');
-            new Chart(divCtx, {
-                type: 'polarArea',
-                data: {
-                    labels: {!! json_encode($divisionDist['labels']) !!},
-                    datasets: [{
-                        data: {!! json_encode($divisionDist['data']) !!},
-                        backgroundColor: chartColors
-                    }]
-                },
-                options: commonOptions
-            });
+            // Dynamic Hierarchy Charts
+            const dynamicHierarchies = {!! json_encode($dynamicHierarchies) !!};
+            
+            Object.keys(dynamicHierarchies).forEach(key => {
+                const hierarchy = dynamicHierarchies[key];
+                const ctx = document.getElementById(key + 'Chart');
+                
+                if (ctx) {
+                    let chartConfig = {
+                        type: hierarchy.chartType,
+                        data: {
+                            labels: hierarchy.data.labels,
+                            datasets: [{
+                                label: 'Employees',
+                                data: hierarchy.data.data,
+                                backgroundColor: hierarchy.chartType === 'bar' ? 'rgba(52, 152, 219, 0.6)' : chartColors,
+                                borderColor: hierarchy.chartType === 'bar' ? 'rgb(52, 152, 219)' : 'transparent',
+                                borderWidth: hierarchy.chartType === 'bar' ? 1 : 0,
+                                borderRadius: hierarchy.chartType === 'bar' ? 6 : 0
+                            }]
+                        },
+                        options: { ...commonOptions }
+                    };
 
-            // Department Chart
-            const deptCtx = document.getElementById('deptChart').getContext('2d');
-            new Chart(deptCtx, {
-                type: 'bar',
-                data: {
-                    labels: {!! json_encode($deptDist['labels']) !!},
-                    datasets: [{
-                        label: 'Employees',
-                        data: {!! json_encode($deptDist['data']) !!},
-                        backgroundColor: 'rgba(241, 196, 15, 0.6)',
-                        borderColor: 'rgb(241, 196, 15)',
-                        borderWidth: 1,
-                        borderRadius: 6
-                    }]
-                },
-                options: {
-                    ...commonOptions,
-                    indexAxis: 'y',
-                    scales: {
-                        x: { beginAtZero: true, ticks: { precision: 0 } }
+                    if (hierarchy.chartType === 'bar') {
+                        chartConfig.options.scales = {
+                            y: { beginAtZero: true, ticks: { precision: 0 } }
+                        };
                     }
+
+                    new Chart(ctx.getContext('2d'), chartConfig);
                 }
             });
         });
