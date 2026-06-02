@@ -77,3 +77,16 @@
 
 **Status**: ✅ SUCCESS
 
+
+## 2026-06-02 (Notification Alert Module)
+
+**Goal**: Implement configurable alert thresholds for birthdays, document expiries, and probation end with automated notifications.
+
+**Exact Command**: `php artisan config:clear; $env:DB_CONNECTION='sqlite'; $env:DB_DATABASE=':memory:'; php artisan test tests/Feature/NotificationAlertTest.php`
+
+**Results**:
+- `it triggers birthday notifications for non-employees`: ✅ PASSED
+- `it triggers visa expiry notifications for employee and non-employees`: ✅ PASSED
+- `it triggers probation end notifications`: ✅ PASSED
+
+**Status**: ✅ SUCCESS

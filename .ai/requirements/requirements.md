@@ -227,8 +227,27 @@ A comprehensive Human Resource Management System (HRMS) built with Laravel 12, f
     - New permission: `nid verification` under employee management.
     - Restricted for `user_type = 'Employee'`.
 - **Database Changes**:
-    - Add `nid` column to the `employees` table (if not exists).
-    - Add `is_nid_verified` boolean column to the `employees` table.
+    *   Add `nid` column to the `employees` table (if not exists).
+    *   Add `is_nid_verified` boolean column to the `employees` table.
+
+### 🔔 Notification & Alert Settings
+- **Goal**: Configure and automate alerts for critical employee milestones and document expiries.
+- **Alert Types**:
+    *   **Birthday**: Triggered based on `date_of_birth` in `employees`.
+    *   **Visa Expiry**: Triggered based on `visa_expiry` in `employees`.
+    *   *Work Permit Expiry**: Triggered based on `work_expiry` in `employees`.
+    *   **Passport Expiry**: Triggered based on `passport_expiry` in `employees`.
+    *   **License Expiry**: Triggered based on `license_expiry` in `employees`.
+    *   **Probation Period End**: Triggered based on `date_of_join` + `probation_duration` in `employee_office_infos`.
+- **Threshold Settings**:
+    *   A new settings page to define the number of days before the event to send the alert.
+- **Notification Routing**:
+    *   **Recipients**:
+        *   For Birthday: Send to all users EXCEPT the particular employee (e.g., HR, Admin).
+        *   For all other alerts: Send to the particular employee AND all other users (HR, Admin).
+    *   **Storage**: Save notifications in the `notifications` table (using `App\Models\Setting\Notification`).
+- **Automation**:
+    *   Daily scheduled task (command) to evaluate all thresholds and generate notifications.
 
 ## Technical Constraints
 - **Framework**: Laravel 12.

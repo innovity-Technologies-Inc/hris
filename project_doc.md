@@ -106,6 +106,16 @@ A dedicated analytical view providing a 360-degree overview of an employee's car
     - Dynamic "Verified" badge display on the profile header upon success.
 - **Access Control**: Requires `nid verification` permission and `user_type != 'Employee'`.
 
+### 🔔 Notification Alert Module
+- **Purpose**: Configure and automate alerts for employee milestones (Birthdays, Probation End) and document expiries (Visa, Passport, Work Permit, License).
+- **Workflow**:
+    - Thresholds are set in **Settings > Notification Alerts**.
+    - A daily scheduled command (`app:check-alerts`) evaluates employees against these thresholds.
+    - Notifications are generated and stored in the `notifications` table.
+- **Recipient Logic**:
+    - **Birthdays**: Sent to all users *except* the birthday employee.
+    - **Expiries/Probation**: Sent to the particular employee AND all other non-employee users.
+
 ---
 
 ## 🔐 Security & Access Control

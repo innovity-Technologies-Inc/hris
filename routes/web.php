@@ -887,6 +887,14 @@ Route::prefix('settings')->middleware('auth')->group(function () {
             Route::post('transfer-settings/update', 'update')->name('setting.transfer.update');
         });
     });
+
+    // Notification Settings Routes
+    Route::controller(\App\Http\Controllers\Setting\NotificationSettingController::class)->group(function () {
+        Route::middleware('permission:general-settings.view')->group(function () {
+            Route::get('notification-settings', 'index')->name('setting.notification_settings.index');
+            Route::post('notification-settings/store', 'store')->name('setting.notification_settings.store');
+        });
+    });
 });
 
 Route::prefix('leaves')->middleware('auth')->group(function () {

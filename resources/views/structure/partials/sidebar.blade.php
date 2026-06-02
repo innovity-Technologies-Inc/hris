@@ -712,6 +712,12 @@
                                     href='{{ route('setting.general_settings') }}'>General</a>
                             </li>
                             @endif
+                            @if(auth()->user()->can('general-settings.view'))
+                            <li>
+                                <a class='tp-link @if (Route::is('setting.notification_settings.*')) menuitem-active @endif'
+                                   href='{{ route('setting.notification_settings.index') }}'>Notification Alerts</a>
+                            </li>
+                            @endif
                             @if($canRoleManagement)
                             <li>
                                 <a class='tp-link @if (Route::is('setting.roles.*')) menuitem-active @endif'
