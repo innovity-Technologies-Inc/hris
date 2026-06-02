@@ -16,7 +16,7 @@
 
                 <p class="text-muted mb-5">Configure how many days in advance alerts should be sent for various employee milestones and document expiries.</p>
 
-                <form id="notificationSettingsForm" action="{{ route('setting.notification_settings.store') }}" method="POST">
+                <form id="notificationSettingsForm">
                     @csrf
 
                     <div class="row g-4">
@@ -118,11 +118,63 @@
                     </div>
 
                     <div class="mt-5 text-end">
-                        <button type="submit" class="btn btn-primary btn-lg px-5 rounded-pill shadow-sm">
+                        <button type="submit" class="btn btn-primary btn-lg px-5 rounded-pill shadow-sm" id="btnSaveSettings">
                             <i class="bi bi-save me-2"></i> Save Settings
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('notificationSettingsForm');
+    const btnSave = document.getElementById('btnSaveSettings');
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Loading state
+        btnSave.disabled = true;
+        btnSave.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span> Saving...';
+
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+
+        axios.post("{{ route('setting.notification_settings.store') }}", data)
+            .then(response => {
+                if (response.data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: response.data.message,
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                } else {
+                    throw new Error(response.data.message || 'Failed to save settings');
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                const msg = error.response?.data?.message || error.message || 'An error occurred while saving settings.';
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: msg
+                });
+            })
+            .finally(() => {
+                btnSave.disabled = false;
+                btnSave.innerHTML = '<i class="bi bi-save me-2"></i> Save Settings';
+            });
+    });
+});
+</script>
+@endpush
             </div>
         </div>
     </div>

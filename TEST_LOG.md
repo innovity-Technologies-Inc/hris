@@ -90,3 +90,14 @@
 - `it triggers probation end notifications`: ✅ PASSED
 
 **Status**: ✅ SUCCESS
+
+## 2026-06-02 (Notification Alert Module Refactoring)
+
+**Goal**: Refactor Notification Settings to use Axios and return JSON responses, including SweetAlert integration.
+
+**Exact Command**: `php artisan config:clear; $env:DB_CONNECTION='sqlite'; $env:DB_DATABASE=':memory:'; php artisan test tests/Feature/Setting/NotificationSettingControllerTest.php`n
+**Results**:
+- `it allows authorized users to save notification settings via axios`: ✅ PASSED
+- `it validates notification settings data`: ✅ PASSED
+
+**Status**: ✅ SUCCESS

@@ -31,10 +31,17 @@ class NotificationSettingController extends Controller
     public function store(NotificationSettingRequest $request)
     {
         try {
-            $this->settingService->updateSettings($request->validated());
-            return redirect()->back()->with('success', 'Notification settings updated successfully.');
+            $settings = $this->settingService->updateSettings($request->validated());
+            return response()->json([
+                'success' => true,
+                'message' => 'Notification settings updated successfully.',
+                'data' => $settings
+            ]);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Failed to update notification settings: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update notification settings: ' . $e->getMessage()
+            ], 500);
         }
     }
 }
