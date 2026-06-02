@@ -401,77 +401,154 @@
             });
 
             // Handle Filter Changes
-            document.querySelectorAll('.filter-container select').forEach(select => {
-                select.addEventListener('change', function() {
-                    const container = this.closest('.filter-container');
-                    const chartKey = container.getAttribute('data-chart-key');
-                    
-                    const company_id = container.querySelector('.filter-company')?.value || '';
-                    const business_unit_id = container.querySelector('.filter-bu')?.value || '';
-                    const division_id = container.querySelector('.filter-division')?.value || '';
-                    const department_id = container.querySelector('.filter-department')?.value || '';
+            function updateChartData(container, chartKey) {
+                const company_id = container.querySelector('.filter-company')?.value || '';
+                const business_unit_id = container.querySelector('.filter-bu')?.value || '';
+                const division_id = container.querySelector('.filter-division')?.value || '';
+                const department_id = container.querySelector('.filter-department')?.value || '';
 
-                    // Cascading Dropdowns Logic
-                    if (this.classList.contains('filter-company') && container.querySelector('.filter-bu')) {
-                        const targetBu = container.querySelector('.filter-bu');
-                        updateDropdown(`/get-units/${company_id || 0}`, targetBu, 'All Business Units');
-                        if(container.querySelector('.filter-division')) updateDropdown(`/get-divisions/${company_id || 0}/0`, container.querySelector('.filter-division'), 'All Divisions');
-                        if(container.querySelector('.filter-department')) updateDropdown(`/get-departments/${company_id || 0}/0/0`, container.querySelector('.filter-department'), 'All Departments');
+                const baseUrl = "{{ route('employee.reports.filtered_data', ['type' => ':type']) }}";
+                const url = baseUrl.replace(':type', chartKey);
+
+                axios.get(url, {
+                    params: { company_id, business_unit_id, division_id, department_id }
+                }).then(response => {
+                    const data = response.data;
+                    if (hierarchyCharts[chartKey]) {
+                        hierarchyCharts[chartKey].data.labels = data.labels;
+                        hierarchyCharts[chartKey].data.datasets[0].data = data.data;
+                        hierarchyCharts[chartKey].update();
                     }
-                    else if (this.classList.contains('filter-bu') && container.querySelector('.filter-division')) {
-                        const targetDiv = container.querySelector('.filter-division');
-                        updateDropdown(`/get-divisions/${company_id || 0}/${business_unit_id || 0}`, targetDiv, 'All Divisions');
-                        if(container.querySelector('.filter-department')) updateDropdown(`/get-departments/${company_id || 0}/${business_unit_id || 0}/0`, container.querySelector('.filter-department'), 'All Departments');
-                    }
-                    else if (this.classList.contains('filter-division') && container.querySelector('.filter-department')) {
-                        const targetDept = container.querySelector('.filter-department');
-                        updateDropdown(`/get-departments/${company_id || 0}/${business_unit_id || 0}/${division_id || 0}`, targetDept, 'All Departments');
-                    }
+                }).catch(error => console.error('Error fetching filtered data:', error));
+            }
 
-                    // Show loading state on canvas wrapper if needed
-                    const baseUrl = "{{ route('employee.reports.filtered_data', ['type' => ':type']) }}";
-                    const url = baseUrl.replace(':type', chartKey);
-
-                    axios.get(url, {
-                        params: { company_id, business_unit_id, division_id, department_id }
-                    })
-                    .then(response => {
-                        const data = response.data;
-                        if (hierarchyCharts[chartKey]) {
-                            hierarchyCharts[chartKey].data.labels = data.labels;
-                            hierarchyCharts[chartKey].data.datasets[0].data = data.data;
-                            hierarchyCharts[chartKey].update();
-                        }
-                    })
-                    .catch(error => console.error('Error fetching filtered data:', error));
-                });
-            });
-
-            function updateDropdown(url, selectElement, defaultText) {
-                if (!selectElement) return;
-                
-                // If the URL has a 0 for company_id, just reset it to default
-                if (url.includes('/get-units/0') || url.includes('/get-divisions/0/') || url.includes('/get-departments/0/')) {
-                    selectElement.innerHTML = `<option value="">${defaultText}</option>`;
+            function loadOptions(selectElement, url, defaultText, callback) {
+                if (!selectElement) {
+                    if (callback) callback();
                     return;
                 }
 
-                axios.get(url)
-                    .then(response => {
-                        let html = `<option value="">${defaultText}</option>`;
-                        if (response.data) {
-                            // DataController typically returns array of objects for units/divisions/depts
-                            response.data.forEach(item => {
-                                // Handle different ID/Name keys based on what DataController returns
-                                let id = item.id;
-                                let name = item.name || item.department_name; 
-                                html += `<option value="${id}">${name}</option>`;
-                            });
-                        }
-                        selectElement.innerHTML = html;
-                    })
-                    .catch(error => console.error('Error updating dropdown:', error));
+                selectElement.innerHTML = `<option value="">Loading...</option>`;
+                selectElement.disabled = true;
+
+                axios.get(url).then(response => {
+                    let html = `<option value="">${defaultText}</option>`;
+                    if (response.data && response.data.length > 0) {
+                        response.data.forEach(item => {
+                            let id = item.id;
+                            let name = item.name || item.department_name;
+                            html += `<option value="${id}">${name}</option>`;
+                        });
+                    }
+                    selectElement.innerHTML = html;
+                    selectElement.disabled = false;
+                    if (callback) callback();
+                }).catch(error => {
+                    console.error('Error updating dropdown:', error);
+                    selectElement.innerHTML = `<option value="">${defaultText}</option>`;
+                    selectElement.disabled = false;
+                    if (callback) callback();
+                });
             }
+
+            document.querySelectorAll('.filter-container').forEach(container => {
+                const chartKey = container.getAttribute('data-chart-key');
+
+                const companySelect = container.querySelector('.filter-company');
+                const buSelect = container.querySelector('.filter-bu');
+                const divSelect = container.querySelector('.filter-division');
+                const deptSelect = container.querySelector('.filter-department');
+
+                if (companySelect) {
+                    companySelect.addEventListener('change', function () {
+                        const companyId = this.value;
+
+                        if (buSelect) { buSelect.innerHTML = '<option value="">All Business Units</option>'; buSelect.value = ''; }
+                        if (divSelect) { divSelect.innerHTML = '<option value="">All Divisions</option>'; divSelect.value = ''; }
+                        if (deptSelect) { deptSelect.innerHTML = '<option value="">All Departments</option>'; deptSelect.value = ''; }
+
+                        updateChartData(container, chartKey);
+
+                        if (!companyId) return;
+
+                        if (buSelect) {
+                            loadOptions(buSelect, `/get-units/${companyId}`, 'All Business Units', () => {
+                                loadDivisions();
+                            });
+                        } else {
+                            loadDivisions();
+                        }
+
+                        function loadDivisions() {
+                            if (divSelect) {
+                                const locationId = buSelect ? (buSelect.value || 'null') : 'null';
+                                loadOptions(divSelect, `/get-divisions/${companyId}/${locationId}`, 'All Divisions', () => {
+                                    loadDepartments();
+                                });
+                            } else {
+                                loadDepartments();
+                            }
+                        }
+
+                        function loadDepartments() {
+                            if (deptSelect) {
+                                const locationId = buSelect ? (buSelect.value || 'null') : 'null';
+                                const divisionId = divSelect ? (divSelect.value || 'null') : 'null';
+                                loadOptions(deptSelect, `/get-departments/${companyId}/${locationId}/${divisionId}`, 'All Departments');
+                            }
+                        }
+                    });
+                }
+
+                if (buSelect) {
+                    buSelect.addEventListener('change', function () {
+                        const companyId = companySelect ? (companySelect.value || 'null') : 'null';
+                        const locationId = this.value || 'null';
+
+                        if (divSelect) { divSelect.innerHTML = '<option value="">All Divisions</option>'; divSelect.value = ''; }
+                        if (deptSelect) { deptSelect.innerHTML = '<option value="">All Departments</option>'; deptSelect.value = ''; }
+
+                        updateChartData(container, chartKey);
+
+                        if (divSelect) {
+                            loadOptions(divSelect, `/get-divisions/${companyId}/${locationId}`, 'All Divisions', () => {
+                                loadDepartments();
+                            });
+                        } else {
+                            loadDepartments();
+                        }
+
+                        function loadDepartments() {
+                            if (deptSelect) {
+                                const divisionId = divSelect ? (divSelect.value || 'null') : 'null';
+                                loadOptions(deptSelect, `/get-departments/${companyId}/${locationId}/${divisionId}`, 'All Departments');
+                            }
+                        }
+                    });
+                }
+
+                if (divSelect) {
+                    divSelect.addEventListener('change', function () {
+                        const companyId = companySelect ? (companySelect.value || 'null') : 'null';
+                        const locationId = buSelect ? (buSelect.value || 'null') : 'null';
+                        const divisionId = this.value || 'null';
+
+                        if (deptSelect) { deptSelect.innerHTML = '<option value="">All Departments</option>'; deptSelect.value = ''; }
+
+                        updateChartData(container, chartKey);
+
+                        if (deptSelect) {
+                            loadOptions(deptSelect, `/get-departments/${companyId}/${locationId}/${divisionId}`, 'All Departments');
+                        }
+                    });
+                }
+
+                if (deptSelect) {
+                    deptSelect.addEventListener('change', function () {
+                        updateChartData(container, chartKey);
+                    });
+                }
+            });
         });
     </script>
 @endpush
