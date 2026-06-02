@@ -126,3 +126,16 @@
 - `it loads the reports page for authorized users`: ✅ PASSED
 
 **Status**: ✅ SUCCESS
+
+## 2026-06-02 (Organizational Analytics & Authorization Expansion)
+
+**Goal**: Expand the Analytics module with detailed age analysis, company/hierarchy distribution charts, organizational scoping, and strict permission-based access control.
+
+**Exact Command**: `php artisan config:clear; $env:DB_CONNECTION='sqlite'; $env:DB_DATABASE=':memory:'; php artisan test tests/Feature/Employee/EmployeeReportTest.php`n
+**Results**:
+- `it calculates detailed age analysis`: ✅ PASSED
+- `it calculates company distribution`: ✅ PASSED
+- `it denies access to analytics for Employee user type even with permission`: ✅ PASSED
+- `All other existing analytics tests`: ✅ PASSED
+
+**Status**: ✅ SUCCESS

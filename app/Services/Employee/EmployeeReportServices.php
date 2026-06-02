@@ -2,6 +2,10 @@
 
 namespace App\Services\Employee;
 
+use App\Models\Company\Company;
+use App\Models\Company\Department;
+use App\Models\Company\Division;
+use App\Models\Company\Section;
 use App\Models\Employee\Employee;
 use App\Models\Employee\EmployeeOfficeInfo;
 use Carbon\Carbon;
@@ -36,6 +40,63 @@ class EmployeeReportServices
         return [
             'labels' => array_keys($groups),
             'data' => array_values($groups),
+        ];
+    }
+
+    /**
+     * Get detailed age analysis stats.
+     */
+    public function getAgeAnalysis(): array
+    {
+        $ages = Employee::whereNotNull('date_of_birth')
+            ->get()
+            ->map(fn($emp) => Carbon::parse($emp->date_of_birth)->age);
+
+        if ($ages->isEmpty()) {
+            return ['avg' => 0, 'min' => 0, 'max' => 0];
+        }
+
+        return [
+            'avg' => round($ages->avg(), 1),
+            'min' => $ages->min(),
+            'max' => $ages->max(),
+        ];
+    }
+
+    /**
+     * Get Company-wise employee distribution.
+     */
+    public function getCompanyDistribution(): array
+    {
+        $data = EmployeeOfficeInfo::with('getCurrentCompany')
+            ->select('current_company_id', DB::raw('count(*) as count'))
+            ->groupBy('current_company_id')
+            ->get();
+
+        return [
+            'labels' => $data->map(fn($item) => $item->getCurrentCompany->name ?? 'Unknown')->toArray(),
+            'data' => $data->pluck('count')->toArray(),
+        ];
+    }
+
+    /**
+     * Get Hierarchy-wise distribution (Divisions/Departments).
+     */
+    public function getHierarchyDistribution(string $type = 'division'): array
+    {
+        $relation = $type === 'division' ? 'getCurrentDivision' : ($type === 'department' ? 'getCurrentDepartment' : 'getCurrentSection');
+        $column = $type === 'division' ? 'current_division_id' : ($type === 'department' ? 'current_department_id' : 'current_section_id');
+        $labelCol = $type === 'department' ? 'department_name' : 'name';
+
+        $data = EmployeeOfficeInfo::with($relation)
+            ->select($column, DB::raw('count(*) as count'))
+            ->whereNotNull($column)
+            ->groupBy($column)
+            ->get();
+
+        return [
+            'labels' => $data->map(fn($item) => $item->$relation->{$labelCol} ?? 'Unknown')->toArray(),
+            'data' => $data->pluck('count')->toArray(),
         ];
     }
 

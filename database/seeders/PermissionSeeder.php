@@ -39,7 +39,7 @@ class PermissionSeeder extends Seeder
             [
                 'name' => 'Employee Management',
                 'icon' => 'users',
-                'actions' => ['view', 'create', 'edit', 'delete', 'profile-review', 'import', 'nid-verification']
+                'actions' => ['view', 'create', 'edit', 'delete', 'profile-review', 'import', 'nid-verification', 'analytics']
             ],
 
             [

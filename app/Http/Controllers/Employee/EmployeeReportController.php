@@ -20,18 +20,28 @@ class EmployeeReportController extends Controller
      */
     public function index()
     {
-        $title = 'Employee Reports & Analytics';
+        if (!auth()->user()->can('employee-management.analytics') || auth()->user()->user_type === 'Employee') {
+            abort(403, 'Unauthorized access to analytics.');
+        }
+
+        $title = 'Workforce Analytics';
         $section = 'Employee';
-        $sub_section = 'Reports';
+        $sub_section = 'Analytics';
 
         $ageDist = $this->reportService->getAgeDistribution();
+        $ageStats = $this->reportService->getAgeAnalysis();
         $loyaltyDist = $this->reportService->getServiceLoyalty();
+        $companyDist = $this->reportService->getCompanyDistribution();
+        $divisionDist = $this->reportService->getHierarchyDistribution('division');
+        $deptDist = $this->reportService->getHierarchyDistribution('department');
+        
         $birthdays = $this->reportService->getUpcomingBirthdays();
         $serviceSummary = $this->reportService->getServiceAnalysis();
 
         return view('employee.reports', compact(
             'title', 'section', 'sub_section', 
-            'ageDist', 'loyaltyDist', 'birthdays', 'serviceSummary'
+            'ageDist', 'ageStats', 'loyaltyDist', 'companyDist', 
+            'divisionDist', 'deptDist', 'birthdays', 'serviceSummary'
         ));
     }
 }

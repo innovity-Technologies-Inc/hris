@@ -110,10 +110,12 @@
                                         href='{{ route('employee.import') }}'>Bulk Upload</a>
                                 </li>
                                 @endif
+                                @if(auth()->user()->can('employee-management.analytics') && auth()->user()->user_type !== 'Employee')
                                 <li>
                                     <a class='tp-link @if (Route::is('employee.reports')) menuitem-active @endif'
-                                        href='{{ route('employee.reports') }}'>Reports</a>
+                                        href='{{ route('employee.reports') }}'>Analytics</a>
                                 </li>
+                                @endif
                             </ul>
                         </div>
                     @endif

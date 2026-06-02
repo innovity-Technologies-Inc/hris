@@ -116,13 +116,15 @@ A dedicated analytical view providing a 360-degree overview of an employee's car
     - **Birthdays**: Sent to all users *except* the birthday employee.
     - **Expiries/Probation**: Sent to the particular employee AND all other non-employee users.
 
-### 📈 Employee Reports & Analytics
-- **Purpose**: Provide visual workforce insights and service analysis.
+### 📈 Workforce Analytics (Reports)
+- **Purpose**: Provide visual workforce insights and service analysis with strict organizational scoping.
 - **Features**:
-    - **Age Distribution**: Interactive doughnut chart showing employee age groups.
-    - **Years of Service (Loyalty)**: Bar chart analyzing organizational tenure.
+    - **Age Distribution & Stats**: Interactive doughnut chart showing age groups, plus Average, Min, and Max age metrics.
+    - **Service Loyalty**: Bar chart analyzing organizational tenure.
+    - **Organizational Hierarchy**: Charts breaking down employee counts by Company, Division, and Department.
     - **Upcoming Birthdays**: Real-time list of employees with birthdays in the current month.
     - **Service Summary**: Key stats including total headcount, active status, and average tenure.
+- **Access Control**: Requires the `analytics` permission (under Employee Management) AND excludes the `Employee` user type. All data respects the `OrganizationScoped` trait.
 - **Tech**: Integrated with Chart.js for high-performance rendering.
 
 ### 🏠 Dashboard Timeline Enhancements

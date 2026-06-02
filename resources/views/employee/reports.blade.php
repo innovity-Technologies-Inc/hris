@@ -58,8 +58,8 @@
     </div>
 
     <div class="row">
-        {{-- Charts Section --}}
-        <div class="col-lg-6 mb-4">
+        {{-- Age Analysis Section --}}
+        <div class="col-lg-4 mb-4">
             <div class="card shadow-sm border-0 rounded-3 h-100">
                 <div class="card-header bg-transparent border-0 pt-4 px-4">
                     <h5 class="fw-bold mb-0">
@@ -70,20 +70,86 @@
                     <div style="height: 220px;">
                         <canvas id="ageDistChart"></canvas>
                     </div>
+                    <div class="row text-center mt-4 pt-2 border-top">
+                        <div class="col-4 border-end">
+                            <p class="text-muted mb-1 small">Average</p>
+                            <h5 class="mb-0 fw-bold text-primary">{{ $ageStats['avg'] }}y</h5>
+                        </div>
+                        <div class="col-4 border-end">
+                            <p class="text-muted mb-1 small">Min</p>
+                            <h5 class="mb-0 fw-bold text-success">{{ $ageStats['min'] }}y</h5>
+                        </div>
+                        <div class="col-4">
+                            <p class="text-muted mb-1 small">Max</p>
+                            <h5 class="mb-0 fw-bold text-danger">{{ $ageStats['max'] }}y</h5>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-6 mb-4">
+        {{-- Service Loyalty Chart --}}
+        <div class="col-lg-4 mb-4">
             <div class="card shadow-sm border-0 rounded-3 h-100">
                 <div class="card-header bg-transparent border-0 pt-4 px-4">
                     <h5 class="fw-bold mb-0">
-                        <i class="mdi mdi-chart-bar text-success me-2"></i> Years of Service (Loyalty)
+                        <i class="mdi mdi-chart-bar text-success me-2"></i> Years of Service
                     </h5>
                 </div>
                 <div class="card-body p-4">
                     <div style="height: 220px;">
                         <canvas id="loyaltyChart"></canvas>
+                    </div>
+                    <p class="text-muted small text-center mt-4 mb-0">Distribution of employee tenure across the organization.</p>
+                </div>
+            </div>
+        </div>
+
+        {{-- Company Distribution Chart --}}
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-sm border-0 rounded-3 h-100">
+                <div class="card-header bg-transparent border-0 pt-4 px-4">
+                    <h5 class="fw-bold mb-0">
+                        <i class="mdi mdi-office-building text-info me-2"></i> Company Distribution
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div style="height: 220px;">
+                        <canvas id="companyDistChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        {{-- Hierarchy Breakdown (Divisions) --}}
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm border-0 rounded-3 h-100">
+                <div class="card-header bg-transparent border-0 pt-4 px-4">
+                    <h5 class="fw-bold mb-0">
+                        <i class="mdi mdi-sitemap text-purple me-2"></i> Division Breakdown
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div style="height: 250px;">
+                        <canvas id="divisionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Hierarchy Breakdown (Departments) --}}
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm border-0 rounded-3 h-100">
+                <div class="card-header bg-transparent border-0 pt-4 px-4">
+                    <h5 class="fw-bold mb-0">
+                        <i class="mdi mdi-domain text-warning me-2"></i> Department Breakdown
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div style="height: 250px;">
+                        <canvas id="deptChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -162,6 +228,8 @@
         [data-bs-theme=dark] .bg-glass {
             background: rgba(45, 55, 72, 0.7);
         }
+        .bg-soft-purple { background-color: rgba(111, 66, 193, 0.15); }
+        .text-purple { color: #6f42c1; }
     </style>
 @endsection
 
@@ -176,12 +244,24 @@
                     legend: {
                         position: 'bottom',
                         labels: {
-                            padding: 20,
-                            usePointStyle: true
+                            padding: 15,
+                            usePointStyle: true,
+                            font: { size: 11 }
                         }
                     }
                 }
             };
+
+            const chartColors = [
+                'rgba(52, 152, 219, 0.7)',
+                'rgba(46, 204, 113, 0.7)',
+                'rgba(155, 89, 182, 0.7)',
+                'rgba(241, 196, 15, 0.7)',
+                'rgba(231, 76, 60, 0.7)',
+                'rgba(52, 73, 94, 0.7)',
+                'rgba(26, 188, 156, 0.7)',
+                'rgba(230, 126, 34, 0.7)'
+            ];
 
             // Age Distribution Chart
             const ageCtx = document.getElementById('ageDistChart').getContext('2d');
@@ -191,13 +271,7 @@
                     labels: {!! json_encode($ageDist['labels']) !!},
                     datasets: [{
                         data: {!! json_encode($ageDist['data']) !!},
-                        backgroundColor: [
-                            'rgba(52, 152, 219, 0.7)',
-                            'rgba(46, 204, 113, 0.7)',
-                            'rgba(155, 89, 182, 0.7)',
-                            'rgba(241, 196, 15, 0.7)',
-                            'rgba(231, 76, 60, 0.7)'
-                        ],
+                        backgroundColor: chartColors,
                         borderWidth: 0,
                         hoverOffset: 10
                     }]
@@ -215,23 +289,71 @@
                 data: {
                     labels: {!! json_encode($loyaltyDist['labels']) !!},
                     datasets: [{
-                        label: 'Number of Employees',
+                        label: 'Employees',
                         data: {!! json_encode($loyaltyDist['data']) !!},
                         backgroundColor: 'rgba(46, 204, 113, 0.6)',
                         borderColor: 'rgb(46, 204, 113)',
                         borderWidth: 1,
-                        borderRadius: 8
+                        borderRadius: 6
                     }]
                 },
                 options: {
                     ...commonOptions,
                     scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                precision: 0
-                            }
-                        }
+                        y: { beginAtZero: true, ticks: { precision: 0 } }
+                    }
+                }
+            });
+
+            // Company Distribution Chart
+            const companyCtx = document.getElementById('companyDistChart').getContext('2d');
+            new Chart(companyCtx, {
+                type: 'pie',
+                data: {
+                    labels: {!! json_encode($companyDist['labels']) !!},
+                    datasets: [{
+                        data: {!! json_encode($companyDist['data']) !!},
+                        backgroundColor: chartColors,
+                        borderWidth: 0
+                    }]
+                },
+                options: commonOptions
+            });
+
+            // Division Chart
+            const divCtx = document.getElementById('divisionChart').getContext('2d');
+            new Chart(divCtx, {
+                type: 'polarArea',
+                data: {
+                    labels: {!! json_encode($divisionDist['labels']) !!},
+                    datasets: [{
+                        data: {!! json_encode($divisionDist['data']) !!},
+                        backgroundColor: chartColors
+                    }]
+                },
+                options: commonOptions
+            });
+
+            // Department Chart
+            const deptCtx = document.getElementById('deptChart').getContext('2d');
+            new Chart(deptCtx, {
+                type: 'bar',
+                data: {
+                    labels: {!! json_encode($deptDist['labels']) !!},
+                    datasets: [{
+                        label: 'Employees',
+                        data: {!! json_encode($deptDist['data']) !!},
+                        backgroundColor: 'rgba(241, 196, 15, 0.6)',
+                        borderColor: 'rgb(241, 196, 15)',
+                        borderWidth: 1,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    indexAxis: 'y',
+                    scales: {
+                        x: { beginAtZero: true, ticks: { precision: 0 } }
                     }
                 }
             });
