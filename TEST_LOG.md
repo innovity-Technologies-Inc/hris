@@ -101,3 +101,15 @@
 - `it validates notification settings data`: ✅ PASSED
 
 **Status**: ✅ SUCCESS
+
+## 2026-06-02 (Notification Alert Enhancements & Bug Fix)
+
+**Goal**: Implement Range Logic for alerts, prevent duplicate notifications, and fix Blade syntax error in settings view.
+
+**Exact Command**: `php artisan config:clear; $env:DB_CONNECTION='sqlite'; $env:DB_DATABASE=':memory:'; php artisan test tests/Feature/NotificationRangeAlertTest.php`n
+**Results**:
+- `it alerts for expiries within the range`: ✅ PASSED
+- `it does not send duplicate notifications for the same expiry cycle`: ✅ PASSED
+- `Blade syntax error (InvalidArgumentException)`: ✅ FIXED
+
+**Status**: ✅ SUCCESS

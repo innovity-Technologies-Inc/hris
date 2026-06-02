@@ -8,7 +8,6 @@ use App\Models\Setting\NotificationSetting;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class CheckAlerts extends Command
@@ -25,7 +24,7 @@ class CheckAlerts extends Command
      *
      * @var string
      */
-    protected $description = 'Check for employee birthdays and document expiries based on notification settings';
+    protected $description = 'Check for employee birthdays and document expiries based on notification settings (Range Logic)';
 
     /**
      * Execute the console command.
@@ -41,7 +40,7 @@ class CheckAlerts extends Command
         $today = Carbon::today();
         $this->info("Checking alerts for: " . $today->toDateString());
 
-        // 1. Birthdays
+        // 1. Birthdays (Still exact day only)
         if ($settings->birthday_days > 0) {
             $this->checkBirthdays($settings->birthday_days, $today);
         }
@@ -86,63 +85,107 @@ class CheckAlerts extends Command
 
         foreach ($employees as $employee) {
             $message = "Upcoming Birthday: {$employee->full_name} on {$targetDate->format('M d')}.";
-            $this->sendToNonEmployees('Birthday Alert', $message, ['employee_id' => $employee->id, 'type' => 'birthday']);
+            
+            // For birthdays, we only alert once on the exact day relative to threshold
+            $this->sendToNonEmployees('Birthday Alert', $message, [
+                'employee_id' => $employee->id, 
+                'type' => 'birthday',
+                'target_date' => $targetDate->toDateString()
+            ]);
         }
     }
 
     protected function checkExpiry(string $column, int $days, Carbon $today, string $label)
     {
-        $targetDate = $today->copy()->addDays($days)->toDateString();
+        // RANGE LOGIC: Anyone whose expiry is between TODAY and threshold
+        $thresholdDate = $today->copy()->addDays($days)->toDateString();
 
-        $employees = Employee::where($column, $targetDate)->get();
+        $employees = Employee::whereBetween($column, [$today->toDateString(), $thresholdDate])->get();
 
         foreach ($employees as $employee) {
-            $message = "{$label} Expiry: {$employee->full_name}'s {$label} will expire on {$targetDate}.";
+            $expiryDate = $employee->{$column};
+            $message = "{$label} Expiry: {$employee->full_name}'s {$label} will expire on {$expiryDate}.";
             
-            // Send to the employee if they have a user account
+            // PREVENT DUPLICATES: Only notify if we haven't already notified for THIS specific expiry date
+            $data = [
+                'employee_id' => $employee->id, 
+                'type' => strtolower($label),
+                'expiry_date' => $expiryDate
+            ];
+
+            // Send to the employee
             $user = User::where('employee_id', $employee->id)->first();
-            if ($user) {
-                $this->createNotification($user, "{$label} Expiry Alert", $message, ['employee_id' => $employee->id, 'type' => strtolower($label)]);
+            if ($user && !$this->notificationExists($user->id, $data)) {
+                $this->createNotification($user, "{$label} Expiry Alert", $message, $data);
             }
 
             // Send to non-employees
-            $this->sendToNonEmployees("{$label} Expiry Alert", $message, ['employee_id' => $employee->id, 'type' => strtolower($label)]);
+            $nonEmployeeUsers = User::where('user_type', '!=', 'Employee')->get();
+            foreach ($nonEmployeeUsers as $neUser) {
+                if (!$this->notificationExists($neUser->id, $data)) {
+                    $this->createNotification($neUser, "{$label} Expiry Alert", $message, $data);
+                }
+            }
         }
     }
 
     protected function checkProbation(int $days, Carbon $today)
     {
-        $targetDate = $today->copy()->addDays($days)->toDateString();
+        $thresholdDate = $today->copy()->addDays($days)->toDateString();
 
-        // Probation end is calculated as date_of_join + probation_duration (if any)
-        // Or directly from confirmation_date if that represents the end
-        // Requirement says "Probation Period end", I'll use office_info.
-        
-        $employees = Employee::whereHas('officeInfo', function($query) use ($targetDate) {
-            // Logic: date_of_join + probation_duration = targetDate
-            // In SQL: DATE_ADD(date_of_join, INTERVAL probation_duration DAY) = targetDate
-            $query->whereRaw("DATE_ADD(date_of_join, INTERVAL probation_duration DAY) = ?", [$targetDate]);
-        })->get();
+        $employees = Employee::whereHas('officeInfo', function($query) use ($today, $thresholdDate) {
+            $query->whereRaw("DATE_ADD(date_of_join, INTERVAL probation_duration DAY) BETWEEN ? AND ?", [
+                $today->toDateString(), 
+                $thresholdDate
+            ]);
+        })->with('officeInfo')->get();
 
         foreach ($employees as $employee) {
-            $message = "Probation Period End: {$employee->full_name}'s probation period will end on {$targetDate}.";
+            $probationEndDate = Carbon::parse($employee->officeInfo->date_of_join)
+                ->addDays($employee->officeInfo->probation_duration)
+                ->toDateString();
+
+            $message = "Probation Period End: {$employee->full_name}'s probation period will end on {$probationEndDate}.";
             
+            $data = [
+                'employee_id' => $employee->id, 
+                'type' => 'probation',
+                'end_date' => $probationEndDate
+            ];
+
             // Send to the employee
             $user = User::where('employee_id', $employee->id)->first();
-            if ($user) {
-                $this->createNotification($user, "Probation End Alert", $message, ['employee_id' => $employee->id, 'type' => 'probation']);
+            if ($user && !$this->notificationExists($user->id, $data)) {
+                $this->createNotification($user, "Probation End Alert", $message, $data);
             }
 
             // Send to non-employees
-            $this->sendToNonEmployees("Probation End Alert", $message, ['employee_id' => $employee->id, 'type' => 'probation']);
+            $nonEmployeeUsers = User::where('user_type', '!=', 'Employee')->get();
+            foreach ($nonEmployeeUsers as $neUser) {
+                if (!$this->notificationExists($neUser->id, $data)) {
+                    $this->createNotification($neUser, "Probation End Alert", $message, $data);
+                }
+            }
         }
+    }
+
+    /**
+     * Check if a notification with the same data already exists for a user
+     */
+    protected function notificationExists(int $userId, array $data): bool
+    {
+        return Notification::where('user_id', $userId)
+            ->whereJsonContains('data', $data)
+            ->exists();
     }
 
     protected function sendToNonEmployees(string $title, string $message, array $data)
     {
         $users = User::where('user_type', '!=', 'Employee')->get();
         foreach ($users as $user) {
-            $this->createNotification($user, $title, $message, $data);
+            if (!$this->notificationExists($user->id, $data)) {
+                $this->createNotification($user, $title, $message, $data);
+            }
         }
     }
 

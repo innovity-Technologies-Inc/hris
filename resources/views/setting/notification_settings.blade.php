@@ -175,7 +175,3 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endpush
-            </div>
-        </div>
-    </div>
-@endsection
