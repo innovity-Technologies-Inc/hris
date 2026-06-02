@@ -310,6 +310,23 @@
                 }
             });
 
+            // Company Distribution Chart (Stacked Bar by Gender)
+            const companyCtx = document.getElementById('companyDistChart').getContext('2d');
+            new Chart(companyCtx, {
+                type: 'bar',
+                data: {
+                    labels: {!! json_encode($companyDist['labels']) !!},
+                    datasets: {!! json_encode($companyDist['datasets']) !!}
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        x: { stacked: true },
+                        y: { stacked: true, beginAtZero: true, ticks: { precision: 0 } }
+                    }
+                }
+            });
+
             // Drill-Down Chart Implementation
             const drillDownCtx = document.getElementById('drillDownChart');
             let drillDownChartInstance = null;
@@ -320,6 +337,15 @@
 
             const btnBack = document.getElementById('btnBackDrillDown');
             const titleEl = document.getElementById('drillDownTitle');
+
+            // Dynamic colors based on hierarchy level
+            const levelColors = {
+                'company': { bg: 'rgba(52, 152, 219, 0.7)', border: 'rgb(52, 152, 219)' }, // Blue
+                'business_unit': { bg: 'rgba(46, 204, 113, 0.7)', border: 'rgb(46, 204, 113)' }, // Green
+                'division': { bg: 'rgba(155, 89, 182, 0.7)', border: 'rgb(155, 89, 182)' }, // Purple
+                'department': { bg: 'rgba(241, 196, 15, 0.7)', border: 'rgb(241, 196, 15)' }, // Yellow
+                'section': { bg: 'rgba(230, 126, 34, 0.7)', border: 'rgb(230, 126, 34)' } // Orange
+            };
 
             function renderDrillDownChart(level, parentId = null) {
                 // Show loading state if desired
@@ -341,6 +367,8 @@
                         drillDownChartInstance.destroy();
                     }
 
+                    const colors = levelColors[level] || levelColors['company'];
+
                     drillDownChartInstance = new Chart(drillDownCtx.getContext('2d'), {
                         type: 'bar', // Using bar for clarity in drill-downs
                         data: {
@@ -348,8 +376,8 @@
                             datasets: [{
                                 label: 'Employees',
                                 data: data.data,
-                                backgroundColor: 'rgba(52, 152, 219, 0.7)',
-                                borderColor: 'rgb(52, 152, 219)',
+                                backgroundColor: colors.bg,
+                                borderColor: colors.border,
                                 borderWidth: 1,
                                 borderRadius: 6
                             }]

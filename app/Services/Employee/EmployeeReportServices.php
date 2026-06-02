@@ -64,19 +64,77 @@ class EmployeeReportServices
     }
 
     /**
-     * Get Company-wise employee distribution.
+     * Get Company-wise employee distribution with gender data.
      */
     public function getCompanyDistribution(): array
     {
-        $data = EmployeeOfficeInfo::with('getCurrentCompany')
-            ->select('current_company_id', DB::raw('count(*) as count'))
+        $data = EmployeeOfficeInfo::with(['getCurrentCompany', 'employee'])
             ->whereNotNull('current_company_id')
-            ->groupBy('current_company_id')
             ->get();
 
+        $companies = [];
+        foreach ($data as $info) {
+            $companyName = $info->getCurrentCompany->name ?? 'Unknown';
+            $gender = $info->employee->gender ?? 'Other';
+            
+            if (!isset($companies[$companyName])) {
+                $companies[$companyName] = ['Male' => 0, 'Female' => 0, 'Other' => 0];
+            }
+            
+            if ($gender === 'Male') {
+                $companies[$companyName]['Male']++;
+            } elseif ($gender === 'Female') {
+                $companies[$companyName]['Female']++;
+            } else {
+                $companies[$companyName]['Other']++;
+            }
+        }
+
+        $labels = array_keys($companies);
+        $maleData = [];
+        $femaleData = [];
+        $otherData = [];
+
+        foreach ($labels as $label) {
+            $maleData[] = $companies[$label]['Male'];
+            $femaleData[] = $companies[$label]['Female'];
+            $otherData[] = $companies[$label]['Other'];
+        }
+
+        // Only include "Other" dataset if there's actually data for it to keep chart clean
+        $datasets = [
+            [
+                'label' => 'Male',
+                'data' => $maleData,
+                'backgroundColor' => 'rgba(52, 152, 219, 0.7)',
+                'borderColor' => 'rgb(52, 152, 219)',
+                'borderWidth' => 1,
+                'stack' => 'Stack 0',
+            ],
+            [
+                'label' => 'Female',
+                'data' => $femaleData,
+                'backgroundColor' => 'rgba(155, 89, 182, 0.7)',
+                'borderColor' => 'rgb(155, 89, 182)',
+                'borderWidth' => 1,
+                'stack' => 'Stack 0',
+            ]
+        ];
+
+        if (array_sum($otherData) > 0) {
+            $datasets[] = [
+                'label' => 'Other/Unspecified',
+                'data' => $otherData,
+                'backgroundColor' => 'rgba(149, 165, 166, 0.7)',
+                'borderColor' => 'rgb(149, 165, 166)',
+                'borderWidth' => 1,
+                'stack' => 'Stack 0',
+            ];
+        }
+
         return [
-            'labels' => $data->map(fn($item) => $item->getCurrentCompany->name ?? 'Unknown')->toArray(),
-            'data' => $data->pluck('count')->toArray(),
+            'labels' => $labels,
+            'datasets' => $datasets,
         ];
     }
 
