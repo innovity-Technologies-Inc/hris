@@ -59,7 +59,19 @@ class EmployeeDashboardServices
         $events = collect();
         $employee = Employee::findOrFail($employeeId);
 
-        // 1. Onboarding (Profile Creation)
+        // 1. Onboarding (Born)
+        if ($employee->date_of_birth) {
+            $events->push([
+                'date' => Carbon::parse($employee->date_of_birth),
+                'type' => 'birth',
+                'title' => 'Born',
+                'description' => "Born on " . Carbon::parse($employee->date_of_birth)->format('M d, Y') . " (Current Age: " . Carbon::parse($employee->date_of_birth)->age . " years)",
+                'icon' => 'calendar',
+                'color' => 'secondary'
+            ]);
+        }
+
+        // 2. Onboarding (Profile Creation)
         $events->push([
             'date' => $employee->created_at,
             'type' => 'onboarding',
@@ -69,16 +81,31 @@ class EmployeeDashboardServices
             'color' => 'primary'
         ]);
 
-        // 2. Official Joining Date
+        // 3. Official Joining Date
         if ($employee->officeInfo && $employee->officeInfo->date_of_join) {
+            $joiningDate = Carbon::parse($employee->officeInfo->date_of_join);
             $events->push([
-                'date' => Carbon::parse($employee->officeInfo->date_of_join),
+                'date' => $joiningDate,
                 'type' => 'joining',
                 'title' => 'Joined Organization',
                 'description' => 'Official start date of employment.',
                 'icon' => 'briefcase',
                 'color' => 'info'
             ]);
+
+            // 4. Probation End Date
+            if ($employee->officeInfo->probation_duration > 0) {
+                $probationEndDate = $joiningDate->copy()->addDays($employee->officeInfo->probation_duration);
+                $isCompleted = $probationEndDate->isPast();
+                $events->push([
+                    'date' => $probationEndDate,
+                    'type' => 'probation_end',
+                    'title' => 'Probation Period End',
+                    'description' => $isCompleted ? 'Successfully completed the probation period.' : 'Scheduled end of the probation period.',
+                    'icon' => $isCompleted ? 'shield-check' : 'clock',
+                    'color' => $isCompleted ? 'success' : 'warning'
+                ]);
+            }
         }
 
         // 3. Profile Approval (using updated_at if active)

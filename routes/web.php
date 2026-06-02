@@ -414,6 +414,8 @@ Route::prefix('employees')->middleware('auth')->group(function () {
         });
     });
 
+    Route::get('reports', [\App\Http\Controllers\Employee\EmployeeReportController::class, 'index'])->name('employee.reports');
+
     // Employee ID Card Routes
     Route::controller(\App\Http\Controllers\Employee\EmployeeIdCardController::class)->group(function () {
         Route::middleware('permission:id-card-design.view')->group(function () {

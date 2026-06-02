@@ -249,6 +249,23 @@ A comprehensive Human Resource Management System (HRMS) built with Laravel 12, f
 - **Automation**:
     *   Daily scheduled task (command) to evaluate all thresholds and generate notifications.
 
+### 📈 Employee Reports & Analytics
+- **Goal**: Provide visual analytics and detailed reports for workforce management.
+- **Report Section**:
+    - **Ages**: Distribution of employee ages (e.g., age groups).
+    - **Years of Service (Loyalty)**: Analysis of tenure across the organization.
+    - **Upcoming Birthdays**: A list of employees with birthdays in the current month/week.
+    - **Service Analysis**: Comprehensive overview of service-related data.
+- **UI/UX**:
+    - Modern dashboard with interactive charts and graphs (Chart.js).
+    - Maintain "Glassmorphism" aesthetic.
+    - Accessible via "Reports" under the "Employees" menu in the sidebar.
+
+### 🏠 Employee Dashboard Updates
+- **Timeline Enhancements**:
+    - **Age**: Include birth date/age milestone in the career timeline.
+    - **Probation End**: Include the calculated probation end date (`date_of_join` + `probation_duration`) in the timeline.
+
 ## Technical Constraints
 - **Framework**: Laravel 12.
 - **PHP Version**: 8.2+ (Strict Typing).

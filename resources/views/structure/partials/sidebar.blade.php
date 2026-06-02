@@ -110,6 +110,10 @@
                                         href='{{ route('employee.import') }}'>Bulk Upload</a>
                                 </li>
                                 @endif
+                                <li>
+                                    <a class='tp-link @if (Route::is('employee.reports')) menuitem-active @endif'
+                                        href='{{ route('employee.reports') }}'>Reports</a>
+                                </li>
                             </ul>
                         </div>
                     @endif
