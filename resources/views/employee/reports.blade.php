@@ -134,58 +134,63 @@
                     </div>
                     <div class="card-body p-4 pt-0">
                         {{-- Dynamic Filters --}}
-                        <div class="row g-2 mb-4 mt-2 filter-container" data-chart-key="{{ $key }}">
-                            {{-- Company Filter --}}
-                            <div class="col">
-                                <select class="form-select form-select-sm filter-company">
-                                    @if(count($filterOptions['companies']) > 1 || auth()->user()->user_type === 'Group')
+                        @if(auth()->user()->user_type === 'Group')
+                            <div class="row g-2 mb-4 mt-2 filter-container" data-chart-key="{{ $key }}">
+                                {{-- Company Filter (Appears in all) --}}
+                                <div class="col">
+                                    <select class="form-select form-select-sm filter-company">
                                         <option value="">All Companies</option>
-                                    @endif
-                                    @foreach($filterOptions['companies'] as $id => $name)
-                                        <option value="{{ $id }}">{{ $name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                                        @foreach($filterOptions['companies'] as $id => $name)
+                                            <option value="{{ $id }}">{{ $name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
 
-                            @if(in_array($key, ['division', 'department', 'section']))
-                                <div class="col">
-                                    <select class="form-select form-select-sm filter-bu">
-                                        @if(count($filterOptions['businessUnits']) > 1 || auth()->user()->user_type === 'Group')
+                                {{-- BU Filter (Appears in Division, Department, Section) --}}
+                                @if(in_array($key, ['division', 'department', 'section']))
+                                    <div class="col">
+                                        <select class="form-select form-select-sm filter-bu">
                                             <option value="">All Business Units</option>
-                                        @endif
-                                        @foreach($filterOptions['businessUnits'] as $id => $name)
-                                            <option value="{{ $id }}">{{ $name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            @endif
+                                            @foreach($filterOptions['businessUnits'] as $id => $name)
+                                                <option value="{{ $id }}">{{ $name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                @endif
 
-                            @if(in_array($key, ['department', 'section']))
-                                <div class="col">
-                                    <select class="form-select form-select-sm filter-division">
-                                        @if(count($filterOptions['divisions']) > 1 || auth()->user()->user_type === 'Group')
+                                {{-- Division Filter (Appears in Department, Section) --}}
+                                @if(in_array($key, ['department', 'section']))
+                                    <div class="col">
+                                        <select class="form-select form-select-sm filter-division">
                                             <option value="">All Divisions</option>
-                                        @endif
-                                        @foreach($filterOptions['divisions'] as $id => $name)
-                                            <option value="{{ $id }}">{{ $name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            @endif
+                                            @foreach($filterOptions['divisions'] as $id => $name)
+                                                <option value="{{ $id }}">{{ $name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                @endif
 
-                            @if($key === 'section')
-                                <div class="col">
-                                    <select class="form-select form-select-sm filter-department">
-                                        @if(count($filterOptions['departments']) > 1 || auth()->user()->user_type === 'Group')
+                                {{-- Department Filter (Appears only in Section) --}}
+                                @if($key === 'section')
+                                    <div class="col">
+                                        <select class="form-select form-select-sm filter-department">
                                             <option value="">All Departments</option>
-                                        @endif
-                                        @foreach($filterOptions['departments'] as $id => $name)
-                                            <option value="{{ $id }}">{{ $name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            @endif
-                        </div>
+                                            @foreach($filterOptions['departments'] as $id => $name)
+                                                <option value="{{ $id }}">{{ $name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                @endif
+                            </div>
+                        @else
+                            {{-- Non-Group Users get predefined scopes and no filter UI --}}
+                            <div class="mb-4 mt-2 filter-container d-none" data-chart-key="{{ $key }}">
+                                <input type="hidden" class="filter-company" value="">
+                                <input type="hidden" class="filter-bu" value="">
+                                <input type="hidden" class="filter-division" value="">
+                                <input type="hidden" class="filter-department" value="">
+                            </div>
+                        @endif
 
                         <div style="height: 250px; position: relative;">
                             <canvas id="{{ $key }}Chart"></canvas>

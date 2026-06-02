@@ -139,3 +139,13 @@
 - `All other existing analytics tests`: ✅ PASSED
 
 **Status**: ✅ SUCCESS
+
+## 2026-06-02 (Cascading Filters Update)
+
+**Goal**: Implement live cascading filters for hierarchy analytics, restricting filter UI based on user_type.
+
+**Exact Command**: `php artisan config:clear; $env:DB_CONNECTION='sqlite'; $env:DB_DATABASE=':memory:'; php artisan test tests/Feature/Employee/EmployeeReportTest.php`n
+**Results**:
+- `it loads the analytics page for authorized users` (with new filter UI logic): ✅ PASSED
+
+**Status**: ✅ SUCCESS
