@@ -104,7 +104,26 @@ Run the database migrations to create the necessary tables:
 php artisan migrate
 ```
 
-### 7. Database Seeding (Optional)
+### 7. Automated Tasks & Alerts (Required)
+
+This project includes an automated alert system for birthdays and document expiries. To ensure these alerts are sent automatically, you must set up the Laravel Scheduler.
+
+#### A. Local Development
+To run scheduled tasks locally while you are working, keep this command running in a separate terminal:
+```bash
+php artisan schedule:work
+```
+
+#### B. Live Server (Production)
+On a live server, you must add a single Cron entry to your server. 
+
+1. Open your server's crontab (usually `crontab -e` via SSH) or use the **Cron Jobs** section in CPanel.
+2. Add the following line (replace `/path-to-your-project` with the actual path):
+```bash
+* * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
+```
+
+### 8. Database Seeding (Optional)
 If you want to populate the database with sample data:
 ```bash
 php artisan db:seed
