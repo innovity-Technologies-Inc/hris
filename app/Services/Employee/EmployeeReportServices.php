@@ -64,6 +64,23 @@ class EmployeeReportServices
     }
 
     /**
+     * Get Company-wise employee distribution.
+     */
+    public function getCompanyDistribution(): array
+    {
+        $data = EmployeeOfficeInfo::with('getCurrentCompany')
+            ->select('current_company_id', DB::raw('count(*) as count'))
+            ->whereNotNull('current_company_id')
+            ->groupBy('current_company_id')
+            ->get();
+
+        return [
+            'labels' => $data->map(fn($item) => $item->getCurrentCompany->name ?? 'Unknown')->toArray(),
+            'data' => $data->pluck('count')->toArray(),
+        ];
+    }
+
+    /**
      * Get data for progressive hierarchy drill-down.
      */
     public function getDrillDownData(string $level = 'company', ?int $parentId = null): array

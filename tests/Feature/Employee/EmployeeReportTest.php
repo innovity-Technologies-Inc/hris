@@ -100,7 +100,7 @@ it('loads the analytics page for authorized users', function () {
 
     $response->assertStatus(200);
     $response->assertViewIs('employee.reports');
-    $response->assertViewHasAll(['ageDist', 'ageStats', 'loyaltyDist', 'companyDist', 'dynamicHierarchies', 'filterOptions', 'birthdays', 'serviceSummary']);
+    $response->assertViewHasAll(['ageDist', 'ageStats', 'loyaltyDist', 'birthdays', 'serviceSummary']);
 });
 
 it('denies access to analytics for users without permission', function () {

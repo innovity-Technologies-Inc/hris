@@ -117,6 +117,23 @@
                     <div style="height: 220px;">
                         <canvas id="companyDistChart"></canvas>
                     </div>
+                    <p class="text-muted small text-center mt-4 mb-0">Number of employees per company.</p>
+                </div>
+            </div>
+        </div>
+        </div>
+        {{-- Company Distribution Chart --}}
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-sm border-0 rounded-3 h-100">
+                <div class="card-header bg-transparent border-0 pt-4 px-4">
+                    <h5 class="fw-bold mb-0">
+                        <i class="mdi mdi-office-building text-info me-2"></i> Company Distribution
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div style="height: 220px;">
+                        <canvas id="companyDistChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>

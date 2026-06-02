@@ -31,13 +31,14 @@ class EmployeeReportController extends Controller
         $ageDist = $this->reportService->getAgeDistribution();
         $ageStats = $this->reportService->getAgeAnalysis();
         $loyaltyDist = $this->reportService->getServiceLoyalty();
+        $companyDist = $this->reportService->getCompanyDistribution();
         
         $birthdays = $this->reportService->getUpcomingBirthdays();
         $serviceSummary = $this->reportService->getServiceAnalysis();
 
         return view('employee.reports', compact(
             'title', 'section', 'sub_section', 
-            'ageDist', 'ageStats', 'loyaltyDist', 'birthdays', 'serviceSummary'
+            'ageDist', 'ageStats', 'loyaltyDist', 'companyDist', 'birthdays', 'serviceSummary'
         ));
     }
 
