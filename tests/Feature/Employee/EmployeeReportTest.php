@@ -93,13 +93,14 @@ it('identifies upcoming birthdays', function () {
 });
 
 it('loads the analytics page for authorized users', function () {
+    $this->withoutExceptionHandling();
     $this->actingAs($this->admin);
 
     $response = $this->get(route('employee.reports'));
 
     $response->assertStatus(200);
     $response->assertViewIs('employee.reports');
-    $response->assertViewHasAll(['ageDist', 'ageStats', 'loyaltyDist', 'companyDist', 'divisionDist', 'deptDist', 'birthdays', 'serviceSummary']);
+    $response->assertViewHasAll(['ageDist', 'ageStats', 'loyaltyDist', 'companyDist', 'dynamicHierarchies', 'filterOptions', 'birthdays', 'serviceSummary']);
 });
 
 it('denies access to analytics for users without permission', function () {

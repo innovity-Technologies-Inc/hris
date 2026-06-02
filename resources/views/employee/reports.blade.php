@@ -127,13 +127,67 @@
         @foreach($dynamicHierarchies as $key => $hierarchy)
             <div class="col-lg-6 mb-4">
                 <div class="card shadow-sm border-0 rounded-3 h-100">
-                    <div class="card-header bg-transparent border-0 pt-4 px-4">
+                    <div class="card-header bg-transparent border-0 pt-4 px-4 d-flex justify-content-between align-items-center">
                         <h5 class="fw-bold mb-0">
                             <i class="mdi {{ $hierarchy['icon'] }} text-{{ $hierarchy['color'] }} me-2"></i> {{ $hierarchy['title'] }}
                         </h5>
                     </div>
-                    <div class="card-body p-4">
-                        <div style="height: 250px;">
+                    <div class="card-body p-4 pt-0">
+                        {{-- Dynamic Filters --}}
+                        <div class="row g-2 mb-4 mt-2 filter-container" data-chart-key="{{ $key }}">
+                            {{-- Company Filter --}}
+                            <div class="col">
+                                <select class="form-select form-select-sm filter-company">
+                                    @if(count($filterOptions['companies']) > 1 || auth()->user()->user_type === 'Group')
+                                        <option value="">All Companies</option>
+                                    @endif
+                                    @foreach($filterOptions['companies'] as $id => $name)
+                                        <option value="{{ $id }}">{{ $name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            @if(in_array($key, ['division', 'department', 'section']))
+                                <div class="col">
+                                    <select class="form-select form-select-sm filter-bu">
+                                        @if(count($filterOptions['businessUnits']) > 1 || auth()->user()->user_type === 'Group')
+                                            <option value="">All Business Units</option>
+                                        @endif
+                                        @foreach($filterOptions['businessUnits'] as $id => $name)
+                                            <option value="{{ $id }}">{{ $name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endif
+
+                            @if(in_array($key, ['department', 'section']))
+                                <div class="col">
+                                    <select class="form-select form-select-sm filter-division">
+                                        @if(count($filterOptions['divisions']) > 1 || auth()->user()->user_type === 'Group')
+                                            <option value="">All Divisions</option>
+                                        @endif
+                                        @foreach($filterOptions['divisions'] as $id => $name)
+                                            <option value="{{ $id }}">{{ $name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endif
+
+                            @if($key === 'section')
+                                <div class="col">
+                                    <select class="form-select form-select-sm filter-department">
+                                        @if(count($filterOptions['departments']) > 1 || auth()->user()->user_type === 'Group')
+                                            <option value="">All Departments</option>
+                                        @endif
+                                        @foreach($filterOptions['departments'] as $id => $name)
+                                            <option value="{{ $id }}">{{ $name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endif
+                        </div>
+
+                        <div style="height: 250px; position: relative;">
                             <canvas id="{{ $key }}Chart"></canvas>
                         </div>
                     </div>
@@ -308,6 +362,7 @@
 
             // Dynamic Hierarchy Charts
             const dynamicHierarchies = {!! json_encode($dynamicHierarchies) !!};
+            const hierarchyCharts = {};
             
             Object.keys(dynamicHierarchies).forEach(key => {
                 const hierarchy = dynamicHierarchies[key];
@@ -336,8 +391,38 @@
                         };
                     }
 
-                    new Chart(ctx.getContext('2d'), chartConfig);
+                    hierarchyCharts[key] = new Chart(ctx.getContext('2d'), chartConfig);
                 }
+            });
+
+            // Handle Filter Changes
+            document.querySelectorAll('.filter-container select').forEach(select => {
+                select.addEventListener('change', function() {
+                    const container = this.closest('.filter-container');
+                    const chartKey = container.getAttribute('data-chart-key');
+                    
+                    const company_id = container.querySelector('.filter-company')?.value || '';
+                    const business_unit_id = container.querySelector('.filter-bu')?.value || '';
+                    const division_id = container.querySelector('.filter-division')?.value || '';
+                    const department_id = container.querySelector('.filter-department')?.value || '';
+
+                    // Show loading state on canvas wrapper if needed
+                    const baseUrl = "{{ route('employee.reports.filtered_data', ['type' => ':type']) }}";
+                    const url = baseUrl.replace(':type', chartKey);
+
+                    axios.get(url, {
+                        params: { company_id, business_unit_id, division_id, department_id }
+                    })
+                    .then(response => {
+                        const data = response.data;
+                        if (hierarchyCharts[chartKey]) {
+                            hierarchyCharts[chartKey].data.labels = data.labels;
+                            hierarchyCharts[chartKey].data.datasets[0].data = data.data;
+                            hierarchyCharts[chartKey].update();
+                        }
+                    })
+                    .catch(error => console.error('Error fetching filtered data:', error));
+                });
             });
         });
     </script>

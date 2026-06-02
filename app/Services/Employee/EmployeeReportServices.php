@@ -80,19 +80,59 @@ class EmployeeReportServices
     }
 
     /**
-     * Get Hierarchy-wise distribution (Divisions/Departments).
+     * Get Hierarchy-wise distribution (Branches/Divisions/Departments/Sections).
      */
-    public function getHierarchyDistribution(string $type = 'division'): array
+    public function getHierarchyDistribution(string $type = 'division', array $filters = []): array
     {
-        $relation = $type === 'division' ? 'getCurrentDivision' : ($type === 'department' ? 'getCurrentDepartment' : 'getCurrentSection');
-        $column = $type === 'division' ? 'current_division_id' : ($type === 'department' ? 'current_department_id' : 'current_section_id');
-        $labelCol = $type === 'department' ? 'department_name' : 'name';
+        $mapping = [
+            'branch' => [
+                'relation' => 'getCurrentBusinessUnit',
+                'column' => 'current_business_unit_id',
+                'labelCol' => 'name'
+            ],
+            'division' => [
+                'relation' => 'getCurrentDivision',
+                'column' => 'current_division_id',
+                'labelCol' => 'name'
+            ],
+            'department' => [
+                'relation' => 'getCurrentDepartment',
+                'column' => 'current_department_id',
+                'labelCol' => 'department_name'
+            ],
+            'section' => [
+                'relation' => 'getCurrentSection',
+                'column' => 'current_section_id',
+                'labelCol' => 'name'
+            ],
+        ];
 
-        $data = EmployeeOfficeInfo::with($relation)
+        if (!array_key_exists($type, $mapping)) {
+            return ['labels' => [], 'data' => []];
+        }
+
+        $relation = $mapping[$type]['relation'];
+        $column = $mapping[$type]['column'];
+        $labelCol = $mapping[$type]['labelCol'];
+
+        $query = EmployeeOfficeInfo::with($relation)
             ->select($column, DB::raw('count(*) as count'))
-            ->whereNotNull($column)
-            ->groupBy($column)
-            ->get();
+            ->whereNotNull($column);
+
+        if (!empty($filters['company_id'])) {
+            $query->where('current_company_id', $filters['company_id']);
+        }
+        if (!empty($filters['business_unit_id'])) {
+            $query->where('current_business_unit_id', $filters['business_unit_id']);
+        }
+        if (!empty($filters['division_id'])) {
+            $query->where('current_division_id', $filters['division_id']);
+        }
+        if (!empty($filters['department_id'])) {
+            $query->where('current_department_id', $filters['department_id']);
+        }
+
+        $data = $query->groupBy($column)->get();
 
         return [
             'labels' => $data->map(fn($item) => $item->$relation->{$labelCol} ?? 'Unknown')->toArray(),
