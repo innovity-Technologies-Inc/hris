@@ -67,7 +67,9 @@
                     </h5>
                 </div>
                 <div class="card-body p-4">
-                    <canvas id="ageDistChart" height="300"></canvas>
+                    <div style="height: 220px;">
+                        <canvas id="ageDistChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -80,7 +82,9 @@
                     </h5>
                 </div>
                 <div class="card-body p-4">
-                    <canvas id="loyaltyChart" height="300"></canvas>
+                    <div style="height: 220px;">
+                        <canvas id="loyaltyChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
