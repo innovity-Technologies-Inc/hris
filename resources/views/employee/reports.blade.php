@@ -411,6 +411,23 @@
                     const division_id = container.querySelector('.filter-division')?.value || '';
                     const department_id = container.querySelector('.filter-department')?.value || '';
 
+                    // Cascading Dropdowns Logic
+                    if (this.classList.contains('filter-company') && container.querySelector('.filter-bu')) {
+                        const targetBu = container.querySelector('.filter-bu');
+                        updateDropdown(`/get-units/${company_id || 0}`, targetBu, 'All Business Units');
+                        if(container.querySelector('.filter-division')) updateDropdown(`/get-divisions/${company_id || 0}/0`, container.querySelector('.filter-division'), 'All Divisions');
+                        if(container.querySelector('.filter-department')) updateDropdown(`/get-departments/${company_id || 0}/0/0`, container.querySelector('.filter-department'), 'All Departments');
+                    }
+                    else if (this.classList.contains('filter-bu') && container.querySelector('.filter-division')) {
+                        const targetDiv = container.querySelector('.filter-division');
+                        updateDropdown(`/get-divisions/${company_id || 0}/${business_unit_id || 0}`, targetDiv, 'All Divisions');
+                        if(container.querySelector('.filter-department')) updateDropdown(`/get-departments/${company_id || 0}/${business_unit_id || 0}/0`, container.querySelector('.filter-department'), 'All Departments');
+                    }
+                    else if (this.classList.contains('filter-division') && container.querySelector('.filter-department')) {
+                        const targetDept = container.querySelector('.filter-department');
+                        updateDropdown(`/get-departments/${company_id || 0}/${business_unit_id || 0}/${division_id || 0}`, targetDept, 'All Departments');
+                    }
+
                     // Show loading state on canvas wrapper if needed
                     const baseUrl = "{{ route('employee.reports.filtered_data', ['type' => ':type']) }}";
                     const url = baseUrl.replace(':type', chartKey);
@@ -429,6 +446,32 @@
                     .catch(error => console.error('Error fetching filtered data:', error));
                 });
             });
+
+            function updateDropdown(url, selectElement, defaultText) {
+                if (!selectElement) return;
+                
+                // If the URL has a 0 for company_id, just reset it to default
+                if (url.includes('/get-units/0') || url.includes('/get-divisions/0/') || url.includes('/get-departments/0/')) {
+                    selectElement.innerHTML = `<option value="">${defaultText}</option>`;
+                    return;
+                }
+
+                axios.get(url)
+                    .then(response => {
+                        let html = `<option value="">${defaultText}</option>`;
+                        if (response.data) {
+                            // DataController typically returns array of objects for units/divisions/depts
+                            response.data.forEach(item => {
+                                // Handle different ID/Name keys based on what DataController returns
+                                let id = item.id;
+                                let name = item.name || item.department_name; 
+                                html += `<option value="${id}">${name}</option>`;
+                            });
+                        }
+                        selectElement.innerHTML = html;
+                    })
+                    .catch(error => console.error('Error updating dropdown:', error));
+            }
         });
     </script>
 @endpush
