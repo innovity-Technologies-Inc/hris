@@ -153,15 +153,14 @@
                                     <tr>
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                @if($birthday['photo'])
-                                                    <img src="{{ $birthday['photo'] }}" alt="" class="rounded-circle me-3" width="35" height="35">
-                                                @else
-                                                    <div class="avatar-xs me-3">
-                                                        <span class="avatar-title bg-soft-primary text-primary rounded-circle">
-                                                            {{ substr($birthday['full_name'], 0, 1) }}
-                                                        </span>
-                                                    </div>
-                                                @endif
+                                                {!! \App\HelperClass::generateAvatar(
+                                                    $birthday['photo_path'],
+                                                    $birthday['full_name'],
+                                                    32,
+                                                    '#974063',
+                                                    'me-3',
+                                                    $birthday['id'],
+                                                ) !!}
                                                 <span class="fw-semibold">{{ $birthday['full_name'] }}</span>
                                             </div>
                                         </td>

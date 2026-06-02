@@ -239,7 +239,8 @@ class EmployeeReportServices
                     'full_name' => $emp->full_name,
                     'date' => Carbon::parse($emp->date_of_birth)->format('M d'),
                     'age_upcoming' => Carbon::parse($emp->date_of_birth)->age + 1,
-                    'photo' => $emp->photo_path ? asset('storage/' . $emp->photo_path) : null
+                    'photo' => $emp->photo_path ? asset('storage/' . $emp->photo_path) : null,
+                    'photo_path' => $emp->photo_path
                 ];
             })
             ->toArray();
