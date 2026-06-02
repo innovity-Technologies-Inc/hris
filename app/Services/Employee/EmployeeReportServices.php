@@ -64,82 +64,7 @@ class EmployeeReportServices
     }
 
     /**
-     * Get Company-wise employee distribution with gender data.
-     */
-    public function getCompanyDistribution(): array
-    {
-        $data = EmployeeOfficeInfo::with(['getCurrentCompany', 'employee'])
-            ->whereNotNull('current_company_id')
-            ->get();
-
-        $companies = [];
-        foreach ($data as $info) {
-            $companyName = $info->getCurrentCompany->name ?? 'Unknown';
-            $gender = $info->employee->gender ?? 'Other';
-            
-            if (!isset($companies[$companyName])) {
-                $companies[$companyName] = ['Male' => 0, 'Female' => 0, 'Other' => 0];
-            }
-            
-            if ($gender === 'Male') {
-                $companies[$companyName]['Male']++;
-            } elseif ($gender === 'Female') {
-                $companies[$companyName]['Female']++;
-            } else {
-                $companies[$companyName]['Other']++;
-            }
-        }
-
-        $labels = array_keys($companies);
-        $maleData = [];
-        $femaleData = [];
-        $otherData = [];
-
-        foreach ($labels as $label) {
-            $maleData[] = $companies[$label]['Male'];
-            $femaleData[] = $companies[$label]['Female'];
-            $otherData[] = $companies[$label]['Other'];
-        }
-
-        // Only include "Other" dataset if there's actually data for it to keep chart clean
-        $datasets = [
-            [
-                'label' => 'Male',
-                'data' => $maleData,
-                'backgroundColor' => 'rgba(52, 152, 219, 0.7)',
-                'borderColor' => 'rgb(52, 152, 219)',
-                'borderWidth' => 1,
-                'stack' => 'Stack 0',
-            ],
-            [
-                'label' => 'Female',
-                'data' => $femaleData,
-                'backgroundColor' => 'rgba(155, 89, 182, 0.7)',
-                'borderColor' => 'rgb(155, 89, 182)',
-                'borderWidth' => 1,
-                'stack' => 'Stack 0',
-            ]
-        ];
-
-        if (array_sum($otherData) > 0) {
-            $datasets[] = [
-                'label' => 'Other/Unspecified',
-                'data' => $otherData,
-                'backgroundColor' => 'rgba(149, 165, 166, 0.7)',
-                'borderColor' => 'rgb(149, 165, 166)',
-                'borderWidth' => 1,
-                'stack' => 'Stack 0',
-            ];
-        }
-
-        return [
-            'labels' => $labels,
-            'datasets' => $datasets,
-        ];
-    }
-
-    /**
-     * Get data for progressive hierarchy drill-down.
+     * Get data for progressive hierarchy drill-down with gender breakdown.
      */
     public function getDrillDownData(string $level = 'company', ?int $parentId = null): array
     {
@@ -187,7 +112,7 @@ class EmployeeReportServices
         ];
 
         if (!array_key_exists($level, $mapping)) {
-            return ['labels' => [], 'data' => [], 'ids' => []];
+            return ['labels' => [], 'datasets' => [], 'ids' => []];
         }
 
         $config = $mapping[$level];
@@ -195,22 +120,74 @@ class EmployeeReportServices
         $column = $config['column'];
         $labelCol = $config['labelCol'];
 
-        $query = EmployeeOfficeInfo::with($relation)
-            ->select($column, DB::raw('count(*) as count'))
+        $query = EmployeeOfficeInfo::with([$relation, 'employee'])
             ->whereNotNull($column);
 
         if ($parentId && $config['parentFilter']) {
             $query->where($config['parentFilter'], $parentId);
         }
 
-        $data = $query->groupBy($column)->get();
+        $records = $query->get();
+
+        $entities = [];
+        foreach ($records as $info) {
+            $entityName = $info->$relation->{$labelCol} ?? 'Unknown';
+            $gender = $info->employee->gender ?? 'Other';
+            $entityId = $info->$column;
+            
+            if (!isset($entities[$entityName])) {
+                $entities[$entityName] = ['Male' => 0, 'Female' => 0, 'Other' => 0, 'id' => $entityId];
+            }
+            
+            if ($gender === 'Male') {
+                $entities[$entityName]['Male']++;
+            } elseif ($gender === 'Female') {
+                $entities[$entityName]['Female']++;
+            } else {
+                $entities[$entityName]['Other']++;
+            }
+        }
+
+        $labels = array_keys($entities);
+        $ids = [];
+        $maleData = [];
+        $femaleData = [];
+        $otherData = [];
+
+        foreach ($labels as $label) {
+            $ids[] = $entities[$label]['id'];
+            $maleData[] = $entities[$label]['Male'];
+            $femaleData[] = $entities[$label]['Female'];
+            $otherData[] = $entities[$label]['Other'];
+        }
+        
+        $datasets = [
+            [
+                'label' => 'Male',
+                'data' => $maleData,
+                'stack' => 'Stack 0',
+            ],
+            [
+                'label' => 'Female',
+                'data' => $femaleData,
+                'stack' => 'Stack 0',
+            ]
+        ];
+
+        if (array_sum($otherData) > 0) {
+            $datasets[] = [
+                'label' => 'Other',
+                'data' => $otherData,
+                'stack' => 'Stack 0',
+            ];
+        }
 
         return [
             'title' => $config['title'],
             'next_level' => $config['nextLevel'],
-            'labels' => $data->map(fn($item) => $item->$relation->{$labelCol} ?? 'Unknown')->toArray(),
-            'data' => $data->pluck('count')->toArray(),
-            'ids' => $data->pluck($column)->toArray(), // Need IDs for the next drill-down click
+            'labels' => $labels,
+            'datasets' => $datasets,
+            'ids' => $ids,
         ];
     }
 

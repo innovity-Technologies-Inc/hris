@@ -59,7 +59,7 @@
 
     <div class="row">
         {{-- Age Analysis Section --}}
-        <div class="col-lg-4 mb-4">
+        <div class="col-lg-6 mb-4">
             <div class="card shadow-sm border-0 rounded-3 h-100">
                 <div class="card-header bg-transparent border-0 pt-4 px-4">
                     <h5 class="fw-bold mb-0">
@@ -67,7 +67,7 @@
                     </h5>
                 </div>
                 <div class="card-body p-4">
-                    <div style="height: 220px;">
+                    <div style="height: 350px;">
                         <canvas id="ageDistChart"></canvas>
                     </div>
                     <div class="row text-center mt-4 pt-2 border-top">
@@ -89,7 +89,7 @@
         </div>
 
         {{-- Service Loyalty Chart --}}
-        <div class="col-lg-4 mb-4">
+        <div class="col-lg-6 mb-4">
             <div class="card shadow-sm border-0 rounded-3 h-100">
                 <div class="card-header bg-transparent border-0 pt-4 px-4">
                     <h5 class="fw-bold mb-0">
@@ -97,43 +97,10 @@
                     </h5>
                 </div>
                 <div class="card-body p-4">
-                    <div style="height: 220px;">
+                    <div style="height: 350px;">
                         <canvas id="loyaltyChart"></canvas>
                     </div>
                     <p class="text-muted small text-center mt-4 mb-0">Distribution of employee tenure across the organization.</p>
-                </div>
-            </div>
-        </div>
-
-        {{-- Company Distribution Chart --}}
-        <div class="col-lg-4 mb-4">
-            <div class="card shadow-sm border-0 rounded-3 h-100">
-                <div class="card-header bg-transparent border-0 pt-4 px-4">
-                    <h5 class="fw-bold mb-0">
-                        <i class="mdi mdi-office-building text-info me-2"></i> Company Distribution
-                    </h5>
-                </div>
-                <div class="card-body p-4">
-                    <div style="height: 220px;">
-                        <canvas id="companyDistChart"></canvas>
-                    </div>
-                    <p class="text-muted small text-center mt-4 mb-0">Number of employees per company.</p>
-                </div>
-            </div>
-        </div>
-        </div>
-        {{-- Company Distribution Chart --}}
-        <div class="col-lg-4 mb-4">
-            <div class="card shadow-sm border-0 rounded-3 h-100">
-                <div class="card-header bg-transparent border-0 pt-4 px-4">
-                    <h5 class="fw-bold mb-0">
-                        <i class="mdi mdi-office-building text-info me-2"></i> Company Distribution
-                    </h5>
-                </div>
-                <div class="card-body p-4">
-                    <div style="height: 220px;">
-                        <canvas id="companyDistChart"></canvas>
-                    </div>
                 </div>
             </div>
         </div>
@@ -152,7 +119,7 @@
                     </button>
                 </div>
                 <div class="card-body p-4">
-                    <div style="height: 350px; position: relative;">
+                    <div style="height: 450px; position: relative;">
                         <canvas id="drillDownChart"></canvas>
                     </div>
                 </div>
@@ -310,23 +277,6 @@
                 }
             });
 
-            // Company Distribution Chart (Stacked Bar by Gender)
-            const companyCtx = document.getElementById('companyDistChart').getContext('2d');
-            new Chart(companyCtx, {
-                type: 'bar',
-                data: {
-                    labels: {!! json_encode($companyDist['labels']) !!},
-                    datasets: {!! json_encode($companyDist['datasets']) !!}
-                },
-                options: {
-                    ...commonOptions,
-                    scales: {
-                        x: { stacked: true },
-                        y: { stacked: true, beginAtZero: true, ticks: { precision: 0 } }
-                    }
-                }
-            });
-
             // Drill-Down Chart Implementation
             const drillDownCtx = document.getElementById('drillDownChart');
             let drillDownChartInstance = null;
@@ -338,18 +288,31 @@
             const btnBack = document.getElementById('btnBackDrillDown');
             const titleEl = document.getElementById('drillDownTitle');
 
-            // Dynamic colors based on hierarchy level
+            // Dynamic colors based on hierarchy level (using different opacities for gender stacks)
             const levelColors = {
-                'company': { bg: 'rgba(52, 152, 219, 0.7)', border: 'rgb(52, 152, 219)' }, // Blue
-                'business_unit': { bg: 'rgba(46, 204, 113, 0.7)', border: 'rgb(46, 204, 113)' }, // Green
-                'division': { bg: 'rgba(155, 89, 182, 0.7)', border: 'rgb(155, 89, 182)' }, // Purple
-                'department': { bg: 'rgba(241, 196, 15, 0.7)', border: 'rgb(241, 196, 15)' }, // Yellow
-                'section': { bg: 'rgba(230, 126, 34, 0.7)', border: 'rgb(230, 126, 34)' } // Orange
+                'company': { 
+                    male: 'rgba(52, 152, 219, 0.8)', female: 'rgba(52, 152, 219, 0.5)', other: 'rgba(52, 152, 219, 0.2)',
+                    border: 'rgb(52, 152, 219)'
+                }, // Blue
+                'business_unit': { 
+                    male: 'rgba(46, 204, 113, 0.8)', female: 'rgba(46, 204, 113, 0.5)', other: 'rgba(46, 204, 113, 0.2)',
+                    border: 'rgb(46, 204, 113)' 
+                }, // Green
+                'division': { 
+                    male: 'rgba(155, 89, 182, 0.8)', female: 'rgba(155, 89, 182, 0.5)', other: 'rgba(155, 89, 182, 0.2)',
+                    border: 'rgb(155, 89, 182)' 
+                }, // Purple
+                'department': { 
+                    male: 'rgba(241, 196, 15, 0.8)', female: 'rgba(241, 196, 15, 0.5)', other: 'rgba(241, 196, 15, 0.2)',
+                    border: 'rgb(241, 196, 15)' 
+                }, // Yellow
+                'section': { 
+                    male: 'rgba(230, 126, 34, 0.8)', female: 'rgba(230, 126, 34, 0.5)', other: 'rgba(230, 126, 34, 0.2)',
+                    border: 'rgb(230, 126, 34)' 
+                } // Orange
             };
 
             function renderDrillDownChart(level, parentId = null) {
-                // Show loading state if desired
-
                 axios.get('{{ route("employee.reports.drill_down") }}', {
                     params: { level: level, parent_id: parentId }
                 }).then(response => {
@@ -370,41 +333,46 @@
                     const colors = levelColors[level] || levelColors['company'];
 
                     drillDownChartInstance = new Chart(drillDownCtx.getContext('2d'), {
-                        type: 'bar', // Using bar for clarity in drill-downs
+                        type: 'bar',
                         data: {
                             labels: data.labels,
-                            datasets: [{
-                                label: 'Employees',
-                                data: data.data,
-                                backgroundColor: colors.bg,
-                                borderColor: colors.border,
-                                borderWidth: 1,
-                                borderRadius: 6
-                            }]
+                            datasets: data.datasets.map(ds => {
+                                let bg;
+                                if(ds.label === 'Male') bg = colors.male;
+                                else if(ds.label === 'Female') bg = colors.female;
+                                else bg = colors.other;
+                                
+                                return {
+                                    label: ds.label,
+                                    data: ds.data,
+                                    backgroundColor: bg,
+                                    borderColor: colors.border,
+                                    borderWidth: 1,
+                                    stack: ds.stack,
+                                    borderRadius: 4
+                                };
+                            })
                         },
                         options: {
                             ...commonOptions,
                             scales: {
-                                y: { beginAtZero: true, ticks: { precision: 0 } }
+                                x: { stacked: true },
+                                y: { stacked: true, beginAtZero: true, ticks: { precision: 0 } }
                             },
                             onClick: (event, elements) => {
                                 if (elements.length > 0 && data.next_level) {
                                     const index = elements[0].index;
                                     const clickedId = data.ids[index];
-                                    const clickedLabel = data.labels[index];
 
-                                    // Push current state to history before drilling down
                                     drillDownHistory.push({
                                         level: level,
                                         parentId: parentId,
                                         title: data.title
                                     });
 
-                                    // Drill down
                                     renderDrillDownChart(data.next_level, clickedId);
                                 }
                             },
-                            // Add a hover effect to show it's clickable
                             onHover: (event, chartElement) => {
                                 event.native.target.style.cursor = chartElement[0] && data.next_level ? 'pointer' : 'default';
                             }
