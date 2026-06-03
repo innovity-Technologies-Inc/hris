@@ -176,7 +176,7 @@ class EmployeeProfileController extends Controller
     /**
      * Download detailed employee profile as PDF.
      */
-    public function downloadDetailedProfilePdf($id)
+    public function downloadProfilePdf($id)
     {
         $employee = $this->empServices->getEmployeeById($id);
 
