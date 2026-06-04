@@ -266,6 +266,23 @@ A comprehensive Human Resource Management System (HRMS) built with Laravel 12, f
     - **Age**: Include birth date/age milestone in the career timeline.
     - **Probation End**: Include the calculated probation end date (`date_of_join` + `probation_duration`) in the timeline.
 
+### 💳 Pay Group Management
+- **Goal**: Define and manage pay groups for payroll processing categorization and scheduling.
+- **Access**: Located under "Company Info" menu in the sidebar.
+- **Fields**:
+    - `title`: Name of the pay group.
+    - `payroll_frequency`: (Hourly, Monthly, Weekly).
+    - `salary_processing_day`: 
+        - If Monthly: Specific date of the month (1-31).
+        - If Weekly: Day of the week (Monday-Sunday).
+        - If Hourly: Automatically set to "Daily".
+    - `status`: (Active, Inactive).
+- **Technical Mandate**:
+    - **API-First**: Use API controllers returning JSON.
+    - **Frontend**: Blade structure with **Axios** and **Vanilla JS** for all data fetching (index listing, searching, form submission).
+    - **UI**: Bootstrap 5 / Glassmorphism consistency.
+    - **Data Scoping**: Respect `OrganizationScoped` trait.
+
 ## Technical Constraints
 - **Framework**: Laravel 12.
 - **PHP Version**: 8.2+ (Strict Typing).

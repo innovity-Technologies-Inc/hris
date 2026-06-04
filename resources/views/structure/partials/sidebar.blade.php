@@ -461,6 +461,7 @@
                         Route::is('companies.*') ||
                         Route::is('company_types.*') ||
                         Route::is('company_locations.*') ||
+                        Route::is('pay_groups.*') ||
                         Route::is('banks.*') ||
                         Route::is('branches.*') ||
                         Route::is('tofsils.*') ||
@@ -526,6 +527,13 @@
                             <li>
                                 <a class='tp-link @if (Route::is('designations.*')) menuitem-active @endif'
                                     href='{{ route('designations.index') }}'>Designations</a>
+                            </li>
+                            @endif
+
+                            @if(auth()->user()->can('general-settings.view'))
+                            <li>
+                                <a class='tp-link @if (Route::is('pay_groups.*')) menuitem-active @endif'
+                                    href='{{ route('pay_groups.index') }}'>Pay Groups</a>
                             </li>
                             @endif
 

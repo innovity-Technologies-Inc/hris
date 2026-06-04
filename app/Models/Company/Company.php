@@ -6,11 +6,12 @@ use App\Models\Employee\Employee;
 use App\Models\Employee\EmployeeOfficeInfo;
 use App\Models\Structure\OrganizationStructure;
 use App\Traits\OrganizationScoped;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Company extends Model
 {
-    use OrganizationScoped;
+    use HasFactory, OrganizationScoped;
     protected $table = 'companies';
     protected $fillable = ['name', 'short_name', 'type_id', 'group_id', 'address', 'fax', 'telephone', 'email', 'status', 'logo'];
 

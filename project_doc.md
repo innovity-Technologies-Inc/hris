@@ -28,6 +28,7 @@ This is a robust Human Resource Management System (HRMS) built with Laravel 12. 
 ### 🏢 Company & Organization Setup
 - **Levels**: Group -> Company -> Division -> Department -> Section.
 - **Structure**: Manage organizational hierarchy and locations.
+- **Pay Groups**: Define payroll processing categorizations (Hourly, Monthly, Weekly) with dynamic salary processing date/day selection.
 - **Support Data**: Banks, Branches, Salary Grades, Tofsils (Acts), and Gazette Locations.
 
 ### 👥 Employee Management

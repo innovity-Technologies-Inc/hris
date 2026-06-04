@@ -245,6 +245,23 @@ Route::prefix('company-setup')->middleware('auth')->group(function () {
             Route::delete('sections/{id}', 'destroy')->name('sections.delete');
         });
     });
+
+    Route::controller(\App\Http\Controllers\Company\PayGroupController::class)->group(function () {
+        Route::middleware('permission:general-settings.view')->group(function () {
+            Route::get('pay-groups', 'index')->name('pay_groups.index');
+        });
+        Route::middleware('permission:general-settings.create')->group(function () {
+            Route::post('pay-groups/store', 'store')->name('pay_groups.store');
+        });
+        Route::middleware('permission:general-settings.edit')->group(function () {
+            Route::get('pay-groups/{id}/edit', 'edit')->name('pay_groups.edit');
+            Route::put('pay-groups/{id}/update', 'update')->name('pay_groups.update');
+        });
+        Route::middleware('permission:general-settings.delete')->group(function () {
+            Route::delete('pay-groups/{id}/delete', 'destroy')->name('pay_groups.delete');
+        });
+    });
+
     Route::controller(DesignationController::class)->group(function () {
         Route::middleware('permission:designations.view')->group(function () {
             Route::get('designations', 'index')->name('designations.index');
