@@ -91,7 +91,7 @@ class CheckAlerts extends Command
                 'employee_id' => $employee->id, 
                 'type' => 'birthday',
                 'target_date' => $targetDate->toDateString()
-            ]);
+            ], $employee);
         }
     }
 
@@ -100,7 +100,7 @@ class CheckAlerts extends Command
         // RANGE LOGIC: Anyone whose expiry is between TODAY and threshold
         $thresholdDate = $today->copy()->addDays($days)->toDateString();
 
-        $employees = Employee::whereBetween($column, [$today->toDateString(), $thresholdDate])->get();
+        $employees = Employee::with('officeInfo')->whereBetween($column, [$today->toDateString(), $thresholdDate])->get();
 
         foreach ($employees as $employee) {
             $expiryDate = $employee->{$column};
@@ -120,12 +120,7 @@ class CheckAlerts extends Command
             }
 
             // Send to non-employees
-            $nonEmployeeUsers = User::where('user_type', '!=', 'Employee')->get();
-            foreach ($nonEmployeeUsers as $neUser) {
-                if (!$this->notificationExists($neUser->id, $data)) {
-                    $this->createNotification($neUser, "{$label} Expiry Alert", $message, $data);
-                }
-            }
+            $this->sendToNonEmployees("{$label} Expiry Alert", $message, $data, $employee);
         }
     }
 
@@ -160,12 +155,7 @@ class CheckAlerts extends Command
             }
 
             // Send to non-employees
-            $nonEmployeeUsers = User::where('user_type', '!=', 'Employee')->get();
-            foreach ($nonEmployeeUsers as $neUser) {
-                if (!$this->notificationExists($neUser->id, $data)) {
-                    $this->createNotification($neUser, "Probation End Alert", $message, $data);
-                }
-            }
+            $this->sendToNonEmployees("Probation End Alert", $message, $data, $employee);
         }
     }
 
@@ -179,13 +169,59 @@ class CheckAlerts extends Command
             ->exists();
     }
 
-    protected function sendToNonEmployees(string $title, string $message, array $data)
+    protected function sendToNonEmployees(string $title, string $message, array $data, Employee $employee)
     {
-        $users = User::where('user_type', '!=', 'Employee')->get();
+        // Fetch all users who are not regular employees
+        $users = User::with('employee.officeInfo')
+            ->where('user_type', '!=', 'Employee')
+            ->get();
+
         foreach ($users as $user) {
-            if (!$this->notificationExists($user->id, $data)) {
-                $this->createNotification($user, $title, $message, $data);
+            if ($this->shouldUserReceiveNotification($user, $employee)) {
+                if (!$this->notificationExists($user->id, $data)) {
+                    $this->createNotification($user, $title, $message, $data);
+                }
             }
+        }
+    }
+
+    /**
+     * Determine if a user should receive a notification based on their organizational scope.
+     */
+    protected function shouldUserReceiveNotification(User $user, Employee $employee): bool
+    {
+        // 1. Group type sees everything
+        if ($user->user_type === 'Group') {
+            return true;
+        }
+
+        // 2. If the user doesn't have an office info profile, they can't have an org scope
+        if (!$user->employee || !$user->employee->officeInfo || !$employee->officeInfo) {
+            return false;
+        }
+
+        $userOffice = $user->employee->officeInfo;
+        $empOffice = $employee->officeInfo;
+
+        // 3. Match based on user type and respective IDs
+        switch ($user->user_type) {
+            case 'Company':
+                return $userOffice->current_company_id == $empOffice->current_company_id;
+            
+            case 'Business Unit':
+                return $userOffice->current_business_unit_id == $empOffice->current_business_unit_id;
+
+            case 'Division':
+                return $userOffice->current_division_id == $empOffice->current_division_id;
+
+            case 'Department':
+                return $userOffice->current_department_id == $empOffice->current_department_id;
+
+            case 'Section':
+                return $userOffice->current_section_id == $empOffice->current_section_id;
+
+            default:
+                return false;
         }
     }
 

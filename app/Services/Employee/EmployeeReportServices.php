@@ -91,7 +91,7 @@ class EmployeeReportServices
                 'labelCol' => 'name',
                 'title' => 'Division Breakdown',
                 'nextLevel' => 'department',
-                'parentFilter' => 'current_business_unit_id' // Drill down from BU
+                'parentFilter' => 'current_business_unit_id'
             ],
             'department' => [
                 'relation' => 'getCurrentDepartment',
@@ -123,42 +123,50 @@ class EmployeeReportServices
         $query = EmployeeOfficeInfo::with([$relation, 'employee'])
             ->whereNotNull($column);
 
+        // Apply strict hierarchical filter if parentId is provided
         if ($parentId && $config['parentFilter']) {
             $query->where($config['parentFilter'], $parentId);
         }
 
         $records = $query->get();
 
+        // Group by Entity ID to prevent merging entities with the same name
         $entities = [];
         foreach ($records as $info) {
+            $entityId = $info->$column;
             $entityName = $info->$relation->{$labelCol} ?? 'Unknown';
             $gender = $info->employee->gender ?? 'Other';
-            $entityId = $info->$column;
             
-            if (!isset($entities[$entityName])) {
-                $entities[$entityName] = ['Male' => 0, 'Female' => 0, 'Other' => 0, 'id' => $entityId];
+            if (!isset($entities[$entityId])) {
+                $entities[$entityId] = [
+                    'name' => $entityName,
+                    'Male' => 0,
+                    'Female' => 0,
+                    'Other' => 0
+                ];
             }
             
-            if ($gender === 'Male') {
-                $entities[$entityName]['Male']++;
-            } elseif ($gender === 'Female') {
-                $entities[$entityName]['Female']++;
+            if (strcasecmp($gender, 'Male') === 0) {
+                $entities[$entityId]['Male']++;
+            } elseif (strcasecmp($gender, 'Female') === 0) {
+                $entities[$entityId]['Female']++;
             } else {
-                $entities[$entityName]['Other']++;
+                $entities[$entityId]['Other']++;
             }
         }
 
-        $labels = array_keys($entities);
+        $labels = [];
         $ids = [];
         $maleData = [];
         $femaleData = [];
         $otherData = [];
 
-        foreach ($labels as $label) {
-            $ids[] = $entities[$label]['id'];
-            $maleData[] = $entities[$label]['Male'];
-            $femaleData[] = $entities[$label]['Female'];
-            $otherData[] = $entities[$label]['Other'];
+        foreach ($entities as $id => $val) {
+            $ids[] = $id;
+            $labels[] = $val['name'];
+            $maleData[] = $val['Male'];
+            $femaleData[] = $val['Female'];
+            $otherData[] = $val['Other'];
         }
         
         $datasets = [

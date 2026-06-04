@@ -22,8 +22,8 @@ beforeEach(function () {
         'probation_days' => 7,
     ]);
 
-    // Create a non-employee user (HR)
-    $this->hr = User::factory()->create(['user_type' => 'Company']);
+    // Create a non-employee user (Group type receives everything)
+    $this->hr = User::factory()->create(['user_type' => 'Group']);
 });
 
 it('triggers birthday notifications for non-employees', function () {

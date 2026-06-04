@@ -14,7 +14,7 @@ beforeEach(function () {
     NotificationSetting::create([
         'visa_days' => 60,
     ]);
-    $this->hr = User::factory()->create(['user_type' => 'Company']);
+    $this->hr = User::factory()->create(['user_type' => 'Group']);
 });
 
 it('alerts for expiries within the range (e.g. 40 days left when threshold is 60)', function () {
