@@ -10,8 +10,6 @@ use Spatie\Permission\Models\Role;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->company = Company::factory()->create(['name' => 'Test Company']);
-    
     // Create and assign permissions
     Permission::firstOrCreate(['name' => 'general-settings.view', 'guard_name' => 'web']);
     Permission::firstOrCreate(['name' => 'general-settings.create', 'guard_name' => 'web']);
@@ -28,7 +26,6 @@ beforeEach(function () {
 it('can list pay groups via ajax', function () {
     $this->withoutMiddleware();
     PayGroup::create([
-        'current_company_id' => $this->company->id,
         'title' => 'Monthly Staff',
         'payroll_frequency' => 'Monthly',
         'salary_processing_day' => '25',
@@ -46,7 +43,6 @@ it('can list pay groups via ajax', function () {
 it('can store a new pay group', function () {
     $this->withoutMiddleware();
     $data = [
-        'current_company_id' => $this->company->id,
         'title' => 'Weekly Casual',
         'payroll_frequency' => 'Weekly',
         'salary_processing_day' => 'Friday',
@@ -65,7 +61,6 @@ it('can store a new pay group', function () {
 it('can update a pay group', function () {
     $this->withoutMiddleware();
     $payGroup = PayGroup::create([
-        'current_company_id' => $this->company->id,
         'title' => 'Old Title',
         'payroll_frequency' => 'Monthly',
         'salary_processing_day' => '1',
@@ -73,7 +68,6 @@ it('can update a pay group', function () {
     ]);
 
     $data = [
-        'current_company_id' => $this->company->id,
         'title' => 'New Title',
         'payroll_frequency' => 'Monthly',
         'salary_processing_day' => '1',
@@ -92,7 +86,6 @@ it('can update a pay group', function () {
 it('can delete a pay group', function () {
     $this->withoutMiddleware();
     $payGroup = PayGroup::create([
-        'current_company_id' => $this->company->id,
         'title' => 'To Be Deleted',
         'payroll_frequency' => 'Hourly',
         'salary_processing_day' => 'Daily',

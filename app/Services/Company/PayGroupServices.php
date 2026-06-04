@@ -14,9 +14,9 @@ class PayGroupServices
      */
     public function getPayGroups(Request $request, FlexSearch $flexsearch)
     {
-        $query = PayGroup::query()->with('company');
+        $query = PayGroup::query();
         $searchTerm = $request->get('keyword');
-        $searchableFields = ['title', 'payroll_frequency', 'company.name'];
+        $searchableFields = ['title', 'payroll_frequency'];
         
         return $flexsearch->apply($query, [], $searchTerm, $searchableFields)
             ->orderBy('id', 'desc')

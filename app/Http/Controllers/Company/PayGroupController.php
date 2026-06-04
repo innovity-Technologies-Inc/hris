@@ -30,8 +30,7 @@ class PayGroupController extends Controller
             return view('company.pay_groups.search_results', compact('payGroups'))->render();
         }
 
-        $companies = Company::all();
-        return view('company.pay_groups.index', compact('title', 'section', 'sub_section', 'companies'));
+        return view('company.pay_groups.index', compact('title', 'section', 'sub_section'));
     }
 
     public function store(PayGroupRequest $request)

@@ -22,7 +22,6 @@ class PayGroupRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'current_company_id' => 'required|exists:companies,id',
             'title' => 'required|string|max:255',
             'payroll_frequency' => 'required|in:Hourly,Monthly,Weekly',
             'salary_processing_day' => 'required|string|max:50',
@@ -33,7 +32,6 @@ class PayGroupRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'current_company_id.required' => 'Please select a company.',
             'title.required' => 'Please enter a title for the pay group.',
             'payroll_frequency.required' => 'Please select a payroll frequency.',
             'salary_processing_day.required' => 'Please select a salary processing day.',

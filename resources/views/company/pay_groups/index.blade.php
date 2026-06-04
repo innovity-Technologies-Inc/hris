@@ -1,51 +1,48 @@
 @extends('structure.master')
 
 @section('content')
+    {{-- List of Pay Groups --}}
     <div class="row">
-        <div class="col-12">
-            <div class="card glass-card border-0 shadow-lg mb-4">
-                <div class="card-header bg-transparent border-0 pt-4 px-4 d-flex justify-content-between align-items-center">
-                    <div>
-                        <h4 class="fw-bold mb-1"><i class="mdi mdi-credit-card-outline me-2 text-primary"></i>Pay Group Management</h4>
-                        <p class="text-muted mb-0">Define and manage payroll processing groups and frequencies.</p>
-                    </div>
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-header">
                     @can('general-settings.create')
-                    <button type="button" class="btn btn-primary rounded-pill px-4 shadow-sm" id="btnCreatePayGroup">
-                        <i class="mdi mdi-plus me-1"></i> Add New Pay Group
+                    <button type="button" class="btn btn-warning btn-sm" id="btnCreatePayGroup">
+                        <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                     </button>
                     @endcan
-                </div>
-                <div class="card-body p-4">
-                    {{-- Search Section --}}
-                    <div class="row mb-4">
-                        <div class="col-md-4">
-                            <div class="input-group search-group shadow-sm rounded-pill overflow-hidden border">
-                                <span class="input-group-text bg-white border-0 ps-3">
-                                    <i class="mdi mdi-magnify text-muted fs-18"></i>
-                                </span>
-                                <input type="text" class="form-control border-0 py-2" id="searchKeyword" placeholder="Search by title, frequency...">
-                            </div>
-                        </div>
-                    </div>
+                </div><!-- end card header -->
 
-                    {{-- Data Table --}}
-                    <div id="payGroupContainer">
-                        <div class="text-center py-5">
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Loading...</span>
+                <div class="card-body">
+                    <form id="filterForm">
+                        {{-- First Row: Keyword Search --}}
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <div class="input-group input-group-md">
+                                    <input type="text" class="form-control border-end-0" id="searchKeyword"
+                                           name="keyword" placeholder="Search pay groups by title or frequency"
+                                           aria-label="Keyword Search">
+                                    <span class="input-group-text border-start-0 input-group-bg">
+                                        <i class="mdi mdi-magnify text-muted"></i>
+                                    </span>
+                                </div>
                             </div>
                         </div>
+                    </form>
+
+                    <div class="table-responsive" id="payGroupContainer">
+                        <div class="text-center py-4 text-muted">Loading Data...</div>
                     </div>
                 </div>
-            </div>
+            </div><!-- end card -->
         </div>
-    </div>
+    </div><!-- end row -->
 
     {{-- Pay Group Modal --}}
     <div class="modal fade" id="payGroupModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header bg-primary text-white border-0">
+                <div class="modal-header bg-warning text-white border-0">
                     <h5 class="modal-title" id="payGroupModalLabel">Add Pay Group</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -53,15 +50,6 @@
                     @csrf
                     <input type="hidden" id="payGroupId" name="id">
                     <div class="modal-body p-4">
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Company <span class="text-danger">*</span></label>
-                            <select class="form-select" name="current_company_id" id="current_company_id" required>
-                                <option value="">Select Company</option>
-                                @foreach($companies as $company)
-                                    <option value="{{ $company->id }}">{{ $company->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Title <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="title" id="title" placeholder="e.g. Monthly Staff" required>
@@ -90,7 +78,7 @@
                     </div>
                     <div class="modal-footer border-0 p-4 pt-0">
                         <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary rounded-pill px-4" id="btnSavePayGroup">Save Changes</button>
+                        <button type="submit" class="btn btn-warning rounded-pill px-4" id="btnSavePayGroup">Save Changes</button>
                     </div>
                 </form>
             </div>
@@ -161,6 +149,9 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => {
                 container.innerHTML = response.data;
                 bindActionButtons();
+                if (window.feather) {
+                    feather.replace();
+                }
             })
             .catch(error => {
                 console.error(error);
@@ -177,7 +168,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     .then(response => {
                         const data = response.data.data;
                         document.getElementById('payGroupId').value = data.id;
-                        document.getElementById('current_company_id').value = data.current_company_id;
                         document.getElementById('title').value = data.title;
                         document.getElementById('payroll_frequency').value = data.payroll_frequency;
                         document.getElementById('status').value = data.status;

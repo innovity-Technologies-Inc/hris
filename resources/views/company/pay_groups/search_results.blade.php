@@ -3,7 +3,6 @@
         <thead class="table-light">
             <tr>
                 <th>Title</th>
-                <th>Company</th>
                 <th>Frequency</th>
                 <th>Processing Day</th>
                 <th>Status</th>
@@ -14,7 +13,6 @@
             @forelse($payGroups as $group)
                 <tr>
                     <td>{{ $group->title }}</td>
-                    <td>{{ $group->company->name ?? 'N/A' }}</td>
                     <td>
                         <span class="badge bg-soft-info text-info">{{ $group->payroll_frequency }}</span>
                     </td>
@@ -43,7 +41,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" class="text-center py-4 text-muted">No pay groups found.</td>
+                    <td colspan="5" class="text-center py-4 text-muted">No pay groups found.</td>
                 </tr>
             @endforelse
         </tbody>
