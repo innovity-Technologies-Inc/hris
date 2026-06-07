@@ -66,62 +66,62 @@ class NotificationServices
                 $office = $employee->officeInfo;
 
                 switch ($userType) {
-                    case 'Section':
+                    case UserType::Section:
                         // Visible if notification target is an Employee in this section
                         $q->whereIn('user_id', function($sub) use ($office) {
                             $sub->select('u.id')
                                 ->from('users as u')
                                 ->join('employee_office_infos as eoi', 'u.employee_id', '=', 'eoi.employee_id')
                                 ->where('eoi.current_section_id', $office->current_section_id)
-                                ->where('u.user_type', 'Employee');
+                                ->where('u.user_type', UserType::Employee->value);
                         });
                         break;
-                    case 'Department':
+                    case UserType::Department:
                         // Visible if notification target is a Section level user in this department
                         $q->whereIn('user_id', function($sub) use ($office) {
                             $sub->select('u.id')
                                 ->from('users as u')
                                 ->join('employee_office_infos as eoi', 'u.employee_id', '=', 'eoi.employee_id')
                                 ->where('eoi.current_department_id', $office->current_department_id)
-                                ->where('u.user_type', 'Section');
+                                ->where('u.user_type', UserType::Section->value);
                         });
                         break;
-                    case 'Division':
+                    case UserType::Division:
                         // Visible if notification target is a Department level user in this division
                         $q->whereIn('user_id', function($sub) use ($office) {
                             $sub->select('u.id')
                                 ->from('users as u')
                                 ->join('employee_office_infos as eoi', 'u.employee_id', '=', 'eoi.employee_id')
                                 ->where('eoi.current_division_id', $office->current_division_id)
-                                ->where('u.user_type', 'Department');
+                                ->where('u.user_type', UserType::Department->value);
                         });
                         break;
-                    case 'Business Unit':
+                    case UserType::BusinessUnit:
                         // Visible if notification target is a Division level user in this BU
                         $q->whereIn('user_id', function($sub) use ($office) {
                             $sub->select('u.id')
                                 ->from('users as u')
                                 ->join('employee_office_infos as eoi', 'u.employee_id', '=', 'eoi.employee_id')
                                 ->where('eoi.current_business_unit_id', $office->current_business_unit_id)
-                                ->where('u.user_type', 'Division');
+                                ->where('u.user_type', UserType::Division->value);
                         });
                         break;
-                    case 'Company':
+                    case UserType::Company:
                         // Visible if notification target is a BU level user in this company
                         $q->whereIn('user_id', function($sub) use ($office) {
                             $sub->select('u.id')
                                 ->from('users as u')
                                 ->join('employee_office_infos as eoi', 'u.employee_id', '=', 'eoi.employee_id')
                                 ->where('eoi.current_company_id', $office->current_company_id)
-                                ->where('u.user_type', 'Business Unit');
+                                ->where('u.user_type', UserType::BusinessUnit->value);
                         });
                         break;
-                    case 'Group':
+                    case UserType::Group:
                         // Group sees everything for Company level targets
                         $q->whereIn('user_id', function($sub) {
                             $sub->select('id')
                                 ->from('users')
-                                ->where('user_type', 'Company');
+                                ->where('user_type', UserType::Company->value);
                         });
                         break;
                 }

@@ -6,7 +6,7 @@ enum UserType: string
 {
     case Group = 'group';
     case Company = 'company';
-    case BusinessUnit = 'business unit';
+    case BusinessUnit = 'business-unit';
     case Division = 'division';
     case Department = 'department';
     case Section = 'section';
