@@ -1,10 +1,10 @@
 @php
-    $canEditFullProfile = auth()->user()->can('employee-management.edit');
+    $canManageRoles = auth()->user()->can('role-management.edit');
     $mode = $mode ?? 'edit'; // 'edit' or 'create'
     $currentUserType = $employee?->user?->user_type ?? 'Employee';
 @endphp
 
-@if($mode === 'edit' && !$canEditFullProfile)
+@if($mode === 'edit' && !$canManageRoles)
     <div class="alert alert-soft-info border-0 mb-4 d-flex align-items-center" role="alert">
         <i class="fas fa-info-circle me-2"></i>
         <div>Only administrators can modify User Types and Roles. You can update your password below.</div>
@@ -129,11 +129,11 @@
             <div class="input-group">
                 <span class="input-group-text bg-light border-end-0"><i class="fas fa-envelope" style="color: #974063;"></i></span>
                 <input type="email" class="form-control border-start-0" id="{{ $mode }}_work_email" name="work_email" 
-                       value="{{ old('work_email', $employee?->user?->email ?? $employee?->work_email ?? '') }}" required @if(!$canEditFullProfile) readonly @endif>
+                       value="{{ old('work_email', $employee?->user?->email ?? $employee?->work_email ?? '') }}" required @if(!$canManageRoles) readonly @endif>
             </div>
         </div>
 
-        @if($canEditFullProfile)
+        @if($canManageRoles)
             <div class="col-md-6 mb-3">
                 <label for="{{ $mode }}_user_type" class="form-label fw-bold" style="color: #974063;">User Type <span class="text-danger">*</span></label>
                 <select class="form-select" id="{{ $mode }}_user_type" name="user_type" required>

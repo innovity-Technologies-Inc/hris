@@ -72,7 +72,8 @@ class EmployeeProfileController extends Controller
             abort(403, 'Unauthorized access.');
         }
 
-        return view('employee.profile', compact('title', 'section', 'sub_section', 'employee', 'section_url'));
+        $roles = $this->empServices->getRoles();
+        return view('employee.profile', compact('title', 'section', 'sub_section', 'employee', 'section_url', 'roles'));
     }
 
     public function generalInfoStore(Request $request){
@@ -406,7 +407,8 @@ class EmployeeProfileController extends Controller
 
         $employee_office_info = EmployeeOfficeInfo::where('employee_id', $id)->first();
 //        dd($employee_office_info);
-        return view('employee.profile', compact('title', 'section', 'sub_section', 'employee', 'employee_office_info', 'section_url'));
+        $roles = $this->empServices->getRoles();
+        return view('employee.profile', compact('title', 'section', 'sub_section', 'employee', 'employee_office_info', 'section_url', 'roles'));
     }
 
     public function officeInfoImport(Request $request){

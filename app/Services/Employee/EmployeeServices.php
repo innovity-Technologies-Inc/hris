@@ -977,7 +977,7 @@ class EmployeeServices
             $employee->update(['user_id' => $user->id]);
         }
 
-        if ($canManageRoles && $request->has('role')) {
+        if ($canManageRoles && $request->filled('role')) {
             $user->syncRoles([$request->role]);
         }
 
