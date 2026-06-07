@@ -42,7 +42,7 @@
     <div class="modal fade" id="payGroupModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header bg-warning text-white border-0">
+                <div class="modal-header text-white border-0" style="background-color: #974063;">
                     <h5 class="modal-title" id="payGroupModalLabel">Add Pay Group</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -78,7 +78,7 @@
                     </div>
                     <div class="modal-footer border-0 p-4 pt-0">
                         <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-warning rounded-pill px-4" id="btnSavePayGroup">Save Changes</button>
+                        <button type="submit" class="btn rounded-pill px-4 text-white" id="btnSavePayGroup" style="background-color: #974063;">Save Changes</button>
                     </div>
                 </form>
             </div>
