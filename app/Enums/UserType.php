@@ -4,13 +4,13 @@ namespace App\Enums;
 
 enum UserType: string
 {
-    case Group = 'Group';
-    case Company = 'Company';
-    case BusinessUnit = 'Business Unit';
-    case Division = 'Division';
-    case Department = 'Department';
-    case Section = 'Section';
-    case Employee = 'Employee';
+    case Group = 'group';
+    case Company = 'company';
+    case BusinessUnit = 'business unit';
+    case Division = 'division';
+    case Department = 'department';
+    case Section = 'section';
+    case Employee = 'employee';
 
     public static function values(): array
     {

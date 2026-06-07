@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-12">
-        @if (auth()->user()->user_type->value === 'Employee' && ((isset($employee_nominee_info) && $employee_nominee_info->status === 'incomplete') || empty($employee_nominee_info)))
+        @if (auth()->user()->user_type->value === 'employee' && ((isset($employee_nominee_info) && $employee_nominee_info->status === 'incomplete') || empty($employee_nominee_info)))
             <!-- Incomplete Profile Warning for Employees -->
             <div class="card border-0 shadow-none mb-3" style="background-color: rgba(151, 64, 99, 0.05); border: 1px solid rgba(151, 64, 99, 0.2) !important;">
                 <div class="card-body text-center py-5">

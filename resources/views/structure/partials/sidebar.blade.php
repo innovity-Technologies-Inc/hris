@@ -37,7 +37,7 @@
                 @endif
 
                 @php
-                    $isEmployeeUser = auth()->user()->user_type->value === 'Employee';
+                    $isEmployeeUser = auth()->user()->user_type->value === 'employee';
                 @endphp
                 @if($isEmployeeUser || auth()->user()->can('employee-management.view'))
                 <li>
@@ -50,7 +50,7 @@
 
                 <!-- Employees Menu -->
                 @php
-                    $isEmployeeType = auth()->user()->user_type->value === 'Employee';
+                    $isEmployeeType = auth()->user()->user_type->value === 'employee';
                     $canViewEmployeeInfo = auth()->user()->can('employee-management.view');
                     $canReviewProfile = auth()->user()->can('employee-management.profile-review');
                     $canSearchEmployee = auth()->user()->can('employee-management.view') && !$isEmployeeType;
