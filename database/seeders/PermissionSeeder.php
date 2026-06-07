@@ -196,6 +196,40 @@ class PermissionSeeder extends Seeder
         $superAdminRole = Role::firstOrCreate(['name' => 'Super Admin', 'guard_name' => 'web']);
         $superAdminRole->syncPermissions(Permission::all());
 
+        // Create HR Manager role and assign HR-specific permissions
+        $hrManagerRole = Role::firstOrCreate(['name' => 'HR Manager', 'guard_name' => 'web']);
+        
+        $hrPermissions = Permission::where(function($q) {
+            $q->where('name', 'like', 'employee-management.%')
+              ->orWhere('name', 'like', 'attendance.%')
+              ->orWhere('name', 'like', 'leaves.%')
+              ->orWhere('name', 'like', 'movement.%')
+              ->orWhere('name', 'like', 'transfers.%')
+              ->orWhere('name', 'like', 'promotions.%')
+              ->orWhere('name', 'like', 'increments.%')
+              ->orWhere('name', 'like', 'bonuses.%')
+              ->orWhere('name', 'like', 'salary.%')
+              ->orWhere('name', 'like', 'plans.%')
+              ->orWhere('name', 'like', 'plan.%')
+              ->orWhere('name', 'like', 'groups.%')
+              ->orWhere('name', 'like', 'company%')
+              ->orWhere('name', 'like', 'divisions.%')
+              ->orWhere('name', 'like', 'departments.%')
+              ->orWhere('name', 'like', 'sections.%')
+              ->orWhere('name', 'like', 'designations.%')
+              ->orWhere('name', 'like', 'pay-%')
+              ->orWhere('name', 'like', 'salary-grades.%')
+              ->orWhere('name', 'like', 'banks.%')
+              ->orWhere('name', 'like', 'bank-%')
+              ->orWhere('name', 'like', 'branches.%')
+              ->orWhere('name', 'like', 'holidays.%')
+              ->orWhere('name', 'like', 'gazette-locations.%')
+              ->orWhere('name', 'like', 'job-creations.%')
+              ->orWhere('name', 'like', 'structural-view.%')
+              ->orWhere('name', 'like', 'members.%');
+        })->get();
+        $hrManagerRole->syncPermissions($hrPermissions);
+
         // Create Employee role and assign specific permissions
         $employeeRole = Role::firstOrCreate(['name' => 'Employee', 'guard_name' => 'web']);
         $employeeRole->syncPermissions([
