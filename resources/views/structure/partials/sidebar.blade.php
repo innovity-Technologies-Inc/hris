@@ -317,6 +317,12 @@
                                    href='{{ route('bonus.index') }}'>Bonus & Reward</a>
                             </li>
                             @endif
+                            @if(auth()->user()->can('penalty-management.view'))
+                            <li>
+                                <a class='tp-link @if (Route::is('payroll.penalty.*')) menuitem-active @endif'
+                                   href='{{ route('payroll.penalty.index') }}'>Penalty Management</a>
+                            </li>
+                            @endif
                             @if($canSalary)
                             <li>
                                 <a class='tp-link @if (request()->is('salary') && !request()->is('salary/create')) menuitem-active @endif'
