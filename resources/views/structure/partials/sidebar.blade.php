@@ -359,82 +359,91 @@
                             @if($canMealPlans)
                             <li>
                                 <a class='tp-link @if (Route::is('plan.meal_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plan.meal_plans.index') }}'>Meal Plans</a>
+                                    href='{{ route('plan.meal_plans.index') }}'>Meal</a>
                             </li>
                             @endif
+
                             @if($canShiftPlans)
                             <li>
                                 <a class='tp-link @if (Route::is('plan.shift_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plan.shift_plans.index') }}'>Shift Plans</a>
+                                    href='{{ route('plan.shift_plans.index') }}'>Shift</a>
                             </li>
                             @endif
+
                             @if($canLeavePlans)
                             <li>
                                 <a class='tp-link @if (Route::is('plan.leave_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plan.leave_plans.index') }}'>Leave Plans</a>
+                                    href='{{ route('plan.leave_plans.index') }}'>Leave</a>
                             </li>
                             @endif
+
                             @if($canOTPlans)
                             <li>
                                 <a class='tp-link @if (Route::is('plan.ot_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plan.ot_plans.index') }}'>OT Plans</a>
+                                    href='{{ route('plan.ot_plans.index') }}'>OT</a>
                             </li>
                             @endif
+
                             @if($canRosterPlans)
                             <li>
                                 <a class='tp-link @if (Route::is('plan.roster_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plan.roster_plans.index') }}'>Roster Plans</a>
+                                    href='{{ route('plan.roster_plans.index') }}'>Roster</a>
                             </li>
                             @endif
+
                             @if($canOffDayPlans)
                             <li>
                                 <a class='tp-link @if (Route::is('plan.off_day_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plan.off_day_plans.index') }}'>Off-Day Work Plans</a>
+                                    href='{{ route('plan.off_day_plans.index') }}'>Off-Day Work</a>
                             </li>
                             @endif
+
                             @if($canBonusPlans)
                             <li>
                                 <a class='tp-link @if (Route::is('plan.bonus_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plan.bonus_plans.index') }}'>Bonus & Reward Plans</a>
+                                    href='{{ route('plan.bonus_plans.index') }}'>Bonus & Reward</a>
                             </li>
                             @endif
 
                             @if(auth()->user()->can('penalty-plans.view'))
                             <li>
                                 <a class='tp-link @if (Route::is('plan.penalty_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plan.penalty_plans.index') }}'>Penalty Plans</a>
+                                    href='{{ route('plan.penalty_plans.index') }}'>Penalty</a>
                             </li>
                             @endif
 
                             @if(auth()->user()->can('leave-encashment-plans.view'))
                             <li>
                                 <a class='tp-link @if (Route::is('plan.leave_encashment_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plan.leave_encashment_plans.index') }}'>Leave Encashment Plans</a>
+                                    href='{{ route('plan.leave_encashment_plans.index') }}'>Leave Encashment</a>
                             </li>
                             @endif
 
                             @if($canAllowancePlans)
                             <li>
                                 <a class='tp-link @if (Route::is('plan.allowance_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plan.allowance_plans.index') }}'>Allowance Plans</a>
+                                    href='{{ route('plan.allowance_plans.index') }}'>Allowance</a>
                             </li>
                             @endif
+
                             @if($canTAPlans)
                             <li>
                                 <a class='tp-link @if (Route::is('plan.ta_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plan.ta_plans.index') }}'>TA Plans</a>
+                                    href='{{ route('plan.ta_plans.index') }}'>TA</a>
                             </li>
                             @endif
+
                             @if($canDAPlans)
                             <li>
                                 <a class='tp-link @if (Route::is('plan.da_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plan.da_plans.index') }}'>DA Plans</a>
+                                    href='{{ route('plan.da_plans.index') }}'>DA</a>
                             </li>
                             @endif
+
                             @if($canDeductionPlans)
                             <li>
                                 <a class='tp-link @if (Route::is('plan.deduction_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plan.deduction_plans.index') }}'>Deduction Plan</a>
+                                    href='{{ route('plan.deduction_plans.index') }}'>Deduction</a>
                             </li>
                             @endif
                             @if($canBulkUploadPlans)
