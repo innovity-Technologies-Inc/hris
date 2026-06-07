@@ -1,26 +1,31 @@
 <div class="table-responsive">
-    <table class="table table-hover align-middle mb-0">
-        <thead class="table-light">
+    <table class="table table-bordered mb-0">
+        <thead>
             <tr>
-                <th>Title</th>
-                <th>Penalty Amount</th>
-                <th>Status</th>
-                <th class="text-end">Action</th>
+                <th scope="col">#</th>
+                <th scope="col">Title</th>
+                <th scope="col">Penalty Amount</th>
+                <th scope="col">Status</th>
+                <th scope="col">Action</th>
             </tr>
         </thead>
         <tbody>
+            @php
+                $sl = \App\HelperClass::indexNumberSerialization($plans);
+            @endphp
             @forelse ($plans as $plan)
                 <tr>
-                    <td class="fw-bold">{{ $plan->title }}</td>
+                    <th scope="row">{{ $sl++ }}</th>
+                    <td>{{ $plan->title }}</td>
                     <td>{{ \App\HelperClass::getCurrency() }} {{ number_format($plan->penalty_amount, 2) }}</td>
                     <td>
                         @if ($plan->status === 'active')
-                            <span class="badge badge-soft-success">Active</span>
+                            <span class="badge text-bg-success">Active</span>
                         @else
-                            <span class="badge badge-soft-danger">Inactive</span>
+                            <span class="badge text-bg-danger">Inactive</span>
                         @endif
                     </td>
-                    <td class="text-end">
+                    <td>
                         @can('penalty-plans.edit')
                         <button type="button" class="btn btn-primary btn-sm me-1 edit-penalty-plan" 
                                 data-id="{{ $plan->id }}" title="Edit">
@@ -37,7 +42,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="4" class="text-center py-4 text-muted">No penalty plans found.</td>
+                    <td colspan="5" class="text-center py-4 text-muted">No penalty plans found.</td>
                 </tr>
             @endforelse
         </tbody>
@@ -45,5 +50,5 @@
 </div>
 
 <div class="mt-3">
-    {{ $plans->links('pagination::bootstrap-5') }}
+    {{ $plans->links() }}
 </div>

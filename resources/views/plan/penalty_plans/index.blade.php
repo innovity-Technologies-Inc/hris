@@ -4,37 +4,35 @@
     {{-- Penalty Plans List --}}
     <div class="row">
         <div class="col-xl-12">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0 fw-bold" style="color: #974063;">Penalty Plans</h5>
+            <div class="card">
+                <div class="card-header">
                     @can('penalty-plans.create')
-                    <button type="button" class="btn btn-warning btn-sm shadow-sm" id="btnCreatePenaltyPlan">
+                    <button type="button" class="btn btn-warning btn-sm" id="btnCreatePenaltyPlan">
                         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                     </button>
                     @endcan
                 </div><!-- end card header -->
 
-                <div class="card-body">
-                    <form id="filterForm" class="mb-4">
-                        <div class="row mb-1 mt-2 mx-4">
-                            <div class="col-12">
-                                <div class="input-group input-group-md">
-                                    <input type="text" class="form-control border-end-0" id="searchKeyword"
-                                           name="keyword" placeholder="Search penalty plans by title or description..."
-                                           aria-label="Keyword Search">
-                                    <span class="input-group-text border-start-0 input-group-bg">
-                                        <i class="mdi mdi-magnify text-muted"></i>
-                                    </span>
-                                </div>
+                {{-- Search Filter Form --}}
+                <form id="filterForm">
+                    <div class="row mb-1 mt-2 mx-4">
+                        <div class="col-12">
+                            <div class="input-group input-group-md">
+                                <input type="text" class="form-control border-end-0" id="searchKeyword"
+                                       name="keyword" placeholder="Search penalty plans by title or description..."
+                                       aria-label="Keyword Search">
+                                <span class="input-group-text border-start-0 input-group-bg">
+                                    <i class="mdi mdi-magnify text-muted"></i>
+                                </span>
                             </div>
                         </div>
-                    </form>
+                    </div>
+                </form>
 
-                    <div id="penaltyPlanContainer">
-                        <div class="text-center py-5">
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
+                <div class="card-body" id="penaltyPlanContainer">
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
                         </div>
                     </div>
                 </div>
