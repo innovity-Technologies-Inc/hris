@@ -3,7 +3,7 @@
         <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">OT Plan Name</th>
+                <th scope="col">Overtime Plan Name</th>
                 <th scope="col">Config Type</th>
                 <th scope="col">Rate</th>
                 <th scope="col">Status</th>

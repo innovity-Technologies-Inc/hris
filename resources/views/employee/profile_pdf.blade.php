@@ -264,7 +264,7 @@
             <p style="margin-bottom: 5px;"><strong>Active Policies:</strong>
             @if($elig->shift_plan_status === 'active') <span class="badge">Shift</span> @endif
             @if($elig->leave_plan_status === 'active') <span class="badge">Leave</span> @endif
-            @if($elig->ot_plan_status === 'active') <span class="badge">OT</span> @endif
+            @if($elig->ot_plan_status === 'active') <span class="badge">Overtime</span> @endif
             @if($elig->roster_plans_status === 'active') <span class="badge">Roster</span> @endif
             @if($elig->bonus_plan_status === 'active') <span class="badge">Bonus</span> @endif
             @if($elig->meal_plan_status === 'active') <span class="badge">Meal</span> @endif

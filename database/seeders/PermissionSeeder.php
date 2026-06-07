@@ -80,19 +80,19 @@ class PermissionSeeder extends Seeder
                 'name' => 'Plans',
                 'icon' => 'layer-group',
                 'submenus' => [
-                    ['name' => 'Meal', 'slug' => 'meal-plans', 'route' => 'plans.meal_plans.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
-                    ['name' => 'Shift', 'slug' => 'shift-plans', 'route' => 'plans.shift_plans.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
-                    ['name' => 'Leave', 'slug' => 'leave-plans', 'route' => 'plans.leave_plans.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
-                    ['name' => 'OT', 'slug' => 'ot-plans', 'route' => 'plans.ot_plans.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
-                    ['name' => 'Roster', 'slug' => 'roster-plans', 'route' => 'plans.roster_plans.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
-                    ['name' => 'Off-Day Work', 'slug' => 'off-day-work-plans', 'route' => 'plans.off_day_plans.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
-                    ['name' => 'Bonus & Reward', 'slug' => 'bonus-plans', 'route' => 'plan.bonus_plans.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
-                    ['name' => 'Penalty', 'slug' => 'penalty-plans', 'route' => 'plan.penalty_plans.index', 'actions' => ['view', 'create', 'edit', 'delete']],
-                    ['name' => 'Leave Encashment', 'slug' => 'leave-encashment-plans', 'route' => 'plan.leave_encashment_plans.index', 'actions' => ['view', 'create', 'edit']],
-                    ['name' => 'Allowance', 'slug' => 'allowance-plans', 'route' => 'plan.allowance_plans.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
-                    ['name' => 'TA', 'slug' => 'ta-plans', 'route' => 'plans.ta_plans.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
-                    ['name' => 'DA', 'slug' => 'da-plans', 'route' => 'plans.da_plans.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
-                    ['name' => 'Deduction', 'slug' => 'deduction-plan', 'route' => 'plans.deduction_plans.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
+                    ['name' => 'Meal Plans', 'slug' => 'meal-plans', 'route' => 'plans.meal_plans.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
+                    ['name' => 'Shift Plans', 'slug' => 'shift-plans', 'route' => 'plans.shift_plans.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
+                    ['name' => 'Leave Plans', 'slug' => 'leave-plans', 'route' => 'plans.leave_plans.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
+                    ['name' => 'OT Plans', 'slug' => 'ot-plans', 'route' => 'plans.ot_plans.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
+                    ['name' => 'Roster Plans', 'slug' => 'roster-plans', 'route' => 'plans.roster_plans.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
+                    ['name' => 'Off-Day Work Plans', 'slug' => 'off-day-work-plans', 'route' => 'plans.off_day_plans.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
+                    ['name' => 'Bonus & Reward Plans', 'slug' => 'bonus-plans', 'route' => 'plan.bonus_plans.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
+                    ['name' => 'Penalty Plans', 'slug' => 'penalty-plans', 'route' => 'plan.penalty_plans.index', 'actions' => ['view', 'create', 'edit', 'delete']],
+                    ['name' => 'Leave Encashment Plans', 'slug' => 'leave-encashment-plans', 'route' => 'plan.leave_encashment_plans.index', 'actions' => ['view', 'create', 'edit']],
+                    ['name' => 'Allowance Plans', 'slug' => 'allowance-plans', 'route' => 'plan.allowance_plans.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
+                    ['name' => 'TA Plans', 'slug' => 'ta-plans', 'route' => 'plans.ta_plans.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
+                    ['name' => 'DA Plans', 'slug' => 'da-plans', 'route' => 'plans.da_plans.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
+                    ['name' => 'Deduction Plan', 'slug' => 'deduction-plan', 'route' => 'plans.deduction_plans.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
                 ]
             ],
             [
@@ -209,8 +209,8 @@ class PermissionSeeder extends Seeder
               ->orWhere('name', 'like', 'increments.%')
               ->orWhere('name', 'like', 'bonuses.%')
               ->orWhere('name', 'like', 'salary.%')
-              ->orWhere('name', 'like', 'plans.%')
-              ->orWhere('name', 'like', 'plan.%')
+              ->orWhere('name', 'like', '%-plans.%')
+              ->orWhere('name', 'like', '%-plan.%')
               ->orWhere('name', 'like', 'groups.%')
               ->orWhere('name', 'like', 'company%')
               ->orWhere('name', 'like', 'divisions.%')

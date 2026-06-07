@@ -197,12 +197,12 @@
                         <!-- Compensation Tab -->
                         <div class="tab-pane pt-4" id="compensation" role="tabpanel">
                             <div class="row">
-                                <!-- OT Plan -->
+                                <!-- Overtime Plan -->
                                 <div class="col-md-6 mb-3">
                                     <div class="card border h-100">
                                         <div class="card-header bg-light">
                                             <h6 class="mb-0 fw-semibold">
-                                                <i class="mdi mdi-clock-check text-primary me-2"></i>OT Plan
+                                                <i class="mdi mdi-clock-check text-primary me-2"></i>Overtime Plan
                                             </h6>
                                         </div>
                                         <div class="card-body">

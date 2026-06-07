@@ -380,7 +380,7 @@
                             @if($canOTPlans)
                             <li>
                                 <a class='tp-link @if (Route::is('plan.ot_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plan.ot_plans.index') }}'>OT</a>
+                                    href='{{ route('plan.ot_plans.index') }}'>Overtime</a>
                             </li>
                             @endif
 

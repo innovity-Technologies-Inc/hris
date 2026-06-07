@@ -50,7 +50,7 @@
                     <li class="nav-item" role="presentation">
                         <a class="nav-link @if($type == 'ot-plans') active @endif p-2 ajax-tab"
                            data-url="{{route('employee.profile.plans', ['id' => $employee->id, 'type' => 'ot-plans'])}}">
-                            <span class="d-none d-sm-block">OT Plan</span>
+                            <span class="d-none d-sm-block">Overtime Plan</span>
                         </a>
                     </li>
                     <li class="nav-item" role="presentation">

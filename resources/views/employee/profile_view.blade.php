@@ -889,7 +889,7 @@
 
                 @if (!empty($employee->ot_plans))
                     <div class="plan-card">
-                        <h4>OT Plan</h4>
+                        <h4>Overtime Plan</h4>
                         @foreach ($employee->ot_plans as $plan)
                             <div class="plan-detail">
                                 <span class="label">Plan Name:</span>

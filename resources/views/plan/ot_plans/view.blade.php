@@ -14,7 +14,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-12 mb-3">
-                        <label class="text-muted small">OT Plan Name</label>
+                        <label class="text-muted small">Overtime Plan Name</label>
                         <p class="fw-semibold mb-0">{{ $plan->name }}</p>
                     </div>
                 </div>
@@ -100,7 +100,7 @@
         <div class="card border mb-4">
             <div class="card-header bg-light">
                 <h5 class="mb-0 fw-semibold">
-                    <i class="mdi mdi-clock-time-eight-outline text-info me-2"></i>OT Hours Configuration
+                    <i class="mdi mdi-clock-time-eight-outline text-info me-2"></i>Overtime Hours Configuration
                 </h5>
             </div>
             <div class="card-body">

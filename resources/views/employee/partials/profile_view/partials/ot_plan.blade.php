@@ -35,7 +35,7 @@
                     style="width: 40px; height: 40px; background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);">
                     <i class="mdi mdi-check-circle text-white"></i>
                 </div>
-                <h5 class="mb-0 fw-bold">Active OT Plan</h5>
+                <h5 class="mb-0 fw-bold">Active Overtime Plan</h5>
             </div>
             <span class="badge bg-info shadow-sm px-3 py-2 rounded-pill">
                 <i class="mdi mdi-check-decagram me-1"></i>{{ $totalActiveOtPlan }} Active
@@ -247,8 +247,8 @@
                         style="width: 80px; height: 80px; background-color: var(--bs-tertiary-bg);">
                         <i class="mdi mdi-clock-remove-outline text-muted fs-1"></i>
                     </div>
-                    <h5 class="fw-semibold mb-2">No Active OT Plans</h5>
-                    <p class="text-muted mb-0">There are currently no active OT plan assignments for this employee.</p>
+                    <h5 class="fw-semibold mb-2">No Active Overtime Plans</h5>
+                    <p class="text-muted mb-0">There are currently no active overtime plan assignments for this employee.</p>
                 </div>
             </div>
 
@@ -257,7 +257,7 @@
     </div>
 </div>
 
-{{-- Previous/Expired OT Plans Section --}}
+{{-- Previous/Expired Overtime Plans Section --}}
 <div class="row">
     <div class="col-12">
         <div class="card border-0 shadow-sm">
@@ -265,7 +265,7 @@
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="d-flex align-items-center">
                         <i class="mdi mdi-history text-secondary fs-5 me-2"></i>
-                        <h6 class="mb-0 fw-semibold text-secondary">Previous OT Plan Assignments</h6>
+                        <h6 class="mb-0 fw-semibold text-secondary">Previous Overtime Plan Assignments</h6>
                     </div>
                     <span class="badge bg-secondary">{{ $totalPreviousOtPlan }} Records</span>
                 </div>
@@ -277,7 +277,7 @@
                             <thead class="table-light">
                                 <tr>
                                     <th>ID</th>
-                                    <th>OT Plan Name</th>
+                                    <th>Overtime Plan Name</th>
                                     <th>Effective From</th>
                                     <th>Effective To</th>
                                     <th>Status</th>
@@ -327,7 +327,7 @@
                 @else
                     <div class="alert alert-secondary m-3">
                         <i class="mdi mdi-information-outline me-2"></i>
-                        No previous OT plan assignments found.
+                        No previous overtime plan assignments found.
                     </div>
                 @endif
             </div>
@@ -337,4 +337,6 @@
 
 {{-- Include the Create Modal --}}
 @include('employee.partials.modal.create_ot_modal')
+
+')
 

@@ -16,7 +16,7 @@
                         <div class="col-12">
                             <div class="input-group input-group-md">
                                 <input type="text" class="form-control border-end-0" id="keywordSearch" name="keyword"
-                                    placeholder="Search OT plans by names " aria-label="Keyword Search">
+                                    placeholder="Search overtime plans by names " aria-label="Keyword Search">
                                 <span class="input-group-text border-start-0 input-group-bg">
                                     <i class="mdi mdi-magnify text-muted"></i>
                                 </span>

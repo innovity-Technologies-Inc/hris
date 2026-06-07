@@ -17,14 +17,14 @@
             <div class="card border mb-4">
                 <div class="card-header bg-light">
                     <h5 class="mb-0 fw-semibold">
-                        <i class="mdi mdi-clock-plus-outline text-primary me-2"></i>Basic OT Information
+                        <i class="mdi mdi-clock-plus-outline text-primary me-2"></i>Basic Overtime Information
                     </h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-12 mb-3">
                             <label for="name" class="form-label fw-semibold">
-                                OT Plan Name <span class="text-danger">*</span>
+                                Overtime Plan Name <span class="text-danger">*</span>
                             </label>
                             <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"
                                 name="name" placeholder="E.g., Regular OT - 1.5x"
@@ -217,7 +217,7 @@
                             <i class="mdi mdi-refresh me-1"></i>Reset
                         </button>
                         <button type="submit" class="btn btn-primary">
-                            <i class="mdi mdi-content-save me-1"></i>Submit OT Plan
+                            <i class="mdi mdi-content-save me-1"></i>Submit Overtime Plan
                         </button>
                     </div>
                 </div>

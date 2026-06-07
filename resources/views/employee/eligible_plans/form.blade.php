@@ -184,13 +184,13 @@
                                     </div>
                                 </div>
 
-                                <!-- OT Plan -->
+                                <!-- Overtime Plan -->
                                 <div class="col-md-6 mb-3">
                                     <div class="card border h-100">
                                         <div
                                             class="card-header bg-light d-flex justify-content-between align-items-center">
                                             <h6 class="mb-0 fw-semibold">
-                                                <i class="mdi mdi-clock-check text-primary me-2"></i>OT Plan
+                                                <i class="mdi mdi-clock-check text-primary me-2"></i>Overtime Plan
                                             </h6>
                                             <div class="form-check form-switch mb-0">
                                                 <input type="hidden" name="ot_plan_status" value="inactive">

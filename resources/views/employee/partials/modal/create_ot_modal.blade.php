@@ -1,9 +1,9 @@
-{{-- Create OT Plan Assignment Modal --}}
+{{-- Create Overtime Plan Assignment Modal --}}
 <div class="modal fade" id="createOTPlanModal" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title"><i class="mdi mdi-clock-plus-outline me-2"></i>Create OT Plan Assignment</h5>
+                <h5 class="modal-title"><i class="mdi mdi-clock-plus-outline me-2"></i>Create Overtime Plan Assignment</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <form method="POST" action="{{ route('employee.profile.plans.store', 'ot-plans') }}">
@@ -15,7 +15,7 @@
                         <div class="col-md-6">
                             <label for="modal_ot_plan_id" class="form-label fw-semibold">
                                 <i class="mdi mdi-clock-plus-outline text-primary me-1"></i>
-                                Select OT Plan <span class="text-danger">*</span>
+                                Select Overtime Plan <span class="text-danger">*</span>
                             </label>
                             <select id="modal_ot_plan_id" name="plan_id" class="form-select" required>
                                 <option value="">-- Choose Plan --</option>
@@ -54,7 +54,7 @@
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <div class="border-start border-primary border-3 ps-3">
-                                            <small class="text-muted d-block">OT Plan</small>
+                                            <small class="text-muted d-block">Overtime Plan</small>
                                             <strong id="modal-ot-detail-name" class="text-dark">-</strong>
                                         </div>
                                     </div>
@@ -124,7 +124,7 @@
         });
 
         // ============================
-        // 🚀 Show OT Plan Details
+        // 🚀 Show Overtime Plan Details
         // ============================
         $(document).on('change', '#modal_ot_plan_id', function() {
             let planId = $(this).val();
