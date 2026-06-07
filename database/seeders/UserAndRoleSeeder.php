@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Enums\UserRole;
 use App\Enums\UserType;
 use App\Models\Employee\Employee;
 use App\Models\User;
@@ -21,10 +20,10 @@ class UserAndRoleSeeder extends Seeder
         // 1. Ensure Permissions and Basic Roles exist
         $this->call(PermissionSeeder::class);
 
-        $superAdminRole = Role::where('name', UserRole::SuperAdmin->value)->first();
-        $hrManagerRole = Role::firstOrCreate(['name' => UserRole::HRManager->value, 'guard_name' => 'web']);
-        $deptManagerRole = Role::firstOrCreate(['name' => UserRole::DepartmentManager->value, 'guard_name' => 'web']);
-        $employeeRole = Role::firstOrCreate(['name' => UserRole::Employee->value, 'guard_name' => 'web']);
+        $superAdminRole = Role::where('name', 'Super Admin')->first();
+        $hrManagerRole = Role::firstOrCreate(['name' => 'HR Manager', 'guard_name' => 'web']);
+        $deptManagerRole = Role::firstOrCreate(['name' => 'Department Manager', 'guard_name' => 'web']);
+        $employeeRole = Role::firstOrCreate(['name' => 'Employee', 'guard_name' => 'web']);
 
         // 2. Create/Update the "Group" Super Admin Employee Profile
         $adminEmployee = Employee::updateOrCreate(
@@ -88,7 +87,7 @@ class UserAndRoleSeeder extends Seeder
                     'status' => 'active',
                 ]
             );
-            $testUser->syncRoles([UserRole::Employee->value]);
+            $testUser->syncRoles(['Employee']);
             $testEmployee->update(['user_id' => $testUser->id]);
         }
 
@@ -143,7 +142,7 @@ class UserAndRoleSeeder extends Seeder
         $finalAdmin = User::where('email', 'admin@example.com')->first();
         if ($finalAdmin) {
             $finalAdmin->update(['user_type' => UserType::Group]);
-            $finalAdmin->syncRoles([UserRole::SuperAdmin->value]);
+            $finalAdmin->syncRoles(['Super Admin']);
         }
 
         $this->command->info('Provisioned employees with login info and roles.');

@@ -2,6 +2,7 @@
 
 use App\Models\Employee\Employee;
 use App\Models\User;
+use App\Enums\UserType;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -59,7 +60,7 @@ beforeEach(function () {
 });
 
 test('Group user can see all employees', function () {
-    $user = User::factory()->create(['user_type' => 'Group']);
+    $user = User::factory()->create(['user_type' => UserType::Group]);
     Auth::login($user);
 
     expect(Employee::count())->toBe(5);
@@ -68,7 +69,7 @@ test('Group user can see all employees', function () {
 test('Company user can see only employees in their company', function () {
     // User linked to Emp 1 (Company 1)
     $user = User::factory()->create([
-        'user_type' => 'Company',
+        'user_type' => UserType::Company,
         'employee_id' => 1
     ]);
     Auth::login($user);
@@ -80,7 +81,7 @@ test('Company user can see only employees in their company', function () {
 test('Business Unit user can see only employees in their location', function () {
     // User linked to Emp 1 (Location 1)
     $user = User::factory()->create([
-        'user_type' => 'Business Unit',
+        'user_type' => UserType::BusinessUnit,
         'employee_id' => 1
     ]);
     Auth::login($user);
@@ -92,7 +93,7 @@ test('Business Unit user can see only employees in their location', function () 
 test('Department user can see only employees in their department', function () {
     // User linked to Emp 1 (Department 1)
     $user = User::factory()->create([
-        'user_type' => 'Department',
+        'user_type' => UserType::Department,
         'employee_id' => 1
     ]);
     Auth::login($user);
@@ -101,13 +102,15 @@ test('Department user can see only employees in their department', function () {
     expect(Employee::count())->toBe(2);
 });
 
-test('Employee user can see only their own record', function () {
+test('Section user can see only employees in their section', function () {
+    // User linked to Emp 1 (Section 1)
     $user = User::factory()->create([
-        'user_type' => 'Employee',
+        'user_type' => UserType::Section,
         'employee_id' => 1
     ]);
     Auth::login($user);
 
+    // Should see only Emp 1
     expect(Employee::count())->toBe(1);
     expect(Employee::first()->id)->toBe(1);
 });
@@ -115,7 +118,7 @@ test('Employee user can see only their own record', function () {
 test('Scoped user can only see organizational units in their scope', function () {
     // Department user from Dept 1 (Location 1, Company 1)
     $user = User::factory()->create([
-        'user_type' => 'Department',
+        'user_type' => UserType::Department,
         'employee_id' => 1
     ]);
     Auth::login($user);
@@ -125,4 +128,3 @@ test('Scoped user can only see organizational units in their scope', function ()
     expect(\App\Models\Company\Department::count())->toBe(1);
     expect(\App\Models\Company\Department::first()->id)->toBe(1);
 });
-

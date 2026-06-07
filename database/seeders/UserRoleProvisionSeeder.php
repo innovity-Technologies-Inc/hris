@@ -9,6 +9,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use App\Enums\UserType;
 
 class UserRoleProvisionSeeder extends Seeder
 {
@@ -31,7 +32,7 @@ class UserRoleProvisionSeeder extends Seeder
             [
                 'name' => 'System Administrator',
                 'password' => Hash::make('12345678'),
-                'user_type' => 'Group',
+                'user_type' => UserType::Group,
                 'status' => 'active',
             ]
         );
@@ -47,16 +48,16 @@ class UserRoleProvisionSeeder extends Seeder
             
             // Determine Role based on Department
             $targetRole = $employeeRole;
-            $userType = 'employee';
+            $userType = UserType::Employee;
 
             $deptName = $employee->officeInfo?->getCurrentDepartment?->department_name ?? '';
             
             if (stripos($deptName, 'Recruitment') !== false || stripos($deptName, 'Payroll') !== false) {
                 $targetRole = $hrManagerRole;
-                $userType = 'Department'; // Example assignment
+                $userType = UserType::Department; // Example assignment
             } elseif ($index < 5) {
                  // Make the first 5 employees "Company" level users for variety
-                 $userType = 'Company';
+                 $userType = UserType::Company;
             }
 
             $user = User::updateOrCreate(

@@ -4,6 +4,7 @@ use App\Models\Company\Company;
 use App\Models\Employee\Employee;
 use App\Models\Employee\EmployeeOfficeInfo;
 use App\Models\User;
+use App\Enums\UserType;
 use App\Services\Employee\EmployeeReportServices;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Permission;
@@ -16,10 +17,10 @@ beforeEach(function () {
     $role = Role::firstOrCreate(['name' => 'HR Admin', 'guard_name' => 'web']);
     $role->givePermissionTo('employee-management.analytics');
 
-    $this->admin = User::factory()->create(['user_type' => 'Company']);
+    $this->admin = User::factory()->create(['user_type' => UserType::Company]);
     $this->admin->assignRole($role);
 
-    $this->employeeUser = User::factory()->create(['user_type' => 'Employee']);
+    $this->employeeUser = User::factory()->create(['user_type' => UserType::Employee]);
 
     $this->reportService = new EmployeeReportServices();
 });
@@ -104,7 +105,7 @@ it('loads the analytics page for authorized users', function () {
 });
 
 it('denies access to analytics for users without permission', function () {
-    $userWithoutPermission = User::factory()->create(['user_type' => 'Company']);
+    $userWithoutPermission = User::factory()->create(['user_type' => UserType::Company]);
     $this->actingAs($userWithoutPermission);
 
     $response = $this->get(route('employee.reports'));

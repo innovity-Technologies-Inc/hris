@@ -175,8 +175,8 @@
                         <label class="small mb-1">User Type</label>
                         <select id="filter_user_type" class="form-select form-select-sm live-filter">
                             <option value="">All Types</option>
-                            @foreach(['Group', 'Company', 'Business Unit', 'Division', 'Department', 'Section', 'Employee'] as $type)
-                                <option value="{{ $type }}">{{ $type }}</option>
+                            @foreach(\App\Enums\UserType::cases() as $type)
+                                <option value="{{ $type->value }}">{{ $type->name }}</option>
                             @endforeach
                         </select>
                     </div>

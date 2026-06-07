@@ -2,6 +2,7 @@
 
 use App\Models\Employee\Employee;
 use App\Models\User;
+use App\Enums\UserType;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -15,12 +16,12 @@ beforeEach(function () {
     $role->givePermissionTo('employee-management.nid-verification');
 
     $this->admin = User::factory()->create([
-        'user_type' => 'Company',
+        'user_type' => UserType::Company,
     ]);
     $this->admin->assignRole($role);
 
     $this->employeeUser = User::factory()->create([
-        'user_type' => 'Employee',
+        'user_type' => UserType::Employee,
     ]);
 
     $this->employee = Employee::factory()->create([
@@ -47,7 +48,7 @@ it('allows authorized users to verify NID', function () {
 
 it('denies NID verification for users without permission', function () {
     $this->withoutMiddleware();
-    $userWithoutPermission = User::factory()->create(['user_type' => 'Company']);
+    $userWithoutPermission = User::factory()->create(['user_type' => UserType::Company]);
     $this->actingAs($userWithoutPermission);
 
     $response = $this->postJson(route('employee.profile.verify_nid', $this->employee->id));

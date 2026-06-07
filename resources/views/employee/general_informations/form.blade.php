@@ -954,13 +954,11 @@
                                         <label for="user_type" class="form-label text-primary fw-bold">User Type <span class="text-danger">*</span></label>
                                         <select class="form-select @error('user_type') is-invalid @enderror" id="user_type" name="user_type">
                                             <option value="">Select User Type</option>
-                                            <option value="Group" {{ (isset($employee->user) && $employee->user->user_type == 'Group') || old('user_type') == 'Group' ? 'selected' : '' }}>Group</option>
-                                            <option value="Company" {{ (isset($employee->user) && $employee->user->user_type == 'Company') || old('user_type') == 'Company' ? 'selected' : '' }}>Company</option>
-                                            <option value="Business Unit" {{ (isset($employee->user) && $employee->user->user_type == 'Business Unit') || old('user_type') == 'Business Unit' ? 'selected' : '' }}>Business Unit</option>
-                                            <option value="Division" {{ (isset($employee->user) && $employee->user->user_type == 'Division') || old('user_type') == 'Division' ? 'selected' : '' }}>Division</option>
-                                            <option value="Department" {{ (isset($employee->user) && $employee->user->user_type == 'Department') || old('user_type') == 'Department' ? 'selected' : '' }}>Department</option>
-                                            <option value="Section" {{ (isset($employee->user) && $employee->user->user_type == 'Section') || old('user_type') == 'Section' ? 'selected' : '' }}>Section</option>
-                                            <option value="Employee" {{ (isset($employee->user) && $employee->user->user_type == 'Employee') || old('user_type') == 'Employee' ? 'selected' : '' }}>Employee</option>
+                                            @foreach(\App\Enums\UserType::cases() as $type)
+                                                <option value="{{ $type->value }}" {{ (isset($employee->user) && $employee->user->user_type->value == $type->value) || old('user_type') == $type->value ? 'selected' : '' }}>
+                                                    {{ $type->name }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                         @error('user_type')
                                             <small class="text-danger">{{ $message }}</small>

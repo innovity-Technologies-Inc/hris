@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Enums\UserType;
 use App\Models\Employee\Employee;
 use App\Models\Employee\EmployeeOfficeInfo;
 use App\Models\Company\Company;
@@ -112,7 +113,7 @@ beforeEach(function () {
     // Create Employee A in Section A
     $this->employeeA = createEmployee(['full_name' => 'Employee A']);
     $this->userA = User::factory()->create([
-        'user_type' => 'Company',
+        'user_type' => UserType::Company,
         'employee_id' => $this->employeeA->id
     ]);
     $this->employeeA->update(['user_id' => $this->userA->id]);
@@ -131,7 +132,7 @@ beforeEach(function () {
     // Create Employee B in Section B
     $this->employeeB = createEmployee(['full_name' => 'Employee B']);
     $this->userB = User::factory()->create([
-        'user_type' => 'Company',
+        'user_type' => UserType::Company,
         'employee_id' => $this->employeeB->id
     ]);
     $this->employeeB->update(['user_id' => $this->userB->id]);
@@ -149,7 +150,7 @@ beforeEach(function () {
 
     // Create a Group user
     $this->groupUser = User::factory()->create([
-        'user_type' => 'Group'
+        'user_type' => UserType::Group
     ]);
 });
 
@@ -181,7 +182,7 @@ test('company user can only see their own company data', function () {
 });
 
 test('business unit user can only see their own business unit data', function () {
-    $this->userA->update(['user_type' => 'Business Unit']);
+    $this->userA->update(['user_type' => UserType::BusinessUnit]);
     Auth::login($this->userA);
 
     expect(\App\Models\Company\CompanyLocation::count())->toBe(1)
@@ -192,7 +193,7 @@ test('business unit user can only see their own business unit data', function ()
 });
 
 test('division user can only see their own division data', function () {
-    $this->userA->update(['user_type' => 'Division']);
+    $this->userA->update(['user_type' => UserType::Division]);
     Auth::login($this->userA);
     
     expect(Division::count())->toBe(1)
@@ -206,7 +207,7 @@ test('division user can only see their own division data', function () {
 });
 
 test('department user can only see their own department data', function () {
-    $this->userA->update(['user_type' => 'Department']);
+    $this->userA->update(['user_type' => UserType::Department]);
     Auth::login($this->userA);
 
     expect(Department::count())->toBe(1)
@@ -220,7 +221,7 @@ test('department user can only see their own department data', function () {
 });
 
 test('section user can only see their own section data', function () {
-    $this->userA->update(['user_type' => 'Section']);
+    $this->userA->update(['user_type' => UserType::Section]);
     Auth::login($this->userA);
 
     expect(Section::count())->toBe(1)
@@ -231,7 +232,7 @@ test('section user can only see their own section data', function () {
 });
 
 test('employee user can only see their own data', function () {
-    $this->userA->update(['user_type' => 'Employee']);
+    $this->userA->update(['user_type' => UserType::Employee]);
     Auth::login($this->userA);
 
     expect(Employee::count())->toBe(1)

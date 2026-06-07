@@ -4,6 +4,7 @@ use App\Models\Employee\Employee;
 use App\Models\Setting\Notification;
 use App\Models\Setting\NotificationSetting;
 use App\Models\User;
+use App\Enums\UserType;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Artisan;
@@ -14,7 +15,7 @@ beforeEach(function () {
     NotificationSetting::create([
         'visa_days' => 60,
     ]);
-    $this->hr = User::factory()->create(['user_type' => 'Group']);
+    $this->hr = User::factory()->create(['user_type' => UserType::Group]);
 });
 
 it('alerts for expiries within the range (e.g. 40 days left when threshold is 60)', function () {
