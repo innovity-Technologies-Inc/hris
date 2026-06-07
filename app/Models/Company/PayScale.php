@@ -10,6 +10,7 @@ class PayScale extends Model
     use HasFactory;
 
     protected $fillable = [
+        'title',
         'grade_id',
         'pay_group_id',
         'min_salary',

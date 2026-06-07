@@ -22,6 +22,7 @@ class PayScaleRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'title' => 'nullable|string|max:255',
             'grade_id' => 'required|exists:salary_grades,id',
             'pay_group_id' => 'required|exists:pay_groups,id',
             'min_salary' => 'required|numeric|min:0',

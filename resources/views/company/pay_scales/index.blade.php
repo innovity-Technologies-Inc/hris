@@ -51,6 +51,11 @@
                     <input type="hidden" id="payScaleId" name="id">
                     <div class="modal-body p-4">
                         <div class="mb-3">
+                            <label class="form-label fw-semibold">Title</label>
+                            <input type="text" class="form-control" name="title" id="title" placeholder="Auto-generated if left blank">
+                            <small class="text-muted">Format: Pay Group - Grade Code (e.g. Monthly Staff - G1)</small>
+                        </div>
+                        <div class="mb-3">
                             <label class="form-label fw-semibold">Salary Grade <span class="text-danger">*</span></label>
                             <select class="form-select" name="grade_id" id="grade_id" required>
                                 <option value="">Select Grade</option>
@@ -142,6 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .then(response => {
                         const data = response.data.data;
                         document.getElementById('payScaleId').value = data.id;
+                        document.getElementById('title').value = data.title || '';
                         document.getElementById('grade_id').value = data.grade_id;
                         document.getElementById('pay_group_id').value = data.pay_group_id;
                         document.getElementById('min_salary').value = data.min_salary;

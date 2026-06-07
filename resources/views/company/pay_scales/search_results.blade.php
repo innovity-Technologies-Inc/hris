@@ -1,31 +1,39 @@
 <div class="table-responsive">
-    <table class="table table-hover align-middle mb-0">
-        <thead class="table-light">
+    <table class="table table-bordered mb-0">
+        <thead>
             <tr>
-                <th>Grade</th>
-                <th>Pay Group</th>
-                <th>Min Salary</th>
-                <th>Max Salary</th>
-                <th>Status</th>
-                <th class="text-end">Actions</th>
+                <th scope="col">#</th>
+                <th scope="col">Title</th>
+                <th scope="col">Grade</th>
+                <th scope="col">Pay Group</th>
+                <th scope="col">Min Salary</th>
+                <th scope="col">Max Salary</th>
+                <th scope="col">Status</th>
+                <th scope="col">Action</th>
             </tr>
         </thead>
         <tbody>
+            @php
+                $sl = \App\HelperClass::indexNumberSerialization($payScales);
+            @endphp
             @forelse($payScales as $scale)
                 <tr>
+                    <th scope="row">{{ $sl++ }}</th>
+                    <td class="fw-bold">{{ $scale->title }}</td>
                     <td>
-                        <span class="fw-bold text-dark">{{ $scale->grade->grade_code }}</span><br>
-                        <small class="text-muted">{{ $scale->grade->grade_name }}</small>
+                        <span class="text-dark">{{ $scale->grade->grade_code }}</span>
                     </td>
                     <td>
-                        <span class="badge bg-soft-info text-info">{{ $scale->payGroup->title }}</span>
+                        {{ $scale->payGroup->title }}
                     </td>
-                    <td>{{ number_format($scale->min_salary, 2) }}</td>
-                    <td>{{ number_format($scale->max_salary, 2) }}</td>
+                    <td>{{ \App\HelperClass::getCurrency() }} {{ number_format($scale->min_salary, 2) }}</td>
+                    <td>{{ \App\HelperClass::getCurrency() }} {{ number_format($scale->max_salary, 2) }}</td>
                     <td>
-                        <span class="badge {{ $scale->status === 'active' ? 'bg-success' : 'bg-danger' }}">
-                            {{ ucfirst($scale->status) }}
-                        </span>
+                        @if ($scale->status === 'active')
+                            <span class="badge text-bg-success">Active</span>
+                        @else
+                            <span class="badge text-bg-danger">Inactive</span>
+                        @endif
                     </td>
                     <td class="text-end">
                         @can('pay-scales.edit')
@@ -44,7 +52,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" class="text-center py-4 text-muted">No pay scales found.</td>
+                    <td colspan="8" class="text-center py-4 text-muted">No pay scales found.</td>
                 </tr>
             @endforelse
         </tbody>

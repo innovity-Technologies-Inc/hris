@@ -16,7 +16,7 @@ class PayScaleServices
     {
         $query = PayScale::query()->with(['grade', 'payGroup']);
         $searchTerm = $request->get('keyword');
-        $searchableFields = ['grade.grade_name', 'grade.grade_code', 'payGroup.title'];
+        $searchableFields = ['title', 'grade.grade_name', 'grade.grade_code', 'payGroup.title'];
         
         return $flexsearch->apply($query, [], $searchTerm, $searchableFields)
             ->orderBy('id', 'desc')
@@ -29,6 +29,11 @@ class PayScaleServices
     public function storePayScale(array $data)
     {
         try {
+            if (empty($data['title'])) {
+                $grade = \App\Models\Company\SalaryGrade::find($data['grade_id']);
+                $payGroup = \App\Models\Company\PayGroup::find($data['pay_group_id']);
+                $data['title'] = ($payGroup?->title ?? 'N/A') . ' - ' . ($grade?->grade_code ?? 'N/A');
+            }
             return PayScale::create($data);
         } catch (\Exception $e) {
             Log::error('Error storing PayScale: ' . $e->getMessage());
@@ -42,6 +47,11 @@ class PayScaleServices
     public function updatePayScale(PayScale $payScale, array $data)
     {
         try {
+            if (empty($data['title'])) {
+                $grade = \App\Models\Company\SalaryGrade::find($data['grade_id']);
+                $payGroup = \App\Models\Company\PayGroup::find($data['pay_group_id']);
+                $data['title'] = ($payGroup?->title ?? 'N/A') . ' - ' . ($grade?->grade_code ?? 'N/A');
+            }
             $payScale->update($data);
             return $payScale;
         } catch (\Exception $e) {
