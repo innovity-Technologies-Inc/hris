@@ -11,10 +11,13 @@ class PenaltyPlanServices
     /**
      * Get list of penalty plans with filtering.
      */
-    public function getPenaltyPlans(Request $request)
+    public function getPenaltyPlans(Request $request, FlexSearch $flexsearch)
     {
-        return FlexSearch::for(PenaltyPlan::class)
-            ->search(['title', 'description'])
+        $query = PenaltyPlan::query();
+        $keyword = $request->get('keyword');
+        $searchableFields = ['title', 'description'];
+
+        return $flexsearch->apply($query, [], $keyword, $searchableFields)
             ->paginate($request->get('per_page', 10));
     }
 

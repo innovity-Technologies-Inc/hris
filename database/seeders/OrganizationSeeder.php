@@ -437,33 +437,18 @@ class OrganizationSeeder extends Seeder
 
     private function seedCompensationStructure()
     {
-        // --- TOFSILS (Bangladesh Employee Categories) ---
-        DB::table('tofsils')->truncate();
-        $tofsils = [
-            ['id' => 1, 'name' => 'Executive Level', 'description' => 'Top-tier management roles', 'status' => 'active'],
-            ['id' => 2, 'name' => 'Professional Staff', 'description' => 'Specialized roles requiring degrees/certifications', 'status' => 'active'],
-            ['id' => 3, 'name' => 'Technical Support', 'description' => 'Skilled trades and support staff', 'status' => 'active'],
-            ['id' => 4, 'name' => 'Administrative', 'description' => 'General office and clerical roles', 'status' => 'active'],
-            ['id' => 5, 'name' => 'Worker Level', 'description' => 'Production and general worker roles', 'status' => 'active'],
-        ];
-        DB::table('tofsils')->insert($tofsils);
-
-        // --- SALARY GRADES (Bangladesh Government Style - Linked to Tofsils) ---
+        // --- SALARY GRADES ---
         DB::table('salary_grades')->truncate();
         $salaryGrades = [];
-        $gradeNumbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
-        $tofsilIds = [1, 2, 3, 4, 5];
-
-        foreach ($tofsilIds as $tofsil_id) {
-            foreach ($gradeNumbers as $index => $grade) {
-                $salaryGrades[] = [
-                    'grade_code' => 'G' . $tofsil_id . '-' . ($index + 1),
-                    'grade_name' => 'Salary Grade ' . $tofsil_id . '-' . ($index + 1),
-                    'tofsil_id' => $tofsil_id,
-                    'status' => 'active',
-                    'created_at' => now(), 'updated_at' => now(),
-                ];
-            }
+        
+        for ($i = 1; $i <= 20; $i++) {
+            $salaryGrades[] = [
+                'grade_code' => 'G' . $i,
+                'grade_name' => 'Salary Grade ' . $i,
+                'status' => 'active',
+                'created_at' => now(), 
+                'updated_at' => now(),
+            ];
         }
         DB::table('salary_grades')->insert($salaryGrades);
     }

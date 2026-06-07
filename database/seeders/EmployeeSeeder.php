@@ -69,7 +69,6 @@ class EmployeeSeeder extends Seeder
         $this->orgData['departments_by_division'] = DB::table('departments')->get()->groupBy('division_id')->map->pluck('id')->toArray();
         $this->orgData['sections_by_department'] = DB::table('sections')->get()->groupBy('department_id')->map->pluck('id')->toArray();
         $this->orgData['designations'] = DB::table('designations')->pluck('id')->toArray();
-        $this->orgData['tofsils'] = DB::table('tofsils')->pluck('id')->toArray();
         $this->orgData['salary_grades'] = DB::table('salary_grades')->pluck('id')->toArray();
         
         $branches = DB::table('branches')->select('id', 'bank_id')->get();
@@ -200,15 +199,6 @@ class EmployeeSeeder extends Seeder
                 'result_grade' => 'A+',
                 'passing_year' => '2015',
                 'gpa_cgpa' => '3.80'
-            ]]),
-            'experiences' => json_encode([[
-                'company' => 'Old Corp Ltd',
-                'designation' => 'Software Engineer',
-                'department' => 'IT',
-                'date_from' => $this->faker->dateTimeBetween('-5 years', '-3 years')->format('Y-m-d'),
-                'date_to' => $this->faker->dateTimeBetween('-3 years', '-2 years')->format('Y-m-d'),
-                'duration' => '2 years',
-                'responsibility' => 'Backend development using Laravel'
             ]]),
             'trainings' => json_encode([[
                 'training_title' => 'Advanced Laravel',

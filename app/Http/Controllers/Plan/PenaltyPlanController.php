@@ -19,9 +19,9 @@ class PenaltyPlanController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request, \DaiyanMozumder\LaravelFlexSearch\FlexSearch $flexsearch)
     {
-        $plans = $this->penaltyServices->getPenaltyPlans($request);
+        $plans = $this->penaltyServices->getPenaltyPlans($request, $flexsearch);
 
         if ($request->ajax()) {
             return view('plan.penalty_plans.search_results', compact('plans'))->render();

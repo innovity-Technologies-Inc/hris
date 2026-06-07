@@ -33,8 +33,22 @@ class PlanSeeder extends Seeder
         $this->seedTAPlans();
         $this->seedDAPlans();
         $this->seedDeductionPlans();
+        $this->seedPenaltyPlans();
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+    }
+
+    private function seedPenaltyPlans()
+    {
+        DB::table('penalty_plans')->truncate();
+        $penalties = [
+            ['title' => 'Late Attendance Penalty', 'description' => 'Fixed penalty for repeated late attendance', 'penalty_amount' => 500, 'status' => 'active'],
+            ['title' => 'Misconduct Penalty', 'description' => 'Penalty for minor policy violations', 'penalty_amount' => 1000, 'status' => 'active'],
+            ['title' => 'Property Damage Penalty', 'description' => 'Recovery for minor office property damage', 'penalty_amount' => 2000, 'status' => 'inactive'],
+        ];
+        foreach ($penalties as $penalty) {
+            DB::table('penalty_plans')->insert(array_merge($penalty, ['created_at' => now(), 'updated_at' => now()]));
+        }
     }
 
     private function seedShiftPlans()
