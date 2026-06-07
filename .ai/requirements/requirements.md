@@ -47,7 +47,7 @@ A comprehensive Human Resource Management System (HRMS) built with Laravel 12, f
 
 ### 📅 Plans & Policies
 - **Attendance**: Shift Plans, Roster Plans.
-- **Benefits**: Allowance, Bonus, and DA Plans.
+- **Benefits**: Allowance, Bonus & Reward, and DA Plans.
 - **Time-off**: Leave and Off-Day Plans.
 - **Others**: Meal and TA Plans.
 
@@ -58,7 +58,7 @@ A comprehensive Human Resource Management System (HRMS) built with Laravel 12, f
 
 ### 💰 Payroll & Benefits
 - Automated salary processing.
-- Promotions, Increments, and Bonus management.
+- Promotions, Increments, and Bonus & Reward management.
 - **Salary Process Eligibility View**: 
     - Provide a "View Eligible Employees" feature accessible via the Salary Process index page (modal -> view button).
     - Display eligibility data mapped from the existing `payrolls` table associated with the specific salary process batch.
@@ -81,7 +81,7 @@ A comprehensive Human Resource Management System (HRMS) built with Laravel 12, f
     *   **Key Statistics**:
         *   `Serving Years`: Calculated tenure from joining date.
         *   `Total Earnings`: Aggregated salary from processed payrolls.
-        *   `Total Bonuses`: Aggregated bonus amounts.
+        *   `Total Bonus & Rewards`: Aggregated bonus and reward amounts.
     *   **UI**: Modern "Glassmorphism" layout with descriptive cards.
 - **Employee Journey Timeline**:
     *   **Visual Representation**: A vertical or horizontal timeline showing key milestones.

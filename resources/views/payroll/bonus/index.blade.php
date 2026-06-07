@@ -7,7 +7,7 @@
             <div class="card border-0 shadow-sm rounded">
                 <div class="card-header">
                     <h5 class="card-title mb-0">
-                        <i data-feather="dollar-sign" class="me-2"></i>Search Bonus Process Batch
+                        <i data-feather="dollar-sign" class="me-2"></i>Search Bonus & Reward Process Batch
                     </h5>
                 </div>
                 <div class="card-header border-bottom p-4">
@@ -103,7 +103,7 @@
         <div class="col-lg-12 mt-3">
             <div class="card border-0 shadow-sm rounded">
                 <div class="card-header">
-                    <h5 class="card-title mb-0">Bonus Process List</h5>
+                    <h5 class="card-title mb-0">Bonus & Reward Process List</h5>
                 </div>
                 <div class="card-body">
                     {{-- Action Buttons --}}

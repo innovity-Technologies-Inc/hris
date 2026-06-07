@@ -314,7 +314,7 @@
                             @if($canBonuses)
                             <li>
                                 <a class='tp-link @if (request()->is('bonus') && !request()->is('bonus/create')) menuitem-active @endif'
-                                   href='{{ route('bonus.index') }}'>Bonuses</a>
+                                   href='{{ route('bonus.index') }}'>Bonus & Reward</a>
                             </li>
                             @endif
                             @if($canSalary)
@@ -395,7 +395,7 @@
                             @if($canBonusPlans)
                             <li>
                                 <a class='tp-link @if (Route::is('plan.bonus_plans.*')) menuitem-active @endif'
-                                    href='{{ route('plan.bonus_plans.index') }}'>Bonus Plans</a>
+                                    href='{{ route('plan.bonus_plans.index') }}'>Bonus & Reward Plans</a>
                             </li>
                             @endif
                             @if($canAllowancePlans)

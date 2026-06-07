@@ -12,7 +12,7 @@
 
                 <div class="card-header bg-primary text-white">
                     <h5 class="mb-0">
-                        {{ $isEdit ? 'Edit Bonus Entry' : 'Bonus Entry' }}
+                        {{ $isEdit ? 'Edit Bonus & Reward Entry' : 'Bonus & Reward Entry' }}
                     </h5>
                 </div>
 
@@ -108,7 +108,7 @@
                         <div class="row mb-3">
                             <div class="col-md-12">
                                 <label class="form-label fw-semibold">
-                                    Bonus Plans <span class="text-danger">*</span>
+                                    Bonus & Reward Plans <span class="text-danger">*</span>
                                 </label>
 
                                 <select name="plan_ids[]"
@@ -142,7 +142,7 @@
 
                         <div class="text-end">
                             <button type="submit" class="btn btn-primary px-4">
-                                {{ $isEdit ? 'Update Bonus' : 'Process Bonus' }}
+                                {{ $isEdit ? 'Update Bonus & Reward' : 'Process Bonus & Reward' }}
                             </button>
                         </div>
 
