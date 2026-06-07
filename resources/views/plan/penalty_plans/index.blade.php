@@ -1,6 +1,7 @@
 @extends('structure.master')
 
 @section('content')
+    {{-- Penalty Plans List --}}
     <div class="row">
         <div class="col-xl-12">
             <div class="card shadow-sm border-0">
@@ -8,22 +9,22 @@
                     <h5 class="card-title mb-0 fw-bold" style="color: #974063;">Penalty Plans</h5>
                     @can('penalty-plans.create')
                     <button type="button" class="btn btn-warning btn-sm shadow-sm" id="btnCreatePenaltyPlan">
-                        <i style="height: 12px; width: 12px" data-feather="plus"></i> Create Penalty Plan
+                        <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                     </button>
                     @endcan
-                </div>
+                </div><!-- end card header -->
 
                 <div class="card-body">
                     <form id="filterForm" class="mb-4">
-                        <div class="row g-3">
-                            <div class="col-md-12">
-                                <div class="input-group">
-                                    <span class="input-group-text bg-white border-end-0">
+                        <div class="row mb-1 mt-2 mx-4">
+                            <div class="col-12">
+                                <div class="input-group input-group-md">
+                                    <input type="text" class="form-control border-end-0" id="searchKeyword"
+                                           name="keyword" placeholder="Search penalty plans by title or description..."
+                                           aria-label="Keyword Search">
+                                    <span class="input-group-text border-start-0 input-group-bg">
                                         <i class="mdi mdi-magnify text-muted"></i>
                                     </span>
-                                    <input type="text" class="form-control border-start-0" id="searchKeyword"
-                                           name="keyword" placeholder="Search by title or description..."
-                                           aria-label="Search">
                                 </div>
                             </div>
                         </div>
@@ -37,9 +38,9 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div><!-- end card -->
         </div>
-    </div>
+    </div><!-- end row -->
 
     {{-- Penalty Plan Modal --}}
     <div class="modal fade" id="penaltyPlanModal" tabindex="-1" aria-hidden="true">
@@ -127,7 +128,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.edit-penalty-plan').forEach(btn => {
             btn.addEventListener('click', function() {
                 const id = this.getAttribute('data-id');
-                axios.get(`/plans/penalty-plans/${id}/edit`)
+                // FIXED URL PATH
+                axios.get(`/plans/penalty-plans/edit/${id}`)
                     .then(response => {
                         const data = response.data.data;
                         document.getElementById('penaltyPlanId').value = data.id;
@@ -151,17 +153,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     text: "You won't be able to revert this!",
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
                     confirmButtonText: 'Yes, delete it!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        axios.delete(`/plans/penalty-plans/${id}/delete`, {
-                            data: { _token: "{{ csrf_token() }}" }
+                        // FIXED URL PATH
+                        axios.delete(`/plans/penalty-plans/delete/${id}`, {
+                            headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}" }
                         }).then(response => {
                             Swal.fire('Deleted!', response.data.message, 'success');
                             fetchPenaltyPlans();
                         }).catch(error => {
+                            console.error(error);
                             Swal.fire('Error!', 'Failed to delete.', 'error');
                         });
                     }
@@ -194,13 +198,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
         
-        const url = id ? `/plans/penalty-plans/${id}/update` : "{{ route('plan.penalty_plans.store') }}";
+        // FIXED URL PATH
+        const url = id ? `/plans/penalty-plans/update/${id}` : "{{ route('plan.penalty_plans.store') }}";
         const method = id ? 'put' : 'post';
 
         axios({
             method: method,
             url: url,
-            data: data
+            data: data,
+            headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}" }
         }).then(response => {
             Swal.fire({
                 icon: 'success',
