@@ -1038,12 +1038,28 @@ Route::prefix('increment')->name('increment.')->controller(IncrementController::
     });
     Route::middleware('permission:increments.delete')->group(function () {
         Route::delete('{id}/delete', 'delete')->name('delete');
+    Route::prefix('bonus')->name('bonus.')->controller(\App\Http\Controllers\Payroll\BonusController::class)->middleware('auth')->group(function () {
+        Route::middleware('permission:bonuses.view')->group(function () {
+            Route::get('index', 'index')->name('index');
+        });
+        // ...
     });
-});
 
-Route::prefix('bonus')->name('bonus.')->controller(\App\Http\Controllers\Payroll\BonusController::class)->middleware('auth')->group(function () {
-    Route::middleware('permission:bonuses.view')->group(function () {
-        Route::get('/', 'index')->name('index');
+    Route::prefix('payroll/penalty')->name('payroll.penalty.')->controller(\App\Http\Controllers\Payroll\EmployeePenaltyController::class)->middleware('auth')->group(function () {
+        Route::middleware('permission:penalty-management.view')->group(function () {
+            Route::get('index', 'index')->name('index');
+        });
+        Route::middleware('permission:penalty-management.create')->group(function () {
+            Route::post('store', 'store')->name('store');
+        });
+        Route::middleware('permission:penalty-management.edit')->group(function () {
+            Route::get('edit/{id}', 'edit')->name('edit');
+            Route::put('update/{id}', 'update')->name('update');
+        });
+        Route::middleware('permission:penalty-management.delete')->group(function () {
+            Route::delete('delete/{id}', 'destroy')->name('delete');
+        });
+    });
         Route::get('view/{id}', 'show')->name('show');
     });
     Route::middleware('permission:bonuses.create')->group(function () {
