@@ -535,17 +535,17 @@
                             </li>
                             @endif
 
-                            @if(auth()->user()->can('general-settings.view'))
-                            <li>
-                                <a class='tp-link @if (Route::is('pay_scales.*')) menuitem-active @endif'
-                                    href='{{ route('pay_scales.index') }}'>Pay Scales</a>
-                            </li>
-                            @endif
-
                             @if($canSalaryGrades)
                             <li>
                                 <a class='tp-link @if (Route::is('salary_grades.*')) menuitem-active @endif'
                                     href='{{ route('salary_grades.index') }}'>Salary Grades</a>
+                            </li>
+                            @endif
+
+                            @if(auth()->user()->can('general-settings.view'))
+                            <li>
+                                <a class='tp-link @if (Route::is('pay_scales.*')) menuitem-active @endif'
+                                    href='{{ route('pay_scales.index') }}'>Pay Scales</a>
                             </li>
                             @endif
 

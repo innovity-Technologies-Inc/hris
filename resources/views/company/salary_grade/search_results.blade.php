@@ -20,15 +20,15 @@
                     </td>
                     <td class="text-end">
                         @can('salary-grades.edit')
-                        <button type="button" class="btn btn-sm btn-soft-primary me-1 edit-salary-grade" 
+                        <button type="button" class="btn btn-primary btn-sm me-1 edit-salary-grade" 
                                 data-id="{{ $grade->id }}" title="Edit">
-                            <i class="mdi mdi-pencil fs-16"></i>
+                            <i style="height: 12px; width: 12px" data-feather="edit"></i>
                         </button>
                         @endcan
                         @can('salary-grades.delete')
-                        <button type="button" class="btn btn-sm btn-soft-danger delete-salary-grade" 
+                        <button type="button" class="btn btn-danger btn-sm delete-salary-grade" 
                                 data-id="{{ $grade->id }}" title="Delete">
-                            <i class="mdi mdi-delete fs-16"></i>
+                            <i style="height: 12px; width: 12px" data-feather="trash"></i>
                         </button>
                         @endcan
                     </td>

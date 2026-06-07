@@ -29,15 +29,15 @@
                     </td>
                     <td class="text-end">
                         @can('general-settings.edit')
-                        <button type="button" class="btn btn-sm btn-soft-primary me-1 edit-pay-scale" 
+                        <button type="button" class="btn btn-primary btn-sm me-1 edit-pay-scale" 
                                 data-id="{{ $scale->id }}" title="Edit">
-                            <i class="mdi mdi-pencil fs-16"></i>
+                            <i style="height: 12px; width: 12px" data-feather="edit"></i>
                         </button>
                         @endcan
                         @can('general-settings.delete')
-                        <button type="button" class="btn btn-sm btn-soft-danger delete-pay-scale" 
+                        <button type="button" class="btn btn-danger btn-sm delete-pay-scale" 
                                 data-id="{{ $scale->id }}" title="Delete">
-                            <i class="mdi mdi-delete fs-16"></i>
+                            <i style="height: 12px; width: 12px" data-feather="trash"></i>
                         </button>
                         @endcan
                     </td>
