@@ -161,7 +161,6 @@
                                 <div class="col-md-3"><label class="data-label">Employee Type</label><span class="data-value" id="detailed_emp_type"></span></div>
                                 <div class="col-md-3"><label class="data-label">HR File Number</label><span class="data-value" id="detailed_hr_file_no"></span></div>
                                 <div class="col-md-3"><label class="data-label">Pay Grade</label><span class="data-value" id="detailed_pay_grade"></span></div>
-                                <div class="col-md-3"><label class="data-label">Act / Tofsil</label><span class="data-value" id="detailed_tofsil"></span></div>
                                 <div class="col-md-12"><label class="data-label">File Note</label><span class="data-value" id="detailed_file_note"></span></div>
                                 <div class="col-12"><hr class="my-1"></div>
                                 <div class="col-md-4"><label class="data-label">Joining Company</label><span class="data-value" id="detailed_joining_company"></span></div>
@@ -191,7 +190,6 @@
                                 <div class="col-md-3"><label class="data-label">Promotion Cycle</label><span class="data-value" id="detailed_promotion_cycle"></span></div>
                                 <div class="col-md-3"><label class="data-label">Increment Cycle</label><span class="data-value" id="detailed_increment_cycle"></span></div>
                                 <div class="col-12"><hr class="my-1"></div>
-                                <div class="col-md-3"><label class="data-label">Salary Type</label><span class="data-value" id="detailed_salary_type"></span></div>
                                 <div class="col-md-3"><label class="data-label">Weekends</label><span class="data-value" id="detailed_weekends"></span></div>
                                 <div class="col-md-3"><label class="data-label">Alternate Off Day</label><span class="data-value" id="detailed_alternate_off"></span></div>
                                 <div class="col-12"><hr class="my-1"></div>
@@ -200,9 +198,8 @@
                                 <div class="col-md-2"><label class="data-label">Transport Eligible</label><span class="data-value" id="detailed_transport_eligible"></span></div>
                                 <div class="col-md-2"><label class="data-label">Gratuity Eligible</label><span class="data-value" id="detailed_gratuity_eligible"></span></div>
                                 <div class="col-md-2"><label class="data-label">Can Apply Loan</label><span class="data-value" id="detailed_can_loan"></span></div>
-                                <div class="col-md-2"><label class="data-label">Can Apply Advance</label><span class="data-value" id="detailed_can_advance"></span></div>
-                                <div class="col-md-4"><label class="data-label">PF Effective Date</label><span class="data-value" id="detailed_pf_effective"></span></div>
-                            </div>
+                                <div class="col-md-3"><label class="data-label">PF Effective</label><span class="data-value" id="detailed_pf_effective_date"></span></div>
+                                </div>
                         </div>
                     </div>
 

@@ -595,10 +595,6 @@
                     <span class="info-value">{{ $employee->office_info->probation_duration }} months</span>
                 </div>
                 <div class="info-item">
-                    <span class="info-label">Salary Type:</span>
-                    <span class="info-value">{{ $employee->office_info->salary_type }}</span>
-                </div>
-                <div class="info-item">
                     <span class="info-label">Promotion Cycle:</span>
                     <span class="info-value">{{ $employee->office_info->promotion_cycle }} months</span>
                 </div>

@@ -10,12 +10,6 @@ use Spatie\Permission\Models\Role;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->tofsil = Tofsil::create([
-        'name' => 'Test Tofsil',
-        'description' => 'Test Description',
-        'status' => 'active'
-    ]);
-    
     // Create and assign permissions
     Permission::firstOrCreate(['name' => 'salary-grades.view', 'guard_name' => 'web']);
     Permission::firstOrCreate(['name' => 'salary-grades.create', 'guard_name' => 'web']);
@@ -34,7 +28,6 @@ it('can list salary grades via ajax', function () {
     SalaryGrade::create([
         'grade_code' => 'G1',
         'grade_name' => 'Grade 1',
-        'tofsil_id' => $this->tofsil->id,
         'status' => 'active'
     ]);
 
@@ -51,7 +44,6 @@ it('can store a new salary grade', function () {
     $data = [
         'grade_code' => 'G2',
         'grade_name' => 'Grade 2',
-        'tofsil_id' => $this->tofsil->id,
         'status' => 'active'
     ];
 
@@ -69,14 +61,12 @@ it('can update a salary grade', function () {
     $grade = SalaryGrade::create([
         'grade_code' => 'G3',
         'grade_name' => 'Old Grade',
-        'tofsil_id' => $this->tofsil->id,
         'status' => 'active'
     ]);
 
     $data = [
         'grade_code' => 'G3-NEW',
         'grade_name' => 'New Grade',
-        'tofsil_id' => $this->tofsil->id,
         'status' => 'inactive'
     ];
 
@@ -94,7 +84,6 @@ it('can delete a salary grade', function () {
     $grade = SalaryGrade::create([
         'grade_code' => 'G4',
         'grade_name' => 'To Be Deleted',
-        'tofsil_id' => $this->tofsil->id,
         'status' => 'active'
     ]);
 

@@ -11,7 +11,6 @@ use App\Models\Employee\Employee;
 use App\Models\Employee\EmployeeOfficeInfo;
 use App\Models\Company\SalaryGrade;
 use App\Models\Company\Section;
-use App\Models\Company\Tofsil;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
@@ -37,7 +36,6 @@ class EmployeeOfficeInformationImport implements ToCollection
                 'emp_type' => $row[1] ?? null,
                 'grade_id' => $this->getId(SalaryGrade::class, $row[2]),
                 'hr_file_no' => $row[3] ?? null,
-                'tofsil_id' => $this->getId(Tofsil::class, $row[4]),
                 'file_note' => $row[5] ?? null,
 
                 // Joining Info (by name lookup)
@@ -73,7 +71,6 @@ class EmployeeOfficeInformationImport implements ToCollection
                 'alternate_off_day' => $this->parseArray($row[30]),
                 'ot_allowed' => $row[31] ?? null,
                 'pf_eligible' => $row[32] ?? null,
-                'salary_type' => $row[33] ?? null,
                 'transport_eligible' => $row[34] ?? null,
                 'can_apply_loan' => $row[35] ?? null,
                 'pf_effective_date' => $this->parseDate($row[36]),

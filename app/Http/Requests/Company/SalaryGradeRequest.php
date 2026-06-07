@@ -24,7 +24,6 @@ class SalaryGradeRequest extends FormRequest
         return [
             'grade_code' => 'required|string|max:50',
             'grade_name' => 'required|string|max:255',
-            'tofsil_id' => 'required|exists:tofsils,id',
             'status' => 'required|in:active,inactive',
         ];
     }
@@ -34,7 +33,6 @@ class SalaryGradeRequest extends FormRequest
         return [
             'grade_code.required' => 'Please enter grade code.',
             'grade_name.required' => 'Please enter grade name.',
-            'tofsil_id.required' => 'Please select a tofsil.',
         ];
     }
 }

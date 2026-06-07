@@ -126,7 +126,7 @@
     <div class="sub-header">Payroll & Identification</div>
     <table class="info-grid">
         <tr><td class="label">Employee Type</td><td class="value">{{ $officeInfo->emp_type ?? 'N/A' }}</td><td class="label">HR File No</td><td class="value">{{ $officeInfo->hr_file_no ?? 'N/A' }}</td></tr>
-        <tr><td class="label">Pay Grade</td><td class="value">{{ $officeInfo->getGrade?->name ?? 'N/A' }}</td><td class="label">Act / Tofsil</td><td class="value">{{ $officeInfo->getTofsil?->name ?? 'N/A' }}</td></tr>
+        <tr><td class="label">Pay Grade</td><td class="value">{{ $officeInfo->getGrade?->grade_name ?? 'N/A' }}</td><td class="label">Status</td><td class="value">{{ strtoupper($employee->status ?? 'N/A') }}</td></tr>
         <tr><td class="label">File Note</td><td class="value" colspan="3">{{ $officeInfo->file_note ?? 'N/A' }}</td></tr>
     </table>
     <div class="sub-header">Joining Details</div>
@@ -151,7 +151,7 @@
     </table>
     <div class="sub-header">Benefits & Schedule</div>
     <table class="info-grid">
-        <tr><td class="label">Salary Type</td><td class="value">{{ $officeInfo->salary_type ?? 'N/A' }}</td><td class="label">PF Effective</td><td class="value">{{ $officeInfo->pf_effective_date ?? 'N/A' }}</td></tr>
+        <tr><td class="label">PF Effective</td><td class="value">{{ $officeInfo->pf_effective_date ?? 'N/A' }}</td><td class="label">OT Allowed</td><td class="value">{{ strtoupper($officeInfo->ot_allowed ?? 'N/A') }}</td></tr>
         <tr><td class="label">Weekends</td><td class="value">{{ implode(', ', (array)($officeInfo->weekends ?? [])) }}</td><td class="label">Alternate Off</td><td class="value">{{ implode(', ', (array)($officeInfo->alternate_off_day ?? [])) }}</td></tr>
     </table>
     <div style="margin-top: 3px;">

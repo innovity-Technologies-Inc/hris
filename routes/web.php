@@ -129,20 +129,20 @@ Route::prefix('company-setup')->middleware('auth')->group(function () {
         });
     });
 
-    Route::controller(TofsilsController::class)->group(function () {
-        Route::middleware('permission:salary-acts.view')->group(function () {
-            Route::get('tofsils', 'index')->name('tofsils.index');
+    Route::controller(\App\Http\Controllers\Company\PayScaleController::class)->group(function () {
+        Route::middleware('permission:general-settings.view')->group(function () {
+            Route::get('pay-scales', 'index')->name('pay_scales.index');
+            Route::get('pay-scales/search', 'index')->name('pay_scales.search');
         });
-        Route::middleware('permission:salary-acts.create')->group(function () {
-            Route::get('tofsils/create', 'create')->name('tofsils.create');
-            Route::post('tofsils/store', 'store')->name('tofsils.store');
+        Route::middleware('permission:general-settings.create')->group(function () {
+            Route::post('pay-scales/store', 'store')->name('pay_scales.store');
         });
-        Route::middleware('permission:salary-acts.edit')->group(function () {
-            Route::get('tofsils/edit/{id}', 'edit')->name('tofsils.edit');
-            Route::put('tofsils/{id}/update', 'update')->name('tofsils.update');
+        Route::middleware('permission:general-settings.edit')->group(function () {
+            Route::get('pay-scales/{id}/edit', 'edit')->name('pay_scales.edit');
+            Route::put('pay-scales/{id}/update', 'update')->name('pay_scales.update');
         });
-        Route::middleware('permission:salary-acts.delete')->group(function () {
-            Route::delete('tofsils/delete/{id}', 'delete')->name('tofsils.delete');
+        Route::middleware('permission:general-settings.delete')->group(function () {
+            Route::delete('pay-scales/{id}/delete', 'destroy')->name('pay_scales.delete');
         });
     });
 
@@ -1046,7 +1046,7 @@ Route::prefix('salary-process')->name('salary.')->controller(\App\Http\Controlle
 Route::controller(DataController::class)->middleware('auth')->group(function () {
 
     //company-details
-    Route::get('get-grades/{tofsil_id}', 'getGradeByAct');
+    Route::get('get-grades', 'getGrades');
     Route::get('get-units/{company_id}', 'getUnit');
     Route::get('get-divisions/{company_id}/{location_id?}', 'getDivisions');
     Route::get('/get-departments/{company_id}/{location_id?}/{division_id?}', 'getDepartments');

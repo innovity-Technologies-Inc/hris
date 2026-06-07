@@ -105,7 +105,8 @@ class PermissionSeeder extends Seeder
                     ['name' => 'Departments', 'route' => 'departments.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
                     ['name' => 'Sections', 'route' => 'sections.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
                     ['name' => 'Designations', 'route' => 'designations.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
-                    ['name' => 'Salary Acts', 'route' => 'tofsils.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
+                    ['name' => 'Pay Groups', 'route' => 'pay_groups.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
+                    ['name' => 'Pay Scales', 'route' => 'pay_scales.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
                     ['name' => 'Salary Grades', 'route' => 'salary_grades.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
                     ['name' => 'Banks', 'route' => 'banks.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
                     ['name' => 'Bank Branches', 'route' => 'branches.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
@@ -216,4 +217,3 @@ class PermissionSeeder extends Seeder
         }
     }
 }
-

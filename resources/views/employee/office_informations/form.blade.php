@@ -35,24 +35,6 @@
                                     @enderror
                                 </div>
 
-                                <div class="col-lg-6 mb-3">
-                                    <label for="tofsil_id" class="form-label">Act</label>
-                                    <select class="form-select select2_list" id="tofsil_id"
-                                            name="tofsil_id" data-placeholder="Select Salary Act">
-                                        <option value="">Select Salary Act</option>
-                                        @foreach($acts as $act)
-                                            <option
-                                                value="{{ $act->id }}"
-                                                {{ old('tofsil_id', $employee_office_info->tofsil_id ?? '') == $act->id ? 'selected' : '' }}>
-                                                {{ $act->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('tofsil_id')
-                                    <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-
 
 
                                 <div class="col-lg-6 mb-3">
@@ -691,35 +673,13 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-lg-6 mb-3">
+                                <div class="col-lg-12 mb-3">
                                     <label for="pf_effective_date" class="form-label">PF Effective Date</label>
                                     <input type="date"
                                            class="form-control @error('pf_effective_date') is-invalid @enderror"
                                            id="pf_effective_date" name="pf_effective_date"
                                            value="{{ isset($employee_office_info) ? $employee_office_info->pf_effective_date : old('pf_effective_date') }}">
                                     @error('pf_effective_date')
-                                    <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                                <div class="col-lg-6 mb-3">
-                                    <label for="salary_type" class="form-label">Salary Type <span
-                                            class="text-danger">*</span></label>
-                                    <select class="form-select  @error('salary_type') is-invalid @enderror"
-                                            id="salary_type" name="salary_type"
-                                            data-placeholder="Select Type">
-                                        <option value="">Select Type</option>
-                                        <option value="hourly" {{ old('salary_type') == 'hourly' || isset($employee_office_info) && ($employee_office_info->salary_type == 'hourly') ? 'selected' : '' }}>
-                                            Hourly</option>
-                                        <option value="daily" {{ old('salary_type') == 'daily' || isset($employee_office_info) && ($employee_office_info->salary_type == 'daily') ? 'selected' : '' }}>
-                                            Daily</option>
-                                        <option value="monthly" {{ old('salary_type') == 'monthly' || isset($employee_office_info) && ($employee_office_info->salary_type == 'monthly') ? 'selected' : '' }}>
-                                            Monthly</option>
-                                        <option value="weekly" {{ old('salary_type') == 'weekly' || isset($employee_office_info) && ($employee_office_info->salary_type == 'weekly') ?  'selected' : '' }}>
-                                            Weekly</option>
-                                        <option value="yearly" {{ old('salary_type') == 'yearly' || isset($employee_office_info) && ($employee_office_info->salary_type == 'yearly') ? 'selected' : '' }}>Yearly
-                                        </option>
-                                    </select>
-                                    @error('salary_type')
                                     <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>

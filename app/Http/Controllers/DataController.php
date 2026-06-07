@@ -129,8 +129,8 @@ class DataController extends Controller
         return response()->json($query->get());
     }
 
-    public function getGradeByAct($tofsil_id){
-        $grades = SalaryGrade::where('tofsil_id', $tofsil_id)->get();
+    public function getGrades(){
+        $grades = SalaryGrade::where('status', 'active')->get();
         return response()->json($grades);
     }
 

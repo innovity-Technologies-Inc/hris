@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Company;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Company\SalaryGradeRequest;
 use App\Models\Company\SalaryGrade;
-use App\Models\Company\Tofsil;
 use App\Services\Company\SalaryGradeServices;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
@@ -30,8 +29,7 @@ class SalaryGradesController extends Controller
             return view('company.salary_grade.search_results', compact('salary_grades'))->render();
         }
 
-        $tofsils = Tofsil::all();
-        return view('company.salary_grade.index', compact('title', 'section', 'sub_section', 'tofsils'));
+        return view('company.salary_grade.index', compact('title', 'section', 'sub_section'));
     }
 
     public function store(SalaryGradeRequest $request)

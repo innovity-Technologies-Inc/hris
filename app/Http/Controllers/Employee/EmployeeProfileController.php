@@ -142,9 +142,8 @@ class EmployeeProfileController extends Controller
                 'officeInfo.getCurrentDivision', 
                 'officeInfo.getCurrentDepartment', 
                 'officeInfo.getCurrentSection', 
-                'officeInfo.getCurrentDesignation', 
+                'officeInfo.getCurrentDesignation',
                 'officeInfo.getGrade',
-                'officeInfo.getTofsil',
                 'educationInfo',
                 'employmentHistory',
                 'nomineeInfo',
@@ -275,10 +274,9 @@ class EmployeeProfileController extends Controller
         $section_url = route('employee.index');
         $employee = Employee::select('id', 'full_name')->where('id', $id)->first();
         $companies = $this->empServices->getCompanies();
-        $acts = $this->empServices->getActs();
         $designations = $this->empServices->getDesignations();
         return view('employee.office_informations.form', compact('title', 'section',
-            'sub_section', 'section_url', 'employee', 'companies', 'acts', 'designations'));
+            'sub_section', 'section_url', 'employee', 'companies', 'designations'));
     }
 
     public function officeInfoStore(Request $request){
@@ -342,9 +340,8 @@ class EmployeeProfileController extends Controller
         if($employee_office_info){
             $employee = Employee::select('id', 'full_name')->where('id', $id)->first();
             $companies = $this->empServices->getCompanies();
-            $acts = $this->empServices->getActs();
             return view('employee.office_informations.form', compact('title', 'section',
-                'sub_section', 'section_url', 'employee', 'companies', 'acts', 'employee_office_info', 'designations'));
+                'sub_section', 'section_url', 'employee', 'companies', 'employee_office_info', 'designations'));
         }else{
             return redirect()->route('employee.index')->with([
                 'message' => 'Employee Office Information Not Found',

@@ -9,7 +9,6 @@ use App\Models\Company\Designation;
 use App\Models\Company\Division;
 use App\Models\Company\SalaryGrade;
 use App\Models\Company\Section;
-use App\Models\Company\Tofsil;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,14 +19,14 @@ class EmployeeOfficeInfo extends Model
     use HasFactory, OrganizationScoped;
 
     protected $fillable = [
-        'employee_id', 'emp_type', 'grade_id', 'hr_file_no', 'tofsil_id',
+        'employee_id', 'emp_type', 'grade_id', 'hr_file_no',
         'file_note', 'joining_company_id', 'joining_business_unit_id', 'joining_division_id',
         'joining_department_id',  'joining_section_id', 'joining_designation_id', 'date_of_join',
         'current_company_id', 'current_business_unit_id', 'current_division_id', 'current_department_id',
          'current_section_id', 'current_designation_id', 'orientation_required', 'orientation_from',
         'orientation_to', 'orientation_type', 'orientation_days', 'confirmation_date', 'probation_duration',
         'next_promotion_date', 'promotion_cycle', 'increment_cycle', 'weekends', 'alternate_off_day',
-        'ot_allowed', 'pf_eligible', 'salary_type', 'transport_eligible', 'can_apply_loan',
+        'ot_allowed', 'pf_eligible', 'transport_eligible', 'can_apply_loan',
         'pf_effective_date', 'can_apply_advance', 'gratuity_eligible',
     ];
 
@@ -98,9 +97,6 @@ class EmployeeOfficeInfo extends Model
     }
     public function getGrade(){
         return $this->belongsTo(SalaryGrade::class, 'grade_id', 'id');
-    }
-    public function getTofsil(){
-        return $this->belongsTo(Tofsil::class, 'tofsil_id', 'id');
     }
 }
 

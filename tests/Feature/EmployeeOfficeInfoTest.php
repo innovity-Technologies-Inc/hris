@@ -10,8 +10,14 @@ use App\Models\Company\Section;
 use App\Models\Company\Designation;
 use App\Models\User;
 
+use Spatie\Permission\Models\Permission;
+
 beforeEach(function () {
     $this->user = User::factory()->create(['user_type' => 'Group']);
+    
+    Permission::firstOrCreate(['name' => 'employee-management.view', 'guard_name' => 'web']);
+    $this->user->givePermissionTo('employee-management.view');
+
     $this->actingAs($this->user);
     $this->withoutMiddleware();
 
@@ -92,7 +98,6 @@ it('saves and displays employee office info correctly', function () {
         'current_section_id' => $this->section->id,
         'current_designation_id' => $this->designation->id,
         'orientation_required' => 'yes',
-        'salary_type' => 'monthly',
     ];
 
     $this->post(route('employee.office_informations.store'), $data)
@@ -132,7 +137,6 @@ it('updates employee office info correctly', function () {
         'orientation_required' => 'yes',
         'joining_company_id' => $this->company->id,
         'current_company_id' => $this->company->id,
-        'salary_type' => 'monthly',
     ];
 
     $this->put(route('employee.office_informations.update', $officeInfo->id), $updateData)

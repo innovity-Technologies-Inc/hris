@@ -4,7 +4,6 @@
             <tr>
                 <th>Grade Code</th>
                 <th>Grade Name</th>
-                <th>Act (Tofsil)</th>
                 <th>Status</th>
                 <th class="text-end">Actions</th>
             </tr>
@@ -14,9 +13,6 @@
                 <tr>
                     <td><span class="fw-bold text-dark">{{ $grade->grade_code }}</span></td>
                     <td>{{ $grade->grade_name }}</td>
-                    <td>
-                        <span class="badge bg-soft-info text-info">{{ $grade->getTofsil->name ?? 'N/A' }}</span>
-                    </td>
                     <td>
                         <span class="badge {{ $grade->status === 'active' ? 'bg-success' : 'bg-danger' }}">
                             {{ ucfirst($grade->status) }}

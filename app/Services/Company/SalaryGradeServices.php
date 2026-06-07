@@ -14,9 +14,9 @@ class SalaryGradeServices
      */
     public function getSalaryGrades(Request $request, FlexSearch $flexsearch)
     {
-        $query = SalaryGrade::query()->with('getTofsil');
+        $query = SalaryGrade::query();
         $searchTerm = $request->get('keyword');
-        $searchableFields = ['grade_code', 'grade_name', 'getTofsil.name'];
+        $searchableFields = ['grade_code', 'grade_name'];
         
         return $flexsearch->apply($query, [], $searchTerm, $searchableFields)
             ->orderBy('id', 'desc')

@@ -18,7 +18,6 @@ use App\Models\Employee\EmployeeOfficeInfo;
 use App\Models\Employee\EmployeeSalaryBreakdown;
 use App\Models\Company\SalaryGrade;
 use App\Models\Company\Section;
-use App\Models\Company\Tofsil;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Services\Setting\NotificationServices;
@@ -335,12 +334,6 @@ class EmployeeServices
         return $companies;
     }
 
-    public function getActs()
-    {
-        $acts = Tofsil::all();
-        return $acts;
-    }
-
     public function getDesignations()
     {
         $designations = Designation::all();
@@ -356,7 +349,6 @@ class EmployeeServices
             'emp_type' => 'nullable|in:permanent,contractual',
             'grade_id' => 'nullable|integer',
             'hr_file_no' => 'nullable|string|max:255',
-            'tofsil_id' => 'nullable|integer',
             'file_note' => 'nullable|string',
 
             // Joining Information
@@ -397,7 +389,6 @@ class EmployeeServices
             'alternate_off_day.*' => 'string',
             'ot_allowed' => 'nullable|in:yes,no',
             'pf_eligible' => 'nullable|in:yes,no',
-            'salary_type' => 'nullable|in:hourly,daily,weekly,monthly,yearly',
             'transport_eligible' => 'nullable|in:yes,no',
 
             // Loan & Benefits

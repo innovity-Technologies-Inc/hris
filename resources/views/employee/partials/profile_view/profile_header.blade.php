@@ -316,8 +316,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (data.office_info) {
             const oi = data.office_info;
             const officeFields = {
-                'detailed_emp_type': oi.emp_type, 'detailed_hr_file_no': oi.hr_file_no, 'detailed_pay_grade': oi.get_grade?.name,
-                'detailed_tofsil': oi.get_tofsil?.name, 'detailed_file_note': oi.file_note, 'detailed_joining_company': oi.get_joining_company?.name,
+                'detailed_emp_type': oi.emp_type, 'detailed_hr_file_no': oi.hr_file_no, 'detailed_pay_grade': oi.get_grade?.grade_name,
+                'detailed_file_note': oi.file_note, 'detailed_joining_company': oi.get_joining_company?.name,
                 'detailed_joining_bu': oi.get_joining_business_unit?.name, 'detailed_joining_division': oi.get_joining_division?.name,
                 'detailed_joining_department': oi.get_joining_department?.department_name, 'detailed_joining_section': oi.get_joining_section?.name,
                 'detailed_joining_designation': oi.get_joining_designation?.company_designation, 'detailed_join_date': oi.date_of_join,
@@ -329,7 +329,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 'detailed_orientation_days': oi.orientation_days, 'detailed_confirmation_date': oi.confirmation_date,
                 'detailed_probation': (oi.probation_duration || 0) + ' Days', 'detailed_next_promotion': oi.next_promotion_date,
                 'detailed_promotion_cycle': oi.promotion_cycle, 'detailed_increment_cycle': oi.increment_cycle,
-                'detailed_salary_type': oi.salary_type, 'detailed_weekends': (oi.weekends || []).join(', '),
+                'detailed_weekends': (oi.weekends || []).join(', '),
                 'detailed_alternate_off': (oi.alternate_off_day || []).join(', '), 'detailed_pf_effective': oi.pf_effective_date
             };
             for (let id in officeFields) { if (document.getElementById(id)) document.getElementById(id).textContent = officeFields[id] || 'N/A'; }

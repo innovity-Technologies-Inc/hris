@@ -67,12 +67,8 @@
                                             <td>{{$employee_office_info->hr_file_no ?? 'N/A'}}</td>
                                         </tr>
                                         <tr>
-                                            <td class="fw-semibold">Act</td>
-                                            <td>{{$employee_office_info->getTofsil->name ?? 'N/A'}}</td>
-                                        </tr>
-                                        <tr>
                                             <td class="fw-semibold">Pay Grade</td>
-                                            <td>{{$employee_office_info->getGrade->name  ?? 'N/A'}}</td>
+                                            <td>{{$employee_office_info->getGrade->grade_name  ?? 'N/A'}}</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -328,19 +324,7 @@
                     <div class="tab-pane pt-4" id="benefits" role="tabpanel">
                         <div class="row">
                             <div class="col-md-6">
-                                <h5 class="fs-16 text-dark fw-semibold mb-3">Salary & Benefits</h5>
-                                <div class="table-responsive">
-                                    <table class="table table-borderless mb-0">
-                                        <tbody>
-                                        <tr>
-                                            <td class="fw-semibold" style="width: 40%;">Salary Type</td>
-                                            <td>{{ucwords($employee_office_info->salary_type ?? 'N/A')}}</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <h5 class="fs-16 text-dark fw-semibold mb-3 mt-4">Compensation Benefits</h5>
+                                <h5 class="fs-16 text-dark fw-semibold mb-3">Compensation Benefits</h5>
                                 <div class="card border">
                                     <div class="card-body">
                                         <div class="d-flex justify-content-between align-items-center mb-3">

@@ -444,7 +444,6 @@
                     $canDepartments = auth()->user()->can('departments.view') && (isset($generalSettings->department_status) && $generalSettings->department_status == 1);
                     $canSections = auth()->user()->can('sections.view') && (isset($generalSettings->section_status) && $generalSettings->section_status == 1);
                     $canDesignations = auth()->user()->can('designations.view');
-                    $canSalaryActs = auth()->user()->can('salary-acts.view');
                     $canSalaryGrades = auth()->user()->can('salary-grades.view');
                     $canBanks = auth()->user()->can('banks.view');
                     $canBankBranches = auth()->user()->can('bank-branches.view');
@@ -453,7 +452,7 @@
                     $canJobCreations = auth()->user()->can('job-creations.view');
                     $canBulkUploadCompany = auth()->user()->can('employee-management.import');
 
-                    $showCompanyMenu = $canGroups || $canCompanyTypes || $canCompanies || $canCompanyBranches || $canDivisions || $canDepartments || $canSections || $canDesignations || $canSalaryActs || $canSalaryGrades || $canBanks || $canBankBranches || $canBankAccounts || $canHolidays || $canJobCreations || $canBulkUploadCompany;
+                    $showCompanyMenu = $canGroups || $canCompanyTypes || $canCompanies || $canCompanyBranches || $canDivisions || $canDepartments || $canSections || $canDesignations || $canSalaryGrades || $canBanks || $canBankBranches || $canBankAccounts || $canHolidays || $canJobCreations || $canBulkUploadCompany;
 
 
                     $companyOpen =
@@ -464,7 +463,6 @@
                         Route::is('pay_groups.*') ||
                         Route::is('banks.*') ||
                         Route::is('branches.*') ||
-                        Route::is('tofsils.*') ||
                         Route::is('salary_grades.*') ||
                         Route::is('gazette_locations.*') ||
                         Route::is('company.bulk_upload');
@@ -537,10 +535,10 @@
                             </li>
                             @endif
 
-                            @if($canSalaryActs)
+                            @if(auth()->user()->can('general-settings.view'))
                             <li>
-                                <a class='tp-link @if (Route::is('tofsils.*')) menuitem-active @endif'
-                                    href='{{ route('tofsils.index') }}'>Salary Acts</a>
+                                <a class='tp-link @if (Route::is('pay_scales.*')) menuitem-active @endif'
+                                    href='{{ route('pay_scales.index') }}'>Pay Scales</a>
                             </li>
                             @endif
 
