@@ -63,7 +63,7 @@
                     <li class="nav-item" role="presentation">
                         <a class="nav-link @if($type == 'bonus-plans') active @endif p-2 ajax-tab"
                            data-url="{{route('employee.profile.plans', ['id' => $employee->id, 'type' => 'bonus-plans'])}}">
-                            <span class="d-none d-sm-block">Bonus Plan</span>
+                            <span class="d-none d-sm-block">Bonus & Reward Plan</span>
                         </a>
                     </li>
 

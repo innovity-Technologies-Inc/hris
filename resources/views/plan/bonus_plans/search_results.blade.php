@@ -3,8 +3,8 @@
         <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Bonus Plan Name</th>
-                <th scope="col">Bonus Type</th>
+                <th scope="col">Bonus & Reward Plan Name</th>
+                <th scope="col">Bonus & Reward Type</th>
                 <th scope="col">Config Type</th>
                 <th scope="col">Rate</th>
                 <th scope="col">Status</th>

@@ -10,22 +10,22 @@
             @endif
             @csrf
 
-            <!-- Basic Bonus Information -->
+            <!-- Basic Bonus & Reward Information -->
             <div class="card border mb-4">
                 <div class="card-header bg-light">
                     <h5 class="mb-0 fw-semibold">
-                        <i class="mdi mdi-gift-outline text-primary me-2"></i>Basic Bonus Information
+                        <i class="mdi mdi-gift-outline text-primary me-2"></i>Basic Bonus & Reward Information
                     </h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <!-- Bonus Plan Name -->
+                        <!-- Bonus & Reward Plan Name -->
                         <div class="col-md-6 mb-3">
                             <label for="name" class="form-label fw-semibold">
-                                Bonus Plan Name <span class="text-danger">*</span>
+                                Bonus & Reward Plan Name <span class="text-danger">*</span>
                             </label>
                             <input type="text" class="form-control" id="name" name="name"
-                                placeholder="E.g., Eid Festival Bonus 2025"
+                                placeholder="E.g., Eid Festival Bonus & Reward 2025"
                                 value="{{ isset($plan) ? $plan->name : old('name') }}"
                                 required>
                             @error('name')
@@ -33,23 +33,23 @@
                             @enderror
                         </div>
 
-                        <!-- Bonus Type -->
+                        <!-- Bonus & Reward Type -->
                         <div class="col-md-6 mb-3">
                             <label for="bonus_type" class="form-label fw-semibold">
-                                Bonus Type <span class="text-danger">*</span>
+                                Bonus & Reward Type <span class="text-danger">*</span>
                             </label>
                             <select class="form-select" id="bonus_type" name="bonus_type" required>
-                                <option value="">Select Bonus Type</option>
+                                <option value="">Select Bonus & Reward Type</option>
                                 <option value="festival" {{ isset($plan) && $plan->bonus_type == 'festival' ? 'selected' : '' }}>
-                                    Festival Bonus</option>
+                                    Festival Bonus & Reward</option>
                                 <option value="performance" {{ isset($plan) && $plan->bonus_type == 'performance' ? 'selected' : '' }}>
-                                    Performance Bonus</option>
+                                    Performance Bonus & Reward</option>
                                 <option value="annual" {{ isset($plan) && $plan->bonus_type == 'annual' ? 'selected' : '' }}>
-                                    Annual Bonus</option>
+                                    Annual Bonus & Reward</option>
                                 <option value="incentive" {{ isset($plan) && $plan->bonus_type == 'incentive' ? 'selected' : '' }}>
                                     Incentive</option>
                                 <option value="retention" {{ isset($plan) && $plan->bonus_type == 'retention' ? 'selected' : '' }}>
-                                    Retention Bonus</option>
+                                    Retention Bonus & Reward</option>
                                 <option value="other" {{ isset($plan) && $plan->bonus_type == 'other' ? 'selected' : '' }}>
                                     Other</option>
                             </select>
@@ -64,7 +64,7 @@
                         <div class="col-md-12 mb-3">
                             <label for="description" class="form-label fw-semibold">Description</label>
                             <textarea class="form-control" id="description" name="description" rows="3"
-                                placeholder="Enter bonus plan details and eligibility criteria...">{{ isset($plan) ? $plan->description : old('description') }}</textarea>
+                                placeholder="Enter bonus & reward plan details and eligibility criteria...">{{ isset($plan) ? $plan->description : old('description') }}</textarea>
                             @error('description')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -73,11 +73,11 @@
                 </div>
             </div>
 
-            <!-- Bonus Calculation Configuration -->
+            <!-- Bonus & Reward Calculation Configuration -->
             <div class="card border mb-4">
                 <div class="card-header bg-light">
                     <h5 class="mb-0 fw-semibold">
-                        <i class="mdi mdi-cash-multiple text-success me-2"></i>Bonus Calculation Configuration
+                        <i class="mdi mdi-cash-multiple text-success me-2"></i>Bonus & Reward Calculation Configuration
                     </h5>
                 </div>
                 <div class="card-body">
@@ -145,7 +145,7 @@
                         <div class="row" id="multiplier_field_row">
                             <div class="col-md-4 mb-3">
                                 <label for="multiplier" class="form-label fw-semibold">
-                                    Bonus Percentage <span class="text-danger">*</span>
+                                    Bonus & Reward Percentage <span class="text-danger">*</span>
                                 </label>
                                 <div class="input-group">
                                     <input type="number" step="0.01" min="0" max="5" class="form-control form-control-sm"
@@ -165,19 +165,19 @@
                     <!-- Custom Fixed Amount -->
                     <div id="custom_rate_section" class="border rounded p-3">
                         <h6 class="fw-semibold mb-3">
-                            <i class="mdi mdi-cash text-success me-1"></i>Fixed Bonus Amount
+                            <i class="mdi mdi-cash text-success me-1"></i>Fixed Bonus & Reward Amount
                         </h6>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="custom_rate" class="form-label fw-semibold">
-                                    Bonus Amount <span class="text-danger">*</span>
+                                    Bonus & Reward Amount <span class="text-danger">*</span>
                                 </label>
                                 <div class="input-group">
                                     <span class="input-group-text">{{\App\HelperClass::getGeneralSetting()->currency ?? '৳'}}</span>
                                     <input type="number" step="0.01" min="0" class="form-control"
                                         id="custom_rate" name="custom_rate"
-                                        placeholder="Enter fixed bonus amount"
+                                        placeholder="Enter fixed bonus & reward amount"
                                         value="{{ isset($plan) ? $plan->custom_rate : old('custom_rate') }}">
                                 </div>
                                 <small class="text-muted">Fixed amount regardless of salary</small>
@@ -218,7 +218,7 @@
                         </button>
                         <button type="submit" class="btn btn-primary">
                             <i class="mdi mdi-content-save me-1"></i>
-                            {{ isset($plan) ? 'Update Bonus Plan' : 'Create Bonus Plan' }}
+                            {{ isset($plan) ? 'Update Bonus & Reward Plan' : 'Create Bonus & Reward Plan' }}
                         </button>
                     </div>
                 </div>

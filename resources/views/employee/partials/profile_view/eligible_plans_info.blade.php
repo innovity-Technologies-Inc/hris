@@ -285,7 +285,7 @@
                                     <div class="card border h-100">
                                         <div class="card-header bg-light">
                                             <h6 class="mb-0 fw-semibold">
-                                                <i class="mdi mdi-gift text-success me-2"></i>Bonus Plan
+                                                <i class="mdi mdi-gift text-success me-2"></i>Bonus & Reward Plan
                                             </h6>
                                         </div>
                                         <div class="card-body">

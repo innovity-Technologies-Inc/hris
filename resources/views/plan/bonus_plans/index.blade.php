@@ -17,7 +17,7 @@
                         <div class="col-12">
                             <div class="input-group input-group-md">
                                 <input type="text" class="form-control border-end-0" id="keywordSearch" name="keyword"
-                                    placeholder="Search bonus plans by name or type..." aria-label="Keyword Search">
+                                    placeholder="Search bonus & reward plans by name or type..." aria-label="Keyword Search">
                                 <span class="input-group-text border-start-0 input-group-bg">
                                     <i class="mdi mdi-magnify text-muted"></i>
                                 </span>
@@ -40,7 +40,7 @@
             // AJAX SEARCH FUNCTION
             // ==========================================
             /**
-             * Performs AJAX request to fetch filtered bonus plans.
+             * Performs AJAX request to fetch filtered bonus & reward plans.
              * Updates the search results container without page reload.
              *
              * @param {string} url - The target URL (defaults to index route)
@@ -57,7 +57,7 @@
                         $('#search-result').html(
                             '<div class="text-center py-4 text-muted">' +
                             '<i class="mdi mdi-loading mdi-spin mdi-24px"></i>' +
-                            '<p class="mt-2">Loading bonus plans...</p>' +
+                            '<p class="mt-2">Loading bonus & reward plans...</p>' +
                             '</div>'
                         );
                     },
@@ -79,7 +79,7 @@
                         $('#search-result').html(
                             '<div class="alert alert-danger m-3" role="alert">' +
                             '<i class="mdi mdi-alert-circle-outline me-2"></i>' +
-                            'Failed to load bonus plans. Please try again.' +
+                            'Failed to load bonus & reward plans. Please try again.' +
                             '</div>'
                         );
                         console.error('AJAX Error:', xhr.responseText);

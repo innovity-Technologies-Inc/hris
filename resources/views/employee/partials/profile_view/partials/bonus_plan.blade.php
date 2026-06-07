@@ -27,7 +27,7 @@
                 <div class="card shadow-sm">
 
                     <div class="card-header bg-light">
-                        <h5 class="mb-3 fw-semibold">💰 Bonus Plan List</h5>
+                        <h5 class="mb-3 fw-semibold">💰 Bonus & Reward Plan List</h5>
 
                         @if(auth()->user()->user_type !== 'Employee')
                             @can('employee-management.edit')
@@ -104,7 +104,7 @@
                              style="height: 350px;">
                             <i class="bi bi-file-earmark-text text-muted"
                                style="font-size: 3rem; opacity: 0.3;"></i>
-                            <p class="text-muted mt-3">Select a bonus plan to view details</p>
+                            <p class="text-muted mt-3">Select a bonus & reward plan to view details</p>
                         </div>
 
                         {{-- ====================== --}}
@@ -166,17 +166,17 @@
                                 <div class="fw-semibold" id="bonusPlanDescription"></div>
                             </div>
 
-                            {{-- Bonus Information --}}
+                            {{-- Bonus & Reward Information --}}
                             <div class="mb-3 p-3 bg-light rounded border">
                                 <h6 class="text-uppercase fw-bold mb-3"
                                     style="font-size: 0.813rem; letter-spacing: 0.8px;">
-                                    <i class="bi bi-info-square me-2 text-primary"></i>Bonus Information
+                                    <i class="bi bi-info-square me-2 text-primary"></i>Bonus & Reward Information
                                 </h6>
 
                                 <div class="row g-2">
                                     <div class="col-md-4">
                                         <label class="text-secondary text-uppercase fw-semibold mb-1"
-                                               style="font-size: 0.688rem;">Bonus Type</label>
+                                               style="font-size: 0.688rem;">Bonus & Reward Type</label>
                                         <div class="fw-semibold" id="bonusBonusType"></div>
                                     </div>
 

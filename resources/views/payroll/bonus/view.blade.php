@@ -65,7 +65,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
                             <i class="fas fa-money-check-alt me-2"></i>
-                            <h5 class="mb-0">Eligible Employees for Bonus</h5>
+                            <h5 class="mb-0">Eligible Employees for Bonus & Reward</h5>
                         </div>
                         <a href="{{route('bonus.index')}}" class="btn btn-light btn-sm">
                             <i class="fas fa-arrow-left me-1"></i>Back to List
