@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Employee;
 
+use App\Enums\UserType;
 use App\Http\Controllers\Controller;
 
 use App\Models\Employee\Employee;
@@ -31,7 +32,7 @@ class EmployeeSearchController extends Controller
     public function index(Request $request, FlexSearch $flexsearch)
     {
         // Security check: Employees should not be able to search other employees
-        if (auth()->user()->user_type === 'Employee') {
+        if (auth()->user()->user_type === UserType::Employee) {
             abort(403, 'Unauthorized access to employee search.');
         }
 
@@ -264,7 +265,7 @@ class EmployeeSearchController extends Controller
     public function export(Request $request, FlexSearch $flexsearch)
     {
         // Security check: Employees should not be able to export employee data
-        if (auth()->user()->user_type === 'Employee') {
+        if (auth()->user()->user_type === UserType::Employee) {
             abort(403, 'Unauthorized access to employee export.');
         }
 

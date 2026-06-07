@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Enums\UserType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
@@ -22,7 +23,7 @@ trait OrganizationScoped
                 // Modified: Only Group type sees everything by default. 
                 // If a user (even Super Admin) has a specific organizational type (Company, Division, etc.), 
                 // they should be filtered by that scope.
-                if ($user->user_type === 'Group') {
+                if ($user->user_type === UserType::Group) {
                     return;
                 }
 
@@ -51,7 +52,7 @@ trait OrganizationScoped
 
                 if (!$employee || !$employee->officeInfo) {
                     // For users with no office info link, default to own data if they are an Employee
-                    if ($user->user_type === 'Employee') {
+                    if ($user->user_type === UserType::Employee) {
                         if ($table === 'employees') {
                             $builder->where('id', $user->employee_id);
                         } elseif ($hasColumn('employee_id')) {
@@ -64,13 +65,13 @@ trait OrganizationScoped
                 $office = $employee->officeInfo;
 
                 $levelMapping = [
-                    'Company' => [
+                    UserType::Company->value => [
                         'self_table' => 'companies',
                         'value' => $office->current_company_id,
                         'columns' => ['company_id', 'current_company_id'],
                         'office_col' => 'current_company_id'
                     ],
-                    'Division' => [
+                    UserType::Division->value => [
                         'self_table' => 'divisions',
                         'value' => $office->current_division_id,
                         'columns' => ['division_id', 'current_division_id'],
@@ -79,7 +80,7 @@ trait OrganizationScoped
                             'companies' => ['col' => 'id', 'val' => $office->current_company_id]
                         ]
                     ],
-                    'Department' => [
+                    UserType::Department->value => [
                         'self_table' => 'departments',
                         'value' => $office->current_department_id,
                         'columns' => ['department_id', 'current_department_id'],
@@ -89,7 +90,7 @@ trait OrganizationScoped
                             'divisions' => ['col' => 'id', 'val' => $office->current_division_id]
                         ]
                     ],
-                    'Section' => [
+                    UserType::Section->value => [
                         'self_table' => 'sections',
                         'value' => $office->current_section_id,
                         'columns' => ['section_id', 'current_section_id'],
@@ -100,7 +101,7 @@ trait OrganizationScoped
                             'departments' => ['col' => 'id', 'val' => $office->current_department_id]
                         ]
                     ],
-                    'Business Unit' => [
+                    UserType::BusinessUnit->value => [
                         'self_table' => 'company_locations',
                         'value' => $office->current_business_unit_id,
                         'columns' => ['business_unit_id', 'current_business_unit_id', 'location_id', 'branch_id'],
@@ -108,8 +109,8 @@ trait OrganizationScoped
                     ],
                 ];
 
-                if (isset($levelMapping[$user->user_type])) {
-                    $map = $levelMapping[$user->user_type];
+                if (isset($levelMapping[$user->user_type->value])) {
+                    $map = $levelMapping[$user->user_type->value];
                     $model = $builder->getModel();
                     
                     if ($table === 'employees') {
@@ -143,7 +144,7 @@ trait OrganizationScoped
                             }
                         }
                     }
-                } elseif ($user->user_type === 'Employee') {
+                } elseif ($user->user_type === UserType::Employee) {
                     if ($table === 'employees') {
                         $builder->where('id', $user->employee_id);
                     } elseif ($hasColumn('employee_id')) {

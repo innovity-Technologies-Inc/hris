@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Payroll;
 
+use App\Enums\UserType;
 use App\Http\Controllers\Controller;
 use App\Models\Company\Company;
 use App\Models\Employee\Employee;
@@ -74,7 +75,7 @@ class SalaryController extends Controller
     {
         try {
             // Security check: Employees can only generate their own certificate
-            if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $employee_id) {
+            if (auth()->user()->user_type === UserType::Employee && auth()->user()->employee_id != $employee_id) {
                 abort(403, 'Unauthorized access to other profiles.');
             }
 

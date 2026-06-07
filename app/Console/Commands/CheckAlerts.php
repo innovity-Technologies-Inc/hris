@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\UserType;
 use App\Models\Employee\Employee;
 use App\Models\Setting\Notification;
 use App\Models\Setting\NotificationSetting;
@@ -173,7 +174,7 @@ class CheckAlerts extends Command
     {
         // Fetch all users who are not regular employees
         $users = User::with('employee.officeInfo')
-            ->where('user_type', '!=', 'Employee')
+            ->where('user_type', '!=', UserType::Employee)
             ->get();
 
         foreach ($users as $user) {
@@ -191,7 +192,7 @@ class CheckAlerts extends Command
     protected function shouldUserReceiveNotification(User $user, Employee $employee): bool
     {
         // 1. Group type sees everything
-        if ($user->user_type === 'Group') {
+        if ($user->user_type === UserType::Group) {
             return true;
         }
 
@@ -205,19 +206,19 @@ class CheckAlerts extends Command
 
         // 3. Match based on user type and respective IDs
         switch ($user->user_type) {
-            case 'Company':
+            case UserType::Company:
                 return $userOffice->current_company_id == $empOffice->current_company_id;
             
-            case 'Business Unit':
+            case UserType::BusinessUnit:
                 return $userOffice->current_business_unit_id == $empOffice->current_business_unit_id;
 
-            case 'Division':
+            case UserType::Division:
                 return $userOffice->current_division_id == $empOffice->current_division_id;
 
-            case 'Department':
+            case UserType::Department:
                 return $userOffice->current_department_id == $empOffice->current_department_id;
 
-            case 'Section':
+            case UserType::Section:
                 return $userOffice->current_section_id == $empOffice->current_section_id;
 
             default:

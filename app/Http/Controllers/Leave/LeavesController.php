@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Leave;
 
 use App\Http\Controllers\Controller;
+use App\Enums\UserType;
 use App\Imports\Employee\EmployeeEligiblePlanImport;
 use App\Imports\Leave\LeavesImport;
 use App\Models\Employee\Employee;
@@ -47,7 +48,7 @@ class LeavesController extends Controller
         $section = 'Leave Management';
         $sub_section = 'Application';
         
-        $isEmployee = auth()->user()->user_type === 'Employee';
+        $isEmployee = auth()->user()->user_type === UserType::Employee;
         
         if ($isEmployee) {
             $employees = Employee::where('id', auth()->user()->employee_id)->get();
@@ -59,7 +60,7 @@ class LeavesController extends Controller
     }
 
     public function store(Request $request){
-        $isEmployee = auth()->user()->user_type === 'Employee';
+        $isEmployee = auth()->user()->user_type === UserType::Employee;
         
         // Security: Employees can only submit for themselves
         if ($isEmployee && $request->input('employee_id') != auth()->user()->employee_id) {
@@ -145,7 +146,7 @@ class LeavesController extends Controller
 
     public function destroy($id){
         // Restricted for Employees
-        if (auth()->user()->user_type === 'Employee') {
+        if (auth()->user()->user_type === UserType::Employee) {
             abort(403, 'Unauthorized access.');
         }
 
@@ -169,7 +170,7 @@ class LeavesController extends Controller
 
     public function changeStatus(Request $request){
         // Restricted for Employees
-        if (auth()->user()->user_type === 'Employee') {
+        if (auth()->user()->user_type === UserType::Employee) {
             abort(403, 'Unauthorized access.');
         }
 
@@ -220,7 +221,7 @@ class LeavesController extends Controller
     public function import(Request $request)
     {
         // Restricted for Employees
-        if (auth()->user()->user_type === 'Employee') {
+        if (auth()->user()->user_type === UserType::Employee) {
             abort(403, 'Unauthorized access.');
         }
 
@@ -255,7 +256,7 @@ class LeavesController extends Controller
         }
 
         // Security check: Employees can only view their own profile
-        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+        if (auth()->user()->user_type === UserType::Employee && auth()->user()->employee_id != $id) {
             abort(403, 'Unauthorized access to other profiles.');
         }
 

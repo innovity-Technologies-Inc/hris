@@ -146,6 +146,10 @@ A comprehensive Human Resource Management System (HRMS) built with Laravel 12, f
         - Wrap "Edit" buttons in employee profile partials (Bank Accounts, Education, Eligible Plans, Nominee, Office Info, Salary Breakdown) with `@can('employee-management.edit')`.
         - Wrap "Create", "Assign", "Store", "Remove", and "Delete" buttons/forms for Meal, Shift, Roster, OT, Off-Day, Bonus, and Leave plans in employee profile with `@can('employee-management.edit')`.
         - Use permission slugs from `PermissionSeeder` (e.g., `slug.create`, `slug.edit`, `slug.delete`, `slug.import`).
+- **UserType Enum Refactoring**:
+    - Refactor all `user_type` string comparisons (e.g., `=== 'Employee'`) to use the `App\Enums\UserType` enum cases (e.g., `=== UserType::Employee`).
+    - This is required because the `User` model now casts `user_type` to `UserType::class`, making direct string comparisons unreliable.
+    - Update both PHP files and Blade templates.
 
 ### 🗄️ Database Seeding & Initial Setup
 - **User Types**: Support 'Group', 'Company', 'Department', and 'Employee' user types.

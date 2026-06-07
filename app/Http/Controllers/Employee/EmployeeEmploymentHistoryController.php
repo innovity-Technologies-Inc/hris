@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Employee;
 
 use App\Http\Controllers\Controller;
 
+use App\Enums\UserType;
 use App\Models\Employee\EmployeeEmploymentHistory;
 use App\Services\Employee\EmployeeServices;
 use Illuminate\Http\Request;
@@ -31,7 +32,7 @@ class EmployeeEmploymentHistoryController extends Controller
         }
 
         // Security check: Employees can only view their own profile
-        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+        if (auth()->user()->user_type === UserType::Employee && auth()->user()->employee_id != $id) {
             abort(403, 'Unauthorized access to other profiles.');
         }
 
@@ -69,7 +70,7 @@ class EmployeeEmploymentHistoryController extends Controller
         }
 
         // Security check
-        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+        if (auth()->user()->user_type === UserType::Employee && auth()->user()->employee_id != $id) {
             abort(403, 'Unauthorized access.');
         }
 
@@ -88,7 +89,7 @@ class EmployeeEmploymentHistoryController extends Controller
         }
 
         // Security check
-        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+        if (auth()->user()->user_type === UserType::Employee && auth()->user()->employee_id != $id) {
             abort(403, 'Unauthorized access.');
         }
 
@@ -109,7 +110,7 @@ class EmployeeEmploymentHistoryController extends Controller
         try {
             $history = $this->empServices->employeeEmploymentHistorySave($validated, $history);
             
-            $redirectRoute = (auth()->user()->user_type === 'Employee')
+            $redirectRoute = (auth()->user()->user_type === UserType::Employee)
                 ? route('employee.profile.employment_history', $id)
                 : route('employee.index');
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Employee;
 
 use App\Http\Controllers\Controller;
 
+use App\Enums\UserType;
 use App\Imports\Employee\EmployeeNomineeImport;
 use App\Imports\EmployeeNomineeInformationImport;
 use App\Models\Employee\Employee;
@@ -36,7 +37,7 @@ class EmployeeNomineeController extends Controller
         }
 
         // Security check: Employees can only view their own profile
-        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+        if (auth()->user()->user_type === UserType::Employee && auth()->user()->employee_id != $id) {
             abort(403, 'Unauthorized access to other profiles.');
         }
 
@@ -74,7 +75,7 @@ class EmployeeNomineeController extends Controller
         }
 
         // Security check: Employees can only view their own profile
-        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+        if (auth()->user()->user_type === UserType::Employee && auth()->user()->employee_id != $id) {
             abort(403, 'Unauthorized access to other profiles.');
         }
 
@@ -125,7 +126,7 @@ class EmployeeNomineeController extends Controller
         }
 
         // Security check: Employees can only view their own profile
-        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+        if (auth()->user()->user_type === UserType::Employee && auth()->user()->employee_id != $id) {
             abort(403, 'Unauthorized access to other profiles.');
         }
 

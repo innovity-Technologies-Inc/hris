@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Employee;
 
+use App\Enums\UserType;
 use App\Http\Controllers\Controller;
 use App\Services\Employee\NIDVerificationServices;
 use Illuminate\Http\JsonResponse;
@@ -30,7 +31,7 @@ class NIDVerificationController extends Controller
         }
 
         // Restrict for Employee user type
-        if (auth()->user()->user_type === 'Employee') {
+        if (auth()->user()->user_type === UserType::Employee) {
             return response()->json([
                 'success' => false,
                 'message' => 'Employees are not allowed to verify NID.'

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Employee;
 
 use App\Http\Controllers\Controller;
 
+use App\Enums\UserType;
 use App\Imports\Employee\EmployeeGeneralInformationImport;
 use App\Imports\Employee\EmployeeOfficeInformationImport;
 use App\Models\Employee\Employee;
@@ -232,7 +233,7 @@ class EmployeeProfileController extends Controller
                 'alert-type' => 'error'
             ]);
         }
-        $redirectRoute = (auth()->user()->user_type === 'Employee')
+        $redirectRoute = (auth()->user()->user_type === UserType::Employee)
             ? route('employee.profile.general_informations', $id)
             : route('employee.index');
 
@@ -265,7 +266,7 @@ class EmployeeProfileController extends Controller
 
     public function officeInfoCreate($id){
         // Restricted for Employees
-        if (auth()->user()->user_type === 'Employee') {
+        if (auth()->user()->user_type === UserType::Employee) {
             abort(403, 'Unauthorized access.');
         }
 
@@ -282,7 +283,7 @@ class EmployeeProfileController extends Controller
 
     public function officeInfoStore(Request $request){
         // Restricted for Employees
-        if (auth()->user()->user_type === 'Employee') {
+        if (auth()->user()->user_type === UserType::Employee) {
             abort(403, 'Unauthorized access.');
         }
 
@@ -317,7 +318,7 @@ class EmployeeProfileController extends Controller
 
     public function officeInfoEdit($id){
         // Restricted for Employees
-        if (auth()->user()->user_type === 'Employee') {
+        if (auth()->user()->user_type === UserType::Employee) {
             abort(403, 'Unauthorized access.');
         }
 
@@ -332,7 +333,7 @@ class EmployeeProfileController extends Controller
         }
 
         // Security check
-        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+        if (auth()->user()->user_type === UserType::Employee && auth()->user()->employee_id != $id) {
             abort(403, 'Unauthorized access to other profiles.');
         }
 
@@ -354,7 +355,7 @@ class EmployeeProfileController extends Controller
 
     public function officeInfoUpdate(Request $request, $id){
         // Restricted for Employees
-        if (auth()->user()->user_type === 'Employee') {
+        if (auth()->user()->user_type === UserType::Employee) {
             abort(403, 'Unauthorized access.');
         }
 
@@ -364,7 +365,7 @@ class EmployeeProfileController extends Controller
         }
 
         // Security check
-        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+        if (auth()->user()->user_type === UserType::Employee && auth()->user()->employee_id != $id) {
             abort(403, 'Unauthorized access to other profiles.');
         }
 
@@ -413,7 +414,7 @@ class EmployeeProfileController extends Controller
 
     public function officeInfoImport(Request $request){
         // Restricted for Employees
-        if (auth()->user()->user_type === 'Employee') {
+        if (auth()->user()->user_type === UserType::Employee) {
             abort(403, 'Unauthorized access.');
         }
 
@@ -451,7 +452,7 @@ class EmployeeProfileController extends Controller
     public function toggleStatus(Request $request, $id)
     {
         // Restricted for Employees
-        if (auth()->user()->user_type === 'Employee') {
+        if (auth()->user()->user_type === UserType::Employee) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthorized access.'

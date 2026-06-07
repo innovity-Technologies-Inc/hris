@@ -2,6 +2,7 @@
 
 namespace App\Services\Employee;
 
+use App\Enums\UserType;
 use App\HelperClass;
 use App\Models\Company\Branch;
 use App\Models\Company\Company;
@@ -79,7 +80,7 @@ class EmployeeServices
         $id = $request->route('id');
         $employee = $id ? Employee::find($id) : null;
         $userId = $employee ? $employee->user_id : null;
-        $isEmployee = auth()->user()->user_type === 'Employee';
+        $isEmployee = auth()->user()->user_type === UserType::Employee;
 
         $rules = [
             // System Identifiers
@@ -162,7 +163,7 @@ class EmployeeServices
             'personal_email' => 'nullable|email|max:255',
 
             // Login Information
-            'user_type' => $id ? 'nullable|string|in:Group,Company,Business Unit,Division,Department,Section,Employee' : 'required|string|in:Group,Company,Business Unit,Division,Department,Section,Employee',
+            'user_type' => $id ? 'nullable|string|in:' . implode(',', UserType::values()) : 'required|string|in:' . implode(',', UserType::values()),
             'roles' => 'nullable|array',
             'password' => $id ? 'nullable|min:8|confirmed' : 'required|min:8|confirmed',
 
@@ -286,7 +287,7 @@ class EmployeeServices
         }
         if (empty($id)) {
             $employee_data = Employee::create($validated);
-            $employee_data->general_info_status = (auth()->user()->user_type === 'Employee') ? 'pending' : 'active';
+            $employee_data->general_info_status = (auth()->user()->user_type === UserType::Employee) ? 'pending' : 'active';
             $employee_data->save();
             $this->revertProfileToPending($employee_data->id);
             // Update user with employee_id for bi-directional link
@@ -307,7 +308,7 @@ class EmployeeServices
                 $this->employeeAttachmentDelete($employee->experience_attachment_path);
             }
             $employee->update($validated);
-            $employee->general_info_status = (auth()->user()->user_type === 'Employee') ? 'pending' : 'active';
+            $employee->general_info_status = (auth()->user()->user_type === UserType::Employee) ? 'pending' : 'active';
             $employee->save();
             $this->revertProfileToPending($id);
             $employee_data = $employee;
@@ -611,7 +612,7 @@ class EmployeeServices
 
     public function employeeEducationInfoSave($validated, $employeeEduData = null)
     {
-        $validated['status'] = (auth()->user()->user_type === 'Employee') ? 'pending' : 'active';
+        $validated['status'] = (auth()->user()->user_type === UserType::Employee) ? 'pending' : 'active';
         if (isset($employeeEduData)) {
             $employeeEduData->update($validated);
             $this->revertProfileToPending($employeeEduData->employee_id);
@@ -679,7 +680,7 @@ class EmployeeServices
 
     public function employeeNomineeInfoSave($request, $validated, $employeeNomineeData = null)
     {
-        $validated['status'] = (auth()->user()->user_type === 'Employee') ? 'pending' : 'active';
+        $validated['status'] = (auth()->user()->user_type === UserType::Employee) ? 'pending' : 'active';
         if (isset($employeeNomineeData)) {
             if ($request->hasFile('photo_path')) {
                 $this->employeeAttachmentDelete($employeeNomineeData->photo_path);
@@ -862,7 +863,7 @@ class EmployeeServices
             'system_id' => 'required|string|unique:employees,system_id',
             'punch_card_no' => 'required|string|unique:employees,punch_card_no',
             'work_email' => 'required|email|unique:users,email|unique:employees,work_email',
-            'user_type' => 'required|string|in:Group,Company,Business Unit,Division,Department,Section,Employee',
+            'user_type' => 'required|string|in:' . implode(',', UserType::values()),
             'role' => 'nullable|string|exists:roles,name',
             'password' => 'required|min:8|confirmed',
         ]);
@@ -900,7 +901,7 @@ class EmployeeServices
                 // 5. System Notification (Always save to DB)
                 try {
                     $this->notificationService->createNotification(
-                        $user->user_type === 'Group' ? 'hr' : $user->user_type,
+                        $user->user_type === UserType::Group ? 'hr' : $user->user_type->value,
                         $user->id,
                         'Account Created',
                         'Welcome! Your employee account has been successfully created.',
@@ -945,7 +946,7 @@ class EmployeeServices
 
         if ($canManageRoles) {
             $rules['work_email'] = 'required|email|unique:users,email' . ($user ? ',' . $user->id : '');
-            $rules['user_type'] = 'required|string|in:Group,Company,Business Unit,Division,Department,Section,Employee';
+            $rules['user_type'] = 'required|string|in:' . implode(',', UserType::values());
             $rules['role'] = 'nullable|string|exists:roles,name';
         }
 
@@ -1013,7 +1014,7 @@ class EmployeeServices
         $history->fill([
             'employee_id' => $validated['employee_id'],
             'histories' => $validated['histories'],
-            'status' => (auth()->user()->user_type === 'Employee') ? 'pending' : 'active',
+            'status' => (auth()->user()->user_type === UserType::Employee) ? 'pending' : 'active',
         ]);
 
         $history->save();
@@ -1096,7 +1097,7 @@ class EmployeeServices
             
             // Create Notification for Employee
             $notificationService->createNotification(
-                'Employee',
+                UserType::Employee->value,
                 $user->id,
                 'Profile Incomplete',
                 'Your profile has been marked as incomplete. Cause: ' . $cause,
@@ -1108,7 +1109,7 @@ class EmployeeServices
             
             // Create Notification for Employee
             $notificationService->createNotification(
-                'Employee',
+                UserType::Employee->value,
                 $user->id,
                 'Profile Activated',
                 'Your profile has been successfully reviewed and activated.',
@@ -1124,7 +1125,7 @@ class EmployeeServices
      */
     public function revertProfileToPending($employeeId)
     {
-        if (auth()->user()->user_type !== 'Employee') {
+        if (auth()->user()->user_type !== UserType::Employee) {
             return;
         }
 

@@ -2,6 +2,7 @@
 
 namespace App\Services\Transfer;
 
+use App\Enums\UserType;
 use App\Models\Employee\Employee;
 use App\Models\Employee\EmployeeOfficeInfo;
 use App\Models\Transfer\Transfer;
@@ -38,20 +39,20 @@ class TransferServices
             ->with(['employee', 'requestedCompany', 'requestedBusinessUnit']);
 
         // 1. Apply Scoping / Permissions manually since we bypassed global scopes
-        if ($user->user_type !== 'Group') {
+        if ($user->user_type !== UserType::Group) {
             $query->where(function($q) use ($user) {
                 // Own scope
                 $q->where(function($sq) use ($user) {
                     $employee = $user->employee()->with('officeInfo')->first();
                     if ($employee && $employee->officeInfo) {
                         $office = $employee->officeInfo;
-                        if ($user->user_type === 'Company') $sq->where('current_company_id', $office->current_company_id);
-                        elseif ($user->user_type === 'Business Unit') $sq->where('current_business_unit_id', $office->current_business_unit_id);
-                        elseif ($user->user_type === 'Division') $sq->where('current_division_id', $office->current_division_id);
-                        elseif ($user->user_type === 'Department') $sq->where('current_department_id', $office->current_department_id);
-                        elseif ($user->user_type === 'Section') $sq->where('current_section_id', $office->current_section_id);
+                        if ($user->user_type === UserType::Company) $sq->where('current_company_id', $office->current_company_id);
+                        elseif ($user->user_type === UserType::BusinessUnit) $sq->where('current_business_unit_id', $office->current_business_unit_id);
+                        elseif ($user->user_type === UserType::Division) $sq->where('current_division_id', $office->current_division_id);
+                        elseif ($user->user_type === UserType::Department) $sq->where('current_department_id', $office->current_department_id);
+                        elseif ($user->user_type === UserType::Section) $sq->where('current_section_id', $office->current_section_id);
                     }
-                    if ($user->user_type === 'Employee') {
+                    if ($user->user_type === UserType::Employee) {
                         $sq->orWhere('employee_id', $user->employee_id);
                     }
                 });
@@ -326,7 +327,7 @@ class TransferServices
                         // 1. System Notification
                         try {
                             $this->notificationService->createNotification(
-                                'Employee',
+                                UserType::Employee->value,
                                 $employeeUser->id,
                                 'Transfer Request Completed',
                                 'Your transfer request has been fully approved and completed.',

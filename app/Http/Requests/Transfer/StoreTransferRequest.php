@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Transfer;
 
+use App\Enums\UserType;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreTransferRequest extends FormRequest
@@ -23,7 +24,7 @@ class StoreTransferRequest extends FormRequest
             'remarks' => 'nullable|string|max:500',
         ];
 
-        if (auth()->check() && auth()->user()->user_type === 'Employee') {
+        if (auth()->check() && auth()->user()->user_type === UserType::Employee) {
             $rules['employee_id'] = 'required|in:' . auth()->user()->employee_id;
             
             $setting = \App\HelperClass::getTransferSetting();

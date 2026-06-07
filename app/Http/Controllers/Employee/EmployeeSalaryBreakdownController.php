@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Employee;
 
+use App\Enums\UserType;
 use App\Http\Controllers\Controller;
 
 use App\Imports\Employee\SalaryBreakdownImport;
@@ -23,7 +24,7 @@ class EmployeeSalaryBreakdownController extends Controller
     public function create($id)
     {
         // Restricted for Employees
-        if (auth()->user()->user_type === 'Employee') {
+        if (auth()->user()->user_type === UserType::Employee) {
             abort(403, 'Unauthorized access.');
         }
 
@@ -38,7 +39,7 @@ class EmployeeSalaryBreakdownController extends Controller
         }
 
         // Security check: Employees can only view their own profile
-        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+        if (auth()->user()->user_type === UserType::Employee && auth()->user()->employee_id != $id) {
             abort(403, 'Unauthorized access to other profiles.');
         }
 
@@ -51,7 +52,7 @@ class EmployeeSalaryBreakdownController extends Controller
     public function store(Request $request)
     {
         // Restricted for Employees
-        if (auth()->user()->user_type === 'Employee') {
+        if (auth()->user()->user_type === UserType::Employee) {
             abort(403, 'Unauthorized access.');
         }
 
@@ -99,7 +100,7 @@ class EmployeeSalaryBreakdownController extends Controller
         }
 
         // Security check: Employees can only view their own profile
-        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+        if (auth()->user()->user_type === UserType::Employee && auth()->user()->employee_id != $id) {
             abort(403, 'Unauthorized access to other profiles.');
         }
 
@@ -114,7 +115,7 @@ class EmployeeSalaryBreakdownController extends Controller
     public function edit($id)
     {
         // Restricted for Employees
-        if (auth()->user()->user_type === 'Employee') {
+        if (auth()->user()->user_type === UserType::Employee) {
             abort(403, 'Unauthorized access.');
         }
 
@@ -125,7 +126,7 @@ class EmployeeSalaryBreakdownController extends Controller
         }
 
         // Security check: Employees can only view their own profile
-        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+        if (auth()->user()->user_type === UserType::Employee && auth()->user()->employee_id != $id) {
             abort(403, 'Unauthorized access to other profiles.');
         }
 
@@ -143,7 +144,7 @@ class EmployeeSalaryBreakdownController extends Controller
     public function update(Request $request, $id)
     {
         // Restricted for Employees
-        if (auth()->user()->user_type === 'Employee') {
+        if (auth()->user()->user_type === UserType::Employee) {
             abort(403, 'Unauthorized access.');
         }
 
@@ -166,7 +167,7 @@ class EmployeeSalaryBreakdownController extends Controller
 
     public function import(Request $request){
         // Restricted for Employees
-        if (auth()->user()->user_type === 'Employee') {
+        if (auth()->user()->user_type === UserType::Employee) {
             abort(403, 'Unauthorized access.');
         }
 

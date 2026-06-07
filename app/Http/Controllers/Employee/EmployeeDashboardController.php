@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Employee;
 
 use App\Http\Controllers\Controller;
+use App\Enums\UserType;
 use App\Models\Employee\Employee;
 use App\Services\Employee\EmployeeDashboardServices;
 use Illuminate\Http\Request;
@@ -49,7 +50,7 @@ class EmployeeDashboardController extends Controller
         ])->findOrFail($id);
         
         // Authorization: Employee can only see their own dashboard
-        if (Auth::user()->user_type === 'Employee' && Auth::user()->employee_id != $id) {
+        if (Auth::user()->user_type === UserType::Employee && Auth::user()->employee_id != $id) {
             abort(403, 'Unauthorized access to another employee\'s dashboard.');
         }
 

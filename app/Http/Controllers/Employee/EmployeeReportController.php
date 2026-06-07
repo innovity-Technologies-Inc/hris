@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Employee;
 
+use App\Enums\UserType;
 use App\Http\Controllers\Controller;
 use App\Services\Employee\EmployeeReportServices;
 use Illuminate\Http\Request;
@@ -20,7 +21,7 @@ class EmployeeReportController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('employee-management.analytics') || auth()->user()->user_type === 'Employee') {
+        if (!auth()->user()->can('employee-management.analytics') || auth()->user()->user_type === UserType::Employee) {
             abort(403, 'Unauthorized access to analytics.');
         }
 
@@ -46,7 +47,7 @@ class EmployeeReportController extends Controller
      */
     public function getHierarchyDrillDown(Request $request)
     {
-        if (!auth()->user()->can('employee-management.analytics') || auth()->user()->user_type === 'Employee') {
+        if (!auth()->user()->can('employee-management.analytics') || auth()->user()->user_type === UserType::Employee) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 

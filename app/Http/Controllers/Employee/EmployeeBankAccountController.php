@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Employee;
 
 use App\Http\Controllers\Controller;
 
+use App\Enums\UserType;
 use App\Imports\Employee\EmployeeBankAccountDetailsImport;
 use App\Models\Employee\EmployeeBankAccount;
 use App\Models\Employee\Employee;
@@ -31,7 +32,7 @@ class EmployeeBankAccountController extends Controller
     public function create($id)
     {
         // Restricted for Employees
-        if (auth()->user()->user_type === 'Employee') {
+        if (auth()->user()->user_type === UserType::Employee) {
             abort(403, 'Unauthorized access.');
         }
 
@@ -47,7 +48,7 @@ class EmployeeBankAccountController extends Controller
         }
 
         // Security check: Employees can only view their own profile
-        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+        if (auth()->user()->user_type === UserType::Employee && auth()->user()->employee_id != $id) {
             abort(403, 'Unauthorized access to other profiles.');
         }
 
@@ -60,7 +61,7 @@ class EmployeeBankAccountController extends Controller
     public function store(Request $request)
     {
         // Restricted for Employees
-        if (auth()->user()->user_type === 'Employee') {
+        if (auth()->user()->user_type === UserType::Employee) {
             abort(403, 'Unauthorized access.');
         }
 
@@ -99,7 +100,7 @@ class EmployeeBankAccountController extends Controller
         }
 
         // Security check: Employees can only view their own profile
-        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+        if (auth()->user()->user_type === UserType::Employee && auth()->user()->employee_id != $id) {
             abort(403, 'Unauthorized access to other profiles.');
         }
 
@@ -114,7 +115,7 @@ class EmployeeBankAccountController extends Controller
     public function edit(string $id)
     {
         // Restricted for Employees
-        if (auth()->user()->user_type === 'Employee') {
+        if (auth()->user()->user_type === UserType::Employee) {
             abort(403, 'Unauthorized access.');
         }
 
@@ -125,7 +126,7 @@ class EmployeeBankAccountController extends Controller
         }
 
         // Security check: Employees can only view their own profile
-        if (auth()->user()->user_type === 'Employee' && auth()->user()->employee_id != $id) {
+        if (auth()->user()->user_type === UserType::Employee && auth()->user()->employee_id != $id) {
             abort(403, 'Unauthorized access to other profiles.');
         }
 
@@ -144,7 +145,7 @@ class EmployeeBankAccountController extends Controller
     public function update(Request $request, string $id)
     {
         // Restricted for Employees
-        if (auth()->user()->user_type === 'Employee') {
+        if (auth()->user()->user_type === UserType::Employee) {
             abort(403, 'Unauthorized access.');
         }
 
@@ -171,7 +172,7 @@ class EmployeeBankAccountController extends Controller
      */
     public function import(Request $request){
         // Restricted for Employees
-        if (auth()->user()->user_type === 'Employee') {
+        if (auth()->user()->user_type === UserType::Employee) {
             abort(403, 'Unauthorized access.');
         }
 

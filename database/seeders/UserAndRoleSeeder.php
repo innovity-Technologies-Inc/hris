@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Enums\UserRole;
+use App\Enums\UserType;
 use App\Models\Employee\Employee;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -19,10 +21,10 @@ class UserAndRoleSeeder extends Seeder
         // 1. Ensure Permissions and Basic Roles exist
         $this->call(PermissionSeeder::class);
 
-        $superAdminRole = Role::where('name', 'Super Admin')->first();
-        $hrManagerRole = Role::firstOrCreate(['name' => 'HR Manager', 'guard_name' => 'web']);
-        $deptManagerRole = Role::firstOrCreate(['name' => 'Department Manager', 'guard_name' => 'web']);
-        $employeeRole = Role::firstOrCreate(['name' => 'Employee', 'guard_name' => 'web']);
+        $superAdminRole = Role::where('name', UserRole::SuperAdmin->value)->first();
+        $hrManagerRole = Role::firstOrCreate(['name' => UserRole::HRManager->value, 'guard_name' => 'web']);
+        $deptManagerRole = Role::firstOrCreate(['name' => UserRole::DepartmentManager->value, 'guard_name' => 'web']);
+        $employeeRole = Role::firstOrCreate(['name' => UserRole::Employee->value, 'guard_name' => 'web']);
 
         // 2. Create/Update the "Group" Super Admin Employee Profile
         $adminEmployee = Employee::updateOrCreate(
@@ -52,7 +54,7 @@ class UserAndRoleSeeder extends Seeder
             [
                 'name' => 'System Administrator',
                 'password' => Hash::make('12345678'),
-                'user_type' => 'Group',
+                'user_type' => UserType::Group,
                 'employee_id' => $adminEmployee->id,
                 'status' => 'active',
             ]
@@ -81,12 +83,12 @@ class UserAndRoleSeeder extends Seeder
                 [
                     'name' => $testEmployee->full_name,
                     'password' => Hash::make('12345678'),
-                    'user_type' => 'Employee',
+                    'user_type' => UserType::Employee,
                     'employee_id' => $testEmployee->id,
                     'status' => 'active',
                 ]
             );
-            $testUser->syncRoles(['Employee']);
+            $testUser->syncRoles([UserRole::Employee->value]);
             $testEmployee->update(['user_id' => $testUser->id]);
         }
 
@@ -96,20 +98,25 @@ class UserAndRoleSeeder extends Seeder
         // Using chunking for performance with ~2000 records
         Employee::with('officeInfo.getCurrentDepartment')->chunk(200, function ($employees) use ($hrManagerRole, $deptManagerRole, $employeeRole, $defaultPassword) {
             foreach ($employees as $employee) {
+                // SKIP Super Admin to prevent overwriting roles/type
+                if ($employee->work_email === 'admin@example.com') {
+                    continue;
+                }
+
                 $email = $employee->work_email ?? 'employee' . $employee->id . '@example.com';
 
                 // Determine Role based on Department or other logic
                 $targetRole = $employeeRole;
-                $userType = 'Employee';
+                $userType = UserType::Employee;
 
                 $deptName = $employee->officeInfo?->getCurrentDepartment?->department_name ?? '';
 
                 if (stripos($deptName, 'HR') !== false || stripos($deptName, 'Human Resource') !== false || stripos($deptName, 'Payroll') !== false) {
                     $targetRole = $hrManagerRole;
-                    $userType = 'Department';
+                    $userType = UserType::Department;
                 } elseif (stripos($deptName, 'Manager') !== false || stripos($deptName, 'Head') !== false) {
                     $targetRole = $deptManagerRole;
-                    $userType = 'Department';
+                    $userType = UserType::Department;
                 }
 
                 $user = User::updateOrCreate(
@@ -132,8 +139,12 @@ class UserAndRoleSeeder extends Seeder
             }
         });
 
-        // 5. Explicitly restore Admin user_type if it was overwritten
-        User::where('email', 'admin@example.com')->update(['user_type' => 'Group']);
+        // 5. Explicitly restore Admin user_type and role if it was overwritten
+        $finalAdmin = User::where('email', 'admin@example.com')->first();
+        if ($finalAdmin) {
+            $finalAdmin->update(['user_type' => UserType::Group]);
+            $finalAdmin->syncRoles([UserRole::SuperAdmin->value]);
+        }
 
         $this->command->info('Provisioned employees with login info and roles.');
     }

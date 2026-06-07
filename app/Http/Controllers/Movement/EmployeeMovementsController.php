@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Movement;
 
+use App\Enums\UserType;
 use App\Http\Controllers\Controller;
 use App\Models\Plan\DAPlan;
 use App\Models\Employee\Employee;
@@ -58,7 +59,7 @@ class EmployeeMovementsController extends Controller
         $sub_section = !empty($id) ? 'Edit' : 'Add';
         $section_url = route('movement.index');
         
-        $isEmployee = auth()->user()->user_type === 'Employee';
+        $isEmployee = auth()->user()->user_type === UserType::Employee;
         
         if ($isEmployee) {
             $employees = Employee::where('id', auth()->user()->employee_id)->get();
@@ -109,7 +110,7 @@ class EmployeeMovementsController extends Controller
     }
 
     public function save(Request $request, $id=null){
-        $isEmployee = auth()->user()->user_type === 'Employee';
+        $isEmployee = auth()->user()->user_type === UserType::Employee;
 
         // Security: Employees can only submit for themselves
         if ($isEmployee && $request->input('employee_id') != auth()->user()->employee_id) {
