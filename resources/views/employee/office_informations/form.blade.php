@@ -717,33 +717,21 @@
     <script>
         $(function() {
 
-            function loadGrades(tofsilId, selectedGrade = null) {
-                if (tofsilId) {
-                    $.get('/get-grades/' + tofsilId, function(data) {
-                        let $gradeSelect = $('#grade_id');
-                        $gradeSelect.html('<option value="">-- Select --</option>');
-                        $.each(data, function(key, value) {
-                            let selected = (selectedGrade == value.id) ? 'selected' : '';
-                            $gradeSelect.append('<option value="'+ value.id +'" '+selected+'>'+ value.name +'</option>');
-                        });
+            function loadGrades(selectedGrade = null) {
+                $.get('/get-grades', function(data) {
+                    let $gradeSelect = $('#grade_id');
+                    $gradeSelect.html('<option value="">-- Select --</option>');
+                    $.each(data, function(key, value) {
+                        let selected = (selectedGrade == value.id) ? 'selected' : '';
+                        let label = (value.grade_code ? value.grade_code + ' - ' : '') + (value.grade_name || value.name);
+                        $gradeSelect.append('<option value="'+ value.id +'" '+selected+'>'+ label +'</option>');
                     });
-                }
+                });
             }
-
-            // --- Change Event ---
-            $('#tofsil_id').on('change', function() {
-                loadGrades($(this).val());
-            });
 
             // --- Auto-load existing values from DB when editing ---
-            @if(isset($employee_office_info))
-            let tofsilId = "{{ old('tofsil_id', $employee_office_info->tofsil_id ?? '') }}";
-            let gradeId  = "{{ old('grade_id', $employee_office_info->grade_id ?? '') }}";
-
-            if (tofsilId) {
-                loadGrades(tofsilId, gradeId);
-            }
-            @endif
+            let selectedGrade = "{{ old('grade_id', $employee_office_info->grade_id ?? '') }}";
+            loadGrades(selectedGrade);
 
         });
     </script>

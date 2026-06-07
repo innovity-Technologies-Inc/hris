@@ -35,7 +35,6 @@ class EmployeeProfilePdfService
                 'officeInfo.getJoiningSection', 
                 'officeInfo.getJoiningDesignation', 
                 'officeInfo.getGrade',
-                'officeInfo.getTofsil',
                 'educationInfo',
                 'employmentHistory',
                 'nomineeInfo',

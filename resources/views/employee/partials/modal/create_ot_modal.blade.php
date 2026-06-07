@@ -144,7 +144,6 @@
                     $('#modal-ot-detail-config').text(data.config ?? '-');
                     $('#modal-ot-detail-rate').text(data.rate ?? '-');
                     $('#modal-ot-detail-multiplier').text(data.multiplier ?? '-');
-                    $('#modal-ot-detail-salary-type').text(data.salary_type ?? '-');
                 }
             });
         });
