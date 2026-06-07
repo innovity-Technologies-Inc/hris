@@ -88,6 +88,7 @@ class PermissionSeeder extends Seeder
                     ['name' => 'Off-Day Work Plans', 'route' => 'plans.off_day_plans.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
                     ['name' => 'Bonus & Reward Plans', 'route' => 'plan.bonus_plans.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
                     ['name' => 'Penalty Plans', 'route' => 'plan.penalty_plans.index', 'actions' => ['view', 'create', 'edit', 'delete']],
+                    ['name' => 'Leave Encashment Plans', 'route' => 'plan.leave_encashment_plans.index', 'actions' => ['view', 'create', 'edit', 'delete']],
                     ['name' => 'Allowance Plans', 'route' => 'plan.allowance_plans.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
                     ['name' => 'TA Plans', 'route' => 'plans.ta_plans.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
                     ['name' => 'DA Plans', 'route' => 'plans.da_plans.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],

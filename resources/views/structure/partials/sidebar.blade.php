@@ -406,6 +406,13 @@
                             </li>
                             @endif
 
+                            @if(auth()->user()->can('leave-encashment-plans.view'))
+                            <li>
+                                <a class='tp-link @if (Route::is('plan.leave_encashment_plans.*')) menuitem-active @endif'
+                                    href='{{ route('plan.leave_encashment_plans.index') }}'>Leave Encashment Plans</a>
+                            </li>
+                            @endif
+
                             @if($canAllowancePlans)
                             <li>
                                 <a class='tp-link @if (Route::is('plan.allowance_plans.*')) menuitem-active @endif'

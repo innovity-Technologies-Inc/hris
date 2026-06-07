@@ -816,6 +816,24 @@ Route::prefix('plans')->middleware('auth')->group(function () {
         });
     });
 
+    Route::prefix('leave-encashment-plans')->group(function () {
+        Route::controller(\App\Http\Controllers\Plan\LeaveEncashmentPlanController::class)->group(function(){
+            Route::middleware('permission:leave-encashment-plans.view')->group(function () {
+                Route::get('/', 'index')->name('plan.leave_encashment_plans.index');
+            });
+            Route::middleware('permission:leave-encashment-plans.create')->group(function () {
+                Route::post('store', 'store')->name('plan.leave_encashment_plans.store');
+            });
+            Route::middleware('permission:leave-encashment-plans.edit')->group(function () {
+                Route::get('edit/{id}', 'edit')->name('plan.leave_encashment_plans.edit');
+                Route::put('update/{id}', 'update')->name('plan.leave_encashment_plans.update');
+            });
+            Route::middleware('permission:leave-encashment-plans.delete')->group(function () {
+                Route::delete('delete/{id}', 'destroy')->name('plan.leave_encashment_plans.delete');
+            });
+        });
+    });
+
     Route::prefix('deduction-plans')->group(function () {
         Route::controller(DeductionPlanController::class)->group(function(){
             Route::middleware('permission:deduction-plan.view')->group(function () {
