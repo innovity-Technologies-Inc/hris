@@ -25,13 +25,13 @@
                         </span>
                     </td>
                     <td class="text-end">
-                        @can('general-settings.edit')
+                        @can('pay-groups.edit')
                         <button type="button" class="btn btn-primary btn-sm me-1 edit-pay-group" 
                                 data-id="{{ $group->id }}" title="Edit">
                             <i style="height: 12px; width: 12px" data-feather="edit"></i>
                         </button>
                         @endcan
-                        @can('general-settings.delete')
+                        @can('pay-groups.delete')
                         <button type="button" class="btn btn-danger btn-sm delete-pay-group" 
                                 data-id="{{ $group->id }}" title="Delete">
                             <i style="height: 12px; width: 12px" data-feather="trash"></i>

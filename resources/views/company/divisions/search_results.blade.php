@@ -28,10 +28,13 @@
                     <td>{{ $division->getLocation->name ?? 'N/A' }}</td>
                     @endif
                     <td>
+                        @can('divisions.edit')
                         <a href="{{ route('divisions.edit', $division->id) }}" class="btn btn-primary btn-sm">
                             <i style="height: 12px; width: 12px" data-feather="edit"></i>
                         </a>
+                        @endcan
 
+                        @can('divisions.delete')
                         <form action="{{ route('divisions.delete', $division->id) }}" method="POST"
                             style="display: inline-block">
                             @csrf
@@ -41,6 +44,7 @@
                                 <i style="height: 12px; width: 12px" data-feather="trash"></i>
                             </button>
                         </form>
+                        @endcan
                     </td>
                 </tr>
             @endforeach

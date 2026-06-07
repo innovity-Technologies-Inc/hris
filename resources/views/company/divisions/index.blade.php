@@ -6,9 +6,11 @@
         <div class="col-xl-12">
             <div class="card">
                  <div class="card-header">
+                    @can('divisions.create')
                     <a type="button" class="btn btn-warning btn-sm" href="{{route('divisions.create')}}">
                         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                     </a>
+                    @endcan
                 </div><!-- end card header -->
 
 

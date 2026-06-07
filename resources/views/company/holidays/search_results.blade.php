@@ -35,10 +35,13 @@
                         @endif
                     </td>
                     <td>
+                        @can('holidays.edit')
                         <a href="{{ route('holidays.edit', $holiday->id) }}" class="btn btn-primary btn-sm">
                             <i style="height: 12px; width: 12px" data-feather="edit"></i>
                         </a>
+                        @endcan
 
+                        @can('holidays.delete')
                         <form action="{{ route('holidays.delete', $holiday->id) }}" method="POST"
                             style="display: inline-block">
                             @csrf
@@ -48,6 +51,7 @@
                                 <i style="height: 12px; width: 12px" data-feather="trash"></i>
                             </button>
                         </form>
+                        @endcan
                     </td>
                 </tr>
             @endforeach

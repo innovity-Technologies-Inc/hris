@@ -26,11 +26,14 @@
                         @endif
                     </td>
                     <td>
+                        @can('company-branches.edit')
                         <a type="button" class="btn btn-primary btn-sm"
                             href="{{ route('gazette_locations.edit', $item->id) }}">
                             <i style="height: 12px; width: 12px" data-feather="edit"></i>
                         </a>
+                        @endcan
 
+                        @can('company-branches.delete')
                         <form action="{{ route('gazette_locations.delete', $item->id) }}" method="POST"
                             style="display: inline-block">
                             @csrf
@@ -40,7 +43,7 @@
                                 <i style="height: 12px; width: 12px" data-feather="trash"></i>
                             </button>
                         </form>
-
+                        @endcan
                     </td>
 
                 </tr>

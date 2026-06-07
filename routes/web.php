@@ -130,18 +130,18 @@ Route::prefix('company-setup')->middleware('auth')->group(function () {
     });
 
     Route::controller(\App\Http\Controllers\Company\PayScaleController::class)->group(function () {
-        Route::middleware('permission:general-settings.view')->group(function () {
+        Route::middleware('permission:pay-scales.view')->group(function () {
             Route::get('pay-scales', 'index')->name('pay_scales.index');
             Route::get('pay-scales/search', 'index')->name('pay_scales.search');
         });
-        Route::middleware('permission:general-settings.create')->group(function () {
+        Route::middleware('permission:pay-scales.create')->group(function () {
             Route::post('pay-scales/store', 'store')->name('pay_scales.store');
         });
-        Route::middleware('permission:general-settings.edit')->group(function () {
+        Route::middleware('permission:pay-scales.edit')->group(function () {
             Route::get('pay-scales/{id}/edit', 'edit')->name('pay_scales.edit');
             Route::put('pay-scales/{id}/update', 'update')->name('pay_scales.update');
         });
-        Route::middleware('permission:general-settings.delete')->group(function () {
+        Route::middleware('permission:pay-scales.delete')->group(function () {
             Route::delete('pay-scales/{id}/delete', 'destroy')->name('pay_scales.delete');
         });
     });
@@ -163,18 +163,18 @@ Route::prefix('company-setup')->middleware('auth')->group(function () {
     });
 
     Route::controller(GazetteLocationsController::class)->group(function () {
-        Route::middleware('permission:company-branches.view')->group(function () {
+        Route::middleware('permission:gazette-locations.view')->group(function () {
             Route::get('gazette_locations', 'index')->name('gazette_locations.index');
         });
-        Route::middleware('permission:company-branches.create')->group(function () {
+        Route::middleware('permission:gazette-locations.create')->group(function () {
             Route::get('gazette_locations/create', 'create')->name('gazette_locations.create');
             Route::post('gazette_locations/store', 'store')->name('gazette_locations.store');
         });
-        Route::middleware('permission:company-branches.edit')->group(function () {
+        Route::middleware('permission:gazette-locations.edit')->group(function () {
             Route::get('gazette_locations/edit/{id}', 'edit')->name('gazette_locations.edit');
             Route::put('gazette_locations/{id}/update', 'update')->name('gazette_locations.update');
         });
-        Route::middleware('permission:company-branches.delete')->group(function () {
+        Route::middleware('permission:gazette-locations.delete')->group(function () {
             Route::delete('gazette_locations/delete/{id}', 'delete')->name('gazette_locations.delete');
         });
     });
@@ -246,17 +246,17 @@ Route::prefix('company-setup')->middleware('auth')->group(function () {
     });
 
     Route::controller(\App\Http\Controllers\Company\PayGroupController::class)->group(function () {
-        Route::middleware('permission:general-settings.view')->group(function () {
+        Route::middleware('permission:pay-groups.view')->group(function () {
             Route::get('pay-groups', 'index')->name('pay_groups.index');
         });
-        Route::middleware('permission:general-settings.create')->group(function () {
+        Route::middleware('permission:pay-groups.create')->group(function () {
             Route::post('pay-groups/store', 'store')->name('pay_groups.store');
         });
-        Route::middleware('permission:general-settings.edit')->group(function () {
+        Route::middleware('permission:pay-groups.edit')->group(function () {
             Route::get('pay-groups/{id}/edit', 'edit')->name('pay_groups.edit');
             Route::put('pay-groups/{id}/update', 'update')->name('pay_groups.update');
         });
-        Route::middleware('permission:general-settings.delete')->group(function () {
+        Route::middleware('permission:pay-groups.delete')->group(function () {
             Route::delete('pay-groups/{id}/delete', 'destroy')->name('pay_groups.delete');
         });
     });

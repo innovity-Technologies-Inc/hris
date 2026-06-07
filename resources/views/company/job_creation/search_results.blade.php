@@ -36,10 +36,13 @@
                         @endif
                     </td>
                     <td>
+                        @can('job-creations.edit')
                         <a href="{{ route('job_creations.edit', $jobCreation->id) }}" class="btn btn-primary btn-sm">
                             <i style="height: 12px; width: 12px" data-feather="edit"></i>
                         </a>
+                        @endcan
 
+                        @can('job-creations.delete')
                         <form action="{{ route('job_creations.delete', $jobCreation->id) }}" method="POST"
                             style="display: inline-block">
                             @csrf
@@ -49,6 +52,7 @@
                                 <i style="height: 12px; width: 12px" data-feather="trash"></i>
                             </button>
                         </form>
+                        @endcan
                     </td>
                 </tr>
             @endforeach

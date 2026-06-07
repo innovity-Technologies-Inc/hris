@@ -7,9 +7,11 @@
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-header">
+                    @can('company-branches.create')
                     <a type="button" class="btn btn-warning btn-sm" href="{{route('gazette_locations.create')}}">
                         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                     </a>
+                    @endcan
                 </div><!-- end card header -->
                 {{-- Search Filter Form --}}
                 <form id="filterForm">
@@ -53,10 +55,13 @@
 
                                     @endif
                                     <td>
+                                        @can('company-branches.edit')
                                         <a type="button" class="btn btn-primary btn-sm" href="{{route('gazette_locations.edit', $item->id)}}">
                                             <i style="height: 12px; width: 12px" data-feather="edit"></i>
                                         </a>
+                                        @endcan
 
+                                        @can('company-branches.delete')
                                         <form action="{{route('gazette_locations.delete', $item->id)}}" method="POST" style="display: inline-block">
                                             @csrf
                                             @method('DELETE')
@@ -64,10 +69,8 @@
                                             <button class ="btn btn-sm btn-danger confirmDelete">
                                                 <i style="height: 12px; width: 12px" data-feather="trash"></i>
                                             </button>
-
-
                                         </form>
-
+                                        @endcan
                                     </td>
 
                                 </tr>

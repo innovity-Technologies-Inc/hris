@@ -112,6 +112,7 @@ class PermissionSeeder extends Seeder
                     ['name' => 'Bank Branches', 'route' => 'branches.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
                     ['name' => 'Bank Accounts', 'route' => 'bank_accounts.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
                     ['name' => 'Holidays', 'route' => 'holidays.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
+                    ['name' => 'Gazette Locations', 'route' => 'gazette_locations.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
                     ['name' => 'Job Creations', 'route' => 'job_creations.index','actions' => ['view', 'create', 'edit', 'delete', 'import']],
                 ]
             ],

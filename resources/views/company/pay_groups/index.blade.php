@@ -6,7 +6,7 @@
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-header">
-                    @can('general-settings.create')
+                    @can('pay-groups.create')
                     <button type="button" class="btn btn-warning btn-sm" id="btnCreatePayGroup">
                         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                     </button>

@@ -8,14 +8,18 @@
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
+                            @can('holidays.create')
                             <a type="button" class="btn btn-warning btn-sm" href="{{ route('holidays.create') }}">
                                 <i style="height: 12px; width: 12px" data-feather="plus"></i> Create Holiday
                             </a>
+                            @endcan
                         </div>
                         <div>
+                            @can('holidays.view')
                             <a type="button" class="btn btn-secondary btn-sm" href="{{ route('holidays.calendar') }}">
                                 <i style="height: 12px; width: 12px" data-feather="calendar"></i> View Calendar
                             </a>
+                            @endcan
                         </div>
                     </div>
                 </div>

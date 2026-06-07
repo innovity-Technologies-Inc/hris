@@ -6,9 +6,11 @@
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-header">
+                    @can('company-branches.create')
                     <a type="button" class="btn btn-warning btn-sm" href="{{ route('company_locations.create') }}">
                         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                     </a>
+                    @endcan
                 </div>
                 {{-- Search Filter Form --}}
                 <form id="filterForm">
@@ -48,16 +50,21 @@
                                         <td>{{ $location->getCompany->name }}</td>
                                         <td>{{ Str::limit($location->location_address, 30) }}</td>
                                         <td>
+                                            @can('company-branches.view')
                                             <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal"
                                                 data-bs-target="#viewLocationModal{{ $location->id }}">
                                                 <i style="height: 12px; width: 12px" data-feather="eye"></i>
                                             </button>
+                                            @endcan
 
+                                            @can('company-branches.edit')
                                             <a href="{{ route('company_locations.edit', $location->id) }}"
                                                 class="btn btn-primary btn-sm">
                                                 <i style="height: 12px; width: 12px" data-feather="edit"></i>
                                             </a>
+                                            @endcan
 
+                                            @can('company-branches.delete')
                                             <form action="{{ route('company_locations.destroy', $location->id) }}"
                                                 method="POST" style="display: inline-block">
                                                 @csrf
@@ -67,10 +74,13 @@
                                                     <i style="height: 12px; width: 12px" data-feather="trash"></i>
                                                 </button>
                                             </form>
+                                            @endcan
                                         </td>
                                     </tr>
 
+                                    @can('company-branches.view')
                                     @include('company.company_locations.view_modal')
+                                    @endcan
                                 @endforeach
                             </tbody>
                         </table>

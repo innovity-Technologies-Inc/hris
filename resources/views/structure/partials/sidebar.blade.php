@@ -444,6 +444,8 @@
                     $canDepartments = auth()->user()->can('departments.view') && (isset($generalSettings->department_status) && $generalSettings->department_status == 1);
                     $canSections = auth()->user()->can('sections.view') && (isset($generalSettings->section_status) && $generalSettings->section_status == 1);
                     $canDesignations = auth()->user()->can('designations.view');
+                    $canPayGroups = auth()->user()->can('pay-groups.view');
+                    $canPayScales = auth()->user()->can('pay-scales.view');
                     $canSalaryGrades = auth()->user()->can('salary-grades.view');
                     $canBanks = auth()->user()->can('banks.view');
                     $canBankBranches = auth()->user()->can('bank-branches.view');
@@ -452,7 +454,7 @@
                     $canJobCreations = auth()->user()->can('job-creations.view');
                     $canBulkUploadCompany = auth()->user()->can('employee-management.import');
 
-                    $showCompanyMenu = $canGroups || $canCompanyTypes || $canCompanies || $canCompanyBranches || $canDivisions || $canDepartments || $canSections || $canDesignations || $canSalaryGrades || $canBanks || $canBankBranches || $canBankAccounts || $canHolidays || $canJobCreations || $canBulkUploadCompany;
+                    $showCompanyMenu = $canGroups || $canCompanyTypes || $canCompanies || $canCompanyBranches || $canDivisions || $canDepartments || $canSections || $canDesignations || $canPayGroups || $canPayScales || $canSalaryGrades || $canBanks || $canBankBranches || $canBankAccounts || $canHolidays || $canJobCreations || $canBulkUploadCompany;
 
 
                     $companyOpen =
@@ -528,7 +530,7 @@
                             </li>
                             @endif
 
-                            @if(auth()->user()->can('general-settings.view'))
+                            @if($canPayGroups)
                             <li>
                                 <a class='tp-link @if (Route::is('pay_groups.*')) menuitem-active @endif'
                                     href='{{ route('pay_groups.index') }}'>Pay Groups</a>
@@ -542,7 +544,7 @@
                             </li>
                             @endif
 
-                            @if(auth()->user()->can('general-settings.view'))
+                            @if($canPayScales)
                             <li>
                                 <a class='tp-link @if (Route::is('pay_scales.*')) menuitem-active @endif'
                                     href='{{ route('pay_scales.index') }}'>Pay Scales</a>
