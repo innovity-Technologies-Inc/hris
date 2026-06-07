@@ -333,12 +333,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 'detailed_alternate_off': (oi.alternate_off_day || []).join(', '), 'detailed_pf_effective': oi.pf_effective_date
             };
             for (let id in officeFields) { if (document.getElementById(id)) document.getElementById(id).textContent = officeFields[id] || 'N/A'; }
-            document.getElementById('detailed_ot_allowed').innerHTML = oi.ot_allowed === 'yes' ? '<span class="badge badge-soft-success">Yes</span>' : '<span class="badge badge-soft-danger">No</span>';
-            document.getElementById('detailed_pf_eligible').innerHTML = oi.pf_eligible === 'yes' ? '<span class="badge badge-soft-success">Yes</span>' : '<span class="badge badge-soft-danger">No</span>';
-            document.getElementById('detailed_transport_eligible').innerHTML = oi.transport_eligible === 'yes' ? '<span class="badge badge-soft-success">Yes</span>' : '<span class="badge badge-soft-danger">No</span>';
-            document.getElementById('detailed_gratuity_eligible').innerHTML = oi.gratuity_eligible === 'yes' ? '<span class="badge badge-soft-success">Yes</span>' : '<span class="badge badge-soft-danger">No</span>';
-            document.getElementById('detailed_can_loan').innerHTML = oi.can_apply_loan === 'yes' ? '<span class="badge badge-soft-success">Yes</span>' : '<span class="badge badge-soft-danger">No</span>';
-            document.getElementById('detailed_can_advance').innerHTML = oi.can_apply_advance === 'yes' ? '<span class="badge badge-soft-success">Yes</span>' : '<span class="badge badge-soft-danger">No</span>';
+            
+            const setBadge = (id, val) => {
+                const el = document.getElementById(id);
+                if (el) el.innerHTML = val === 'yes' ? '<span class="badge badge-soft-success">Yes</span>' : '<span class="badge badge-soft-danger">No</span>';
+            };
+            setBadge('detailed_ot_allowed', oi.ot_allowed);
+            setBadge('detailed_pf_eligible', oi.pf_eligible);
+            setBadge('detailed_transport_eligible', oi.transport_eligible);
+            setBadge('detailed_gratuity_eligible', oi.gratuity_eligible);
+            setBadge('detailed_can_loan', oi.can_apply_loan);
+            setBadge('detailed_can_advance', oi.can_apply_advance);
         }
 
         const populateDynamicList = (sId, bId, list, mapper) => {

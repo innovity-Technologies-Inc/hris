@@ -198,8 +198,9 @@
                                 <div class="col-md-2"><label class="data-label">Transport Eligible</label><span class="data-value" id="detailed_transport_eligible"></span></div>
                                 <div class="col-md-2"><label class="data-label">Gratuity Eligible</label><span class="data-value" id="detailed_gratuity_eligible"></span></div>
                                 <div class="col-md-2"><label class="data-label">Can Apply Loan</label><span class="data-value" id="detailed_can_loan"></span></div>
+                                <div class="col-md-2"><label class="data-label">Can Apply Advance</label><span class="data-value" id="detailed_can_advance"></span></div>
                                 <div class="col-md-3"><label class="data-label">PF Effective</label><span class="data-value" id="detailed_pf_effective_date"></span></div>
-                                </div>
+                            </div>
                         </div>
                     </div>
 
