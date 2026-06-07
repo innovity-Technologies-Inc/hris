@@ -151,15 +151,14 @@ Route::prefix('company-setup')->middleware('auth')->group(function () {
             Route::get('salary_grades', 'index')->name('salary_grades.index');
         });
         Route::middleware('permission:salary-grades.create')->group(function () {
-            Route::get('salary_grades/create', 'create')->name('salary_grades.create');
             Route::post('salary_grades/store', 'store')->name('salary_grades.store');
         });
         Route::middleware('permission:salary-grades.edit')->group(function () {
-            Route::get('salary_grades/edit/{id}', 'edit')->name('salary_grades.edit');
+            Route::get('salary_grades/{id}/edit', 'edit')->name('salary_grades.edit');
             Route::put('salary_grades/{id}/update', 'update')->name('salary_grades.update');
         });
         Route::middleware('permission:salary-grades.delete')->group(function () {
-            Route::delete('salary_grades/delete/{id}', 'delete')->name('salary_grades.delete');
+            Route::delete('salary_grades/{id}/delete', 'destroy')->name('salary_grades.delete');
         });
     });
 

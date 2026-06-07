@@ -3,129 +3,95 @@
 namespace App\Http\Controllers\Company;
 
 use App\Http\Controllers\Controller;
-
+use App\Http\Requests\Company\SalaryGradeRequest;
 use App\Models\Company\SalaryGrade;
 use App\Models\Company\Tofsil;
+use App\Services\Company\SalaryGradeServices;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class SalaryGradesController extends Controller
 {
+    protected $salaryGradeService;
+
+    public function __construct(SalaryGradeServices $salaryGradeService)
+    {
+        $this->salaryGradeService = $salaryGradeService;
+    }
+
     public function index(Request $request, FlexSearch $flexsearch)
     {
-        $title = 'Salary Grade';
-        $section = 'Company Setup';
-        $sub_section = 'SalaryGrade';
-        $query = SalaryGrade::query()->with(['getTofsil']);
-        $searchTerm = $request->get('keyword');
-        $searchableFields = ['name', 'getTofsil.name'];
-        $salary_grades = $flexsearch->apply($query, [], $searchTerm, $searchableFields)->orderBy('id', 'desc')->paginate(10);
+        $title = 'Salary Grades';
+        $section = 'Company Info';
+        $sub_section = 'Salary Grades';
+
         if ($request->ajax()) {
+            $salary_grades = $this->salaryGradeService->getSalaryGrades($request, $flexsearch);
             return view('company.salary_grade.search_results', compact('salary_grades'))->render();
         }
-        return view('company.salary_grade.index', compact('title', 'section', 'sub_section', 'salary_grades'));
+
+        $tofsils = Tofsil::all();
+        return view('company.salary_grade.index', compact('title', 'section', 'sub_section', 'tofsils'));
     }
 
-    public function create()
+    public function store(SalaryGradeRequest $request)
     {
-        $title = 'Add Salary Grade';
-        $section = 'Salary Grade';
-        $section_url = route('salary_grades.index');
-        $sub_section = 'Add';
-        $tofsils = Tofsil::all()->sortBy('name');
-        return view('company.salary_grade.form', compact('title', 'section', 'sub_section', 'section_url', 'tofsils'));
-    }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'tofsil_id' => 'required',
-            'status' => 'required',
-        ], [
-            'name.required' => 'Please Enter Name',
-            'name.max' => 'Name Must Be Less Than 255 Characters',
-            'name.string' => 'Name Must Be String',
-            'tofsil_id.required' => 'Please Select Tofsil Name',
-        ]);
-
         try {
-            Log::info('Creating Salary Grade');
-            SalaryGrade::create($request->all());
-
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
-            return redirect()->back()->with([
-                'message' => 'Something Went Wrong',
-                'alert-type' => 'error'
+            $salaryGrade = $this->salaryGradeService->storeSalaryGrade($request->validated());
+            return response()->json([
+                'success' => true,
+                'message' => 'Salary Grade saved successfully.',
+                'data' => $salaryGrade
             ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to save Salary Grade.'
+            ], 500);
         }
-
-        Log::info('Salary Grade Created Successfully');;
-
-        return redirect()->route('salary_grades.index')->with([
-            'message' => 'Salary Grade Created Successfully',
-            'alert-type' => 'success'
-        ]);
-
     }
 
     public function edit($id)
     {
-        $title = 'Edit Salary Grade';
-        $section = 'Salary Grade';
-        $section_url = route('salary_grades.index');
-        $sub_section = 'Edit';
-        $salary_grade = SalaryGrade::find($id);
-        $tofsils = Tofsil::all()->sortBy('name');
-        return view('company.salary_grade.form', compact('title', 'section', 'sub_section', 'section_url', 'salary_grade', 'tofsils'));
+        $salaryGrade = SalaryGrade::findOrFail($id);
+        return response()->json([
+            'success' => true,
+            'data' => $salaryGrade
+        ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(SalaryGradeRequest $request, $id)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'tofsil_id' => 'required',
-            'status' => 'required',
-        ], [
-            'name.required' => 'Please Enter Name',
-            'name.max' => 'Name Must Be Less Than 255 Characters',
-            'name.string' => 'Name Must Be String',
-            'tofsil_id.required' => 'Please Select Tofsil Name',
-        ]);
-
         try {
-            $salary_grade = SalaryGrade::find($id);
-
-            Log::info('Creating Salary Grade');
-            $salary_grade->update($request->all());
-
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
-            return redirect()->back()->with([
-                'message' => 'Something Went Wrong',
-                'alert-type' => 'error'
+            $salaryGrade = SalaryGrade::findOrFail($id);
+            $this->salaryGradeService->updateSalaryGrade($salaryGrade, $request->validated());
+            return response()->json([
+                'success' => true,
+                'message' => 'Salary Grade updated successfully.',
+                'data' => $salaryGrade
             ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update Salary Grade.'
+            ], 500);
         }
-
-        Log::info('Info Updated Successfully');;
-
-        return redirect()->route('salary_grades.index')->with([
-            'message' => 'Info Updated Successfully',
-            'alert-type' => 'success'
-        ]);
-
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
-        $salary_grade = SalaryGrade::find($id);
-        $salary_grade->delete();
-        return redirect()->back()->with([
-            'message' => 'Salary Grade Deleted Successfully',
-            'alert-type' => 'success'
-        ]);
+        try {
+            $salaryGrade = SalaryGrade::findOrFail($id);
+            $this->salaryGradeService->deleteSalaryGrade($salaryGrade);
+            return response()->json([
+                'success' => true,
+                'message' => 'Salary Grade deleted successfully.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete Salary Grade.'
+            ], 500);
+        }
     }
 }
-

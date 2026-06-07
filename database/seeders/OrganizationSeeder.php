@@ -457,7 +457,8 @@ class OrganizationSeeder extends Seeder
         foreach ($tofsilIds as $tofsil_id) {
             foreach ($gradeNumbers as $index => $grade) {
                 $salaryGrades[] = [
-                    'name' => 'Grade-' . $tofsil_id . '-' . ($index + 1),
+                    'grade_code' => 'G' . $tofsil_id . '-' . ($index + 1),
+                    'grade_name' => 'Salary Grade ' . $tofsil_id . '-' . ($index + 1),
                     'tofsil_id' => $tofsil_id,
                     'status' => 'active',
                     'created_at' => now(), 'updated_at' => now(),

@@ -1,55 +1,51 @@
-@if ($salary_grades->isEmpty())
-    <div class="text-center py-4 text-muted">No Salary Grade found.</div>
-@else
-    <table class="table table-bordered mb-0">
-        <thead>
+<div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
             <tr>
-                <th scope="col">#</th>
-                <th scope="col">Salary Grade</th>
-                <th scope="col">Act</th>
-                <th scope="col">Status</th>
-                <th scope="col">Action</th>
+                <th>Grade Code</th>
+                <th>Grade Name</th>
+                <th>Act (Tofsil)</th>
+                <th>Status</th>
+                <th class="text-end">Actions</th>
             </tr>
         </thead>
         <tbody>
-            @php
-                $sl = \App\HelperClass::indexNumberSerialization($salary_grades);
-            @endphp
-            @foreach ($salary_grades as $item)
+            @forelse($salary_grades as $grade)
                 <tr>
-                    <th scope="row">{{ $sl++ }}</th>
-                    <td>{{ $item->name }}</td>
-                    <td>{{ $item->getTofsil->name ?? 'N/A' }}</td>
-
+                    <td><span class="fw-bold text-dark">{{ $grade->grade_code }}</span></td>
+                    <td>{{ $grade->grade_name }}</td>
                     <td>
-                        @if ($item->status == 'active')
-                            <span class="badge text-bg-success">Active</span>
-                        @else
-                            <span class="badge text-bg-danger">Inactive</span>
-                        @endif
+                        <span class="badge bg-soft-info text-info">{{ $grade->getTofsil->name ?? 'N/A' }}</span>
                     </td>
                     <td>
-                        <a type="button" class="btn btn-primary btn-sm"
-                            href="{{ route('salary_grades.edit', $item->id) }}">
-                            <i style="height: 12px; width: 12px" data-feather="edit"></i>
-                        </a>
-
-                        <form action="{{ route('salary_grades.delete', $item->id) }}" method="POST"
-                            style="display: inline-block">
-                            @csrf
-                            @method('DELETE')
-
-                            <button class ="btn btn-sm btn-danger confirmDelete">
-                                <i style="height: 12px; width: 12px" data-feather="trash"></i>
-                            </button>
-                        </form>
-
+                        <span class="badge {{ $grade->status === 'active' ? 'bg-success' : 'bg-danger' }}">
+                            {{ ucfirst($grade->status) }}
+                        </span>
                     </td>
-
+                    <td class="text-end">
+                        @can('salary-grades.edit')
+                        <button type="button" class="btn btn-sm btn-soft-primary me-1 edit-salary-grade" 
+                                data-id="{{ $grade->id }}" title="Edit">
+                            <i class="mdi mdi-pencil fs-16"></i>
+                        </button>
+                        @endcan
+                        @can('salary-grades.delete')
+                        <button type="button" class="btn btn-sm btn-soft-danger delete-salary-grade" 
+                                data-id="{{ $grade->id }}" title="Delete">
+                            <i class="mdi mdi-delete fs-16"></i>
+                        </button>
+                        @endcan
+                    </td>
                 </tr>
-            @endforeach
-
+            @empty
+                <tr>
+                    <td colspan="5" class="text-center py-4 text-muted">No salary grades found.</td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
-@endif
+</div>
 
+<div class="mt-3">
+    {{ $salary_grades->links('pagination::bootstrap-5') }}
+</div>
