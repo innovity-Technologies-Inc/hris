@@ -54,7 +54,7 @@
                     <div class="modal-body p-4">
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Title <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="title" id="title" placeholder="e.g. Late Penalty" required>
+                            <input type="text" class="form-control" name="title" id="title" placeholder="e.g. Property Damage Penalty" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Description</label>
