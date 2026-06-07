@@ -443,6 +443,7 @@ class OrganizationSeeder extends Seeder
         
         for ($i = 1; $i <= 20; $i++) {
             $salaryGrades[] = [
+                'id' => $i,
                 'grade_code' => 'G' . $i,
                 'grade_name' => 'Salary Grade ' . $i,
                 'status' => 'active',
@@ -451,6 +452,36 @@ class OrganizationSeeder extends Seeder
             ];
         }
         DB::table('salary_grades')->insert($salaryGrades);
+
+        // --- PAY GROUPS ---
+        DB::table('pay_groups')->truncate();
+        $payGroups = [
+            ['id' => 1, 'title' => 'Monthly Staff', 'payroll_frequency' => 'Monthly', 'salary_processing_day' => '25', 'status' => 'active', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 2, 'title' => 'Weekly Labor', 'payroll_frequency' => 'Weekly', 'salary_processing_day' => 'Sunday', 'status' => 'active', 'created_at' => now(), 'updated_at' => now()],
+        ];
+        DB::table('pay_groups')->insert($payGroups);
+
+        // --- PAY SCALES ---
+        DB::table('pay_scales')->truncate();
+        $payScales = [];
+        foreach ([1, 2] as $groupId) {
+            $groupTitle = $groupId == 1 ? 'Monthly Staff' : 'Weekly Labor';
+            for ($i = 1; $i <= 10; $i++) {
+                $min = 10000 + ($i * 5000);
+                $max = $min + 15000;
+                $payScales[] = [
+                    'title' => "$groupTitle - G$i",
+                    'grade_id' => $i,
+                    'pay_group_id' => $groupId,
+                    'min_salary' => $min,
+                    'max_salary' => $max,
+                    'status' => 'active',
+                    'created_at' => now(), 
+                    'updated_at' => now(),
+                ];
+            }
+        }
+        DB::table('pay_scales')->insert($payScales);
     }
 }
 

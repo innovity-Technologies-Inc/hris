@@ -10,6 +10,7 @@ class EmployeeSalaryBreakdown extends Model
     use OrganizationScoped;
     protected $fillable = [
         'employee_id',
+        'pay_scale_id',
         'basic_salary',
         'house_allowance',
         'transport_allowance',
@@ -24,6 +25,11 @@ class EmployeeSalaryBreakdown extends Model
         'other_earnings_percentage',
         'gross_salary',
     ];
+
+    public function payScale()
+    {
+        return $this->belongsTo(\App\Models\Company\PayScale::class, 'pay_scale_id');
+    }
 
     public function getEmployee()
     {

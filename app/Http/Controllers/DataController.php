@@ -388,6 +388,15 @@ class DataController extends Controller
         return response()->json($info);
     }
 
+    public function getPayScaleDetails($id)
+    {
+        $payScale = \App\Models\Company\PayScale::with(['grade', 'payGroup'])->findOrFail($id);
+        return response()->json([
+            'success' => true,
+            'data' => $payScale
+        ]);
+    }
+
 
 
 

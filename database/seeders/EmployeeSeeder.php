@@ -70,6 +70,7 @@ class EmployeeSeeder extends Seeder
         $this->orgData['sections_by_department'] = DB::table('sections')->get()->groupBy('department_id')->map->pluck('id')->toArray();
         $this->orgData['designations'] = DB::table('designations')->pluck('id')->toArray();
         $this->orgData['salary_grades'] = DB::table('salary_grades')->pluck('id')->toArray();
+        $this->orgData['pay_scales'] = DB::table('pay_scales')->pluck('id')->toArray();
         
         $branches = DB::table('branches')->select('id', 'bank_id')->get();
         $this->orgData['bank_branches'] = $branches->pluck('id')->toArray();
@@ -246,9 +247,16 @@ class EmployeeSeeder extends Seeder
 
     private function generateSalaryBreakdownData($employeeId): array
     {
-        $gross = $this->faker->numberBetween(30000, 100000);
+        $payScaleId = $this->faker->randomElement($this->orgData['pay_scales']);
+        $payScale = DB::table('pay_scales')->where('id', $payScaleId)->first();
+        
+        $min = $payScale ? (float)$payScale->min_salary : 30000;
+        $max = $payScale ? (float)$payScale->max_salary : 100000;
+        
+        $gross = $this->faker->numberBetween($min, $max);
         return [
             'employee_id' => $employeeId,
+            'pay_scale_id' => $payScaleId,
             'gross_salary' => (string)$gross,
             'basic_salary' => (string)($gross * 0.6),
             'basic_salary_percentage' => '60',

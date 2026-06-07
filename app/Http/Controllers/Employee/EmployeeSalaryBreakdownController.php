@@ -43,7 +43,9 @@ class EmployeeSalaryBreakdownController extends Controller
             abort(403, 'Unauthorized access to other profiles.');
         }
 
-        return view('employee.salary_breakdown.form', compact('employee', 'title', 'section', 'sub_section', 'section_url'));
+        $payScales = \App\Models\Company\PayScale::with(['grade', 'payGroup'])->where('status', 'active')->get();
+
+        return view('employee.salary_breakdown.form', compact('employee', 'title', 'section', 'sub_section', 'section_url', 'payScales'));
     }
 
     /**
@@ -131,11 +133,13 @@ class EmployeeSalaryBreakdownController extends Controller
         }
 
         $employeeData = EmployeeSalaryBreakdown::where('employee_id', $id)->first();
+        $payScales = \App\Models\Company\PayScale::with(['grade', 'payGroup'])->where('status', 'active')->get();
+
         $title = 'Edit Employee Salary Breakdown';
         $section = 'Employees';
         $sub_section = 'Salary Breakdown / Edit';
         $section_url = route('employee.index');
-        return view('employee.salary_breakdown.form', compact('employeeData', 'employee', 'title', 'section', 'sub_section', 'section_url'));
+        return view('employee.salary_breakdown.form', compact('employeeData', 'employee', 'title', 'section', 'sub_section', 'section_url', 'payScales'));
     }
 
     /**

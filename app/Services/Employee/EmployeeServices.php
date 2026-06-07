@@ -705,8 +705,9 @@ class EmployeeServices
 
     public function employeeSalaryBreakdownValidation($request)
     {
-        $validated = $request->validate([
+        $rules = [
             'employee_id' => 'required|exists:employees,id',
+            'pay_scale_id' => 'required|exists:pay_scales,id',
 
             'basic_salary' => 'required|numeric|min:0',
             'house_allowance' => 'nullable|numeric|min:0',
@@ -723,10 +724,22 @@ class EmployeeServices
             'other_earnings_percentage' => 'nullable|numeric|min:0',
 
             'gross_salary' => 'required|numeric|min:0',
-        ],
-            [
-                'employee_id.required' => 'The employee field is required.',
-                'employee_id.exists' => 'The selected employee does not exist.',
+        ];
+
+        // Custom validation for Pay Scale range
+        if ($request->has('pay_scale_id') && $request->has('gross_salary')) {
+            $payScale = \App\Models\Company\PayScale::find($request->pay_scale_id);
+            if ($payScale) {
+                $rules['gross_salary'] .= "|numeric|min:{$payScale->min_salary}|max:{$payScale->max_salary}";
+            }
+        }
+
+        $validated = $request->validate($rules, [
+            'employee_id.required' => 'The employee field is required.',
+            'employee_id.exists' => 'The selected employee does not exist.',
+            'pay_scale_id.required' => 'Please select a Pay Scale.',
+            'gross_salary.min' => 'Gross salary is lower than the minimum allowed for this pay scale.',
+            'gross_salary.max' => 'Gross salary is higher than the maximum allowed for this pay scale.',
 
                 'basic_salary.required' => 'The basic salary is required.',
                 'basic_salary.numeric' => 'The basic salary must be a valid number.',

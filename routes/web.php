@@ -1088,6 +1088,7 @@ Route::controller(DataController::class)->middleware('auth')->group(function () 
     Route::get('get-shift-plan-details/{id}', 'getShiftPlanDetails');
     Route::get('get-roster-plan-details/{id}', 'getRosterPlanDetails');
     Route::get('get-bonus-plan-details/{id}', 'getBonusPlanDetails');
+    Route::get('get-pay-scale-details/{id}', 'getPayScaleDetails');
     Route::get('get-leave-plan-details/{id}', 'getLeavePlanDetails');
     Route::get('get-shift-details/{shift_id}', 'getShiftDetails');
 

@@ -22,12 +22,28 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group mb-3">
+                                        <label class="form-label fw-bold">Pay Scale <span class="text-danger">*</span></label>
+                                        <select class="form-select" name="pay_scale_id" id="pay_scale_id" required>
+                                            <option value="">Select Pay Scale</option>
+                                            @foreach($payScales as $scale)
+                                                <option value="{{ $scale->id }}" {{ (isset($employeeData) && $employeeData->pay_scale_id == $scale->id) || old('pay_scale_id') == $scale->id ? 'selected' : '' }}>
+                                                    {{ $scale->title }} ({{ \App\HelperClass::getCurrency() }} {{ number_format($scale->min_salary, 0) }} - {{ number_format($scale->max_salary, 0) }})
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
                                         <label class="form-label fw-bold">Gross Salary<span class="text-danger">*</span></label>
                                         <input type="number" step="1"
                                                class="form-control"
                                                name="gross_salary" id="gross_salary"
                                                value="{{isset($employeeData) ? $employeeData->gross_salary : old('gross_salary')}}"
                                                placeholder="30000" required>
+                                        <div id="payscale_hint" class="small mt-1 text-muted d-none">
+                                            Pay Scale Range: <span id="min_val">0</span> - <span id="max_val">0</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -234,13 +250,62 @@
     </div>
     @include('employee.partials.preview_modal')
 
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const grossInput = document.getElementById('gross_salary');
+            const payscaleSelect = document.getElementById('pay_scale_id');
+            const payscaleHint = document.getElementById('payscale_hint');
+            const minValSpan = document.getElementById('min_val');
+            const maxValSpan = document.getElementById('max_val');
             const percentageInputs = document.querySelectorAll('input[name$="_percentage"]');
             const form = document.querySelector('form');
 
+            let currentMin = 0;
+            let currentMax = 0;
+
+            // --- Pay Scale Details Fetching ---
+            payscaleSelect.addEventListener('change', function() {
+                const id = this.value;
+                if (!id) {
+                    payscaleHint.classList.add('d-none');
+                    currentMin = 0;
+                    currentMax = 0;
+                    return;
+                }
+
+                axios.get(`/get-pay-scale-details/${id}`)
+                    .then(res => {
+                        const scale = res.data.data;
+                        currentMin = parseFloat(scale.min_salary);
+                        currentMax = parseFloat(scale.max_salary);
+                        
+                        minValSpan.innerText = currentMin.toLocaleString();
+                        maxValSpan.innerText = currentMax.toLocaleString();
+                        payscaleHint.classList.remove('d-none');
+                        
+                        validateGrossRange();
+                    });
+            });
+
+            // Trigger on load if editing
+            if (payscaleSelect.value) {
+                payscaleSelect.dispatchEvent(new Event('change'));
+            }
+
+            function validateGrossRange() {
+                const gross = parseFloat(grossInput.value) || 0;
+                if (currentMin > 0 && (gross < currentMin || gross > currentMax)) {
+                    grossInput.classList.add('is-invalid');
+                    return false;
+                } else {
+                    grossInput.classList.remove('is-invalid');
+                    return true;
+                }
+            }
+
             function validateAndCalculate(event) {
+                validateGrossRange();
                 const grossSalary = parseFloat(grossInput.value) || 0;
                 let totalAllocated = 0;
 
@@ -316,6 +381,18 @@
 
             // Final Submission Check with SweetAlert
             form.addEventListener('submit', function(e) {
+                const gross = parseFloat(grossInput.value) || 0;
+                
+                if (currentMin > 0 && (gross < currentMin || gross > currentMax)) {
+                    e.preventDefault();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Salary Range Violation',
+                        text: `The Gross Salary (${gross}) must be between ${currentMin} and ${currentMax} for the selected Pay Scale.`,
+                    });
+                    return;
+                }
+
                 let total = 0;
                 percentageInputs.forEach(i => total += parseFloat(i.value) || 0);
 
@@ -334,4 +411,3 @@
         });
     </script>
 @endsection
-
