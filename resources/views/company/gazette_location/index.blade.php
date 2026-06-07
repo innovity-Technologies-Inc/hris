@@ -7,7 +7,7 @@
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-header">
-                    @can('company-branches.create')
+                    @can('gazette-locations.create')
                     <a type="button" class="btn btn-warning btn-sm" href="{{route('gazette_locations.create')}}">
                         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                     </a>
@@ -55,13 +55,13 @@
 
                                     @endif
                                     <td>
-                                        @can('company-branches.edit')
+                                        @can('gazette-locations.edit')
                                         <a type="button" class="btn btn-primary btn-sm" href="{{route('gazette_locations.edit', $item->id)}}">
                                             <i style="height: 12px; width: 12px" data-feather="edit"></i>
                                         </a>
                                         @endcan
 
-                                        @can('company-branches.delete')
+                                        @can('gazette-locations.delete')
                                         <form action="{{route('gazette_locations.delete', $item->id)}}" method="POST" style="display: inline-block">
                                             @csrf
                                             @method('DELETE')

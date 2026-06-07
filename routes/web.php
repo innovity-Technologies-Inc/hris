@@ -96,7 +96,7 @@ Route::prefix('company-setup')->middleware('auth')->group(function () {
         Route::middleware('permission:groups.view')->group(function () {
             Route::get('groups', 'groupIndex')->name('groups.index');
         });
-        Route::middleware('permission:groups.create')->group(function () {
+        Route::middleware('permission:groups.create|groups.edit')->group(function () {
             Route::post('groups/save', 'groupSave')->name('groups.save');
         });
         Route::middleware('permission:groups.delete')->group(function () {
@@ -106,7 +106,7 @@ Route::prefix('company-setup')->middleware('auth')->group(function () {
         Route::middleware('permission:company-types.view')->group(function () {
             Route::get('company-types', 'companyTypeIndex')->name('company_types.index');
         });
-        Route::middleware('permission:company-types.create')->group(function () {
+        Route::middleware('permission:company-types.create|company-types.edit')->group(function () {
             Route::post('company-types/save', 'companyTypeSave')->name('company_types.save');
         });
         Route::middleware('permission:company-types.delete')->group(function () {
@@ -115,13 +115,13 @@ Route::prefix('company-setup')->middleware('auth')->group(function () {
 
         Route::middleware('permission:companies.view')->group(function () {
             Route::get('companies', 'companyIndex')->name('companies.index');
-            Route::get('companies/edit/{id}', 'companyEdit')->name('companies.edit');
         });
         Route::middleware('permission:companies.create')->group(function () {
             Route::get('companies/create', 'companyCreate')->name('companies.create');
             Route::post('companies/store', 'companyStore')->name('companies.store');
         });
         Route::middleware('permission:companies.edit')->group(function () {
+            Route::get('companies/edit/{id}', 'companyEdit')->name('companies.edit');
             Route::put('companies/{id}/update', 'companyUpdate')->name('companies.update');
         });
         Route::middleware('permission:companies.delete')->group(function () {
@@ -430,8 +430,10 @@ Route::prefix('employees')->middleware('auth')->group(function () {
         });
     });
 
-    Route::get('reports', [\App\Http\Controllers\Employee\EmployeeReportController::class, 'index'])->name('employee.reports');
-    Route::get('reports/drill-down', [\App\Http\Controllers\Employee\EmployeeReportController::class, 'getHierarchyDrillDown'])->name('employee.reports.drill_down');
+    Route::middleware('permission:employee-management.analytics')->group(function () {
+        Route::get('reports', [\App\Http\Controllers\Employee\EmployeeReportController::class, 'index'])->name('employee.reports');
+        Route::get('reports/drill-down', [\App\Http\Controllers\Employee\EmployeeReportController::class, 'getHierarchyDrillDown'])->name('employee.reports.drill_down');
+    });
 
     // Employee ID Card Routes
     Route::controller(\App\Http\Controllers\Employee\EmployeeIdCardController::class)->group(function () {
@@ -901,16 +903,20 @@ Route::prefix('settings')->middleware('auth')->group(function () {
 
     // Transfer Settings Routes
     Route::controller(\App\Http\Controllers\Setting\TransferSettingController::class)->group(function () {
-        Route::middleware('permission:general-settings.view')->group(function () {
+        Route::middleware('permission:transfer-settings.view')->group(function () {
             Route::get('transfer-settings', 'index')->name('setting.transfer.index');
+        });
+        Route::middleware('permission:transfer-settings.edit')->group(function () {
             Route::post('transfer-settings/update', 'update')->name('setting.transfer.update');
         });
     });
 
     // Notification Settings Routes
     Route::controller(\App\Http\Controllers\Setting\NotificationSettingController::class)->group(function () {
-        Route::middleware('permission:general-settings.view')->group(function () {
+        Route::middleware('permission:notification-settings.view')->group(function () {
             Route::get('notification-settings', 'index')->name('setting.notification_settings.index');
+        });
+        Route::middleware('permission:notification-settings.create|notification-settings.edit')->group(function () {
             Route::post('notification-settings/store', 'store')->name('setting.notification_settings.store');
         });
     });
