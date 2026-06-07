@@ -24,19 +24,54 @@ class UserAndRoleSeeder extends Seeder
         $deptManagerRole = Role::firstOrCreate(['name' => 'Department Manager', 'guard_name' => 'web']);
         $employeeRole = Role::firstOrCreate(['name' => 'Employee', 'guard_name' => 'web']);
 
-        // 2. Create/Update the "Group" Super Admin User
+        // 2. Create/Update the "Group" Super Admin Employee Profile
+        $adminEmployee = Employee::updateOrCreate(
+            ['work_email' => 'admin@example.com'],
+            [
+                'applicant_id' => 'ADMIN001',
+                'system_id' => 'SYSADMIN001',
+                'punch_card_no' => 'PADMIN001',
+                'first_name' => 'System',
+                'last_name' => 'Administrator',
+                'full_name' => 'System Administrator',
+                'father_name' => 'N/A',
+                'mother_name' => 'N/A',
+                'gender' => 'Male',
+                'religion' => 'N/A',
+                'nationality' => 'N/A',
+                'present_address' => json_encode(['address' => 'N/A']),
+                'date_of_birth' => '1980-01-01',
+                'personal_mobile' => '0000000000',
+                'status' => 'active',
+            ]
+        );
+
+        // 3. Create/Update the "Group" Super Admin User and link to Employee
         $adminUser = User::updateOrCreate(
             ['email' => 'admin@example.com'],
             [
                 'name' => 'System Administrator',
                 'password' => Hash::make('12345678'),
                 'user_type' => 'Group',
+                'employee_id' => $adminEmployee->id,
                 'status' => 'active',
             ]
         );
         $adminUser->assignRole($superAdminRole);
+        $adminEmployee->update(['user_id' => $adminUser->id]);
 
-        $this->command->info('Super Admin user created with user_type: Group');
+        // 4. Create/Update Office Info for Super Admin
+        \App\Models\Employee\EmployeeOfficeInfo::updateOrCreate(
+            ['employee_id' => $adminEmployee->id],
+            [
+                'emp_type' => 'permanent',
+                'date_of_join' => '2020-01-01',
+                'current_company_id' => \App\Models\Company\Company::first()?->id,
+                'current_business_unit_id' => \App\Models\Company\CompanyLocation::first()?->id,
+            ]
+        );
+
+        $this->command->info('Super Admin user created and linked to Employee profile.');
 
         // 3. Create Specific Test User
         $testEmployee = Employee::first(); // Use the first seeded employee
@@ -96,6 +131,9 @@ class UserAndRoleSeeder extends Seeder
                 }
             }
         });
+
+        // 5. Explicitly restore Admin user_type if it was overwritten
+        User::where('email', 'admin@example.com')->update(['user_type' => 'Group']);
 
         $this->command->info('Provisioned employees with login info and roles.');
     }
