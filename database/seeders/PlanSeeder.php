@@ -44,7 +44,6 @@ class PlanSeeder extends Seeder
         DB::table('leave_encashment_plans')->truncate();
         $plans = [
             ['title' => 'Standard Leave Encashment', 'description' => 'Standard policy with 10 days min balance', 'encashment_basis' => 'basic', 'min_balance_to_maintain' => 10, 'max_encashable_days_per_year' => 30, 'encashment_rate' => 1.00, 'status' => 'active'],
-            ['title' => 'Executive Encashment Policy', 'description' => 'Premium policy on gross salary', 'encashment_basis' => 'gross', 'min_balance_to_maintain' => 5, 'max_encashable_days_per_year' => 60, 'encashment_rate' => 1.00, 'status' => 'active'],
         ];
         foreach ($plans as $plan) {
             DB::table('leave_encashment_plans')->insert(array_merge($plan, ['created_at' => now(), 'updated_at' => now()]));

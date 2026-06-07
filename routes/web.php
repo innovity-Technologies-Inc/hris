@@ -822,14 +822,12 @@ Route::prefix('plans')->middleware('auth')->group(function () {
                 Route::get('/', 'index')->name('plan.leave_encashment_plans.index');
             });
             Route::middleware('permission:leave-encashment-plans.create')->group(function () {
+                Route::get('create', 'create')->name('plan.leave_encashment_plans.create');
                 Route::post('store', 'store')->name('plan.leave_encashment_plans.store');
             });
             Route::middleware('permission:leave-encashment-plans.edit')->group(function () {
-                Route::get('edit/{id}', 'edit')->name('plan.leave_encashment_plans.edit');
-                Route::put('update/{id}', 'update')->name('plan.leave_encashment_plans.update');
-            });
-            Route::middleware('permission:leave-encashment-plans.delete')->group(function () {
-                Route::delete('delete/{id}', 'destroy')->name('plan.leave_encashment_plans.delete');
+                Route::get('edit', 'edit')->name('plan.leave_encashment_plans.edit');
+                Route::put('update', 'update')->name('plan.leave_encashment_plans.update');
             });
         });
     });
