@@ -398,6 +398,14 @@
                                     href='{{ route('plan.bonus_plans.index') }}'>Bonus & Reward Plans</a>
                             </li>
                             @endif
+
+                            @if(auth()->user()->can('penalty-plans.view'))
+                            <li>
+                                <a class='tp-link @if (Route::is('plan.penalty_plans.*')) menuitem-active @endif'
+                                    href='{{ route('plan.penalty_plans.index') }}'>Penalty Plans</a>
+                            </li>
+                            @endif
+
                             @if($canAllowancePlans)
                             <li>
                                 <a class='tp-link @if (Route::is('plan.allowance_plans.*')) menuitem-active @endif'

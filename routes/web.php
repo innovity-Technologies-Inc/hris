@@ -797,6 +797,25 @@ Route::prefix('plans')->middleware('auth')->group(function () {
         });
     });
 
+    Route::prefix('penalty-plans')->group(function () {
+        Route::controller(\App\Http\Controllers\Plan\PenaltyPlanController::class)->group(function(){
+            Route::middleware('permission:penalty-plans.view')->group(function () {
+                Route::get('/', 'index')->name('plan.penalty_plans.index');
+            });
+            Route::middleware('permission:penalty-plans.create')->group(function () {
+                Route::post('store', 'store')->name('plan.penalty_plans.store');
+            });
+            Route::middleware('permission:penalty-plans.edit')->group(function () {
+                Route::get('edit/{id}', 'edit')->name('plan.penalty_plans.edit');
+                // The Axios form uses PUT for updates
+                Route::put('update/{id}', 'update')->name('plan.penalty_plans.update');
+            });
+            Route::middleware('permission:penalty-plans.delete')->group(function () {
+                Route::delete('delete/{id}', 'destroy')->name('plan.penalty_plans.delete');
+            });
+        });
+    });
+
     Route::prefix('deduction-plans')->group(function () {
         Route::controller(DeductionPlanController::class)->group(function(){
             Route::middleware('permission:deduction-plan.view')->group(function () {
