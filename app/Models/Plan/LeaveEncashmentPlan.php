@@ -4,8 +4,12 @@ namespace App\Models\Plan;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class LeaveEncashmentPlan extends Model
 {
+    use Userstamps, Auditable;
     protected $table = 'leave_encashment_plans';
 
     protected $fillable = [

@@ -4,8 +4,12 @@ namespace App\Models\Setting;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class Notification extends Model
 {
+    use Userstamps, Auditable;
     protected $fillable = [
         'user_type',
         'user_id',

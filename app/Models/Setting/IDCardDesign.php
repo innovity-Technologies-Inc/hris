@@ -5,8 +5,12 @@ namespace App\Models\Setting;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class IDCardDesign extends Model
 {
+    use Userstamps, Auditable;
     protected $table = 'id_card_designs';
 
     protected $fillable = [

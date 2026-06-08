@@ -6,8 +6,12 @@ use App\Models\Employee\Employee;
 use App\Models\Plan\LeavePlan;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class LeaveCount extends Model
 {
+    use Userstamps, Auditable;
     protected $table = 'leaves_count';
     protected $fillable = ['plan_id', 'employee_id', 'leave_taken'];
 

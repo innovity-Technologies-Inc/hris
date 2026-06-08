@@ -6,8 +6,12 @@ use App\Models\Employee\Employee;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class VehicleDriver extends Model
 {
+    use Userstamps, Auditable;
     protected $table = 'vehicle_drivers';
 
     protected $fillable = [

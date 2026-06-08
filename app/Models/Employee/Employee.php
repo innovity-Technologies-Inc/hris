@@ -10,8 +10,12 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use App\Models\User;
 use App\Traits\OrganizationScoped;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class Employee extends Model
 {
+    use Userstamps, Auditable;
     use HasFactory, OrganizationScoped;
 
     protected $fillable = [

@@ -6,8 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Company\PayScale;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class SalaryGrade extends Model
 {
+    use Userstamps, Auditable;
     protected $table = 'salary_grades';
     protected $fillable = ['grade_code', 'grade_name', 'status'];
 

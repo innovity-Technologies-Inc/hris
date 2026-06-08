@@ -5,8 +5,12 @@ namespace App\Models\Employee;
 use App\Models\Plan\ShiftPlan;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class EmployeeShiftPlan extends Model
 {
+    use Userstamps, Auditable;
     protected $table = 'employee_shift_plans';
 
     protected $fillable = [

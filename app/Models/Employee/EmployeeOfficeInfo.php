@@ -14,8 +14,12 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Traits\OrganizationScoped;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class EmployeeOfficeInfo extends Model
 {
+    use Userstamps, Auditable;
     use HasFactory, OrganizationScoped;
 
     protected $fillable = [

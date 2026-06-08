@@ -6,8 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class EmployeeId extends Model
 {
+    use Userstamps, Auditable;
     protected $table = 'employee_ids';
 
     protected $fillable = [

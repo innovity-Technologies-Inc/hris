@@ -5,8 +5,12 @@ namespace App\Models\Employee;
 use App\Models\Plan\RosterPlan;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class EmployeeRosterPlan extends Model
 {
+    use Userstamps, Auditable;
     protected $table = 'employee_roster_plans';
 
     protected $fillable = [

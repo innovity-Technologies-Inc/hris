@@ -9,8 +9,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 use App\Traits\OrganizationScoped;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class VehicleRequisition extends Model
 {
+    use Userstamps, Auditable;
     use OrganizationScoped;
     protected $table = 'vehicle_requisitions';
 

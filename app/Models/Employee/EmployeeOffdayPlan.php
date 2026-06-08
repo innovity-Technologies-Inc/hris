@@ -5,8 +5,12 @@ namespace App\Models\Employee;
 use App\Models\Plan\OffDayPlan;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class EmployeeOffdayPlan extends Model
 {
+    use Userstamps, Auditable;
     protected $table = 'employee_offday_plans';
 
     protected $fillable = [

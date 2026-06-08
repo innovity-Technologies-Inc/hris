@@ -4,8 +4,12 @@ namespace App\Models\Plan;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class RosterPlan extends Model
 {
+    use Userstamps, Auditable;
     protected $fillable = [
         'name', 'short_name', 'swapping', 'description', 'status', 'first_shift_id', 'second_shift_id', 'third_shift_id'
     ];

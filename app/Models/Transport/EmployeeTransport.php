@@ -15,8 +15,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 use App\Traits\OrganizationScoped;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class EmployeeTransport extends Model
 {
+    use Userstamps, Auditable;
     use OrganizationScoped;
     protected $table = 'employee_transports';
 

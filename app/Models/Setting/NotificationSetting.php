@@ -4,8 +4,12 @@ namespace App\Models\Setting;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class NotificationSetting extends Model
 {
+    use Userstamps, Auditable;
     protected $fillable = [
         'birthday_days',
         'visa_days',

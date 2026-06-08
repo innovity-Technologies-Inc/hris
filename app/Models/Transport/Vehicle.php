@@ -6,8 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class Vehicle extends Model
 {
+    use Userstamps, Auditable;
     protected $table = 'vehicles';
 
     protected $fillable = [

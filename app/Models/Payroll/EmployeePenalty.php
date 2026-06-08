@@ -6,8 +6,12 @@ use App\Models\Employee\Employee;
 use App\Models\Plan\PenaltyPlan;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class EmployeePenalty extends Model
 {
+    use Userstamps, Auditable;
     protected $table = 'employee_penalties';
 
     protected $fillable = [

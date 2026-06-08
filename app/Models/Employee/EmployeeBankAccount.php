@@ -7,8 +7,12 @@ use App\Models\Company\Branch;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\OrganizationScoped;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class EmployeeBankAccount extends Model
 {
+    use Userstamps, Auditable;
     use OrganizationScoped;
     protected $table = 'employee_bank_accounts';
 

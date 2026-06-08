@@ -4,8 +4,12 @@ namespace App\Models\Company;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class JobCreation extends Model
 {
+    use Userstamps, Auditable;
     protected $fillable = [
         'designation_id',
         'department_id',

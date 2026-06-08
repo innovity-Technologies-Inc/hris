@@ -12,8 +12,12 @@ use App\Models\Company\Department;
 use App\Models\Company\Section;
 use App\Models\Employee\Employee;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class OrganizationStructure extends Model
 {
+    use Userstamps, Auditable;
     use HasFactory;
 
     protected $table = 'organization_structure';

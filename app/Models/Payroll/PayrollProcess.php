@@ -13,8 +13,12 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Traits\OrganizationScoped;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class PayrollProcess extends Model
 {
+    use Userstamps, Auditable;
     use OrganizationScoped;
     protected $table = 'payroll_process';
 

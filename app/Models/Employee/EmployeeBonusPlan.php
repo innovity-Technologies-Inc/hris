@@ -5,8 +5,12 @@ namespace App\Models\Employee;
 use App\Models\Plan\BonusPlan;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class EmployeeBonusPlan extends Model
 {
+    use Userstamps, Auditable;
     protected $fillable = [
         'employee_id',
         'plan_id',

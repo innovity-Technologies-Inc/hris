@@ -16,8 +16,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class Transfer extends Model
 {
+    use Userstamps, Auditable;
     use HasFactory, OrganizationScoped;
 
     protected $fillable = [

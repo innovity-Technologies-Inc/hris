@@ -8,8 +8,12 @@ use App\Models\Structure\OrganizationStructure;
 use App\Traits\OrganizationScoped;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class Division extends Model
 {
+    use Userstamps, Auditable;
     use OrganizationScoped;
     protected $fillable = [
         'name',

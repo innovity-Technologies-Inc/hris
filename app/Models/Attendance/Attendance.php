@@ -10,8 +10,12 @@ use App\Models\Plan\ShiftPlan;
 use App\Models\Plan\OTPlan;
 use App\Models\Plan\OffDayPlan;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class Attendance extends Model
 {
+    use Userstamps, Auditable;
     use OrganizationScoped;
     protected $table = 'attendance';
     protected $fillable = [

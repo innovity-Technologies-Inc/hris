@@ -6,8 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Crypt;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class MailSetting extends Model
 {
+    use Userstamps, Auditable;
     protected $table = 'mail_settings';
     protected $fillable = [
         'app_name',

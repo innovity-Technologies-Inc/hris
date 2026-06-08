@@ -5,8 +5,12 @@ namespace App\Models\Transport;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class AllocationRoute extends Model
 {
+    use Userstamps, Auditable;
     protected $table = 'allocation_routes';
 
     protected $fillable = [

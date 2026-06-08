@@ -8,8 +8,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class VehicleAllocation extends Model
 {
+    use Userstamps, Auditable;
     protected $table = 'vehicle_allocations';
 
     protected $fillable = [

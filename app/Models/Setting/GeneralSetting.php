@@ -4,8 +4,12 @@ namespace App\Models\Setting;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class GeneralSetting extends Model
 {
+    use Userstamps, Auditable;
     protected $table = 'general_settings';
     protected $fillable = [
         'name', 'currency', 'logo_light', 'logo_dark', 'favicon', 'branch_status', 'division_status',

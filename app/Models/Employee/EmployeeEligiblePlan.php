@@ -7,8 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Traits\OrganizationScoped;
 
+use App\Traits\Userstamps;
+use App\Traits\Auditable;
+
 class EmployeeEligiblePlan extends Model
 {
+    use Userstamps, Auditable;
     use HasFactory, OrganizationScoped;
 
     protected $table = 'employee_eligible_plans';
