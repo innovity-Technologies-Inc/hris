@@ -47,16 +47,45 @@
                                 View Details
                             </button>
                             <div class="collapse mt-2" id="log-details-{{ $log->id }}">
-                                @if(isset($log->properties['old']))
-                                    <div class="mb-1">
-                                        <strong>Old:</strong>
-                                        <pre class="bg-light p-1 mb-0 rounded" style="font-size: 11px;">{{ json_encode($log->properties['old'], JSON_PRETTY_PRINT) }}</pre>
-                                    </div>
-                                @endif
-                                @if(isset($log->properties['attributes']))
-                                    <div>
-                                        <strong>New:</strong>
-                                        <pre class="bg-light p-1 mb-0 rounded" style="font-size: 11px;">{{ json_encode($log->properties['attributes'], JSON_PRETTY_PRINT) }}</pre>
+                                @php
+                                    $attributes = $log->properties['attributes'] ?? [];
+                                    $old = $log->properties['old'] ?? [];
+                                    
+                                    $formatValue = function($val) {
+                                        if (is_array($val) || is_object($val)) return json_encode($val);
+                                        if (is_bool($val)) return $val ? 'True' : 'False';
+                                        if (is_null($val) || $val === '') return '<em class="text-muted">Empty</em>';
+                                        return htmlspecialchars($val);
+                                    };
+                                @endphp
+                                @if(!empty($attributes) || !empty($old))
+                                    <div class="table-responsive">
+                                        <table class="table table-sm table-bordered mb-0" style="font-size: 0.85rem;">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th width="30%">Field</th>
+                                                    @if(!empty($old)) <th width="35%">Old Value</th> @endif
+                                                    @if(!empty($attributes)) <th width="35%">New Value</th> @endif
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @php
+                                                    $allKeys = array_unique(array_merge(array_keys($attributes), array_keys($old)));
+                                                @endphp
+                                                @foreach($allKeys as $key)
+                                                    @if(in_array($key, ['created_at', 'updated_at', 'created_by', 'updated_by'])) @continue @endif
+                                                    <tr>
+                                                        <td class="fw-semibold text-muted">{{ str_replace('_', ' ', Str::title($key)) }}</td>
+                                                        @if(!empty($old))
+                                                            <td class="text-danger"><del>{!! $formatValue($old[$key] ?? null) !!}</del></td>
+                                                        @endif
+                                                        @if(!empty($attributes))
+                                                            <td class="text-success">{!! $formatValue($attributes[$key] ?? null) !!}</td>
+                                                        @endif
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
                                     </div>
                                 @endif
                             </div>
