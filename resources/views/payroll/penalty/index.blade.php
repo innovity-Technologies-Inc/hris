@@ -54,7 +54,7 @@
                     <div class="modal-body p-4">
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Employee <span class="text-danger">*</span></label>
-                            <select class="form-select select2_list" name="employee_id" id="employee_id" required>
+                            <select class="form-select penalty-employee-select" name="employee_id" id="employee_id" required>
                                 <option value="">Select Employee</option>
                                 @foreach($employees as $emp)
                                     <option value="{{ $emp->id }}">{{ $emp->full_name }} ({{ $emp->applicant_id ?? $emp->system_id }})</option>
@@ -115,6 +115,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('penaltyForm');
     const planSelect = document.getElementById('penalty_plan_id');
     const amountInput = document.getElementById('penalty_amount');
+
+    // Initialize Select2 for Employee Dropdown
+    if ($.fn.select2) {
+        $('#employee_id').select2({
+            dropdownParent: $('#penaltyModal'),
+            width: '100%',
+            placeholder: 'Select Employee'
+        });
+    }
 
     // Auto-fill amount based on plan
     planSelect.addEventListener('change', function() {
