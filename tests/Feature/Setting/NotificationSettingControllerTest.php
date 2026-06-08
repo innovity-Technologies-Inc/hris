@@ -8,7 +8,7 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     $this->admin = User::factory()->create([
-        'user_type' => 'Company',
+        'user_type' => 'company',
     ]);
 });
 

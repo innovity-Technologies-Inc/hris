@@ -23,7 +23,7 @@ beforeEach(function () {
     ]);
 
     // Create a non-employee user (Group type receives everything)
-    $this->hr = User::factory()->create(['user_type' => 'Group']);
+    $this->hr = User::factory()->create(['user_type' => 'group']);
 });
 
 it('triggers birthday notifications for non-employees', function () {
@@ -59,7 +59,7 @@ it('triggers visa expiry notifications for employee and non-employees', function
 
     $employeeUser = User::factory()->create([
         'employee_id' => $employee->id,
-        'user_type' => 'Employee'
+        'user_type' => 'employee'
     ]);
 
     Artisan::call('app:check-alerts');
