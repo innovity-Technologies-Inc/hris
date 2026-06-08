@@ -4,6 +4,7 @@ namespace App\Models\Company;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Company\PayScale;
 
 class PayGroup extends Model
 {
@@ -15,4 +16,21 @@ class PayGroup extends Model
         'salary_processing_day',
         'status',
     ];
+
+    public function payScales()
+    {
+        return $this->hasMany(PayScale::class, 'pay_group_id');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($payGroup) {
+            // Delete related pay scales
+            $payGroup->payScales()->each(function ($payScale) {
+                $payScale->delete();
+            });
+        });
+    }
 }

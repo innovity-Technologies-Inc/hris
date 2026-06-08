@@ -11,7 +11,7 @@ beforeEach(function () {
     $this->employee = Employee::factory()->create(['id' => 1]);
 
     $this->employeeUser = User::factory()->create([
-        'user_type' => 'Employee',
+        'user_type' => 'employee',
         'employee_id' => 1
     ]);
 });

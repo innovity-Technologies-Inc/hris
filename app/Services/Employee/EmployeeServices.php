@@ -761,31 +761,42 @@ class EmployeeServices
                 'other_earnings.numeric' => 'The other earnings must be a valid number.',
                 'other_earnings.min' => 'The other earnings must be a positive value.',
 
-                'basic_salary_percentage.required' => 'The basic salary is required.',
-                'basic_salary_percentage.numeric' => 'The basic salary must be a valid number.',
-                'basic_salary_percentage.min' => 'The basic salary must be a positive value.',
+                'basic_salary_percentage.required' => 'The basic salary percentage is required.',
+                'basic_salary_percentage.numeric' => 'The basic salary percentage must be a valid number.',
+                'basic_salary_percentage.min' => 'The basic salary percentage must be a positive value.',
 
-                'house_allowance_percentage.numeric' => 'The house allowance must be a valid number.',
-                'house_allowance_percentage.min' => 'The house allowance must be a positive value.',
+                'house_allowance_percentage.numeric' => 'The house allowance percentage must be a valid number.',
+                'house_allowance_percentage.min' => 'The house allowance percentage must be a positive value.',
 
-                'transport_allowance_percentage.numeric' => 'The transport allowance must be a valid number.',
-                'transport_allowance_percentage.min' => 'The transport allowance must be a positive value.',
+                'transport_allowance_percentage.numeric' => 'The transport allowance percentage must be a valid number.',
+                'transport_allowance_percentage.min' => 'The transport allowance percentage must be a positive value.',
 
-                'food_allowance_percentage.numeric' => 'The food allowance must be a valid number.',
-                'food_allowance_percentage.min' => 'The food allowance must be a positive value.',
+                'food_allowance_percentage.numeric' => 'The food allowance percentage must be a valid number.',
+                'food_allowance_percentage.min' => 'The food allowance percentage must be a positive value.',
 
-                'medical_allowance_percentage.numeric' => 'The medical allowance must be a valid number.',
-                'medical_allowance_percentage.min' => 'The medical allowance must be a positive value.',
+                'medical_allowance_percentage.numeric' => 'The medical allowance percentage must be a valid number.',
+                'medical_allowance_percentage.min' => 'The medical allowance percentage must be a positive value.',
 
-
-                'other_earnings_percentage.numeric' => 'The other earnings must be a valid number.',
-                'other_earnings_percentage.min' => 'The other earnings must be a positive value.',
+                'other_earnings_percentage.numeric' => 'The other earnings percentage must be a valid number.',
+                'other_earnings_percentage.min' => 'The other earnings percentage must be a positive value.',
 
                 'gross_salary.required' => 'The gross salary is required.',
                 'gross_salary.numeric' => 'The gross salary must be a valid number.',
-                'gross_salary.min' => 'The gross salary must be a positive value.',
+        ]);
 
+        // Total Percentage Validation (Final Defense)
+        $totalPercentage = (float)$request->basic_salary_percentage +
+            (float)$request->house_allowance_percentage +
+            (float)$request->transport_allowance_percentage +
+            (float)$request->food_allowance_percentage +
+            (float)$request->medical_allowance_percentage +
+            (float)$request->other_earnings_percentage;
+
+        if (round($totalPercentage, 2) != 100.00) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'basic_salary_percentage' => ["The total salary breakdown percentage must be exactly 100%. Currently it is {$totalPercentage}%."],
             ]);
+        }
 
         return $validated;
     }

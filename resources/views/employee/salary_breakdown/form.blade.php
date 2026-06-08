@@ -1,7 +1,32 @@
 @extends('structure.master')
 @section('content')
+    @php
+        $initialTotalPct = 0;
+        $initialBasicAmount = 0;
+        $initialBenefitsAmount = 0;
+        $initialGrossAmount = 0;
+
+        if (isset($employeeData)) {
+            $initialGrossAmount = floatval($employeeData->gross_salary);
+            $initialTotalPct = floatval($employeeData->basic_salary_percentage) + 
+                                floatval($employeeData->house_allowance_percentage) + 
+                                floatval($employeeData->transport_allowance_percentage) + 
+                                floatval($employeeData->food_allowance_percentage) + 
+                                floatval($employeeData->medical_allowance_percentage) + 
+                                floatval($employeeData->other_earnings_percentage);
+            
+            $initialBasicAmount = floatval($employeeData->basic_salary);
+            $initialBenefitsAmount = floatval($employeeData->house_allowance) + 
+                                     floatval($employeeData->transport_allowance) + 
+                                     floatval($employeeData->food_allowance) + 
+                                     floatval($employeeData->medical_allowance) + 
+                                     floatval($employeeData->other_earnings);
+        }
+        $isSubmitDisabled = (round($initialTotalPct, 2) != 100);
+    @endphp
+
     <div class="mt-4">
-            <form class="" method="POST" enctype="multipart/form-data"
+            <form id="salaryBreakdownForm" class="" method="POST" enctype="multipart/form-data"
                   action="{{isset($employeeData) ? route('employee.salary_breakdown.update', $employeeData->id) : route('employee.salary_breakdown.store') }}">
                 @if(isset($employeeData))
                     @method('PUT')
@@ -195,7 +220,7 @@
                                     <div class="card bg-light">
                                         <div class="card-body text-center">
                                             <h6 class="text-muted mb-2">Basic Salary</h6>
-                                            <h4 class="text-success fw-bold mb-0" id="basic_salary_display">0.00</h4>
+                                            <h4 class="text-success fw-bold mb-0" id="basic_salary_display">{{ number_format($initialBasicAmount, 2) }}</h4>
                                         </div>
                                     </div>
                                 </div>
@@ -203,7 +228,7 @@
                                     <div class="card bg-light">
                                         <div class="card-body text-center">
                                             <h6 class="text-muted mb-2">Total Benefits</h6>
-                                            <h4 class="text-success fw-bold mb-0" id="total_benefits_display">0.00</h4>
+                                            <h4 class="text-success fw-bold mb-0" id="total_benefits_display">{{ number_format($initialBenefitsAmount, 2) }}</h4>
                                         </div>
                                     </div>
                                 </div>
@@ -211,7 +236,7 @@
                                     <div class="card bg-primary text-white">
                                         <div class="card-body text-center">
                                             <h6 class="text-white mb-2">Gross Salary</h6>
-                                            <h4 class="text-white fw-bold mb-0" id="gross_salary_display">0.00</h4>
+                                            <h4 class="text-white fw-bold mb-0" id="gross_salary_display">{{ number_format($initialGrossAmount, 2) }}</h4>
                                         </div>
                                     </div>
                                 </div>
@@ -225,12 +250,24 @@
                         <div class="col-12">
                             <div class="alert {{ isset($employeeData) ? 'alert-light' : 'alert-warning' }} border d-flex justify-content-between align-items-center">
                                 <span><i class="bi bi-info-circle"></i> Note: Total allocation must equal 100%.</span>
-                                <span class="fs-5">Total: <span id="total_pct_display">0%</span></span>
+                                <span class="fs-5">Total: <span id="total_pct_display" class="fw-bold {{ $isSubmitDisabled ? 'text-danger' : 'text-success' }}">{{ $initialTotalPct }}%</span></span>
                             </div>
                         </div>
                     </div>
 
             <!-- Form Actions -->
+            @php
+                $initialTotalPct = 0;
+                if (isset($employeeData)) {
+                    $initialTotalPct = floatval($employeeData->basic_salary_percentage) + 
+                                       floatval($employeeData->house_allowance_percentage) + 
+                                       floatval($employeeData->transport_allowance_percentage) + 
+                                       floatval($employeeData->food_allowance_percentage) + 
+                                       floatval($employeeData->medical_allowance_percentage) + 
+                                       floatval($employeeData->other_earnings_percentage);
+                }
+                $isSubmitDisabled = (round($initialTotalPct, 2) != 100);
+            @endphp
             <div class="row mt-4">
                 <div class="col-12">
                     <div class="d-flex justify-content-end gap-2">
@@ -240,7 +277,7 @@
                         <button type="button" id="previewBtn" class="btn btn-info text-white">
                             <i class="mdi mdi-eye me-1"></i> Preview
                         </button>
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" id="saveSalaryBtn" class="btn btn-primary" {{ $isSubmitDisabled ? 'disabled' : '' }}>
                             <i class="bi bi-check-circle"></i> Save Salary Breakdown
                         </button>
                     </div>
@@ -249,20 +286,26 @@
         </form>
     </div>
     @include('employee.partials.preview_modal')
+@endsection
 
+@push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('salaryBreakdownForm');
+            if (!form) return;
+
             const grossInput = document.getElementById('gross_salary');
             const payscaleSelect = document.getElementById('pay_scale_id');
             const payscaleHint = document.getElementById('payscale_hint');
             const minValSpan = document.getElementById('min_val');
             const maxValSpan = document.getElementById('max_val');
             const percentageInputs = document.querySelectorAll('input[name$="_percentage"]');
-            const form = document.querySelector('form');
+            const saveBtn = document.getElementById('saveSalaryBtn');
 
             let currentMin = 0;
             let currentMax = 0;
+            let currentTotalPct = 0;
 
             // --- Pay Scale Details Fetching ---
             payscaleSelect.addEventListener('change', function() {
@@ -307,32 +350,34 @@
             function validateAndCalculate(event) {
                 validateGrossRange();
                 const grossSalary = parseFloat(grossInput.value) || 0;
-                let totalAllocated = 0;
+                let totalAllocatedExcludingCurrent = 0;
 
                 // 1. Calculate sum of other fields
                 percentageInputs.forEach(input => {
                     if (event && event.target === input) return;
-                    totalAllocated += parseFloat(input.value) || 0;
+                    totalAllocatedExcludingCurrent += parseFloat(input.value) || 0;
                 });
 
                 // 2. Validate the active input with SweetAlert
-                if (event && event.target.name.includes('_percentage')) {
+                if (event && event.target.name && event.target.name.includes('_percentage')) {
                     let newVal = parseFloat(event.target.value) || 0;
 
-                    if (totalAllocated + newVal > 100) {
-                        const maxAllowed = 100 - totalAllocated;
-                        event.target.value = maxAllowed > 0 ? maxAllowed : 0;
+                    if (totalAllocatedExcludingCurrent + newVal > 100) {
+                        const maxAllowed = Math.max(0, 100 - totalAllocatedExcludingCurrent);
+                        event.target.value = maxAllowed;
 
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'Limit Exceeded',
-                            text: `Total percentage cannot exceed 100%. This field has been capped at ${event.target.value}%`,
-                            confirmButtonColor: '#3085d6'
-                        });
+                        if (window.Swal) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Limit Exceeded',
+                                text: `Total percentage cannot exceed 100%. This field has been capped at ${maxAllowed}%`,
+                                confirmButtonColor: '#3085d6'
+                            });
+                        }
                     }
                 }
 
-                // 3. Update all dollar amounts
+                // 3. Update all dollar amounts and total percentage
                 let runningTotalPercent = 0;
                 let totalBenefits = 0;
                 let basicAmount = 0;
@@ -356,7 +401,10 @@
                     }
                 });
 
-                updateSummary(basicAmount, totalBenefits, grossSalary, runningTotalPercent);
+                // Use rounding to handle floating point issues
+                currentTotalPct = Math.round(runningTotalPercent * 100) / 100;
+
+                updateSummary(basicAmount, totalBenefits, grossSalary, currentTotalPct);
             }
 
             function updateSummary(basic, benefits, gross, totalPct) {
@@ -369,7 +417,13 @@
                 const pctDisplay = document.getElementById('total_pct_display');
                 if(pctDisplay) {
                     pctDisplay.textContent = totalPct + "%";
-                    pctDisplay.className = (totalPct === 100) ? "fw-bold text-success" : "fw-bold text-danger";
+                    if (Math.abs(totalPct - 100) < 0.001) {
+                        pctDisplay.className = "fw-bold text-success";
+                        if(saveBtn) saveBtn.disabled = false;
+                    } else {
+                        pctDisplay.className = "fw-bold text-danger";
+                        if(saveBtn) saveBtn.disabled = true;
+                    }
                 }
             }
 
@@ -379,35 +433,42 @@
                 input.addEventListener('input', validateAndCalculate);
             });
 
-            // Final Submission Check with SweetAlert
+            // Final Submission Check
             form.addEventListener('submit', function(e) {
                 const gross = parseFloat(grossInput.value) || 0;
                 
                 if (currentMin > 0 && (gross < currentMin || gross > currentMax)) {
                     e.preventDefault();
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Salary Range Violation',
-                        text: `The Gross Salary (${gross}) must be between ${currentMin} and ${currentMax} for the selected Pay Scale.`,
-                    });
+                    if (window.Swal) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Salary Range Violation',
+                            text: `The Gross Salary (${gross}) must be between ${currentMin} and ${currentMax} for the selected Pay Scale.`,
+                        });
+                    }
                     return;
                 }
 
-                let total = 0;
-                percentageInputs.forEach(i => total += parseFloat(i.value) || 0);
+                // Explicitly recalculate on submit
+                let finalTotal = 0;
+                percentageInputs.forEach(i => finalTotal += parseFloat(i.value) || 0);
+                finalTotal = Math.round(finalTotal * 100) / 100;
 
-                if (total !== 100) {
+                if (Math.abs(finalTotal - 100) > 0.001) {
                     e.preventDefault();
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Incomplete Breakdown',
-                        text: `The total must be exactly 100%. Currently at ${total}%`,
-                        footer: 'Please adjust your percentages before saving.'
-                    });
+                    if (window.Swal) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Incomplete Breakdown',
+                            text: `The total must be exactly 100%. Currently at ${finalTotal}%`,
+                            footer: 'Please adjust your percentages before saving.'
+                        });
+                    }
                 }
             });
 
-            validateAndCalculate();
+            // Initial calculation (forces a validation check)
+            validateAndCalculate({});
         });
     </script>
-@endsection
+@endpush

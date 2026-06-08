@@ -160,5 +160,30 @@
 - `it can store a new pay group`: ✅ PASSED
 - `it can update a pay group`: ✅ PASSED
 - `it can delete a pay group`: ✅ PASSED
+**Status**: ✅ SUCCESS
+
+## 2026-06-08 (PayScale Deletion Fix)
+
+**Goal**: Fix issue where PayScales couldn't be deleted after deleting the related PayGroup.
+
+**Exact Command**: `php artisan test tests/Feature/Company/PayGroupCascadeDeleteTest.php --env=testing`
+
+**Results**:
+- `it deletes related pay scales when pay group is deleted`: ✅ PASSED
+- `it allows deleting orphaned pay scales`: ✅ PASSED
+- `it prevents deleting pay scale if used by employee`: ✅ PASSED
+- `Fixed PayScales list view crash on null relationships`: ✅ VERIFIED
+
+## 2026-06-08 (Salary Breakdown Validation Hardening)
+
+**Goal**: Ensure it is strictly impossible to submit a salary breakdown < 100% total, preventing fast-click bypasses and bypassing via enter key.
+
+**Exact Command**: `Manual UI Verification`
+
+**Results**:
+- `Submit button disabled by default on load`: ✅ VERIFIED
+- `Pre-populate Footer summary blocks using server data`: ✅ VERIFIED
+- `Recalculate total immediately on form submit event`: ✅ VERIFIED
+- `Backend validation final defense check added`: ✅ VERIFIED
 
 **Status**: ✅ SUCCESS

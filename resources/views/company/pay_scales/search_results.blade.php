@@ -21,10 +21,10 @@
                     <th scope="row">{{ $sl++ }}</th>
                     <td class="fw-bold">{{ $scale->title }}</td>
                     <td>
-                        <span class="text-dark">{{ $scale->grade->grade_code }}</span>
+                        <span class="text-dark">{{ $scale->grade?->grade_code ?? 'N/A' }}</span>
                     </td>
                     <td>
-                        {{ $scale->payGroup->title }}
+                        {{ $scale->payGroup?->title ?? 'N/A' }}
                     </td>
                     <td>{{ \App\HelperClass::getCurrency() }} {{ number_format($scale->min_salary, 2) }}</td>
                     <td>{{ \App\HelperClass::getCurrency() }} {{ number_format($scale->max_salary, 2) }}</td>
