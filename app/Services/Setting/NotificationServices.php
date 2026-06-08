@@ -2,6 +2,7 @@
 
 namespace App\Services\Setting;
 
+use App\Enums\UserType;
 use App\Models\Setting\Notification;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
