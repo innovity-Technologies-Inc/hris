@@ -187,3 +187,16 @@
 - `Backend validation final defense check added`: ✅ VERIFIED
 
 **Status**: ✅ SUCCESS
+
+## 2026-06-08 (Application-Wide Audit Logging & Userstamps)
+
+**Goal**: Implement `created_by` and `updated_by` tracking across all tables, configure `spatie/laravel-activitylog` for automated event logging, and provide an Audit Logs UI module.
+
+**Exact Command**: `php artisan config:clear; php artisan test tests/Feature/Setting/AuditLogTest.php --env=testing`
+
+**Results**:
+- `it automatically tracks created by and updated by`: ✅ PASSED
+- `it creates an activity log when a model is created or updated`: ✅ PASSED
+- `admin can view the audit logs page`: ✅ PASSED
+
+**Status**: ✅ SUCCESS

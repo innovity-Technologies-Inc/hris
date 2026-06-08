@@ -762,6 +762,12 @@
                                    href='{{ route('setting.notification_settings.index') }}'>Notification Alerts</a>
                             </li>
                             @endif
+                            @if(auth()->user()->can('audit-logs.view'))
+                            <li>
+                                <a class='tp-link @if (Route::is('audit_logs.*')) menuitem-active @endif'
+                                   href='{{ route('audit_logs.index') }}'>Audit Logs</a>
+                            </li>
+                            @endif
                             @if($canRoleManagement)
                             <li>
                                 <a class='tp-link @if (Route::is('setting.roles.*')) menuitem-active @endif'

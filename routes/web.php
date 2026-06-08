@@ -946,6 +946,11 @@ Route::prefix('settings')->middleware('auth')->group(function () {
         });
     });
 
+    // Audit Logs Route
+    Route::controller(\App\Http\Controllers\Setting\AuditLogController::class)->group(function () {
+        Route::get('audit-logs', 'index')->name('audit_logs.index')->middleware('permission:audit-logs.view');
+    });
+
     // Notification Settings Routes
     Route::controller(\App\Http\Controllers\Setting\NotificationSettingController::class)->group(function () {
         Route::middleware('permission:notification-settings.view')->group(function () {

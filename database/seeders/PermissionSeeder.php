@@ -149,6 +149,7 @@ class PermissionSeeder extends Seeder
                     ['name' => 'SMTP', 'route' => 'settings.mail_settings', 'actions' => ['view', 'edit']],
                     ['name' => 'DB Backup', 'route' => 'db_backup', 'actions' => ['download']],
                     ['name' => 'Role Management', 'route' => 'settings.roles.index', 'actions' => ['view', 'create', 'edit', 'delete',]],
+                    ['name' => 'Audit Logs', 'route' => 'audit_logs.index', 'actions' => ['view']],
                 ]
             ],
         ];
