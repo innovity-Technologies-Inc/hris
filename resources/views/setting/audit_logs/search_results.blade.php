@@ -40,15 +40,26 @@
                     <td>
                         <small class="text-muted d-block">{{ class_basename($log->subject_type) }}</small>
                         @php
-                            $subjectName = '-';
+                            $subjectName = null;
                             $profileLink = null;
                             $subject = $log->subject;
-                            
+                            $basename = class_basename($log->subject_type);
+
+                            // Try to get a meaningful name
                             if ($subject) {
+                                // 1. Direct name fields
                                 $subjectName = $subject->full_name ?? $subject->name ?? $subject->department_name ?? $subject->title ?? $subject->grade_name ?? null;
                                 
+                                // 2. If no direct name, check for employee relationship
+                                if (!$subjectName) {
+                                    $emp = $subject->employee ?? $subject->getEmployee ?? null;
+                                    if ($emp) {
+                                        $subjectName = $emp->full_name . " (" . $basename . ")";
+                                    }
+                                }
+
                                 // Profile Link logic
-                                if (class_basename($log->subject_type) === 'Employee') {
+                                if ($basename === 'Employee') {
                                     $profileLink = route('employee.profile.general_informations', $subject->id);
                                 } elseif (isset($subject->employee_id)) {
                                     $profileLink = route('employee.profile.general_informations', $subject->employee_id);
@@ -60,6 +71,11 @@
                                 
                                 if (isset($attrs['employee_id'])) {
                                      $profileLink = route('employee.profile.general_informations', $attrs['employee_id']);
+                                     
+                                     // If we don't have a subject name but we have an employee link, make it descriptive
+                                     if(!$subjectName) {
+                                         $subjectName = $basename . " (Deleted)";
+                                     }
                                 }
                             }
                         @endphp

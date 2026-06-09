@@ -12,12 +12,17 @@ class AuditLogController extends Controller
 {
     public function index(Request $request)
     {
+        $query = Activity::with(['causer', 'subject' => function($morphTo) {
+            $morphTo->morphWith([
+                \App\Models\Employee\EmployeeSalaryBreakdown::class => ['getEmployee'],
+                \App\Models\Employee\EmployeeOfficeInfo::class => ['employee'],
+                \App\Models\Employee\EmployeeEligiblePlan::class => ['employee'],
+                \App\Models\Employee\EmployeeBankAccount::class => ['getEmployee'],
+                \App\Models\Employee\EmployeeNominee::class => ['employee'],
+            ]);
+        }])->latest();
+
         if ($request->ajax()) {
-            $query = Activity::with(['causer', 'subject'])->latest();
-            
-            // Allow searching by exact model/subject class or causer ID if needed, 
-            // FlexSearch will handle generic string searches automatically if configured.
-            
             $flexSearch = new FlexSearch($query);
             $logs = $flexSearch->paginate(15);
             
@@ -25,7 +30,7 @@ class AuditLogController extends Controller
             return response()->json(['html' => $view]);
         }
         
-        $logs = Activity::with(['causer', 'subject'])->latest()->paginate(15);
+        $logs = $query->paginate(15);
         return view('setting.audit_logs.index', compact('logs'));
     }
 }
