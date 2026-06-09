@@ -13,7 +13,7 @@ use App\Models\User;
 use Spatie\Permission\Models\Permission;
 
 beforeEach(function () {
-    $this->user = User::factory()->create(['user_type' => 'Group']);
+    $this->user = User::factory()->create(['user_type' => 'group']);
     
     Permission::firstOrCreate(['name' => 'employee-management.view', 'guard_name' => 'web']);
     $this->user->givePermissionTo('employee-management.view');
