@@ -82,7 +82,8 @@ class EmployeeProfileController extends Controller
         try{
             $employee = $this->empServices->employeeInfoSave($request, $validated);
         }catch(\Exception $e){
-            Log::error($e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeProfileController@generalInfoStore: ' . $e->getMessage(), ['exception' => $e]);
+
             return redirect()->back()->with([
                 'message' => $e->getMessage(),
                 'alert-type' => 'error'
@@ -169,7 +170,8 @@ class EmployeeProfileController extends Controller
                 'data' => $employee
             ]);
         } catch (\Exception $e) {
-            Log::error('Error in getDetailedProfileJson: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeProfileController@getDetailedProfileJson: ' . $e->getMessage(), ['exception' => $e]);
+
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
@@ -201,7 +203,8 @@ class EmployeeProfileController extends Controller
                 ->header('Content-Type', 'application/pdf')
                 ->header('Content-Disposition', 'inline; filename="' . $fileName . '"');
         } catch (\Exception $e) {
-            Log::error('Detailed Profile PDF generation failed: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeProfileController@downloadProfilePdf: ' . $e->getMessage(), ['exception' => $e]);
+
             return redirect()->back()->with([
                 'alert-type' => 'error',
                 'message' => 'Failed to generate PDF: ' . $e->getMessage()
@@ -227,7 +230,8 @@ class EmployeeProfileController extends Controller
         try{
             $this->empServices->employeeInfoSave($request,$validated, $id);
         }catch(\Exception $e){
-            Log::error($e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeProfileController@generalInfoUpdate: ' . $e->getMessage(), ['exception' => $e]);
+
             return redirect()->back()->with([
                 'message' => $e->getMessage(),
                 'alert-type' => 'error'
@@ -255,7 +259,8 @@ class EmployeeProfileController extends Controller
                 'alert-type' => 'success'
             ]);
         }catch (\Exception $e){
-            Log::error($e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeProfileController@generalInfoImport: ' . $e->getMessage(), ['exception' => $e]);
+
             return redirect()->back()->with([
                 'message' => 'Something Went Wrong',
                 'alert-type' => 'error'
@@ -291,7 +296,8 @@ class EmployeeProfileController extends Controller
         try{
             $employee = $this->empServices->employeeOfficeInfoSave($request, $validated);
         }catch(\Exception $e){
-            Log::error($e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeProfileController@officeInfoStore: ' . $e->getMessage(), ['exception' => $e]);
+
             return redirect()->back()->with([
                 'message' => $e->getMessage(),
                 'alert-type' => 'error'
@@ -375,7 +381,8 @@ class EmployeeProfileController extends Controller
         try{
             $this->empServices->employeeOfficeInfoSave($request, $validated, $employee_office_info);
         }catch(\Exception $e){
-            Log::error($e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeProfileController@officeInfoUpdate: ' . $e->getMessage(), ['exception' => $e]);
+
             return redirect()->back()->with([
                 'message' => $e->getMessage(),
                 'alert-type' => 'error'
@@ -429,7 +436,8 @@ class EmployeeProfileController extends Controller
                 'alert-type' => 'success'
             ]);
         }catch (\Exception $e){
-            Log::error($e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeProfileController@officeInfoImport: ' . $e->getMessage(), ['exception' => $e]);
+
             return redirect()->back()->with([
                 'message' => $e->getMessage(). 'Contact with your administrator',
                 'alert-type' => 'error'
@@ -483,7 +491,8 @@ class EmployeeProfileController extends Controller
                 'message' => 'Employee not found'
             ], 404);
         } catch (\Exception $e) {
-            Log::error('Error toggling employee status: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeProfileController@toggleStatus: ' . $e->getMessage(), ['exception' => $e]);
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to update employee status: ' . $e->getMessage()
@@ -502,7 +511,8 @@ class EmployeeProfileController extends Controller
                 'alert-type' => 'success'
             ]);
         }catch(\Exception $e){
-            Log::error('Error updating login info: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeProfileController@updateLoginInfo: ' . $e->getMessage(), ['exception' => $e]);
+
             return redirect()->back()->with([
                 'message' => $e->getMessage(),
                 'alert-type' => 'error'
@@ -519,6 +529,7 @@ class EmployeeProfileController extends Controller
                 'alert-type' => 'success'
             ]);
         } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeProfileController@storeAccount: ' . $e->getMessage(), ['exception' => $e]);
             return redirect()->back()->with([
                 'message' => $e->getMessage(),
                 'alert-type' => 'error'

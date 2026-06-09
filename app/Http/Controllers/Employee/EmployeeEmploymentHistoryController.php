@@ -49,7 +49,8 @@ class EmployeeEmploymentHistoryController extends Controller
                 'alert-type' => 'success'
             ]);
         } catch (\Exception $e) {
-            Log::error('Employment History Store Error: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeEmploymentHistoryController@store: ' . $e->getMessage(), ['exception' => $e]);
+
             return redirect()->back()->with([
                 'message' => 'Something went wrong while saving employment history.',
                 'alert-type' => 'error'
@@ -119,7 +120,8 @@ class EmployeeEmploymentHistoryController extends Controller
                 'alert-type' => 'success'
             ]);
         } catch (\Exception $e) {
-            Log::error('Employment History Update Error: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeEmploymentHistoryController@update: ' . $e->getMessage(), ['exception' => $e]);
+
             return redirect()->back()->with([
                 'message' => 'Something went wrong while updating employment history.',
                 'alert-type' => 'error'

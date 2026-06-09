@@ -64,7 +64,8 @@ class EmployeeSalaryBreakdownController extends Controller
             $employee = $this->empServices->employeeSalaryBreakdownInfoSave($validated);
 
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeSalaryBreakdownController@store: ' . $e->getMessage(), ['exception' => $e]);
+
             return redirect()->back()->with([
                 'message' => 'Something went wrong. Please try again later.',
                 'alert-type' => 'error'
@@ -162,6 +163,7 @@ class EmployeeSalaryBreakdownController extends Controller
                 ->with(['message' => 'Employee salary breakdown updated successfully.',
                     'alert-type' => 'success']);
         } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeSalaryBreakdownController@update: ' . $e->getMessage(), ['exception' => $e]);
             return redirect()
                 ->back()
                 ->with(['message' => 'Something went wrong. Please try again later.',
@@ -186,7 +188,8 @@ class EmployeeSalaryBreakdownController extends Controller
                 'alert-type' => 'success'
             ]);
         }catch (\Exception $e){
-            Log::error($e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeSalaryBreakdownController@import: ' . $e->getMessage(), ['exception' => $e]);
+
             return redirect()->back()->with([
                 'message' => $e->getMessage(). 'Contact with your administrator',
                 'alert-type' => 'error'

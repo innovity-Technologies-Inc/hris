@@ -321,6 +321,7 @@ class EmployeeServices
         try {
             $employee = Employee::find($id);
         } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeServices@getEmployeeById: ' . $e->getMessage(), ['exception' => $e]);
             return redirect()->back()->with([
                 'message' => 'Data Not Found',
                 'alert-type' => 'error'
@@ -869,7 +870,8 @@ class EmployeeServices
             try {
                 \Illuminate\Support\Facades\Mail::to($employee->work_email)->send(new \App\Mail\Employee\ProfileStatusMail($employee, $status));
             } catch (\Exception $e) {
-                Log::error('Failed to send status toggle email: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeServices@toggleEmployeeStatus: ' . $e->getMessage(), ['exception' => $e]);
+
             }
         }
 
@@ -932,6 +934,7 @@ class EmployeeServices
                         ['employee_id' => $employee->id]
                     );
                 } catch (\Exception $ne) {
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeServices@createEmployeeAccount: ' . $ne->getMessage(), ['exception' => $ne]);
                     Log::warning('System notification failed during account creation: ' . $ne->getMessage());
                 }
 
@@ -943,6 +946,7 @@ class EmployeeServices
                         $request->password
                     ));
                 } catch (\Exception $me) {
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeServices@createEmployeeAccount: ' . $me->getMessage(), ['exception' => $me]);
                     Log::warning('Email delivery failed during account creation: ' . $me->getMessage());
                     // We don't re-throw here so the transaction can still commit and the account is created
                 }
@@ -951,9 +955,7 @@ class EmployeeServices
             });
 
         } catch (\Exception $e) {
-            Log::error('Error creating employee account: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeServices@createEmployeeAccount: ' . $e->getMessage(), ['exception' => $e]);
             throw $e;
         }
     }

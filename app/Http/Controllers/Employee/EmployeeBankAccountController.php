@@ -159,6 +159,11 @@ class EmployeeBankAccountController extends Controller
                 ->with(['message' => 'Employee bank account details updated successfully.',
                     'alert-type' => 'success']);
         } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeBankAccountController@update: ' . $e->getMessage(), [
+                'exception' => $e,
+                'id' => $id,
+                'request' => $request->except(['password', 'password_confirmation'])
+            ]);
             return redirect()
                 ->back()
                 ->withInput()
@@ -187,7 +192,10 @@ class EmployeeBankAccountController extends Controller
                 'alert-type' => 'success'
             ]);
         }catch (\Exception $e){
-            Log::error($e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeBankAccountController@import: ' . $e->getMessage(), [
+                'exception' => $e,
+                'request' => $request->except(['file'])
+            ]);
             return redirect()->back()->with([
                 'message' => $e->getMessage(). 'Contact with your administrator',
                 'alert-type' => 'error'

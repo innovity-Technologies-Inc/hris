@@ -35,7 +35,8 @@ class NIDVerificationServices
             ];
 
         } catch (\Exception $e) {
-            Log::error("NID Verification failed for employee ID: {$employeeId}. Error: " . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Error in NIDVerificationServices@verifyNID: ' . $e->getMessage(), ['exception' => $e]);
+
             return [
                 'success' => false,
                 'message' => 'NID verification failed: ' . $e->getMessage()

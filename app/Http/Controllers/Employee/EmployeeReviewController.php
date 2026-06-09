@@ -82,7 +82,8 @@ class EmployeeReviewController extends Controller
                 'alert-type' => 'success'
             ]);
         } catch (\Exception $e) {
-            Log::error('Profile Review Error: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeReviewController@review: ' . $e->getMessage(), ['exception' => $e]);
+
             return redirect()->back()->with([
                 'message' => 'Something went wrong while reviewing the profile.',
                 'alert-type' => 'error'

@@ -45,7 +45,10 @@ class EmployeeEducationExperienceTrainingController extends Controller
         try{
             $employeeEduData = $this->empServices->employeeEducationInfoSave($validated);
         }catch(\Exception $e){
-            Log::error($e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeEducationExperienceTrainingController@store: ' . $e->getMessage(), [
+                'exception' => $e,
+                'request' => $request->all()
+            ]);
             return redirect()->back()->with([
                 'message' => 'Something Went Wrong',
                 'alert-type' => 'error'
@@ -113,7 +116,11 @@ class EmployeeEducationExperienceTrainingController extends Controller
             $employeeEduData = $this->empServices->employeeEducationInfoSave($validated, $employeeEduData);
             $employee = $employeeEduData->employee_id;
         }catch(\Exception $e){
-            Log::error($e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeEducationExperienceTrainingController@update: ' . $e->getMessage(), [
+                'exception' => $e,
+                'id' => $id,
+                'request' => $request->all()
+            ]);
             return redirect()->back()->with([
                 'message' => 'Something Went Wrong',
                 'alert-type' => 'error'
@@ -137,7 +144,10 @@ class EmployeeEducationExperienceTrainingController extends Controller
                 'alert-type' => 'success'
             ]);
         }catch (\Exception $e){
-            Log::error($e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeEducationExperienceTrainingController@import: ' . $e->getMessage(), [
+                'exception' => $e,
+                'request' => $request->except(['file'])
+            ]);
             return redirect()->back()->with([
                 'message' => $e->getMessage(). 'Contact with your administrator',
                 'alert-type' => 'error'

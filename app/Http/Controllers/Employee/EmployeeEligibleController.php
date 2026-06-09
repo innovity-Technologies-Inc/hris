@@ -65,7 +65,10 @@ class EmployeeEligibleController extends Controller
             $employee = $this->empServices->employeeEligiblePanInfoSave($validated);
 
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeEligibleController@store: ' . $e->getMessage(), [
+                'exception' => $e,
+                'request' => $request->all()
+            ]);
             return redirect()->back()->with([
                     'message' => 'Something went wrong. Please try again later.',
                     'alert-type' => 'error'
@@ -162,6 +165,7 @@ class EmployeeEligibleController extends Controller
                 ->with(['message' => 'Employee eligible plans updated successfully.',
                     'alert-type' => 'success']);
         } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeEligibleController@update: ' . $e->getMessage(), ['exception' => $e]);
             return redirect()
                 ->back()
                 ->withInput()
@@ -187,7 +191,8 @@ class EmployeeEligibleController extends Controller
                 'alert-type' => 'success'
             ]);
         }catch (\Exception $e){
-            Log::error($e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeEligibleController@import: ' . $e->getMessage(), ['exception' => $e]);
+
             return redirect()->back()->with([
                 'message' => $e->getMessage(). 'Contact with your administrator',
                 'alert-type' => 'error'

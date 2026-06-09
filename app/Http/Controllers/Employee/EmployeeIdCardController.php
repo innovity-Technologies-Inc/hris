@@ -63,6 +63,7 @@ class EmployeeIdCardController extends Controller
                 ->with('alert-type', 'success');
 
         } catch (Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeIdCardController@generate: ' . $e->getMessage(), ['exception' => $e]);
             return redirect()->back()
                 ->with('message', 'Failed to generate ID card: ' . $e->getMessage())
                 ->with('alert-type', 'error');
@@ -92,6 +93,7 @@ class EmployeeIdCardController extends Controller
                 ->with('alert-type', 'success');
 
         } catch (Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeIdCardController@regenerate: ' . $e->getMessage(), ['exception' => $e]);
             return redirect()->back()
                 ->with('message', 'Failed to regenerate ID card: ' . $e->getMessage())
                 ->with('alert-type', 'error');
@@ -120,6 +122,7 @@ class EmployeeIdCardController extends Controller
             return $this->idCardService->streamPdf($employeeIdCard);
 
         } catch (Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeIdCardController@view: ' . $e->getMessage(), ['exception' => $e]);
             return redirect()->back()
                 ->with('error', 'Failed to view ID card: ' . $e->getMessage());
         }
@@ -147,6 +150,7 @@ class EmployeeIdCardController extends Controller
             return $this->idCardService->downloadPdf($employeeIdCard);
 
         } catch (Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeIdCardController@download: ' . $e->getMessage(), ['exception' => $e]);
             return redirect()->back()
                 ->with('error', 'Failed to download ID card: ' . $e->getMessage());
         }
@@ -172,6 +176,7 @@ class EmployeeIdCardController extends Controller
                 ->header('Content-Type', 'text/html');
 
         } catch (Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeIdCardController@preview: ' . $e->getMessage(), ['exception' => $e]);
             return redirect()->back()
                 ->with('error', 'Failed to preview ID card: ' . $e->getMessage());
         }
@@ -198,6 +203,7 @@ class EmployeeIdCardController extends Controller
                 ->with('alert-type', 'success');
 
         } catch (Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeIdCardController@deactivate: ' . $e->getMessage(), ['exception' => $e]);
             return redirect()->back()
                 ->with('message', 'Failed to deactivate ID card: ' . $e->getMessage())
                 ->with('alert-type', 'error');
@@ -247,6 +253,7 @@ class EmployeeIdCardController extends Controller
             ]);
 
         } catch (Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeIdCardController@status: ' . $e->getMessage(), ['exception' => $e]);
             return response()->json([
                 'error' => $e->getMessage()
             ], 400);

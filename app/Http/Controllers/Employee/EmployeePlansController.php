@@ -229,7 +229,8 @@ class EmployeePlansController extends Controller
                 }
 
         }catch (\Exception $e){
-            Log::error($e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Error in EmployeePlansController@assignPlan: ' . $e->getMessage(), ['exception' => $e]);
+
             return redirect()->back()->with([
                 'message' => 'Something Went Wrong, Try Again Later',
                 'alert-type' => 'error',

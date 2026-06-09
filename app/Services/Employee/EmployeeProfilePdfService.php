@@ -82,7 +82,8 @@ class EmployeeProfilePdfService
                 ->timeout(config('browsershot.timeout', 60))
                 ->pdf();
         } catch (Exception $e) {
-            Log::error('Browsershot PDF generation failed: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeProfilePdfService@generateDetailedProfilePdf: ' . $e->getMessage(), ['exception' => $e]);
+
             throw new Exception('PDF generation failed: ' . $e->getMessage());
         }
     }

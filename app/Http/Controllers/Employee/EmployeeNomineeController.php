@@ -50,7 +50,8 @@ class EmployeeNomineeController extends Controller
         try{
             $employee = $this->empServices->employeeNomineeInfoSave($request, $validated);
         }catch(\Exception $e){
-            Log::error($e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeNomineeController@store: ' . $e->getMessage(), ['exception' => $e]);
+
             return redirect()->back()->with([
                 'message' => $e->getMessage(),
                 'alert-type' => 'error'
@@ -104,6 +105,7 @@ class EmployeeNomineeController extends Controller
                 ->with(['message' => 'Employee nominee information updated successfully.',
                     'alert-type' => 'success']);
         } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeNomineeController@update: ' . $e->getMessage(), ['exception' => $e]);
             return redirect()
                 ->back()
                 ->withInput()
@@ -147,7 +149,8 @@ class EmployeeNomineeController extends Controller
                 'alert-type' => 'success'
             ]);
         }catch (\Exception $e){
-            Log::error($e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Error in EmployeeNomineeController@import: ' . $e->getMessage(), ['exception' => $e]);
+
             return redirect()->back()->with([
                 'message' => $e->getMessage(). 'Contact with your administrator',
                 'alert-type' => 'error'
