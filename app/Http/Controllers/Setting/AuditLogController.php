@@ -13,7 +13,7 @@ class AuditLogController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $query = Activity::with('causer')->latest();
+            $query = Activity::with(['causer', 'subject'])->latest();
             
             // Allow searching by exact model/subject class or causer ID if needed, 
             // FlexSearch will handle generic string searches automatically if configured.
@@ -25,7 +25,7 @@ class AuditLogController extends Controller
             return response()->json(['html' => $view]);
         }
         
-        $logs = Activity::with('causer')->latest()->paginate(15);
+        $logs = Activity::with(['causer', 'subject'])->latest()->paginate(15);
         return view('setting.audit_logs.index', compact('logs'));
     }
 }

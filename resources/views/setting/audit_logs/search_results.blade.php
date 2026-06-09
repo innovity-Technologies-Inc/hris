@@ -39,7 +39,39 @@
                     </td>
                     <td>
                         <small class="text-muted d-block">{{ class_basename($log->subject_type) }}</small>
-                        <span class="fw-bold">ID: {{ $log->subject_id }}</span>
+                        @php
+                            $subjectName = '-';
+                            $profileLink = null;
+                            $subject = $log->subject;
+                            
+                            if ($subject) {
+                                $subjectName = $subject->full_name ?? $subject->name ?? $subject->department_name ?? $subject->title ?? $subject->grade_name ?? null;
+                                
+                                // Profile Link logic
+                                if (class_basename($log->subject_type) === 'Employee') {
+                                    $profileLink = route('employee.profile.general_informations', $subject->id);
+                                } elseif (isset($subject->employee_id)) {
+                                    $profileLink = route('employee.profile.general_informations', $subject->employee_id);
+                                }
+                            } else {
+                                // Fallback for deleted records using log properties
+                                $attrs = $log->properties['attributes'] ?? ($log->properties['old'] ?? []);
+                                $subjectName = $attrs['full_name'] ?? $attrs['name'] ?? $attrs['department_name'] ?? $attrs['title'] ?? null;
+                                
+                                if (isset($attrs['employee_id'])) {
+                                     $profileLink = route('employee.profile.general_informations', $attrs['employee_id']);
+                                }
+                            }
+                        @endphp
+
+                        @if($profileLink)
+                            <a href="{{ $profileLink }}" class="text-decoration-none fw-bold">
+                                {{ $subjectName ?? 'ID: ' . $log->subject_id }}
+                            </a>
+                        @else
+                            <span class="fw-bold">{{ $subjectName ?? 'ID: ' . $log->subject_id }}</span>
+                        @endif
+                        <span class="text-muted ms-1" style="font-size: 0.75rem;">(#{{ $log->subject_id }})</span>
                     </td>
                     <td>
                         @if($log->properties && $log->properties->count() > 0)
