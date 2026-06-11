@@ -33,7 +33,7 @@ beforeEach(function () {
     $role = Role::firstOrCreate(['name' => 'Admin', 'guard_name' => 'web']);
     $role->givePermissionTo(['general-settings.view', 'general-settings.create', 'general-settings.edit', 'general-settings.delete']);
     
-    $this->admin = User::factory()->create(['user_type' => 'Group']);
+    $this->admin = User::factory()->create(['user_type' => \App\Enums\UserType::Group]);
     $this->admin->assignRole($role);
 });
 

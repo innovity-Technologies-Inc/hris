@@ -15,7 +15,7 @@ beforeEach(function () {
 
 test('employment history view handles missing joining_date gracefully', function () {
     // 1. Create a user and employee
-    $user = User::factory()->create(['user_type' => 'Group']);
+    $user = User::factory()->create(['user_type' => \App\Enums\UserType::Group]);
     $user->givePermissionTo('employee-management.view');
     
     $employee = Employee::factory()->create();
@@ -45,7 +45,7 @@ test('employment history view handles missing joining_date gracefully', function
 });
 
 test('employment history view handles correct data correctly', function () {
-    $user = User::factory()->create(['user_type' => 'Group']);
+    $user = User::factory()->create(['user_type' => \App\Enums\UserType::Group]);
     $user->givePermissionTo('employee-management.view');
     
     $employee = Employee::factory()->create();

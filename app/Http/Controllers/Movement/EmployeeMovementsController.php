@@ -83,10 +83,10 @@ class EmployeeMovementsController extends Controller
             }
             return view('movement.form', compact(
                 'employees', 'taPlans', 'daPlans', 'statusOptions', 'title', 'section', 'sub_section', 'section_url'
-            , 'movement'));
+            , 'movement', 'isEmployee'));
         }else{
             return view('movement.form', compact(
-                'employees', 'taPlans', 'daPlans', 'statusOptions', 'title', 'section', 'sub_section', 'section_url'
+                'employees', 'taPlans', 'daPlans', 'statusOptions', 'title', 'section', 'sub_section', 'section_url', 'isEmployee'
             ));
         }
     }

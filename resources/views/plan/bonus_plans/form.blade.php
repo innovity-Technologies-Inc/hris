@@ -19,6 +19,24 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
+                        <!-- Pay Group -->
+                        <div class="col-md-12 mb-3">
+                            <label for="pay_group_id" class="form-label fw-semibold">
+                                Pay Group <span class="text-danger">*</span>
+                            </label>
+                            <select class="form-select" id="pay_group_id" name="pay_group_id" required>
+                                <option value="">Select Pay Group</option>
+                                @foreach($payGroups as $pg)
+                                    <option value="{{ $pg->id }}" {{ isset($plan) && $plan->pay_group_id == $pg->id ? 'selected' : '' }}>
+                                        {{ $pg->title }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('pay_group_id')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        
                         <!-- Bonus & Reward Plan Name -->
                         <div class="col-md-6 mb-3">
                             <label for="name" class="form-label fw-semibold">

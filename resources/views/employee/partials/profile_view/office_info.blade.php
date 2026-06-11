@@ -445,7 +445,7 @@
                                 </p>
 
                             <!-- Action Button -->
-                            @if(auth()->user()->user_type !== 'Employee')
+                            @if(auth()->user()->user_type !== \App\Enums\UserType::Employee)
                                 @can('employee-management.create')
                                 <a href="{{route('employee.office_informations.create', $employee->id)}}" class="btn btn-primary btn-lg px-5 rounded-pill">
                                     Add Information
@@ -470,7 +470,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="d-flex justify-content-end gap-2">
-                    @if(auth()->user()->user_type !== 'Employee')
+                    @if(auth()->user()->user_type !== \App\Enums\UserType::Employee)
                         @can('employee-management.edit')
                             <a href="{{ route('employee.office_informations.edit', $employee->id) }}"
                                class="btn btn-primary">

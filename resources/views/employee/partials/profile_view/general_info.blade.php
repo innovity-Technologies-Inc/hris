@@ -1,4 +1,4 @@
-@if(auth()->user()->user_type->value === 'employee' && ($employee->general_info_status === 'incomplete' || empty($employee->first_name)))
+@if(auth()->user()->user_type === \App\Enums\UserType::Employee && ($employee->general_info_status === 'incomplete' || empty($employee->first_name)))
     <!-- Only show Complete Profile button for incomplete status to Employees -->
     <div class="row">
         <div class="col-12">

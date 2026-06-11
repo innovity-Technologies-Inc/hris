@@ -15,7 +15,7 @@
             </div>
 
             @php
-                $isEmployee = auth()->user()->user_type->value === 'employee';
+                $isEmployee = auth()->user()->user_type === \App\Enums\UserType::Employee;
                 $loggedInEmployeeId = auth()->user()->employee_id;
                 $loggedInEmployeeName = auth()->user()->employee?->full_name ?? auth()->user()->name;
             @endphp

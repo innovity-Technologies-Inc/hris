@@ -46,10 +46,10 @@
             <td>
                 <div class="d-flex align-items-center">
                     <div class="avatar-circle me-2">
-                        {{ strtoupper(substr($item->generated_by, 0, 2)) }}
+                        {{ strtoupper(substr($item->generatedBy->employee->full_name ?? $item->generatedBy->name ?? 'NA', 0, 2)) }}
                     </div>
                     <div>
-                        <strong>{{ $item->generated_by ?? 'N/A'}}</strong>
+                        <strong>{{ $item->generatedBy->employee->full_name ?? $item->generatedBy->name ?? 'N/A'}}</strong>
                     </div>
                 </div>
             </td>
@@ -60,7 +60,7 @@
                         data-batch-id="{{ $item->batch_id }}"
                         data-salary-month="{{ \Carbon\Carbon::parse($item->salary_month)->format('F Y') }}"
                         data-approval-status="{{ $item->approval_status }}"
-                        data-generated-by="{{ $item->generated_by ?? 'N/A' }}"
+                        data-generated-by="{{ $item->generatedBy->employee->full_name ?? $item->generatedBy->name ?? 'N/A' }}"
                         data-company="{{ $item->getCompany->name ?? 'N/A' }}"
                         data-branch="{{ $item->getBranch->name ?? 'N/A' }}"
                         data-division="{{ $item->getDivision->name ?? 'N/A' }}"

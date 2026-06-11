@@ -35,7 +35,7 @@
                         </div>
                         <div class="ms-auto">
                             <div class="d-flex align-items-center gap-3">
-                                @if(auth()->user()->can('employee-management.edit') && auth()->user()->user_type !== 'Employee')
+                                @if(auth()->user()->can('employee-management.edit') && auth()->user()->user_type !== \App\Enums\UserType::Employee)
                                     @if($employee?->status === 'pending')
                                     <button type="button" class="btn btn-info text-white d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#reviewProfileModal">
                                         <i class="mdi mdi-clipboard-check me-1"></i> Review Profile
@@ -106,7 +106,7 @@
                     </button>
 
                     <!-- NID Verification Button -->
-                    @if(auth()->user()->can('employee-management.nid-verification') && auth()->user()->user_type !== 'Employee' && !$employee?->is_nid_verified)
+                    @if(auth()->user()->can('employee-management.nid-verification') && auth()->user()->user_type !== \App\Enums\UserType::Employee && !$employee?->is_nid_verified)
                     <button type="button" class="btn btn-info text-white d-flex align-items-center fw-semibold" data-bs-toggle="modal" data-bs-target="#nidVerificationModal">
                         <i class="mdi mdi-card-account-details-outline me-1 fs-18"></i> NID Verification
                     </button>

@@ -24,7 +24,7 @@
 
 
             <!-- System Identifiers Section -->
-            @if(auth()->user()->user_type !== 'Employee')
+            @if(auth()->user()->user_type !== \App\Enums\UserType::Employee)
             <div class="row">
                 <div class="col-12">
                     <div class="card">

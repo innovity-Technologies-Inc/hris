@@ -458,20 +458,45 @@ class OrganizationSeeder extends Seeder
         $payGroups = [
             ['id' => 1, 'title' => 'Monthly Staff', 'payroll_frequency' => 'Monthly', 'salary_processing_day' => '25', 'status' => 'active', 'created_at' => now(), 'updated_at' => now()],
             ['id' => 2, 'title' => 'Weekly Labor', 'payroll_frequency' => 'Weekly', 'salary_processing_day' => 'Sunday', 'status' => 'active', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 3, 'title' => 'Hourly Workers', 'payroll_frequency' => 'Hourly', 'salary_processing_day' => 'Daily', 'status' => 'active', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 4, 'title' => 'Daily Field Worker', 'payroll_frequency' => 'Daily', 'salary_processing_day' => '1', 'status' => 'active', 'created_at' => now(), 'updated_at' => now()],
         ];
         DB::table('pay_groups')->insert($payGroups);
 
         // --- PAY SCALES ---
         DB::table('pay_scales')->truncate();
         $payScales = [];
-        foreach ([1, 2] as $groupId) {
-            $groupTitle = $groupId == 1 ? 'Monthly Staff' : 'Weekly Labor';
-            for ($i = 1; $i <= 10; $i++) {
-                $min = 10000 + ($i * 5000);
-                $max = $min + 15000;
+        foreach ([1, 2, 3, 4] as $groupId) {
+            $groupTitle = match($groupId) {
+                1 => 'Monthly Staff',
+                2 => 'Weekly Labor',
+                3 => 'Hourly Workers',
+                4 => 'Daily Field Worker'
+            };
+            
+            // Create more pay scales for Monthly Staff
+            $limit = $groupId == 1 ? 15 : 5;
+            
+            for ($i = 1; $i <= $limit; $i++) {
+                if ($groupId == 1) { // Monthly
+                    $min = 10000 + ($i * 5000);
+                    $max = $min + 20000;
+                } elseif ($groupId == 2) { // Weekly
+                    $min = 2500 + ($i * 1000);
+                    $max = $min + 5000;
+                } elseif ($groupId == 3) { // Hourly
+                    $min = 100 + ($i * 50);
+                    $max = $min + 200;
+                } else { // Daily
+                    $min = 500 + ($i * 200);
+                    $max = $min + 1000;
+                }
+                
+                $gradeId = ($i > 20) ? 20 : $i;
+
                 $payScales[] = [
-                    'title' => "$groupTitle - G$i",
-                    'grade_id' => $i,
+                    'title' => "$groupTitle - Scale $i",
+                    'grade_id' => $gradeId,
                     'pay_group_id' => $groupId,
                     'min_salary' => $min,
                     'max_salary' => $max,

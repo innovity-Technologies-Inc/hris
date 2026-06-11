@@ -46,7 +46,7 @@
                 }
             });
 
-            @if(auth()->user()->user_type !== 'Employee')
+            @if(auth()->user()->user_type !== \App\Enums\UserType::Employee)
             $('#employeeStatusToggle').on('change', function(e) {
                 e.preventDefault();
 

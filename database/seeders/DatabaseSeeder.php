@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             EmployeeSeeder::class,
             OrganizationStructureSeeder::class,
             UserAndRoleSeeder::class,
+            AttendanceSeeder::class,
+            PenaltySeeder::class,
         ]);
     }
 }

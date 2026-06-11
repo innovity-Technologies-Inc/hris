@@ -20,7 +20,22 @@ class TransferController extends Controller
         $title = 'Career Movement Application';
         $section = 'Career Movement';
         $setting = \App\HelperClass::getTransferSetting();
-        return view('transfer.application', compact('title', 'section', 'setting'));
+        $user = auth()->user();
+        $isEmployee = $user->user_type === \App\Enums\UserType::Employee;
+        $loggedInEmployeeId = $user->employee_id;
+
+        $weights = [
+            'company' => 1,
+            'business_unit' => 2,
+            'division' => 3,
+            'department' => 4,
+            'section' => 5,
+        ];
+
+        $level = $isEmployee ? ($setting->employee_transfer_level ?? 'company') : ($setting->supervisor_transfer_level ?? 'company');
+        $levelWeight = $weights[$level] ?? 1;
+
+        return view('transfer.application', compact('title', 'section', 'setting', 'isEmployee', 'loggedInEmployeeId', 'levelWeight'));
     }
 
     public function show($id)

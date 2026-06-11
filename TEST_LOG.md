@@ -188,15 +188,26 @@
 
 **Status**: ✅ SUCCESS
 
-## 2026-06-08 (Application-Wide Audit Logging & Userstamps)
+## 2026-06-09 (Advanced Salary Generation)
 
-**Goal**: Implement `created_by` and `updated_by` tracking across all tables, configure `spatie/laravel-activitylog` for automated event logging, and provide an Audit Logs UI module.
+**Goal**: Require Pay Group selection, handle Hourly and Daily frequency calculations, prevent duplicates, and deduct approved penalties during salary processing.
 
-**Exact Command**: `php artisan config:clear; php artisan test tests/Feature/Setting/AuditLogTest.php --env=testing`
+**Exact Command**: `php artisan config:clear && vendor/bin/pest tests\Feature\PayrollAdvancedSalaryTest.php`
 
 **Results**:
-- `it automatically tracks created by and updated by`: ✅ PASSED
-- `it creates an activity log when a model is created or updated`: ✅ PASSED
-- `admin can view the audit logs page`: ✅ PASSED
+- `salary process correctly calculates hourly frequency and deducts penalties`: ✅ PASSED
+- `salary process correctly calculates daily frequency`: ✅ PASSED
+
+**Status**: ✅ SUCCESS
+
+**Goal**: Fix `Undefined variable $levelWeight` in `transfer/application.blade.php` and resolve `UserType` enum mismatches in `TransferServices` and tests.
+
+**Exact Command**: `php artisan config:clear && vendor/bin/pest tests/Feature/TransferModuleTest.php`
+
+**Results**:
+- `transfer application can be submitted and completed`: ✅ PASSED
+- `it restricts transfer logs based on organizational scope`: ✅ PASSED
+- `transfer application view loads correctly`: ✅ PASSED (Fixed `Undefined variable $levelWeight`)
+- `UserType enum mismatches in TransferServices`: ✅ FIXED
 
 **Status**: ✅ SUCCESS

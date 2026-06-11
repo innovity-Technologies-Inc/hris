@@ -55,7 +55,7 @@
                                             <input type="date" class="form-control" id="toDate" name="to"
                                                 value="{{ request('to') }}">
                                         </div>
-                                        @if(auth()->user()->user_type !== 'Employee')
+                                        @if(auth()->user()->user_type !== \App\Enums\UserType::Employee)
                                         <div class="col-md-3">
                                             <label for="statusFilter" class="form-label text-muted small fw-semibold mb-1">
                                                 Status

@@ -53,7 +53,7 @@
                                 </div>
                             </div>
 
-                            <div class="mt-4 p-4 bg-primary bg-opacity-5 rounded-4 border border-primary-subtle">
+                            <div class="mt-4 p-4 bg-primary bg-opacity-10 rounded-4 border border-primary-subtle">
                                 <h6 class="fw-bold text-primary mb-2">Note:</h6>
                                 <p class="small text-muted mb-0">Your request will undergo a multi-stage approval process by the relevant authorities. Ensure all requested data is accurate.</p>
                             </div>

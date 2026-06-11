@@ -37,7 +37,7 @@
                 @endif
 
                 @php
-                    $isEmployeeUser = auth()->user()->user_type->value === 'employee';
+                    $isEmployeeUser = auth()->user()->user_type === \App\Enums\UserType::Employee;
                 @endphp
                 @if($isEmployeeUser || auth()->user()->can('employee-management.view'))
                 <li>
@@ -50,7 +50,7 @@
 
                 <!-- Employees Menu -->
                 @php
-                    $isEmployeeType = auth()->user()->user_type->value === 'employee';
+                    $isEmployeeType = auth()->user()->user_type === \App\Enums\UserType::Employee;
                     $canViewEmployeeInfo = auth()->user()->can('employee-management.view');
                     $canReviewProfile = auth()->user()->can('employee-management.profile-review');
                     $canSearchEmployee = auth()->user()->can('employee-management.view') && !$isEmployeeType;
@@ -110,7 +110,7 @@
                                         href='{{ route('employee.import') }}'>Bulk Upload</a>
                                 </li>
                                 @endif
-                                @if(auth()->user()->can('employee-management.analytics') && auth()->user()->user_type->value !== 'Employee')
+                                @if(auth()->user()->can('employee-management.analytics') && auth()->user()->user_type !== \App\Enums\UserType::Employee)
                                 <li>
                                     <a class='tp-link @if (Route::is('employee.reports')) menuitem-active @endif'
                                         href='{{ route('employee.reports') }}'>Analytics</a>

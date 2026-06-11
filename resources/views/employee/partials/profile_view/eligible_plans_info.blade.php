@@ -552,7 +552,7 @@
                                     </p>
 
                                     <!-- Action Button -->
-                                    @if(auth()->user()->user_type !== 'Employee')
+                                    @if(auth()->user()->user_type !== \App\Enums\UserType::Employee)
                                         @can('employee-management.create')
                                         <a href="{{ route('employee.eligible_plans.create', $employee->id) }}"
                                             class="btn btn-primary btn-lg px-5 rounded-pill">
@@ -578,7 +578,7 @@
                     <div class="d-flex justify-content-end gap-2">
                         <a href="{{ route('employee.index') }}" class="btn btn-secondary">Back to List</a>
                         @if ($employeePlan)
-                            @if(auth()->user()->user_type !== 'Employee')
+                            @if(auth()->user()->user_type !== \App\Enums\UserType::Employee)
                                 @can('employee-management.edit')
                                     <a href="{{ route('employee.eligible_plans.edit', $employee->id) }}"
                                         class="btn btn-primary">Edit Plans</a>

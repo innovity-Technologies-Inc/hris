@@ -56,7 +56,7 @@ class LeavesController extends Controller
             $employees = Employee::where('status', 'active')->orderBy('full_name')->get();
         }
         
-        return view('leave.create', compact('employees', 'title', 'section', 'sub_section'));
+        return view('leave.create', compact('employees', 'title', 'section', 'sub_section', 'isEmployee'));
     }
 
     public function store(Request $request){

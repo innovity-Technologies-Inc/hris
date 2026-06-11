@@ -11,7 +11,7 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     $this->user = User::factory()->create([
-        'user_type' => 'Group'
+        'user_type' => \App\Enums\UserType::Group,
     ]);
     
     // Create permission if it doesn't exist
@@ -72,7 +72,7 @@ test('admin can fetch detailed employee profile json', function () {
 
 test('employee can fetch their own detailed profile json', function () {
     $employeeUser = User::factory()->create([
-        'user_type' => 'Employee',
+        'user_type' => \App\Enums\UserType::Employee,
         'employee_id' => $this->employee->id
     ]);
     $this->employee->update(['user_id' => $employeeUser->id]);
@@ -86,7 +86,7 @@ test('employee can fetch their own detailed profile json', function () {
 test('employee cannot fetch other employee detailed profile json', function () {
     $otherEmployee = Employee::factory()->create();
     $employeeUser = User::factory()->create([
-        'user_type' => 'Employee',
+        'user_type' => \App\Enums\UserType::Employee,
         'employee_id' => $this->employee->id
     ]);
 

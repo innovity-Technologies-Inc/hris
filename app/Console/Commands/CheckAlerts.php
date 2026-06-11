@@ -229,7 +229,7 @@ class CheckAlerts extends Command
     protected function createNotification(User $user, string $title, string $message, array $data)
     {
         Notification::create([
-            'user_type' => $user->user_type,
+            'user_type' => $user->user_type->value,
             'user_id' => $user->id,
             'title' => $title,
             'message' => $message,

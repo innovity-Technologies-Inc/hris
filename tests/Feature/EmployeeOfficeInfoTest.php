@@ -139,7 +139,7 @@ it('updates employee office info correctly', function () {
         'current_company_id' => $this->company->id,
     ];
 
-    $this->put(route('employee.office_informations.update', $officeInfo->id), $updateData)
+    $this->put(route('employee.office_informations.update', $this->employee->id), $updateData)
         ->assertStatus(302);
 
     $officeInfo->refresh();

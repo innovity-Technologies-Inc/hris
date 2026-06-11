@@ -13,6 +13,13 @@
             </div>
             <div class="card-body">
                 <div class="row">
+                    <!-- Pay Group -->
+                    <div class="col-md-12 mb-3">
+                        <label class="text-muted small">Pay Group</label>
+                        <p class="fw-semibold mb-0">{{ $plan->payGroup->title ?? 'N/A' }}</p>
+                    </div>
+                </div>
+                <div class="row">
                     <!-- Bonus & Reward Plan Name -->
                     <div class="col-md-6 mb-3">
                         <label class="text-muted small">Bonus & Reward Plan Name</label>

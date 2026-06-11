@@ -19,7 +19,7 @@ beforeEach(function () {
     $role = Role::firstOrCreate(['name' => 'Admin', 'guard_name' => 'web']);
     $role->givePermissionTo(['salary-grades.view', 'salary-grades.create', 'salary-grades.edit', 'salary-grades.delete']);
     
-    $this->admin = User::factory()->create(['user_type' => 'Group']);
+    $this->admin = User::factory()->create(['user_type' => \App\Enums\UserType::Group]);
     $this->admin->assignRole($role);
 });
 

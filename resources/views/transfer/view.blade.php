@@ -94,7 +94,7 @@
         </div>
     </div>
 
-    @if(auth()->user()->user_type !== 'Employee')
+    @if(auth()->user()->user_type !== \App\Enums\UserType::Employee)
     <!-- Approval Workflow Section -->
     <div class="col-md-12">
         <div class="card glass-card">

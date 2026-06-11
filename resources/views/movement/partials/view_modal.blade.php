@@ -14,7 +14,7 @@
 
             {{-- Modal Body --}}
             <div class="modal-body p-4">
-                @php $isEmployee = auth()->user()->user_type === 'Employee'; @endphp
+                @php $isEmployee = auth()->user()->user_type === \App\Enums\UserType::Employee; @endphp
 
                 {{-- Status Badges --}}
                 @if(!$isEmployee)

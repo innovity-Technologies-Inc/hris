@@ -42,7 +42,8 @@ class BonusPlanController extends Controller
         $section = 'Bonus Plans';
         $sub_section = 'Create';
         $section_url = route('plan.bonus_plans.index');
-        return view('plan.bonus_plans.form', compact('title', 'section', 'sub_section', 'section_url'));
+        $payGroups = \App\Models\Company\PayGroup::where('status', 'active')->get();
+        return view('plan.bonus_plans.form', compact('title', 'section', 'sub_section', 'section_url', 'payGroups'));
     }
 
     public function store(Request $request)
@@ -81,8 +82,9 @@ class BonusPlanController extends Controller
         $section = 'Bonus Plans';
         $sub_section = 'Edit';
         $section_url = route('plan.bonus_plans.index');
+        $payGroups = \App\Models\Company\PayGroup::where('status', 'active')->get();
         $plan = $this->planServices->getPlanById($id, BonusPlan::class);
-        return view('plan.bonus_plans.form', compact('title', 'section', 'sub_section', 'section_url', 'plan'));
+        return view('plan.bonus_plans.form', compact('title', 'section', 'sub_section', 'section_url', 'plan', 'payGroups'));
     }
 
     public function update(Request $request, $id)

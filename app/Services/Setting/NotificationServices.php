@@ -50,7 +50,7 @@ class NotificationServices
             });
 
             // 2. HR type (Group users show notifications with user_type = 'hr')
-            if ($userType === 'Group') {
+            if ($userType === UserType::Group) {
                 $query->orWhere('user_type', 'hr');
             }
 

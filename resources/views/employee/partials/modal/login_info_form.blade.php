@@ -1,7 +1,7 @@
 @php
     $canManageRoles = auth()->user()->can('role-management.edit');
     $mode = $mode ?? 'edit'; // 'edit' or 'create'
-    $currentUserType = $employee?->user?->user_type ?? 'Employee';
+    $currentUserType = $employee?->user?->user_type ?? \App\Enums\UserType::Employee;
 @endphp
 
 @if($mode === 'edit' && !$canManageRoles)

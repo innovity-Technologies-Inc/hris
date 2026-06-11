@@ -321,6 +321,7 @@ class PlanService
     public function bonusPlanValidation($request)
     {
         $validated = $request->validate([
+            'pay_group_id' => 'required|exists:pay_groups,id',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'bonus_type' => 'required|in:festival,performance,annual,incentive,retention,other',
@@ -333,6 +334,8 @@ class PlanService
 
             'status' => 'required|in:active,inactive',
         ], [
+            'pay_group_id.required' => 'Pay Group is required.',
+            'pay_group_id.exists' => 'The selected Pay Group does not exist.',
             'name.required' => 'Bonus plan name is required.',
             'name.string' => 'Bonus plan name must be a string.',
             'name.max' => 'Bonus plan name may not exceed 255 characters.',

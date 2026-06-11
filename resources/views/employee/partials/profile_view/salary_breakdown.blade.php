@@ -177,7 +177,7 @@
                                 </p>
 
                                 <!-- Action Button -->
-                                @if(auth()->user()->user_type !== 'Employee')
+                                @if(auth()->user()->user_type !== \App\Enums\UserType::Employee)
                                     @can('employee-management.create')
                                     <a href="{{route('employee.salary_breakdown.create', $employee->id)}}" class="btn btn-primary btn-lg px-5 rounded-pill">
                                         Add Information
@@ -205,7 +205,7 @@
                                 <i class="fas fa-certificate me-1"></i> Salary Certificate
                             </a>
 
-                            @if(auth()->user()->user_type !== 'Employee')
+                            @if(auth()->user()->user_type !== \App\Enums\UserType::Employee)
                                 @can('employee-management.edit')
                                     <a href="{{ route('employee.salary_breakdown.edit', $employee->id) }}"
                                        class="btn btn-primary">

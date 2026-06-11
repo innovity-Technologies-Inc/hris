@@ -5,7 +5,7 @@
         <th scope="col">Employee Name</th>
         <th scope="col">From</th>
         <th scope="col">To</th>
-        @if(auth()->user()->user_type !== 'Employee')
+        @if(auth()->user()->user_type !== \App\Enums\UserType::Employee)
             <th scope="col">Total Allowance</th>
             <th scope="col">Status</th>
             <th scope="col">Payment</th>
@@ -16,7 +16,7 @@
     <tbody>
     @php 
         $sl = 1;
-        $isEmployee = auth()->user()->user_type === 'Employee';
+        $isEmployee = auth()->user()->user_type === \App\Enums\UserType::Employee;
     @endphp
     @foreach ($movements as $movement)
         <tr>

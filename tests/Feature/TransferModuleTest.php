@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Notification;
 use App\Notifications\Transfer\TransferRequestedNotification;
 use App\Notifications\Transfer\TransferCompletedNotification;
 
+use App\Enums\UserType;
+
 beforeEach(function () {
     app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
     Permission::firstOrCreate(['name' => 'transfers.create', 'guard_name' => 'web']);
@@ -21,6 +23,16 @@ beforeEach(function () {
     
     $this->group = Group::create(['name' => 'Test Group', 'status' => 'active']);
     $this->type = CompanyType::create(['name' => 'IT', 'short_name' => 'IT', 'status' => 'active']);
+
+    // Ensure settings exist
+    \App\Models\Setting\GeneralSetting::firstOrCreate([], [
+        'name' => 'Test HRMS',
+        'branch_status' => 1
+    ]);
+    \App\Models\Setting\TransferSetting::firstOrCreate([], [
+        'employee_transfer_level' => 'company',
+        'supervisor_transfer_level' => 'company'
+    ]);
 });
 
 test('transfer application can be submitted and completed', function () {
@@ -28,12 +40,12 @@ test('transfer application can be submitted and completed', function () {
     Notification::fake();
 
     // 1. Setup Data
-    $admin = User::factory()->create(['user_type' => 'Group']);
+    $admin = User::factory()->create(['user_type' => UserType::Group]);
     $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'Admin', 'guard_name' => 'web']);
     $role->syncPermissions(['transfers.create', 'transfers.view', 'transfers.approve', 'transfers.edit']);
     $admin->assignRole($role);
 
-    $approver = User::factory()->create(['user_type' => 'Group']);
+    $approver = User::factory()->create(['user_type' => UserType::Group]);
     $approverRole = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'Approver', 'guard_name' => 'web']);
     $approverRole->syncPermissions(['transfers.approve']);
     $approver->assignRole($approverRole);
@@ -89,7 +101,7 @@ test('transfer application can be submitted and completed', function () {
 it('restricts transfer logs based on organizational scope', function () {
     $this->withoutMiddleware();
     
-    $admin = User::factory()->create(['user_type' => 'Group']);
+    $admin = User::factory()->create(['user_type' => UserType::Group]);
     
     $company1 = Company::create(['group_id' => $this->group->id, 'type_id' => $this->type->id, 'name' => 'C1', 'short_name' => 'C1', 'status' => 'active', 'address' => 'A1']);
     $company2 = Company::create(['group_id' => $this->group->id, 'type_id' => $this->type->id, 'name' => 'C2', 'short_name' => 'C2', 'status' => 'active', 'address' => 'A2']);
@@ -118,7 +130,7 @@ it('restricts transfer logs based on organizational scope', function () {
     ]);
 
     // User from Company One
-    $user1 = User::factory()->create(['user_type' => 'Company', 'employee_id' => $emp1->id]);
+    $user1 = User::factory()->create(['user_type' => UserType::Company, 'employee_id' => $emp1->id]);
 
     $response = $this->actingAs($user1)->getJson(route('transfer.api.list'));
     $response->assertStatus(200);
@@ -127,8 +139,20 @@ it('restricts transfer logs based on organizational scope', function () {
     $response->assertJsonCount(1, 'data.data');
 
     // Group user sees both
-    $groupUser = User::factory()->create(['user_type' => 'Group']);
+    $groupUser = User::factory()->create(['user_type' => UserType::Group]);
     $this->actingAs($groupUser)->getJson(route('transfer.api.list'))
         ->assertStatus(200)
         ->assertJsonCount(2, 'data.data');
+});
+
+test('transfer application view loads correctly', function () {
+    $this->withoutMiddleware();
+    
+    $admin = User::factory()->create(['user_type' => UserType::Group]);
+    
+    $response = $this->actingAs($admin)->get(route('transfer.create'));
+
+    $response->assertStatus(200);
+    $response->assertViewIs('transfer.application');
+    $response->assertViewHas('levelWeight');
 });

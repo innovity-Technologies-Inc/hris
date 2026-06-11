@@ -104,17 +104,55 @@
                             </div>
                         </div>
 
-                        {{-- ================= SALARY MONTH ================= --}}
+                        {{-- ================= PAY GROUP & DATES ================= --}}
                         <div class="row mb-4">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">
+                                    Pay Group <span class="text-danger">*</span>
+                                </label>
+                                <select name="pay_group_id" id="pay_group_id"
+                                        class="form-select select2_list" required>
+                                    <option value="">Select Pay Group</option>
+                                    @foreach($payGroups as $payGroup)
+                                        <option value="{{ $payGroup->id }}" data-frequency="{{ strtolower($payGroup->payroll_frequency) }}"
+                                            {{ $isEdit && $salaryData->pay_group_id == $payGroup->id ? 'selected' : '' }}>
+                                            {{ $payGroup->title }} ({{ $payGroup->payroll_frequency }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-4" id="monthPickerContainer">
                                 <label class="form-label fw-semibold">
                                     Salary Month <span class="text-danger">*</span>
                                 </label>
                                 <input type="month"
                                        name="salary_month"
+                                       id="salary_month"
                                        class="form-control"
-                                       value="{{ $isEdit ? $salaryData->salary_month : '' }}"
-                                       required>
+                                       value="{{ $isEdit ? $salaryData->salary_month : '' }}">
+                            </div>
+
+                            <div class="col-md-4 d-none" id="startDateContainer">
+                                <label class="form-label fw-semibold">
+                                    Start Date <span class="text-danger">*</span>
+                                </label>
+                                <input type="date"
+                                       name="start_date"
+                                       id="start_date"
+                                       class="form-control"
+                                       value="{{ $isEdit ? $salaryData->start_date : '' }}">
+                            </div>
+
+                            <div class="col-md-4 d-none" id="endDateContainer">
+                                <label class="form-label fw-semibold">
+                                    End Date <span class="text-danger">*</span>
+                                </label>
+                                <input type="date"
+                                       name="end_date"
+                                       id="end_date"
+                                       class="form-control"
+                                       value="{{ $isEdit ? $salaryData->end_date : '' }}">
                             </div>
                         </div>
 
@@ -255,6 +293,39 @@
                 .then(()=> loadSections(editData.company, editData.branch, editData.division, editData.department, editData.section))
                 .then(()=> loadEmployees(editData.company, editData.branch, editData.division, editData.department, editData.section, editData.employee));
             @endif
+
+            // Pay Group Frequency Handling
+            function handlePayGroupChange() {
+                let selectedOption = $('#pay_group_id').find(':selected');
+                let frequency = selectedOption.data('frequency');
+                
+                if (!frequency) {
+                    $('#monthPickerContainer').removeClass('d-none');
+                    $('#startDateContainer').addClass('d-none');
+                    $('#endDateContainer').addClass('d-none');
+                    $('#salary_month').attr('required', true);
+                    $('#start_date, #end_date').removeAttr('required');
+                    return;
+                }
+
+                if (frequency === 'monthly') {
+                    $('#monthPickerContainer').removeClass('d-none');
+                    $('#startDateContainer').addClass('d-none');
+                    $('#endDateContainer').addClass('d-none');
+                    $('#salary_month').attr('required', true);
+                    $('#start_date, #end_date').removeAttr('required').val('');
+                } else {
+                    $('#monthPickerContainer').addClass('d-none');
+                    $('#startDateContainer').removeClass('d-none');
+                    $('#endDateContainer').removeClass('d-none');
+                    $('#salary_month').removeAttr('required').val('');
+                    $('#start_date, #end_date').attr('required', true);
+                }
+            }
+
+            $('#pay_group_id').on('change', handlePayGroupChange);
+            // Trigger on load for edit mode
+            handlePayGroupChange();
 
             // BLOCK SUBMIT IF NO EMPLOYEES WERE LOADED (create mode only)
             @if(!$isEdit)

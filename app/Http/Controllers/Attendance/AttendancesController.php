@@ -173,5 +173,38 @@ class AttendancesController extends Controller
         $record = Attendance::with('getEmployee', 'getShift')->findOrFail($id);
         return view('attendance.print_detail', compact('record'));
     }
+
+    public function edit($id)
+    {
+        $title = 'Edit Attendance';
+        $section = 'Attendance';
+        $sub_section = 'Edit';
+        $record = Attendance::findOrFail($id);
+        $employees = Employee::has('shift')->get();
+        return view('attendance.attendance_form', compact('title', 'section', 'sub_section', 'record', 'employees'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'employee_id' => 'required|exists:employees,id',
+            'clock_in' => 'required|date',
+            'clock_out' => 'required|date|after:clock_in',
+            'workstation' => 'required|string',
+        ]);
+
+        try {
+            $this->attendancesService->attendanceUpdate($id, $validated);
+            return redirect()->route('attendance.index')->with([
+                'message' => 'Attendance Updated Successfully',
+                'alert-type' => 'success'
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with([
+                'message' => 'Error updating attendance: ' . $e->getMessage(),
+                'alert-type' => 'error'
+            ]);
+        }
+    }
 }
 

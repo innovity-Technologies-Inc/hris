@@ -10,9 +10,9 @@ use App\Models\Transfer\Transfer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 beforeEach(function () {
-    $this->admin = User::factory()->create(['user_type' => 'Group']);
+    $this->admin = User::factory()->create(['user_type' => \App\Enums\UserType::Group]);
     $this->employee = Employee::factory()->create(['full_name' => 'Test Employee']);
-    $this->empUser = User::factory()->create(['user_type' => 'Employee', 'employee_id' => $this->employee->id]);
+    $this->empUser = User::factory()->create(['user_type' => \App\Enums\UserType::Employee, 'employee_id' => $this->employee->id]);
     
     EmployeeOfficeInfo::create([
         'employee_id' => $this->employee->id,

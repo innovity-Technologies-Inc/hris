@@ -27,8 +27,23 @@
                             @method('PUT')
                         @endif
 
-                        {{-- ================= COMPANY ================= --}}
+                        {{-- ================= PAY GROUP & COMPANY ================= --}}
                         <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">
+                                    Pay Group <span class="text-danger">*</span>
+                                </label>
+                                <select name="pay_group_id" id="pay_group_id"
+                                        class="form-select select2_list" required>
+                                    <option value="">Select Pay Group</option>
+                                    @foreach($payGroups as $payGroup)
+                                        <option value="{{ $payGroup->id }}"
+                                            {{ $isEdit && $bonusData->pay_group_id == $payGroup->id ? 'selected' : '' }}>
+                                            {{ $payGroup->title }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">
                                     Company <span class="text-danger">*</span>
@@ -44,19 +59,18 @@
                                     @endforeach
                                 </select>
                             </div>
+                        </div>
 
-                            <div class="col-md-6">
+                        {{-- ================= DIVISION / DEPARTMENT ================= --}}
+                        <div class="row mb-3">
+                            <div class="col-md-4">
                                 <label class="form-label fw-semibold">Branch</label>
                                 <select name="branch_id" id="branch_id"
                                         class="form-select select2_list">
                                     <option value="">Select Branch</option>
                                 </select>
                             </div>
-                        </div>
-
-                        {{-- ================= DIVISION / DEPARTMENT ================= --}}
-                        <div class="row mb-3">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="form-label fw-semibold">Division</label>
                                 <select name="division_id" id="division_id"
                                         class="form-select select2_list">
@@ -64,7 +78,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="form-label fw-semibold">Department</label>
                                 <select name="department_id" id="department_id"
                                         class="form-select select2_list">
@@ -111,12 +125,12 @@
                                     Bonus & Reward Plans <span class="text-danger">*</span>
                                 </label>
 
-                                <select name="plan_ids[]"
+                                <select name="plan_ids[]" id="bonus_plan_select"
                                         class="form-select select2_list"
                                         multiple required>
 
                                     @foreach($bonusPlans as $plan)
-                                        <option value="{{ $plan->id }}"
+                                        <option value="{{ $plan->id }}" data-paygroup="{{ $plan->pay_group_id }}"
                                             {{ $isEdit && in_array((string) $plan->id, $bonusData->bonus_plan_ids ?? []) ? 'selected' : '' }}>
                                             {{ $plan->name }}
                                         </option>
@@ -277,6 +291,25 @@
                 .then(()=> loadSections(editData.company, editData.branch, editData.division, editData.department, editData.section))
                 .then(()=> loadEmployees(editData.company, editData.branch, editData.division, editData.department, editData.section, editData.employee));
             @endif
+
+            // Pay Group Bonus Plan Filter
+            function filterBonusPlans() {
+                let selectedPayGroup = $('#pay_group_id').val();
+                $('#bonus_plan_select option').each(function() {
+                    let optionPayGroup = $(this).data('paygroup');
+                    if (!selectedPayGroup || optionPayGroup == selectedPayGroup) {
+                        $(this).prop('disabled', false).show();
+                    } else {
+                        $(this).prop('disabled', true).hide();
+                        $(this).prop('selected', false);
+                    }
+                });
+                $('#bonus_plan_select').trigger('change.select2'); // Refresh select2 UI
+            }
+
+            $('#pay_group_id').on('change', filterBonusPlans);
+            // Trigger initially
+            filterBonusPlans();
 
             // BLOCK SUBMIT IF NO EMPLOYEES WERE LOADED (create mode only)
             @if(!$isEdit)

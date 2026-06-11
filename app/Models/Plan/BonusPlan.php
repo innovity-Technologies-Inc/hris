@@ -12,6 +12,7 @@ class BonusPlan extends Model
     use Userstamps, Auditable;
     protected $table = 'bonus_plans';
     protected $fillable = [
+        'pay_group_id',
         'name',
         'description',
         'bonus_type',
@@ -21,6 +22,11 @@ class BonusPlan extends Model
         'custom_rate',
         'status',
     ];
+
+    public function payGroup()
+    {
+        return $this->belongsTo(\App\Models\Company\PayGroup::class, 'pay_group_id');
+    }
 
 }
 

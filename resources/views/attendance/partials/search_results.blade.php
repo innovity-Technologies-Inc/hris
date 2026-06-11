@@ -108,6 +108,12 @@
                             <i class="bi bi-eye"></i>
                         </button>
                         @endcan
+
+                        @can('attendance.edit')
+                        <a href="{{ route('attendance.edit', $record->id) }}" class="btn btn-sm btn-primary" title="Edit Attendance">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        @endcan
                     </td>
                 </tr>
 
@@ -120,19 +126,8 @@
 
 {{-- Table Footer with Pagination --}}
 <div class="border-top p-4" style="background-color: var(--bs-tertiary-bg);">
-    <div class="row align-items-center g-3">
-        <div class="col-md-6">
-            <div class="text-muted small">
-                Showing <strong>{{ $attendanceRecords->firstItem() ?? 0 }}</strong> to
-                <strong>{{ $attendanceRecords->lastItem() ?? 0 }}</strong> of
-                <strong>{{ $attendanceRecords->total() }}</strong> total records
-            </div>
-        </div>
-        <div class="col-md-6">
-            <nav aria-label="Attendance pagination">
-                {{ $attendanceRecords->links('pagination::bootstrap-5') }}
-            </nav>
-        </div>
+    <div class="w-100">
+        {{ $attendanceRecords->links('pagination::bootstrap-5') }}
     </div>
 </div>
 

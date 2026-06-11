@@ -159,10 +159,6 @@
         </div>
     @endif
 </div>
-<div class="text-muted small">
-    Showing {{ $promotions->firstItem() ?? 0 }} to {{ $promotions->lastItem() ?? 0 }}
-    of {{ $promotions->total() }} entries
-</div>
 <div>
     {{ $promotions->links() }}
 </div>

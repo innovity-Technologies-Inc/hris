@@ -3,6 +3,7 @@
         <thead>
             <tr>
                 <th scope="col">#</th>
+                <th scope="col">Pay Group</th>
                 <th scope="col">Bonus & Reward Plan Name</th>
                 <th scope="col">Bonus & Reward Type</th>
                 <th scope="col">Config Type</th>
@@ -19,6 +20,9 @@
                 <tr>
                     {{-- Serial Number --}}
                     <th scope="row">{{ $sl++ }}</th>
+
+                    {{-- Pay Group --}}
+                    <td>{{ $item->payGroup->title ?? '-' }}</td>
 
                     {{-- Plan Name --}}
                     <td>{{ $item->name }}</td>

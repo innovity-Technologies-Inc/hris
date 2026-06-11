@@ -74,7 +74,7 @@
             @endif
 
             {{-- 5. Office Information --}}
-            @if (isset($employee->id) && (auth()->user()->user_type->value !== 'employee' || $employee->status === 'active'))
+            @if (isset($employee->id) && (auth()->user()->user_type !== \App\Enums\UserType::Employee || $employee->status === 'active'))
                 <div class="col">
                     <a href="{{ route('employee.profile.office_informations', $employee->id) }}"
                         class="btn btn-outline-secondary w-100 py-3 text-decoration-none @if (request()->routeIs('employee.office_informations.create') ||
@@ -94,7 +94,7 @@
             @endif
 
             {{-- 6. Policy Tag --}}
-            @if (isset($employee->id) && (auth()->user()->user_type->value !== 'employee' || $employee->status === 'active'))
+            @if (isset($employee->id) && (auth()->user()->user_type !== \App\Enums\UserType::Employee || $employee->status === 'active'))
                 <div class="col">
                     <a href="{{ route('employee.profile.eligible_plans', $employee->id) }}"
                         class="btn btn-outline-secondary w-100 py-3 text-decoration-none @if (request()->routeIs('employee.eligible_plans.create') || request()->routeIs('employee.profile.eligible_plans')) active @endif">
@@ -113,7 +113,7 @@
             @endif
 
             {{-- 7. Salary Breakdown --}}
-            @if (isset($employee->id) && (auth()->user()->user_type->value !== 'employee' || $employee->status === 'active'))
+            @if (isset($employee->id) && (auth()->user()->user_type !== \App\Enums\UserType::Employee || $employee->status === 'active'))
                 <div class="col">
                     <a href="{{ route('employee.profile.salary_breakdown', $employee->id) }}"
                         class="btn btn-outline-secondary w-100 py-3 text-decoration-none @if (request()->routeIs('employee.salary_breakdown.create') || request()->routeIs('employee.profile.salary_breakdown')) active @endif">
@@ -132,7 +132,7 @@
             @endif
 
             {{-- 8. Accounts Information --}}
-            @if (isset($employee->id) && (auth()->user()->user_type->value !== 'employee' || $employee->status === 'active'))
+            @if (isset($employee->id) && (auth()->user()->user_type !== \App\Enums\UserType::Employee || $employee->status === 'active'))
                 <div class="col">
                     <a href="{{ route('employee.profile.bank_accounts', $employee->id) }}"
                         class="btn btn-outline-secondary w-100 py-3 text-decoration-none @if (request()->routeIs('employee.bank_accounts.create') || request()->routeIs('employee.profile.bank_accounts')) active @endif">
@@ -152,7 +152,7 @@
 
 
             {{-- 9. Plans --}}
-            @if (isset($employee->id) && (auth()->user()->user_type->value !== 'employee' || $employee->status === 'active'))
+            @if (isset($employee->id) && (auth()->user()->user_type !== \App\Enums\UserType::Employee || $employee->status === 'active'))
                 <div class="col">
                     <a href="{{ route('employee.profile.plans', ['id' => $employee->id, 'type' => 'meal-plans']) }}"
                         class="btn btn-outline-secondary w-100 py-3 text-decoration-none @if (request()->routeIs('employee.profile.plans')) active @endif">
@@ -171,7 +171,7 @@
             @endif
 
             {{-- 10. Leave Info --}}
-            @if (isset($employee->id) && (auth()->user()->user_type->value !== 'employee' || $employee->status === 'active'))
+            @if (isset($employee->id) && (auth()->user()->user_type !== \App\Enums\UserType::Employee || $employee->status === 'active'))
                 <div class="col">
                     <a href="{{ route('employee.profile.leave_info', $employee->id) }}"
                         class="btn btn-outline-secondary w-100 py-3 text-decoration-none @if (request()->routeIs('employee.profile.leave_info')) active @endif">

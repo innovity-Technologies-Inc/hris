@@ -24,12 +24,15 @@ class PayrollProcess extends Model
 
     protected $fillable = [
         'batch_id',
+        'pay_group_id',
         'company_id',
         'branch_id',
         'division_id',
         'department_id',
         'section_id',
         'salary_month',
+        'start_date',
+        'end_date',
         'type',
         'bonus_plan_ids',
         'status',

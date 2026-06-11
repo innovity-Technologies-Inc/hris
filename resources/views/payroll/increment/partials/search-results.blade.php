@@ -184,10 +184,6 @@ Each increment object should have:
         </div>
     @endif
 </div>
-<div class="text-muted small">
-    Showing {{ $increments->firstItem() ?? 0 }} to {{ $increments->lastItem() ?? 0 }}
-    of {{ $increments->total() }} entries
-</div>
 <div>
     {{ $increments->links() }}
 </div>

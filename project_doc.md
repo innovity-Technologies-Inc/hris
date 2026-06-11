@@ -69,6 +69,8 @@ Dedicated sub-system to define various HR policies:
 - **Salary Processing**: Automated salary calculation and breakdown.
 - **Salary Process Eligibility View**: A dedicated view to track and audit eligible employees for each salary process batch, accessible via the main salary process index.
 - **Individual Payroll Detail View**: Detailed breakdown of earnings (Gross, OT, Bonus, Off-day) and deductions for each employee within a batch.
+- **Granular Deductions**: Individual tracking and storage of Late, Excessive Late, Absent, and Early Exit deductions in the `payrolls` table.
+- **Penalty Integration**: Automated deduction of approved employee penalties during salary generation. Penalties are marked as `deducted` upon processing and correctly reset to `approved` if the process is deleted or re-run.
 - **Industry Standard PDF Payslip**: Professional PDF generation of payslips with company branding, employee details, and clear financial breakdown using `Spatie Browsershot`.
 - **Salary Certificate Generation**: Standard "To Whom It May Concern" salary certificate generation for employees, including tenure and remuneration details.
 - **Adjustments**: Handle Promotions, Increments, and Bonus distributions.

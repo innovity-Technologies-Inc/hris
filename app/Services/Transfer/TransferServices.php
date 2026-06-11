@@ -171,7 +171,7 @@ class TransferServices
                         // 1. System Notification (Always save to DB)
                         try {
                             $this->notificationService->createNotification(
-                                $approver->user_type,
+                                $approver->user_type->value,
                                 $approver->id,
                                 'New Transfer Approval Required',
                                 'You have a pending transfer approval for ' . $transfer->employee->full_name,
@@ -252,7 +252,7 @@ class TransferServices
                         // 1. System Notification
                         try {
                             $this->notificationService->createNotification(
-                                $creator->user_type,
+                                $creator->user_type->value,
                                 $creator->id,
                                 'Transfer Request Update',
                                 'An authority has approved your transfer request for ' . $transfer->employee->full_name,

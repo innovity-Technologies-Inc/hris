@@ -117,8 +117,9 @@ class SalaryController extends Controller
         $section_url = route('salary.index');
         $sub_section = 'Add';
         $companies = Company::all();
+        $payGroups = \App\Models\Company\PayGroup::where('status', 'active')->get();
         return view('payroll.salary.create', compact('title', 'section',
-            'sub_section', 'section_url', 'companies'));
+            'sub_section', 'section_url', 'companies', 'payGroups'));
     }
 
     public function edit($id)
@@ -129,9 +130,10 @@ class SalaryController extends Controller
         $employees = Employee::has('salary')->where('status', 'active')->get();
         $sub_section = 'Edit';
         $companies = Company::all();
+        $payGroups = \App\Models\Company\PayGroup::where('status', 'active')->get();
         $salaryData = PayrollProcess::find($id);
         return view('payroll.salary.create', compact('title', 'section',
-            'section_url', 'salaryData', 'employees', 'sub_section', 'companies'));
+            'section_url', 'salaryData', 'employees', 'sub_section', 'companies', 'payGroups'));
     }
 
     public function save(Request $request, $id=null){

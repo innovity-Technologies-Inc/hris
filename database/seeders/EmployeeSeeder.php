@@ -71,6 +71,7 @@ class EmployeeSeeder extends Seeder
         $this->orgData['designations'] = DB::table('designations')->pluck('id')->toArray();
         $this->orgData['salary_grades'] = DB::table('salary_grades')->pluck('id')->toArray();
         $this->orgData['pay_scales'] = DB::table('pay_scales')->pluck('id')->toArray();
+        $this->orgData['pay_scales_detailed'] = DB::table('pay_scales')->get()->toArray();
         
         $branches = DB::table('branches')->select('id', 'bank_id')->get();
         $this->orgData['bank_branches'] = $branches->pluck('id')->toArray();
@@ -83,7 +84,7 @@ class EmployeeSeeder extends Seeder
         $this->orgData['ot_plans'] = DB::table('ot_plans')->pluck('id')->toArray();
         $this->orgData['roster_plans'] = DB::table('roster_plans')->pluck('id')->toArray();
         $this->orgData['off_day_plans'] = DB::table('off_day_plans')->pluck('id')->toArray();
-        $this->orgData['bonus_plans'] = DB::table('bonus_plans')->pluck('id')->toArray();
+        $this->orgData['bonus_plans'] = DB::table('bonus_plans')->get()->toArray();
     }
 
     private function seedEmployees()
@@ -98,11 +99,14 @@ class EmployeeSeeder extends Seeder
             // employees
             DB::table('employees')->insert($this->generateEmployeeData($employee_id, $firstName, $lastName, $gender));
 
-            // office info
-            DB::table('employee_office_infos')->insert($this->generateOfficeInfoData($employee_id));
+            // Link Plans FIRST so linking logic is consistent
+            $planAssigned = $this->linkPlans($employee_id);
+
+            // office info (needs weekends)
+            DB::table('employee_office_infos')->insert($this->generateOfficeInfoData($employee_id, $planAssigned));
 
             // eligible plans
-            DB::table('employee_eligible_plans')->insert($this->generateEligiblePlansData($employee_id));
+            DB::table('employee_eligible_plans')->insert($this->generateEligiblePlansData($employee_id, $planAssigned));
 
             // edu/exp/training
             DB::table('employee_education_experience_training')->insert($this->generateEducationExperienceTrainingData($employee_id));
@@ -118,11 +122,8 @@ class EmployeeSeeder extends Seeder
 
             // history
             DB::table('employee_employment_histories')->insert($this->generateEmploymentHistoryData($employee_id));
-
-            // Link Plans
-            $this->linkPlans($employee_id);
         }
-        echo "Seeded " . $this->totalEmployees . " employees with comprehensive data.\n";
+        echo "Seeded " . $this->totalEmployees . " employees with comprehensive data and randomized plans.\n";
     }
 
     private function generateEmployeeData($id, $firstName, $lastName, $gender): array
@@ -158,32 +159,64 @@ class EmployeeSeeder extends Seeder
         ];
     }
 
-    private function generateOfficeInfoData($employeeId): array
+    private function generateOfficeInfoData($employeeId, $planAssigned): array
     {
         $companyId = $this->faker->randomElement($this->orgData['companies']);
+        
+        $locationId = null;
+        if (isset($this->orgData['company_locations_by_company'][$companyId])) {
+            $locationId = $this->faker->randomElement($this->orgData['company_locations_by_company'][$companyId]);
+        }
+        
+        $divisionId = null;
+        if ($locationId && isset($this->orgData['divisions_by_location'][$locationId])) {
+            $divisionId = $this->faker->randomElement($this->orgData['divisions_by_location'][$locationId]);
+        }
+        
+        $departmentId = null;
+        if ($divisionId && isset($this->orgData['departments_by_division'][$divisionId])) {
+            $departmentId = $this->faker->randomElement($this->orgData['departments_by_division'][$divisionId]);
+        }
+        
+        $sectionId = null;
+        if ($departmentId && isset($this->orgData['sections_by_department'][$departmentId])) {
+            $sectionId = $this->faker->randomElement($this->orgData['sections_by_department'][$departmentId]);
+        }
+
         return [
             'employee_id' => $employeeId,
             'current_company_id' => $companyId,
+            'current_business_unit_id' => $locationId,
+            'current_division_id' => $divisionId,
+            'current_department_id' => $departmentId,
+            'current_section_id' => $sectionId,
             'current_designation_id' => $this->faker->randomElement($this->orgData['designations']),
             'date_of_join' => $this->faker->dateTimeBetween('-5 years', '-1 year')->format('Y-m-d'),
+            'weekends' => json_encode(['Friday', 'Saturday']),
+            'ot_allowed' => $planAssigned['ot'] ? 'yes' : 'no',
+            'emp_type' => 'permanent',
             'created_at' => now(), 'updated_at' => now(),
         ];
     }
 
-    private function generateEligiblePlansData($employeeId): array
+    private function generateEligiblePlansData($employeeId, $planAssigned): array
     {
         return [
             'employee_id' => $employeeId,
-            'shift_plan_status' => 'active',
+            'shift_plan_status' => $planAssigned['shift'] ? 'active' : 'inactive',
             'shift_plan_from' => now()->subYear()->format('Y-m-d'),
+            'roster_plans_status' => $planAssigned['roster'] ? 'active' : 'inactive',
+            'roster_plans_from' => now()->subYear()->format('Y-m-d'),
             'leave_plan_status' => 'active',
             'leave_plan_from' => now()->subYear()->format('Y-m-d'),
             'meal_plan_status' => 'active',
             'meal_plan_from' => now()->subYear()->format('Y-m-d'),
-            'ot_plan_status' => 'active',
+            'ot_plan_status' => $planAssigned['ot'] ? 'active' : 'inactive',
             'ot_plan_from' => now()->subYear()->format('Y-m-d'),
             'bonus_plan_status' => 'active',
             'bonus_plan_from' => now()->subYear()->format('Y-m-d'),
+            'day_off_work_plan_status' => $planAssigned['offday'] ? 'active' : 'inactive',
+            'day_off_work_plan_from' => now()->subYear()->format('Y-m-d'),
             'created_at' => now(), 'updated_at' => now(),
         ];
     }
@@ -247,19 +280,51 @@ class EmployeeSeeder extends Seeder
 
     private function generateSalaryBreakdownData($employeeId): array
     {
-        $payScaleId = $this->faker->randomElement($this->orgData['pay_scales']);
-        $payScale = DB::table('pay_scales')->where('id', $payScaleId)->first();
+        // Favor monthly pay scales, but allow some variety
+        $payScaleId = null;
+        if ($this->faker->boolean(80)) {
+            // 80% chance of Monthly Staff (group_id = 1)
+            $monthlyScales = collect($this->orgData['pay_scales_detailed'])->where('pay_group_id', 1)->pluck('id')->toArray();
+            if(!empty($monthlyScales)) $payScaleId = $this->faker->randomElement($monthlyScales);
+        } else {
+            // 20% chance of Weekly/Hourly/Daily
+            $otherScales = collect($this->orgData['pay_scales_detailed'])->where('pay_group_id', '!=', 1)->pluck('id')->toArray();
+            if(!empty($otherScales)) $payScaleId = $this->faker->randomElement($otherScales);
+        }
+
+        if(!$payScaleId && !empty($this->orgData['pay_scales'])) {
+            $payScaleId = $this->faker->randomElement($this->orgData['pay_scales']);
+        }
+        
+        $payScale = collect($this->orgData['pay_scales_detailed'])->firstWhere('id', $payScaleId);
         
         $min = $payScale ? (float)$payScale->min_salary : 30000;
         $max = $payScale ? (float)$payScale->max_salary : 100000;
         
         $gross = $this->faker->numberBetween($min, $max);
+        
+        $basicPercent = 60;
+        $housePercent = 20;
+        $medicalPercent = 10;
+        $transportPercent = 5;
+        $foodPercent = 5;
+        
         return [
             'employee_id' => $employeeId,
             'pay_scale_id' => $payScaleId,
             'gross_salary' => (string)$gross,
-            'basic_salary' => (string)($gross * 0.6),
-            'basic_salary_percentage' => '60',
+            'basic_salary' => (string)($gross * ($basicPercent / 100)),
+            'basic_salary_percentage' => (string)$basicPercent,
+            'house_allowance' => (string)($gross * ($housePercent / 100)),
+            'house_allowance_percentage' => (string)$housePercent,
+            'medical_allowance' => (string)($gross * ($medicalPercent / 100)),
+            'medical_allowance_percentage' => (string)$medicalPercent,
+            'transport_allowance' => (string)($gross * ($transportPercent / 100)),
+            'transport_allowance_percentage' => (string)$transportPercent,
+            'food_allowance' => (string)($gross * ($foodPercent / 100)),
+            'food_allowance_percentage' => (string)$foodPercent,
+            'other_earnings' => '0',
+            'other_earnings_percentage' => '0',
             'created_at' => now(), 'updated_at' => now(),
         ];
     }
@@ -278,47 +343,58 @@ class EmployeeSeeder extends Seeder
         ];
     }
 
-    private function linkPlans($employeeId)
+    private function linkPlans($employeeId): array
     {
         $from = now()->subYear()->format('Y-m-d');
         $to = now()->addYear()->format('Y-m-d');
+        $assigned = ['shift' => false, 'roster' => false, 'ot' => false, 'offday' => false];
 
-        if (!empty($this->orgData['shift_plans'])) {
-            DB::table('employee_shift_plans')->insert([
-                'employee_id' => $employeeId,
-                'plan_id' => $this->faker->randomElement($this->orgData['shift_plans']),
-                'from' => $from, 'to' => $to, 'status' => 'active',
-                'created_at' => now(), 'updated_at' => now()
-            ]);
+        // 1. Shift OR Roster (Exclusive for seeding clarity)
+        if ($this->faker->boolean(70)) {
+            if (!empty($this->orgData['shift_plans'])) {
+                DB::table('employee_shift_plans')->insert([
+                    'employee_id' => $employeeId,
+                    'plan_id' => $this->faker->randomElement($this->orgData['shift_plans']),
+                    'from' => $from, 'to' => $to, 'status' => 'active',
+                    'created_at' => now(), 'updated_at' => now()
+                ]);
+                $assigned['shift'] = true;
+            }
+        } else {
+            if (!empty($this->orgData['roster_plans'])) {
+                DB::table('employee_roster_plans')->insert([
+                    'employee_id' => $employeeId,
+                    'plan_id' => $this->faker->randomElement($this->orgData['roster_plans']),
+                    'from' => $from, 'to' => $to, 'status' => 'active',
+                    'created_at' => now(), 'updated_at' => now()
+                ]);
+                $assigned['roster'] = true;
+            }
         }
 
-        if (!empty($this->orgData['roster_plans'])) {
-            DB::table('employee_roster_plans')->insert([
-                'employee_id' => $employeeId,
-                'plan_id' => $this->faker->randomElement($this->orgData['roster_plans']),
-                'from' => $from, 'to' => $to, 'status' => 'active',
-                'created_at' => now(), 'updated_at' => now()
-            ]);
-        }
-
-        if (!empty($this->orgData['ot_plans'])) {
+        // 2. Overtime (Optional 60%)
+        if ($this->faker->boolean(60) && !empty($this->orgData['ot_plans'])) {
             DB::table('employee_ot_plans')->insert([
                 'employee_id' => $employeeId,
                 'plan_id' => $this->faker->randomElement($this->orgData['ot_plans']),
                 'from' => $from, 'to' => $to, 'status' => 'active',
                 'created_at' => now(), 'updated_at' => now()
             ]);
+            $assigned['ot'] = true;
         }
 
-        if (!empty($this->orgData['off_day_plans'])) {
+        // 3. OffDay Work (Optional 40%)
+        if ($this->faker->boolean(40) && !empty($this->orgData['off_day_plans'])) {
             DB::table('employee_offday_plans')->insert([
                 'employee_id' => $employeeId,
                 'plan_id' => $this->faker->randomElement($this->orgData['off_day_plans']),
                 'from' => $from, 'to' => $to, 'status' => 'active',
                 'created_at' => now(), 'updated_at' => now()
             ]);
+            $assigned['offday'] = true;
         }
 
+        // Standard links for everyone
         if (!empty($this->orgData['meal_plans'])) {
             DB::table('employee_meal_plans')->insert([
                 'employee_id' => $employeeId,
@@ -327,7 +403,6 @@ class EmployeeSeeder extends Seeder
                 'created_at' => now(), 'updated_at' => now()
             ]);
         }
-
         if (!empty($this->orgData['leave_plans'])) {
             DB::table('employee_leave_plans')->insert([
                 'employee_id' => $employeeId,
@@ -335,13 +410,30 @@ class EmployeeSeeder extends Seeder
                 'created_at' => now(), 'updated_at' => now()
             ]);
         }
-
         if (!empty($this->orgData['bonus_plans'])) {
-            DB::table('employee_bonus_plans')->insert([
-                'employee_id' => $employeeId,
-                'plan_id' => $this->faker->randomElement($this->orgData['bonus_plans']),
-                'created_at' => now(), 'updated_at' => now()
-            ]);
+            // Find which pay group the employee belongs to
+            $payScaleId = DB::table('employee_salary_breakdowns')->where('employee_id', $employeeId)->value('pay_scale_id');
+            $payGroupId = DB::table('pay_scales')->where('id', $payScaleId)->value('pay_group_id');
+            
+            // Get all bonus plans for this pay group
+            $applicableBonusPlans = collect($this->orgData['bonus_plans'])->where('pay_group_id', $payGroupId);
+            
+            // If none found for specific group, fallback to first group's plans to ensure they have something
+            if ($applicableBonusPlans->isEmpty()) {
+                $firstPayGroupId = collect($this->orgData['bonus_plans'])->first()->pay_group_id ?? 1;
+                $applicableBonusPlans = collect($this->orgData['bonus_plans'])->where('pay_group_id', $firstPayGroupId);
+            }
+
+            foreach ($applicableBonusPlans as $bonusPlan) {
+                DB::table('employee_bonus_plans')->insert([
+                    'employee_id' => $employeeId,
+                    'plan_id' => $bonusPlan->id,
+                    'status' => 'active',
+                    'created_at' => now(), 'updated_at' => now()
+                ]);
+            }
         }
+
+        return $assigned;
     }
 }
