@@ -60,12 +60,11 @@
 
                         {{-- Effective To --}}
                         <div class="col-md-6">
-                            <label for="modal_effective_to" class="form-label fw-semibold">
+                            <label for="modal_meal_effective_to" class="form-label fw-semibold">
                                 <i class="mdi mdi-calendar-end text-danger me-1"></i>
-                                Effective To <span class="text-danger">*</span>
+                                Effective To
                             </label>
-                            <input type="date" id="modal_effective_to" name="to" class="form-control"
-                                required>
+                            <input type="date" id="modal_meal_effective_to" name="to" class="form-control">
                         </div>
                     </div>
 

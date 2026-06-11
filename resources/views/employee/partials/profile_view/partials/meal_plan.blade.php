@@ -10,7 +10,7 @@
             </div>
 
         </div>
-        @if(auth()->user()->user_type !== 'Employee')
+        @if(auth()->user()->user_type !== \App\Enums\UserType::Employee)
             @can('employee-management.edit')
                 <div>
                     {{-- Create Button to Open Modal --}}
@@ -80,7 +80,7 @@
                                             </span>
                                         </td>
                                         <td class="text-center">
-                                            @if(auth()->user()->user_type !== 'Employee')
+                                            @if(auth()->user()->user_type !== \App\Enums\UserType::Employee)
                                                 @can('employee-management.edit')
                                                     <form
                                                         action="{{ route('employee.profile.plans.remove', ['id' => $plan->id, 'type' => 'meal-plans']) }}"
@@ -165,7 +165,7 @@
                                                 {{ number_format($plan->getPlan->cost ?? 0) }}</span>
                                         </td>
                                         <td>{{ \Carbon\Carbon::parse($plan->from)->format('jS F Y') }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($plan->to)->format('jS F Y') }}</td>
+                                        <td>{{ !empty($plan->to) ? \Carbon\Carbon::parse($plan->to)->format('jS F Y') : 'Present' }}</td>
                                         <td>
                                             @if ($plan->status == 'inactive')
                                                 <span class="badge bg-warning-subtle text-warning">
@@ -178,7 +178,7 @@
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            @if(auth()->user()->user_type !== 'Employee')
+                                            @if(auth()->user()->user_type !== \App\Enums\UserType::Employee)
                                                 @can('employee-management.edit')
                                                     <form
                                                         action="{{ route('employee.profile.plans.delete', ['type' => 'meal-plans', 'id' => $plan->id]) }}"

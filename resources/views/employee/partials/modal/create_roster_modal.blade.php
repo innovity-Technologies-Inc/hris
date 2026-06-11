@@ -36,10 +36,10 @@
                         <div class="col-md-6">
                             <label for="modal_roster_effective_to" class="form-label fw-semibold">
                                 <i class="mdi mdi-calendar-end text-danger me-1"></i>
-                                Effective To <span class="text-danger">*</span>
+                                Effective To
                             </label>
                             <input type="date" id="modal_roster_effective_to" name="to"
-                                class="form-control" required>
+                                class="form-control">
                         </div>
                     </div>
                     <div id="modal-roster-plan-details" class="mt-4" style="display: none;">

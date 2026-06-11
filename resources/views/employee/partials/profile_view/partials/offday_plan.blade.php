@@ -8,7 +8,7 @@
                 <h5 class="fs-16 text-dark fw-semibold mb-0">Off Day Plan Management</h5>
             </div>
         </div>
-        @if(auth()->user()->user_type !== 'Employee')
+        @if(auth()->user()->user_type !== \App\Enums\UserType::Employee)
             @can('employee-management.edit')
                 <div>
                     {{-- Create Button to Open Modal --}}
@@ -109,7 +109,7 @@
                                             </span>
                                         </td>
                                         <td>{{ date('d M Y', strtotime($plan->from)) }}</td>
-                                        <td>{{ date('d M Y', strtotime($plan->to)) }}</td>
+                                        <td>{{ !empty($plan->to) ? date('d M Y', strtotime($plan->to)) : 'Present' }}</td>
                                         <td>
                                             <span class="badge bg-success">
                                                 <i class="mdi mdi-check-circle me-1"></i>{{ ucfirst($plan->status) }}
@@ -125,7 +125,7 @@
                                                     <i class="mdi mdi-eye"></i> View
                                                 </button>
                                                 {{-- Remove Button --}}
-                                                @if(auth()->user()->user_type !== 'Employee')
+                                                @if(auth()->user()->user_type !== \App\Enums\UserType::Employee)
                                                     @can('employee-management.edit')
                                                         <form
                                                             action="{{ route('employee.profile.plans.remove', ['id' => $plan->id, 'type' => 'offday-plans']) }}"
@@ -224,7 +224,7 @@
                                             </span>
                                         </td>
                                         <td>{{ date('d M Y', strtotime($plan->from)) }}</td>
-                                        <td>{{ date('d M Y', strtotime($plan->to)) }}</td>
+                                        <td>{{ !empty($plan->to) ? date('d M Y', strtotime($plan->to)) : 'Present' }}</td>
                                         <td>
                                             <span class="badge bg-warning-subtle text-warning">
                                                 <i class="mdi mdi-clock-alert-outline me-1"></i>{{ $plan->status }}
@@ -240,7 +240,7 @@
                                                     <i class="mdi mdi-eye"></i> View
                                                 </button>
                                                 {{-- Delete Button --}}
-                                                @if(auth()->user()->user_type !== 'Employee')
+                                                @if(auth()->user()->user_type !== \App\Enums\UserType::Employee)
                                                     @can('employee-management.edit')
                                                     <form
                                                         action="{{ route('employee.profile.plans.delete', ['type' => 'offday-plans', 'id' => $plan->id]) }}"

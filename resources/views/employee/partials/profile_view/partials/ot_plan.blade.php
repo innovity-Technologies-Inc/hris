@@ -8,7 +8,7 @@
                 <h5 class="fs-16 text-dark fw-semibold mb-0">Overtime Plan Management</h5>
             </div>
         </div>
-        @if(auth()->user()->user_type !== 'Employee')
+        @if(auth()->user()->user_type !== \App\Enums\UserType::Employee)
         @can('employee-management.edit')
         <div>
             {{-- Create Button to Open Modal --}}
@@ -208,7 +208,7 @@
                                     <div class="flex-grow-1">
                                         <p class="text-muted small mb-0 fw-semibold">Effective To</p>
                                         <h6 class="mb-0 fw-bold">
-                                            {{ date('d M Y', strtotime($activeOtPLan->to)) }}
+                                            {{ !empty($activeOtPLan->to) ? date('d M Y', strtotime($activeOtPLan->to)) : 'Present' }}
                                         </h6>
                                     </div>
                                 </div>
@@ -295,7 +295,7 @@
                                             <td>{{ $plan->getPlan->name ?? 'N/A' }}</td>
 
                                             <td>{{ date('d M Y', strtotime($plan->from)) }}</td>
-                                            <td>{{ date('d M Y', strtotime($plan->to)) }}</td>
+                                            <td>{{ !empty($plan->to) ? date('d M Y', strtotime($plan->to)) : 'N/A' }}</td>
                                             <td>
                                                 <span class="badge bg-warning-subtle text-warning">
                                                     <i
@@ -337,6 +337,4 @@
 
 {{-- Include the Create Modal --}}
 @include('employee.partials.modal.create_ot_modal')
-
-')
 

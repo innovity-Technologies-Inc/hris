@@ -60,7 +60,20 @@
                                 <option value="Monthly">Monthly</option>
                                 <option value="Weekly">Weekly</option>
                                 <option value="Hourly">Hourly</option>
+                                <option value="Daily">Daily</option>
                             </select>
+                        </div>
+                        <div id="dynamicWorkingMetrics" style="display: none;">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Working Hours / Day <span class="text-danger">*</span></label>
+                                    <input type="number" step="0.01" class="form-control" name="working_hours_per_day" id="working_hours_per_day" placeholder="e.g. 8">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Working Days / Cycle <span class="text-danger">*</span></label>
+                                    <input type="number" step="0.01" class="form-control" name="working_days_per_cycle" id="working_days_per_cycle" placeholder="e.g. 30">
+                                </div>
+                            </div>
                         </div>
                         <div class="mb-3" id="processingDayGroup">
                             <label class="form-label fw-semibold" id="processingDayLabel">Generation Date of Each Month <span class="text-danger">*</span></label>
@@ -115,6 +128,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const frequency = typeof selectedValue === 'string' ? selectedValue : frequencySelect.value;
         let html = '';
         
+        const dynamicWorkingMetrics = document.getElementById('dynamicWorkingMetrics');
+        const workingHoursInput = document.getElementById('working_hours_per_day');
+        const workingDaysInput = document.getElementById('working_days_per_cycle');
+
         if (frequency === 'Monthly') {
             dayLabel.innerText = 'Generation Date of Each Month';
             html = `<select class="form-select" name="salary_processing_day" required>`;
@@ -122,6 +139,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 html += `<option value="${i}">${i}</option>`;
             }
             html += `</select>`;
+            
+            dynamicWorkingMetrics.style.display = 'block';
+            workingHoursInput.required = true;
+            workingDaysInput.required = true;
+            
         } else if (frequency === 'Weekly') {
             dayLabel.innerText = 'Generation Day of the Week';
             const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -130,9 +152,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 html += `<option value="${day}">${day}</option>`;
             });
             html += `</select>`;
+            
+            dynamicWorkingMetrics.style.display = 'block';
+            workingHoursInput.required = true;
+            workingDaysInput.required = true;
+            
         } else {
             dayLabel.innerText = 'Salary Processing Date';
             html = `<input type="text" class="form-control bg-light" name="salary_processing_day" value="Daily" readonly>`;
+            
+            dynamicWorkingMetrics.style.display = 'none';
+            workingHoursInput.required = false;
+            workingDaysInput.required = false;
+            workingHoursInput.value = '';
+            workingDaysInput.value = '';
         }
         
         dayInputContainer.innerHTML = html;
@@ -171,6 +204,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         document.getElementById('title').value = data.title;
                         document.getElementById('payroll_frequency').value = data.payroll_frequency;
                         document.getElementById('status').value = data.status;
+                        
+                        document.getElementById('working_hours_per_day').value = data.working_hours_per_day || '';
+                        document.getElementById('working_days_per_cycle').value = data.working_days_per_cycle || '';
                         
                         updateProcessingDayInput(data.payroll_frequency);
                         const daySelect = dayInputContainer.querySelector('[name="salary_processing_day"]');

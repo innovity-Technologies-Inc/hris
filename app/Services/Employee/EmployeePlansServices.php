@@ -20,7 +20,13 @@ class EmployeePlansServices
             return $plan;
         }else{
             DB::transaction(function () use ($validated, $modelName, $active_plan) {
-                $active_plan->update(['status' => 'inactive']);
+                // Set the end date of the old plan to the day before the new plan starts
+                // or just today if the new plan starts today.
+                $endDate = now()->subDay()->format('Y-m-d');
+                $active_plan->update([
+                    'status' => 'inactive',
+                    'to' => $endDate
+                ]);
                 $plan = $modelName::create($validated);
                 return $plan;
             });
@@ -47,7 +53,10 @@ class EmployeePlansServices
             return $meal_plan;
         }else{
             DB::transaction(function () use ($validated, $meal_plan) {
-                $meal_plan->update(['status' => 'inactive']);
+                $meal_plan->update([
+                    'status' => 'inactive',
+                    'to' => now()->subDay()->format('Y-m-d')
+                ]);
                 $meal_plan = EmployeeMealPlan::create($validated);
                 return $meal_plan;
             });
@@ -56,7 +65,10 @@ class EmployeePlansServices
 
     public function planRemove($id, $modelName){
         $plan = $modelName::findOrFail($id);
-        $plan->update(['status' => 'inactive']);
+        $plan->update([
+            'status' => 'inactive',
+            'to' => now()->format('Y-m-d')
+        ]);
         return $plan;
     }
 
@@ -71,15 +83,13 @@ class EmployeePlansServices
             'employee_id' => 'required',
             'plan_id' => 'required',
             'from' => 'required|date',
-            'to' => 'required|date|after_or_equal:from',
+            'to' => 'nullable|date|after_or_equal:from',
         ], [
             'employee_id.required' => 'The employee field is required.',
             'plan_id.required' => 'The plan field is required.',
             'from.required' => 'The from date field is required.',
-            'to.required' => 'The to date field is required.',
             'to.after_or_equal' => 'The to date must be after or equal to the from date.',
         ]);
         return $validated;
     }
 }
-

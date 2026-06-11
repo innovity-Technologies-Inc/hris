@@ -4,6 +4,7 @@
             <tr>
                 <th>Title</th>
                 <th>Frequency</th>
+                <th>Metrics</th>
                 <th>Processing Day</th>
                 <th>Status</th>
                 <th class="text-end">Actions</th>
@@ -15,6 +16,14 @@
                     <td>{{ $group->title }}</td>
                     <td>
                         <span class="badge bg-soft-info text-info">{{ $group->payroll_frequency }}</span>
+                    </td>
+                    <td>
+                        @if(in_array($group->payroll_frequency, ['Monthly', 'Weekly']))
+                            <small class="text-muted d-block">Hrs/Day: <strong class="text-dark">{{ $group->working_hours_per_day ?? '-' }}</strong></small>
+                            <small class="text-muted d-block">Days/Cycle: <strong class="text-dark">{{ $group->working_days_per_cycle ?? '-' }}</strong></small>
+                        @else
+                            <span class="text-muted">-</span>
+                        @endif
                     </td>
                     <td>
                         <span class="text-muted">{{ $group->salary_processing_day }}</span>
@@ -41,7 +50,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5" class="text-center py-4 text-muted">No pay groups found.</td>
+                    <td colspan="6" class="text-center py-4 text-muted">No pay groups found.</td>
                 </tr>
             @endforelse
         </tbody>

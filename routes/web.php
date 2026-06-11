@@ -1050,6 +1050,7 @@ Route::prefix('bonus')->name('bonus.')->controller(\App\Http\Controllers\Payroll
     Route::middleware('permission:bonuses.view')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('view/{id}', 'show')->name('show');
+        Route::get('individual-view/{id}', 'individualBonusView')->name('individual_view');
     });
     Route::middleware('permission:bonuses.create')->group(function () {
         Route::get('create', 'create')->name('create');
@@ -1154,6 +1155,10 @@ Route::controller(DataController::class)->middleware('auth')->group(function () 
         Route::middleware('permission:attendance.create')->group(function () {
             Route::get('create', 'create')->name('attendance.create');
             Route::post('store', 'store')->name('attendance.store');
+        });
+        Route::middleware('permission:attendance.edit')->group(function () {
+            Route::get('edit/{id}', 'edit')->name('attendance.edit');
+            Route::post('update/{id}', 'update')->name('attendance.update');
         });
         Route::middleware('permission:attendance.import')->group(function () {
             Route::get('bulk-upload', 'bulkUpload')->name('attendance.bulk-upload');

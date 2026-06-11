@@ -46,8 +46,9 @@ class BonusController extends Controller
         $sub_section = 'Add';
         $bonusPlans = BonusPlan::where('status', 'active')->get();
         $companies = Company::all();
+        $payGroups = \App\Models\Company\PayGroup::where('status', 'active')->get();
         return view('payroll.bonus.create', compact('title', 'section',
-            'sub_section', 'section_url', 'bonusPlans', 'companies'));
+            'sub_section', 'section_url', 'bonusPlans', 'companies', 'payGroups'));
     }
 
     public function edit($id)
@@ -59,9 +60,10 @@ class BonusController extends Controller
         $sub_section = 'Edit';
         $bonusPlans = BonusPlan::where('status', 'active')->get();
         $companies = Company::all();
+        $payGroups = \App\Models\Company\PayGroup::where('status', 'active')->get();
         $bonusData = PayrollProcess::find($id);
         return view('payroll.bonus.create', compact('title', 'section',
-            'section_url', 'bonusData', 'employees', 'sub_section', 'bonusPlans', 'companies'));
+            'section_url', 'bonusData', 'employees', 'sub_section', 'bonusPlans', 'companies', 'payGroups'));
     }
 
     public function save(Request $request, $id=null){
@@ -100,6 +102,23 @@ class BonusController extends Controller
         $bonuses = Bonus::where('batch_id', $batch_id)->orderBy('created_at', 'desc')->paginate(10);
         return view('payroll.bonus.view', compact('title', 'section', 'section_url', 'sub_section',
             'bonuses', 'salary_month', 'sub_section'));
+    }
+
+    public function individualBonusView($id)
+    {
+        $bonus = Bonus::with(['getEmployee', 'getBatch'])->findOrFail($id);
+        $title = 'Bonus Details';
+        $section = 'Employee Bonus';
+        $section_url = route('bonus.index');
+        $sub_section = 'Bonus Detail';
+        
+        // Get the plans from the batch
+        $planIds = $bonus->getBatch->bonus_plan_ids ?? [];
+        $bonusPlans = BonusPlan::whereIn('id', $planIds)->get();
+
+        return view('payroll.bonus.individual_view', compact(
+            'title', 'section', 'section_url', 'sub_section', 'bonus', 'bonusPlans'
+        ));
     }
 
     public function delete($id)

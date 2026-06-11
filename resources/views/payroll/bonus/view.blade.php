@@ -87,6 +87,7 @@
                                     <th scope="col">Employee ID</th>
                                     <th scope="col">Employee Name</th>
                                     <th scope="col">Amount</th>
+                                    <th scope="col" class="text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -116,6 +117,11 @@
                                         </td>
                                         <td>
                                             {{ $item->amount }}
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="{{ route('bonus.individual_view', $item->id) }}" class="btn btn-outline-info btn-sm">
+                                                <i class="fas fa-eye me-1"></i>Details
+                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach

@@ -201,9 +201,13 @@
                     <td>Total Deductions (Late, Absent, etc.)</td>
                     <td class="text-right">{{ number_format($payroll->deduction_amount, 2) }}</td>
                 </tr>
+                <tr>
+                    <td>Penalty Deductions</td>
+                    <td class="text-right">{{ number_format($payroll->penalty_amount, 2) }}</td>
+                </tr>
                 <tr class="total-row">
                     <td>Total Deductions (B)</td>
-                    <td class="text-right">{{ number_format($payroll->deduction_amount, 2) }}</td>
+                    <td class="text-right">{{ number_format($payroll->deduction_amount + $payroll->penalty_amount, 2) }}</td>
                 </tr>
             </tbody>
         </table>

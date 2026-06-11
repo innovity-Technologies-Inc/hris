@@ -17,6 +17,8 @@ class PayGroup extends Model
     protected $fillable = [
         'title',
         'payroll_frequency',
+        'working_hours_per_day',
+        'working_days_per_cycle',
         'salary_processing_day',
         'status',
     ];

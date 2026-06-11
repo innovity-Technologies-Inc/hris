@@ -24,6 +24,8 @@ class PayGroupRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'payroll_frequency' => 'required|in:Hourly,Monthly,Weekly',
+            'working_hours_per_day' => 'required_if:payroll_frequency,Monthly,Weekly|nullable|numeric|min:1|max:24',
+            'working_days_per_cycle' => 'required_if:payroll_frequency,Monthly,Weekly|nullable|numeric|min:1|max:31',
             'salary_processing_day' => 'required|string|max:50',
             'status' => 'required|in:active,inactive',
         ];
@@ -34,6 +36,8 @@ class PayGroupRequest extends FormRequest
         return [
             'title.required' => 'Please enter a title for the pay group.',
             'payroll_frequency.required' => 'Please select a payroll frequency.',
+            'working_hours_per_day.required_if' => 'Working hours per day is required for Monthly/Weekly frequencies.',
+            'working_days_per_cycle.required_if' => 'Working days per cycle is required for Monthly/Weekly frequencies.',
             'salary_processing_day.required' => 'Please select a salary processing day.',
         ];
     }

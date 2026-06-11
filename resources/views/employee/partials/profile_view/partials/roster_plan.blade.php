@@ -238,7 +238,7 @@
                                     <div class="flex-grow-1">
                                         <p class="text-muted small mb-0 fw-semibold">Effective To</p>
                                         <h6 class="mb-0 fw-bold">
-                                            {{ date('d M Y', strtotime($activeRosterPLan->to)) }}
+                                            {{ !empty($activeRosterPLan->to) ? date('d M Y', strtotime($activeRosterPLan->to)) : 'Present' }}
                                         </h6>
                                     </div>
                                 </div>
@@ -337,7 +337,7 @@
                                             </span>
                                         </td>
                                         <td>{{ date('d M Y', strtotime($plan->from)) }}</td>
-                                        <td>{{ date('d M Y', strtotime($plan->to)) }}</td>
+                                        <td>{{ !empty($plan->to) ? date('d M Y', strtotime($plan->to)) : 'N/A' }}</td>
                                         <td>
                                             <span class="badge bg-warning-subtle text-warning">
                                                 <i class="mdi mdi-clock-alert-outline me-1"></i>{{ $plan->status }}

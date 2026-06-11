@@ -90,16 +90,28 @@
                                     </h6>
                                     <ul class="list-group list-group-flush bg-transparent">
                                         <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent px-0 border-light">
-                                            Total Deductions
-                                            <span class="fw-bold text-danger">৳ {{ number_format($payroll->deduction_amount, 2) }}</span>
+                                            Late Deduction
+                                            <span class="fw-bold text-danger">৳ {{ number_format($payroll->late_deduction_amount, 2) }}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent px-0 border-light">
+                                            Excessive Late Deduction
+                                            <span class="fw-bold text-danger">৳ {{ number_format($payroll->excessive_late_deduction_amount, 2) }}</span>
                                         </li>
                                         <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent px-0 border-light">
                                             Absent Deduction
-                                            <span class="text-muted small">(Included in total)</span>
+                                            <span class="fw-bold text-danger">৳ {{ number_format($payroll->absent_deduction_amount, 2) }}</span>
                                         </li>
                                         <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent px-0 border-light">
-                                            Late Deduction
-                                            <span class="text-muted small">(Included in total)</span>
+                                            Early Exit Deduction
+                                            <span class="fw-bold text-danger">৳ {{ number_format($payroll->early_exit_deduction_amount, 2) }}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent px-0 border-light">
+                                            Penalty Amount
+                                            <span class="fw-bold text-danger">৳ {{ number_format($payroll->penalty_amount, 2) }}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent px-0 border-light mt-2 pt-2 border-top border-danger border-2">
+                                            <strong>Total Deductions</strong>
+                                            <strong class="text-danger">৳ {{ number_format($payroll->deduction_amount + $payroll->penalty_amount, 2) }}</strong>
                                         </li>
                                         <div class="mt-4 pt-3 border-top border-danger border-2">
                                             <div class="d-flex justify-content-between align-items-center">

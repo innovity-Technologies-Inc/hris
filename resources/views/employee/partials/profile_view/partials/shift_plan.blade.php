@@ -8,7 +8,7 @@
                 <h5 class="fs-16 text-dark fw-semibold mb-0">Shift Plan Management</h5>
             </div>
         </div>
-        @if(auth()->user()->user_type !== 'Employee')
+        @if(auth()->user()->user_type !== \App\Enums\UserType::Employee)
             @can('employee-management.edit')
                 <div>
                     {{-- Create Button to Open Modal --}}
@@ -52,7 +52,7 @@
                 <div class="card-header border-0 py-3 position-relative" style="background: var(--bs-tertiary-bg);">
 
                     {{-- Remove Button --}}
-                    @if(auth()->user()->user_type !== 'Employee')
+                    @if(auth()->user()->user_type !== \App\Enums\UserType::Employee)
                         @can('employee-management.edit')
                             <div class="position-absolute top-0 end-0 mt-2 me-3">
                                 <form
@@ -351,7 +351,7 @@
                                     <div class="flex-grow-1">
                                         <p class="text-muted small mb-0 fw-semibold">Effective To</p>
                                         <h6 class="mb-0 fw-bold">
-                                            {{ date('d M Y', strtotime($activeShiftPLan->to)) }}
+                                            {{ !empty($activeShiftPLan->to) ? date('d M Y', strtotime($activeShiftPLan->to)) : 'Present' }}
                                         </h6>
                                     </div>
                                 </div>
@@ -431,14 +431,14 @@
                                             </span>
                                         </td>
                                         <td>{{ date('d M Y', strtotime($plan->from)) }}</td>
-                                        <td>{{ date('d M Y', strtotime($plan->to)) }}</td>
+                                        <td>{{ !empty($plan->to) ? date('d M Y', strtotime($plan->to)) : 'N/A' }}</td>
                                         <td>
                                             <span class="badge bg-warning-subtle text-warning">
                                                 <i class="mdi mdi-clock-alert-outline me-1"></i>{{ $plan->status }}
                                             </span>
                                         </td>
                                         <td class="text-center">
-                                            @if(auth()->user()->user_type !== 'Employee')
+                                            @if(auth()->user()->user_type !== \App\Enums\UserType::Employee)
                                                 @can('employee-management.edit')
                                                     <form
                                                         action="{{ route('employee.profile.plans.delete', ['type' => 'shift-plans', 'id' => $plan->id]) }}"
