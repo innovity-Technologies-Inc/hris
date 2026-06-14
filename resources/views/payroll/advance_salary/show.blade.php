@@ -56,18 +56,25 @@
                                 <th class="text-center">Deduction Month</th>
                                 <th class="text-end">Advance Amount</th>
                                 <th class="text-center">Status</th>
+                                <th class="text-center">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($process->advanceSalaries as $index => $item)
                             <tr>
                                 <td class="text-center text-muted">{{ $index + 1 }}</td>
-                                <td><span class="fw-semibold text-secondary">{{ $item->employee->employee_id }}</span></td>
+                                <td><span class="fw-semibold text-secondary">{{ $item->employee->system_id }}</span></td>
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <div class="ms-1">
-                                            <div class="fw-bold text-dark">{{ $item->employee->full_name }}</div>
-                                            <div class="text-muted small">{{ $item->employee->officeInfo->designation->name ?? 'N/A' }}</div>
+                                            <div class="fw-bold">
+                                                <a href="{{ route('employee.profile.general_informations', $item->employee->id) }}" class="text-dark hover-primary">
+                                                    {{ $item->employee->full_name }}
+                                                </a>
+                                            </div>
+                                            <div class="text-muted small">
+                                                {{ $item->employee->officeInfo->getCurrentDesignation->name ?? 'N/A' }}
+                                            </div>
                                         </div>
                                     </div>
                                 </td>
@@ -91,6 +98,19 @@
                                         <span class="badge bg-danger-subtle text-danger border border-danger">{{ ucfirst($item->status) }}</span>
                                     @endif
                                 </td>
+                                <td class="text-center">
+                                    <button type="button" class="btn btn-outline-info btn-sm view-item-details"
+                                            data-name="{{ $item->employee->full_name }}"
+                                            data-id="{{ $item->employee->system_id }}"
+                                            data-amount="{{ number_format($item->amount, 2) }}"
+                                            data-month="{{ \Carbon\Carbon::parse($item->deduction_month)->format('F Y') }}"
+                                            data-reason="{{ $item->reason ?? 'N/A' }}"
+                                            data-status="{{ ucfirst($item->status) }}"
+                                            data-department="{{ $item->employee->officeInfo->getCurrentDepartment->name ?? 'N/A' }}"
+                                            data-designation="{{ $item->employee->officeInfo->getCurrentDesignation->name ?? 'N/A' }}">
+                                        <i data-feather="eye" style="width: 14px; height: 14px;"></i>
+                                    </button>
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -110,4 +130,71 @@
         </div>
     </div>
 </div>
+
+{{-- Individual Item Modal --}}
+<div class="modal fade" id="itemDetailsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title text-white">Employee Advance Details</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="text-center mb-4">
+                    <h5 class="mb-1" id="modal-emp-name">-</h5>
+                    <span class="badge bg-light text-dark border" id="modal-emp-id">-</span>
+                </div>
+                <div class="row g-3">
+                    <div class="col-6">
+                        <label class="text-muted small d-block">Department</label>
+                        <span class="fw-bold" id="modal-emp-dept">-</span>
+                    </div>
+                    <div class="col-6">
+                        <label class="text-muted small d-block">Designation</label>
+                        <span class="fw-bold" id="modal-emp-desig">-</span>
+                    </div>
+                    <div class="col-6">
+                        <label class="text-muted small d-block">Advance Amount</label>
+                        <span class="fw-bold text-primary fs-5" id="modal-advance-amount">-</span>
+                    </div>
+                    <div class="col-6">
+                        <label class="text-muted small d-block">Deduction Month</label>
+                        <span class="fw-bold" id="modal-deduction-month">-</span>
+                    </div>
+                    <div class="col-12 border-top pt-3">
+                        <label class="text-muted small d-block">Reason</label>
+                        <p class="text-dark mb-0" id="modal-reason">-</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .hover-primary:hover { color: var(--bs-primary) !important; text-decoration: underline; }
+</style>
+
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        $('.view-item-details').on('click', function() {
+            const data = $(this).data();
+            $('#modal-emp-name').text(data.name);
+            $('#modal-emp-id').text(data.id);
+            $('#modal-emp-dept').text(data.department);
+            $('#modal-emp-desig').text(data.designation);
+            $('#modal-advance-amount').text(data.amount);
+            $('#modal-deduction-month').text(data.month);
+            $('#modal-reason').text(data.reason);
+            
+            const modal = new bootstrap.Modal(document.getElementById('itemDetailsModal'));
+            modal.show();
+        });
+    });
+</script>
+@endpush
 @endsection

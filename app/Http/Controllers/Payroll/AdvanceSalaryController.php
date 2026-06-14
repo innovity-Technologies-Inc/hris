@@ -43,7 +43,8 @@ class AdvanceSalaryController extends Controller
         try {
             $companies = Company::all();
             $payGroups = PayGroup::all();
-            return view('payroll.advance_salary.create', compact('companies', 'payGroups'));
+            $generalSettings = \App\HelperClass::getGeneralSetting();
+            return view('payroll.advance_salary.create', compact('companies', 'payGroups', 'generalSettings'));
         } catch (\Exception $e) {
             Log::error('Error loading Advance Salary create view.', ['message' => $e->getMessage()]);
             return redirect()->back()->with(['alert-type' => 'error', 'message' => 'Failed to load creation form.']);
@@ -127,8 +128,9 @@ class AdvanceSalaryController extends Controller
             $firstItem = $advanceData->advanceSalaries->first();
             $companies = Company::all();
             $payGroups = PayGroup::all();
+            $generalSettings = \App\HelperClass::getGeneralSetting();
             
-            return view('payroll.advance_salary.create', compact('advanceData', 'companies', 'payGroups', 'firstItem'));
+            return view('payroll.advance_salary.create', compact('advanceData', 'companies', 'payGroups', 'firstItem', 'generalSettings'));
         } catch (\Exception $e) {
             Log::error('Error loading Advance Salary edit view.', ['process_id' => $id, 'message' => $e->getMessage()]);
             return redirect()->route('advance-salary.index')->with(['alert-type' => 'error', 'message' => 'Batch not found.']);
@@ -139,8 +141,14 @@ class AdvanceSalaryController extends Controller
     {
         Log::info('Accessing Advance Salary detail view.', ['process_id' => $id]);
         try {
-            $process = PayrollProcess::with(['advanceSalaries.employee', 'getCompany', 'getBranch', 'getDepartment', 'generatedBy'])
-                ->findOrFail($id);
+            $process = PayrollProcess::with([
+                'advanceSalaries.employee.officeInfo.getCurrentDesignation',
+                'advanceSalaries.employee.officeInfo.getCurrentDepartment',
+                'getCompany', 
+                'getBranch', 
+                'getDepartment', 
+                'generatedBy'
+            ])->findOrFail($id);
             
             if ($process->type !== 'advance') {
                 abort(404);

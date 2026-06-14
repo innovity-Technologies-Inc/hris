@@ -5,12 +5,28 @@
         $isEdit = isset($advanceData);
     @endphp
 
+    <style>
+        /* Ensure Select2 height matches Bootstrap 5 form-control exactly */
+        .select2-container--bootstrap-5 .select2-selection--single {
+            height: 38px !important; /* Standard BS5 height */
+            display: flex;
+            align-items: center;
+        }
+        .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+            line-height: 38px !important;
+            padding-left: 0.75rem !important;
+        }
+        .select2-container--bootstrap-5 .select2-selection--single .select2-selection__arrow {
+            height: 36px !important;
+        }
+    </style>
+
     <div class="row">
         <div class="col-12">
             <div class="card shadow-sm border-0">
-                <div class="card-header bg-white py-3">
-                    <h5 class="card-title mb-0">
-                        <i data-feather="{{ $isEdit ? 'edit' : 'plus' }}" class="me-2 text-primary"></i>
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="card-title mb-0 text-white">
+                        <i data-feather="{{ $isEdit ? 'edit' : 'plus' }}" class="me-2"></i>
                         {{ $isEdit ? 'Edit' : 'Process' }} Advance Salary
                     </h5>
                 </div>
@@ -20,44 +36,79 @@
                         @csrf
                         @if($isEdit) @method('PUT') @endif
 
-                        <div class="row g-4">
-                            {{-- Selection Filters --}}
+                        {{-- ================= ORGANIZATIONAL HIERARCHY ================= --}}
+                        <div class="row mb-3 g-3">
                             <div class="col-md-4">
-                                <label class="form-label fw-semibold small text-muted">Company <span class="text-danger">*</span></label>
-                                <select class="form-select select2" name="company_id" id="company_id" required>
+                                <label class="form-label fw-semibold">Company <span class="text-danger">*</span></label>
+                                <select class="select2_list" name="company_id" id="company_id" required>
                                     <option value="">Select Company</option>
                                     @foreach($companies as $company)
-                                        <option value="{{ $company->id }}" {{ (isset($advanceData) && $advanceData->company_id == $company->id) ? 'selected' : '' }}>
+                                        <option value="{{ $company->id }}" {{ ($isEdit && $advanceData->company_id == $company->id) ? 'selected' : '' }}>
                                             {{ $company->name }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
 
+                            @if($generalSettings->branch_status == 1)
                             <div class="col-md-4">
-                                <label class="form-label fw-semibold small text-muted">Branch</label>
-                                <select class="form-select select2" name="branch_id" id="branch_id">
+                                <label class="form-label fw-semibold">Branch</label>
+                                <select class="select2_list" name="branch_id" id="branch_id">
                                     <option value="">Select Branch</option>
-                                    {{-- Loaded via AJAX --}}
                                 </select>
                             </div>
+                            @endif
 
+                            @if($generalSettings->division_status == 1)
                             <div class="col-md-4">
-                                <label class="form-label fw-semibold small text-muted">Department</label>
-                                <select class="form-select select2" name="department_id" id="department_id">
+                                <label class="form-label fw-semibold">Division</label>
+                                <select class="select2_list" name="division_id" id="division_id">
+                                    <option value="">Select Division</option>
+                                </select>
+                            </div>
+                            @endif
+
+                            @if($generalSettings->department_status == 1)
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Department</label>
+                                <select class="select2_list" name="department_id" id="department_id">
                                     <option value="">Select Department</option>
-                                    {{-- Loaded via AJAX --}}
                                 </select>
                             </div>
+                            @endif
+
+                            @if($generalSettings->section_status == 1)
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Section</label>
+                                <select class="select2_list" name="section_id" id="section_id">
+                                    <option value="">Select Section</option>
+                                </select>
+                            </div>
+                            @endif
 
                             <div class="col-md-4">
-                                <label class="form-label fw-semibold small text-muted">Pay Group <span class="text-danger">*</span></label>
-                                <select class="form-select select2" name="pay_group_id" id="pay_group_id" required>
+                                <label class="form-label fw-semibold">Specific Employee (Optional)</label>
+                                <select class="select2_list" name="employee_id" id="employeeSelect">
+                                    <option value="">All Eligible Employees</option>
+                                    @if($isEdit && isset($firstItem) && $firstItem->employee)
+                                        <option value="{{ $firstItem->employee_id }}" selected>
+                                            {{ $firstItem->employee->full_name }}
+                                        </option>
+                                    @endif
+                                </select>
+                            </div>
+                        </div>
+
+                        {{-- ================= PAY GROUP & DATES ================= --}}
+                        <div class="row mb-4 g-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Pay Group <span class="text-danger">*</span></label>
+                                <select class="select2_list" name="pay_group_id" id="pay_group_id" required>
                                     <option value="">Select Pay Group</option>
                                     @foreach($payGroups as $group)
                                         <option value="{{ $group->id }}" 
                                                 data-frequency="{{ strtolower($group->payroll_frequency) }}"
-                                                {{ (isset($advanceData) && $advanceData->pay_group_id == $group->id) ? 'selected' : '' }}>
+                                                {{ ($isEdit && $advanceData->pay_group_id == $group->id) ? 'selected' : '' }}>
                                             {{ $group->name }} ({{ $group->payroll_frequency }})
                                         </option>
                                     @endforeach
@@ -65,62 +116,57 @@
                             </div>
 
                             <div class="col-md-4" id="salary_month_container">
-                                <label class="form-label fw-semibold small text-muted">Advance Month <span class="text-danger">*</span></label>
+                                <label class="form-label fw-semibold">Advance Month <span class="text-danger">*</span></label>
                                 <input type="month" class="form-control" name="salary_month" id="salary_month" 
-                                       value="{{ isset($advanceData) ? $advanceData->salary_month : date('Y-m') }}">
+                                       value="{{ $isEdit ? $advanceData->salary_month : date('Y-m') }}">
                             </div>
 
-                            <div class="col-md-4 custom-date-container" style="display: none;">
-                                <label class="form-label fw-semibold small text-muted">Start Date <span class="text-danger">*</span></label>
+                            <div class="col-md-4 custom-date-container d-none">
+                                <label class="form-label fw-semibold">Start Date <span class="text-danger">*</span></label>
                                 <input type="date" class="form-control" name="start_date" id="start_date" 
-                                       value="{{ isset($advanceData) ? \Carbon\Carbon::parse($advanceData->start_date)->format('Y-m-d') : '' }}">
+                                       value="{{ $isEdit ? \Carbon\Carbon::parse($advanceData->start_date)->format('Y-m-d') : '' }}">
                             </div>
 
-                            <div class="col-md-4 custom-date-container" style="display: none;">
-                                <label class="form-label fw-semibold small text-muted">End Date <span class="text-danger">*</span></label>
+                            <div class="col-md-4 custom-date-container d-none">
+                                <label class="form-label fw-semibold">End Date <span class="text-danger">*</span></label>
                                 <input type="date" class="form-control" name="end_date" id="end_date" 
-                                       value="{{ isset($advanceData) ? \Carbon\Carbon::parse($advanceData->end_date)->format('Y-m-d') : '' }}">
+                                       value="{{ $isEdit ? \Carbon\Carbon::parse($advanceData->end_date)->format('Y-m-d') : '' }}">
                             </div>
 
                             <div class="col-md-4">
-                                <label class="form-label fw-semibold small text-muted">Deduction Month <span class="text-danger">*</span></label>
+                                <label class="form-label fw-semibold">Deduction Month <span class="text-danger">*</span></label>
                                 <input type="month" class="form-control" name="deduction_month" id="deduction_month" 
                                        value="{{ isset($firstItem) ? $firstItem->deduction_month : date('Y-m', strtotime('+1 month')) }}" required>
                             </div>
+                        </div>
 
-                            <div class="col-md-3">
-                                <label class="form-label fw-semibold small text-muted">Amount Type <span class="text-danger">*</span></label>
+                        {{-- ================= AMOUNT CONFIGURATION ================= --}}
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Amount Type <span class="text-danger">*</span></label>
                                 <select class="form-select" name="amount_type" id="amount_type" required>
                                     <option value="fixed" {{ (isset($firstItem) && $firstItem->amount_type == 'fixed') ? 'selected' : '' }}>Fixed Amount</option>
                                     <option value="percentage" {{ (isset($firstItem) && $firstItem->amount_type == 'percentage') ? 'selected' : '' }}>Percentage</option>
                                 </select>
                             </div>
 
-                            <div class="col-md-3" id="percentage_base_container" style="display: none;">
-                                <label class="form-label fw-semibold small text-muted">Percentage Base</label>
+                            <div class="col-md-4" id="percentage_base_container" style="display: none;">
+                                <label class="form-label fw-semibold">Percentage Base</label>
                                 <select class="form-select" name="percentage_base" id="percentage_base">
                                     <option value="gross_salary">Gross Salary</option>
                                     <option value="basic_salary">Basic Salary</option>
                                 </select>
                             </div>
 
-                            <div class="col-md-3">
-                                <label class="form-label fw-semibold small text-muted">Amount Value <span class="text-danger">*</span></label>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Amount Value <span class="text-danger">*</span></label>
                                 <input type="number" step="0.01" class="form-control" name="amount_value" 
                                        value="{{ isset($firstItem) ? $firstItem->amount_value : '' }}" placeholder="Enter amount or percent" required>
                             </div>
 
-                            <div class="col-md-3">
-                                <label class="form-label fw-semibold small text-muted">Specific Employee (Optional)</label>
-                                <select class="form-select select2" name="employee_id" id="employee_id">
-                                    <option value="">All Eligible Employees</option>
-                                    {{-- Loaded via AJAX --}}
-                                </select>
-                            </div>
-
                             <div class="col-12">
-                                <label class="form-label fw-semibold small text-muted">Reason</label>
-                                <textarea class="form-control" name="reason" rows="2">{{ isset($firstItem) ? $firstItem->reason : '' }}</textarea>
+                                <label class="form-label fw-semibold">Reason</label>
+                                <textarea class="form-control" name="reason" rows="2" placeholder="Describe the purpose of this advance">{{ isset($firstItem) ? $firstItem->reason : '' }}</textarea>
                             </div>
                         </div>
 
@@ -138,10 +184,114 @@
     </div>
 
     @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $('.select2').select2({ width: '100%' });
+        $(function() {
+            $('.select2_list, .select2').select2({
+                theme: 'bootstrap-5',
+                allowClear: true,
+                width: '100%'
+            });
+
+            function ajaxLoad(url, $select, placeholder, selectedValue = null){
+                if (!$select.length) return Promise.resolve();
+                return $.get(url).then(function(data){
+                    $select.html(`<option value="">${placeholder}</option>`);
+                    data.forEach(item=>{
+                        $select.append(
+                            `<option value="${item.id}">${item.name ?? item.department_name ?? item.full_name}</option>`
+                        );
+                    });
+                    if(selectedValue){
+                        $select.val(selectedValue).trigger('change');
+                    }
+                }).catch(function(){
+                    $select.html('<option value="">Error loading data</option>');
+                });
+            }
+
+            function loadBranches(companyId, selected=null){
+                if(!companyId) return Promise.resolve();
+                return ajaxLoad(`/get-units/${companyId}`, $('#branch_id'),'Select Branch',selected);
+            }
+
+            function loadDivisions(companyId, branchId, selected=null){
+                return ajaxLoad(`/get-divisions/${companyId}/${branchId ?? 'null'}`, $('#division_id'),'Select Division',selected);
+            }
+
+            function loadDepartments(companyId, branchId, divisionId, selected=null){
+                return ajaxLoad(`/get-departments/${companyId}/${branchId ?? 'null'}/${divisionId ?? 'null'}`, $('#department_id'),'Select Department',selected);
+            }
+
+            function loadSections(companyId, branchId, divisionId, departmentId, selected=null){
+                return ajaxLoad(`/get-sections/${companyId}/${branchId ?? 'null'}/${divisionId ?? 'null'}/${departmentId ?? 'null'}`, $('#section_id'),'Select Section',selected);
+            }
+
+            function loadEmployees(companyId, branchId, divisionId, departmentId, sectionId, selected=null){
+                return ajaxLoad(`/get-employees/${companyId}/${branchId ?? 'null'}/${divisionId ?? 'null'}/${departmentId ?? 'null'}/${sectionId ?? 'null'}`, $('#employeeSelect'),'All Eligible Employees',selected);
+            }
+
+            $('#company_id').on('change',function(){
+                let company = $(this).val();
+                if(!company) return;
+                loadBranches(company);
+                loadDivisions(company);
+                loadDepartments(company);
+                loadSections(company);
+                loadEmployees(company);
+            });
+
+            $('#branch_id').on('change',function(){
+                let company = $('#company_id').val();
+                let branch = $(this).val();
+                loadDivisions(company,branch);
+                loadDepartments(company,branch);
+                loadSections(company,branch);
+                loadEmployees(company,branch);
+            });
+
+            $('#division_id').on('change',function(){
+                let company = $('#company_id').val();
+                let branch = $('#branch_id').val();
+                let division = $(this).val();
+                loadDepartments(company,branch,division);
+                loadSections(company,branch,division);
+                loadEmployees(company,branch,division);
+            });
+
+            $('#department_id').on('change',function(){
+                let company = $('#company_id').val();
+                let branch = $('#branch_id').val();
+                let division = $('#division_id').val();
+                let department = $(this).val();
+                loadSections(company,branch,division,department);
+                loadEmployees(company,branch,division,department);
+            });
+
+            $('#section_id').on('change',function(){
+                let company = $('#company_id').val();
+                let branch = $('#branch_id').val();
+                let division = $('#division_id').val();
+                let department = $('#department_id').val();
+                let section = $(this).val();
+                loadEmployees(company,branch,division,department,section);
+            });
+
+            @if($isEdit)
+            const editData = {
+                company: "{{ $advanceData->company_id ?? '' }}",
+                branch: "{{ $advanceData->branch_id ?? '' }}",
+                division: "{{ $advanceData->division_id ?? '' }}",
+                department: "{{ $advanceData->department_id ?? '' }}",
+                section: "{{ $advanceData->section_id ?? '' }}",
+                employee: "{{ $firstItem->employee_id ?? '' }}"
+            };
+
+            loadBranches(editData.company, editData.branch)
+                .then(()=> loadDivisions(editData.company, editData.branch, editData.division))
+                .then(()=> loadDepartments(editData.company, editData.branch, editData.division, editData.department))
+                .then(()=> loadSections(editData.company, editData.branch, editData.division, editData.department, editData.section))
+                .then(()=> loadEmployees(editData.company, editData.branch, editData.division, editData.department, editData.section, editData.employee));
+            @endif
 
             const amountType = $('#amount_type');
             const percContainer = $('#percentage_base_container');
@@ -156,78 +306,53 @@
             amountType.on('change', togglePercentage);
             togglePercentage();
 
-            const payGroupId = $('#pay_group_id');
-            const salaryMonthContainer = $('#salary_month_container');
-            const customDateContainers = $('.custom-date-container');
-
-            function toggleFrequencyFields() {
-                const selected = payGroupId.find(':selected');
-                const frequency = selected.data('frequency');
+            function handlePayGroupChange() {
+                let selectedOption = $('#pay_group_id').find(':selected');
+                let frequency = selectedOption.data('frequency');
+                
+                if (!frequency) {
+                    $('#salary_month_container').removeClass('d-none');
+                    $('.custom-date-container').addClass('d-none');
+                    $('#salary_month').attr('required', true);
+                    $('#start_date, #end_date').removeAttr('required');
+                    return;
+                }
 
                 if (frequency === 'monthly') {
-                    salaryMonthContainer.show();
+                    $('#salary_month_container').removeClass('d-none');
+                    $('.custom-date-container').addClass('d-none');
                     $('#salary_month').attr('required', true);
-                    customDateContainers.hide();
-                    $('#start_date, #end_date').attr('required', false);
-                } else if (frequency) {
-                    salaryMonthContainer.hide();
-                    $('#salary_month').attr('required', false);
-                    customDateContainers.show();
+                    $('#start_date, #end_date').removeAttr('required').val('');
+                } else {
+                    $('#salary_month_container').addClass('d-none');
+                    $('.custom-date-container').removeClass('d-none');
+                    $('#salary_month').removeAttr('required').val('');
                     $('#start_date, #end_date').attr('required', true);
                 }
             }
 
-            payGroupId.on('change', toggleFrequencyFields);
-            toggleFrequencyFields();
+            $('#pay_group_id').on('change', handlePayGroupChange);
+            handlePayGroupChange();
 
-            // Organizational Selects (AJAX)
-            $('#company_id').on('change', function() {
-                const companyId = $(this).val();
-                if (!companyId) return;
+            @if(!$isEdit)
+            $('#advanceSalaryForm').on('submit', function(e) {
+                const $empSelect = $('#employeeSelect');
+                const optionCount = $empSelect.find('option').length;
+                const selectedVal = $empSelect.val();
 
-                axios.get(`/get-units/${companyId}`).then(res => {
-                    let options = '<option value="">Select Branch</option>';
-                    res.data.forEach(item => {
-                        options += `<option value="${item.id}">${item.name}</option>`;
+                // If "All Eligible Employees" is selected, we need to ensure some options exists (count > 1)
+                if (!selectedVal && optionCount <= 1) {
+                    e.preventDefault();
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'No Eligible Employees Found',
+                        text: 'No employees match the selected filters. Please check or change organization filters.',
+                        confirmButtonColor: '#3085d6'
                     });
-                    $('#branch_id').html(options).trigger('change');
-                });
-
-                loadEmployees();
+                    return false;
+                }
             });
-
-            $('#branch_id').on('change', function() {
-                const companyId = $('#company_id').val();
-                const branchId = $(this).val();
-                if (!companyId) return;
-
-                axios.get(`/get-departments/${companyId}/${branchId || ''}`).then(res => {
-                    let options = '<option value="">Select Department</option>';
-                    res.data.forEach(item => {
-                        options += `<option value="${item.id}">${item.name}</option>`;
-                    });
-                    $('#department_id').html(options).trigger('change');
-                });
-                loadEmployees();
-            });
-
-            $('#department_id').on('change', loadEmployees);
-
-            function loadEmployees() {
-                const companyId = $('#company_id').val();
-                const branchId = $('#branch_id').val() || '';
-                const deptId = $('#department_id').val() || '';
-
-                if (!companyId) return;
-
-                axios.get(`/get-employees/${companyId}/${branchId}/${deptId}`).then(res => {
-                    let options = '<option value="">All Eligible Employees</option>';
-                    res.data.forEach(item => {
-                        options += `<option value="${item.id}">${item.full_name} (${item.employee_id})</option>`;
-                    });
-                    $('#employee_id').html(options);
-                });
-            }
+            @endif
         });
     </script>
     @endpush
