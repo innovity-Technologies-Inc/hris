@@ -12,6 +12,7 @@ use App\Models\Employee\EmployeeOtPlan;
 use App\Models\Employee\EmployeeSalaryBreakdown;
 use App\Models\Company\Holiday;
 use App\Models\Leave\Leave;
+use App\Models\Payroll\AdvanceSalary;
 use App\Models\Payroll\Bonus;
 use App\Models\Payroll\Increment;
 use App\Models\Payroll\Payroll;
@@ -34,6 +35,176 @@ class PayrollServices
     public function __construct()
     {
         //
+    }
+
+    public function advanceProcess($data, $processId = null)
+    {
+        try {
+            Log::info('Initiating advance salary process.', ['data' => $data, 'process_id' => $processId]);
+            
+            $payGroup = \App\Models\Company\PayGroup::findOrFail($data['pay_group_id']);
+            $frequency = strtolower($payGroup->payroll_frequency);
+            
+            $deduction_month = $data['deduction_month'];
+            $amount_type = $data['amount_type'];
+            $amount_value = $data['amount_value'];
+            $percentage_base = $data['percentage_base'] ?? 'gross_salary';
+            $reason = $data['reason'] ?? '';
+
+            if ($frequency === 'monthly') {
+                $salary_month = $data['salary_month'];
+                $effectiveDate = Carbon::createFromFormat('Y-m', $salary_month)->startOfMonth();
+                $startDate = $effectiveDate->copy();
+                $endDate = $effectiveDate->copy()->endOfMonth();
+            } else {
+                $startDate = Carbon::parse($data['start_date']);
+                $endDate = Carbon::parse($data['end_date']);
+                $salary_month = $startDate->format('Y-m');
+                $effectiveDate = $startDate;
+            }
+
+            Log::info('Target period and frequency for advance.', [
+                'frequency' => $frequency,
+                'salary_month' => $salary_month,
+                'start_date' => $startDate->toDateString(),
+                'end_date' => $endDate->toDateString()
+            ]);
+
+            $employees = $this->findEmployees($data, $effectiveDate);
+            Log::info('Eligible employees found for advance.', ['count' => $employees->count()]);
+            
+            $total_advance = 0;
+            $employeeData = [];
+            
+            foreach ($employees as $employee) {
+                try {
+                    $employeeSalary = EmployeeSalaryBreakdown::where('employee_id', $employee->id)->first();
+                    if (!$employeeSalary) {
+                        Log::warning('Skipping employee: Salary breakdown missing.', ['employee_id' => $employee->id]);
+                        continue;
+                    }
+
+                    $calculated_amount = 0;
+                    if ($amount_type === 'fixed') {
+                        $calculated_amount = $amount_value;
+                    } else {
+                        $base_salary = ($percentage_base === 'basic_salary') ? $employeeSalary->basic_salary : $employeeSalary->gross_salary;
+                        $calculated_amount = ($base_salary * $amount_value) / 100;
+                    }
+
+                    if ($calculated_amount > 0) {
+                        Log::info('Calculated advance for employee.', [
+                            'employee_id' => $employee->id,
+                            'amount' => $calculated_amount
+                        ]);
+                        $total_advance += $calculated_amount;
+                        $employeeData[] = [
+                            'employee_id' => $employee->id,
+                            'amount' => $calculated_amount,
+                            'deduction_month' => $deduction_month,
+                            'reason' => $reason,
+                        ];
+                    }
+                } catch (\Exception $innerEx) {
+                    Log::error('Error processing individual employee advance.', [
+                        'employee_id' => $employee->id,
+                        'error' => $innerEx->getMessage()
+                    ]);
+                }
+            }
+            
+            $total_employees = count($employeeData);
+            if ($total_employees == 0) {
+                Log::warning('No advance records could be generated.', ['data' => $data]);
+                throw new \Exception('No eligible employees found for advance salary generation with provided criteria.');
+            }
+
+            Log::info('Consolidated advance summary.', [
+                'total_employees' => $total_employees,
+                'total_amount' => $total_advance
+            ]);
+
+            DB::transaction(function () use ($data, $employeeData, $total_advance, $total_employees, $processId, $salary_month, $startDate, $endDate) {
+                if ($processId == null) {
+                    $process = PayrollProcess::create([
+                        'batch_id' => uniqid('Advance_', true),
+                        'company_id' => $data['company_id'],
+                        'branch_id' => $data['branch_id'],
+                        'division_id' => $data['division_id'],
+                        'department_id' => $data['department_id'],
+                        'section_id' => $data['section_id'],
+                        'pay_group_id' => $data['pay_group_id'],
+                        'salary_month' => $salary_month,
+                        'start_date' => $startDate,
+                        'end_date' => $endDate,
+                        'type' => 'advance',
+                        'total_amount' => $total_advance,
+                        'generated_by' => Auth::id() ?? null,
+                        'total_employee' => $total_employees,
+                    ]);
+                    Log::info('New Advance Payroll Process record created.', ['process_id' => $process->id]);
+                } else {
+                    $process = PayrollProcess::findOrFail($processId);
+                    $process->update([
+                        'company_id' => $data['company_id'],
+                        'branch_id' => $data['branch_id'],
+                        'division_id' => $data['division_id'],
+                        'department_id' => $data['department_id'],
+                        'section_id' => $data['section_id'],
+                        'pay_group_id' => $data['pay_group_id'],
+                        'salary_month' => $salary_month,
+                        'start_date' => $startDate,
+                        'end_date' => $endDate,
+                        'total_amount' => $total_advance,
+                        'generated_by' => Auth::id() ?? null,
+                        'total_employee' => $total_employees,
+                    ]);
+                    // Clear old items
+                    AdvanceSalary::where('process_id', $processId)->delete();
+                    Log::info('Existing Advance Payroll Process updated.', ['process_id' => $processId]);
+                }
+
+                foreach ($employeeData as $employee) {
+                    AdvanceSalary::create([
+                        'process_id' => $process->id,
+                        'batch_id' => $process->batch_id,
+                        'employee_id' => $employee['employee_id'],
+                        'amount' => $employee['amount'],
+                        'deduction_month' => $employee['deduction_month'],
+                        'reason' => $employee['reason'],
+                        'status' => 'pending',
+                    ]);
+                }
+            });
+
+            Log::info('Advance salary process database transaction committed.');
+
+        } catch (\Exception $e) {
+            Log::error('Advance salary processing failure in Service layer.', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            throw $e;
+        }
+    }
+
+    public function advanceDelete($id)
+    {
+        Log::info('Deleting Advance Salary Process and related items.', ['process_id' => $id]);
+        try {
+            $process = PayrollProcess::findOrFail($id);
+            DB::transaction(function () use ($process, $id) {
+                AdvanceSalary::where('process_id', $id)->delete();
+                $process->delete();
+            });
+            Log::info('Advance Salary Process and items deleted successfully.', ['process_id' => $id]);
+        } catch (\Exception $e) {
+            Log::error('Failed to delete Advance Salary Process.', [
+                'process_id' => $id,
+                'message' => $e->getMessage()
+            ]);
+            throw $e;
+        }
     }
 
     public function promotionRequestData($request)
@@ -174,6 +345,10 @@ class PayrollServices
 
     public function payrollProcessDataValidation($request, $flag = null)
     {
+        Log::info('Validating payroll process data.', [
+            'request_all' => $request->all(),
+            'flag' => $flag
+        ]);
         $rules = [
             // Validate the arrays themselves
             'employee_id' => 'nullable',
@@ -214,9 +389,11 @@ class PayrollServices
         ];
 
         $validated = $request->validate($rules, $messages);
+        Log::info('Data validation successful.', ['validated' => $validated]);
 
         // Check for duplicates
         if ($flag !== 'bonus') {
+            Log::info('Checking for duplicate payroll processes.');
             $processQuery = PayrollProcess::where('company_id', $request->company_id)
                 ->where('pay_group_id', $request->pay_group_id)
                 ->where('type', 'salary');
@@ -244,6 +421,7 @@ class PayrollServices
             $existingProcess = $processQuery->first();
 
             if ($existingProcess) {
+                Log::warning('Duplicate payroll process found.', ['process_id' => $existingProcess->id]);
                 throw new \Exception('Salary process already exists for the selected criteria and period.');
             }
         }
@@ -253,6 +431,7 @@ class PayrollServices
 
     public function bonusCalculation($employee, $plan_ids)
     {
+        Log::info('Calculating bonus for employee.', ['employee_id' => $employee->id, 'plan_ids' => $plan_ids]);
         $bonus_amount = 0;
         foreach ($plan_ids as $id) {
             // Check if employee is explicitly attached to this bonus plan
@@ -262,32 +441,39 @@ class PayrollServices
                 ->exists();
 
             if (!$isAttached) {
+                Log::info('Employee not attached to bonus plan.', ['employee_id' => $employee->id, 'plan_id' => $id]);
                 continue;
             }
 
             $plan_data = BonusPlan::find($id);
             if ($plan_data) {
+                Log::info('Calculating bonus for plan.', ['plan_name' => $plan_data->name]);
                 if ($plan_data->bonus_config_type == 'Salary Based') {
                     $basic_salary = EmployeeSalaryBreakdown::where('employee_id', $employee->id)->first()->basic_salary;
-                    Log::info('Basic Salary of employee_id ' . $employee->id . ': ' . $basic_salary);
+                    Log::info('Basic Salary for bonus calculation.', ['employee_id' => $employee->id, 'basic_salary' => $basic_salary]);
                     if ($plan_data->salary_rate_type == 'Basic Rate') {
-                        $bonus_amount += $basic_salary;
+                        $amount = $basic_salary;
                     } else {
-                        Log::info('Multiplier Value for this employee_id ' . $employee->id . ': ' . $plan_data->multiplier);
-                        $bonus_amount += $basic_salary * $plan_data->multiplier;
-                        Log::info('Bonus Amount of Plan ' . $plan_data->name . ': ' . $bonus_amount);
+                        Log::info('Multiplier applied.', ['multiplier' => $plan_data->multiplier]);
+                        $amount = $basic_salary * $plan_data->multiplier;
                     }
                 } else {
-                    $bonus_amount += $plan_data->custom_rate;
+                    $amount = $plan_data->custom_rate;
                 }
+                Log::info('Bonus plan amount calculated.', ['plan_name' => $plan_data->name, 'amount' => $amount]);
+                $bonus_amount += $amount;
             }
         }
-        Log::info('Bonus Amount of the Employee ' . $bonus_amount);
+        Log::info('Total bonus for employee calculated.', ['employee_id' => $employee->id, 'total_bonus' => $bonus_amount]);
         return $bonus_amount;
     }
 
     public function findEmployees($data, $firstDayOfSalaryMonth)
     {
+        Log::info('Finding eligible employees for salary.', [
+            'criteria' => $data,
+            'effective_date' => $firstDayOfSalaryMonth->toDateString()
+        ]);
         $query = Employee::query()
             ->select('id', 'full_name')
             ->whereHas('salary', function ($q) use ($data) {
@@ -323,7 +509,7 @@ class PayrollServices
 
         $employees = $query->get();
 
-        Log::info('Employees Found:', ['count' => $employees->count()]);
+        Log::info('Eligible employees count.', ['count' => $employees->count()]);
 
         return $employees;
     }
@@ -498,6 +684,11 @@ class PayrollServices
 
     public function absentCalculate($employee, $startDate, $endDate, $employeeAttendance)
     {
+        Log::info('Calculating absences.', [
+            'employee_id' => $employee->id,
+            'start_date' => $startDate->toDateString(),
+            'end_date' => $endDate->toDateString()
+        ]);
 
         $holidaysInSalaryMonth = $this->findHolidaysInSalaryMonth($startDate, $endDate);
         $weekendsInSalaryMonth = $this->findWeekendsInSalaryMonth($employee, $startDate, $endDate);
@@ -508,12 +699,12 @@ class PayrollServices
         }
         $employeeAttendDate = collect($employeeAttendDate);
 
-//        dd($holidaysInSalaryMonth, $weekendsInSalaryMonth, $leavesInSalaryMonth, $employeeAttendDate);
-
-        Log::info('Holiday Count' . count($holidaysInSalaryMonth));
-        Log::info('Weekend Count' . count($weekendsInSalaryMonth));
-        Log::info('Leave Count' . count($leavesInSalaryMonth));
-        Log::info('Employee Attendance Count' . count($employeeAttendDate));
+        Log::info('Attendance analysis counts.', [
+            'holidays' => count($holidaysInSalaryMonth),
+            'weekends' => count($weekendsInSalaryMonth),
+            'leaves' => count($leavesInSalaryMonth),
+            'attendance_records' => count($employeeAttendDate)
+        ]);
 
         $safeData = $holidaysInSalaryMonth->merge($leavesInSalaryMonth)
             ->merge($weekendsInSalaryMonth)
@@ -521,9 +712,7 @@ class PayrollServices
             ->unique();
         $leave_count = $leavesInSalaryMonth->count();
 
-        Log::info('Total Safe Data' . count($safeData));
-
-//        dd($safeData);
+        Log::info('Total unique "safe" days (present/leave/holiday/weekend).', ['count' => count($safeData)]);
 
         $absentDates = collect(CarbonPeriod::create($startDate, $endDate))
             ->map(fn($date) => $date->format('Y-m-d'))
@@ -533,6 +722,12 @@ class PayrollServices
             ->values()
             ->toArray();
 
+        Log::info('Absence calculation result.', [
+            'absent_count' => count($absentDates),
+            'absent_dates' => $absentDates,
+            'leave_count' => $leave_count
+        ]);
+
         return [
             'absent_count' => count($absentDates),
             'absent_dates' => $absentDates,
@@ -541,41 +736,80 @@ class PayrollServices
 
     }
 
-    public function overTimeSalary($employee, $employeeSalary, $otAttendances)
+    public function overTimeSalary($employeeId, $employeeSalary, $otAttendances, $totalMonthlyHours = 240, $workingHoursPerDay = 8, $frequency = 'monthly', $workingDays = 30)
     {
+        Log::info('Calculating overtime salary using Gross-based Base Rate.', ['employee_id' => $employeeId, 'frequency' => $frequency]);
         $overTimeSalary = 0;
-        $basicSalary = $employeeSalary->basic_salary;
-        $hourlyRate = $basicSalary / 240; 
+        $grossSalary = $employeeSalary->gross_salary;
         
+        // Determine hourly rate based on Gross-based Base Rate (Gross / Working Days)
+        if ($frequency === 'hourly') {
+            $hourlyRate = $grossSalary; // gross_salary is already hourly rate
+        } elseif ($frequency === 'daily') {
+            $hourlyRate = $grossSalary / ($workingHoursPerDay ?: 8); // gross_salary is daily rate
+        } else {
+            // Base Rate = Gross / Working Days. Hourly Rate = Base Rate / Working Hours Per Day
+            $dayRate = $grossSalary / ($workingDays ?: 30);
+            $hourlyRate = $dayRate / ($workingHoursPerDay ?: 8);
+        }
+        
+        Log::info('Calculated hourly rate for OT.', ['hourly_rate' => $hourlyRate, 'gross_salary' => $grossSalary]);
+
         $groupedAttendances = $otAttendances->groupBy('ot_id');
 
         foreach ($groupedAttendances as $otId => $records) {
             if (!$otId) continue;
             
             $plan = \App\Models\Plan\OTPlan::find($otId);
-            if (!$plan) continue;
+            if (!$plan) {
+                Log::warning('OT Plan not found.', ['ot_id' => $otId]);
+                continue;
+            }
 
             $overtimeCount = $records->sum('overtime');
 
             if ($plan->ot_config_type == 'Salary Based') {
                 if ($plan->salary_rate_type == 'Basic Rate') {
-                    $overTimeSalary += $hourlyRate * ($overtimeCount / 60);
+                    $amount = $hourlyRate * ($overtimeCount / 60);
                 } else {
-                    $overTimeSalary += ($hourlyRate * $plan->overtime_multiplier) * ($overtimeCount / 60);
+                    $amount = ($hourlyRate * $plan->overtime_multiplier) * ($overtimeCount / 60);
                 }
             } else {
-                $overTimeSalary += $plan->custom_overtime_rate * ($overtimeCount / 60);
+                $amount = $plan->custom_overtime_rate * ($overtimeCount / 60);
             }
+            
+            Log::info('OT Plan calculation.', [
+                'plan_name' => $plan->name,
+                'minutes' => $overtimeCount,
+                'calculated_amount' => $amount,
+                'hourly_rate_used' => $hourlyRate
+            ]);
+            
+            $overTimeSalary += $amount;
         }
         
-        return ceil(round($overTimeSalary, 2));
+        $finalAmount = ceil(round($overTimeSalary, 2));
+        Log::info('Total overtime salary.', ['amount' => $finalAmount]);
+        return $finalAmount;
     }
 
-    public function offDayWorkSalary($employee, $employeeSalary, $offDayAttendances)
+    public function offDayWorkSalary($employeeId, $employeeSalary, $offDayAttendances, $totalMonthlyHours = 240, $workingHoursPerDay = 8, $frequency = 'monthly', $workingDays = 30)
     {
+        Log::info('Calculating off-day work salary using Gross-based Base Rate.', ['employee_id' => $employeeId, 'frequency' => $frequency]);
         $offDayWorkSalary = 0;
-        $basicSalary = $employeeSalary->basic_salary;
-        $hourlyRate = $basicSalary / 240;
+        $grossSalary = $employeeSalary->gross_salary;
+
+        // Determine hourly rate based on Gross-based Base Rate (Gross / Working Days)
+        if ($frequency === 'hourly') {
+            $hourlyRate = $grossSalary; // gross_salary is already hourly rate
+        } elseif ($frequency === 'daily') {
+            $hourlyRate = $grossSalary / $workingHoursPerDay; // gross_salary is daily rate
+        } else {
+            $dayRate = $grossSalary / ($workingDays ?: 30);
+            $hourlyRate = $dayRate / ($workingHoursPerDay ?: 8);
+        }
+
+        Log::info('Calculated hourly rate for Off-Day Work.', ['hourly_rate' => $hourlyRate, 'gross_salary' => $grossSalary]);
 
         $groupedAttendances = $offDayAttendances->groupBy('offday_id');
 
@@ -583,7 +817,10 @@ class PayrollServices
             if (!$offdayId) continue;
 
             $plan = \App\Models\Plan\OffDayPlan::find($offdayId);
-            if (!$plan) continue;
+            if (!$plan) {
+                Log::warning('Off-Day Plan not found.', ['offday_id' => $offdayId]);
+                continue;
+            }
 
             $offDayWorkDayCount = $records->count();
 
@@ -591,49 +828,85 @@ class PayrollServices
                 $shiftTimeInMints = $plan->getShift->treat_as_full_day_minutes + $plan->getShift->grace_time + $plan->getShift->early_out_grace_minutes;
                 $offDayWorkCount = $offDayWorkDayCount * ($shiftTimeInMints / 60); 
             } else {
-                $offDayWorkCount = $offDayWorkDayCount * 8; 
+                $offDayWorkCount = $offDayWorkDayCount * ($workingHoursPerDay ?: 8); 
             }
 
             if ($plan->offday_config_type == 'Salary Based') {
                 if ($plan->salary_rate_type == 'Basic Rate') {
-                    $offDayWorkSalary += $hourlyRate * $offDayWorkCount;
+                    $amount = $hourlyRate * $offDayWorkCount;
                 } else {
-                    $offDayWorkSalary += ($hourlyRate * $plan->offday_multiplier) * $offDayWorkCount;
+                    $amount = ($hourlyRate * $plan->offday_multiplier) * $offDayWorkCount;
                 }
             } else {
                 // custom_offday_rate is now treated as an hourly rate
-                $offDayWorkSalary += $plan->custom_offday_rate * $offDayWorkCount;
+                $amount = $plan->custom_offday_rate * $offDayWorkCount;
             }
+            
+            Log::info('Off-Day Plan calculation.', [
+                'plan_name' => $plan->name,
+                'days_count' => $offDayWorkDayCount,
+                'total_hours' => $offDayWorkCount,
+                'calculated_amount' => $amount,
+                'hourly_rate_used' => $hourlyRate
+            ]);
+            
+            $offDayWorkSalary += $amount;
         }
 
-        return ceil(round($offDayWorkSalary, 2));
+        $finalAmount = ceil(round($offDayWorkSalary, 2));
+        Log::info('Total off-day work salary.', ['amount' => $finalAmount]);
+        return $finalAmount;
     }
 
-    public function deductionAmount($lateCount, $excessiveLateCount, $earlyExitCount, $absentCount, $employeeSalary, $workingDays = 30){
+    public function deductionAmount($lateCount, $excessiveLateCount, $earlyExitCount, $absentCount, $employeeSalary, $workingDays = 30, $frequency = 'monthly', $workingHoursPerDay = 8){
+        Log::info('Calculating deduction amounts.', [
+            'frequency' => $frequency,
+            'working_days' => $workingDays,
+            'working_hours_per_day' => $workingHoursPerDay
+        ]);
+        
         $deductionRule = DeductionPlan::first();
-//        dd($deductionRule);
+        if (!$deductionRule) {
+            Log::warning('No deduction plan found. Skipping deductions.');
+            return [
+                'total' => 0,
+                'late_deduction_amount' => 0,
+                'excessive_late_deduction_amount' => 0,
+                'absent_deduction_amount' => 0,
+                'early_exit_deduction_amount' => 0,
+            ];
+        }
+
+        if ($deductionRule->calculation_type == 'basic_salary'){
+            $baseForDeduction = $employeeSalary->basic_salary;
+        }else{
+            $baseForDeduction = $employeeSalary->gross_salary;
+        }
+
+        // Determine what "1 day's pay" is based on frequency
+        if ($frequency === 'hourly') {
+            $dayRate = $baseForDeduction * $workingHoursPerDay;
+        } elseif ($frequency === 'daily') {
+            $dayRate = $baseForDeduction;
+        } else {
+            $dayRate = $baseForDeduction / ($workingDays ?: 30);
+        }
+
+        Log::info('Determined base day rate for deductions.', ['day_rate' => $dayRate, 'base_salary_field' => $baseForDeduction]);
+
         //late deduction amount calculation
         if ($deductionRule->late_deduction_days != null && $lateCount >= $deductionRule->late_deduction_days){
-            $lateDeduction = intdiv($lateCount, $deductionRule->late_deduction_days) * $deductionRule->late_salary_deduction_rate;
-            if ($deductionRule->calculation_type == 'basic_salary'){
-                $lateDeductionAmount = $lateDeduction * ($employeeSalary->basic_salary/$workingDays);
-            }else{
-                $lateDeductionAmount = $lateDeduction * ($employeeSalary->gross_salary/$workingDays);
-            }
+            $lateDeductionUnits = intdiv($lateCount, $deductionRule->late_deduction_days) * $deductionRule->late_salary_deduction_rate;
+            $lateDeductionAmount = $lateDeductionUnits * $dayRate;
         }else{
             $lateDeductionAmount = 0;
         }
         Log::info('Late Deduction Amount [' . $lateDeductionAmount . ']');
 
         //excessive late deduction amount calculation
-
-        if ($deductionRule->excessive_late_deduction_days != null && $lateCount >= $deductionRule->excessive_late_deduction_days){
-            $excessiveLateDeduction = intdiv($excessiveLateCount, $deductionRule->excessive_late_deduction_days) * $deductionRule->excessive_late_salary_deduction_rate;
-            if ($deductionRule->calculation_type == 'basic_salary'){
-                $excessiveLateDeductionAmount = $excessiveLateDeduction * ($employeeSalary->basic_salary/$workingDays);
-            }else{
-                $excessiveLateDeductionAmount = $excessiveLateDeduction * ($employeeSalary->gross_salary/$workingDays);
-            }
+        if ($deductionRule->excessive_late_deduction_days != null && $excessiveLateCount >= $deductionRule->excessive_late_deduction_days){
+            $excessiveLateDeductionUnits = intdiv($excessiveLateCount, $deductionRule->excessive_late_deduction_days) * $deductionRule->excessive_late_salary_deduction_rate;
+            $excessiveLateDeductionAmount = $excessiveLateDeductionUnits * $dayRate;
         }else{
             $excessiveLateDeductionAmount = 0;
         }
@@ -641,25 +914,17 @@ class PayrollServices
 
         //absent deduction amount calculation
         if ($deductionRule->absent_deduction_days != null && $absentCount >= $deductionRule->absent_deduction_days){
-            $absentDeduction = intdiv($absentCount, $deductionRule->absent_deduction_days) * $deductionRule->absent_salary_deduction_rate;
-            if ($deductionRule->calculation_type == 'basic_salary'){
-                $absentDeductionAmount = $absentDeduction * ($employeeSalary->basic_salary/$workingDays);
-            }else{
-                $absentDeductionAmount = $absentDeduction * ($employeeSalary->gross_salary/$workingDays);
-            }
+            $absentDeductionUnits = intdiv($absentCount, $deductionRule->absent_deduction_days) * $deductionRule->absent_salary_deduction_rate;
+            $absentDeductionAmount = $absentDeductionUnits * $dayRate;
         }else{
             $absentDeductionAmount = 0;
         }
         Log::info('Absent Deduction Amount [' . $absentDeductionAmount . ']');
 
         //early exit deduction amount calculation
-        if ($deductionRule->early_out_deduction_days != null && $absentCount >= $deductionRule->early_out_deduction_days){
-            $earlyExitDeduction = intdiv($earlyExitCount, $deductionRule->early_out_deduction_days) * $deductionRule->early_out_salary_deduction_rate;
-            if ($deductionRule->calculation_type == 'basic_salary'){
-                $earlyExitDeductionAmount = $earlyExitDeduction * ($employeeSalary->basic_salary/$workingDays);
-            }else{
-                $earlyExitDeductionAmount = $earlyExitDeduction * ($employeeSalary->gross_salary/$workingDays);
-            }
+        if ($deductionRule->early_out_deduction_days != null && $earlyExitCount >= $deductionRule->early_out_deduction_days){
+            $earlyExitDeductionUnits = intdiv($earlyExitCount, $deductionRule->early_out_deduction_days) * $deductionRule->early_out_salary_deduction_rate;
+            $earlyExitDeductionAmount = $earlyExitDeductionUnits * $dayRate;
         }else{
             $earlyExitDeductionAmount = 0;
         }
@@ -690,12 +955,20 @@ class PayrollServices
 
     public function salaryProcess($data, $processId = null)
     {
+        Log::info('Starting salary process.', ['data' => $data, 'process_id' => $processId]);
         $payGroup = \App\Models\Company\PayGroup::find($data['pay_group_id']);
         $frequency = strtolower($payGroup->payroll_frequency);
         
         $workingDaysPerCycle = $payGroup->working_days_per_cycle ?? 30;
         $workingHoursPerDay = $payGroup->working_hours_per_day ?? 8;
         $totalMonthlyHours = $workingDaysPerCycle * $workingHoursPerDay;
+
+        Log::info('Pay group configuration.', [
+            'frequency' => $frequency,
+            'working_days_per_cycle' => $workingDaysPerCycle,
+            'working_hours_per_day' => $workingHoursPerDay,
+            'total_monthly_hours' => $totalMonthlyHours
+        ]);
 
         if ($frequency === 'monthly') {
             $salary_month = $data['salary_month'];
@@ -709,24 +982,43 @@ class PayrollServices
             $data['salary_month'] = $salary_month;
         }
 
+        Log::info('Salary period defined.', [
+            'start_date' => $startDate->toDateString(),
+            'end_date' => $endDate->toDateString(),
+            'salary_month' => $salary_month
+        ]);
+
         $employees = $this->findEmployees($data, $startDate);
 
         $total_employees = count($employees);
         if ($total_employees == 0) {
+            Log::warning('No eligible employees found for salary generation.', ['data' => $data]);
             throw new \Exception('Eligible Employees not found.');
         }
+
+        Log::info('Found eligible employees.', ['count' => $total_employees]);
 
         $total_salary = 0;
         $employeeData = [];
         $penaltiesToUpdate = [];
 
         foreach ($employees as $employee) {
+            Log::info('Processing salary for employee.', ['employee_id' => $employee->id, 'full_name' => $employee->full_name]);
+            
             $employeeAttendance = Attendance::where('employee_id', $employee->id)
                 ->whereBetween('in_time', [$startDate, $endDate])
                 ->get();
+            
+            Log::info('Employee attendance records.', ['count' => $employeeAttendance->count()]);
+            
             $absentData = $this->absentCalculate($employee, $startDate, $endDate, $employeeAttendance);
             $employeeSalary = EmployeeSalaryBreakdown::where('employee_id', $employee->id)->first();
             
+            if (!$employeeSalary) {
+                Log::error('Salary breakdown not found for employee.', ['employee_id' => $employee->id]);
+                continue;
+            }
+
             // Base Salary Calculation depending on frequency
             if ($frequency === 'hourly') {
                 $totalShiftMinutes = 0;
@@ -742,11 +1034,14 @@ class PayrollServices
                 }
                 // gross_salary is hourly rate, so multiply by (total minutes / 60)
                 $calculatedGrossSalary = $employeeSalary->gross_salary * ($totalShiftMinutes / 60);
+                Log::info('Hourly salary calculation.', ['total_minutes' => $totalShiftMinutes, 'hourly_rate' => $employeeSalary->gross_salary, 'calculated_gross' => $calculatedGrossSalary]);
             } elseif ($frequency === 'daily') {
                 $totalDaysInRange = abs($startDate->diffInDays($endDate)) + 1;
                 $calculatedGrossSalary = $employeeSalary->gross_salary * $totalDaysInRange;
+                Log::info('Daily salary calculation.', ['total_days' => $totalDaysInRange, 'daily_rate' => $employeeSalary->gross_salary, 'calculated_gross' => $calculatedGrossSalary]);
             } else {
                 $calculatedGrossSalary = $employeeSalary->gross_salary;
+                Log::info('Monthly salary calculation.', ['gross_salary' => $calculatedGrossSalary]);
             }
 
             $lateCount = $employeeAttendance->where('in_status', 'Late')->count();
@@ -756,20 +1051,24 @@ class PayrollServices
             $overtimeMinutes = $employeeAttendance->sum('overtime');
             if ($overtimeMinutes > 0) {
                 $otAttendances = $employeeAttendance->where('overtime', '>', 0);
-                $overTimeSalary = $this->overTimeSalary($employee->id, $employeeSalary, $otAttendances, $totalMonthlyHours);
+                $overTimeSalary = $this->overTimeSalary($employee->id, $employeeSalary, $otAttendances, $totalMonthlyHours, $workingHoursPerDay, $frequency);
             } else {
                 $overTimeSalary = 0;
             }
+            Log::info('Overtime calculation.', ['minutes' => $overtimeMinutes, 'amount' => $overTimeSalary]);
 
             $offDayWorkCount = $employeeAttendance->where('shift_type', 'Off-Day')->count();
             if ($offDayWorkCount > 0) {
                 $offDayAttendances = $employeeAttendance->where('shift_type', 'Off-Day');
-                $offDayWorkSalary = $this->offDayWorkSalary($employee->id, $employeeSalary, $offDayAttendances, $totalMonthlyHours, $workingHoursPerDay);
+                $offDayWorkSalary = $this->offDayWorkSalary($employee->id, $employeeSalary, $offDayAttendances, $totalMonthlyHours, $workingHoursPerDay, $frequency);
             } else {
                 $offDayWorkSalary = 0;
             }
-            $deductionData = $this->deductionAmount($lateCount, $excessiveLateCount, $earlyExitCount, $absentData['absent_count'], $employeeSalary, $workingDaysPerCycle);
+            Log::info('Off-day work calculation.', ['count' => $offDayWorkCount, 'amount' => $offDayWorkSalary]);
+
+            $deductionData = $this->deductionAmount($lateCount, $excessiveLateCount, $earlyExitCount, $absentData['absent_count'], $employeeSalary, $workingDaysPerCycle, $frequency, $workingHoursPerDay);
             $deductionAmount = $deductionData['total'];
+            Log::info('Deduction calculation.', ['deduction_data' => $deductionData]);
             
             // Bonus is handled in a separate module, removing from standard salary process
             $bonusAmount = 0; 
@@ -785,9 +1084,21 @@ class PayrollServices
                      $penaltiesToUpdate[] = $pen->id;
                  }
             }
+            Log::info('Penalty calculation.', ['amount' => $penaltyAmount, 'count' => $penalties->count()]);
 
-            $salary_amount = $calculatedGrossSalary + $offDayWorkSalary + $overTimeSalary - $deductionAmount - $penaltyAmount;
+            // Advance Salary Calculation
+            $advances = AdvanceSalary::where('employee_id', $employee->id)
+                ->where('status', 'approved')
+                ->where('deduction_month', $salary_month)
+                ->get();
+            $advanceDeductionAmount = $advances->sum('amount');
+            Log::info('Advance Salary deduction calculation.', ['amount' => $advanceDeductionAmount, 'count' => $advances->count()]);
+
+            $salary_amount = $calculatedGrossSalary + $offDayWorkSalary + $overTimeSalary - $deductionAmount - $penaltyAmount - $advanceDeductionAmount;
             $total_salary += $salary_amount;
+            
+            Log::info('Final salary for employee.', ['employee_id' => $employee->id, 'total_salary' => $salary_amount]);
+
             $employeeData[] = [
                 'employee_id' => $employee->id,
                 'absent_count' => $absentData['absent_count'],
@@ -807,17 +1118,22 @@ class PayrollServices
                 'absent_deduction_amount' => $deductionData['absent_deduction_amount'],
                 'early_exit_deduction_amount' => $deductionData['early_exit_deduction_amount'],
                 'penalty_amount' => $penaltyAmount,
+                'advance_deduction_amount' => $advanceDeductionAmount,
                 'bonus_amount' => $bonusAmount,
                 'total_salary' => $salary_amount,
+                'advance_ids' => $advances->pluck('id')->toArray(),
             ];
         }
         Log::info('Total Payroll Amount ' . $total_salary);
         $data['amount'] = $total_salary;
 
-        DB::transaction(function () use ($data, $employeeData, $total_salary, $total_employees, $processId, $penaltiesToUpdate, $startDate, $endDate) {
+        DB::transaction(function () use ($data, $employeeData, $total_salary, $total_employees, $processId, $penaltiesToUpdate, $startDate, $endDate, $salary_month) {
             if ($processId == null) {
-                Log::info('ProcessId ' . $processId);
-                Log::info('Payroll Process Creating');
+                Log::info('Creating new PayrollProcess.', [
+                    'company_id' => $data['company_id'],
+                    'pay_group_id' => $data['pay_group_id'],
+                    'salary_month' => $data['salary_month'] ?? null
+                ]);
                 $process = PayrollProcess::create([
                     'batch_id' => uniqid('Salary_', true),
                     'company_id' => $data['company_id'],
@@ -834,12 +1150,11 @@ class PayrollServices
                     'generated_by' => Auth::id() ?? null,
                     'total_employee' => $total_employees,
                 ]);
-                Log::info('Payroll Process Created: ' . $process->id);
+                Log::info('Payroll Process Created.', ['id' => $process->id, 'batch_id' => $process->batch_id]);
 
             } else {
-                Log::info('ProcessId ' . $processId);
+                Log::info('Updating existing PayrollProcess.', ['id' => $processId]);
                 $process = PayrollProcess::find($processId);
-                Log::info('Payroll Process Updating: ' . $process->id);
                 $process->update([
                     'company_id' => $data['company_id'],
                     'branch_id' => $data['branch_id'],
@@ -855,10 +1170,11 @@ class PayrollServices
                     'generated_by' => Auth::id() ?? null,
                     'total_employee' => $total_employees,
                 ]);
+                Log::info('Payroll Process Updated.', ['id' => $process->id]);
             }
 
             foreach ($employeeData as $employee) {
-                Log::info('Payroll Process Created: ' . $employee['employee_id']);
+                Log::info('Creating individual payroll record.', ['employee_id' => $employee['employee_id']]);
                 $salary = Payroll::create([
                     'process_id' => $process->id,
                     'batch_id' => $process->batch_id,
@@ -880,16 +1196,22 @@ class PayrollServices
                     'absent_deduction_amount' => $employee['absent_deduction_amount'],
                     'early_exit_deduction_amount' => $employee['early_exit_deduction_amount'],
                     'penalty_amount' => $employee['penalty_amount'],
+                    'advance_deduction_amount' => $employee['advance_deduction_amount'],
                     'bonus_amount' => $employee['bonus_amount'],
                     'total_salary' => $employee['total_salary'],
                 ]);
+
+                if (count($employee['advance_ids']) > 0) {
+                    AdvanceSalary::whereIn('id', $employee['advance_ids'])->update(['status' => 'deducted']);
+                }
             }
             
             if (count($penaltiesToUpdate) > 0) {
+                Log::info('Updating penalties status to deducted.', ['penalty_ids' => $penaltiesToUpdate]);
                 \App\Models\Payroll\EmployeePenalty::whereIn('id', $penaltiesToUpdate)->update(['status' => 'deducted']);
             }
             
-            Log::info('Payroll Created.');
+            Log::info('Payroll process database transaction completed.');
         });
     }
 
@@ -910,6 +1232,7 @@ class PayrollServices
         if ($process) {
             $startDate = $process->start_date;
             $endDate = $process->end_date;
+            $salaryMonth = $process->salary_month;
             
             // Find all payrolls for this process to get employee IDs
             $employeeIds = Payroll::where('process_id', $id)->pluck('employee_id');
@@ -917,6 +1240,12 @@ class PayrollServices
             // Reset penalties for these employees in this date range
             \App\Models\Payroll\EmployeePenalty::whereIn('employee_id', $employeeIds)
                 ->whereBetween('occurrence_date', [$startDate, $endDate])
+                ->where('status', 'deducted')
+                ->update(['status' => 'approved']);
+
+            // Reset advance salaries for these employees for this deduction month
+            AdvanceSalary::whereIn('employee_id', $employeeIds)
+                ->where('deduction_month', $salaryMonth)
                 ->where('status', 'deducted')
                 ->update(['status' => 'approved']);
         }
@@ -929,72 +1258,112 @@ class PayrollServices
 
     public function processDelete($id)
     {
-        Log::info('Deleting Old Process Data');
-        $process = PayrollProcess::find($id);
-        $process->delete();
+        Log::info('Deleting Payroll Process record.', ['process_id' => $id]);
+        try {
+            $process = PayrollProcess::findOrFail($id);
+            $process->delete();
+            Log::info('Payroll Process record deleted successfully.', ['process_id' => $id]);
+        } catch (\Exception $e) {
+            Log::error('Failed to delete Payroll Process record.', [
+                'process_id' => $id,
+                'message' => $e->getMessage()
+            ]);
+            throw $e;
+        }
+    }
+
+    public function advanceStatusUpdate($id, $status)
+    {
+        Log::info('Updating individual advance salary item status.', [
+            'advance_id' => $id,
+            'status' => $status
+        ]);
+        try {
+            $advance = AdvanceSalary::findOrFail($id);
+            $advance->update(['status' => $status]);
+            Log::info('Individual advance salary status updated.', ['advance_id' => $id]);
+        } catch (\Exception $e) {
+            Log::error('Failed to update individual advance salary status.', [
+                'advance_id' => $id,
+                'message' => $e->getMessage()
+            ]);
+            throw $e;
+        }
     }
 
     public function searchResult(Request $request, $modelName, $flexsearch)
     {
-        $query = $modelName::with('getEmployee');
+        Log::info('Executing generic search result query.', ['model' => $modelName, 'filters' => $request->all()]);
+        try {
+            $query = $modelName::with('getEmployee');
 
-        $filters = [];
+            $filters = [];
 
-        if ($request->filled('effective_from_start')) {
-            $filters['effective_from>='] = ($request->input('effective_from_start'));
+            if ($request->filled('effective_from_start')) {
+                $filters['effective_from>='] = ($request->input('effective_from_start'));
+            }
+
+            if ($request->filled('effective_from_end')) {
+                $filters['effective_from<='] = ($request->input('effective_from_end'));
+            }
+
+            if ($request->filled('status')) {
+                $filters['status'] = ($request->input('status'));
+            }
+
+            $searchTerm = $request->get('keyword');
+
+            $searchableFields = ['getEmployee.applicant_id', 'getEmployee.full_name', 'getEmployee.system_id'];
+
+            $data = $flexsearch->apply($query,
+                $filters,
+                $searchTerm,
+                $searchableFields)->orderBy('id', 'desc')->paginate(20);
+
+            return $data;
+        } catch (\Exception $e) {
+            Log::error('Search result query failed.', ['message' => $e->getMessage()]);
+            throw $e;
         }
-
-        if ($request->filled('effective_from_end')) {
-            $filters['effective_from<='] = ($request->input('effective_from_end'));
-        }
-
-        if ($request->filled('status')) {
-            $filters['status'] = ($request->input('status'));
-        }
-
-        $searchTerm = $request->get('keyword');
-
-        $searchableFields = ['getEmployee.applicant_id', 'getEmployee.full_name', 'getEmployee.system_id'];
-
-        $data = $flexsearch->apply($query,
-            $filters,
-            $searchTerm,
-            $searchableFields)->orderBy('id', 'desc')->paginate(20);
-
-        return $data;
     }
 
     public function payrollProcessSearchResult(Request $request, $modelName, $flexsearch)
     {
-        $query = $modelName::with('generatedBy');
+        Log::info('Executing payroll process search result query.', ['model' => $modelName, 'filters' => $request->all()]);
+        try {
+            $query = $modelName::with('generatedBy');
 
-        $filters = [];
+            $filters = [];
 
-        if ($request->filled('from_start')) {
-            $filters['created_at>='] = ($request->input('from_start'));
+            if ($request->filled('from_start')) {
+                $filters['created_at>='] = ($request->input('from_start'));
+            }
+
+            if ($request->filled('from_end')) {
+                $filters['created_at<='] = ($request->input('from_end'));
+            }
+
+            if ($request->filled('status')) {
+                $filters['approval_status'] = ($request->input('status'));
+            }
+
+            if ($request->filled('salary_month')) {
+                $filters['salary_month'] = ($request->input('salary_month'));
+            }
+
+            $searchTerm = $request->get('keyword');
+
+            $searchableFields = ['generatedBy.name', 'batch_id'];
+
+            $data = $flexsearch->apply($query,
+                $filters,
+                $searchTerm,
+                $searchableFields);
+            return $data;
+        } catch (\Exception $e) {
+            Log::error('Payroll process search query failed.', ['message' => $e->getMessage()]);
+            throw $e;
         }
-
-        if ($request->filled('from_end')) {
-            $filters['created_at<='] = ($request->input('from_end'));
-        }
-
-        if ($request->filled('status')) {
-            $filters['approval_status'] = ($request->input('status'));
-        }
-
-        if ($request->filled('salary_month')) {
-            $filters['salary_month'] = ($request->input('salary_month'));
-        }
-
-        $searchTerm = $request->get('keyword');
-
-        $searchableFields = ['generatedBy.name', 'batch_id'];
-
-        $data = $flexsearch->apply($query,
-            $filters,
-            $searchTerm,
-            $searchableFields);
-        return $data;
     }
 
 }

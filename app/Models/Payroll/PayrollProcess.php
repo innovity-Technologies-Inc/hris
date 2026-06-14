@@ -76,5 +76,10 @@ class PayrollProcess extends Model
     public function approvedBy(){
         return $this->belongsTo(User::class, 'approved_by', 'id');
     }
+
+    public function advanceSalaries()
+    {
+        return $this->hasMany(AdvanceSalary::class, 'process_id');
+    }
 }
 

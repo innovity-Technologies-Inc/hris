@@ -137,23 +137,32 @@ class SalaryController extends Controller
     }
 
     public function save(Request $request, $id=null){
+        Log::info('Salary generation started.', [
+            'id' => $id,
+            'request_data' => $request->all()
+        ]);
         $data = $this->payrollService->payrollProcessDataValidation($request);
         try{
             if ($id == null) {
                 $this->payrollService->salaryProcess($data);
             }else{
+                Log::info('Updating existing salary process.', ['process_id' => $id]);
                 DB::transaction(function () use ($id, $data) {
                     $this->payrollService->salaryDelete($id);
                     $this->payrollService->salaryProcess($data, $id);
                 });
             }
         }catch (\Exception $exception){
-            Log::error($exception->getMessage());
+            Log::error('Salary generation failed.', [
+                'message' => $exception->getMessage(),
+                'trace' => $exception->getTraceAsString()
+            ]);
             return redirect()->back()->with([
                 'alert-type' => 'error',
                 'message' => $exception->getMessage() == 'Eligible Employees not found.'?  $exception->getMessage() : 'Something went wrong! '
             ]);
         }
+        Log::info('Salary generation completed successfully.', ['id' => $id]);
         return redirect()->route('salary.index')->with([
             'alert-type' => 'success',
             'message' => 'Salary Generated successfully! Wait for approval.'

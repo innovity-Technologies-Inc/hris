@@ -284,10 +284,11 @@
                     $canPromotions = auth()->user()->can('promotions.view');
                     $canIncrements = auth()->user()->can('increments.view');
                     $canBonuses = auth()->user()->can('bonuses.view');
+                    $canAdvanceSalary = auth()->user()->can('advance-salary.view');
                     $canSalary = auth()->user()->can('salary.view');
-                    $showPayrollMenu = $canPromotions || $canIncrements || $canBonuses || $canSalary;
+                    $showPayrollMenu = $canPromotions || $canIncrements || $canBonuses || $canAdvanceSalary || $canSalary;
                     $payrollOpen = request()->is('promotion*') || request()->is('increment*') || request()->is('bonus*')
-                    || request()->is('salary*');
+                    || request()->is('advance-salary*') || request()->is('salary*');
                 @endphp
                 @if($showPayrollMenu)
                 <li>
@@ -321,6 +322,12 @@
                             <li>
                                 <a class='tp-link @if (Route::is('payroll.penalty.*')) menuitem-active @endif'
                                    href='{{ route('payroll.penalty.index') }}'>Penalty Management</a>
+                            </li>
+                            @endif
+                            @if($canAdvanceSalary)
+                            <li>
+                                <a class='tp-link @if (request()->is('advance-salary*')) menuitem-active @endif'
+                                   href='{{ route('advance-salary.index') }}'>Advance Salary</a>
                             </li>
                             @endif
                             @if($canSalary)

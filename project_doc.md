@@ -71,10 +71,44 @@ Dedicated sub-system to define various HR policies:
 - **Individual Payroll Detail View**: Detailed breakdown of earnings (Gross, OT, Bonus, Off-day) and deductions for each employee within a batch.
 - **Granular Deductions**: Individual tracking and storage of Late, Excessive Late, Absent, and Early Exit deductions in the `payrolls` table.
 - **Penalty Integration**: Automated deduction of approved employee penalties during salary generation. Penalties are marked as `deducted` upon processing and correctly reset to `approved` if the process is deleted or re-run.
+- **Advance Salary Module**: 
+    - **Purpose**: Process advance payments for employees that are automatically recovered in future salary cycles.
+    - **Recovery**: Approved advances for a specific `deduction_month` are automatically subtracted from the total salary during generation and marked as `deducted`.
+    - **Consistency**: Mimics the core salary generation UI and supports all pay group frequencies (Monthly, Weekly, Daily, Hourly).
 - **Industry Standard PDF Payslip**: Professional PDF generation of payslips with company branding, employee details, and clear financial breakdown using `Spatie Browsershot`.
 - **Salary Certificate Generation**: Standard "To Whom It May Concern" salary certificate generation for employees, including tenure and remuneration details.
 - **Adjustments**: Handle Promotions, Increments, and Bonus distributions.
 - **Structure**: Based on Salary Grades and Employee-specific breakdown.
+
+### 💸 Payroll Calculation Logic by Pay Group Frequency
+
+The system dynamically adapts its calculation engine based on the employee's assigned **Pay Group Frequency**. All divisors (Working Days, Working Hours) are retrieved from the Pay Group configuration, with safety fallbacks (30 days / 8 hours) if undefined.
+
+#### 1. Monthly Pay Group
+- **Base Salary**: Taken directly from the employee's `gross_salary`.
+- **Base Rate (Day Rate)**: `Gross Salary / Working Days Per Cycle`.
+- **Hourly Rate**: `(Gross Salary / Working Days) / Working Hours Per Day`.
+- **Overtime & Off-Day**: Calculated using the **Gross-based Hourly Rate**.
+- **Bonus**: Calculated foundationally on the `basic_salary` component.
+- **Deductions**: Uses the **Day Rate** derived from the chosen foundation (Gross or Basic).
+
+#### 2. Daily Pay Group
+- **Base Salary**: `Daily Rate (Gross Salary) * Total Days in Range`.
+- **Base Rate (Day Rate)**: The `gross_salary` value itself (entered as a daily rate).
+- **Hourly Rate**: `Gross Salary / Working Hours Per Day`.
+- **Overtime & Off-Day**: Calculated using the **Gross-based Hourly Rate**.
+- **Bonus**: Calculated based on the `basic_salary` (treated as the daily basic portion).
+- **Deductions**: Uses the `gross_salary` directly as the Day Rate.
+
+#### 3. Hourly Pay Group
+- **Base Salary**: `Hourly Rate (Gross Salary) * (Total Scheduled Minutes / 60)`.
+- **Base Rate (Day Rate)**: `Gross Salary * Working Hours Per Day`.
+- **Hourly Rate**: The `gross_salary` value itself (entered as an hourly rate).
+- **Overtime & Off-Day**: Calculated using the **Gross-based Hourly Rate** (the `gross_salary` field).
+- **Bonus**: Calculated based on the `basic_salary` (treated as the hourly basic portion).
+- **Deductions**: Calculated by deriving the Day Rate from the hourly rate.
+
+---
 
 ### 📊 Employee Personal Dashboard & Journey Timeline
 A dedicated analytical view providing a 360-degree overview of an employee's career and financial growth within the organization.

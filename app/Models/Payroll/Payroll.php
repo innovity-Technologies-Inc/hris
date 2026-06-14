@@ -26,6 +26,7 @@ class Payroll extends Model
         'absent_deduction_amount',
         'early_exit_deduction_amount',
         'penalty_amount',
+        'advance_deduction_amount',
         'leaves_count',
         'offday_work_count',
         'absent_count',
