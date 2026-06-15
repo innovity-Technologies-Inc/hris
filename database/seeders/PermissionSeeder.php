@@ -75,6 +75,7 @@ class PermissionSeeder extends Seeder
                     ['name' => 'Bonuses', 'route' => 'bonus.index', 'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'management-approve']],
                     ['name' => 'Penalty Management', 'slug' => 'penalty-management', 'route' => 'payroll.penalty.index', 'actions' => ['view', 'create', 'edit', 'delete']],
                     ['name' => 'Advance Salary', 'route' => 'advance-salary.index', 'actions' => ['view', 'create', 'edit', 'delete', 'approve']],
+                    ['name' => 'Arrear Management', 'slug' => 'arrear', 'route' => 'arrear.index', 'actions' => ['view', 'create', 'edit', 'delete', 'approve']],
                     ['name' => 'Salary', 'route' => 'salary.index', 'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'management-approve']],
                 ]
             ],

@@ -13,6 +13,7 @@ use App\Models\Employee\EmployeeSalaryBreakdown;
 use App\Models\Company\Holiday;
 use App\Models\Leave\Leave;
 use App\Models\Payroll\AdvanceSalary;
+use App\Models\Payroll\Arrear;
 use App\Models\Payroll\Bonus;
 use App\Models\Payroll\Increment;
 use App\Models\Payroll\Payroll;
@@ -1122,7 +1123,26 @@ class PayrollServices
                 'advance_ids' => $advances->pluck('id')->toArray()
             ]);
 
-            $salary_amount = $calculatedGrossSalary + $offDayWorkSalary + $overTimeSalary - $deductionAmount - $penaltyAmount - $advanceDeductionAmount;
+            // Arrear Calculation
+            Log::info('Searching for approved arrears for addition (including overdue).', [
+                'employee_id' => $employee->id,
+                'current_salary_month' => $salary_month
+            ]);
+            
+            $arrears = Arrear::where('employee_id', $employee->id)
+                ->where('status', 'approved')
+                ->where('payment_month', '<=', $salary_month)
+                ->get();
+
+            $arrearAmount = $arrears->sum('amount');
+            Log::info('Arrear addition result.', [
+                'employee_id' => $employee->id,
+                'total_added' => $arrearAmount, 
+                'count' => $arrears->count(),
+                'arrear_ids' => $arrears->pluck('id')->toArray()
+            ]);
+
+            $salary_amount = $calculatedGrossSalary + $offDayWorkSalary + $overTimeSalary + $arrearAmount - $deductionAmount - $penaltyAmount - $advanceDeductionAmount;
             
             Log::info('Final salary breakdown for employee.', [
                 'employee_id' => $employee->id,
@@ -1130,6 +1150,7 @@ class PayrollServices
                     'base_gross' => $calculatedGrossSalary,
                     'overtime' => $overTimeSalary,
                     'offday_work' => $offDayWorkSalary,
+                    'arrears' => $arrearAmount,
                     'deductions' => $deductionAmount,
                     'penalties' => $penaltyAmount,
                     'advances' => $advanceDeductionAmount,
@@ -1159,9 +1180,11 @@ class PayrollServices
                 'early_exit_deduction_amount' => $deductionData['early_exit_deduction_amount'],
                 'penalty_amount' => $penaltyAmount,
                 'advance_deduction_amount' => $advanceDeductionAmount,
+                'arrear_amount' => $arrearAmount,
                 'bonus_amount' => $bonusAmount,
                 'total_salary' => $salary_amount,
                 'advance_ids' => $advances->pluck('id')->toArray(),
+                'arrear_ids' => $arrears->pluck('id')->toArray(),
             ];
         }
         Log::info('Total Payroll Amount ' . $total_salary);
@@ -1222,6 +1245,215 @@ class PayrollServices
                     'salary' => $employee['salary'],
                     'late_count' => $employee['late_count'],
                     'leaves_count' => $employee['leaves_count'],
+                    'absent_count' => $employee['absent_count'],
+                    'absent_dates' => $employee['absent_dates'],
+                    'excessive_late_count' => $employee['excessive_late_count'],
+                    'early_exit_count' => $employee['early_exit_count'],
+                    'overtime_count' => $employee['overtime_count'],
+                    'overtime_amount' => $employee['overtime_amount'],
+                    'offday_work_count' => $employee['offday_work_count'],
+                    'offday_work_salary' => $employee['offday_work_salary'],
+                    'deduction_amount' => $employee['deduction_amount'],
+                    'late_deduction_amount' => $employee['late_deduction_amount'],
+                    'excessive_late_deduction_amount' => $employee['excessive_late_deduction_amount'],
+                    'absent_deduction_amount' => $employee['absent_deduction_amount'],
+                    'early_exit_deduction_amount' => $employee['early_exit_deduction_amount'],
+                    'penalty_amount' => $employee['penalty_amount'],
+                    'advance_deduction_amount' => $employee['advance_deduction_amount'],
+                    'bonus_amount' => $employee['bonus_amount'],
+                    'total_salary' => $employee['total_salary'],
+                ]);
+
+                if (count($employee['advance_ids']) > 0) {
+                    AdvanceSalary::whereIn('id', $employee['advance_ids'])->update(['status' => 'deducted']);
+                }
+
+                if (count($employee['arrear_ids']) > 0) {
+                    Arrear::whereIn('id', $employee['arrear_ids'])->update(['status' => 'paid']);
+                }
+            }
+            
+            if (count($penaltiesToUpdate) > 0) {
+                Log::info('Updating penalties status to deducted.', ['penalty_ids' => $penaltiesToUpdate]);
+                \App\Models\Payroll\EmployeePenalty::whereIn('id', $penaltiesToUpdate)->update(['status' => 'deducted']);
+            }
+            
+            Log::info('Payroll process database transaction completed.');
+        });
+    }
+
+
+    public function bonusDelete($id)
+    {
+        Log::info('Deleting individual bonus records for process.', ['process_id' => $id]);
+        try {
+            Bonus::where('process_id', $id)->delete();
+            Log::info('Individual bonus records deleted successfully.', ['process_id' => $id]);
+        } catch (\Exception $e) {
+            Log::error('Failed to delete individual bonus records.', [
+                'process_id' => $id,
+                'message' => $e->getMessage()
+            ]);
+            throw $e;
+        }
+    }
+
+    public function salaryDelete($id)
+    {
+        Log::info('Initiating deletion of salary process data.', ['process_id' => $id]);
+        try {
+            $process = PayrollProcess::find($id);
+            if ($process) {
+                $startDate = $process->start_date;
+                $endDate = $process->end_date;
+                $salaryMonth = $process->salary_month;
+                
+                // Find all payrolls for this process to get employee IDs
+                $employeeIds = Payroll::where('process_id', $id)->pluck('employee_id');
+                
+                if ($employeeIds->isNotEmpty()) {
+                    Log::info('Rolling back penalty and advance statuses for affected employees.', ['count' => $employeeIds->count()]);
+                    
+                    // Reset penalties for these employees in this date range
+                    \App\Models\Payroll\EmployeePenalty::whereIn('employee_id', $employeeIds)
+                        ->whereBetween('occurrence_date', [$startDate, $endDate])
+                        ->where('status', 'deducted')
+                        ->update(['status' => 'approved']);
+
+                    // Reset advance salaries for these employees for this deduction month
+                    AdvanceSalary::whereIn('employee_id', $employeeIds)
+                        ->where('deduction_month', $salaryMonth)
+                        ->where('status', 'deducted')
+                        ->update(['status' => 'approved']);
+                }
+            }
+
+            // Bulk delete individual payroll records
+            $deletedCount = Payroll::where('process_id', $id)->delete();
+            Log::info('Individual payroll records deleted.', ['process_id' => $id, 'count' => $deletedCount]);
+
+        } catch (\Exception $e) {
+            Log::error('Salary deletion sequence failed.', [
+                'process_id' => $id,
+                'message' => $e->getMessage()
+            ]);
+            throw $e;
+        }
+    }
+
+    public function processDelete($id)
+    {
+        Log::info('Deleting Payroll Process record.', ['process_id' => $id]);
+        try {
+            $process = PayrollProcess::findOrFail($id);
+            $process->delete();
+            Log::info('Payroll Process record deleted successfully.', ['process_id' => $id]);
+        } catch (\Exception $e) {
+            Log::error('Failed to delete Payroll Process record.', [
+                'process_id' => $id,
+                'message' => $e->getMessage()
+            ]);
+            throw $e;
+        }
+    }
+
+    public function advanceStatusUpdate($id, $status)
+    {
+        Log::info('Updating individual advance salary item status.', [
+            'advance_id' => $id,
+            'status' => $status
+        ]);
+        try {
+            $advance = AdvanceSalary::findOrFail($id);
+            $advance->update(['status' => $status]);
+            Log::info('Individual advance salary status updated.', ['advance_id' => $id]);
+        } catch (\Exception $e) {
+            Log::error('Failed to update individual advance salary status.', [
+                'advance_id' => $id,
+                'message' => $e->getMessage()
+            ]);
+            throw $e;
+        }
+    }
+
+    public function searchResult(Request $request, $modelName, $flexsearch)
+    {
+        Log::info('Executing generic search result query.', ['model' => $modelName, 'filters' => $request->all()]);
+        try {
+            $query = $modelName::with('getEmployee');
+
+            $filters = [];
+
+            if ($request->filled('effective_from_start')) {
+                $filters['effective_from>='] = ($request->input('effective_from_start'));
+            }
+
+            if ($request->filled('effective_from_end')) {
+                $filters['effective_from<='] = ($request->input('effective_from_end'));
+            }
+
+            if ($request->filled('status')) {
+                $filters['status'] = ($request->input('status'));
+            }
+
+            $searchTerm = $request->get('keyword');
+
+            $searchableFields = ['getEmployee.applicant_id', 'getEmployee.full_name', 'getEmployee.system_id'];
+
+            $data = $flexsearch->apply($query,
+                $filters,
+                $searchTerm,
+                $searchableFields)->orderBy('id', 'desc')->paginate(20);
+
+            return $data;
+        } catch (\Exception $e) {
+            Log::error('Search result query failed.', ['message' => $e->getMessage()]);
+            throw $e;
+        }
+    }
+
+    public function payrollProcessSearchResult(Request $request, $modelName, $flexsearch)
+    {
+        Log::info('Executing payroll process search result query.', ['model' => $modelName, 'filters' => $request->all()]);
+        try {
+            $query = $modelName::with(['generatedBy', 'getCompany', 'getBranch', 'getDivision', 'getDepartment', 'getSection']);
+
+            $filters = [];
+
+            if ($request->filled('from_start')) {
+                $filters['created_at>='] = ($request->input('from_start'));
+            }
+
+            if ($request->filled('from_end')) {
+                $filters['created_at<='] = ($request->input('from_end'));
+            }
+
+            if ($request->filled('status')) {
+                $filters['approval_status'] = ($request->input('status'));
+            }
+
+            if ($request->filled('salary_month')) {
+                $filters['salary_month'] = ($request->input('salary_month'));
+            }
+
+            $searchTerm = $request->get('keyword');
+
+            $searchableFields = ['generatedBy.name', 'batch_id'];
+
+            $data = $flexsearch->apply($query,
+                $filters,
+                $searchTerm,
+                $searchableFields);
+            return $data;
+        } catch (\Exception $e) {
+            Log::error('Payroll process search query failed.', ['message' => $e->getMessage()]);
+            throw $e;
+        }
+    }
+
+}
+
+'],
                     'absent_count' => $employee['absent_count'],
                     'absent_dates' => $employee['absent_dates'],
                     'excessive_late_count' => $employee['excessive_late_count'],

@@ -285,10 +285,11 @@
                     $canIncrements = auth()->user()->can('increments.view');
                     $canBonuses = auth()->user()->can('bonuses.view');
                     $canAdvanceSalary = auth()->user()->can('advance-salary.view');
+                    $canArrear = auth()->user()->can('arrear.view');
                     $canSalary = auth()->user()->can('salary.view');
-                    $showPayrollMenu = $canPromotions || $canIncrements || $canBonuses || $canAdvanceSalary || $canSalary;
+                    $showPayrollMenu = $canPromotions || $canIncrements || $canBonuses || $canAdvanceSalary || $canArrear || $canSalary;
                     $payrollOpen = request()->is('promotion*') || request()->is('increment*') || request()->is('bonus*')
-                    || request()->is('advance-salary*') || request()->is('salary*');
+                    || request()->is('advance-salary*') || request()->is('arrear*') || request()->is('salary*');
                 @endphp
                 @if($showPayrollMenu)
                 <li>
@@ -328,6 +329,12 @@
                             <li>
                                 <a class='tp-link @if (request()->is('advance-salary*')) menuitem-active @endif'
                                    href='{{ route('advance-salary.index') }}'>Advance Salary</a>
+                            </li>
+                            @endif
+                            @if($canArrear)
+                            <li>
+                                <a class='tp-link @if (request()->is('arrear*')) menuitem-active @endif'
+                                   href='{{ route('arrear.index') }}'>Arrear Management</a>
                             </li>
                             @endif
                             @if($canSalary)

@@ -1126,6 +1126,27 @@ Route::prefix('advance-salary')->name('advance-salary.')->controller(\App\Http\C
     });
 });
 
+Route::prefix('arrear')->name('arrear.')->controller(\App\Http\Controllers\Payroll\ArrearController::class)->middleware('auth')->group(function () {
+    Route::middleware('permission:arrear.view')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('view/{id}', 'show')->name('show');
+    });
+    Route::middleware('permission:arrear.create')->group(function () {
+        Route::get('create', 'create')->name('create');
+        Route::post('store', 'save')->name('store');
+    });
+    Route::middleware('permission:arrear.edit')->group(function () {
+        Route::get('edit/{id}', 'edit')->name('edit');
+        Route::put('{id}/update', 'save')->name('update');
+    });
+    Route::middleware('permission:arrear.approve')->group(function () {
+        Route::put('{id}/status-update', 'statusUpdate')->name('status.update');
+    });
+    Route::middleware('permission:arrear.delete')->group(function () {
+        Route::delete('{id}/delete', 'destroy')->name('delete');
+    });
+});
+
 
 Route::controller(DataController::class)->middleware('auth')->group(function () {
 
