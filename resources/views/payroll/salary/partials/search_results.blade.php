@@ -64,7 +64,7 @@
                         data-company="{{ $item->getCompany->name ?? 'N/A' }}"
                         data-branch="{{ $item->getBranch->name ?? 'N/A' }}"
                         data-division="{{ $item->getDivision->name ?? 'N/A' }}"
-                        data-department="{{ $item->getDepartment->name ?? 'N/A' }}"
+                        data-department="{{ $item->getDepartment->department_name ?? 'N/A' }}"
                         data-section="{{ $item->getSection->name ?? 'N/A' }}"
                         data-type="{{ $item->type }}"
                         data-approved-by="{{ $item->approved_by ?? 'N/A' }}"

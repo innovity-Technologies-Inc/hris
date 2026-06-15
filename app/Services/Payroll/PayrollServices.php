@@ -1389,7 +1389,7 @@ class PayrollServices
     {
         Log::info('Executing payroll process search result query.', ['model' => $modelName, 'filters' => $request->all()]);
         try {
-            $query = $modelName::with('generatedBy');
+            $query = $modelName::with(['generatedBy', 'getCompany', 'getBranch', 'getDivision', 'getDepartment', 'getSection']);
 
             $filters = [];
 

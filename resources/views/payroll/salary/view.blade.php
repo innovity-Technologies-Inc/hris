@@ -29,6 +29,7 @@
                                     <th scope="col">Profile</th>
                                     <th scope="col">Employee ID</th>
                                     <th scope="col">Employee Name</th>
+                                    <th scope="col">Department</th>
                                     <th scope="col">Total Salary</th>
                                     <th scope="col" class="text-center">Action</th>
                                 </tr>
@@ -57,6 +58,9 @@
                                             <a href="{{ route('employee.profile.general_informations', $item->employee_id) }}">
                                                 {{ $item->getEmployee->full_name }}
                                             </a>
+                                        </td>
+                                        <td>
+                                            {{ $item->getEmployee->officeInfo->getCurrentDepartment->department_name ?? 'N/A' }}
                                         </td>
                                         <td>
                                             ৳ {{ number_format($item->total_salary, 2) }}

@@ -211,3 +211,16 @@
 - `UserType enum mismatches in TransferServices`: ✅ FIXED
 
 **Status**: ✅ SUCCESS
+
+## 2026-06-15 (Payroll Department Fetching Fix)
+
+**Goal**: Fix the department fetching issue in payroll process details and improve eager loading of organizational relationships.
+
+**Exact Command**: `php artisan config:clear && vendor/bin/pest tests\Feature\PayrollDepartmentTest.php`
+
+**Results**:
+- `payroll process search result eager loads department and uses correct attribute`: ✅ PASSED
+- `Department attribute corrected from 'name' to 'department_name' in partials`: ✅ VERIFIED
+- `Department column added to Eligible Employees and Payroll Details views`: ✅ VERIFIED
+
+**Status**: ✅ SUCCESS

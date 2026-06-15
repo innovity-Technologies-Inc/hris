@@ -35,6 +35,7 @@
                                     <h4 class="mb-1 text-primary">{{ $payroll->getEmployee->full_name }}</h4>
                                     <p class="text-muted mb-0"><strong>ID:</strong> {{ $payroll->getEmployee->applicant_id }}</p>
                                     <p class="text-muted mb-0"><strong>System ID:</strong> {{ $payroll->getEmployee->system_id }}</p>
+                                    <p class="text-muted mb-0"><strong>Department:</strong> {{ $payroll->getEmployee->officeInfo->getCurrentDepartment->department_name ?? 'N/A' }}</p>
                                 </div>
                             </div>
                         </div>
