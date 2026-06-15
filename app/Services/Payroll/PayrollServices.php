@@ -1087,17 +1087,57 @@ class PayrollServices
             Log::info('Penalty calculation.', ['amount' => $penaltyAmount, 'count' => $penalties->count()]);
 
             // Advance Salary Calculation
+            Log::info('Searching for approved advances for recovery (including overdue).', [
+                'employee_id' => $employee->id,
+                'current_salary_month' => $salary_month
+            ]);
+            
+            // We search for advances where deduction_month is <= current salary_month
+            // This ensures missed advances from previous months are also recovered
             $advances = AdvanceSalary::where('employee_id', $employee->id)
                 ->where('status', 'approved')
-                ->where('deduction_month', $salary_month)
+                ->where('deduction_month', '<=', $salary_month)
                 ->get();
+                
+            if ($advances->isEmpty()) {
+                // Debug: Check if there are any advances at all for this employee
+                $anyAdvances = AdvanceSalary::where('employee_id', $employee->id)->get();
+                if ($anyAdvances->isNotEmpty()) {
+                    Log::info('Employee has advances, but none are "approved" or "due".', [
+                        'employee_id' => $employee->id,
+                        'advances' => $anyAdvances->map(fn($a) => [
+                            'id' => $a->id,
+                            'status' => $a->status,
+                            'due_month' => $a->deduction_month
+                        ])
+                    ]);
+                }
+            }
+
             $advanceDeductionAmount = $advances->sum('amount');
-            Log::info('Advance Salary deduction calculation.', ['amount' => $advanceDeductionAmount, 'count' => $advances->count()]);
+            Log::info('Advance Salary recovery result.', [
+                'employee_id' => $employee->id,
+                'total_recovered' => $advanceDeductionAmount, 
+                'count' => $advances->count(),
+                'advance_ids' => $advances->pluck('id')->toArray()
+            ]);
 
             $salary_amount = $calculatedGrossSalary + $offDayWorkSalary + $overTimeSalary - $deductionAmount - $penaltyAmount - $advanceDeductionAmount;
-            $total_salary += $salary_amount;
             
-            Log::info('Final salary for employee.', ['employee_id' => $employee->id, 'total_salary' => $salary_amount]);
+            Log::info('Final salary breakdown for employee.', [
+                'employee_id' => $employee->id,
+                'math' => [
+                    'base_gross' => $calculatedGrossSalary,
+                    'overtime' => $overTimeSalary,
+                    'offday_work' => $offDayWorkSalary,
+                    'deductions' => $deductionAmount,
+                    'penalties' => $penaltyAmount,
+                    'advances' => $advanceDeductionAmount,
+                    'EQUALS' => $salary_amount
+                ]
+            ]);
+            
+            $total_salary += $salary_amount;
 
             $employeeData[] = [
                 'employee_id' => $employee->id,
@@ -1218,41 +1258,59 @@ class PayrollServices
 
     public function bonusDelete($id)
     {
-        Log::info('Deleting Old Bonus Data');
-        $bonuses = Bonus::where('process_id', $id)->get();
-        foreach ($bonuses as $bonus) {
-            $bonus->delete();
+        Log::info('Deleting individual bonus records for process.', ['process_id' => $id]);
+        try {
+            Bonus::where('process_id', $id)->delete();
+            Log::info('Individual bonus records deleted successfully.', ['process_id' => $id]);
+        } catch (\Exception $e) {
+            Log::error('Failed to delete individual bonus records.', [
+                'process_id' => $id,
+                'message' => $e->getMessage()
+            ]);
+            throw $e;
         }
     }
 
     public function salaryDelete($id)
     {
-        Log::info('Deleting Old Salary Data');
-        $process = PayrollProcess::find($id);
-        if ($process) {
-            $startDate = $process->start_date;
-            $endDate = $process->end_date;
-            $salaryMonth = $process->salary_month;
-            
-            // Find all payrolls for this process to get employee IDs
-            $employeeIds = Payroll::where('process_id', $id)->pluck('employee_id');
-            
-            // Reset penalties for these employees in this date range
-            \App\Models\Payroll\EmployeePenalty::whereIn('employee_id', $employeeIds)
-                ->whereBetween('occurrence_date', [$startDate, $endDate])
-                ->where('status', 'deducted')
-                ->update(['status' => 'approved']);
+        Log::info('Initiating deletion of salary process data.', ['process_id' => $id]);
+        try {
+            $process = PayrollProcess::find($id);
+            if ($process) {
+                $startDate = $process->start_date;
+                $endDate = $process->end_date;
+                $salaryMonth = $process->salary_month;
+                
+                // Find all payrolls for this process to get employee IDs
+                $employeeIds = Payroll::where('process_id', $id)->pluck('employee_id');
+                
+                if ($employeeIds->isNotEmpty()) {
+                    Log::info('Rolling back penalty and advance statuses for affected employees.', ['count' => $employeeIds->count()]);
+                    
+                    // Reset penalties for these employees in this date range
+                    \App\Models\Payroll\EmployeePenalty::whereIn('employee_id', $employeeIds)
+                        ->whereBetween('occurrence_date', [$startDate, $endDate])
+                        ->where('status', 'deducted')
+                        ->update(['status' => 'approved']);
 
-            // Reset advance salaries for these employees for this deduction month
-            AdvanceSalary::whereIn('employee_id', $employeeIds)
-                ->where('deduction_month', $salaryMonth)
-                ->where('status', 'deducted')
-                ->update(['status' => 'approved']);
-        }
+                    // Reset advance salaries for these employees for this deduction month
+                    AdvanceSalary::whereIn('employee_id', $employeeIds)
+                        ->where('deduction_month', $salaryMonth)
+                        ->where('status', 'deducted')
+                        ->update(['status' => 'approved']);
+                }
+            }
 
-        $payrolls = Payroll::where('process_id', $id)->get();
-        foreach ($payrolls as $payroll) {
-            $payroll->delete();
+            // Bulk delete individual payroll records
+            $deletedCount = Payroll::where('process_id', $id)->delete();
+            Log::info('Individual payroll records deleted.', ['process_id' => $id, 'count' => $deletedCount]);
+
+        } catch (\Exception $e) {
+            Log::error('Salary deletion sequence failed.', [
+                'process_id' => $id,
+                'message' => $e->getMessage()
+            ]);
+            throw $e;
         }
     }
 

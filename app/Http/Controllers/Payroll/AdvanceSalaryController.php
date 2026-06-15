@@ -142,8 +142,12 @@ class AdvanceSalaryController extends Controller
         Log::info('Accessing Advance Salary detail view.', ['process_id' => $id]);
         try {
             $process = PayrollProcess::with([
-                'advanceSalaries.employee.officeInfo.getCurrentDesignation',
+                'advanceSalaries.employee.officeInfo.getCurrentCompany',
+                'advanceSalaries.employee.officeInfo.getCurrentBusinessUnit',
+                'advanceSalaries.employee.officeInfo.getCurrentDivision',
                 'advanceSalaries.employee.officeInfo.getCurrentDepartment',
+                'advanceSalaries.employee.officeInfo.getCurrentSection',
+                'advanceSalaries.employee.officeInfo.getCurrentDesignation',
                 'getCompany', 
                 'getBranch', 
                 'getDepartment', 

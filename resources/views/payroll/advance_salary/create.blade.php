@@ -5,22 +5,6 @@
         $isEdit = isset($advanceData);
     @endphp
 
-    <style>
-        /* Ensure Select2 height matches Bootstrap 5 form-control exactly */
-        .select2-container--bootstrap-5 .select2-selection--single {
-            height: 38px !important; /* Standard BS5 height */
-            display: flex;
-            align-items: center;
-        }
-        .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
-            line-height: 38px !important;
-            padding-left: 0.75rem !important;
-        }
-        .select2-container--bootstrap-5 .select2-selection--single .select2-selection__arrow {
-            height: 36px !important;
-        }
-    </style>
-
     <div class="row">
         <div class="col-12">
             <div class="card shadow-sm border-0">

@@ -34,7 +34,7 @@
                                     Pay Group <span class="text-danger">*</span>
                                 </label>
                                 <select name="pay_group_id" id="pay_group_id"
-                                        class="form-select select2_list" required>
+                                        class="select2_list" required>
                                     <option value="">Select Pay Group</option>
                                     @foreach($payGroups as $payGroup)
                                         <option value="{{ $payGroup->id }}"
@@ -49,7 +49,7 @@
                                     Company <span class="text-danger">*</span>
                                 </label>
                                 <select name="company_id" id="company_id"
-                                        class="form-select select2_list" required>
+                                        class="select2_list" required>
                                     <option value="">Select Company</option>
                                     @foreach($companies as $company)
                                         <option value="{{ $company->id }}"
@@ -66,14 +66,14 @@
                             <div class="col-md-4">
                                 <label class="form-label fw-semibold">Branch</label>
                                 <select name="branch_id" id="branch_id"
-                                        class="form-select select2_list">
+                                        class="select2_list">
                                     <option value="">Select Branch</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label fw-semibold">Division</label>
                                 <select name="division_id" id="division_id"
-                                        class="form-select select2_list">
+                                        class="select2_list">
                                     <option value="">Select Division</option>
                                 </select>
                             </div>
@@ -81,7 +81,7 @@
                             <div class="col-md-4">
                                 <label class="form-label fw-semibold">Department</label>
                                 <select name="department_id" id="department_id"
-                                        class="form-select select2_list">
+                                        class="select2_list">
                                     <option value="">Select Department</option>
                                 </select>
                             </div>
@@ -92,7 +92,7 @@
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">Section</label>
                                 <select name="section_id" id="section_id"
-                                        class="form-select select2_list">
+                                        class="select2_list">
                                     <option value="">Select Section</option>
                                 </select>
                             </div>
@@ -105,7 +105,7 @@
 
                                 <select id="employeeSelect"
                                         name="employee_id"
-                                        class="form-select select2">
+                                        class="select2">
 
                                     <option value="">Select Employee</option>
 
@@ -126,7 +126,7 @@
                                 </label>
 
                                 <select name="plan_ids[]" id="bonus_plan_select"
-                                        class="form-select select2_list"
+                                        class="select2_list"
                                         multiple required>
 
                                     @foreach($bonusPlans as $plan)
@@ -176,6 +176,7 @@
         $(function(){
 
             $('.select2_list, .select2').select2({
+                theme: 'bootstrap-5',
                 allowClear: true,
                 width: '100%'
             });

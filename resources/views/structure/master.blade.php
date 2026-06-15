@@ -81,6 +81,22 @@
     <!-- Custom Styles -->
     <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet" type="text/css">
 
+    <style>
+        /* Global Select2 height fix to match Bootstrap 5 form-control exactly */
+        .select2-container--bootstrap-5 .select2-selection--single {
+            height: 38px !important; /* Standard BS5 height */
+            display: flex;
+            align-items: center;
+        }
+        .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+            line-height: 38px !important;
+            padding-left: 0.75rem !important;
+        }
+        .select2-container--bootstrap-5 .select2-selection--single .select2-selection__arrow {
+            height: 36px !important;
+        }
+    </style>
+
     @stack('styles')
 
 </head>
