@@ -1325,6 +1325,12 @@ class PayrollServices
                         ->where('deduction_month', $salaryMonth)
                         ->where('status', 'deducted')
                         ->update(['status' => 'approved']);
+
+                    // Reset arrear payments for these employees for this payment month
+                    Arrear::whereIn('employee_id', $employeeIds)
+                        ->where('payment_month', $salaryMonth)
+                        ->where('status', 'paid')
+                        ->update(['status' => 'approved']);
                 }
             }
 
@@ -1335,6 +1341,196 @@ class PayrollServices
         } catch (\Exception $e) {
             Log::error('Salary deletion sequence failed.', [
                 'process_id' => $id,
+                'message' => $e->getMessage()
+            ]);
+            throw $e;
+        }
+    }
+
+    public function arrearProcess($data, $processId = null)
+    {
+        try {
+            Log::info('Initiating arrear process.', ['data' => $data, 'process_id' => $processId]);
+            
+            $payGroup = \App\Models\Company\PayGroup::findOrFail($data['pay_group_id']);
+            $frequency = strtolower($payGroup->payroll_frequency);
+            
+            $payment_month = $data['payment_month'];
+            $amount_type = $data['amount_type'];
+            $amount_value = $data['amount_value'];
+            $percentage_base = $data['percentage_base'] ?? 'gross_salary';
+            $reason = $data['reason'] ?? '';
+
+            if ($frequency === 'monthly') {
+                $salary_month = $data['salary_month'];
+                $effectiveDate = Carbon::createFromFormat('Y-m', $salary_month)->startOfMonth();
+                $startDate = $effectiveDate->copy();
+                $endDate = $effectiveDate->copy()->endOfMonth();
+            } else {
+                $startDate = Carbon::parse($data['start_date']);
+                $endDate = Carbon::parse($data['end_date']);
+                $salary_month = $startDate->format('Y-m');
+                $effectiveDate = $startDate;
+            }
+
+            Log::info('Target period and frequency for arrear.', [
+                'frequency' => $frequency,
+                'salary_month' => $salary_month,
+                'start_date' => $startDate->toDateString(),
+                'end_date' => $endDate->toDateString()
+            ]);
+
+            $employees = $this->findEmployees($data, $effectiveDate);
+            Log::info('Eligible employees found for arrear.', ['count' => $employees->count()]);
+            
+            $total_arrear = 0;
+            $employeeData = [];
+            
+            foreach ($employees as $employee) {
+                try {
+                    $employeeSalary = EmployeeSalaryBreakdown::where('employee_id', $employee->id)->first();
+                    if (!$employeeSalary) {
+                        Log::warning('Skipping employee: Salary breakdown missing.', ['employee_id' => $employee->id]);
+                        continue;
+                    }
+
+                    $calculated_amount = 0;
+                    if ($amount_type === 'fixed') {
+                        $calculated_amount = $amount_value;
+                    } else {
+                        $base_salary = ($percentage_base === 'basic_salary') ? $employeeSalary->basic_salary : $employeeSalary->gross_salary;
+                        $calculated_amount = ($base_salary * $amount_value) / 100;
+                    }
+
+                    if ($calculated_amount > 0) {
+                        Log::info('Calculated arrear for employee.', [
+                            'employee_id' => $employee->id,
+                            'amount' => $calculated_amount
+                        ]);
+                        $total_arrear += $calculated_amount;
+                        $employeeData[] = [
+                            'employee_id' => $employee->id,
+                            'amount' => $calculated_amount,
+                            'type' => $type,
+                            'payment_month' => $payment_month,
+                            'reason' => $reason,
+                        ];
+                    }
+                } catch (\Exception $innerEx) {
+                    Log::error('Error processing individual employee arrear.', [
+                        'employee_id' => $employee->id,
+                        'error' => $innerEx->getMessage()
+                    ]);
+                }
+            }
+            
+            $total_employees = count($employeeData);
+            if ($total_employees == 0) {
+                Log::warning('No arrear records could be generated.', ['data' => $data]);
+                throw new \Exception('No eligible employees found for arrear generation with provided criteria.');
+            }
+
+            Log::info('Consolidated arrear summary.', [
+                'total_employees' => $total_employees,
+                'total_amount' => $total_arrear
+            ]);
+
+            DB::transaction(function () use ($data, $employeeData, $total_arrear, $total_employees, $processId, $salary_month, $startDate, $endDate) {
+                if ($processId == null) {
+                    $process = PayrollProcess::create([
+                        'batch_id' => uniqid('Arrear_', true),
+                        'company_id' => $data['company_id'],
+                        'branch_id' => $data['branch_id'],
+                        'division_id' => $data['division_id'],
+                        'department_id' => $data['department_id'],
+                        'section_id' => $data['section_id'],
+                        'pay_group_id' => $data['pay_group_id'],
+                        'salary_month' => $salary_month,
+                        'start_date' => $startDate,
+                        'end_date' => $endDate,
+                        'type' => 'arrear',
+                        'total_amount' => $total_arrear,
+                        'generated_by' => Auth::id() ?? null,
+                        'total_employee' => $total_employees,
+                    ]);
+                    Log::info('New Arrear Payroll Process record created.', ['process_id' => $process->id]);
+                } else {
+                    $process = PayrollProcess::findOrFail($processId);
+                    $process->update([
+                        'company_id' => $data['company_id'],
+                        'branch_id' => $data['branch_id'],
+                        'division_id' => $data['division_id'],
+                        'department_id' => $data['department_id'],
+                        'section_id' => $data['section_id'],
+                        'pay_group_id' => $data['pay_group_id'],
+                        'salary_month' => $salary_month,
+                        'start_date' => $startDate,
+                        'end_date' => $endDate,
+                        'total_amount' => $total_arrear,
+                        'generated_by' => Auth::id() ?? null,
+                        'total_employee' => $total_employees,
+                    ]);
+                    // Clear old items
+                    Arrear::where('process_id', $processId)->delete();
+                    Log::info('Existing Arrear Payroll Process updated.', ['process_id' => $processId]);
+                }
+
+                foreach ($employeeData as $employee) {
+                    Arrear::create([
+                        'process_id' => $process->id,
+                        'batch_id' => $process->batch_id,
+                        'employee_id' => $employee['employee_id'],
+                        'amount' => $employee['amount'],
+                        'payment_month' => $employee['payment_month'],
+                        'reason' => $employee['reason'],
+                        'status' => 'pending',
+                    ]);
+                }
+            });
+
+            Log::info('Arrear process database transaction committed.');
+
+        } catch (\Exception $e) {
+            Log::error('Arrear processing failure in Service layer.', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            throw $e;
+        }
+    }
+
+    public function arrearDelete($id)
+    {
+        Log::info('Deleting Arrear Process and related items.', ['process_id' => $id]);
+        try {
+            $process = PayrollProcess::findOrFail($id);
+            DB::transaction(function () use ($process, $id) {
+                Arrear::where('process_id', $id)->delete();
+                $process->delete();
+            });
+            Log::info('Arrear Process and items deleted successfully.', ['process_id' => $id]);
+        } catch (\Exception $e) {
+            Log::error('Failed to delete Arrear Process.', [
+                'process_id' => $id,
+                'message' => $e->getMessage()
+            ]);
+            throw $e;
+        }
+    }
+
+    public function arrearStatusUpdate($id, $status)
+    {
+        Log::info('Updating individual arrear item status.', [
+            'arrear_id' => $id,
+            'status' => $status
+        ]);
+        try {
+            $arrear = Arrear::findOrFail($id);
+            $arrear->update(['status' => $status]);
+            Log::info('Individual arrear status updated.', ['arrear_id' => $id]);
+        } catch (\Exception $e) {
+            Log::error('Failed to update individual arrear status.', [
+                'arrear_id' => $id,
                 'message' => $e->getMessage()
             ]);
             throw $e;

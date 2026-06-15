@@ -66,6 +66,7 @@ class ArrearController extends Controller
             'section_id' => 'nullable|exists:sections,id',
             'pay_group_id' => 'required|exists:pay_groups,id',
             'employee_id' => 'nullable|exists:employees,id',
+            'type' => 'required|in:Salary Adjustment,Overtime,Off Day Work,Bonus & Reward,others',
             'payment_month' => 'required',
             'amount_type' => 'required|in:fixed,percentage',
             'amount_value' => 'required|numeric|min:0.01',

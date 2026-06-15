@@ -126,7 +126,18 @@
 
                         {{-- ================= AMOUNT CONFIGURATION ================= --}}
                         <div class="row g-4 mb-4">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold">Arrear Type <span class="text-danger">*</span></label>
+                                <select class="form-select select2_list" name="type" id="type" required>
+                                    <option value="">Select Type</option>
+                                    @php $types = ['Salary Adjustment', 'Overtime', 'Off Day Work', 'Bonus & Reward', 'others']; @endphp
+                                    @foreach($types as $t)
+                                        <option value="{{ $t }}" {{ (isset($firstItem) && $firstItem->type == $t) ? 'selected' : '' }}>{{ $t }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-3">
                                 <label class="form-label fw-semibold">Amount Type <span class="text-danger">*</span></label>
                                 <select class="form-select" name="amount_type" id="amount_type" required>
                                     <option value="fixed" {{ (isset($firstItem) && $firstItem->amount_type == 'fixed') ? 'selected' : '' }}>Fixed Amount</option>
@@ -134,7 +145,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-4" id="percentage_base_container" style="display: none;">
+                            <div class="col-md-3" id="percentage_base_container" style="display: none;">
                                 <label class="form-label fw-semibold">Percentage Base</label>
                                 <select class="form-select" name="percentage_base" id="percentage_base">
                                     <option value="gross_salary">Gross Salary</option>
@@ -142,7 +153,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label class="form-label fw-semibold">Amount Value <span class="text-danger">*</span></label>
                                 <input type="number" step="0.01" class="form-control" name="amount_value" 
                                        value="{{ isset($firstItem) ? $firstItem->amount_value : '' }}" placeholder="Enter amount or percent" required>

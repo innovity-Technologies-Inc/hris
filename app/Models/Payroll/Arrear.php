@@ -13,6 +13,7 @@ class Arrear extends Model
         'employee_id',
         'batch_id',
         'amount',
+        'type',
         'payment_month',
         'reason',
         'status',

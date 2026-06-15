@@ -52,6 +52,7 @@
                                 <th class="text-center" style="width: 50px;">#</th>
                                 <th>Employee Name</th>
                                 <th>Reason</th>
+                                <th>Type</th>
                                 <th class="text-center">Target Payment Month</th>
                                 <th class="text-end">Arrear Amount</th>
                                 <th class="text-center">Status</th>
@@ -87,6 +88,7 @@
                                     </div>
                                 </td>
                                 <td><span class="text-muted small">{{ $item->reason ?? 'No reason provided' }}</span></td>
+                                <td><span class="badge bg-secondary text-white">{{ $item->type }}</span></td>
                                 <td class="text-center">
                                     <span class="badge bg-light text-dark border">
                                         {{ \Carbon\Carbon::parse($item->payment_month)->format('M Y') }}
@@ -112,6 +114,7 @@
                                             data-id="{{ $item->employee->system_id }}"
                                             data-photo="{{ $item->employee->photo_path ? asset('storage/' . $item->employee->photo_path) : '' }}"
                                             data-amount="{{ number_format($item->amount, 2) }}"
+                                            data-type="{{ $item->type }}"
                                             data-month="{{ \Carbon\Carbon::parse($item->payment_month)->format('F Y') }}"
                                             data-reason="{{ $item->reason ?? 'N/A' }}"
                                             data-status="{{ ucfirst($item->status) }}"
@@ -221,6 +224,10 @@
                                 <span class="fw-bold text-dark" id="modal-payment-month">-</span>
                             </div>
                         </div>
+                        <div class="col-12 mt-2">
+                            <label class="text-muted small d-block mb-1">Arrear Type</label>
+                            <span class="badge bg-secondary text-white" id="modal-arrear-type">-</span>
+                        </div>
                         <div class="col-12 mt-3">
                             <label class="text-muted small d-block mb-1">Reason for Arrear</label>
                             <div class="p-3 bg-light rounded-3 italic text-muted small" style="border-left: 4px solid #dee2e6;">
@@ -260,6 +267,7 @@
             $('#modal-emp-dept').text(data.department);
             $('#modal-emp-section').text(data.section);
             $('#modal-arrear-amount').text(data.amount);
+            $('#modal-arrear-type').text(data.type);
             $('#modal-payment-month').text(data.month);
             $('#modal-reason').text(data.reason);
 
