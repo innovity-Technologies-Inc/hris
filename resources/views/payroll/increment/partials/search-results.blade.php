@@ -16,11 +16,6 @@ Each increment object should have:
 --}}
 
 <div class="card-body p-0">
-    @can('increments.create')
-    <a type="button" class="btn btn-warning btn-sm me-3 mb-3" href="{{ route('increment.create') }}">
-        <i style="height: 12px; width: 12px" data-feather="plus"></i> Create Increment
-    </a>
-    @endcan
 
     @if ($increments->isNotEmpty())
         @can('increments.hr-approve')
