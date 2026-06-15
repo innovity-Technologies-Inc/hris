@@ -205,9 +205,13 @@
                     <td>Penalty Deductions</td>
                     <td class="text-right">{{ number_format($payroll->penalty_amount, 2) }}</td>
                 </tr>
+                <tr>
+                    <td>Advance Deductions</td>
+                    <td class="text-right">{{ number_format($payroll->advance_deduction_amount, 2) }}</td>
+                </tr>
                 <tr class="total-row">
                     <td>Total Deductions (B)</td>
-                    <td class="text-right">{{ number_format($payroll->deduction_amount + $payroll->penalty_amount, 2) }}</td>
+                    <td class="text-right">{{ number_format($payroll->deduction_amount + $payroll->penalty_amount + $payroll->advance_deduction_amount, 2) }}</td>
                 </tr>
             </tbody>
         </table>

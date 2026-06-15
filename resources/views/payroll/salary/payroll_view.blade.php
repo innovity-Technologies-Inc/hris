@@ -110,9 +110,13 @@
                                             Penalty Amount
                                             <span class="fw-bold text-danger">৳ {{ number_format($payroll->penalty_amount, 2) }}</span>
                                         </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent px-0 border-light">
+                                            Advance Deduction
+                                            <span class="fw-bold text-danger">৳ {{ number_format($payroll->advance_deduction_amount, 2) }}</span>
+                                        </li>
                                         <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent px-0 border-light mt-2 pt-2 border-top border-danger border-2">
                                             <strong>Total Deductions</strong>
-                                            <strong class="text-danger">৳ {{ number_format($payroll->deduction_amount + $payroll->penalty_amount, 2) }}</strong>
+                                            <strong class="text-danger">৳ {{ number_format($payroll->deduction_amount + $payroll->penalty_amount + $payroll->advance_deduction_amount, 2) }}</strong>
                                         </li>
                                         <div class="mt-4 pt-3 border-top border-danger border-2">
                                             <div class="d-flex justify-content-between align-items-center">
