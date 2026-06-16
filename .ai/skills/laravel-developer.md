@@ -57,6 +57,13 @@ After implementation and verification are complete:
 3. **Commit**: Commit changes with a clear message following project style.
 
 ## 🛠️ Guidelines & Mandates
+
+### ⚠️ Safe Code Modification Guidelines
+- **Surgical Edits Only**: NEVER attempt to rewrite large blocks of code (e.g., methods exceeding 50 lines) in a single tool call. Break modifications into smaller, targeted edits.
+- **Read Before Edit**: ALWAYS use the `read_file` tool to retrieve the exact line numbers and current state of the code before applying any changes using `replace`.
+- **No Truncation Hacks**: NEVER use shell commands (like `head`, `tail`, `sed`, or PowerShell equivalents) to "chop off" or truncate files to fix syntax errors. If a parse error occurs, carefully locate the exact lines using `read_file` and surgically remove the incorrect lines using `replace`.
+- **Verify Syntax**: After complex edits, especially in core classes (e.g., `PayrollServices.php`), verify structural integrity by running `php -l path/to/file.php` before committing or assuming the task is complete.
+
 - **Strict Typing**: Use PHP 8.2+ type hints for all method arguments and return types.
 - **FlexSearch**: Use `daiyanmozumder/laravel-flexsearch` for all table filtering and searching.
 - **UI/UX**: Strictly follow `.ai/guidelines/design-guidelines.md`.
