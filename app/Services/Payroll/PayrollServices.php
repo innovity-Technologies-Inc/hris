@@ -902,7 +902,17 @@ class PayrollServices
                 $advances = AdvanceSalary::where('employee_id', $employee->id)->where('status', 'approved')->where('deduction_month', '<=', $salary_month)->get();
                 $arrears = Arrear::where('employee_id', $employee->id)->where('status', 'approved')->where('payment_month', '<=', $salary_month)->get();
 
-                $salary_amount = $calculatedGrossSalary + $offDayWorkSalary + $overTimeSalary + $arrears->sum('amount') - $deductionData['total'] - $penalties->sum('penalty_amount') - $advances->sum('amount');
+                $previousDues = \App\Models\Payroll\PreviousDue::where('employee_id', $employee->id)->where('status', 'pending')->get();
+                $previousDueAmount = $previousDues->sum('amount');
+
+                $salary_amount = $calculatedGrossSalary + $offDayWorkSalary + $overTimeSalary + $arrears->sum('amount') - $deductionData['total'] - $penalties->sum('penalty_amount') - $advances->sum('amount') - $previousDueAmount;
+                
+                $newDueAmount = 0;
+                if ($salary_amount < 0) {
+                    $newDueAmount = abs($salary_amount);
+                    $salary_amount = 0;
+                }
+                
                 $total_salary += $salary_amount;
 
                 $employeeData[] = [
@@ -928,8 +938,10 @@ class PayrollServices
                     'arrear_amount' => $arrears->sum('amount'),
                     'bonus_amount' => 0,
                     'total_salary' => $salary_amount,
+                    'new_due_amount' => $newDueAmount,
                     'advance_ids' => $advances->pluck('id')->toArray(),
                     'arrear_ids' => $arrears->pluck('id')->toArray(),
+                    'previous_due_ids' => $previousDues->pluck('id')->toArray(),
                 ];
             }
 
@@ -1129,5 +1141,8 @@ class PayrollServices
         if ($request->filled('status')) $filters['approval_status'] = $request->input('status');
         if ($request->filled('salary_month')) $filters['salary_month'] = $request->input('salary_month');
         return $flexsearch->apply($query, $filters, $request->get('keyword'), ['generatedBy.name', 'batch_id']);
+    }
+}
+eratedBy.name', 'batch_id']);
     }
 }

@@ -1,0 +1,38 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('disbursements', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('process_id');
+            $table->string('batch_id')->unique();
+            $table->enum('process_type', ['salary', 'bonus']);
+            $table->string('payment_method');
+            $table->decimal('total_amount', 15, 2);
+            $table->integer('total_employees');
+            $table->text('note')->nullable();
+            $table->unsignedBigInteger('disbursed_by')->nullable();
+            $table->timestamps();
+
+            $table->foreign('process_id')->references('id')->on('payroll_process')->onDelete('cascade');
+            $table->foreign('disbursed_by')->references('id')->on('users')->onDelete('set null');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('disbursements');
+    }
+};

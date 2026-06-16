@@ -1126,6 +1126,16 @@ Route::prefix('advance-salary')->name('advance-salary.')->controller(\App\Http\C
     });
 });
 
+Route::prefix('disbursement')->name('disbursement.')->controller(\App\Http\Controllers\Payroll\DisbursementController::class)->middleware('auth')->group(function () {
+    Route::middleware('permission:disbursement.view')->group(function () {
+        Route::get('/', 'index')->name('index');
+    });
+    Route::middleware('permission:disbursement.process')->group(function () {
+        Route::get('process/{id}', 'process')->name('process');
+        Route::post('store', 'store')->name('store');
+    });
+});
+
 Route::prefix('arrear')->name('arrear.')->controller(\App\Http\Controllers\Payroll\ArrearController::class)->middleware('auth')->group(function () {
     Route::middleware('permission:arrear.view')->group(function () {
         Route::get('/', 'index')->name('index');
