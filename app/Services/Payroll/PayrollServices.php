@@ -1143,6 +1143,3 @@ class PayrollServices
         return $flexsearch->apply($query, $filters, $request->get('keyword'), ['generatedBy.name', 'batch_id']);
     }
 }
-eratedBy.name', 'batch_id']);
-    }
-}
