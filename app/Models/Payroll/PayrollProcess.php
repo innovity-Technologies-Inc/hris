@@ -86,5 +86,15 @@ class PayrollProcess extends Model
     {
         return $this->hasMany(Arrear::class, 'process_id');
     }
+
+    public function payrolls()
+    {
+        return $this->hasMany(Payroll::class, 'process_id');
+    }
+
+    public function bonuses()
+    {
+        return $this->hasMany(Bonus::class, 'process_id');
+    }
 }
 
