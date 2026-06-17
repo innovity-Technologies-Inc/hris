@@ -51,8 +51,8 @@
         <div class="col-md-3">
             <div class="card border-0 shadow-sm text-center p-3 stat-card" style="border-radius: 12px; border-left: 5px solid #ef4444 !important;">
                 <small class="text-muted text-uppercase fw-bold ls-1 d-block mb-1">Total Value</small>
-                <h3 class="fw-bold mb-0 text-primary" id="stat-total-amt">৳ -</h3>
-                <small class="text-muted mt-1 d-block text-truncate" id="stat-paid-amt">Paid: ৳ -</small>
+                <h3 class="fw-bold mb-0 text-primary" id="stat-total-amt">&#2547; -</h3>
+                <small class="text-muted mt-1 d-block text-truncate" id="stat-paid-amt">Paid: &#2547; -</small>
             </div>
         </div>
     </div>
@@ -79,38 +79,7 @@
     <div class="mb-5 pb-5"></div>
 </div>
 
-<style>
-    .bg-soft-info { background-color: rgba(13, 202, 240, 0.1); }
-    .italic { font-style: italic; }
-    .btn-xs { padding: .2rem .5rem; font-size: .75rem; }
-    .disbursement-block { transition: all 0.3s ease; }
-    .disbursement-block:hover { background-color: #fafbfc; }
-    .ls-1 { letter-spacing: 0.5px; }
-    .ls-2 { letter-spacing: 1px; }
-
-    /* Statistics Card Hover Effects */
-    .stat-card { transition: all 0.3s ease; cursor: default; }
-    .stat-card small, .stat-card h3 { transition: color 0.3s ease; }
-    
-    .stat-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; }
-    .stat-card:hover small, .stat-card:hover h3, .stat-card:hover .text-muted, .stat-card:hover .text-success, .stat-card:hover .text-warning, .stat-card:hover .text-primary, .stat-card:hover .text-dark { 
-        color: #fff !important; 
-    }
-
-    .stat-card[style*="#6366f1"]:hover { background-color: #6366f1 !important; }
-    .stat-card[style*="#10b981"]:hover { background-color: #10b981 !important; }
-    .stat-card[style*="#f59e0b"]:hover { background-color: #f59e0b !important; }
-    .stat-card[style*="#ef4444"]:hover { background-color: #ef4444 !important; }
-
-    .pager-link { 
-        display: inline-block; padding: 4px 12px; margin: 0 2px; border-radius: 8px; 
-        font-size: 12px; font-weight: bold; color: #6c757d; background: #fff;
-        text-decoration: none; border: 1px solid #dee2e6; transition: all 0.2s;
-    }
-    .pager-link:hover { background: #108dff; color: #fff; border-color: #108dff; transform: translateY(-1px); }
-    .pager-link.active { background: #108dff; color: #fff; border-color: #108dff; }
-    .pagination-sm .page-link { font-size: 11px; padding: 0.25rem 0.5rem; }
-</style>
+@endsection
 
 @push('scripts')
 <script>
@@ -120,7 +89,7 @@
         const itemsApiUrl = "{{ route('disbursement.items_data', ':id') }}";
 
         function formatCurrency(amt) {
-            return '৳ ' + parseFloat(amt).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            return '\u09F3 ' + parseFloat(amt).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
 
         function loadHistory(page = 1) {
