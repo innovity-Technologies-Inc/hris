@@ -123,10 +123,8 @@ class BonusController extends Controller
 
     public function delete($id)
     {
-        DB::transaction(function () use ($id) {
-            $this->payrollService->bonusDelete($id);
-            $this->payrollService->processDelete($id);
-        });
+        $this->payrollService->bonusDelete($id);
+        
         return redirect()->back()->with([
             'message' => 'Deleted Successfully',
             'alert-type' => 'success'

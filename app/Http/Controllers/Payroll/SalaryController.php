@@ -195,10 +195,8 @@ class SalaryController extends Controller
 
     public function delete($id)
     {
-        DB::transaction(function () use ($id) {
-            $this->payrollService->salaryDelete($id);
-            $this->payrollService->processDelete($id);
-        });
+        $this->payrollService->salaryDelete($id);
+        
         return redirect()->back()->with([
             'message' => 'Deleted Successfully',
             'alert-type' => 'success'
