@@ -75,6 +75,41 @@ class DisbursementServices
         return ['process' => $process, 'items' => $items];
     }
 
+    public function getBatchHistory($id)
+    {
+        $process = PayrollProcess::with(['getCompany', 'getBranch', 'getDepartment', 'generatedBy'])->findOrFail($id);
+        
+        // Calculate Statistics
+        if ($process->type === 'salary') {
+            $stats = [
+                'total_employees' => Payroll::where('process_id', $id)->count(),
+                'eligible_employees' => Payroll::where('process_id', $id)->where('total_salary', '>', 0)->count(),
+                'paid_employees' => Payroll::where('process_id', $id)->where('disbursement_status', 'paid')->count(),
+                'total_amount' => $process->total_amount,
+                'paid_amount' => Payroll::where('process_id', $id)->where('disbursement_status', 'paid')->sum('total_salary'),
+            ];
+        } else {
+            $stats = [
+                'total_employees' => Bonus::where('process_id', $id)->count(),
+                'eligible_employees' => Bonus::where('process_id', $id)->where('amount', '>', 0)->count(),
+                'paid_employees' => Bonus::where('process_id', $id)->where('disbursement_status', 'paid')->count(),
+                'total_amount' => $process->total_amount,
+                'paid_amount' => Bonus::where('process_id', $id)->where('disbursement_status', 'paid')->sum('amount'),
+            ];
+        }
+
+        $stats['pending_employees'] = $stats['eligible_employees'] - $stats['paid_employees'];
+        $stats['pending_amount'] = $stats['total_amount'] - $stats['paid_amount'];
+
+        // Get Disbursement History
+        $disbursements = Disbursement::with(['disbursedBy', 'attachments', 'items.employee.officeInfo.getCurrentDesignation'])
+            ->where('process_id', $id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return compact('process', 'stats', 'disbursements');
+    }
+
     public function processDisbursement($data)
     {
         return DB::transaction(function () use ($data) {

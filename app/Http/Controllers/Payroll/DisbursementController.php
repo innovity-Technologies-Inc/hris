@@ -50,6 +50,17 @@ class DisbursementController extends Controller
         }
     }
 
+    public function show($id)
+    {
+        try {
+            $data = $this->disbursementService->getBatchHistory($id);
+            return view('payroll.disbursement.show', $data);
+        } catch (\Exception $e) {
+            Log::error('Error loading Disbursement batch details.', ['message' => $e->getMessage()]);
+            return redirect()->route('disbursement.index')->with(['alert-type' => 'error', 'message' => 'Details not found.']);
+        }
+    }
+
     public function store(Request $request)
     {
         $request->validate([

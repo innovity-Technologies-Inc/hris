@@ -1129,6 +1129,7 @@ Route::prefix('advance-salary')->name('advance-salary.')->controller(\App\Http\C
 Route::prefix('disbursement')->name('disbursement.')->controller(\App\Http\Controllers\Payroll\DisbursementController::class)->middleware('auth')->group(function () {
     Route::middleware('permission:disbursement.view')->group(function () {
         Route::get('/', 'index')->name('index');
+        Route::get('show/{id}', 'show')->name('show');
     });
     Route::middleware('permission:disbursement.process')->group(function () {
         Route::get('process/{id}', 'process')->name('process');

@@ -57,10 +57,16 @@
             <td class="text-end fw-bold text-success">
                 {{ number_format($item->total_amount, 2) }}
             </td>
-            <td class="text-center">
+            <td class="text-center" style="width: 150px;">
+                @can('disbursement.view')
+                <a href="{{ route('disbursement.show', $item->id) }}" class="btn btn-outline-info btn-sm rounded-circle shadow-sm me-1" title="View Batch Details">
+                    <i style="height: 14px; width: 14px" data-feather="bar-chart-2"></i>
+                </a>
+                @endcan
+
                 @can('disbursement.process')
-                <a href="{{ route('disbursement.process', $item->id) }}" class="btn btn-primary btn-sm rounded-pill shadow-sm" title="Process Disbursement">
-                    <i style="height: 14px; width: 14px" data-feather="play-circle" class="me-1"></i> Disburse
+                <a href="{{ route('disbursement.process', $item->id) }}" class="btn btn-outline-primary btn-sm rounded-circle shadow-sm" title="Process Disbursement">
+                    <i style="height: 14px; width: 14px" data-feather="play-circle"></i>
                 </a>
                 @endcan
             </td>
