@@ -115,7 +115,7 @@
                 @endif
                 @can('bonuses.delete')
                 <form class="d-inline"
-                      action="{{ route('bonus.delete', $item->id) }}"
+                        action="{{ route('bonus.delete', $item->id) }}"
                       method="POST">
                     @csrf
                     @method('delete')

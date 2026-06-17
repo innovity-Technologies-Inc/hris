@@ -79,7 +79,7 @@
                 @if ($item->approval_status == 'pending')
                     {{-- Edit Button --}}
                     @can('salary.edit')
-                    <a href="{{ route('bonus.edit', $item->id) }}"
+                    <a href="{{ route('salary.edit', $item->id) }}"
                        class="btn btn-primary btn-sm" title="Edit">
                         <i style="height: 12px; width: 12px" data-feather="edit"></i>
                     </a>
@@ -88,7 +88,7 @@
                     {{-- Approve Button --}}
                     @can('salary.hr-approve')
                     <form class="d-inline"
-                          action="{{ route('bonus.status.update', $item->id) }}"
+                          action="{{ route('salary.status.update', $item->id) }}"
                           method="POST">
                         @csrf
                         @method('PUT')
@@ -102,7 +102,7 @@
 
                     {{-- Reject Button --}}
                     <form class="d-inline" method="POST"
-                          action="{{ route('bonus.status.update', $item->id) }}">
+                          action="{{ route('salary.status.update', $item->id) }}">
                         @csrf
                         @method('PUT')
                         <input type="hidden" name="status" value="rejected">
@@ -115,7 +115,7 @@
                 @endif
                 @can('salary.delete')
                 <form class="d-inline"
-                      action="{{ route('bonus.delete', $item->id) }}"
+                        action="{{ route('salary.delete', $item->id) }}"
                       method="POST">
                     @csrf
                     @method('delete')
