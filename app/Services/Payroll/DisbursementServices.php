@@ -21,7 +21,15 @@ class DisbursementServices
         $query = PayrollProcess::whereIn('type', ['salary', 'bonus'])
             ->where('approval_status', 'approved')
             ->where('total_amount', '>', 0)
-            ->with(['generatedBy', 'getCompany', 'getBranch', 'getDepartment']);
+            ->with(['generatedBy', 'getCompany', 'getBranch', 'getDepartment'])
+            ->withCount([
+                'payrolls as paid_count' => function ($q) {
+                    $q->where('disbursement_status', 'paid');
+                },
+                'bonuses as paid_bonus_count' => function ($q) {
+                    $q->where('disbursement_status', 'paid');
+                }
+            ]);
 
         // Check if there are un-disbursed items
         $query->where(function ($q) {
