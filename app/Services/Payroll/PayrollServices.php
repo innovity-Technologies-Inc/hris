@@ -956,6 +956,16 @@ class PayrollServices
                 Payroll::create(['process_id' => $process->id, 'batch_id' => $process->batch_id, 'employee_id' => $emp['employee_id'], 'salary' => $emp['salary'], 'late_count' => $emp['late_count'], 'leaves_count' => $emp['leaves_count'], 'absent_count' => $emp['absent_count'], 'absent_dates' => $emp['absent_dates'], 'excessive_late_count' => $emp['excessive_late_count'], 'early_exit_count' => $emp['early_exit_count'], 'overtime_count' => $emp['overtime_count'], 'overtime_amount' => $emp['overtime_amount'], 'offday_work_count' => $emp['offday_work_count'], 'offday_work_salary' => $emp['offday_work_salary'], 'deduction_amount' => $emp['deduction_amount'], 'late_deduction_amount' => $emp['late_deduction_amount'], 'excessive_late_deduction_amount' => $emp['excessive_late_deduction_amount'], 'absent_deduction_amount' => $emp['absent_deduction_amount'], 'early_exit_deduction_amount' => $emp['early_exit_deduction_amount'], 'penalty_amount' => $emp['penalty_amount'], 'advance_deduction_amount' => $emp['advance_deduction_amount'], 'arrear_amount' => $emp['arrear_amount'], 'bonus_amount' => $emp['bonus_amount'], 'total_salary' => $emp['total_salary']]);
                 if ($emp['advance_ids']) AdvanceSalary::whereIn('id', $emp['advance_ids'])->update(['status' => 'deducted']);
                 if ($emp['arrear_ids']) Arrear::whereIn('id', $emp['arrear_ids'])->update(['status' => 'paid']);
+                if ($emp['previous_due_ids']) \App\Models\Payroll\PreviousDue::whereIn('id', $emp['previous_due_ids'])->update(['status' => 'deducted']);
+                if ($emp['new_due_amount'] > 0) {
+                    \App\Models\Payroll\PreviousDue::create([
+                        'employee_id' => $emp['employee_id'],
+                        'amount' => $emp['new_due_amount'],
+                        'salary_month' => $salary_month,
+                        'status' => 'pending',
+                        'reason' => 'Negative salary balance carried over from ' . $salary_month
+                    ]);
+                }
             }
             if ($penaltiesToUpdate) \App\Models\Payroll\EmployeePenalty::whereIn('id', $penaltiesToUpdate)->update(['status' => 'deducted']);
         });
@@ -970,6 +980,8 @@ class PayrollServices
                 \App\Models\Payroll\EmployeePenalty::whereIn('employee_id', $employeeIds)->whereBetween('occurrence_date', [$process->start_date, $process->end_date])->where('status', 'deducted')->update(['status' => 'approved']);
                 AdvanceSalary::whereIn('employee_id', $employeeIds)->where('deduction_month', $process->salary_month)->where('status', 'deducted')->update(['status' => 'approved']);
                 Arrear::whereIn('employee_id', $employeeIds)->where('payment_month', $process->salary_month)->where('status', 'paid')->update(['status' => 'approved']);
+                \App\Models\Payroll\PreviousDue::whereIn('employee_id', $employeeIds)->where('status', 'deducted')->update(['status' => 'pending']);
+                \App\Models\Payroll\PreviousDue::whereIn('employee_id', $employeeIds)->where('salary_month', $process->salary_month)->where('status', 'pending')->delete();
             }
             Payroll::where('process_id', $id)->delete();
         }

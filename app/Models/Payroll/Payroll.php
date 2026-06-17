@@ -40,6 +40,7 @@ class Payroll extends Model
         'offday_work_salary',
         'bonus_amount',
         'total_salary',
+        'disbursement_status',
     ];
 
     protected $casts = [

@@ -23,6 +23,7 @@ class Bonus extends Model
         'batch_id',
         'process_id',
         'amount',
+        'disbursement_status',
     ];
     public function getEmployee()
     {
