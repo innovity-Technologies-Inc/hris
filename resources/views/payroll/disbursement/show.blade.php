@@ -71,6 +71,7 @@
                         <p class="mt-2 text-muted">Fetching history...</p>
                     </div>
                 </div>
+                <div class="card-footer bg-white border-0 py-3" id="history-pagination"></div>
             </div>
         </div>
     </div>
@@ -85,44 +86,46 @@
     .disbursement-block { transition: all 0.3s ease; }
     .disbursement-block:hover { background-color: #fafbfc; }
     .ls-1 { letter-spacing: 0.5px; }
+    .ls-2 { letter-spacing: 1px; }
     .pager-link { 
-        display: inline-block; padding: 2px 10px; margin: 0 2px; border-radius: 20px; 
-        font-size: 11px; font-weight: bold; color: #6c757d; background: #fff;
+        display: inline-block; padding: 4px 12px; margin: 0 2px; border-radius: 8px; 
+        font-size: 12px; font-weight: bold; color: #6c757d; background: #fff;
         text-decoration: none; border: 1px solid #dee2e6; transition: all 0.2s;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
     .pager-link:hover { background: #108dff; color: #fff; border-color: #108dff; transform: translateY(-1px); }
     .pager-link.active { background: #108dff; color: #fff; border-color: #108dff; }
+    .pagination-sm .page-link { font-size: 11px; padding: 0.25rem 0.5rem; }
 </style>
 
 @push('scripts')
 <script>
     $(document).ready(function() {
         const batchId = "{{ $id }}";
-        const apiUrl = "{{ route('disbursement.api.batch_data', ':id') }}".replace(':id', batchId);
+        const historyApiUrl = "{{ route('disbursement.batch_details_data', ':id') }}".replace(':id', batchId);
+        const itemsApiUrl = "{{ route('disbursement.items_data', ':id') }}";
 
         function formatCurrency(amt) {
             return '৳ ' + parseFloat(amt).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
 
-        function loadBatchData() {
-            axios.get(apiUrl)
+        function loadHistory(page = 1) {
+            $('#loader').show();
+            axios.get(historyApiUrl + '?page=' + page)
             .then(function (response) {
-                const data = response.data;
-                renderPage(data);
+                renderPage(response.data);
             })
             .catch(function (error) {
                 console.error(error);
-                $('#history-container').html('<div class="text-center py-5 text-danger">Failed to load data.</div>');
+                $('#history-container').html('<div class="text-center py-5 text-danger">Failed to load history.</div>');
             });
         }
 
         function renderPage(data) {
             const process = data.process;
             const stats = data.stats;
-            const disbursements = data.disdisbursements || data.disbursements; // Handle possible typo fix
+            const disbursements = data.disbursements; // This is now a LengthAwarePaginator result
 
-            // Populate Headers
+            // Populate Headers (only once)
             $('#header-batch-id').text(process.batch_id);
             const monthDate = new Date(process.salary_month + '-01');
             $('#header-month').text(monthDate.toLocaleString('default', { month: 'long', year: 'numeric' }));
@@ -137,19 +140,18 @@
             $('#stat-total-amt').text(formatCurrency(stats.total_amount));
             $('#stat-paid-amt').text('Paid: ' + formatCurrency(stats.paid_amount));
 
-            // Render History
+            // Render History Blocks
             const $container = $('#history-container');
             $container.empty();
 
-            if (disdisbursements.length === 0) {
+            if (disbursements.data.length === 0) {
                 $container.html('<div class="text-center py-5"><i data-feather="inbox" class="text-muted mb-3" style="width: 48px; height: 48px;"></i><p class="text-muted mb-0">No disbursements recorded yet.</p></div>');
                 if (typeof feather !== 'undefined') feather.replace();
                 return;
             }
 
-            disdisbursements.forEach((disb, index) => {
-                const isLast = index === disdisbursements.length - 1;
-                const borderClass = isLast ? '' : 'border-bottom';
+            disbursements.data.forEach((disb, index) => {
+                const borderClass = (index === disbursements.data.length - 1) ? '' : 'border-bottom';
                 
                 let attachmentsHtml = '';
                 if (disb.attachments && disb.attachments.length > 0) {
@@ -160,29 +162,8 @@
                     attachmentsHtml += `</div>`;
                 }
 
-                let employeesHtml = '';
-                disb.items.forEach(item => {
-                    const avatar = item.employee.photo_path 
-                        ? `<img src="/storage/${item.employee.photo_path}" alt="img" class="rounded-circle shadow-sm" style="width: 30px; height: 30px; object-fit: cover;">`
-                        : `<div class="avatar-title rounded-circle bg-white text-primary d-flex align-items-center justify-content-center fw-bold border" style="width: 30px; height: 30px; font-size: 10px;">${item.employee.full_name.charAt(0).toUpperCase()}</div>`;
-
-                    employeesHtml += `
-                        <tr>
-                            <td class="px-2">
-                                <div class="d-flex align-items-center py-1">
-                                    <div class="avatar-xs me-2">${avatar}</div>
-                                    <div>
-                                        <span class="fw-bold small d-block text-dark">${item.employee.full_name}</span>
-                                        <span class="text-muted" style="font-size: 10px;">${item.employee.system_id} | ${item.employee.office_info?.get_current_designation?.company_designation || 'N/A'}</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-end px-2 fw-bold text-dark small">${formatCurrency(item.amount)}</td>
-                        </tr>`;
-                });
-
                 const blockHtml = `
-                    <div class="disbursement-block p-4 ${borderClass}">
+                    <div class="disbursement-block p-4 ${borderClass}" id="disb-block-${disb.id}">
                         <div class="row align-items-start g-4">
                             <div class="col-md-3">
                                 <div class="d-flex align-items-center mb-3">
@@ -199,14 +180,14 @@
                             <div class="col-md-9">
                                 <div class="bg-light p-3 rounded-4 mb-2">
                                     <div class="table-responsive">
-                                        <table class="table table-sm table-borderless align-middle mb-0 paginated-table" data-page-size="10">
+                                        <table class="table table-sm table-borderless align-middle mb-0" id="items-table-${disb.id}">
                                             <thead><tr><th class="small text-muted text-uppercase px-2">Staff Details</th><th class="text-end small text-muted text-uppercase px-2">Amount Paid</th></tr></thead>
-                                            <tbody>${employeesHtml}</tbody>
+                                            <tbody class="items-body"></tbody>
                                         </table>
                                     </div>
                                 </div>
-                                <div class="d-flex justify-content-between align-items-center px-2 mb-2">
-                                    <div class="pagination-container"></div>
+                                <div class="d-flex justify-content-between align-items-center px-2">
+                                    <div class="items-pagination" data-disb-id="${disb.id}"></div>
                                     <div class="text-end">
                                         <span class="small text-muted">Subtotal (${disb.total_employees} Staff): </span>
                                         <span class="fw-bold text-success fs-6">${formatCurrency(disb.total_amount)}</span>
@@ -217,46 +198,88 @@
                     </div>`;
                 
                 $container.append(blockHtml);
+                loadItems(disb.id, 1);
             });
+
+            // History Pagination Links
+            renderPagination($('#history-pagination'), disbursements, loadHistory);
 
             if (typeof feather !== 'undefined') feather.replace();
-            initializePagination();
         }
 
-        function initializePagination() {
-            $('.paginated-table').each(function() {
-                var $table = $(this);
-                var itemsPerPage = parseInt($table.data('page-size')) || 10;
-                var $rows = $table.find('tbody tr');
-                var totalRows = $rows.length;
-                var totalPages = Math.ceil(totalRows / itemsPerPage);
+        function loadItems(disbId, page = 1) {
+            const $block = $('#disb-block-' + disbId);
+            const $tbody = $block.find('.items-body');
+            const url = itemsApiUrl.replace(':id', disbId) + '?page=' + page;
 
-                if (totalRows <= itemsPerPage) return;
+            if (page === 1) $tbody.html('<tr><td colspan="2" class="text-center py-3 small text-muted">Loading staff...</td></tr>');
 
-                var $pagerContainer = $table.closest('.col-md-9').find('.pagination-container');
-                $pagerContainer.empty();
-                
-                function showPage(page) {
-                    $rows.hide();
-                    $rows.slice(page * itemsPerPage, (page + 1) * itemsPerPage).show();
-                    $pagerContainer.find('.pager-link').removeClass('active');
-                    $pagerContainer.find('.pager-link[data-page="' + page + '"]').addClass('active');
-                }
+            axios.get(url)
+            .then(function (response) {
+                const data = response.data;
+                $tbody.empty();
+                data.data.forEach(item => {
+                    const avatar = item.employee.photo_path 
+                        ? `<img src="/storage/${item.employee.photo_path}" alt="img" class="rounded-circle shadow-sm" style="width: 30px; height: 30px; object-fit: cover;">`
+                        : `<div class="avatar-title rounded-circle bg-white text-primary d-flex align-items-center justify-content-center fw-bold border" style="width: 30px; height: 30px; font-size: 10px;">${item.employee.full_name.charAt(0).toUpperCase()}</div>`;
 
-                for (var i = 0; i < totalPages; i++) {
-                    $('<a href="javascript:void(0)" class="pager-link shadow-sm" data-page="' + i + '">' + (i + 1) + '</a>')
-                        .appendTo($pagerContainer);
-                }
-
-                $pagerContainer.on('click', '.pager-link', function() {
-                    showPage($(this).data('page'));
+                    $tbody.append(`
+                        <tr>
+                            <td class="px-2">
+                                <div class="d-flex align-items-center py-1">
+                                    <div class="avatar-xs me-2">${avatar}</div>
+                                    <div>
+                                        <span class="fw-bold small d-block text-dark">${item.employee.full_name}</span>
+                                        <span class="text-muted" style="font-size: 10px;">${item.employee.system_id} | ${item.employee.office_info?.get_current_designation?.company_designation || 'N/A'}</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-end px-2 fw-bold text-dark small">${formatCurrency(item.amount)}</td>
+                        </tr>`);
                 });
-
-                showPage(0);
+                renderPagination($block.find('.items-pagination'), data, (p) => loadItems(disbId, p));
             });
         }
 
-        loadBatchData();
+        function renderPagination($container, paginator, callback) {
+            $container.empty();
+            if (paginator.last_page <= 1) return;
+
+            let html = '<nav><ul class="pagination pagination-sm mb-0">';
+            
+            // Previous
+            html += `<li class="page-item ${paginator.current_page === 1 ? 'disabled' : ''}">
+                        <a class="page-link" href="javascript:void(0)" data-page="${paginator.current_page - 1}">Prev</a>
+                     </li>`;
+
+            // Simple Logic for Page Numbers
+            for (let i = 1; i <= paginator.last_page; i++) {
+                if (i === 1 || i === paginator.last_page || (i >= paginator.current_page - 1 && i <= paginator.current_page + 1)) {
+                    html += `<li class="page-item ${paginator.current_page === i ? 'active' : ''}">
+                                <a class="page-link" href="javascript:void(0)" data-page="${i}">${i}</a>
+                             </li>`;
+                } else if (i === 2 || i === paginator.last_page - 1) {
+                    html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+                }
+            }
+
+            // Next
+            html += `<li class="page-item ${paginator.current_page === paginator.last_page ? 'disabled' : ''}">
+                        <a class="page-link" href="javascript:void(0)" data-page="${paginator.current_page + 1}">Next</a>
+                     </li>`;
+
+            html += '</ul></nav>';
+            $container.html(html);
+
+            $container.find('.page-link').on('click', function() {
+                const p = $(this).data('page');
+                if (p && !$(this).parent().hasClass('disabled') && !$(this).parent().hasClass('active')) {
+                    callback(p);
+                }
+            });
+        }
+
+        loadHistory(1);
     });
 </script>
 @endpush

@@ -101,13 +101,20 @@ class DisbursementServices
         $stats['pending_employees'] = $stats['eligible_employees'] - $stats['paid_employees'];
         $stats['pending_amount'] = $stats['total_amount'] - $stats['paid_amount'];
 
-        // Get Disbursement History
-        $disbursements = Disbursement::with(['disbursedBy', 'attachments', 'items.employee.officeInfo.getCurrentDesignation'])
+        // Get Disbursement History (Paginated)
+        $disbursements = Disbursement::with(['disbursedBy', 'attachments'])
             ->where('process_id', $id)
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(10); // Paginate the history blocks
 
         return compact('process', 'stats', 'disbursements');
+    }
+
+    public function getDisbursementItems($disbursementId)
+    {
+        return DisbursementItem::with(['employee.officeInfo.getCurrentDesignation'])
+            ->where('disbursement_id', $disbursementId)
+            ->paginate(10);
     }
 
     public function processDisbursement($data)

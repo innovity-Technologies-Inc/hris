@@ -77,6 +77,16 @@ class DisbursementController extends Controller
         }
     }
 
+    public function getDisbursementItems($id)
+    {
+        try {
+            $data = $this->disbursementService->getDisbursementItems($id);
+            return response()->json($data);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
     public function store(Request $request)
     {
         $request->validate([

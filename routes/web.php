@@ -1130,7 +1130,8 @@ Route::prefix('disbursement')->name('disbursement.')->controller(\App\Http\Contr
     Route::middleware('permission:disbursement.view')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('show/{id}', 'show')->name('show');
-        Route::get('api/batch-data/{id}', 'getBatchData')->name('api.batch_data');
+        Route::get('batch-details-data/{id}', 'getBatchData')->name('batch_details_data');
+        Route::get('disbursement-items/{id}', 'getDisbursementItems')->name('items_data');
     });
     Route::middleware('permission:disbursement.process')->group(function () {
         Route::get('process/{id}', 'process')->name('process');
