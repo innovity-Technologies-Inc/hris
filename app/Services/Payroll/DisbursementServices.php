@@ -51,7 +51,7 @@ class DisbursementServices
                 ->where('total_salary', '>', 0)
                 ->get();
         } elseif ($process->type === 'bonus') {
-            $items = Bonus::with('employee.officeInfo.getCurrentDesignation')
+            $items = Bonus::with('getEmployee.officeInfo.getCurrentDesignation')
                 ->where('process_id', $id)
                 ->where('disbursement_status', 'pending')
                 ->where('amount', '>', 0)
