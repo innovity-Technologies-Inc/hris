@@ -29,11 +29,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="text-muted small">Type</label>
-                                <p class="fw-bold mb-0" id="modal-type">-</p>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="text-muted small">Status</label>
-                                <p class="fw-bold mb-0" id="modal-status">-</p>
+                                <p class="fw-bold mb-0 text-capitalize" id="modal-type">-</p>
                             </div>
                         </div>
                     </div>

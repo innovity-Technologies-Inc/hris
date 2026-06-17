@@ -250,7 +250,6 @@
                 $('#modal-batch-id').text(batchId);
                 $('#modal-salary-month').text(salaryMonth);
                 $('#modal-type').text(type);
-                $('#modal-status').html('<span class="badge text-bg-info">' + status + '</span>');
                 $('#modal-company').text(company);
                 $('#modal-branch').text(branch);
                 $('#modal-division').text(division);
