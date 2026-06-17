@@ -22,9 +22,15 @@ class DisbursementController extends Controller
     {
         try {
             $data = $this->disbursementService->getPendingProcesses($request, $flexsearch);
+            
+            if ($request->wantsJson()) {
+                return view('payroll.disbursement.partials.search_results', compact('data'))->render();
+            }
+
             return view('payroll.disbursement.index', compact('data'));
         } catch (\Exception $e) {
             Log::error('Error loading Disbursement index.', ['message' => $e->getMessage()]);
+            if ($request->wantsJson()) return response()->json(['error' => 'Failed to load data.'], 500);
             return redirect()->back()->with(['alert-type' => 'error', 'message' => 'Failed to load list.']);
         }
     }
@@ -54,10 +60,20 @@ class DisbursementController extends Controller
     {
         try {
             $data = $this->disbursementService->getBatchHistory($id);
-            return view('payroll.disbursement.show', $data);
+            return view('payroll.disbursement.show', compact('id'));
         } catch (\Exception $e) {
             Log::error('Error loading Disbursement batch details.', ['message' => $e->getMessage()]);
             return redirect()->route('disbursement.index')->with(['alert-type' => 'error', 'message' => 'Details not found.']);
+        }
+    }
+
+    public function getBatchData($id)
+    {
+        try {
+            $data = $this->disbursementService->getBatchHistory($id);
+            return response()->json($data);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -72,21 +88,22 @@ class DisbursementController extends Controller
         ]);
 
         try {
-            $this->disbursementService->processDisbursement($request->all());
+            $disbursement = $this->disbursementService->processDisbursement($request->all());
             
-            return redirect()->route('disbursement.index')->with([
-                'alert-type' => 'success',
-                'message' => 'Disbursement processed successfully!'
+            return response()->json([
+                'success' => true,
+                'message' => 'Disbursement processed successfully!',
+                'redirect_url' => route('disbursement.index')
             ]);
         } catch (\Exception $e) {
             Log::error('Disbursement processing failed.', [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            return redirect()->back()->with([
-                'alert-type' => 'error',
+            return response()->json([
+                'success' => false,
                 'message' => 'Processing failed: ' . $e->getMessage()
-            ])->withInput();
+            ], 500);
         }
     }
 }

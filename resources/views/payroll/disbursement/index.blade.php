@@ -94,19 +94,20 @@
         $(document).ready(function() {
             function fetchData(url = "{{ route('disbursement.index') }}") {
                 const queryString = $('#filterForm').serialize();
-                $.ajax({
-                    url: url,
-                    method: "GET",
-                    data: queryString,
-                    beforeSend: function() {
-                        $('#search-result').html('<div class="text-center py-4 text-muted">Loading Data...</div>');
-                    },
-                    success: function(response) {
-                        $('#search-result').html(response);
-                        if (typeof feather !== 'undefined') { feather.replace(); }
-                        const newUrl = '?' + queryString;
-                        window.history.pushState(null, '', newUrl || location.pathname);
-                    }
+                const fetchUrl = url + (url.includes('?') ? '&' : '?') + queryString;
+
+                axios.get(fetchUrl, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+                })
+                .then(function (response) {
+                    $('#search-result').html(response.data);
+                    if (typeof feather !== 'undefined') { feather.replace(); }
+                    const newUrl = '?' + queryString;
+                    window.history.pushState(null, '', newUrl || location.pathname);
+                })
+                .catch(function (error) {
+                    console.error('Error fetching data:', error);
+                    $('#search-result').html('<div class="text-center py-4 text-danger">Error loading data. Please try again.</div>');
                 });
             }
 

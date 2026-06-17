@@ -214,8 +214,39 @@
             }
         });
 
-        $('#disbursementForm').on('submit', function() {
+        $('#disbursementForm').on('submit', function(e) {
+            e.preventDefault();
             $submitBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Processing...');
+
+            let formData = new FormData(this);
+
+            axios.post("{{ route('disbursement.store') }}", formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            })
+            .then(function (response) {
+                if (response.data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: response.data.message,
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        window.location.href = response.data.redirect_url;
+                    });
+                }
+            })
+            .catch(function (error) {
+                console.error(error);
+                let msg = error.response?.data?.message || 'Something went wrong during disbursement.';
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Disbursement Failed',
+                    text: msg
+                });
+                $submitBtn.prop('disabled', false).html('<i data-feather="check-circle" class="me-2" style="width: 18px;"></i> CONFIRM PAYMENT');
+                if (typeof feather !== 'undefined') feather.replace();
+            });
         });
     });
 </script>
