@@ -43,7 +43,7 @@
                                             <tbody>
                                                 @foreach($items as $item)
                                                     @php
-                                                        $employee = $process->type === 'salary' ? $item->getEmployee : $item->employee;
+                                                        $employee = $item->getEmployee;
                                                         $amount = $process->type === 'salary' ? $item->total_salary : $item->amount;
                                                     @endphp
                                                 <tr>
