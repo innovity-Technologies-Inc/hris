@@ -36,8 +36,9 @@
             <td class="text-center" style="min-width: 150px;">
                 @php
                     $paidCount = $item->type == 'salary' ? ($item->paid_count ?? 0) : ($item->paid_bonus_count ?? 0);
-                    $totalEmp = $item->total_employee ?: 1;
-                    $percent = round(($paidCount / $totalEmp) * 100);
+                    $eligibleCount = $item->type == 'salary' ? ($item->eligible_count ?? 0) : ($item->eligible_bonus_count ?? 0);
+                    $totalDenominator = $eligibleCount ?: 1;
+                    $percent = round(($paidCount / $totalDenominator) * 100);
                 @endphp
                 <div class="d-flex align-items-center justify-content-center">
                     <div class="progress flex-grow-1 me-2" style="height: 6px; border-radius: 10px; background-color: #eee;">
@@ -51,7 +52,7 @@
                     </div>
                     <span class="small fw-bold {{ $percent == 100 ? 'text-success' : 'text-primary' }}">{{ $percent }}%</span>
                 </div>
-                <small class="text-muted" style="font-size: 10px;">{{ $paidCount }} / {{ $item->total_employee }} Paid</small>
+                <small class="text-muted" style="font-size: 10px;">{{ $paidCount }} / {{ $eligibleCount }} Paid</small>
             </td>
             <td class="text-end fw-bold text-success">
                 {{ number_format($item->total_amount, 2) }}

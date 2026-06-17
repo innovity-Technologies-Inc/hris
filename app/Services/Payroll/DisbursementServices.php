@@ -26,8 +26,14 @@ class DisbursementServices
                 'payrolls as paid_count' => function ($q) {
                     $q->where('disbursement_status', 'paid');
                 },
+                'payrolls as eligible_count' => function ($q) {
+                    $q->where('total_salary', '>', 0);
+                },
                 'bonuses as paid_bonus_count' => function ($q) {
                     $q->where('disbursement_status', 'paid');
+                },
+                'bonuses as eligible_bonus_count' => function ($q) {
+                    $q->where('amount', '>', 0);
                 }
             ]);
 
