@@ -235,6 +235,18 @@
     {{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
     <script src="{{ asset('assets/libs/sweetalert/sweetalert2@11.js') }}"></script>
 
+    {{-- Axios --}}
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        // Set default CSRF token for Axios
+        axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+        let token = document.head.querySelector('meta[name="csrf-token"]');
+        if (token) {
+            axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+        }
+    </script>
+
 
     <script>
         $('.confirmDelete').click(function(event) {
