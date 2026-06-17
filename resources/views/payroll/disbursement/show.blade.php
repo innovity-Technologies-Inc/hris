@@ -87,6 +87,21 @@
     .disbursement-block:hover { background-color: #fafbfc; }
     .ls-1 { letter-spacing: 0.5px; }
     .ls-2 { letter-spacing: 1px; }
+
+    /* Statistics Card Hover Effects */
+    .stat-card { transition: all 0.3s ease; cursor: default; }
+    .stat-card small, .stat-card h3 { transition: color 0.3s ease; }
+    
+    .stat-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; }
+    .stat-card:hover small, .stat-card:hover h3, .stat-card:hover .text-muted, .stat-card:hover .text-success, .stat-card:hover .text-warning, .stat-card:hover .text-primary, .stat-card:hover .text-dark { 
+        color: #fff !important; 
+    }
+
+    .stat-card[style*="#6366f1"]:hover { background-color: #6366f1 !important; }
+    .stat-card[style*="#10b981"]:hover { background-color: #10b981 !important; }
+    .stat-card[style*="#f59e0b"]:hover { background-color: #f59e0b !important; }
+    .stat-card[style*="#ef4444"]:hover { background-color: #ef4444 !important; }
+
     .pager-link { 
         display: inline-block; padding: 4px 12px; margin: 0 2px; border-radius: 8px; 
         font-size: 12px; font-weight: bold; color: #6c757d; background: #fff;
