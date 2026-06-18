@@ -138,31 +138,31 @@
                                     </h6>
                                     <div class="row g-2">
                                         <div class="col-6">
-                                            <div class="p-2 bg-white rounded shadow-sm text-center">
+                                            <div class="p-2 rounded shadow-sm text-center">
                                                 <small class="text-muted d-block">Late</small>
                                                 <span class="fw-bold">{{ $payroll->late_count }}</span>
                                             </div>
                                         </div>
                                         <div class="col-6">
-                                            <div class="p-2 bg-white rounded shadow-sm text-center border-start border-3 border-danger">
+                                            <div class="p-2 rounded shadow-sm text-center border-start border-3 border-danger">
                                                 <small class="text-muted d-block">Excess Late</small>
                                                 <span class="fw-bold text-danger">{{ $payroll->excessive_late_count }}</span>
                                             </div>
                                         </div>
                                         <div class="col-6">
-                                            <div class="p-2 bg-white rounded shadow-sm text-center">
+                                            <div class="p-2 rounded shadow-sm text-center">
                                                 <small class="text-muted d-block">Early Exit</small>
                                                 <span class="fw-bold">{{ $payroll->early_exit_count }}</span>
                                             </div>
                                         </div>
                                         <div class="col-6">
-                                            <div class="p-2 bg-white rounded shadow-sm text-center border-start border-3 border-danger">
+                                            <div class="p-2 rounded shadow-sm text-center border-start border-3 border-danger">
                                                 <small class="text-muted d-block">Absents</small>
                                                 <span class="fw-bold text-danger">{{ $payroll->absent_count }}</span>
                                             </div>
                                         </div>
                                         <div class="col-12 mt-2">
-                                            <div class="p-2 bg-white rounded shadow-sm">
+                                            <div class="p-2 rounded shadow-sm">
                                                 <small class="text-muted d-block mb-1">Absent Dates:</small>
                                                 @if($payroll->absent_dates && count($payroll->absent_dates) > 0)
                                                     <div class="d-flex flex-wrap gap-1">
@@ -176,7 +176,7 @@
                                             </div>
                                         </div>
                                         <div class="col-12 mt-2">
-                                            <div class="p-2 bg-white rounded shadow-sm text-center">
+                                            <div class="p-2 rounded shadow-sm text-center">
                                                 <small class="text-muted d-block">Leaves Taken</small>
                                                 <span class="fw-bold text-primary">{{ $payroll->leaves_count }}</span>
                                             </div>

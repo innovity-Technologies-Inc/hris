@@ -4,7 +4,7 @@
 <div class="row">
     <div class="col-12">
         <div class="card shadow-sm border-0">
-            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
                 <h5 class="card-title mb-0">
                     <i data-feather="info" class="me-2 text-primary"></i>
                     Advance Salary Batch: <span class="text-primary">{{ $process->batch_id }}</span>
@@ -175,7 +175,7 @@
                     <div class="row g-3">
                         <div class="col-6">
                             <label class="text-muted small d-block mb-1">System ID</label>
-                            <span class="badge bg-white text-dark border px-2 py-1" id="modal-emp-id">-</span>
+                            <span class="badge text-dark border px-2 py-1" id="modal-emp-id">-</span>
                         </div>
                         <div class="col-6">
                             <label class="text-muted small d-block mb-1">Current Status</label>
