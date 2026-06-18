@@ -85,8 +85,9 @@
     </div>
 
     <style>
-        .filter-section-bg { background-color: #f8f9fa; }
-        .input-group-bg { background-color: #fff; }
+        .filter-section-bg { background-color: rgba(0,0,0,0.02); }
+        [data-bs-theme=dark] .filter-section-bg { background-color: rgba(255,255,255,0.05); }
+        .input-group-bg { background-color: transparent; }
     </style>
 
     @push('scripts')

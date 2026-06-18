@@ -5,8 +5,8 @@
     {{-- Header Section --}}
     <div class="row mb-4">
         <div class="col-12">
-            <div class="card shadow-sm border-0" style="border-radius: 12px;">
-                <div class="card-header bg-white py-3 px-4 d-flex justify-content-between align-items-center" style="border-radius: 12px;">
+            <div class="card shadow-sm border-0 mb-0" style="border-radius: 12px;">
+                <div class="card-header py-3 px-4 d-flex justify-content-between align-items-center" style="border-radius: 12px;">
                     <div>
                         <h5 class="card-title mb-1 fw-bold text-dark">
                             <i data-feather="bar-chart-2" class="me-2 text-info" style="width: 20px;"></i>
@@ -61,7 +61,7 @@
     <div class="row g-4">
         <div class="col-lg-12">
             <div class="card border-0 shadow-sm" style="border-radius: 15px;">
-                <div class="card-header bg-white pt-4 px-4 border-bottom-0">
+                <div class="card-header pt-4 px-4 border-bottom-0">
                     <h6 class="fw-bold mb-1 text-dark">Disbursement Transactions</h6>
                     <p class="text-muted small">History of all payment events for this batch.</p>
                 </div>
@@ -71,7 +71,7 @@
                         <p class="mt-2 text-muted">Fetching history...</p>
                     </div>
                 </div>
-                <div class="card-footer bg-white border-0 py-3" id="history-pagination"></div>
+                <div class="card-footer border-0 py-3" id="history-pagination"></div>
             </div>
         </div>
     </div>
@@ -107,7 +107,7 @@
         function renderPage(data) {
             const process = data.process;
             const stats = data.stats;
-            const disbursements = data.disbursements; // This is now a LengthAwarePaginator result
+            const disbursements = data.disbursements; // Paginator result
 
             // Populate Headers (only once)
             $('#header-batch-id').text(process.batch_id);
@@ -128,7 +128,7 @@
             const $container = $('#history-container');
             $container.empty();
 
-            if (disbursements.data.length === 0) {
+            if (!disbursements.data || disbursements.data.length === 0) {
                 $container.html('<div class="text-center py-5"><i data-feather="inbox" class="text-muted mb-3" style="width: 48px; height: 48px;"></i><p class="text-muted mb-0">No disbursements recorded yet.</p></div>');
                 if (typeof feather !== 'undefined') feather.replace();
                 return;
@@ -205,7 +205,7 @@
                 data.data.forEach(item => {
                     const avatar = item.employee.photo_path 
                         ? `<img src="/storage/${item.employee.photo_path}" alt="img" class="rounded-circle shadow-sm" style="width: 30px; height: 30px; object-fit: cover;">`
-                        : `<div class="avatar-title rounded-circle bg-white text-primary d-flex align-items-center justify-content-center fw-bold border" style="width: 30px; height: 30px; font-size: 10px;">${item.employee.full_name.charAt(0).toUpperCase()}</div>`;
+                        : `<div class="avatar-title rounded-circle text-primary d-flex align-items-center justify-content-center fw-bold border" style="width: 30px; height: 30px; font-size: 10px;">${item.employee.full_name.charAt(0).toUpperCase()}</div>`;
 
                     $tbody.append(`
                         <tr>
@@ -267,4 +267,3 @@
     });
 </script>
 @endpush
-@endsection

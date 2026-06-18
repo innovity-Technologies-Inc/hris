@@ -10,7 +10,7 @@
                 {{-- Header Section --}}
                 <div class="col-12">
                     <div class="card shadow-sm border-0 mb-0" style="border-radius: 12px;">
-                        <div class="card-header bg-white py-3 px-4 d-flex justify-content-between align-items-center" style="border-radius: 12px;">
+                        <div class="card-header py-3 px-4 d-flex justify-content-between align-items-center" style="border-radius: 12px;">
                             <div>
                                 <h5 class="card-title mb-1 fw-bold text-dark">
                                     <i data-feather="play-circle" class="me-2 text-primary" style="width: 20px;"></i>
@@ -28,7 +28,7 @@
                 {{-- Left Column: Employee Selection --}}
                 <div class="col-lg-8">
                     <div class="card border-0 shadow-sm h-100 mb-4" style="border-radius: 12px;">
-                        <div class="card-header bg-white border-bottom-0 pt-4 pb-3 px-4 d-flex justify-content-between align-items-center" style="border-top-left-radius: 12px; border-top-right-radius: 12px;">
+                        <div class="card-header border-bottom-0 pt-4 pb-3 px-4 d-flex justify-content-between align-items-center" style="border-top-left-radius: 12px; border-top-right-radius: 12px;">
                             <div>
                                 <h6 class="fw-bold mb-1 text-dark">Eligible Employees</h6>
                                 <p class="text-muted small mb-0">Select employees from this batch for payment.</p>
@@ -79,7 +79,7 @@
                                             </td>
                                             <td class="text-end px-4 py-3">
                                                 <span class="fw-bold text-success fs-5">
-                                                    ৳ {{ number_format($amount, 2) }}
+                                                    &#2547; {{ number_format($amount, 2) }}
                                                 </span>
                                             </td>
                                         </tr>
@@ -88,7 +88,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="card-footer bg-white border-top-0 py-3 px-4 text-end" style="border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
+                        <div class="card-footer border-top-0 py-3 px-4 text-end" style="border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
                             <div class="d-flex justify-content-end align-items-center">
                                 <div class="me-4 text-start">
                                     <small class="text-muted d-block text-uppercase fw-bold ls-1" style="font-size: 10px;">Selected Staff</small>
@@ -96,7 +96,7 @@
                                 </div>
                                 <div class="text-end">
                                     <small class="text-muted d-block text-uppercase fw-bold ls-1" style="font-size: 10px;">Total Disbursement</small>
-                                    <h5 class="mb-0 fw-bold text-success" id="selectedTotal">৳ {{ number_format($items->sum($process->type === 'salary' ? 'total_salary' : 'amount'), 2) }}</h5>
+                                    <h5 class="mb-0 fw-bold text-success" id="selectedTotal">&#2547; {{ number_format($items->sum($process->type === 'salary' ? 'total_salary' : 'amount'), 2) }}</h5>
                                 </div>
                             </div>
                         </div>
@@ -106,7 +106,7 @@
                 {{-- Right Column: Payment Details --}}
                 <div class="col-lg-4">
                     <div class="card border-0 shadow-sm sticky-top" style="top: 85px; border-radius: 12px; z-index: 10;">
-                        <div class="card-header bg-white pt-4 pb-3 px-4 border-bottom-0" style="border-top-left-radius: 12px; border-top-right-radius: 12px;">
+                        <div class="card-header pt-4 pb-3 px-4 border-bottom-0" style="border-top-left-radius: 12px; border-top-right-radius: 12px;">
                             <h6 class="fw-bold mb-1 text-dark">Payment Details</h6>
                             <p class="text-muted small mb-0">Enter payment proof and method.</p>
                         </div>
@@ -183,7 +183,7 @@
             });
 
             $selectedCount.text(count);
-            $selectedTotal.text('৳ ' + total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+            $selectedTotal.text('\u09F3 ' + total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
 
             $submitBtn.prop('disabled', count === 0);
         }
