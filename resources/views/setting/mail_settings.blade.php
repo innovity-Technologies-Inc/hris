@@ -51,7 +51,7 @@
                                             placeholder="noreply@example.com"
                                             value="{{ isset($mailSetting) ? $mailSetting->sender_email : old('sender_email') }}"
                                             required>
-                                        <span class="input-group-text bg-white border-start-0">
+                                        <span class="input-group-text border-start-0">
                                             <i class="fas fa-eye password-toggle"></i>
                                         </span>
                                     </div>
@@ -70,7 +70,7 @@
                                             placeholder="smtp.gmail.com"
                                             value="{{ isset($mailSetting) ? $mailSetting->mail_host : old('mail_host') }}"
                                             required>
-                                        <span class="input-group-text bg-white border-start-0">
+                                        <span class="input-group-text border-start-0">
                                             <i class="fas fa-eye password-toggle"></i>
                                         </span>
                                     </div>
@@ -125,7 +125,7 @@
                                             placeholder="Enter SMTP password"
                                             value="{{ isset($mailSetting) ? $mailSetting->password : old('password') }}"
                                             required>
-                                        <span class="input-group-text bg-white border-start-0">
+                                        <span class="input-group-text border-start-0">
                                             <i class="fas fa-eye password-toggle"></i>
                                         </span>
                                     </div>

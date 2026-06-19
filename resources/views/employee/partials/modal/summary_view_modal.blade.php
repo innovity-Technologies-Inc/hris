@@ -39,7 +39,7 @@
                                             <p class="text-muted mb-0 small" id="summary_basic_identifiers"></p>
                                         </div>
                                         <div class="col-md-4 text-md-end">
-                                            <div class="d-inline-block text-start p-2 bg-white rounded border shadow-sm">
+                                            <div class="d-inline-block text-start p-2 rounded border shadow-sm">
                                                 <label class="data-label text-primary">Current Designation</label>
                                                 <span class="data-value fw-bold text-dark" id="summary_header_designation"></span>
                                             </div>

@@ -986,7 +986,7 @@
                                         <div class="input-group">
                                             <span class="input-group-text bg-light border-end-0"><i class="fas fa-lock"></i></span>
                                             <input type="password" class="form-control border-start-0 @error('password') is-invalid @enderror" id="password" name="password">
-                                            <span class="input-group-text bg-white border-start-0"><i class="fas fa-eye password-toggle"></i></span>
+                                            <span class="input-group-text border-start-0"><i class="fas fa-eye password-toggle"></i></span>
                                         </div>
                                         @error('password')
                                             <small class="text-danger">{{ $message }}</small>
@@ -998,7 +998,7 @@
                                         <div class="input-group">
                                             <span class="input-group-text bg-light border-end-0"><i class="fas fa-check-circle"></i></span>
                                             <input type="password" class="form-control border-start-0" id="password_confirmation" name="password_confirmation">
-                                            <span class="input-group-text bg-white border-start-0"><i class="fas fa-eye password-toggle"></i></span>
+                                            <span class="input-group-text border-start-0"><i class="fas fa-eye password-toggle"></i></span>
                                         </div>
                                     </div>
                                 </div>

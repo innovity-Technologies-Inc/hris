@@ -2,7 +2,7 @@
         @if(!empty($employeeData))
         <div class="col-12">
             <div class="card shadow-sm">
-                <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+                <div class="card-header d-flex justify-content-between align-items-center py-3">
                     <h5 class="mb-0 text-dark">
                         <i class="fas fa-wallet text-primary"></i> Bank Account Details
                     </h5>

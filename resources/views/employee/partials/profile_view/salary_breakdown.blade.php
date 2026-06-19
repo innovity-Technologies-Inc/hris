@@ -17,7 +17,7 @@
             <!-- Page Header -->
         <div class="row mb-4">
             <div class="col-12">
-                <div class="bg-white p-4 border-bottom border-3 border-dark">
+                <div class="p-4 border-bottom border-3 border-dark">
                     <h3 class="fw-bold text-dark mb-1">Salary Breakdown Statement</h3>
                     <p class="text-muted mb-0 small">Official Compensation Details</p>
                 </div>
@@ -144,7 +144,7 @@
         <!-- Footer Note -->
         <div class="row mt-4">
             <div class="col-12">
-                <div class="bg-white p-3 border-start border-dark border-4">
+                <div class="p-3 border-start border-dark border-4">
                     <p class="text-muted small mb-0"><strong>Note:</strong> This is an official salary breakdown statement. All amounts are in {{ $employeeData->currency ?? 'N/A' }}. For any discrepancies, please contact the HR department.</p>
                 </div>
             </div>

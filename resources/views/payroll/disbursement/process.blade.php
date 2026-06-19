@@ -124,7 +124,7 @@
 
                             <div class="mb-4">
                                 <label class="form-label fw-bold text-muted small text-uppercase ls-1">Upload Proofs</label>
-                                <div class="file-upload-wrapper border-dashed rounded-3 p-4 text-center bg-light" style="transition: all 0.3s ease;">
+                                <div class="file-upload-wrapper border-dashed rounded-3 p-4 text-center" style="transition: all 0.3s ease;">
                                     <i data-feather="upload-cloud" class="text-muted mb-2" style="width: 30px; height: 30px;"></i>
                                     <input type="file" class="form-control form-control-sm opacity-0 position-absolute" name="attachments[]" id="attachments" multiple accept=".pdf,.jpg,.jpeg,.png,.zip" style="width: 1px;">
                                     <label for="attachments" class="d-block text-primary small fw-bold mb-1" style="cursor: pointer;">Click to Upload</label>
@@ -135,7 +135,7 @@
 
                             <div class="mb-4">
                                 <label class="form-label fw-bold text-muted small text-uppercase ls-1">Internal Note</label>
-                                <textarea class="form-control bg-light border-0 p-3" name="note" rows="4" placeholder="Transaction IDs, cheque numbers, or general remarks..." style="border-radius: 8px; font-size: 13px;"></textarea>
+                                <textarea class="form-control border-0 p-3" name="note" rows="4" placeholder="Transaction IDs, cheque numbers, or general remarks..." style="border-radius: 8px; font-size: 13px;"></textarea>
                             </div>
 
                             <button type="submit" class="btn btn-primary w-100 py-3 rounded-pill fw-bold shadow-lg" id="submitBtn" style="letter-spacing: 1px;">
@@ -149,16 +149,6 @@
             <div class="mb-5 pb-5"></div>
         </form>
     </div>
-
-<style>
-    .bg-soft-primary { background-color: rgba(16, 141, 255, 0.08); }
-    .border-dashed { border: 2px dashed #dee2e6 !important; }
-    .ls-1 { letter-spacing: 0.5px; }
-    .ls-2 { letter-spacing: 1px; }
-    .img-thumbnail { padding: .2rem; background-color: #fff; border: 1px solid #dee2e6; border-radius: 50%; }
-    .table > :not(caption) > * > * { padding: 1rem 0.5rem; }
-    .file-upload-wrapper:hover { background-color: #f1f4f9 !important; border-color: #108dff !important; }
-</style>
 
 @push('scripts')
 <script>

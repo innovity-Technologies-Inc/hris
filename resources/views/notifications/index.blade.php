@@ -4,7 +4,7 @@
 <div class="row">
     <div class="col-lg-12">
         <div class="card border-0 shadow-sm rounded">
-            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="card-title mb-0">Notifications</h5>
                 <button type="button" id="markAllReadBtn" class="btn btn-sm btn-outline-primary">
                     <i class="mdi mdi-check-all me-1"></i> Mark All as Read
@@ -71,7 +71,7 @@
                 </div>
             </div>
             @if($notifications->hasPages())
-            <div class="card-footer bg-white border-top">
+            <div class="card-footer border-top">
                 <div class="d-flex justify-content-center">
                     {{ $notifications->links() }}
                 </div>

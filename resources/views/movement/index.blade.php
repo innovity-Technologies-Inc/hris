@@ -7,7 +7,7 @@
         <div class="col-lg-12">
             @can('movement.view')
             <div class="card border-0 shadow-lg rounded-4 my-4">
-                <div class="card-header border-bottom bg-white rounded-top-4 p-4">
+                <div class="card-header border-bottom rounded-top-4 p-4">
                     <div class="d-flex align-items-center">
                         <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-3 d-inline-flex align-items-center justify-content-center">
                             <i class="bi bi-search text-primary fs-5"></i>
@@ -101,7 +101,7 @@
 
         <div class="col-lg-12">
             <div class="card border-0 shadow-lg rounded-4 mb-5">
-                <div class="card-header border-bottom bg-white rounded-top-4 p-4">
+                <div class="card-header border-bottom rounded-top-4 p-4">
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
                             <div class="bg-info bg-opacity-10 rounded-circle p-2 me-3 d-inline-flex align-items-center justify-content-center">

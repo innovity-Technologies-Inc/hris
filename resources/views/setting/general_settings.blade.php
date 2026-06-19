@@ -76,7 +76,7 @@
                                         @enderror
                                         <div class="mt-3">
                                             <div
-                                                class="border border-3 border-dashed rounded-3 bg-white d-flex align-items-center justify-content-center"
+                                                class="border border-3 border-dashed rounded-3 d-flex align-items-center justify-content-center"
                                                 id="logoLightPreview" style="height: 150px;">
                                                 @if(isset($generalSetting) && $generalSetting->logo_light)
                                                     <img src="{{ asset('storage/' . $generalSetting->logo_light) }}"
@@ -277,7 +277,7 @@
                                         <div class="card bg-secondary text-white border-0 h-100">
                                             <div class="p-2">
                                                 <div class="d-flex align-items-center">
-                                                    <span class="badge bg-white text-dark me-2">Level 1</span>
+                                                    <span class="badge text-dark me-2">Level 1</span>
                                                     <div class="flex-fill">
                                                         <i class="bi bi-building me-2"></i>
                                                         <span class="fw-bold">Group</span>
@@ -292,7 +292,7 @@
                                         <div class="card bg-secondary text-white border-0 h-100">
                                             <div class="p-2">
                                                 <div class="d-flex align-items-center">
-                                                    <span class="badge bg-white text-dark me-2">Level 2</span>
+                                                    <span class="badge text-dark me-2">Level 2</span>
                                                     <div class="flex-fill">
                                                         <i class="bi bi-buildings me-2"></i>
                                                         <span class="fw-bold">Company</span>

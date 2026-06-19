@@ -171,7 +171,7 @@
             <span class="input-group-text bg-light border-end-0"><i class="fas fa-lock" style="color: #974063;"></i></span>
             <input type="password" class="form-control border-start-0" id="{{ $mode }}_password" name="password" 
                    placeholder="••••••••" {{ $mode === 'create' ? 'required' : '' }}>
-            <span class="input-group-text bg-white border-start-0 cursor-pointer"><i class="fas fa-eye password-toggle"></i></span>
+            <span class="input-group-text border-start-0 cursor-pointer"><i class="fas fa-eye password-toggle"></i></span>
         </div>
     </div>
 
@@ -181,7 +181,7 @@
             <span class="input-group-text bg-light border-end-0"><i class="fas fa-check-circle" style="color: #974063;"></i></span>
             <input type="password" class="form-control border-start-0" id="{{ $mode }}_password_confirmation" name="password_confirmation" 
                    placeholder="••••••••" {{ $mode === 'create' ? 'required' : '' }}>
-            <span class="input-group-text bg-white border-start-0 cursor-pointer"><i class="fas fa-eye password-toggle"></i></span>
+            <span class="input-group-text border-start-0 cursor-pointer"><i class="fas fa-eye password-toggle"></i></span>
         </div>
     </div>
 </div>

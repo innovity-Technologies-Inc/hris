@@ -22,7 +22,7 @@
             </div>
         @elseif(isset($historyData) && !empty($histories))
             <div class="card shadow-sm border-0">
-                <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
+                <div class="card-header border-bottom d-flex justify-content-between align-items-center">
                     <h5 class="card-title mb-0">Employment History</h5>
                     @can('employee-management.edit')
                         <a href="{{ route('employee.employment_history.edit', $employee->id) }}" class="btn btn-sm btn-outline-primary">

@@ -4,7 +4,7 @@
 <div class="row">
     <div class="col-xl-12">
         <div class="card">
-            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
                 <h5 class="card-title mb-0 fw-bold" style="color: #974063;">
                     <i class="mdi mdi-cash-multiple me-2"></i>{{ isset($plan) ? 'Edit Leave Encashment Plan' : 'Create Leave Encashment Plan' }}
                 </h5>

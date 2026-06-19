@@ -19,7 +19,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card shadow-sm border-0">
-                        <div class="card-header bg-white py-3">
+                        <div class="card-header py-3">
                             <h5 class="card-title mb-0">Payroll Information</h5>
                         </div>
                         <div class="card-body">
@@ -74,7 +74,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card shadow-sm border-0">
-                        <div class="card-header bg-white py-3">
+                        <div class="card-header py-3">
                             <h5 class="card-title mb-0">Joining Information</h5>
                         </div>
                         <div class="card-body">
@@ -184,7 +184,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card shadow-sm border-0">
-                        <div class="card-header bg-white py-3">
+                        <div class="card-header py-3">
                             <h5 class="card-title mb-0">Current Information</h5>
                         </div>
                         <div class="card-body">
@@ -284,7 +284,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card shadow-sm border-0">
-                        <div class="card-header bg-white py-3">
+                        <div class="card-header py-3">
                             <h5 class="card-title mb-0">Orientation</h5>
                         </div>
                         <div class="card-body">
@@ -351,7 +351,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card shadow-sm border-0">
-                        <div class="card-header bg-white py-3">
+                        <div class="card-header py-3">
                             <h5 class="card-title mb-0">Duration & Cycles</h5>
                         </div>
                         <div class="card-body">
@@ -415,7 +415,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card shadow-sm border-0">
-                        <div class="card-header bg-white py-3">
+                        <div class="card-header py-3">
                             <h5 class="card-title mb-0">Work Schedule</h5>
                         </div>
                         <div class="card-body">
@@ -467,7 +467,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card shadow-sm border-0">
-                        <div class="card-header bg-white py-3">
+                        <div class="card-header py-3">
                             <h5 class="card-title mb-0">Eligibility & Benefits</h5>
                         </div>
                         <div class="card-body">

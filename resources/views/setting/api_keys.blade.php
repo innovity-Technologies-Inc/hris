@@ -37,7 +37,7 @@
                                         name="google_maps_api_key" placeholder="Enter your Google Maps API Key"
                                         value="{{ isset($apiKey) ? $apiKey->google_maps_api_key : old('google_maps_api_key') }}"
                                         required>
-                                    <span class="input-group-text bg-white border-start-0">
+                                    <span class="input-group-text border-start-0">
                                         <i class="fas fa-eye password-toggle"></i>
                                     </span>
                                 </div>

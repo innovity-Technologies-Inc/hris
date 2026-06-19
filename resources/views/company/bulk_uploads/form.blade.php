@@ -6,7 +6,7 @@
             <!-- Main Card -->
             <div class="card shadow-sm border">
                 <!-- Header -->
-                <div class="card-header bg-white border-bottom py-4">
+                <div class="card-header border-bottom py-4">
                     <div class="d-flex align-items-center">
                         <div class="bg-dark bg-opacity-10 rounded p-2 me-3">
                             <i class="bi bi-file-earmark-arrow-up fs-3 text-dark"></i>

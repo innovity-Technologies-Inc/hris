@@ -583,44 +583,14 @@ html[data-bs-theme='light'] .app-sidebar-menu .logo-lg img.logo-img-dark {
 }
 
 .stat-card::after {
-    content: '?';
-    position: absolute;
-    bottom: 1rem;
-    right: 1rem;
-    font-size: 1.5rem;
-    opacity: 0;
-    transition: all 0.3s ease;
-    font-weight: bold;
-    color: var(--primary-color);
-}
-
-[data-bs-theme=dark] .stat-card::after {
-    color: var(--bs-dashboard-accent);
+    content: none !important;
+    display: none !important;
 }
 
 .stat-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15) !important;
-    background: var(--primary-color) !important;
-    border-left-color: #000000;
+    cursor: pointer;
 }
 
-[data-bs-theme=dark] .stat-card:hover {
-    background: var(--bs-dashboard-accent) !important;
-    border-left-color: #000000;
-}
-
-.stat-card:hover::before {
-    transform: translate(20px, -20px) rotate(25deg);
-    opacity: 0.1;
-    background: white;
-}
-
-.stat-card:hover::after {
-    opacity: 0.8;
-    right: 0.5rem;
-    color: white !important;
-}
 
 .stat-icon {
     width: 50px;
@@ -1072,4 +1042,13 @@ html[data-bs-theme='light'] .app-sidebar-menu .logo-lg img.logo-img-dark {
 }
 .pager-link:hover { background: #108dff; color: #fff; border-color: #108dff; transform: translateY(-1px); }
 .pager-link.active { background: #108dff; color: #fff; border-color: #108dff; }
+
+/* File Upload & Interactive Textarea Overrides */
+.file-upload-wrapper { background-color: rgba(0,0,0,0.02); transition: all 0.3s ease; position: relative; }
+[data-bs-theme=dark] .file-upload-wrapper { background-color: rgba(255,255,255,0.05); }
+.file-upload-wrapper:hover { background-color: rgba(16, 141, 255, 0.08) !important; border-color: #108dff !important; }
+
+textarea.form-control { background-color: rgba(0,0,0,0.02) !important; transition: all 0.3s ease; }
+[data-bs-theme=dark] textarea.form-control { background-color: rgba(255,255,255,0.05) !important; }
+textarea.form-control:focus { background-color: transparent !important; }
 

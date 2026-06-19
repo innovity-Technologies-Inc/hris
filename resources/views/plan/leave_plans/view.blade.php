@@ -209,7 +209,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card-footer bg-white border-top">
+            <div class="card-footer border-top">
                 <div class="d-flex justify-content-end">
                     <a type="button" class="btn btn-primary btn-sm"
                         href="{{ route('plan.leave_plans.edit', $plan->id) }}" title="Edit">
