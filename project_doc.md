@@ -65,48 +65,95 @@ Dedicated sub-system to define various HR policies:
 - **Attendance**: Clock-in/out records, bulk imports, and detailed reporting.
 - **Leaves**: Leave application, approval workflows, and balance tracking.
 
-### 💰 Payroll & Benefits
-- **Salary Processing**: Automated salary calculation and breakdown.
-- **Salary Process Eligibility View**: A dedicated view to track and audit eligible employees for each salary process batch, accessible via the main salary process index.
-- **Individual Payroll Detail View**: Detailed breakdown of earnings (Gross, OT, Bonus, Off-day) and deductions for each employee within a batch.
-- **Granular Deductions**: Individual tracking and storage of Late, Excessive Late, Absent, and Early Exit deductions in the `payrolls` table.
-- **Penalty Integration**: Automated deduction of approved employee penalties during salary generation. Penalties are marked as `deducted` upon processing and correctly reset to `approved` if the process is deleted or re-run.
-- **Advance Salary Module**: 
-    - **Purpose**: Process advance payments for employees that are automatically recovered in future salary cycles.
-    - **Recovery**: Approved advances for a specific `deduction_month` are automatically subtracted from the total salary during generation and marked as `deducted`.
-    - **Consistency**: Mimics the core salary generation UI and supports all pay group frequencies (Monthly, Weekly, Daily, Hourly).
-- **Industry Standard PDF Payslip**: Professional PDF generation of payslips with company branding, employee details, and clear financial breakdown using `Spatie Browsershot`.
-- **Salary Certificate Generation**: Standard "To Whom It May Concern" salary certificate generation for employees, including tenure and remuneration details.
-- **Adjustments**: Handle Promotions, Increments, and Bonus distributions.
-- **Structure**: Based on Salary Grades and Employee-specific breakdown.
+### 💰 In-Depth Payroll & Benefits Module
 
-### 💸 Payroll Calculation Logic by Pay Group Frequency
+The Payroll & Benefits module is a highly flexible, transaction-safe, and organization-scoped financial processing engine. It manages the complete lifecycle of employee remuneration, deductions, adjustments, and final disbursement.
 
-The system dynamically adapts its calculation engine based on the employee's assigned **Pay Group Frequency**. All divisors (Working Days, Working Hours) are retrieved from the Pay Group configuration, with safety fallbacks (30 days / 8 hours) if undefined.
+#### 🏗️ 1. Core Architecture & Service Delegation
+The module follows a strict **Request -> Service -> API Controller** pattern:
+- **Thin Controllers**: [SalaryController](file:///P:/Project/Web/hrms/app/Http/Controllers/Payroll/SalaryController.php), [AdvanceSalaryController](file:///P:/Project/Web/hrms/app/Http/Controllers/Payroll/AdvanceSalaryController.php), [EmployeePenaltyController](file:///P:/Project/Web/hrms/app/Http/Controllers/Payroll/EmployeePenaltyController.php), and [DisbursementController](file:///P:/Project/Web/hrms/app/Http/Controllers/Payroll/DisbursementController.php) handle routing, input validation, and user responses (returning Blade templates or JSON structures).
+- **Business Logic Services**: Enacted in specialized classes including [PayrollServices](file:///P:/Project/Web/hrms/app/Services/Payroll/PayrollServices.php), [DisbursementServices](file:///P:/Project/Web/hrms/app/Services/Payroll/DisbursementServices.php), [EmployeePenaltyServices](file:///P:/Project/Web/hrms/app/Services/Payroll/EmployeePenaltyServices.php), [PayslipService](file:///P:/Project/Web/hrms/app/Services/Payroll/PayslipService.php), and [SalaryCertificateService](file:///P:/Project/Web/hrms/app/Services/Payroll/SalaryCertificateService.php).
+- **Transaction Safety**: All multi-step payroll processes, updates, and rollback deletions are wrapped inside Eloquent database transactions (`DB::transaction(...)`) to guarantee data integrity.
+- **Isolation Scoping**: Leverages the [OrganizationScoped](file:///P:/Project/Web/hrms/app/Traits/OrganizationScoped.php) trait at the database query level to restrict viewable records based on the user's `user_type` (e.g., Company, Division, Section, Employee).
 
-#### 1. Monthly Pay Group
+---
+
+#### 💸 2. Payroll Calculation Logic by Pay Group Frequency
+The system dynamically adapts its calculation engine depending on the employee's assigned **Pay Group Frequency** (Monthly, Daily, Hourly). Working days and hourly divisors are retrieved from the pay group config, with a default fallback of 30 working days and 8 daily hours.
+
+##### A. Monthly Pay Group
 - **Base Salary**: Taken directly from the employee's `gross_salary`.
-- **Base Rate (Day Rate)**: `Gross Salary / Working Days Per Cycle`.
-- **Hourly Rate**: `(Gross Salary / Working Days) / Working Hours Per Day`.
-- **Overtime & Off-Day**: Calculated using the **Gross-based Hourly Rate**.
-- **Bonus**: Calculated foundationally on the `basic_salary` component.
-- **Deductions**: Uses the **Day Rate** derived from the chosen foundation (Gross or Basic).
+- **Base Rate (Day Rate)**: `Gross Salary / Working Days Per Cycle` (default 30 days).
+- **Hourly Rate**: `(Gross Salary / Working Days) / Working Hours Per Day` (default 8 hours).
+- **Overtime & Off-Day Work**: Calculated using the **Gross-based Hourly Rate**.
+- **Deductions**: Calculated using the **Day Rate** (absent deductions subtract full Day Rate values per absent day). Late, excessive late, and early exit deductions are calculated and stored individually in the `payrolls` table.
+- **Bonus**: Calculated based on the `basic_salary` component.
 
-#### 2. Daily Pay Group
+##### B. Daily Pay Group
 - **Base Salary**: `Daily Rate (Gross Salary) * Total Days in Range`.
-- **Base Rate (Day Rate)**: The `gross_salary` value itself (entered as a daily rate).
-- **Hourly Rate**: `Gross Salary / Working Hours Per Day`.
-- **Overtime & Off-Day**: Calculated using the **Gross-based Hourly Rate**.
-- **Bonus**: Calculated based on the `basic_salary` (treated as the daily basic portion).
+- **Base Rate (Day Rate)**: The `gross_salary` value itself (which is entered as a daily rate).
+- **Hourly Rate**: `Gross Salary / Working Hours Per Day` (default 8 hours).
+- **Overtime & Off-Day Work**: Calculated using the daily gross-based Hourly Rate.
 - **Deductions**: Uses the `gross_salary` directly as the Day Rate.
+- **Bonus**: Calculated based on the `basic_salary` (treated as the daily basic portion).
 
-#### 3. Hourly Pay Group
+##### C. Hourly Pay Group
 - **Base Salary**: `Hourly Rate (Gross Salary) * (Total Scheduled Minutes / 60)`.
-- **Base Rate (Day Rate)**: `Gross Salary * Working Hours Per Day`.
+- **Base Rate (Day Rate)**: `Gross Salary * Working Hours Per Day` (default 8 hours).
 - **Hourly Rate**: The `gross_salary` value itself (entered as an hourly rate).
-- **Overtime & Off-Day**: Calculated using the **Gross-based Hourly Rate** (the `gross_salary` field).
+- **Overtime & Off-Day Work**: Calculated using the **Gross-based Hourly Rate** (the `gross_salary` field).
+- **Deductions**: Derived by converting the hourly rate into the equivalent day rate based on scheduled hours.
 - **Bonus**: Calculated based on the `basic_salary` (treated as the hourly basic portion).
-- **Deductions**: Calculated by deriving the Day Rate from the hourly rate.
+
+---
+
+#### 🔄 3. Key Sub-Modules & Workflows
+
+##### A. Salary Process & Rollback
+- **Processing**: Salary batches are initiated with a defined month/period. The system checks eligibility based on active employee office info and pay scale status. A dedicated **Salary Process Eligibility View** is provided to review and audit eligible employees before saving the batch.
+- **Deduction Granularity**: The system records individual late, excessive late, absent, and early exit count deductions in the `payrolls` table.
+- **Rollback Process**: When a process is rolled back or deleted via `rollbackSalaryProcess($id)`, the system updates all subtracted advances and penalties back to `approved` state, ensuring zero loss of adjustment records.
+
+##### B. Advance Salary Module
+- **Purpose**: Processes cash/salary advances to employees that are automatically recovered in subsequent payroll processes.
+- **Calculations**: Supports both Fixed amounts and Percentage-based calculations (referencing basic salary or gross salary).
+- **Auto-Recovery**: During salary generation, the engine scans for active, approved advance salary records matching the target `deduction_month`. The recovery amount is subtracted from the final total salary, and the advance status is updated to `deducted`.
+- **Rollback Safety**: Rollback or deletion of a salary process restores the advance records back to `approved` status.
+
+##### C. Employee Penalties
+- **Assignment**: Penalties are assigned to employees based on specific Penalty Plans and logged with occurrences and causes in the [EmployeePenalty](file:///P:/Project/Web/hrms/app/Models/Payroll/EmployeePenalty.php) model.
+- **Notifications**: Saving a penalty automatically invokes `notifyEmployee()`, dispatching a real-time notification to the target employee's user dashboard.
+- **Salary Deductions**: Approved penalties matching the payroll period are deducted from the employee's total earnings during salary generation, changing status to `deducted`.
+- **Rollback Integration**: Reverting or deleting a salary process resets the penalty status to `approved`.
+
+##### D. Arrears Management
+- **Purpose**: Manages outstanding/overdue payments.
+- **Workflow**: Logged under [Arrear](file:///P:/Project/Web/hrms/app/Models/Payroll/Arrear.php), approved arrear batches are included in the payroll process and cleared during final disbursement.
+
+##### E. Promotions & Increments
+- **Increments**: Increases are calculated as a flat amount or percentage of gross/basic salary.
+- **Promotions**: Designation and salary grades are revised.
+- **Modifications**: Once approved, the system updates the employee's `gross_salary` and breakdown and invokes `designationUpdate()` to update office parameters.
+
+##### F. Bonus Management
+- **Workflow**: Compiles bonuses based on assigned plans.
+- **Processing**: Initiates standalone bonus batches or embeds them inside standard monthly salary payouts.
+
+---
+
+#### 💳 4. Payouts & Disbursement System
+Once a salary or bonus batch is approved, it enters the **Disbursement** pipeline handled by [DisbursementServices](file:///P:/Project/Web/hrms/app/Services/Payroll/DisbursementServices.php):
+- **Pending Batch Audits**: The dashboard computes statistics (eligible headcount, total batch cost, disbursed vs pending amounts, and headcount) for approved salary/bonus processes.
+- **Payment Processing**: HR selects records and defines a payment method (e.g., Cash, Bank Transfer, MFS) to initiate the disbursement batch.
+- **Status Progression**: Inside a database transaction, individual records in the `payrolls` or `bonuses` tables are updated from `pending` to `paid` to prevent double-payouts.
+- **History & Documentation**: Disbursements support uploading physical files (e.g. bank sheets, receipts) and keep a historical log of who disbursed the funds, when, and the transaction note.
+
+---
+
+#### 📄 5. Branded PDF Generation
+Using `Spatie Browsershot`, the system compiles Blade templates into standard PDFs:
+- **Payslips**: Comprehensive breakdown of Gross, Overtime, Off-day work, Bonuses, and individual deductions (Absent, Late, Advance Salary, Penalty) compiled with company branding.
+- **Salary Certificates**: Generates a standard "To Whom It May Concern" certification representing tenure and remuneration. It can be compiled using a past processed payroll record or generated based on the employee's current salary breakdown.
 
 ---
 
