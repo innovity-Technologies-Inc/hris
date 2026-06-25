@@ -38,8 +38,6 @@ if [ "$APP_ENV" = "local" ]; then
     echo "Clearing caches manually to avoid boot crashes..."
     rm -f bootstrap/cache/*.php
     php artisan config:clear
-    php artisan cache:clear
-    php artisan route:clear
 
     # 4. Local Command Serialization
     if [ ! -d "vendor" ]; then
@@ -56,6 +54,10 @@ if [ "$APP_ENV" = "local" ]; then
     echo "Running migrations..."
     php artisan migrate --no-interaction
 
+    echo "Clearing other caches..."
+    php artisan cache:clear
+    php artisan route:clear
+
     # Seeder Lock
     if [ ! -f "storage/logs/seeded.lock" ]; then
         echo "Running seeders for the first time..."
@@ -70,8 +72,6 @@ else
     echo "Clearing caches manually to avoid boot crashes..."
     rm -f bootstrap/cache/*.php
     php artisan config:clear
-    php artisan cache:clear
-    php artisan route:clear
 
     # 5. Production Command Serialization
     echo "Checking application key..."
@@ -84,6 +84,7 @@ else
     php artisan migrate --force --no-interaction
 
     echo "Caching configuration, routes, and views..."
+    php artisan cache:clear
     php artisan config:cache
     php artisan route:cache
     php artisan view:cache
