@@ -14,7 +14,7 @@ services:
       - DB_HOST=db
       - DB_PORT=3306
       - DB_DATABASE=${DB_DATABASE:-hrms}
-      - DB_USERNAME=${DB_USERNAME:-hrms_user}
+      - DB_USERNAME=${DB_USERNAME:-root}
       - DB_PASSWORD=${DB_PASSWORD:-secret}
       - QUEUE_CONNECTION=database
       - SESSION_DRIVER=database
@@ -47,13 +47,11 @@ services:
     restart: unless-stopped
     environment:
       - MYSQL_DATABASE=${DB_DATABASE:-hrms}
-      - MYSQL_USER=${DB_USERNAME:-hrms_user}
-      - MYSQL_PASSWORD=${DB_PASSWORD:-secret}
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD:-secret}
     volumes:
       - db-data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -74,7 +72,7 @@ services:
       - DB_HOST=db
       - DB_PORT=3306
       - DB_DATABASE=${DB_DATABASE:-hrms}
-      - DB_USERNAME=${DB_USERNAME:-hrms_user}
+      - DB_USERNAME=${DB_USERNAME:-root}
       - DB_PASSWORD=${DB_PASSWORD:-secret}
       - QUEUE_CONNECTION=database
       - SESSION_DRIVER=database
@@ -103,7 +101,7 @@ services:
       - DB_HOST=db
       - DB_PORT=3306
       - DB_DATABASE=${DB_DATABASE:-hrms}
-      - DB_USERNAME=${DB_USERNAME:-hrms_user}
+      - DB_USERNAME=${DB_USERNAME:-root}
       - DB_PASSWORD=${DB_PASSWORD:-secret}
       - QUEUE_CONNECTION=database
       - SESSION_DRIVER=database
