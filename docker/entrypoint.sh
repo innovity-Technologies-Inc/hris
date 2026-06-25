@@ -35,7 +35,8 @@ if [ "$APP_ENV" = "local" ]; then
     echo "Running in LOCAL environment..."
     
     # Crucial Caching Clear FIRST
-    echo "Clearing caches..."
+    echo "Clearing caches manually to avoid boot crashes..."
+    rm -f bootstrap/cache/*.php
     php artisan config:clear
     php artisan cache:clear
     php artisan route:clear
@@ -66,7 +67,8 @@ else
     echo "Running in PRODUCTION environment..."
     
     # Crucial Caching Clear FIRST
-    echo "Clearing caches..."
+    echo "Clearing caches manually to avoid boot crashes..."
+    rm -f bootstrap/cache/*.php
     php artisan config:clear
     php artisan cache:clear
     php artisan route:clear
