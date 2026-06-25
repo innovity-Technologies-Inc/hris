@@ -34,6 +34,12 @@ exit(1);
 if [ "$APP_ENV" = "local" ]; then
     echo "Running in LOCAL environment..."
     
+    # Crucial Caching Clear FIRST
+    echo "Clearing caches..."
+    php artisan config:clear
+    php artisan cache:clear
+    php artisan route:clear
+
     # 4. Local Command Serialization
     if [ ! -d "vendor" ]; then
         echo "Running composer install..."
@@ -49,12 +55,6 @@ if [ "$APP_ENV" = "local" ]; then
     echo "Running migrations..."
     php artisan migrate --no-interaction
 
-    # Crucial Caching Clear
-    echo "Clearing caches..."
-    php artisan config:clear
-    php artisan cache:clear
-    php artisan route:clear
-
     # Seeder Lock
     if [ ! -f "storage/logs/seeded.lock" ]; then
         echo "Running seeders for the first time..."
@@ -65,6 +65,12 @@ if [ "$APP_ENV" = "local" ]; then
 else
     echo "Running in PRODUCTION environment..."
     
+    # Crucial Caching Clear FIRST
+    echo "Clearing caches..."
+    php artisan config:clear
+    php artisan cache:clear
+    php artisan route:clear
+
     # 5. Production Command Serialization
     echo "Checking application key..."
     if ! grep -q "APP_KEY=base64:" .env; then
