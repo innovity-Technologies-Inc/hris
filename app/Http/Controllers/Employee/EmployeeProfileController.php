@@ -536,5 +536,28 @@ class EmployeeProfileController extends Controller
         }
     }
 
+    public function showLifecycleHistory($id){
+        $title = 'Employee Lifecycle History';
+        $section = 'Employees';
+        $sub_section = 'Profile - Lifecycle History';
+        $section_url = route('employee.index');
+        $employee = $this->empServices->getEmployeeById($id);
+
+        if (!$employee) {
+            abort(404, 'Employee not found');
+        }
+
+        // Security check: Owner can view, or user with permission can view
+        $isOwner = auth()->user()->employee_id == $id;
+        $canViewAny = auth()->user()->can('employee-management.view');
+
+        if (!$isOwner && !$canViewAny) {
+            abort(403, 'Unauthorized access.');
+        }
+
+        $roles = $this->empServices->getRoles();
+        return view('employee.profile', compact('title', 'section', 'sub_section', 'employee', 'section_url', 'roles'));
+    }
+
 }
 
