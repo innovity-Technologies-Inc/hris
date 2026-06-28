@@ -14,6 +14,7 @@ use App\Models\Employee\Employee;
 use App\Models\Employee\EmployeeBankAccount;
 use App\Models\Employee\EmployeeEducationExperienceTraining;
 use App\Models\Employee\EmployeeEligiblePlan;
+use App\Models\Employee\EmployeeLifecycle;
 use App\Models\Employee\EmployeeNominee;
 use App\Models\Employee\EmployeeOfficeInfo;
 use App\Models\Employee\EmployeeSalaryBreakdown;
@@ -292,6 +293,13 @@ class EmployeeServices
             $this->revertProfileToPending($employee_data->id);
             // Update user with employee_id for bi-directional link
             $user->update(['employee_id' => $employee_data->id]);
+
+            EmployeeLifecycle::create([
+                'employee_id' => $employee_data->id,
+                'type' => 'profile_created',
+                'status_date' => now(),
+                'description' => 'Employee profile has been created.'
+            ]);
         } else {
             $employee = $this->getEmployeeById($id);
 
@@ -418,6 +426,35 @@ class EmployeeServices
             $employee_office_info->update($validated);
             $employee_office_data = $employee_office_info->fresh();
         }
+
+        // Handle Lifecycle for Probation / Confirmed
+        if (!empty($validated['probation_duration']) && empty($validated['confirmation_date'])) {
+            // Check if probation lifecycle already exists
+            $exists = EmployeeLifecycle::where('employee_id', $validated['employee_id'])
+                ->where('type', 'probation')->exists();
+            if (!$exists) {
+                EmployeeLifecycle::create([
+                    'employee_id' => $validated['employee_id'],
+                    'type' => 'probation',
+                    'status_date' => $validated['date_of_join'] ?? now(),
+                    'description' => 'Employee is on probation for ' . $validated['probation_duration'] . ' months.'
+                ]);
+            }
+        }
+
+        if (!empty($validated['confirmation_date'])) {
+            $exists = EmployeeLifecycle::where('employee_id', $validated['employee_id'])
+                ->where('type', 'confirmed')->exists();
+            if (!$exists) {
+                EmployeeLifecycle::create([
+                    'employee_id' => $validated['employee_id'],
+                    'type' => 'confirmed',
+                    'status_date' => $validated['confirmation_date'],
+                    'description' => 'Employee has been confirmed.'
+                ]);
+            }
+        }
+
         return $employee_office_data;
     }
 
@@ -857,8 +894,18 @@ class EmployeeServices
     public function toggleEmployeeStatus($employeeId, $status)
     {
         $employee = Employee::findOrFail($employeeId);
+        $oldStatus = $employee->status;
         $employee->status = $status;
         $employee->save();
+
+        if ($oldStatus !== $status) {
+            EmployeeLifecycle::create([
+                'employee_id' => $employee->id,
+                'type' => $status,
+                'status_date' => now(),
+                'description' => 'Employee status changed from ' . $oldStatus . ' to ' . $status . '.'
+            ]);
+        }
 
         // Also update associated user if exists
         if ($employee->user_id) {

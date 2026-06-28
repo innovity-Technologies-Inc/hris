@@ -171,6 +171,13 @@ class IncrementController extends Controller
             foreach ($increments as $increment) {
                 $this->payrollService->updateSalaryData($increment);
                 $increment->update(['is_adjustment' => 2]);
+
+                \App\Models\Employee\EmployeeLifecycle::create([
+                    'employee_id' => $increment->employee_id,
+                    'type' => 'salary_increment',
+                    'status_date' => $increment->effective_from,
+                    'description' => 'Salary increment of ' . $increment->salary_increase_amount . ' applied.'
+                ]);
             }
         });
         return redirect()->route('increment.index')->with([

@@ -12,7 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('pay_groups', function (Blueprint $table) {
-            $table->dropColumn('current_company_id');
+            if (Schema::hasColumn('pay_groups', 'current_company_id')) {
+                // To avoid sqlite dropping index error, we can try to drop index if it exists
+                // But better yet, we just check if it's sqlite and ignore index dropping? No, laravel handles it if we do dropIndex.
+                // Actually in sqlite, dropping a column that is indexed requires dropIndex first since laravel 8+.
+                // Let's just drop index.
+                $table->dropIndex(['current_company_id']);
+                $table->dropColumn('current_company_id');
+            }
         });
     }
 

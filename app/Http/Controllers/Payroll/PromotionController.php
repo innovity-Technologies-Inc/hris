@@ -180,6 +180,12 @@ class PromotionController extends Controller
                     $this->payrollService->designationUpdate($promotion);
                     $promotion->update(['is_adjustment' => 2]);
 
+                    \App\Models\Employee\EmployeeLifecycle::create([
+                        'employee_id' => $promotion->employee_id,
+                        'type' => 'promotion',
+                        'status_date' => $promotion->effective_from,
+                        'description' => 'Promoted to a new designation.'
+                    ]);
                 }
             });
 

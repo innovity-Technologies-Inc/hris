@@ -397,6 +397,7 @@ Route::prefix('employees')->middleware('auth')->group(function () {
         Route::get('profile/{id}/office-informations', 'showOfficeInfo')->name('employee.profile.office_informations');
         Route::get('profile/{id}/detailed-json', 'getDetailedProfileJson')->name('employee.profile.detailed_json');
         Route::get('profile/{id}/download-pdf', 'downloadProfilePdf')->name('employee.profile.download_pdf');
+        Route::get('profile/{id}/lifecycle-history', 'showLifecycleHistory')->name('employee.profile.lifecycle_history');
 
         Route::middleware('permission:employee-management.view')->group(function () {
             Route::get('/', 'index')->name('employee.index');

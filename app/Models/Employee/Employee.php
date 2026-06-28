@@ -159,7 +159,6 @@ class Employee extends Model
     {
         return $this->hasOne(EmployeeBankAccount::class, 'employee_id', 'id');
     }
-
     public function leaveApplications()
     {
         return $this->hasMany(\App\Models\Leave\Leave::class, 'employee_id', 'id');
@@ -169,5 +168,9 @@ class Employee extends Model
     {
         return $this->hasMany(\App\Models\Leave\LeaveCount::class, 'employee_id', 'id');
     }
-}
 
+    public function lifecycles()
+    {
+        return $this->hasMany(EmployeeLifecycle::class, 'employee_id', 'id');
+    }
+}

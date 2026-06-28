@@ -12,7 +12,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement("ALTER TABLE payroll_process MODIFY COLUMN type ENUM('salary', 'bonus', 'advance') NOT NULL");
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement("ALTER TABLE payroll_process MODIFY COLUMN type ENUM('salary', 'bonus', 'advance') NOT NULL");
+        }
     }
 
     /**
@@ -20,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("ALTER TABLE payroll_process MODIFY COLUMN type ENUM('salary', 'bonus') NOT NULL");
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement("ALTER TABLE payroll_process MODIFY COLUMN type ENUM('salary', 'bonus') NOT NULL");
+        }
     }
 };
