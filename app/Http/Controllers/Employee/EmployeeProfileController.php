@@ -408,8 +408,22 @@ class EmployeeProfileController extends Controller
         // Security check: Owner can view, or user with permission can view
         $isOwner = auth()->user()->employee_id == $id;
         $canViewAny = auth()->user()->can('employee-management.view');
+
+        if (!$isOwner && !$canViewAny) {
+            abort(403, 'Unauthorized access.');
         }
 
+        $employee_office_info = \App\Models\Employee\EmployeeOfficeInfo::where('employee_id', $id)->first();
+//        dd($employee_office_info);
+        $roles = $this->empServices->getRoles();
+        return view('employee.profile', compact('title', 'section', 'sub_section', 'employee', 'employee_office_info', 'section_url', 'roles'));
+    }
+
+    public function officeInfoImport(Request $request){
+        // Restricted for Employees
+        if (auth()->user()->user_type === \App\Enums\UserType::Employee) {
+            abort(403, 'Unauthorized access.');
+        }
         $request->validate([
             'file' => 'required|mimes:text/csv,text/plain,application/csv,text/comma-separated-values,text/anytext,application/octet-stream,application/txt,xlsx,csv,txt',
         ]);
