@@ -559,5 +559,100 @@ class EmployeeProfileController extends Controller
         return view('employee.profile', compact('title', 'section', 'sub_section', 'employee', 'section_url', 'roles'));
     }
 
-}
+    public function showDocuments($id)
+    {
+        $title = 'Employee Documents';
+        $section = 'Employees';
+        $sub_section = 'Profile - Documents';
+        $section_url = route('employee.index');
+        $employee = $this->empServices->getEmployeeById($id);
 
+        if (!$employee) {
+            abort(404, 'Employee not found');
+        }
+
+        // Security check: Owner can view, or user with permission can view
+        $isOwner = auth()->user()->employee_id == $id;
+        $canViewAny = auth()->user()->can('employee-management.view');
+
+        if (!$isOwner && !$canViewAny) {
+            abort(403, 'Unauthorized access.');
+        }
+
+        $roles = $this->empServices->getRoles();
+        return view('employee.profile', compact('title', 'section', 'sub_section', 'employee', 'section_url', 'roles'));
+    }
+
+    public function storeDocuments(Request $request, $id)
+    {
+        // Security check
+        $isOwner = auth()->user()->employee_id == $id;
+        $canUpdate = auth()->user()->can('employee-management.update');
+        if (!$isOwner && !$canUpdate) {
+            abort(403, 'Unauthorized access.');
+        }
+
+        $request->validate([
+            'documents' => 'required|array',
+            'documents.*.title' => 'required|string|max:255',
+            'documents.*.file' => 'required|file|mimes:pdf,doc,docx,jpg,jpeg,png,webp,csv,xlsx,txt|max:10240',
+        ]);
+
+        try {
+            $employee = \App\Models\Employee\Employee::findOrFail($id);
+            if ($request->has('documents')) {
+                foreach ($request->documents as $docData) {
+                    if (isset($docData['file']) && $docData['file'] instanceof \Illuminate\Http\UploadedFile) {
+                        $file = $docData['file'];
+                        $path = \App\HelperClass::file_upload($file, 'employee_documents');
+                        \App\Models\Employee\EmployeeDocument::create([
+                            'employee_id' => $id,
+                            'title' => $docData['title'],
+                            'file_path' => $path,
+                            'file_type' => $file->getClientOriginalExtension()
+                        ]);
+                    }
+                }
+            }
+
+            return redirect()->back()->with([
+                'message' => 'Documents uploaded successfully.',
+                'alert-type' => 'success'
+            ]);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error uploading documents: ' . $e->getMessage(), ['exception' => $e]);
+            return redirect()->back()->with([
+                'message' => 'Failed to upload documents. ' . $e->getMessage(),
+                'alert-type' => 'error'
+            ]);
+        }
+    }
+
+    public function deleteDocument($id, $document_id)
+    {
+        // Security check
+        $isOwner = auth()->user()->employee_id == $id;
+        $canDelete = auth()->user()->can('employee-management.delete');
+        if (!$isOwner && !$canDelete) {
+            abort(403, 'Unauthorized access.');
+        }
+
+        try {
+            $document = \App\Models\Employee\EmployeeDocument::where('employee_id', $id)->findOrFail($document_id);
+            \App\HelperClass::file_delete($document->file_path);
+            $document->delete();
+
+            return redirect()->back()->with([
+                'message' => 'Document deleted successfully.',
+                'alert-type' => 'success'
+            ]);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error deleting document: ' . $e->getMessage(), ['exception' => $e]);
+            return redirect()->back()->with([
+                'message' => 'Failed to delete document.',
+                'alert-type' => 'error'
+            ]);
+        }
+    }
+
+}

@@ -173,4 +173,9 @@ class Employee extends Model
     {
         return $this->hasMany(EmployeeLifecycle::class, 'employee_id', 'id');
     }
+
+    public function documents()
+    {
+        return $this->hasMany(EmployeeDocument::class, 'employee_id', 'id');
+    }
 }

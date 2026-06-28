@@ -210,6 +210,26 @@
             @endif
 
 
+            {{-- 12. Documents --}}
+            @if (isset($employee->id) && (auth()->user()->user_type !== \App\Enums\UserType::Employee || $employee->status === 'active'))
+                <div class="col">
+                    <a href="{{ route('employee.profile.documents', $employee->id) }}"
+                        class="btn btn-outline-secondary w-100 py-3 text-decoration-none @if (request()->routeIs('employee.profile.documents')) active @endif">
+                        <span class="badge bg-secondary rounded-circle me-2 px-2 py-1">12</span>
+                        Documents
+                    </a>
+                </div>
+            @elseif(!isset($employee->id))
+                <div class="col">
+                    <button type="submit"
+                        class="btn btn-outline-secondary w-100 py-3 text-decoration-none information">
+                        <span class="badge bg-secondary rounded-circle me-2 px-2 py-1">12</span>
+                        Documents
+                    </button>
+                </div>
+            @endif
+
+
         </div>
     </div>
 

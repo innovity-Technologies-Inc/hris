@@ -29,6 +29,8 @@
         @include('employee.partials.profile_view.leave_info')
     @elseif(Route::currentRouteNamed('employee.profile.lifecycle_history'))
         @include('employee.partials.profile_view.lifecycle_history')
+    @elseif(Route::currentRouteNamed('employee.profile.documents'))
+        @include('employee.partials.profile_view.documents')
     @endif
 @endsection
 
