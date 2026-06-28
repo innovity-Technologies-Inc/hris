@@ -6,7 +6,12 @@
     </div>
     <div class="card-body p-4">
         <div class="timeline">
-            @forelse($employee->lifecycles()->orderBy('status_date', 'desc')->orderBy('created_at', 'desc')->get() as $history)
+            @php
+                $lifecycles = $employee->lifecycles()->orderBy('status_date', 'desc')->orderBy('created_at', 'desc')->get();
+                $hasProfileCreated = $lifecycles->contains('type', 'profile_created');
+            @endphp
+
+            @foreach($lifecycles as $history)
                 <div class="timeline-item">
                     <div class="timeline-marker bg-primary"></div>
                     <div class="timeline-content">
@@ -20,12 +25,21 @@
                         @endif
                     </div>
                 </div>
-            @empty
-                <div class="text-center py-4 text-muted">
-                    <i class="mdi mdi-inbox-outline fs-1 text-secondary mb-2"></i>
-                    <p>No lifecycle history found for this employee.</p>
+            @endforeach
+
+            @if(!$hasProfileCreated)
+                <div class="timeline-item">
+                    <div class="timeline-marker bg-primary"></div>
+                    <div class="timeline-content">
+                        <h6 class="text-dark fw-bold mb-1">Profile Created</h6>
+                        <p class="text-muted small mb-2">
+                            <i class="mdi mdi-calendar-clock me-1"></i>
+                            {{ $employee->created_at ? $employee->created_at->format('F d, Y') : 'Unknown Date' }}
+                        </p>
+                        <p class="mb-0 text-secondary">Employee profile created.</p>
+                    </div>
                 </div>
-            @endforelse
+            @endif
         </div>
     </div>
 </div>
