@@ -29,7 +29,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="text-end mt-3">
+                <div class="text-start mt-3">
                     <button type="submit" class="btn btn-primary px-4">
                         <i class="mdi mdi-upload me-1"></i> Upload Files
                     </button>
@@ -40,7 +40,7 @@
 
         <!-- Document Showcase -->
         <h6 class="fw-bold mb-3">Uploaded Documents</h6>
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
             @forelse($employee->documents as $document)
                 <div class="col">
                     <div class="card h-100 border shadow-sm document-card position-relative">
