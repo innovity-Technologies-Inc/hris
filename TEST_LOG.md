@@ -225,3 +225,4 @@
 
 **Status**: ✅ SUCCESS
 | 2026-06-28 | Added Employee Lifecycle tracking events | php artisan test tests/Feature/Employee/EmployeeLifecycleTest.php | 3 passed | ✅ SUCCESS |
+| 2026-06-28 | Added joined event tracking | php artisan test tests/Feature/Employee/EmployeeLifecycleTest.php | 3 passed | ✅ SUCCESS |

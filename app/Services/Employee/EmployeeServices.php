@@ -427,7 +427,20 @@ class EmployeeServices
             $employee_office_data = $employee_office_info->fresh();
         }
 
-        // Handle Lifecycle for Probation / Confirmed
+        // Handle Lifecycle for Joined / Probation / Confirmed
+        if (!empty($validated['date_of_join'])) {
+            $exists = EmployeeLifecycle::where('employee_id', $validated['employee_id'])
+                ->where('type', 'joined')->exists();
+            if (!$exists) {
+                EmployeeLifecycle::create([
+                    'employee_id' => $validated['employee_id'],
+                    'type' => 'joined',
+                    'status_date' => $validated['date_of_join'],
+                    'description' => 'Employee joined the company.'
+                ]);
+            }
+        }
+
         if (!empty($validated['probation_duration']) && empty($validated['confirmation_date'])) {
             // Check if probation lifecycle already exists
             $exists = EmployeeLifecycle::where('employee_id', $validated['employee_id'])
