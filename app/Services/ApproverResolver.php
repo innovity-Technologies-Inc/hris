@@ -19,7 +19,14 @@ class ApproverResolver implements ApproverResolverInterface
     public function resolve(string $requiredUserType, Model $approvable): array
     {
         // Get the requesting user from the approvable model
-        $requestingUser = method_exists($approvable, 'user') ? $approvable->user : null;
+        $requestingUser = null;
+        if (method_exists($approvable, 'user')) {
+            $requestingUser = $approvable->user;
+        } elseif (method_exists($approvable, 'getEmployee') && $approvable->getEmployee) {
+            $requestingUser = $approvable->getEmployee->user ?? null;
+        } elseif (method_exists($approvable, 'creator')) {
+            $requestingUser = $approvable->creator;
+        }
         
         // Ensure we have the user and their organizational office info
         if (!$requestingUser || !$requestingUser->employee || !$requestingUser->employee->officeInfo) {

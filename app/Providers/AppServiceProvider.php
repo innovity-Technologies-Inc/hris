@@ -94,5 +94,23 @@ class AppServiceProvider extends ServiceProvider
                 Config::set($data);
             }
         }
+
+        // Notify approvers when a new step request is created
+        \Innovity\ApprovalEngine\Models\ApprovalStepRequest::created(function ($stepRequest) {
+            if ($stepRequest->status->value === 'pending') {
+                $resolver = app(\Innovity\ApprovalEngine\Contracts\ApproverResolverInterface::class);
+                $approvable = $stepRequest->approvalRequest->approvable;
+                
+                if ($approvable) {
+                    $approverIds = $resolver->resolve($stepRequest->workflowStep->required_user_type, $approvable);
+                    if (!empty($approverIds)) {
+                        $users = \App\Models\User::whereIn('id', $approverIds)->get();
+                        foreach ($users as $user) {
+                            $user->notify(new \App\Notifications\Approval\ApprovalActionRequiredNotification($stepRequest));
+                        }
+                    }
+                }
+            }
+        });
     }
 }
