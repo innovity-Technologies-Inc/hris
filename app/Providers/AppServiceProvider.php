@@ -15,6 +15,13 @@ use Illuminate\Support\Facades\Gate;
 
 use Illuminate\Support\Facades\View;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Route;
+use App\Services\ApproverResolver;
+use Innovity\ApprovalEngine\Contracts\ApproverResolverInterface;
+use Innovity\ApprovalEngine\Events\ApprovalCompleted;
+use Innovity\ApprovalEngine\Events\ApprovalRejected;
+use Illuminate\Support\Facades\Event;
+use App\Listeners\WorkflowStatusListener;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(ApproverResolverInterface::class, ApproverResolver::class);
     }
 
     /**
@@ -47,6 +54,9 @@ class AppServiceProvider extends ServiceProvider
         }
         
         Paginator::useBootstrap();
+        
+        Event::listen(ApprovalCompleted::class, [WorkflowStatusListener::class, 'handleCompleted']);
+        Event::listen(ApprovalRejected::class, [WorkflowStatusListener::class, 'handleRejected']);
 
         //Google Api Key Configuration
         // Avoid error during migrate

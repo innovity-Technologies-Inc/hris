@@ -11,6 +11,7 @@ use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Innovity\ApprovalEngine\Services\WorkflowGenerator;
 
 class IncrementController extends Controller
 {
@@ -57,7 +58,7 @@ class IncrementController extends Controller
             'section_url', 'incrementData', 'employees'));
     }
 
-    public function save(Request $request, $incrementData = null)
+    public function save(Request $request, WorkflowGenerator $generator, $incrementData = null)
     {
         $request->validate([
             'employee_id' => 'required|exists:employees,id',
@@ -94,11 +95,12 @@ class IncrementController extends Controller
             $data = $result['data'];
 
             if (!empty($incrementData)) {
-
                 $this->payrollService->incrementDataUpdate($incrementData, $data);
             } else {
-                $this->payrollService->incrementDataStore($data);
-
+                $increment = $this->payrollService->incrementDataStore($data);
+                
+                // Trigger approval workflow
+                $generator->generate($increment, 'increment');
             }
 
         } catch (\Exception $e) {

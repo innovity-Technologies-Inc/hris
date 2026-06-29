@@ -291,7 +291,7 @@ class PayrollServices
 
     public function promotionDataStore($data)
     {
-        Promotion::create($data);
+        return Promotion::create($data);
     }
 
     public function promotionDataUpdate($id, $data)
@@ -302,7 +302,7 @@ class PayrollServices
 
     public function incrementDataStore($data)
     {
-        Increment::create($data);
+        return Increment::create($data);
     }
 
     public function incrementDataUpdate($id, $data)

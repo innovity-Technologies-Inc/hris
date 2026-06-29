@@ -42,6 +42,7 @@ use App\Http\Controllers\Payroll\PromotionController;
 use App\Http\Controllers\Plan\RosterPlansController;
 use App\Http\Controllers\Company\SalaryGradesController;
 use App\Http\Controllers\Company\SectionController;
+use App\Http\Controllers\Setting\ApprovalWorkflowController;
 use App\Http\Controllers\Setting\SettingsController;
 use App\Http\Controllers\Plan\ShiftPlanController;
 use App\Http\Controllers\Plan\TAPlanController;
@@ -891,6 +892,20 @@ Route::get('salary-process', function () {
 })->name('salary.process')->middleware(['auth', 'permission:salary.view']);
 
 Route::prefix('settings')->middleware('auth')->group(function () {
+    
+    // Approval Workflow Routes
+    Route::controller(ApprovalWorkflowController::class)->group(function () {
+        Route::get('approval-workflows', 'index')->name('setting.approval_workflows.index')->middleware('permission:approval-workflows.view');
+        Route::get('approval-workflows/create', 'create')->name('setting.approval_workflows.create')->middleware('permission:approval-workflows.create');
+        Route::post('approval-workflows', 'store')->name('setting.approval_workflows.store')->middleware('permission:approval-workflows.create');
+        Route::get('approval-workflows/{id}/edit', 'edit')->name('setting.approval_workflows.edit')->middleware('permission:approval-workflows.edit');
+        Route::put('approval-workflows/{id}', 'update')->name('setting.approval_workflows.update')->middleware('permission:approval-workflows.edit');
+        Route::delete('approval-workflows/{id}', 'destroy')->name('setting.approval_workflows.destroy')->middleware('permission:approval-workflows.delete');
+    });
+
+    // Workflow Action Route (Global)
+    Route::post('/workflow-action/{stepRequestId}', [\App\Http\Controllers\ApprovalActionController::class, 'action'])->name('approval.action');
+
     Route::controller(SettingsController::class)->group(function (){
        Route::middleware('permission:general-settings.view')->group(function () {
            Route::get('general-settings', 'generalSettingIndex')->name('setting.general_settings');

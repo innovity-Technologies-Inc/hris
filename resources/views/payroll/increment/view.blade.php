@@ -13,24 +13,6 @@
                         <a href="{{ route('increment.edit', $incrementData->id) }}" class="btn btn-primary btn-sm">
                             <i style="height: 12px; width: 12px" data-feather="edit"></i> Edit
                         </a>
-                        <form class="d-inline" action="{{ route('increment.status.update', $incrementData->id) }}" method="POST">
-                            @csrf
-                            @method('PUT')
-                            <input type="hidden" name="status" value="approved">
-                            <button type="submit" class="btn btn-success btn-sm"
-                                onclick="return confirm('Are you sure you want to approve this increment?')">
-                                <i style="height: 12px; width: 12px" data-feather="check"></i> Approve
-                            </button>
-                        </form>
-                        <form class="d-inline" action="{{ route('increment.status.update', $incrementData->id) }}" method="POST">
-                            @csrf
-                            @method('PUT')
-                            <input type="hidden" name="status" value="rejected">
-                            <button type="submit" class="btn btn-danger btn-sm"
-                                onclick="return confirm('Are you sure you want to reject this increment?')">
-                                <i style="height: 12px; width: 12px" data-feather="x"></i> Reject
-                            </button>
-                        </form>
                     </div>
                 @endif
             </div>
@@ -189,6 +171,9 @@
             </div>
         </div>
     </div>
+
+    {{-- Workflow History & Approval Form --}}
+    @include('approval_engine.workflow_history', ['approvable' => $incrementData])
 
     <script>
         // Initialize Feather icons

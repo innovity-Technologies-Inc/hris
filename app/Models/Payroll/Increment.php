@@ -9,10 +9,11 @@ use App\Traits\OrganizationScoped;
 
 use App\Traits\Userstamps;
 use App\Traits\Auditable;
+use Innovity\ApprovalEngine\Traits\Approvable;
 
 class Increment extends Model
 {
-    use Userstamps, Auditable;
+    use Userstamps, Auditable, Approvable;
     use OrganizationScoped;
     protected $fillable = [
         'employee_id',
@@ -41,4 +42,3 @@ class Increment extends Model
     }
 
 }
-

@@ -757,7 +757,8 @@
                     $canSMTP = auth()->user()->can('smtp.view');
                     $canDBBackup = auth()->user()->can('db-backup.download');
                     $canRoleManagement = auth()->user()->can('role-management.view');
-                    $showSettingsMenu = $canGeneralSettings || $canIDCardDesign || $canAPIKeys || $canSMTP || $canDBBackup || $canRoleManagement;
+                    $canApprovalWorkflows = auth()->user()->can('approval-workflows.view');
+                    $showSettingsMenu = $canGeneralSettings || $canIDCardDesign || $canAPIKeys || $canSMTP || $canDBBackup || $canRoleManagement || $canApprovalWorkflows;
                 @endphp
                 @if($showSettingsMenu)
                 <li>
@@ -792,6 +793,12 @@
                             <li>
                                 <a class='tp-link @if (Route::is('setting.roles.*')) menuitem-active @endif'
                                    href='{{ route('setting.roles.index') }}'>Role Management</a>
+                            </li>
+                            @endif
+                            @if($canApprovalWorkflows)
+                            <li>
+                                <a class='tp-link @if (Route::is('setting.approval_workflows.*')) menuitem-active @endif'
+                                   href='{{ route('setting.approval_workflows.index') }}'>Approval Workflows</a>
                             </li>
                             @endif
                             @if(auth()->user()->can('general-settings.view'))
