@@ -113,13 +113,18 @@ class AppServiceProvider extends ServiceProvider
                             }
                             
                             try {
-                                $module = ucfirst($stepRequest->approvalRequest->workflow->module_name ?? 'Item');
+                                $moduleName = $stepRequest->approvalRequest->workflow->module_name ?? '';
+                                $module = ucfirst($moduleName ?: 'Item');
+                                $url = \Illuminate\Support\Facades\Route::has($moduleName . '.show') 
+                                        ? route($moduleName . '.show', $approvable->id, false) 
+                                        : '/' . $moduleName;
+
                                 app(\App\Services\Setting\NotificationServices::class)->createNotification(
                                     $user->user_type->value ?? $user->user_type,
                                     $user->id,
                                     'Approval Action Required',
                                     "You have a new $module approval request pending your action.",
-                                    ['url' => '/' . ($stepRequest->approvalRequest->workflow->module_name ?? ''), 'type' => 'approval_request']
+                                    ['url' => $url, 'type' => 'approval_request']
                                 );
                             } catch (\Exception $e) {
                                 \Illuminate\Support\Facades\Log::error('Custom Notification error: ' . $e->getMessage());

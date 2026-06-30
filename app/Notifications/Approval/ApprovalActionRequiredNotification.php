@@ -34,8 +34,13 @@ class ApprovalActionRequiredNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $module = ucfirst($this->stepRequest->approvalRequest->workflow->module_name ?? 'Item');
-        $url = url('/' . $this->stepRequest->approvalRequest->workflow->module_name);
+        $moduleName = $this->stepRequest->approvalRequest->workflow->module_name ?? '';
+        $module = ucfirst($moduleName ?: 'Item');
+        
+        $approvable = $this->stepRequest->approvalRequest->approvable;
+        $url = \Illuminate\Support\Facades\Route::has($moduleName . '.show') && $approvable
+                ? route($moduleName . '.show', $approvable->id) 
+                : url('/' . $moduleName);
 
         return (new MailMessage)
             ->subject("Action Required: $module Approval Request")
@@ -52,12 +57,18 @@ class ApprovalActionRequiredNotification extends Notification
      */
     public function toArray(object $notifiable): array
     {
-        $module = ucfirst($this->stepRequest->approvalRequest->workflow->module_name ?? 'Item');
+        $moduleName = $this->stepRequest->approvalRequest->workflow->module_name ?? '';
+        $module = ucfirst($moduleName ?: 'Item');
+        
+        $approvable = $this->stepRequest->approvalRequest->approvable;
+        $url = \Illuminate\Support\Facades\Route::has($moduleName . '.show') && $approvable
+                ? route($moduleName . '.show', $approvable->id, false) 
+                : '/' . $moduleName;
         
         return [
             'title' => 'Approval Action Required',
             'message' => "You have a new $module approval request pending your action.",
-            'url' => '/' . $this->stepRequest->approvalRequest->workflow->module_name,
+            'url' => $url,
             'type' => 'approval_request'
         ];
     }
