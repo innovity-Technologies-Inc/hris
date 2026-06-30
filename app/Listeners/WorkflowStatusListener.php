@@ -26,9 +26,9 @@ class WorkflowStatusListener
         $request = $event->approvalRequest;
         $approvable = $request->approvable; // The model instance
 
-        Log::info("Workflow completed for module: " . $request->workflow->module_name);
+        Log::info("Workflow completed for module: " . $request->workflow->module);
 
-        if ($request->workflow->module_name === 'promotion') {
+        if ($request->workflow->module === 'promotion') {
             if ($approvable instanceof Promotion) {
                 $approvable->update([
                     'status' => 'approved',
@@ -37,7 +37,7 @@ class WorkflowStatusListener
             }
         }
 
-        if ($request->workflow->module_name === 'increment') {
+        if ($request->workflow->module === 'increment') {
             if ($approvable instanceof Increment) {
                 $approvable->update([
                     'status' => 'approved',
@@ -54,9 +54,9 @@ class WorkflowStatusListener
         $request = $event->approvalRequest;
         $approvable = $request->approvable; // The model instance
 
-        Log::info("Workflow rejected for module: " . $request->workflow->module_name);
+        Log::info("Workflow rejected for module: " . $request->workflow->module);
 
-        if ($request->workflow->module_name === 'promotion') {
+        if ($request->workflow->module === 'promotion') {
             if ($approvable instanceof Promotion) {
                 $approvable->update([
                     'status' => 'rejected'
@@ -64,7 +64,7 @@ class WorkflowStatusListener
             }
         }
 
-        if ($request->workflow->module_name === 'increment') {
+        if ($request->workflow->module === 'increment') {
             if ($approvable instanceof Increment) {
                 $approvable->update([
                     'status' => 'rejected'
