@@ -44,6 +44,28 @@ class WorkflowStatusListener
                 ]);
             }
         }
+
+        if ($request->workflow->module === 'leave') {
+            if ($approvable instanceof \App\Models\Leave\Leave) {
+                $approvable->update([
+                    'status' => 'approved',
+                ]);
+
+                $leaveCount = \App\Models\Leave\LeaveCount::where('employee_id', $approvable->employee_id)
+                    ->where('plan_id', $approvable->plan_id)
+                    ->first();
+
+                if ($leaveCount) {
+                    $leaveCount->increment('leave_taken', $approvable->leave_count);
+                } else {
+                    \App\Models\Leave\LeaveCount::create([
+                        'employee_id' => $approvable->employee_id,
+                        'plan_id' => $approvable->plan_id,
+                        'leave_taken' => $approvable->leave_count
+                    ]);
+                }
+            }
+        }
     }
 
     /**
@@ -66,6 +88,14 @@ class WorkflowStatusListener
 
         if ($request->workflow->module === 'increment') {
             if ($approvable instanceof Increment) {
+                $approvable->update([
+                    'status' => 'rejected'
+                ]);
+            }
+        }
+
+        if ($request->workflow->module === 'leave') {
+            if ($approvable instanceof \App\Models\Leave\Leave) {
                 $approvable->update([
                     'status' => 'rejected'
                 ]);

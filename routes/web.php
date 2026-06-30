@@ -985,14 +985,12 @@ Route::prefix('leaves')->middleware('auth')->group(function () {
     Route::controller(LeavesController::class)->group(function (){
         Route::middleware('permission:leaves.view')->group(function () {
             Route::get('/', 'index')->name('leave.index');
+            Route::get('/{id}/view', 'show')->name('leave.show');
         });
         Route::middleware('permission:leaves.create')->group(function () {
             Route::get('create', 'create')->name('leave.create');
             Route::post('store', 'store')->name('leave.store');
             Route::post('import', 'import')->name('leave.import');
-        });
-        Route::middleware('permission:leaves.hr-approve')->group(function () {
-            Route::put('change-status', 'changeStatus')->name('leave.change_status');
         });
         Route::middleware('permission:leaves.delete')->group(function () {
             Route::delete('{id}/delete', 'destroy')->name('leave.destroy');

@@ -33,41 +33,12 @@
             </td>
             <td>
                 @can('leaves.view')
-                <button type="button" class="btn btn-secondary btn-sm" title="View"
-                        data-bs-toggle="modal" data-bs-target="#viewLeaveModal">
+                <a href="{{ route('leave.show', $application->id) }}" class="btn btn-secondary btn-sm" title="View">
                     <i style="height: 12px; width: 12px" data-feather="eye"></i>
-                </button>
-                {{-- Include View Modal --}}
-                @include('leave.partials.view_modal')
+                </a>
                 @endcan
 
-                @if ($application->status == 'pending')
-                    @can('leaves.hr-approve')
-                    <form class="d-inline" action="{{ route('leave.change_status') }}"
-                          method="post">
-                        @method('put')
-                        @csrf
-                        <input type="hidden" name="id" value="{{ $application->id }}">
-                        <input type="hidden" name="status" value="approved">
-                        <button type="submit" class="btn btn-success btn-sm confirmApprove"
-                                title="Approve">
-                            <i style="height: 12px; width: 12px" data-feather="check"></i>
-                        </button>
-                    </form>
-                    <form class="d-inline" method="post"
-                          action="{{ route('leave.change_status') }}">
-                        @method('put')
-                        @csrf
-                        <input type="hidden" name="id"
-                               value="{{ $application->id }}">
-                        <input type="hidden" name="status" value="rejected">
-                        <button type="submit" class="btn btn-danger btn-sm confirmReject"
-                                title="Reject">
-                            <i style="height: 12px; width: 12px" data-feather="x"></i>
-                        </button>
-                    </form>
-                    @endcan
-                @endif
+
                 @can('leaves.delete')
                 <form action="{{ route('leave.destroy', $application->id) }}"
                       method="POST" class="d-inline">

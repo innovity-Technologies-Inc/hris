@@ -111,7 +111,7 @@ class LeavesController extends Controller
         try {
             DB::transaction(function () use ($request, $employee_id, $plan_id) {
                 Log::info('Saving leave request for '.$employee_id);
-                Leave::create($request->all());
+                $newLeave = Leave::create($request->all());
                 if ($request->status == 'approved'){
                     $leave = LeaveCount::where('employee_id', $employee_id)
                         ->where('plan_id', $plan_id)
@@ -128,6 +128,8 @@ class LeavesController extends Controller
                             'leave_taken' => $request->leave_count
                         ]);
                     }
+                } else {
+                    $newLeave->startWorkflow('leave');
                 }
             });
 
@@ -168,54 +170,14 @@ class LeavesController extends Controller
         ]);
     }
 
-    public function changeStatus(Request $request){
-        // Restricted for Employees
-        if (auth()->user()->user_type === UserType::Employee) {
-            abort(403, 'Unauthorized access.');
-        }
-
-        $id = $request->input('id');
-        $status = $request->input('status');
-        $leave_request = Leave::find($id);
-
-        try {
-            if($status == 'approved') {
-                DB::transaction(function () use ($leave_request) {
-                    $leave = LeaveCount::where('employee_id', $leave_request->employee_id)
-                        ->where('plan_id', $leave_request->plan_id)->first();
-
-                    if ($leave){
-                        $leave->increment('leave_taken', $leave_request->leave_count);
-                    }else{
-                        LeaveCount::create([
-                            'employee_id' => $leave_request->employee_id,
-                            'plan_id' => $leave_request->plan_id,
-                            'leave_taken' => $leave_request->leave_count
-                        ]);
-                    }
-
-                    $leave_request->status = 'approved';
-                    $leave_request->save();
-
-                });
-            }
-
-            if($status == 'rejected') {
-                $leave_request->status = 'rejected';
-                $leave_request->save();
-            }
-        }catch (\Exception $e){
-            Log::error($e->getMessage());
-            return redirect()->back()->with([
-                'message' => 'Something went wrong. Please try again later.',
-                'alert-type' => 'error'
-            ]);
-        }
-
-        return redirect()->back()->with([
-            'message' => 'Leave Request Status Changed Successfully',
-            'alert-type' => 'success'
-        ]);
+    public function show($id)
+    {
+        $title = 'Leave Data';
+        $section = 'Leave Management';
+        $section_url = route('leave.index');
+        $sub_section = 'View';
+        $leaveData = Leave::find($id);
+        return view('leave.view', compact('title', 'section', 'sub_section', 'section_url', 'leaveData'));
     }
 
     public function import(Request $request)
