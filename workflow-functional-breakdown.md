@@ -6,9 +6,20 @@ This document provides a complete, end-to-end breakdown of how the Innovity Appr
 The engine relies on a strict hierarchy of database tables to track state:
 
 *   **`Workflow` (`vendor/innovity/laravel-approval-engine/src/Models/Workflow.php`) (The Blueprint):** Defines the overarching rules for a specific module (like "Promotion"). It tracks things like whether the flow is `Sequential` (one after another) or `Random` (anyone can approve in any order), and the required threshold of approvals.
+    *   **Table:** `approval_workflows`
+    *   **Fields:** `id`, `name`, `module` (e.g., 'promotion'), `type` (sequential/random), `total_steps`, `required_approvals`, `is_active`, `created_at`, `updated_at`
+
 *   **`WorkflowStep` (`vendor/innovity/laravel-approval-engine/src/Models/WorkflowStep.php`) (The Blueprint Steps):** The individual tiers inside a Workflow (e.g., Step 1: Section, Step 2: Department, Step 3: Division).
+    *   **Table:** `approval_workflow_steps`
+    *   **Fields:** `id`, `workflow_id` (Foreign Key), `name`, `step_order` (1, 2, 3...), `required_user_type` (e.g., 'department'), `created_at`, `updated_at`
+
 *   **`ApprovalRequest` (`vendor/innovity/laravel-approval-engine/src/Models/ApprovalRequest.php`) (The Master Tracker):** When a Promotion is created, one of these is generated. This is the master record that tracks the *overall* progress of that specific Promotion through the blueprint. 
+    *   **Table:** `approval_requests`
+    *   **Fields:** `id`, `workflow_id`, `approvable_type` (e.g., 'App\Models\Payroll\Promotion'), `approvable_id` (e.g., 7), `status` ('pending', 'approved', 'rejected'), `payload` (JSON), `created_at`, `updated_at`
+
 *   **`ApprovalStepRequest` (`vendor/innovity/laravel-approval-engine/src/Models/ApprovalStepRequest.php`) (The Active Token):** These are the individual "tasks" assigned to approvers. The engine generates these one by one (or all at once if random) to ask for a yes/no decision.
+    *   **Table:** `approval_step_requests`
+    *   **Fields:** `id`, `approval_request_id` (Foreign Key to master tracker), `workflow_step_id` (Foreign Key to blueprint step), `approver_id` (ID of user who took action), `status` ('pending', 'approved', 'rejected'), `comments`, `action_taken_at`, `created_at`, `updated_at`
 
 ## Step-by-Step Functional Cycle
 
