@@ -14,7 +14,7 @@ use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Innovity\ApprovalEngine\Services\WorkflowGenerator;
+
 
 class PromotionController extends Controller
 {
@@ -59,7 +59,7 @@ class PromotionController extends Controller
             'section_url', 'promotionData', 'designations', 'employees'));
     }
 
-    public function save(Request $request, WorkflowGenerator $generator, $promotionData = null){
+    public function save(Request $request, $promotionData = null){
         $request->validate([
             'employee_id'              => 'required|exists:employees,id',
             'previous_designation'     => 'required|exists:designations,id',
@@ -109,7 +109,7 @@ class PromotionController extends Controller
                     $promotion = $this->payrollService->promotionDataStore($data);
                     
                     // Trigger approval workflow
-                    $generator->generate($promotion, 'promotion');
+                    $promotion->startWorkflow('promotion');
                 }
         }catch(\Exception $e){
             Log::error($e->getMessage());
