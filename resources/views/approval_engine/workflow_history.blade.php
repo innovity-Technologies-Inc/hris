@@ -131,7 +131,7 @@
                                         showLoaderOnConfirm: true,
                                         preConfirm: () => {
                                             actionInput.value = actionType;
-                                            return axios.post(form.action, new FormData(form))
+                                            return axios.post(form.getAttribute('action'), new FormData(form))
                                                 .then(response => {
                                                     return response.data;
                                                 })
