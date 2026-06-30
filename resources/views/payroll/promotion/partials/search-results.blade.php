@@ -96,7 +96,6 @@
                                         </a>
                                         @endcan
 
-                                        @endcan
                                     @endif
                                     @can('promotions.delete')
                                     <form class="d-inline"
