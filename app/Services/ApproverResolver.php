@@ -22,18 +22,27 @@ class ApproverResolver implements ApproverResolverInterface
         $requestingUser = null;
         if (method_exists($approvable, 'user')) {
             $requestingUser = $approvable->user;
-        } elseif (method_exists($approvable, 'getEmployee') && $approvable->getEmployee) {
-            $requestingUser = $approvable->getEmployee->user ?? null;
+        } elseif (method_exists($approvable, 'getEmployee')) {
+            $emp = $approvable->getEmployee()->withoutGlobalScopes()->first();
+            $requestingUser = $emp ? $emp->user : null;
         } elseif (method_exists($approvable, 'creator')) {
             $requestingUser = $approvable->creator;
         }
         
         // Ensure we have the user and their organizational office info
-        if (!$requestingUser || !$requestingUser->employee || !$requestingUser->employee->officeInfo) {
+        if (!$requestingUser) {
             return [];
         }
 
-        $officeInfo = $requestingUser->employee->officeInfo;
+        $employee = $requestingUser->employee()->withoutGlobalScopes()->with(['officeInfo' => function($q) {
+            $q->withoutGlobalScopes();
+        }])->first();
+
+        if (!$employee || !$employee->officeInfo) {
+            return [];
+        }
+
+        $officeInfo = $employee->officeInfo;
 
         // Convert the required string from the workflow step into our UserType enum
         $enumValue = UserType::tryFrom($requiredUserType);
@@ -45,15 +54,18 @@ class ApproverResolver implements ApproverResolverInterface
             if ($enumValue !== UserType::Group) {
                 // Apply organization scope filtering to find the correct UserType
                 // that belongs to the same organizational level as the requesting user.
-                $query->whereHas('employee.officeInfo', function ($q) use ($enumValue, $officeInfo) {
-                    match ($enumValue) {
-                        UserType::Company => $q->where('current_company_id', $officeInfo->current_company_id),
-                        UserType::Division => $q->where('current_division_id', $officeInfo->current_division_id),
-                        UserType::Department => $q->where('current_department_id', $officeInfo->current_department_id),
-                        UserType::Section => $q->where('current_section_id', $officeInfo->current_section_id),
-                        UserType::BusinessUnit => $q->where('current_business_unit_id', $officeInfo->current_business_unit_id),
-                        default => $q,
-                    };
+                $query->whereHas('employee', function ($q) use ($enumValue, $officeInfo) {
+                    $q->withoutGlobalScopes()->whereHas('officeInfo', function ($q2) use ($enumValue, $officeInfo) {
+                        $q2->withoutGlobalScopes();
+                        match ($enumValue) {
+                            UserType::Company => $q2->where('current_company_id', $officeInfo->current_company_id),
+                            UserType::Division => $q2->where('current_division_id', $officeInfo->current_division_id),
+                            UserType::Department => $q2->where('current_department_id', $officeInfo->current_department_id),
+                            UserType::Section => $q2->where('current_section_id', $officeInfo->current_section_id),
+                            UserType::BusinessUnit => $q2->where('current_business_unit_id', $officeInfo->current_business_unit_id),
+                            default => $q2,
+                        };
+                    });
                 });
             }
 
