@@ -5,15 +5,15 @@ This document provides a complete, end-to-end breakdown of how the Innovity Appr
 ## The Core Database Models
 The engine relies on a strict hierarchy of database tables to track state:
 
-*   **`Workflow` (The Blueprint):** Defines the overarching rules for a specific module (like "Promotion"). It tracks things like whether the flow is `Sequential` (one after another) or `Random` (anyone can approve in any order), and the required threshold of approvals.
-*   **`WorkflowStep` (The Blueprint Steps):** The individual tiers inside a Workflow (e.g., Step 1: Section, Step 2: Department, Step 3: Division).
-*   **`ApprovalRequest` (The Master Tracker):** When a Promotion is created, one of these is generated. This is the master record that tracks the *overall* progress of that specific Promotion through the blueprint. 
-*   **`ApprovalStepRequest` (The Active Token):** These are the individual "tasks" assigned to approvers. The engine generates these one by one (or all at once if random) to ask for a yes/no decision.
+*   **`Workflow` (`vendor/innovity/laravel-approval-engine/src/Models/Workflow.php`) (The Blueprint):** Defines the overarching rules for a specific module (like "Promotion"). It tracks things like whether the flow is `Sequential` (one after another) or `Random` (anyone can approve in any order), and the required threshold of approvals.
+*   **`WorkflowStep` (`vendor/innovity/laravel-approval-engine/src/Models/WorkflowStep.php`) (The Blueprint Steps):** The individual tiers inside a Workflow (e.g., Step 1: Section, Step 2: Department, Step 3: Division).
+*   **`ApprovalRequest` (`vendor/innovity/laravel-approval-engine/src/Models/ApprovalRequest.php`) (The Master Tracker):** When a Promotion is created, one of these is generated. This is the master record that tracks the *overall* progress of that specific Promotion through the blueprint. 
+*   **`ApprovalStepRequest` (`vendor/innovity/laravel-approval-engine/src/Models/ApprovalStepRequest.php`) (The Active Token):** These are the individual "tasks" assigned to approvers. The engine generates these one by one (or all at once if random) to ask for a yes/no decision.
 
 ## Step-by-Step Functional Cycle
 
 ### 1. Initiation (Creating the Request)
-**The Hook (`Approvable` Trait):** 
+**The Hook (`Approvable` Trait in `vendor/innovity/laravel-approval-engine/src/Traits/Approvable.php`):** 
 The core models (e.g., `Promotion`, `Increment`) use the `Approvable` trait. It is important to note that **this trait does not automatically trigger the workflow** when a model is saved. This is intentional to prevent accidental workflows starting when users save "Drafts" or when running database seeders.
 
 Instead, the `Approvable` trait provides a helper method called `startWorkflow()`.
@@ -30,31 +30,31 @@ When this generator is called, it performs the following:
 3. **Hands off to the Dealer:** It passes the new master request to the `TaskEmitter` to figure out what happens first.
 4. **Broadcasts an Event:** It dispatches the `ApprovalRequested` system event.
 
-### 2. Task Emission (`TaskEmitter`)
+### 2. Task Emission (`TaskEmitter` in `vendor/innovity/laravel-approval-engine/src/Services/TaskEmitter.php`)
 The `TaskEmitter`'s only job is to "deal the cards" (generate `ApprovalStepRequests`). 
 *   **If the Workflow is Random:** It creates a step request for *every single step* in the blueprint simultaneously. 
 *   **If the Workflow is Sequential:** It looks at the step orders (1, 2, 3), finds the next step that hasn't been created yet, and emits *only* that one step request.
 
 ### 3. Notification Routing & Approver Resolution
 **Catching the Step:** 
-In `AppServiceProvider`, there is an Eloquent event listener waiting for any `ApprovalStepRequest` to be created. 
+In `AppServiceProvider` (`app/Providers/AppServiceProvider.php`), there is an Eloquent event listener waiting for any `ApprovalStepRequest` to be created. 
 
 **Resolving Approvers (`ApproverResolverInterface`):** 
-The engine generates a step requiring a specific authority level (e.g., "Department"), but the engine itself knows nothing about your company structure. It relies on your application's `App\Services\ApproverResolver` to find the right person.
+The engine generates a step requiring a specific authority level (e.g., "Department"), but the engine itself knows nothing about your company structure. It relies on your application's `App\Services\ApproverResolver` (`app/Services/ApproverResolver.php`) to find the right person.
 *   The resolver looks at the employee being promoted and identifies who holds the required authority (finding the user whose `UserType` is "Department" and shares the same `current_department_id` as the employee).
 *   *Note: This resolver is designed to bypass standard global scopes (`withoutGlobalScopes`) to ensure that routing succeeds regardless of which user triggered the event.*
 
 **Dispatching Alerts:** 
 For every resolved approver found, the system immediately:
-1. Sends an email via `ApprovalActionRequiredNotification`.
-2. Generates an in-app database notification via `NotificationServices::createNotification`, complete with the correct redirect URL.
+1. Sends an email via `ApprovalActionRequiredNotification` (`app/Notifications/Approval/ApprovalActionRequiredNotification.php`).
+2. Generates an in-app database notification via `NotificationServices::createNotification` (`app/Services/Setting/NotificationServices.php`), complete with the correct redirect URL.
 
 ### 4. User Interaction (The Frontend)
-*   **Viewing the Timeline:** The targeted approver clicks the notification and is routed to the view page. The `workflow_history.blade.php` component reads the pending `ApprovalStepRequest`.
+*   **Viewing the Timeline:** The targeted approver clicks the notification and is routed to the view page. The `workflow_history.blade.php` component (`resources/views/approval_engine/workflow_history.blade.php`) reads the pending `ApprovalStepRequest`.
 *   **Authorization Check:** The blade file re-runs the `ApproverResolver` in real-time. If the currently logged-in user is on the list of authorized approvers for that specific pending step, the "Approve" and "Reject" buttons are rendered.
-*   **Submitting the Action:** When the user clicks Approve/Reject, an Axios AJAX `POST` request is fired to the `ApprovalActionController`.
+*   **Submitting the Action:** When the user clicks Approve/Reject, an Axios AJAX `POST` request is fired to the `ApprovalActionController` (`app/Http/Controllers/ApprovalActionController.php`).
 
-### 5. Package Processing (`ApprovalResolver`)
+### 5. Package Processing (`ApprovalResolver` in `vendor/innovity/laravel-approval-engine/src/Services/ApprovalResolver.php`)
 This acts as the "Judge" of the engine. When the AJAX request hits, it evaluates the decision:
 
 **When an Approver clicks "Approve":**
@@ -69,7 +69,7 @@ This acts as the "Judge" of the engine. When the AJAX request hits, it evaluates
 2. **Sequential:** If one person rejects it, the Judge immediately kills the entire workflow. The Master Request becomes `rejected`, and it fires the `ApprovalRejected` event.
 3. **Random:** If it's random, it evaluates whether to wait for more approvals or fail immediately if the mathematical threshold can no longer be reached.
 
-### 6. Finalizing the Core Data (`WorkflowStatusListener`)
+### 6. Finalizing the Core Data (`WorkflowStatusListener` in `app/Listeners/WorkflowStatusListener.php`)
 Once the `Innovity\ApprovalEngine` finishes its mathematics, its job is strictly done. It broadcasts the final result back to the main Laravel application.
 
 *   Your custom `WorkflowStatusListener` intercepts the `ApprovalCompleted` or `ApprovalRejected` events.
