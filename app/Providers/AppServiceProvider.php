@@ -106,7 +106,11 @@ class AppServiceProvider extends ServiceProvider
                     if (!empty($approverIds)) {
                         $users = \App\Models\User::whereIn('id', $approverIds)->get();
                         foreach ($users as $user) {
-                            $user->notify(new \App\Notifications\Approval\ApprovalActionRequiredNotification($stepRequest));
+                            try {
+                                $user->notify(new \App\Notifications\Approval\ApprovalActionRequiredNotification($stepRequest));
+                            } catch (\Exception $e) {
+                                \Illuminate\Support\Facades\Log::error('Mail Notification error: ' . $e->getMessage());
+                            }
                             
                             try {
                                 $module = ucfirst($stepRequest->approvalRequest->workflow->module_name ?? 'Item');
