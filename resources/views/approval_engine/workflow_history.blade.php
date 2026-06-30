@@ -114,46 +114,53 @@
                                 const form = document.getElementById('approvalForm');
                                 const actionInput = document.getElementById('actionInput');
 
-                                document.getElementById('btnApprove').addEventListener('click', function () {
+                                function submitApprovalAction(actionType, confirmMessage) {
                                     if (!form.checkValidity()) {
                                         form.reportValidity();
                                         return;
                                     }
+                                    
                                     Swal.fire({
-                                        title: 'Are you sure you want to approve this request?',
+                                        title: confirmMessage,
                                         text: 'You won\'t be able to revert!',
                                         icon: 'warning',
                                         showCancelButton: true,
                                         confirmButtonColor: '#3085d6',
                                         cancelButtonColor: '#d33',
-                                        confirmButtonText: 'Confirm'
+                                        confirmButtonText: 'Confirm',
+                                        showLoaderOnConfirm: true,
+                                        preConfirm: () => {
+                                            actionInput.value = actionType;
+                                            return axios.post(form.action, new FormData(form))
+                                                .then(response => {
+                                                    return response.data;
+                                                })
+                                                .catch(error => {
+                                                    Swal.showValidationMessage(
+                                                        `Request failed: ${error.response?.data?.message || error.message}`
+                                                    );
+                                                });
+                                        },
+                                        allowOutsideClick: () => !Swal.isLoading()
                                     }).then((result) => {
                                         if (result.isConfirmed) {
-                                            actionInput.value = 'approve';
-                                            form.submit();
+                                            Swal.fire({
+                                                title: 'Success!',
+                                                text: result.value.message,
+                                                icon: 'success'
+                                            }).then(() => {
+                                                window.location.reload();
+                                            });
                                         }
                                     });
+                                }
+
+                                document.getElementById('btnApprove').addEventListener('click', function () {
+                                    submitApprovalAction('approve', 'Are you sure you want to approve this request?');
                                 });
 
                                 document.getElementById('btnReject').addEventListener('click', function () {
-                                    if (!form.checkValidity()) {
-                                        form.reportValidity();
-                                        return;
-                                    }
-                                    Swal.fire({
-                                        title: 'Are you sure you want to reject this request?',
-                                        text: 'You won\'t be able to revert!',
-                                        icon: 'warning',
-                                        showCancelButton: true,
-                                        confirmButtonColor: '#3085d6',
-                                        cancelButtonColor: '#d33',
-                                        confirmButtonText: 'Confirm'
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-                                            actionInput.value = 'reject';
-                                            form.submit();
-                                        }
-                                    });
+                                    submitApprovalAction('reject', 'Are you sure you want to reject this request?');
                                 });
                             });
                         </script>

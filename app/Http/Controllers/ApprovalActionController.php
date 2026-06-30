@@ -25,9 +25,9 @@ class ApprovalActionController extends Controller
             $message = 'Request successfully rejected!';
         }
 
-        return redirect()->back()->with([
-            'message' => $message,
-            'alert-type' => 'success'
+        return response()->json([
+            'status' => 'success',
+            'message' => $message
         ]);
     }
 }
