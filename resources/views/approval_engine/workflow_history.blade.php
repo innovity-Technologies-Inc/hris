@@ -90,7 +90,7 @@
                     <hr class="my-4">
                     <div class="bg-primary bg-opacity-10 border border-primary border-opacity-25 rounded p-4">
                         <h5 class="fw-bold text-primary mb-3"><i class="mdi mdi-gavel"></i> Your Action Required</h5>
-                        <p class="text-muted mb-3">You are authorized to approve or reject this request as a <strong>{{ ucfirst(str_replace('_', ' ', $pendingStep->workflowStep->required_user_type)) }}</strong>.</p>
+                        <p class="text-muted mb-3">You are authorized to approve or reject this request as a <strong>{{ ucfirst(str_replace('_', ' ', $pendingStep->workflowStep->required_user_type)) }} Authority</strong>.</p>
                         
                         <form action="{{ route('approval.action', $pendingStep->id) }}" method="POST">
                             @csrf
