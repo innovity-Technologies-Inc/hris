@@ -92,21 +92,71 @@
                         <h5 class="fw-bold text-primary mb-3"><i class="mdi mdi-gavel"></i> Your Action Required</h5>
                         <p class="text-muted mb-3">You are authorized to approve or reject this request as a <strong>{{ ucfirst(str_replace('_', ' ', $pendingStep->workflowStep->required_user_type)) }} Authority</strong>.</p>
                         
-                        <form action="{{ route('approval.action', $pendingStep->id) }}" method="POST">
+                        <form action="{{ route('approval.action', $pendingStep->id) }}" method="POST" id="approvalForm">
                             @csrf
+                            <input type="hidden" name="action" id="actionInput" value="">
                             <div class="mb-3">
                                 <label for="comments" class="form-label fw-bold">Remarks / Comments <span class="text-danger">*</span></label>
                                 <textarea name="comments" id="comments" rows="3" class="form-control" placeholder="Please provide your remarks..." required></textarea>
                             </div>
                             <div class="d-flex gap-3">
-                                <button type="submit" name="action" value="approve" class="btn btn-success px-4" onclick="return confirm('Are you sure you want to APPROVE this request?');">
+                                <button type="button" id="btnApprove" class="btn btn-success px-4">
                                     <i class="mdi mdi-check-circle"></i> Approve Request
                                 </button>
-                                <button type="submit" name="action" value="reject" class="btn btn-danger px-4" onclick="return confirm('Are you sure you want to REJECT this request?');">
+                                <button type="button" id="btnReject" class="btn btn-danger px-4">
                                     <i class="mdi mdi-close-circle"></i> Reject Request
                                 </button>
                             </div>
                         </form>
+                        
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function () {
+                                const form = document.getElementById('approvalForm');
+                                const actionInput = document.getElementById('actionInput');
+
+                                document.getElementById('btnApprove').addEventListener('click', function () {
+                                    if (!form.checkValidity()) {
+                                        form.reportValidity();
+                                        return;
+                                    }
+                                    Swal.fire({
+                                        title: 'Are you sure you want to approve this request?',
+                                        text: 'You won\'t be able to revert!',
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: 'Confirm'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            actionInput.value = 'approve';
+                                            form.submit();
+                                        }
+                                    });
+                                });
+
+                                document.getElementById('btnReject').addEventListener('click', function () {
+                                    if (!form.checkValidity()) {
+                                        form.reportValidity();
+                                        return;
+                                    }
+                                    Swal.fire({
+                                        title: 'Are you sure you want to reject this request?',
+                                        text: 'You won\'t be able to revert!',
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: 'Confirm'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            actionInput.value = 'reject';
+                                            form.submit();
+                                        }
+                                    });
+                                });
+                            });
+                        </script>
                     </div>
                 @endif
                 
