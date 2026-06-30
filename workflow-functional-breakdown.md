@@ -14,12 +14,14 @@ The engine relies on a strict hierarchy of database tables to track state:
 
 ### 1. Initiation (Creating the Request)
 **The Hook (`Approvable` Trait):** 
-The core models (e.g., `Promotion`, `Increment`) use the `Approvable` trait. It is important to note that **this trait does not automatically trigger the workflow**. It is purely structural, providing the Eloquent relationships needed to connect the model to the engine.
+The core models (e.g., `Promotion`, `Increment`) use the `Approvable` trait. It is important to note that **this trait does not automatically trigger the workflow** when a model is saved. This is intentional to prevent accidental workflows starting when users save "Drafts" or when running database seeders.
 
-**The Ignition (`WorkflowGenerator`):**
-To prevent accidental triggers (such as when saving drafts or running seeders), the system requires the engine to be started manually. In your controller (e.g., `PromotionController@save`), the `WorkflowGenerator` is injected and triggered explicitly:
+Instead, the `Approvable` trait provides a helper method called `startWorkflow()`.
+
+**The Ignition:**
+To start the engine, you must manually call the helper method from your controller (e.g., `PromotionController@save`) right after the model is created and ready for approval:
 ```php
-$generator->generate($promotion, 'promotion');
+$promotion->startWorkflow('promotion');
 ```
 
 When this generator is called, it performs the following:
