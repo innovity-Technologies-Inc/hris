@@ -48,17 +48,20 @@ The `TaskEmitter`'s only job is to "deal the cards" (generate `ApprovalStepReque
 
 ### 3. Notification Routing & Approver Resolution
 **Catching the Step:** 
-In `AppServiceProvider` (`app/Providers/AppServiceProvider.php`), there is an Eloquent event listener waiting for any `ApprovalStepRequest` to be created. 
+In `AppServiceProvider` (`app/Providers/AppServiceProvider.php`), there is an Eloquent event listener waiting for any `ApprovalStepRequest` to be created. Because it is attached to the database `created` event inside the Service Provider, the notification logic is entirely decoupled from your controllers.
 
 **Resolving Approvers (`ApproverResolverInterface`):** 
 The engine generates a step requiring a specific authority level (e.g., "Department"), but the engine itself knows nothing about your company structure. It relies on your application's `App\Services\ApproverResolver` (`app/Services/ApproverResolver.php`) to find the right person.
-*   The resolver looks at the employee being promoted and identifies who holds the required authority (finding the user whose `UserType` is "Department" and shares the same `current_department_id` as the employee).
+*   The resolver looks at the employee and identifies who holds the required authority (finding the user whose `UserType` is "Department" and shares the same `current_department_id` as the employee).
 *   *Note: This resolver is designed to bypass standard global scopes (`withoutGlobalScopes`) to ensure that routing succeeds regardless of which user triggered the event.*
 
-**Dispatching Alerts:** 
-For every resolved approver found, the system immediately:
-1. Sends an email via `ApprovalActionRequiredNotification` (`app/Notifications/Approval/ApprovalActionRequiredNotification.php`).
-2. Generates an in-app database notification via `NotificationServices::createNotification` (`app/Services/Setting/NotificationServices.php`), complete with the correct redirect URL.
+**Generating the Notifications:** 
+For every resolved approver found (e.g., User IDs `[45, 82]`), the system loops through them and generates two types of notifications:
+
+1. **Email Notification:** It uses Laravel's standard Notification system to send an email via `ApprovalActionRequiredNotification` (`app/Notifications/Approval/ApprovalActionRequiredNotification.php`).
+2. **Dashboard (In-App) Notification:** 
+   * It dynamically builds the redirect URL by taking the module name from the workflow (e.g., `leave`) and checking if a route named `{module_name}.show` exists. If so, it generates the route (e.g., `hrms.com/leaves/5/view`).
+   * Finally, it triggers `NotificationServices::createNotification` (`app/Services/Setting/NotificationServices.php`) to generate the bell-icon alert in the top right corner of the dashboard with the dynamic URL attached.
 
 ### 4. User Interaction (The Frontend)
 *   **Viewing the Timeline:** The targeted approver clicks the notification and is routed to the view page. The `workflow_history.blade.php` component (`resources/views/approval_engine/workflow_history.blade.php`) reads the pending `ApprovalStepRequest`.
