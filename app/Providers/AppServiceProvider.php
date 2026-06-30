@@ -107,6 +107,19 @@ class AppServiceProvider extends ServiceProvider
                         $users = \App\Models\User::whereIn('id', $approverIds)->get();
                         foreach ($users as $user) {
                             $user->notify(new \App\Notifications\Approval\ApprovalActionRequiredNotification($stepRequest));
+                            
+                            try {
+                                $module = ucfirst($stepRequest->approvalRequest->workflow->module_name ?? 'Item');
+                                app(\App\Services\Setting\NotificationServices::class)->createNotification(
+                                    $user->user_type->value ?? $user->user_type,
+                                    $user->id,
+                                    'Approval Action Required',
+                                    "You have a new $module approval request pending your action.",
+                                    ['url' => '/' . ($stepRequest->approvalRequest->workflow->module_name ?? ''), 'type' => 'approval_request']
+                                );
+                            } catch (\Exception $e) {
+                                \Illuminate\Support\Facades\Log::error('Custom Notification error: ' . $e->getMessage());
+                            }
                         }
                     }
                 }
