@@ -33,7 +33,13 @@
                                 </td>
                                 <td>
                                     <div class="d-flex flex-column">
-                                        <h6 class="mb-1 fw-bold text-dark">{{ $notification->title }}</h6>
+                                        @if(isset($notification->data['url']))
+                                            <a href="{{ url($notification->data['url']) }}" class="text-decoration-none">
+                                                <h6 class="mb-1 fw-bold text-dark">{{ $notification->title }}</h6>
+                                            </a>
+                                        @else
+                                            <h6 class="mb-1 fw-bold text-dark">{{ $notification->title }}</h6>
+                                        @endif
                                         <p class="text-muted small mb-0">{{ $notification->message }}</p>
                                     </div>
                                 </td>
@@ -50,6 +56,10 @@
                                         
                                         @if(isset($notification->data['employee_id']))
                                         <a href="{{ route('employee.profile.general_informations', $notification->data['employee_id']) }}" class="btn btn-sm btn-info text-white" title="View Related Profile">
+                                            <i class="mdi mdi-account"></i>
+                                        </a>
+                                        @elseif(isset($notification->data['url']))
+                                        <a href="{{ url($notification->data['url']) }}" class="btn btn-sm btn-info text-white" title="View Details">
                                             <i class="mdi mdi-eye"></i>
                                         </a>
                                         @endif

@@ -1,5 +1,8 @@
 @forelse($notifications as $notification)
-    <a href="javascript:void(0);" class="dropdown-item notify-item text-muted link-primary" onclick="markNotificationRead({{ $notification->id }})">
+    @php
+        $redirectUrl = isset($notification->data['employee_id']) ? route('employee.profile.general_informations', $notification->data['employee_id']) : (isset($notification->data['url']) ? url($notification->data['url']) : null);
+    @endphp
+    <a href="javascript:void(0);" class="dropdown-item notify-item text-muted link-primary" onclick="markNotificationRead({{ $notification->id }}{{ $redirectUrl ? ", '$redirectUrl'" : '' }})">
         <div class="notify-icon bg-soft-primary">
             <i class="fas fa-info-circle text-primary"></i>
         </div>

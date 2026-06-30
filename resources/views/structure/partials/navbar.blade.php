@@ -71,13 +71,17 @@ function fetchHeaderNotifications() {
     });
 }
 
-function markNotificationRead(id) {
+function markNotificationRead(id, redirectUrl = null) {
     $.ajax({
         url: "/notifications/" + id + "/mark-as-read",
         method: "POST",
         data: { _token: "{{ csrf_token() }}" },
         success: function() {
-            fetchHeaderNotifications();
+            if (redirectUrl) {
+                window.location.href = redirectUrl;
+            } else {
+                fetchHeaderNotifications();
+            }
         }
     });
 }
