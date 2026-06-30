@@ -113,7 +113,7 @@ class AppServiceProvider extends ServiceProvider
                             }
                             
                             try {
-                                $moduleName = $stepRequest->approvalRequest->workflow->module_name ?? '';
+                                $moduleName = $stepRequest->approvalRequest->workflow->module ?? '';
                                 $module = ucfirst($moduleName ?: 'Item');
                                 $url = \Illuminate\Support\Facades\Route::has($moduleName . '.show') 
                                         ? route($moduleName . '.show', $approvable->id, false) 

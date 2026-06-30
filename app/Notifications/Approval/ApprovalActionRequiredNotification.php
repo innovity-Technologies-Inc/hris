@@ -34,7 +34,7 @@ class ApprovalActionRequiredNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $moduleName = $this->stepRequest->approvalRequest->workflow->module_name ?? '';
+        $moduleName = $this->stepRequest->approvalRequest->workflow->module ?? '';
         $module = ucfirst($moduleName ?: 'Item');
         
         $approvable = $this->stepRequest->approvalRequest->approvable;
@@ -57,7 +57,7 @@ class ApprovalActionRequiredNotification extends Notification
      */
     public function toArray(object $notifiable): array
     {
-        $moduleName = $this->stepRequest->approvalRequest->workflow->module_name ?? '';
+        $moduleName = $this->stepRequest->approvalRequest->workflow->module ?? '';
         $module = ucfirst($moduleName ?: 'Item');
         
         $approvable = $this->stepRequest->approvalRequest->approvable;
