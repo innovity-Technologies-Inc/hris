@@ -101,19 +101,19 @@
                                     </div>
                                     <div class="row g-3 text-center">
                                         <div class="col-4">
-                                            <div class="p-2 rounded shadow-sm">
+                                            <div>
                                                 <span class="d-block text-muted small mb-1">Limit</span>
                                                 <span class="h4 mb-0 fw-bold text-primary" id="card-plan-limit">0</span>
                                             </div>
                                         </div>
                                         <div class="col-4">
-                                            <div class="p-2 rounded shadow-sm">
+                                            <div>
                                                 <span class="d-block text-muted small mb-1">Taken</span>
                                                 <span class="h4 mb-0 fw-bold text-danger" id="card-plan-taken">0</span>
                                             </div>
                                         </div>
                                         <div class="col-4">
-                                            <div class="p-2 rounded shadow-sm">
+                                            <div>
                                                 <span class="d-block text-muted small mb-1">Remaining</span>
                                                 <span class="h4 mb-0 fw-bold text-success" id="card-plan-remaining">0</span>
                                             </div>
