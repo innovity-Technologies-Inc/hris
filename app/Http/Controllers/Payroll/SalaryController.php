@@ -144,13 +144,12 @@ class SalaryController extends Controller
         $data = $this->payrollService->payrollProcessDataValidation($request);
         try{
             if ($id == null) {
-                $this->payrollService->salaryProcess($data);
+                $process = $this->payrollService->salaryProcess($data);
+                $process->startWorkflow('salary');
             }else{
                 Log::info('Updating existing salary process.', ['process_id' => $id]);
-                DB::transaction(function () use ($id, $data) {
-                    $this->payrollService->salaryDelete($id);
-                    $this->payrollService->salaryProcess($data, $id);
-                });
+                $process = $this->payrollService->salaryProcess($data, $id);
+                $process->startWorkflow('salary');
             }
         }catch (\Exception $exception){
             Log::error('Salary generation failed.', [
@@ -179,7 +178,7 @@ class SalaryController extends Controller
         $salary_month = $process->salary_month;
         $salaryes = Payroll::where('process_id', $id)->orderBy('created_at', 'desc')->paginate(10);
         return view('payroll.salary.view', compact('title', 'section', 'section_url', 'sub_section',
-            'salaryes', 'salary_month'));
+            'salaryes', 'salary_month', 'process'));
     }
 
     public function showPayroll($id)

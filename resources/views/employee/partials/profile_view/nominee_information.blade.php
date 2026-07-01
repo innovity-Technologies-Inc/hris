@@ -7,14 +7,14 @@
                     <div class="avatar-lg rounded-circle mx-auto mb-4 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; background-color: rgba(151, 64, 99, 0.1);">
                         <i class="fas fa-users" style="font-size: 40px; color: #974063;"></i>
                     </div>
-                    <h4 class="fw-bold text-dark">Incomplete Nominee Information</h4>
+                    <h4 class="fw-bold text-dark">Incomplete Emergency Contact Information</h4>
                     <p class="text-muted mb-4 mx-auto" style="max-width: 500px;">
-                        Please provide your nominee details to proceed with the profile verification.
+                        Please provide your emergency contact details to proceed with the profile verification.
                     </p>
                     @can('employee-management.create')
                     <a href="{{ isset($employee_nominee_info) ? route('employee.nominee_information.edit', $employee->id) : route('employee.nominee_information.create', $employee->id) }}"
                         class="btn btn-lg px-5 shadow-sm text-white" style="background-color: #974063;">
-                        <i class="fas fa-plus me-1"></i> Complete Nominee Now
+                        <i class="fas fa-plus me-1"></i> Complete Emergency Contact Now
                     </a>
                     @endcan
                 </div>
@@ -69,7 +69,7 @@
                                         <table class="table table-borderless mb-0">
                                             <tbody>
                                             <tr>
-                                                <td class="fw-semibold" style="width: 40%;">Nominee Name</td>
+                                                <td class="fw-semibold" style="width: 40%;">Emergency Contact Name</td>
                                                 <td>{{ $employee_nominee_info->nominee_name ?? 'N/A' }}</td>
                                             </tr>
                                             <tr>
@@ -133,7 +133,7 @@
                                     <h5 class="fs-16 text-dark fw-semibold mb-3 mt-4">Photo</h5>
                                     <div class="card bg-light border-0">
                                         <div class="card-body text-center">
-                                            <img src="{{ asset('storage/'.$employee_nominee_info->photo_path) }}" alt="Nominee Photo"
+                                            <img src="{{ asset('storage/'.$employee_nominee_info->photo_path) }}" alt="Emergency Contact Photo"
                                                  class="img-thumbnail" style="max-width: 200px;">
                                         </div>
                                     </div>
@@ -383,7 +383,7 @@
                         @can('employee-management.edit')
                             <a href="{{ route('employee.nominee_information.edit', $employee->id) }}"
                                class="btn btn-primary">
-                                <i class="mdi mdi-pencil me-1"></i> Edit Nominee Information
+                                <i class="mdi mdi-pencil me-1"></i> Edit Emergency Contact Information
                             </a>
                         @endcan
                     </div>

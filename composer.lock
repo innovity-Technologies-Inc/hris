@@ -1548,12 +1548,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:innovity-Technologies-Inc/laravel-approval-engine.git",
-                "reference": "99e7298b293b3566f3b8c87a0ca255917513162d"
+                "reference": "6fade2a0e2286a64f201935ef41b97d1d175199d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/innovity-Technologies-Inc/laravel-approval-engine/zipball/99e7298b293b3566f3b8c87a0ca255917513162d",
-                "reference": "99e7298b293b3566f3b8c87a0ca255917513162d",
+                "url": "https://api.github.com/repos/innovity-Technologies-Inc/laravel-approval-engine/zipball/6fade2a0e2286a64f201935ef41b97d1d175199d",
+                "reference": "6fade2a0e2286a64f201935ef41b97d1d175199d",
                 "shasum": ""
             },
             "require": {
@@ -1588,7 +1588,7 @@
                 "MIT"
             ],
             "description": "Dynamic Approval Workflow Engine for Laravel",
-            "time": "2026-06-29T10:59:41+00:00"
+            "time": "2026-06-30T10:44:39+00:00"
         },
         {
             "name": "laravel/framework",

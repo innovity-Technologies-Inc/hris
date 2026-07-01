@@ -227,3 +227,16 @@
 | 2026-06-28 | Added Employee Lifecycle tracking events | php artisan test tests/Feature/Employee/EmployeeLifecycleTest.php | 3 passed | ✅ SUCCESS |
 | 2026-06-28 | Added joined event tracking | php artisan test tests/Feature/Employee/EmployeeLifecycleTest.php | 3 passed | ✅ SUCCESS |
 | 2026-06-28 | Added Employee Document Management | php artisan test tests/Feature/Employee/EmployeeDocumentTest.php | 2 passed | ✅ SUCCESS |
+
+## 2026-07-01 (Approval Workflow Engine Integration for Payroll)
+
+**Goal**: Apply the approval workflow to the salary generate and bonus process, ensuring no crashes when startWorkflow is called, and replacing the manual static buttons.
+
+**Exact Command**: `php artisan config:clear && php artisan test` (alongside manual tinker verification)
+
+**Results**:
+- `startWorkflow()` calls correctly replaced with `app(\Innovity\ApprovalEngine\Services\WorkflowGenerator::class)->generate($process, 'module')` to fix 'Call to undefined method' errors.
+- `Approvable` trait integrated correctly into `PayrollProcess`.
+- `WorkflowStatusListener` handles 'salary' and 'bonus' module state transitions.
+
+**Status**: ✅ SUCCESS

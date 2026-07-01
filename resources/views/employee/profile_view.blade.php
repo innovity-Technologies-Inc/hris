@@ -745,7 +745,7 @@
 
         <!-- Nominees -->
         <div class="section">
-            <h2 class="section-title">Nominee Information</h2>
+            <h2 class="section-title">Emergency Contact Information</h2>
             <table class="data-table">
                 <thead>
                     <tr>

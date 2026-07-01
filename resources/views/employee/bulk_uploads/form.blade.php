@@ -187,8 +187,8 @@
                                             class="badge bg-dark text-white rounded-circle me-3 d-flex align-items-center justify-content-center fw-bold"
                                             style="width: 36px; height: 36px; font-size: 14px;">5</span>
                                         <div class="flex-grow-1">
-                                            <h6 class="mb-1 fw-semibold text-dark">Nominee Information</h6>
-                                            <p class="text-muted small mb-0" style="font-size: 0.813rem;">Nominee details of an Employee</p>
+                                            <h6 class="mb-1 fw-semibold text-dark">Emergency Contact</h6>
+                                            <p class="text-muted small mb-0" style="font-size: 0.813rem;">Emergency Contact details of an Employee</p>
                                         </div>
                                     </div>
                                     <button type="button"
@@ -197,7 +197,7 @@
                                             data-bs-toggle="modal"
                                             data-bs-target="#bulkUploadModal"
                                             data-section="nominee-information"
-                                            data-section-name="Nominee Information"
+                                            data-section-name="Emergency Contact"
                                             data-section-number="6"
                                             data-form-action="{{ route('employee.nominee_information.import') }}"
                                             data-excel-link="{{asset('assets/excel/employee_nominee_information.xlsx')}}"

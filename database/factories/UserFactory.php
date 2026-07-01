@@ -24,7 +24,7 @@ class UserFactory extends Factory
             // User model has 'password' => 'hashed' cast, so we provide plain string
             'password' => 'password',
             'remember_token' => Str::random(10),
-            'user_type' => 'Employee',
+            'user_type' => 'employee',
             'status' => 'active',
         ];
     }

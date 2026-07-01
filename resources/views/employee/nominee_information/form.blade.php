@@ -30,7 +30,7 @@
                                 <input type="hidden" name="employee_id" value="{{ $employee->id }}">
 
                                 <div class="col-lg-4 mb-3">
-                                    <label for="nominee_name" class="form-label">Nominee Name <span class="text-danger">*</span></label>
+                                    <label for="nominee_name" class="form-label">Emergency Contact Name <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control @error('nominee_name') is-invalid @enderror"
                                            id="nominee_name" name="nominee_name"
                                            value="{{ isset($employee_nominee_info) ? $employee_nominee_info->nominee_name : old('nominee_name') }}"
@@ -211,7 +211,7 @@
                                 </div>
 
                                 <div class="col-lg-4 mb-3">
-                                    <label for="photo_path" class="form-label">Nominee Photo</label>
+                                    <label for="photo_path" class="form-label">Emergency Contact Photo</label>
                                     <input type="file" class="form-control @error('photo_path') is-invalid @enderror"
                                            id="photo_path" name="photo_path" accept="image/*">
                                     @error('photo_path')
@@ -404,7 +404,7 @@
                                 <button type="button" id="previewBtn" class="btn btn-info text-white">
                                     <i class="mdi mdi-eye me-1"></i> Preview
                                 </button>
-                                <button type="submit" class="btn btn-primary">Submit Nominee Information</button>
+                                <button type="submit" class="btn btn-primary">Submit Emergency Contact Information</button>
                             </div>
                         </div>
                     </div>

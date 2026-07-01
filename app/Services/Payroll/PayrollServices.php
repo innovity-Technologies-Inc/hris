@@ -585,6 +585,7 @@ class PayrollServices
                 ]);
             }
             Log::info('Bonus process completed.', ['id' => $process->id]);
+            return $process;
         });
     }
 
@@ -968,6 +969,7 @@ class PayrollServices
                 }
             }
             if ($penaltiesToUpdate) \App\Models\Payroll\EmployeePenalty::whereIn('id', $penaltiesToUpdate)->update(['status' => 'deducted']);
+            return $process;
         });
     }
 

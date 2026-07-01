@@ -66,6 +66,15 @@ class WorkflowStatusListener
                 }
             }
         }
+
+        if (in_array($request->workflow->module, ['salary', 'bonus'])) {
+            if ($approvable instanceof \App\Models\Payroll\PayrollProcess) {
+                $approvable->update([
+                    'approval_status' => 'approved',
+                    'status' => 'approved'
+                ]);
+            }
+        }
     }
 
     /**
@@ -97,6 +106,15 @@ class WorkflowStatusListener
         if ($request->workflow->module === 'leave') {
             if ($approvable instanceof \App\Models\Leave\Leave) {
                 $approvable->update([
+                    'status' => 'rejected'
+                ]);
+            }
+        }
+
+        if (in_array($request->workflow->module, ['salary', 'bonus'])) {
+            if ($approvable instanceof \App\Models\Payroll\PayrollProcess) {
+                $approvable->update([
+                    'approval_status' => 'rejected',
                     'status' => 'rejected'
                 ]);
             }

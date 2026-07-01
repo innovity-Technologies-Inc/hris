@@ -120,11 +120,11 @@
                         <!-- 7. Nominee (Name & Relation Only) -->
                         <div class="col-12">
                             <div class="card border shadow-none">
-                                <div class="card-header bg-light py-2"><h6 class="mb-0 fw-bold small text-uppercase">Nominee Summary</h6></div>
+                                <div class="card-header bg-light py-2"><h6 class="mb-0 fw-bold small text-uppercase">Emergency Contact Summary</h6></div>
                                 <div class="card-body py-2">
                                     <div class="row align-items-center">
                                         <div class="col-md-6 border-end">
-                                            <label class="data-label">Nominee Name</label>
+                                            <label class="data-label">Emergency Contact Name</label>
                                             <span class="data-value fw-bold" id="summary_nominee_name"></span>
                                         </div>
                                         <div class="col-md-6 ps-md-4">

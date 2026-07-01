@@ -26,8 +26,8 @@
                 <!-- Employee Selection Section -->
                 <div class="mb-5">
                     <div class="d-flex align-items-center mb-4">
-                        <div class="bg-primary bg-opacity-10 rounded-circle p-3 me-3 d-inline-flex align-items-center justify-content-center">
-                            <i class="bi bi-person-badge text-primary fs-4"></i>
+                        <div class="rounded-circle p-3 me-3 d-inline-flex align-items-center justify-content-center">
+                            <i class="bi bi-person-badge fs-4"></i>
                         </div>
                         <h3 class="fs-5 fw-bold text-dark mb-0">Employee Information</h3>
                     </div>
@@ -82,8 +82,7 @@
                     </div>
 
                     <div class="mt-4" id="leave-plan-card-container" style="display:none;">
-                        <div class="card border rounded-3 shadow-sm">
-                            <div class="card-body p-4">
+                        <div class="border rounded-3 p-4">
                                 <div id="leave-plan-skeleton">
                                     <div class="placeholder-glow">
                                         <div class="placeholder col-6 mb-2" style="height:20px;"></div>
@@ -120,7 +119,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -128,13 +126,13 @@
                 <!-- Leave Details Section -->
                 <div class="mb-5">
                     <div class="d-flex align-items-center mb-4">
-                        <div class="bg-success bg-opacity-10 rounded-circle p-3 me-3 d-inline-flex align-items-center justify-content-center">
-                            <i class="bi bi-clock-history text-success fs-4"></i>
+                        <div class="rounded-circle p-3 me-3 d-inline-flex align-items-center justify-content-center">
+                            <i class="bi bi-clock-history fs-4"></i>
                         </div>
                         <h3 class="fs-5 fw-bold text-dark mb-0">Leave Duration & Details</h3>
                     </div>
 
-                    <div class="card border shadow-sm p-4">
+                    <div class="border rounded-3 p-4">
                         <div class="row g-4">
                             <div class="col-md-4">
                                 <label for="leave_count" class="form-label fw-semibold">Leave Count (Days) <span class="text-danger">*</span></label>

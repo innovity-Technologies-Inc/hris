@@ -237,7 +237,7 @@
                     <!-- 12. Nominee Information -->
                     <div id="section_nominee" class="card border shadow-none mb-3 d-none">
                         <div class="card-header bg-light py-2">
-                            <h6 class="mb-0 fw-bold">Nominee Information</h6>
+                            <h6 class="mb-0 fw-bold">Emergency Contact Information</h6>
                         </div>
                         <div class="card-body" id="detailed_nominee_body"></div>
                     </div>

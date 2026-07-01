@@ -107,8 +107,6 @@ class PromotionController extends Controller
                     $this->payrollService->promotionDataUpdate($promotionData, $data);
                 } else {
                     $promotion = $this->payrollService->promotionDataStore($data);
-                    
-                    // Trigger approval workflow
                     $promotion->startWorkflow('promotion');
                 }
         }catch(\Exception $e){

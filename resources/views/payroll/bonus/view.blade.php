@@ -78,6 +78,9 @@
                         <h6>Salary Month {{ \Carbon\Carbon::parse($salary_month)->format('M, Y') }}</h6>
                     </div>
 
+                    {{-- Approval Engine Workflow History --}}
+                    @include('approval_engine.workflow_history', ['model' => $process])
+
                     <div class="table-responsive" id="search-result">
                         <table class="table table-bordered table-hover mb-0">
                             <thead class="table-light">

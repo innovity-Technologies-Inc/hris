@@ -98,8 +98,6 @@ class IncrementController extends Controller
                 $this->payrollService->incrementDataUpdate($incrementData, $data);
             } else {
                 $increment = $this->payrollService->incrementDataStore($data);
-                
-                // Trigger approval workflow
                 $increment->startWorkflow('increment');
             }
 

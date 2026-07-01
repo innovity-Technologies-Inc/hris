@@ -85,33 +85,7 @@
                     </a>
                     @endcan
 
-                    {{-- Approve Button --}}
-                    @can('bonuses.hr-approve')
-                    <form class="d-inline"
-                          action="{{ route('bonus.status.update', $item->id) }}"
-                          method="POST">
-                        @csrf
-                        @method('PUT')
-                        <input type="hidden" name="status" value="approved">
 
-                        <button type="submit" class="btn btn-success btn-sm confirmApprove"
-                                title="Approve">
-                            <i style="height: 12px; width: 12px" data-feather="check"></i>
-                        </button>
-                    </form>
-
-                    {{-- Reject Button --}}
-                    <form class="d-inline" method="POST"
-                          action="{{ route('bonus.status.update', $item->id) }}">
-                        @csrf
-                        @method('PUT')
-                        <input type="hidden" name="status" value="rejected">
-                        <button type="submit" class="btn btn-danger btn-sm confirmReject"
-                                title="Reject">
-                            <i style="height: 12px; width: 12px" data-feather="x"></i>
-                        </button>
-                    </form>
-                    @endcan
                 @endif
                 @can('bonuses.delete')
                 <form class="d-inline"

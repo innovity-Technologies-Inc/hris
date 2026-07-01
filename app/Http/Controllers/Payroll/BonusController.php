@@ -70,12 +70,11 @@ class BonusController extends Controller
         $data = $this->payrollService->payrollProcessDataValidation($request, $flag='bonus');
         try{
             if ($id == null) {
-                $this->payrollService->bonusProcess($data);
+                $process = $this->payrollService->bonusProcess($data);
+                $process->startWorkflow('bonus');
             }else{
-                DB::transaction(function () use ($id, $data) {
-                    $this->payrollService->bonusDelete($id);
-                    $this->payrollService->bonusProcess($data, $id);
-                });
+                $process = $this->payrollService->bonusProcess($data, $id);
+                $process->startWorkflow('bonus');
             }
         }catch (\Exception $exception){
             Log::error($exception->getMessage());
@@ -101,7 +100,7 @@ class BonusController extends Controller
         $batch_id = $process->batch_id;
         $bonuses = Bonus::where('batch_id', $batch_id)->orderBy('created_at', 'desc')->paginate(10);
         return view('payroll.bonus.view', compact('title', 'section', 'section_url', 'sub_section',
-            'bonuses', 'salary_month', 'sub_section'));
+            'bonuses', 'salary_month', 'sub_section', 'process'));
     }
 
     public function individualBonusView($id)

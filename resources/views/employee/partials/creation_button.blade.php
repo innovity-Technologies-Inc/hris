@@ -60,7 +60,7 @@
                         class="btn btn-outline-secondary w-100 py-3 text-decoration-none @if (request()->routeIs('employee.nominee_information.create') ||
                                 request()->routeIs('employee.profile.nominee_information')) active @endif">
                         <span class="badge bg-secondary rounded-circle me-2 px-2 py-1">4</span>
-                        Nominee Information
+                        Emergency Contact Information
                     </a>
                 </div>
             @else
@@ -68,7 +68,7 @@
                     <button type="submit"
                         class="btn btn-outline-secondary w-100 py-3 text-decoration-none information">
                         <span class="badge bg-secondary rounded-circle me-2 px-2 py-1">4</span>
-                        Nominee Information
+                        Emergency Contact Information
                     </button>
                 </div>
             @endif

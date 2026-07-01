@@ -10,6 +10,7 @@ use App\Models\Company\Division;
 use App\Models\Company\Section;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Innovity\ApprovalEngine\Traits\Approvable;
 
 use App\Traits\OrganizationScoped;
 
@@ -20,6 +21,7 @@ class PayrollProcess extends Model
 {
     use Userstamps, Auditable;
     use OrganizationScoped;
+    use Approvable;
     protected $table = 'payroll_process';
 
     protected $fillable = [

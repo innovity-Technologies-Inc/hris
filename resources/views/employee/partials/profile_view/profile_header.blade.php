@@ -389,7 +389,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (data.nominee_info) {
             const n = data.nominee_info; sNom.classList.remove('d-none');
             bNom.innerHTML = `<div class="row g-3">
-                <div class="col-md-3"><label class="data-label">Nominee Name</label><span class="data-value fw-bold">${n.nominee_name || 'N/A'}</span></div>
+                <div class="col-md-3"><label class="data-label">Emergency Contact Name</label><span class="data-value fw-bold">${n.nominee_name || 'N/A'}</span></div>
                 <div class="col-md-3"><label class="data-label">Relation</label><span class="data-value">${n.relation || 'N/A'}</span></div>
                 <div class="col-md-3"><label class="data-label">Mobile</label><span class="data-value">${n.nominee_mobile || 'N/A'}</span></div>
                 <div class="col-md-3"><label class="data-label">Phone</label><span class="data-value">${n.phone || 'N/A'}</span></div>
