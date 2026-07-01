@@ -81,9 +81,8 @@
                         </div>
                     </div>
 
-                    <!-- Leave Plan Details Card -->
                     <div class="mt-4" id="leave-plan-card-container" style="display:none;">
-                        <div class="card border-primary border-opacity-25 bg-primary bg-opacity-5 rounded-3">
+                        <div class="card border rounded-3 shadow-sm">
                             <div class="card-body p-4">
                                 <div id="leave-plan-skeleton">
                                     <div class="placeholder-glow">
