@@ -39,7 +39,7 @@
                                         <select name="module_name" id="module_name" class="form-select" required>
                                             <option value="" disabled>Select Module</option>
                                             @foreach($modules as $key => $label)
-                                                <option value="{{ $key }}" {{ old('module_name', $workflow->module_name) == $key ? 'selected' : '' }}>{{ $label }}</option>
+                                                <option value="{{ $key }}" {{ old('module_name', $workflow->module) == $key ? 'selected' : '' }}>{{ $label }}</option>
                                             @endforeach
                                         </select>
                                     </div>
