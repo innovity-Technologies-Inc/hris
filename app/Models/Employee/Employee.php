@@ -178,4 +178,62 @@ class Employee extends Model
     {
         return $this->hasMany(EmployeeDocument::class, 'employee_id', 'id');
     }
+
+    public function getProfileCompletionDetailsAttribute()
+    {
+        $calculateModelCompletion = function($model, $modelClass) {
+            $temp = $model ?: new $modelClass();
+            $fields = $temp->getFillable();
+            $exclude = ['id', 'employee_id', 'created_at', 'updated_at', 'status', 'general_info_status', 'user_id', 'review_cause'];
+            $fields = array_values(array_diff($fields, $exclude));
+            
+            $totalFields = count($fields);
+            if ($totalFields === 0) {
+                return ['total' => 1, 'filled' => $model ? 1 : 0, 'percentage' => $model ? 100 : 0];
+            }
+
+            $filled = 0;
+            if ($model) {
+                foreach ($fields as $field) {
+                    $val = $model->getAttribute($field);
+                    if ($val !== null && $val !== '' && (is_array($val) ? count($val) > 0 : true) && $val !== '[]') {
+                        $filled++;
+                    }
+                }
+            }
+            
+            return [
+                'total' => $totalFields,
+                'filled' => $filled,
+                'percentage' => round(($filled / $totalFields) * 100)
+            ];
+        };
+
+        $sections = [
+            'General' => $calculateModelCompletion($this, \App\Models\Employee\Employee::class),
+            'Education' => $calculateModelCompletion($this->educationInfo()->first(), \App\Models\Employee\EmployeeEducationExperienceTraining::class),
+            'Employment History' => $calculateModelCompletion($this->employmentHistory()->first(), \App\Models\Employee\EmployeeEmploymentHistory::class),
+            'Emergency Contact' => $calculateModelCompletion($this->nomineeInfo()->first(), \App\Models\Employee\EmployeeNominee::class),
+            'Office' => $calculateModelCompletion($this->officeInfo()->first(), \App\Models\Employee\EmployeeOfficeInfo::class),
+            'Policy Tag' => $calculateModelCompletion($this->employeeEligibility()->first(), \App\Models\Employee\EmployeeEligiblePlan::class),
+            'Salary Breakdown' => $calculateModelCompletion($this->salaryBreakdown()->first(), \App\Models\Employee\EmployeeSalaryBreakdown::class),
+            'Accounts' => $calculateModelCompletion($this->bankAccount()->first(), \App\Models\Employee\EmployeeBankAccount::class),
+        ];
+
+        $totalPercentage = 0;
+        foreach ($sections as $section) {
+            $totalPercentage += $section['percentage'];
+        }
+        $averagePercentage = round($totalPercentage / count($sections));
+
+        return [
+            'sections' => $sections,
+            'average_percentage' => $averagePercentage
+        ];
+    }
+
+    public function getProfileCompletionPercentageAttribute()
+    {
+        return $this->profile_completion_details['average_percentage'];
+    }
 }

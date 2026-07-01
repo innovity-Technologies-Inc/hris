@@ -71,13 +71,13 @@
                         </a>
                     @else
                         <a href="#sidebarEmployees" data-bs-toggle="collapse"
-                            aria-expanded="{{ Route::is('employee.*') || Route::is('employee.employee') ? 'true' : 'false' }}"
-                            class="@if (Route::is('employee.*') || Route::is('employee.employee')) menuitem-active @endif">
+                            aria-expanded="{{ Route::is('employee.*') || Route::is('employee.employee') || Route::is('profile_update_requests.*') ? 'true' : 'false' }}"
+                            class="@if (Route::is('employee.*') || Route::is('employee.employee') || Route::is('profile_update_requests.*')) menuitem-active @endif">
                             <i data-feather="users"></i>
                             <span> Employees </span>
                             <span class="menu-arrow"></span>
                         </a>
-                        <div class="collapse @if (Route::is('employee.*') || Route::is('employee.employee')) show @endif" id="sidebarEmployees">
+                        <div class="collapse @if (Route::is('employee.*') || Route::is('employee.employee') || Route::is('profile_update_requests.*')) show @endif" id="sidebarEmployees">
                             <ul class="nav-second-level">
                                 @if($canViewEmployeeInfo)
                                 <li>
@@ -97,6 +97,14 @@
                                         href='{{ route('employee.review.index') }}'>Profile Review</a>
                                 </li>
                                 @endif
+
+                                @if(auth()->user()->can('profile-update-requests.view'))
+                                <li>
+                                    <a class='tp-link @if (Route::is('profile_update_requests.*')) menuitem-active @endif'
+                                        href='{{ route('profile_update_requests.index') }}'>Profile Update Requests</a>
+                                </li>
+                                @endif
+
 
                                 @if($canSearchEmployee)
                                 <li>

@@ -385,6 +385,19 @@ Route::prefix('employees')->middleware('auth')->group(function () {
         });
     });
 
+    Route::controller(\App\Http\Controllers\Employee\ProfileUpdateRequestController::class)->group(function () {
+        Route::middleware('permission:profile-update-requests.view')->group(function () {
+            Route::get('update-requests', 'index')->name('profile_update_requests.index');
+            Route::get('update-requests/{id}', 'show')->name('profile_update_requests.show');
+        });
+        Route::middleware('permission:profile-update-requests.add')->group(function () {
+            Route::post('update-requests', 'store')->name('profile_update_requests.store');
+        });
+        Route::middleware('permission:profile-update-requests.delete')->group(function () {
+            Route::delete('update-requests/{id}', 'destroy')->name('profile_update_requests.destroy');
+        });
+    });
+
     // Employee Dashboard & Timeline Routes
     Route::controller(\App\Http\Controllers\Employee\EmployeeDashboardController::class)->group(function () {
         Route::get('employee-dashboard', 'index')->name('employee.dashboard');

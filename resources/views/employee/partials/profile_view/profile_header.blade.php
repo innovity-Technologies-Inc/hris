@@ -94,6 +94,12 @@
                         <i class="mdi mdi-account-key me-1 fs-18"></i> Edit Login Info
                     </button>
                     @endif
+                    
+                    @if($isOwner && auth()->user()->can('profile-update-requests.add'))
+                    <button type="button" class="btn btn-secondary text-white d-flex align-items-center fw-semibold" data-bs-toggle="modal" data-bs-target="#updateRequestModal">
+                        <i class="mdi mdi-file-document-edit-outline me-1 fs-18"></i> Update Request
+                    </button>
+                    @endif
 
                     <!-- Summary View Button -->
                     <button type="button" class="btn btn-warning d-flex align-items-center text-dark fw-semibold" id="openSummaryView">
@@ -150,6 +156,7 @@
 </div>
 
 @include('employee.partials.modal.edit_login_modal')
+@include('employee.partials.modal.update_request_modal')
 @include('employee.partials.modal.review_profile_modal')
 @include('employee.partials.modal.detailed_view_modal')
 @include('employee.partials.modal.summary_view_modal')

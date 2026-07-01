@@ -41,6 +41,13 @@ class PermissionSeeder extends Seeder
                 'icon' => 'users',
                 'actions' => ['view', 'create', 'edit', 'delete', 'profile-review', 'import', 'nid-verification', 'analytics']
             ],
+            [
+                'name' => 'Profile Update Requests',
+                'icon' => 'file-document-edit',
+                'slug' => 'profile-update-requests',
+                'route' => 'profile_update_requests.index',
+                'actions' => ['view', 'add', 'delete']
+            ],
 
             [
                 'name' => 'Attendance',
