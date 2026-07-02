@@ -2,51 +2,78 @@
 @section('title', 'Review Profile Update Request')
 
 @section('content')
-<div class="row">
+<div class="row mb-3">
     <div class="col-12">
         <div class="page-title-box">
-            <h4 class="page-title">Review Profile Update Request</h4>
+            <h4 class="page-title text-dark fw-bold">Review Profile Update Request</h4>
         </div>
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-body text-center">
-                <img src="{{ $updateRequest->employee->photo_path ? asset('storage/' . $updateRequest->employee->photo_path) : asset('assets/images/users/avatar-1.jpg') }}" class="rounded-circle avatar-lg img-thumbnail" alt="profile-image">
-                <h4 class="mb-0 mt-2">{{ $updateRequest->employee->full_name }}</h4>
-                <p class="text-muted font-14">{{ $updateRequest->employee->punch_card_no }}</p>
+<div class="row g-4">
+    <!-- Left Column: Employee Info Profile Card -->
+    <div class="col-lg-4">
+        <div class="card border shadow-sm rounded-3">
+            <div class="card-body text-center p-4">
+                <div class="mb-3 d-flex justify-content-center">
+                    {!! \App\HelperClass::generateAvatar(
+                        $updateRequest->employee->photo_path ?? null,
+                        $updateRequest->employee->full_name ?? 'N/A',
+                        90,
+                        '#974063',
+                        'img-thumbnail rounded-circle shadow-sm border border-2 border-primary',
+                        $updateRequest->employee->id ?? 0,
+                    ) !!}
+                </div>
+                <h4 class="mb-1 fw-bold text-dark">{{ $updateRequest->employee->full_name }}</h4>
+                <p class="text-muted font-14 mb-3"><i class="mdi mdi-card-account-details-outline me-1"></i>{{ $updateRequest->employee->punch_card_no }}</p>
+                
+                <hr class="my-3 opacity-50">
+
                 <div class="text-start mt-3">
-                    <p class="text-muted mb-2 font-13"><strong>Section Requested:</strong> <span class="badge bg-info text-capitalize ms-2">{{ str_replace('_', ' ', $updateRequest->section) }}</span></p>
-                    <p class="text-muted mb-2 font-13"><strong>Status:</strong> 
+                    <div class="d-flex justify-content-between align-items-center mb-2 font-13 text-muted">
+                        <strong>Requested Section:</strong>
+                        <span class="badge bg-info-subtle text-info text-capitalize px-2.5 py-1 fw-normal">
+                            {{ str_replace('_', ' ', $updateRequest->section) }}
+                        </span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-2 font-13 text-muted">
+                        <strong>Status:</strong>
                         @if($updateRequest->status === 'pending')
-                            <span class="badge bg-warning ms-2">Pending</span>
+                            <span class="badge bg-warning-subtle text-warning px-2.5 py-1 fw-normal">Pending Approval</span>
                         @elseif($updateRequest->status === 'approved')
-                            <span class="badge bg-success ms-2">Approved</span>
+                            <span class="badge bg-success-subtle text-success px-2.5 py-1 fw-normal">Approved</span>
                         @else
-                            <span class="badge bg-danger ms-2">Rejected</span>
+                            <span class="badge bg-danger-subtle text-danger px-2.5 py-1 fw-normal">Rejected</span>
                         @endif
-                    </p>
-                    <p class="text-muted mb-2 font-13"><strong>Requested At:</strong> <span class="ms-2">{{ $updateRequest->created_at->format('d M Y, h:i A') }}</span></p>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center font-13 text-muted">
+                        <strong>Submitted Date:</strong>
+                        <span class="fw-semibold text-dark">{{ $updateRequest->created_at->format('d M Y, h:i A') }}</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header border-bottom">
-                <h4 class="header-title">Data Comparison</h4>
+    <!-- Right Column: Data Comparison and Actions -->
+    <div class="col-lg-8">
+        <div class="card border shadow-sm rounded-3">
+            <div class="card-header bg-transparent border-bottom py-3">
+                <h5 class="card-title mb-0 fw-bold text-dark d-flex align-items-center gap-2">
+                    <i class="mdi mdi-swap-horizontal text-primary fs-4"></i> Data Comparison & Changes
+                </h5>
             </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered mb-0">
+            <div class="card-body p-4">
+                <div class="table-responsive rounded border">
+                    <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Field Name</th>
-                                <th>Previous Data</th>
-                                <th>Requested Changes</th>
+                                <th class="py-2.5 fw-bold text-dark" style="width: 25%;">Field Name</th>
+                                <th class="py-2.5 fw-bold text-dark" style="width: 37.5%;">Previous Profile Value</th>
+                                <th class="py-2.5 fw-bold text-dark" style="width: 37.5%;">Requested New Value</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -107,10 +134,12 @@
                                     $reqStr = is_array($reqVal) ? json_encode($reqVal) : $reqVal;
                                     $hasChanged = $prevStr != $reqStr;
                                 @endphp
-                                <tr class="{{ $hasChanged ? 'table-warning' : '' }}">
-                                    <td class="fw-semibold text-capitalize align-middle" style="width: 200px;">{{ str_replace('_', ' ', $key) }}</td>
-                                    <td class="align-middle">{!! formatProfileUpdateData($prevVal) !!}</td>
-                                    <td class="align-middle {{ $hasChanged ? 'text-danger fw-bold' : '' }}">{!! formatProfileUpdateData($reqVal) !!}</td>
+                                <tr class="{{ $hasChanged ? 'table-warning-subtle' : '' }}">
+                                    <td class="fw-semibold text-capitalize text-dark py-2.5">{{ str_replace('_', ' ', $key) }}</td>
+                                    <td class="py-2.5 text-muted">{!! formatProfileUpdateData($prevVal) !!}</td>
+                                    <td class="py-2.5 {{ $hasChanged ? 'text-primary fw-bold bg-light-subtle' : 'text-muted' }}">
+                                        {!! formatProfileUpdateData($reqVal) !!}
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -118,8 +147,7 @@
                 </div>
 
                 <!-- Approval Workflow Actions -->
-                <div class="mt-4 border-top pt-3">
-                    <h5 class="mb-3">Approval Workflow Actions</h5>
+                <div class="mt-4 pt-3">
                     @include('approval_engine.workflow_history', ['approvable' => $updateRequest])
                 </div>
             </div>
