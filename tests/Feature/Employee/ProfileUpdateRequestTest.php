@@ -1,0 +1,260 @@
+<?php
+
+use App\Models\User;
+use App\Enums\UserType;
+use App\Models\Employee\Employee;
+use App\Models\Employee\ProfileUpdateRequest;
+use App\Models\Employee\EmployeeEducationExperienceTraining;
+use App\Models\Employee\EmployeeEmploymentHistory;
+use App\Models\Employee\EmployeeNominee;
+use Innovity\ApprovalEngine\Models\Workflow;
+use Innovity\ApprovalEngine\Models\ApprovalRequest;
+use Innovity\ApprovalEngine\Events\ApprovalCompleted;
+use App\Listeners\WorkflowStatusListener;
+
+beforeEach(function () {
+    $this->employee = Employee::factory()->create([
+        'first_name' => 'John',
+        'last_name' => 'Doe',
+        'personal_mobile' => '123456789',
+        'status' => 'active'
+    ]);
+
+    $this->user = User::factory()->create([
+        'user_type' => UserType::Employee,
+        'employee_id' => $this->employee->id,
+        'name' => 'John Doe',
+        'email' => 'john@example.com'
+    ]);
+
+    $this->employee->update(['user_id' => $this->user->id]);
+
+    // Give permissions to submit profile update requests
+    $permission = \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'profile-update-requests.add', 'guard_name' => 'web']);
+    $this->user->givePermissionTo($permission);
+
+    // Create a dummy workflow for profile-update
+    $this->workflow = Workflow::create([
+        'name' => 'Profile Update Workflow',
+        'module' => 'profile-update',
+        'type' => 'sequential',
+        'total_steps' => 1,
+        'is_active' => true
+    ]);
+
+    $this->workflow->steps()->create([
+        'name' => 'Step 1 - HR Review',
+        'step_order' => 1,
+        'type' => 'user-type',
+        'required_user_type' => 'company'
+    ]);
+});
+
+test('it can submit general section update request and apply changes upon approval', function () {
+    $this->actingAs($this->user);
+
+    $requestedData = [
+        'first_name' => 'Johnny',
+        'last_name' => 'Smith',
+        'personal_mobile' => '987654321',
+        'present_address' => [
+            'address_line' => 'Flat 4B',
+            'village' => 'Gulshan',
+            'city' => 'Dhaka'
+        ]
+    ];
+
+    $response = $this->postJson(route('profile_update_requests.store'), [
+        'employee_id' => $this->employee->id,
+        'section' => 'general',
+        'requested_data' => $requestedData,
+        'previous_data' => [
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'personal_mobile' => '123456789',
+            'present_address' => null
+        ]
+    ]);
+
+    $response->assertStatus(200);
+    $response->assertJsonPath('success', true);
+
+    $requestRecord = ProfileUpdateRequest::where('employee_id', $this->employee->id)
+        ->where('section', 'general')
+        ->first();
+
+    expect($requestRecord)->not->toBeNull();
+    expect($requestRecord->status)->toBe('pending');
+    expect($requestRecord->requested_data['first_name'])->toBe('Johnny');
+
+    // Simulate approval workflow completed event
+    $approvalRequest = ApprovalRequest::create([
+        'workflow_id' => $this->workflow->id,
+        'approvable_type' => ProfileUpdateRequest::class,
+        'approvable_id' => $requestRecord->id,
+        'status' => 'approved'
+    ]);
+
+    $event = new ApprovalCompleted($approvalRequest);
+    $listener = new WorkflowStatusListener();
+    $listener->handleCompleted($event);
+
+    // Verify changes applied to the Employee
+    $this->employee->refresh();
+    expect($this->employee->first_name)->toBe('Johnny');
+    expect($this->employee->last_name)->toBe('Smith');
+    expect($this->employee->personal_mobile)->toBe('987654321');
+    expect($this->employee->present_address['village'])->toBe('Gulshan');
+
+    // Verify request status is approved
+    $requestRecord->refresh();
+    expect($requestRecord->status)->toBe('approved');
+});
+
+test('it can submit education section update request and apply changes upon approval', function () {
+    $this->actingAs($this->user);
+
+    $requestedData = [
+        'educations' => [
+            [
+                'education_title' => 'B.Sc. in CSE',
+                'institute' => 'University of Dhaka',
+                'passing_year' => '2022'
+            ]
+        ],
+        'trainings' => [
+            [
+                'training_title' => 'Laravel Advanced',
+                'institute' => 'LaraCasts'
+            ]
+        ]
+    ];
+
+    $response = $this->postJson(route('profile_update_requests.store'), [
+        'employee_id' => $this->employee->id,
+        'section' => 'education',
+        'requested_data' => $requestedData,
+        'previous_data' => [
+            'educations' => [],
+            'trainings' => []
+        ]
+    ]);
+
+    $response->assertStatus(200);
+
+    $requestRecord = ProfileUpdateRequest::where('employee_id', $this->employee->id)
+        ->where('section', 'education')
+        ->first();
+
+    // Trigger Approval Completed Event
+    $approvalRequest = ApprovalRequest::create([
+        'workflow_id' => $this->workflow->id,
+        'approvable_type' => ProfileUpdateRequest::class,
+        'approvable_id' => $requestRecord->id,
+        'status' => 'approved'
+    ]);
+
+    $event = new ApprovalCompleted($approvalRequest);
+    $listener = new WorkflowStatusListener();
+    $listener->handleCompleted($event);
+
+    // Verify changes applied to EmployeeEducationExperienceTraining
+    $eduRecord = EmployeeEducationExperienceTraining::where('employee_id', $this->employee->id)->first();
+    expect($eduRecord)->not->toBeNull();
+    expect($eduRecord->educations[0]['education_title'])->toBe('B.Sc. in CSE');
+    expect($eduRecord->trainings[0]['training_title'])->toBe('Laravel Advanced');
+});
+
+test('it can submit employment history update request and apply changes upon approval', function () {
+    $this->actingAs($this->user);
+
+    $requestedData = [
+        'histories' => [
+            [
+                'company_name' => 'Old Tech Inc',
+                'designation' => 'Developer',
+                'joining_date' => '2020-01-01',
+                'end_date' => '2021-12-31'
+            ]
+        ]
+    ];
+
+    $response = $this->postJson(route('profile_update_requests.store'), [
+        'employee_id' => $this->employee->id,
+        'section' => 'employment_history',
+        'requested_data' => $requestedData,
+        'previous_data' => [
+            'histories' => []
+        ]
+    ]);
+
+    $response->assertStatus(200);
+
+    $requestRecord = ProfileUpdateRequest::where('employee_id', $this->employee->id)
+        ->where('section', 'employment_history')
+        ->first();
+
+    $approvalRequest = ApprovalRequest::create([
+        'workflow_id' => $this->workflow->id,
+        'approvable_type' => ProfileUpdateRequest::class,
+        'approvable_id' => $requestRecord->id,
+        'status' => 'approved'
+    ]);
+
+    $event = new ApprovalCompleted($approvalRequest);
+    $listener = new WorkflowStatusListener();
+    $listener->handleCompleted($event);
+
+    // Verify EmployeeEmploymentHistory updated
+    $historyRecord = EmployeeEmploymentHistory::where('employee_id', $this->employee->id)->first();
+    expect($historyRecord)->not->toBeNull();
+    expect($historyRecord->histories[0]['company_name'])->toBe('Old Tech Inc');
+});
+
+test('it can submit emergency contact nominee update request and apply changes upon approval', function () {
+    $this->actingAs($this->user);
+
+    $requestedData = [
+        'nominee_name' => 'Jane Doe',
+        'relation' => 'Spouse',
+        'mobile' => '987654321',
+        'nid' => '1122334455'
+    ];
+
+    $response = $this->postJson(route('profile_update_requests.store'), [
+        'employee_id' => $this->employee->id,
+        'section' => 'emergency_contact',
+        'requested_data' => $requestedData,
+        'previous_data' => [
+            'nominee_name' => '',
+            'relation' => '',
+            'mobile' => '',
+            'nid' => ''
+        ]
+    ]);
+
+    $response->assertStatus(200);
+
+    $requestRecord = ProfileUpdateRequest::where('employee_id', $this->employee->id)
+        ->where('section', 'emergency_contact')
+        ->first();
+
+    $approvalRequest = ApprovalRequest::create([
+        'workflow_id' => $this->workflow->id,
+        'approvable_type' => ProfileUpdateRequest::class,
+        'approvable_id' => $requestRecord->id,
+        'status' => 'approved'
+    ]);
+
+    $event = new ApprovalCompleted($approvalRequest);
+    $listener = new WorkflowStatusListener();
+    $listener->handleCompleted($event);
+
+    // Verify EmployeeNominee updated
+    $nomineeRecord = EmployeeNominee::where('employee_id', $this->employee->id)->first();
+    expect($nomineeRecord)->not->toBeNull();
+    expect($nomineeRecord->nominee_name)->toBe('Jane Doe');
+    expect($nomineeRecord->relation)->toBe('Spouse');
+    expect($nomineeRecord->mobile)->toBe('987654321');
+    expect($nomineeRecord->nid)->toBe('1122334455');
+});

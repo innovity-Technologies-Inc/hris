@@ -75,6 +75,46 @@ class WorkflowStatusListener
                 ]);
             }
         }
+
+        if ($request->workflow->module === 'profile-update') {
+            if ($approvable instanceof \App\Models\Employee\ProfileUpdateRequest) {
+                $approvable->update([
+                    'status' => 'approved'
+                ]);
+
+                $employee = $approvable->employee;
+                if ($employee) {
+                    $section = $approvable->section;
+                    $reqData = $approvable->requested_data ?? [];
+
+                    if ($section === 'general') {
+                        $employee->update($reqData);
+                    } elseif ($section === 'education') {
+                        \App\Models\Employee\EmployeeEducationExperienceTraining::updateOrCreate(
+                            ['employee_id' => $employee->id],
+                            [
+                                'educations' => $reqData['educations'] ?? ($employee->educationInfo?->educations ?? []),
+                                'trainings' => $reqData['trainings'] ?? ($employee->educationInfo?->trainings ?? []),
+                                'status' => 'active'
+                            ]
+                        );
+                    } elseif ($section === 'employment_history') {
+                        \App\Models\Employee\EmployeeEmploymentHistory::updateOrCreate(
+                            ['employee_id' => $employee->id],
+                            [
+                                'histories' => $reqData['histories'] ?? [],
+                                'status' => 'active'
+                            ]
+                        );
+                    } elseif ($section === 'emergency_contact') {
+                        \App\Models\Employee\EmployeeNominee::updateOrCreate(
+                            ['employee_id' => $employee->id],
+                            array_merge($reqData, ['status' => 'active'])
+                        );
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -115,6 +155,14 @@ class WorkflowStatusListener
             if ($approvable instanceof \App\Models\Payroll\PayrollProcess) {
                 $approvable->update([
                     'approval_status' => 'rejected',
+                    'status' => 'rejected'
+                ]);
+            }
+        }
+
+        if ($request->workflow->module === 'profile-update') {
+            if ($approvable instanceof \App\Models\Employee\ProfileUpdateRequest) {
+                $approvable->update([
                     'status' => 'rejected'
                 ]);
             }

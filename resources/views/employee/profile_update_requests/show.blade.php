@@ -51,7 +51,48 @@
                         </thead>
                         <tbody>
                             @php
-                                // We combine keys from both to handle additions and removals
+                                if (!function_exists('formatProfileUpdateData')) {
+                                    function formatProfileUpdateData($val) {
+                                        if (is_array($val)) {
+                                            if (empty($val)) {
+                                                return '<span class="text-muted font-12">Empty</span>';
+                                            }
+
+                                            // If it is a sequential list of objects (e.g. educations, trainings, histories)
+                                            if (isset($val[0]) && is_array($val[0])) {
+                                                $html = '<div class="table-responsive"><table class="table table-sm table-bordered m-0 font-12 bg-white">';
+                                                $headers = array_keys($val[0]);
+                                                $html .= '<thead class="table-light"><tr>';
+                                                foreach ($headers as $h) {
+                                                    $html .= '<th class="py-1">' . ucfirst(str_replace('_', ' ', $h)) . '</th>';
+                                                }
+                                                $html .= '</tr></thead><tbody>';
+                                                foreach ($val as $row) {
+                                                    $html .= '<tr>';
+                                                    foreach ($headers as $h) {
+                                                        $html .= '<td class="py-1">' . e($row[$h] ?? 'N/A') . '</td>';
+                                                    }
+                                                    $html .= '</tr>';
+                                                }
+                                                $html .= '</tbody></table></div>';
+                                                return $html;
+                                            }
+
+                                            // If it is an associative array (e.g. addresses)
+                                            $html = '<ul class="list-unstyled mb-0 font-12">';
+                                            foreach ($val as $k => $v) {
+                                                if (is_array($v)) {
+                                                    $v = json_encode($v);
+                                                }
+                                                $html .= '<li class="mb-1"><strong>' . ucfirst(str_replace('_', ' ', $k)) . ':</strong> ' . e($v) . '</li>';
+                                            }
+                                            $html .= '</ul>';
+                                            return $html;
+                                        }
+                                        return e($val);
+                                    }
+                                }
+
                                 $previous = is_array($updateRequest->previous_data) ? $updateRequest->previous_data : [];
                                 $requested = is_array($updateRequest->requested_data) ? $updateRequest->requested_data : [];
                                 $allKeys = array_unique(array_merge(array_keys($previous), array_keys($requested)));
@@ -62,16 +103,14 @@
                                     $prevVal = $previous[$key] ?? '';
                                     $reqVal = $requested[$key] ?? '';
                                     
-                                    // Handle array values gracefully (like JSON arrays inside)
-                                    if(is_array($prevVal)) $prevVal = json_encode($prevVal);
-                                    if(is_array($reqVal)) $reqVal = json_encode($reqVal);
-                                    
-                                    $hasChanged = $prevVal != $reqVal;
+                                    $prevStr = is_array($prevVal) ? json_encode($prevVal) : $prevVal;
+                                    $reqStr = is_array($reqVal) ? json_encode($reqVal) : $reqVal;
+                                    $hasChanged = $prevStr != $reqStr;
                                 @endphp
                                 <tr class="{{ $hasChanged ? 'table-warning' : '' }}">
-                                    <td class="fw-semibold text-capitalize">{{ str_replace('_', ' ', $key) }}</td>
-                                    <td>{{ $prevVal }}</td>
-                                    <td class="{{ $hasChanged ? 'text-danger fw-bold' : '' }}">{{ $reqVal }}</td>
+                                    <td class="fw-semibold text-capitalize align-middle" style="width: 200px;">{{ str_replace('_', ' ', $key) }}</td>
+                                    <td class="align-middle">{!! formatProfileUpdateData($prevVal) !!}</td>
+                                    <td class="align-middle {{ $hasChanged ? 'text-danger fw-bold' : '' }}">{!! formatProfileUpdateData($reqVal) !!}</td>
                                 </tr>
                             @endforeach
                         </tbody>
