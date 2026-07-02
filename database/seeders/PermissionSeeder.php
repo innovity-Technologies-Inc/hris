@@ -43,7 +43,7 @@ class PermissionSeeder extends Seeder
             ],
             [
                 'name' => 'Profile Update Requests',
-                'icon' => 'file-document-edit',
+                'icon' => 'file-pen',
                 'slug' => 'profile-update-requests',
                 'route' => 'profile_update_requests.index',
                 'actions' => ['view', 'add', 'delete']
