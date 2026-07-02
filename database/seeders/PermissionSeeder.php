@@ -209,55 +209,108 @@ class PermissionSeeder extends Seeder
         $superAdminRole = Role::firstOrCreate(['name' => 'Super Admin', 'guard_name' => 'web']);
         $superAdminRole->syncPermissions(Permission::all());
 
-        // Create HR Manager role and assign HR-specific permissions
+        // Create HR Manager role and assign HR-specific permissions exactly as in DB
         $hrManagerRole = Role::firstOrCreate(['name' => 'HR Manager', 'guard_name' => 'web']);
-        
-        $hrPermissions = Permission::where(function($q) {
-            $q->where('name', 'like', 'employee-management.%')
-              ->orWhere('name', 'like', 'attendance.%')
-              ->orWhere('name', 'like', 'leaves.%')
-              ->orWhere('name', 'like', 'movement.%')
-              ->orWhere('name', 'like', 'transfers.%')
-              ->orWhere('name', 'like', 'promotions.%')
-              ->orWhere('name', 'like', 'increments.%')
-              ->orWhere('name', 'like', 'bonuses.%')
-              ->orWhere('name', 'like', 'salary.%')
-              ->orWhere('name', 'like', '%-plans.%')
-              ->orWhere('name', 'like', '%-plan.%')
-              ->orWhere('name', 'like', 'groups.%')
-              ->orWhere('name', 'like', 'company%')
-              ->orWhere('name', 'like', 'divisions.%')
-              ->orWhere('name', 'like', 'departments.%')
-              ->orWhere('name', 'like', 'sections.%')
-              ->orWhere('name', 'like', 'designations.%')
-              ->orWhere('name', 'like', 'pay-%')
-              ->orWhere('name', 'like', 'salary-grades.%')
-              ->orWhere('name', 'like', 'banks.%')
-              ->orWhere('name', 'like', 'bank-%')
-              ->orWhere('name', 'like', 'branches.%')
-              ->orWhere('name', 'like', 'holidays.%')
-              ->orWhere('name', 'like', 'gazette-locations.%')
-              ->orWhere('name', 'like', 'job-creations.%')
-              ->orWhere('name', 'like', 'structural-view.%')
-              ->orWhere('name', 'like', 'members.%');
-        })->get();
+        $hrPermissions = Permission::whereNotIn('name', [
+            'dashboard.view',
+            'structural-view.view',
+            'members.view',
+            'members.create',
+            'members.edit',
+            'members.delete',
+            'api-keys.view',
+            'api-keys.edit',
+            'api-keys.delete',
+            'smtp.view',
+            'smtp.edit',
+            'db-backup.download',
+            'role-management.view',
+            'role-management.create',
+            'role-management.edit',
+            'role-management.delete',
+        ])->get();
         $hrManagerRole->syncPermissions($hrPermissions);
 
-        // Create Employee role and assign specific permissions
+        // Create Employee role and assign specific permissions exactly as in DB
         $employeeRole = Role::firstOrCreate(['name' => 'Employee', 'guard_name' => 'web']);
         $employeeRole->syncPermissions([
             'employee-management.view',
             'employee-management.create',
-            'employee-management.edit',
-            'leaves.create',
-            'leaves.view',
-            'attendance.create',
+            'profile-update-requests.view',
+            'profile-update-requests.add',
             'attendance.view',
             'attendance.clock-in-out',
-            'movement.create',
+            'attendance.create',
+            'leaves.view',
+            'leaves.create',
             'movement.view',
-            'transfers.create',
+            'movement.create',
             'transfers.view',
+            'transfers.create',
+        ]);
+
+        // Create Manager role and assign specific permissions exactly as in DB
+        $managerRole = Role::firstOrCreate(['name' => 'Manager', 'guard_name' => 'web']);
+        $managerRole->syncPermissions([
+            'employee-management.view',
+            'employee-management.create',
+            'employee-management.edit',
+            'employee-management.profile-review',
+            'employee-management.nid-verification',
+            'employee-management.analytics',
+            'profile-update-requests.view',
+            'profile-update-requests.add',
+            'attendance.view',
+            'attendance.clock-in-out',
+            'attendance.create',
+            'attendance.edit',
+            'leaves.view',
+            'leaves.create',
+            'leaves.edit',
+            'movement.view',
+            'movement.create',
+            'movement.edit',
+            'transfers.view',
+            'transfers.create',
+            'transfers.edit',
+            'promotions.view',
+            'promotions.create',
+            'promotions.edit',
+            'increments.view',
+            'increments.create',
+            'increments.edit',
+            'bonuses.view',
+            'bonuses.create',
+            'bonuses.edit',
+            'penalty-management.view',
+            'penalty-management.create',
+            'penalty-management.edit',
+            'advance-salary.view',
+            'advance-salary.create',
+            'advance-salary.edit',
+            'arrear.view',
+            'arrear.create',
+            'arrear.edit',
+            'salary.view',
+            'salary.create',
+            'salary.edit',
+            'disbursement.view',
+            'disbursement.process',
+            'vehicles.view',
+            'vehicles.create',
+            'vehicles.edit',
+            'assign-driver.view',
+            'assign-driver.create',
+            'assign-driver.edit',
+            'vehicle-requisition.view',
+            'vehicle-requisition.create',
+            'vehicle-requisition.edit',
+            'employee-transport.view',
+            'employee-transport.create',
+            'employee-transport.edit',
+            'vehicle-allocation.view',
+            'vehicle-allocation.create',
+            'vehicle-allocation.edit',
         ]);
 
         // Ensure a default user is Super Admin if needed
