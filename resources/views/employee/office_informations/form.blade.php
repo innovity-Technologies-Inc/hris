@@ -536,6 +536,8 @@
             // Re-initialize Feather Icons
             if (typeof feather !== 'undefined') { feather.replace(); }
 
+            let silenceChangeEvents = false;
+
             // Standard Ajax Loader with Pre-selection support
             function ajaxLoad(url, $select, placeholder, selectedValue = null) {
                 if (!$select.length) return Promise.resolve();
@@ -548,6 +550,8 @@
                     });
                     if (selectedValue && selectedValue !== 'null' && selectedValue !== '') {
                         $select.val(selectedValue).trigger('change.select2');
+                    } else {
+                        $select.val('').trigger('change.select2');
                     }
                 }).catch(function () {
                     $select.html('<option value="">Error loading data</option>');
@@ -580,13 +584,53 @@
 
             // --- Change Listeners ---
             $('#joining_company_id, #current_company_id').on('change', function () {
+                if (silenceChangeEvents) return;
                 const prefix = this.id.replace('_company_id', '');
-                loadHierarchy(prefix, $(this).val());
+                silenceChangeEvents = true;
+                loadHierarchy(prefix, $(this).val()).then(() => {
+                    silenceChangeEvents = false;
+                });
             });
 
             $('#joining_business_unit_id, #current_business_unit_id').on('change', function () {
+                if (silenceChangeEvents) return;
                 const prefix = this.id.replace('_business_unit_id', '');
-                loadHierarchy(prefix, $(`#${prefix}_company_id`).val(), $(this).val());
+                silenceChangeEvents = true;
+                loadHierarchy(prefix, $(`#${prefix}_company_id`).val(), $(this).val()).then(() => {
+                    silenceChangeEvents = false;
+                });
+            });
+
+            $('#joining_division_id, #current_division_id').on('change', function () {
+                if (silenceChangeEvents) return;
+                const prefix = this.id.replace('_division_id', '');
+                const companyId = $(`#${prefix}_company_id`).val();
+                const branchId = $(`#${prefix}_business_unit_id`).val() || 'null';
+                const divisionId = $(this).val() || 'null';
+
+                silenceChangeEvents = true;
+                ajaxLoad(`/get-departments/${companyId}/${branchId}/${divisionId}`, $(`#${prefix}_department_id`), 'Select Department')
+                    .then(() => {
+                        const deptId = $(`#${prefix}_department_id`).val() || 'null';
+                        return ajaxLoad(`/get-sections/${companyId}/${branchId}/${divisionId}/${deptId}`, $(`#${prefix}_section_id`), 'Select Section');
+                    }).then(() => {
+                        silenceChangeEvents = false;
+                    });
+            });
+
+            $('#joining_department_id, #current_department_id').on('change', function () {
+                if (silenceChangeEvents) return;
+                const prefix = this.id.replace('_department_id', '');
+                const companyId = $(`#${prefix}_company_id`).val();
+                const branchId = $(`#${prefix}_business_unit_id`).val() || 'null';
+                const divisionId = $(`#${prefix}_division_id`).val() || 'null';
+                const deptId = $(this).val() || 'null';
+
+                silenceChangeEvents = true;
+                ajaxLoad(`/get-sections/${companyId}/${branchId}/${divisionId}/${deptId}`, $(`#${prefix}_section_id`), 'Select Section')
+                    .then(() => {
+                        silenceChangeEvents = false;
+                    });
             });
 
             // --- Pay Grade Loader ---
@@ -604,6 +648,7 @@
 
             // --- Initial Load in Edit Mode ---
             @if($isEdit)
+                silenceChangeEvents = true;
                 loadGrades("{{ old('grade_id', $employee_office_info->grade_id) }}");
 
                 loadHierarchy(
@@ -613,16 +658,20 @@
                     "{{ old('joining_division_id', $employee_office_info->joining_division_id) }}",
                     "{{ old('joining_department_id', $employee_office_info->joining_department_id) }}",
                     "{{ old('joining_section_id', $employee_office_info->joining_section_id) }}"
-                );
-
-                loadHierarchy(
-                    'current',
-                    "{{ old('current_company_id', $employee_office_info->current_company_id) }}",
-                    "{{ old('current_business_unit_id', $employee_office_info->current_business_unit_id) }}",
-                    "{{ old('current_division_id', $employee_office_info->current_division_id) }}",
-                    "{{ old('current_department_id', $employee_office_info->current_department_id) }}",
-                    "{{ old('current_section_id', $employee_office_info->current_section_id) }}"
-                );
+                ).then(() => {
+                    return loadHierarchy(
+                        'current',
+                        "{{ old('current_company_id', $employee_office_info->current_company_id) }}",
+                        "{{ old('current_business_unit_id', $employee_office_info->current_business_unit_id) }}",
+                        "{{ old('current_division_id', $employee_office_info->current_division_id) }}",
+                        "{{ old('current_department_id', $employee_office_info->current_department_id) }}",
+                        "{{ old('current_section_id', $employee_office_info->current_section_id) }}"
+                    );
+                }).then(() => {
+                    silenceChangeEvents = false;
+                }).catch(() => {
+                    silenceChangeEvents = false;
+                });
             @else
                 loadGrades();
             @endif
