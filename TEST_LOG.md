@@ -240,3 +240,16 @@
 - `WorkflowStatusListener` handles 'salary' and 'bonus' module state transitions.
 
 **Status**: ✅ SUCCESS
+
+## 2026-07-02 (Dynamic Step Types in Approval Workflows)
+
+**Goal**: Implement and verify 3 dynamic step types ('user-type', 'role-user', 'specific-user') in the Approval Workflow Engine, including custom schema columns, updated ApproverResolver logic, Spatie Role/User validation, and builder UI views.
+
+**Exact Command**: `php artisan config:clear && vendor/bin/pest tests/Feature/Setting/ApprovalWorkflowTest.php`
+
+**Results**:
+- `it can store a sequential approval workflow with dynamic steps`: ✅ PASSED
+- `it resolves steps using the approver resolver`: ✅ PASSED
+
+**Status**: ✅ SUCCESS
+

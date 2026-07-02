@@ -18,7 +18,7 @@
             $resolver = app(\Innovity\ApprovalEngine\Contracts\ApproverResolverInterface::class);
             
             foreach ($pendingSteps as $step) {
-                $authorizedUserIds = $resolver->resolve($step->workflowStep->required_user_type, $approvable);
+                $authorizedUserIds = $resolver->resolve((string) $step->workflowStep->id, $approvable);
                 if (in_array(auth()->id(), $authorizedUserIds)) {
                     $canApprove = true;
                     $pendingStep = $step;

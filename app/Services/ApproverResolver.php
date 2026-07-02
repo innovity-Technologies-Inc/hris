@@ -18,12 +18,64 @@ class ApproverResolver implements ApproverResolverInterface
      */
     public function resolve(string $requiredUserType, Model $approvable): array
     {
+        // 1. Identify if a WorkflowStep ID was passed instead of a raw type string
+        $step = null;
+        if (is_numeric($requiredUserType)) {
+            $step = \Innovity\ApprovalEngine\Models\WorkflowStep::find((int) $requiredUserType);
+        }
+
+        // 2. Determine step type
+        $type = $step ? ($step->type ?? 'user-type') : 'user-type';
+
+        switch ($type) {
+            case 'specific-user':
+                return $step && $step->user_id ? [$step->user_id] : [];
+
+            case 'role-user':
+                if (!$step || !$step->role_id || !$step->required_user_type) {
+                    return [];
+                }
+                
+                // Get users of a specific user type (e.g. Department Head)
+                $typeUserIds = $this->resolveUserType($step->required_user_type, $approvable);
+                
+                if (empty($typeUserIds)) {
+                    return [];
+                }
+
+                // Filter users to only those who also possess the Spatie Role
+                return User::whereIn('id', $typeUserIds)
+                    ->whereHas('roles', function($q) use ($step) {
+                        $q->where('id', $step->role_id);
+                    })
+                    ->pluck('id')
+                    ->toArray();
+
+            case 'user-type':
+            default:
+                $userTypeString = $step ? $step->required_user_type : $requiredUserType;
+                return $this->resolveUserType($userTypeString, $approvable);
+        }
+    }
+
+    /**
+     * Resolve users by Organizational Hierarchy (Original Code logic)
+     */
+    protected function resolveUserType(?string $requiredUserType, Model $approvable): array
+    {
+        if (!$requiredUserType) {
+            return [];
+        }
+
         // Get the requesting user from the approvable model
         $requestingUser = null;
         if (method_exists($approvable, 'user')) {
             $requestingUser = $approvable->user;
         } elseif (method_exists($approvable, 'getEmployee')) {
             $emp = $approvable->getEmployee()->withoutGlobalScopes()->first();
+            $requestingUser = $emp ? $emp->user : null;
+        } elseif (method_exists($approvable, 'employee')) {
+            $emp = $approvable->employee()->withoutGlobalScopes()->first();
             $requestingUser = $emp ? $emp->user : null;
         } elseif (method_exists($approvable, 'creator')) {
             $requestingUser = $approvable->creator;

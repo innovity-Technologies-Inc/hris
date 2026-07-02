@@ -102,7 +102,7 @@ class AppServiceProvider extends ServiceProvider
                 $approvable = $stepRequest->approvalRequest->approvable;
                 
                 if ($approvable) {
-                    $approverIds = $resolver->resolve($stepRequest->workflowStep->required_user_type, $approvable);
+                    $approverIds = $resolver->resolve((string) $stepRequest->workflowStep->id, $approvable);
                     if (!empty($approverIds)) {
                         $users = \App\Models\User::whereIn('id', $approverIds)->get();
                         foreach ($users as $user) {

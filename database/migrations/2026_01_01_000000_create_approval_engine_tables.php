@@ -29,7 +29,10 @@ return new class extends Migration
             $table->foreignId('workflow_id')->constrained(config('approval-engine.table_names.workflows', 'approval_workflows'))->cascadeOnDelete();
             $table->string('name');
             $table->integer('step_order');
-            $table->string('required_user_type'); // e.g., 'department_head', 'manager', etc.
+            $table->string('type')->default('user-type'); // 'user-type', 'role-user', 'specific-user'
+            $table->string('required_user_type')->nullable(); // Made nullable
+            $table->unsignedBigInteger('role_id')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
         });
 

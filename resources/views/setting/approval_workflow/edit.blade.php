@@ -85,27 +85,65 @@
                                 <div id="stepsContainer">
                                     @foreach($workflow->steps as $index => $step)
                                         <div class="card mb-2 step-row bg-light border shadow-none">
-                                            <div class="card-body p-3 d-flex align-items-center gap-3">
-                                                <div class="step-handle text-muted" style="cursor: grab;">
-                                                    <i data-feather="menu"></i>
-                                                </div>
-                                                <div class="step-number fw-bold bg-white border rounded px-2 py-1 text-center" style="min-width: 40px;">
-                                                    {{ $index + 1 }}
-                                                </div>
-                                                <div class="flex-grow-1">
-                                                    <select class="form-select user-type-select" name="steps[{{ $index }}][required_user_type]" required>
-                                                        <option value="" disabled>Select Approver Type</option>
-                                                        @foreach($userTypes as $type)
-                                                            <option value="{{ $type->value }}" {{ $step->required_user_type == $type->value ? 'selected' : '' }}>
-                                                                {{ ucfirst(str_replace('-', ' ', $type->value)) }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                                <div>
-                                                    <button type="button" class="btn btn-sm btn-danger remove-step-btn">
-                                                        <i style="height: 14px; width: 14px" data-feather="x"></i>
-                                                    </button>
+                                            <div class="card-body p-3">
+                                                <div class="d-flex align-items-center gap-3">
+                                                    <div class="step-handle text-muted" style="cursor: grab;">
+                                                        <i data-feather="menu"></i>
+                                                    </div>
+                                                    <div class="step-number fw-bold bg-white border rounded px-2 py-1 text-center" style="min-width: 40px;">
+                                                        {{ $index + 1 }}
+                                                    </div>
+                                                    
+                                                    <!-- Step Type -->
+                                                    <div style="min-width: 150px;">
+                                                        <select class="form-select step-type-select" name="steps[{{ $index }}][type]" required>
+                                                            <option value="user-type" {{ ($step->type ?? 'user-type') === 'user-type' ? 'selected' : '' }}>User Type</option>
+                                                            <option value="role-user" {{ ($step->type ?? '') === 'role-user' ? 'selected' : '' }}>User Type + Role</option>
+                                                            <option value="specific-user" {{ ($step->type ?? '') === 'specific-user' ? 'selected' : '' }}>Specific User</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <!-- User Type Selection -->
+                                                    <div class="flex-grow-1 user-type-wrapper" style="display: {{ ($step->type ?? 'user-type') !== 'specific-user' ? 'block' : 'none' }};">
+                                                        <select class="form-select user-type-select" name="steps[{{ $index }}][required_user_type]" {{ ($step->type ?? 'user-type') !== 'specific-user' ? 'required' : '' }}>
+                                                            <option value="" disabled selected>Select User Type</option>
+                                                            @foreach($userTypes as $type)
+                                                                <option value="{{ $type->value }}" {{ $step->required_user_type === $type->value ? 'selected' : '' }}>
+                                                                    {{ ucfirst(str_replace('-', ' ', $type->value)) }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+
+                                                    <!-- Spatie Role Selection -->
+                                                    <div class="flex-grow-1 role-wrapper" style="display: {{ ($step->type ?? '') === 'role-user' ? 'block' : 'none' }};">
+                                                        <select class="form-select role-select" name="steps[{{ $index }}][role_id]" {{ ($step->type ?? '') === 'role-user' ? 'required' : '' }}>
+                                                            <option value="" disabled selected>Select Role</option>
+                                                            @foreach($roles as $role)
+                                                                <option value="{{ $role->id }}" {{ $step->role_id == $role->id ? 'selected' : '' }}>
+                                                                    {{ $role->name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+
+                                                    <!-- Specific User Selection -->
+                                                    <div class="flex-grow-1 user-wrapper" style="display: {{ ($step->type ?? '') === 'specific-user' ? 'block' : 'none' }};">
+                                                        <select class="form-select user-select" name="steps[{{ $index }}][user_id]" {{ ($step->type ?? '') === 'specific-user' ? 'required' : '' }}>
+                                                            <option value="" disabled selected>Select Specific User</option>
+                                                            @foreach($users as $user)
+                                                                <option value="{{ $user->id }}" {{ $step->user_id == $user->id ? 'selected' : '' }}>
+                                                                    {{ $user->name }} ({{ $user->email }})
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+
+                                                    <div>
+                                                        <button type="button" class="btn btn-sm btn-danger remove-step-btn">
+                                                            <i style="height: 14px; width: 14px" data-feather="x"></i>
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -130,25 +168,59 @@
     <!-- Template for Step Row -->
     <template id="stepTemplate">
         <div class="card mb-2 step-row bg-light border shadow-none">
-            <div class="card-body p-3 d-flex align-items-center gap-3">
-                <div class="step-handle text-muted" style="cursor: grab;">
-                    <i data-feather="menu"></i>
-                </div>
-                <div class="step-number fw-bold bg-white border rounded px-2 py-1 text-center" style="min-width: 40px;">
-                    1
-                </div>
-                <div class="flex-grow-1">
-                    <select class="form-select user-type-select" required>
-                        <option value="" disabled selected>Select Approver Type</option>
-                        @foreach($userTypes as $type)
-                            <option value="{{ $type->value }}">{{ ucfirst(str_replace('-', ' ', $type->value)) }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div>
-                    <button type="button" class="btn btn-sm btn-danger remove-step-btn">
-                        <i style="height: 14px; width: 14px" data-feather="x"></i>
-                    </button>
+            <div class="card-body p-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="step-handle text-muted" style="cursor: grab;">
+                        <i data-feather="menu"></i>
+                    </div>
+                    <div class="step-number fw-bold bg-white border rounded px-2 py-1 text-center" style="min-width: 40px;">
+                        1
+                    </div>
+                    
+                    <!-- Step Type -->
+                    <div style="min-width: 150px;">
+                        <select class="form-select step-type-select" required>
+                            <option value="user-type" selected>User Type</option>
+                            <option value="role-user">User Type + Role</option>
+                            <option value="specific-user">Specific User</option>
+                        </select>
+                    </div>
+
+                    <!-- User Type Selection (for user-type and role-user) -->
+                    <div class="flex-grow-1 user-type-wrapper">
+                        <select class="form-select user-type-select" required>
+                            <option value="" disabled selected>Select User Type</option>
+                            @foreach($userTypes as $type)
+                                <option value="{{ $type->value }}">{{ ucfirst(str_replace('-', ' ', $type->value)) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Spatie Role Selection (for role-user) -->
+                    <div class="flex-grow-1 role-wrapper" style="display: none;">
+                        <select class="form-select role-select">
+                            <option value="" disabled selected>Select Role</option>
+                            @foreach($roles as $role)
+                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Specific User Selection (for specific-user) -->
+                    <div class="flex-grow-1 user-wrapper" style="display: none;">
+                        <select class="form-select user-select">
+                            <option value="" disabled selected>Select Specific User</option>
+                            @foreach($users as $user)
+                                <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div>
+                        <button type="button" class="btn btn-sm btn-danger remove-step-btn">
+                            <i style="height: 14px; width: 14px" data-feather="x"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -184,7 +256,12 @@
             
             rows.each(function(index) {
                 $(this).find('.step-number').text(index + 1);
+                
+                // Update names of input fields for correct form serialization if needed
+                $(this).find('.step-type-select').attr('name', `steps[${index}][type]`);
                 $(this).find('.user-type-select').attr('name', `steps[${index}][required_user_type]`);
+                $(this).find('.role-select').attr('name', `steps[${index}][role_id]`);
+                $(this).find('.user-select').attr('name', `steps[${index}][user_id]`);
             });
 
             totalStepsDisplay.text(`out of ${totalSteps} total step(s)`);
@@ -212,6 +289,27 @@
             }
         });
 
+        // Toggle row inputs based on type selection
+        stepsContainer.on('change', '.step-type-select', function() {
+            const row = $(this).closest('.step-row');
+            const type = $(this).val();
+
+            // Reset wrappers visibility and required attributes
+            row.find('.user-type-wrapper, .role-wrapper, .user-wrapper').hide();
+            row.find('.user-type-select, .role-select, .user-select').removeAttr('required');
+
+            if (type === 'user-type') {
+                row.find('.user-type-wrapper').show();
+                row.find('.user-type-select').attr('required', true);
+            } else if (type === 'role-user') {
+                row.find('.user-type-wrapper, .role-wrapper').show();
+                row.find('.user-type-select, .role-select').attr('required', true);
+            } else if (type === 'specific-user') {
+                row.find('.user-wrapper').show();
+                row.find('.user-select').attr('required', true);
+            }
+        });
+
         // Axios Form Submission
         document.getElementById('workflowForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -228,11 +326,20 @@
             
             // Handle array of steps correctly for Axios
             const steps = [];
-            $('.step-row').each(function(index) {
-                const userType = $(this).find('.user-type-select').val();
-                if(userType) {
-                    steps.push({ required_user_type: userType });
+            $('.step-row').each(function() {
+                const type = $(this).find('.step-type-select').val();
+                const stepData = { type: type };
+
+                if (type === 'user-type') {
+                    stepData.required_user_type = $(this).find('.user-type-select').val();
+                } else if (type === 'role-user') {
+                    stepData.required_user_type = $(this).find('.user-type-select').val();
+                    stepData.role_id = $(this).find('.role-select').val();
+                } else if (type === 'specific-user') {
+                    stepData.user_id = $(this).find('.user-select').val();
                 }
+
+                steps.push(stepData);
             });
             data.steps = steps;
 

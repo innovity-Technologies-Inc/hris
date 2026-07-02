@@ -20,7 +20,9 @@ class ApprovalWorkflowController extends Controller
     {
         $modules = config('approval-engine.modules');
         $userTypes = UserType::cases();
-        return view('setting.approval_workflow.create', compact('modules', 'userTypes'));
+        $roles = \Spatie\Permission\Models\Role::orderBy('name')->get();
+        $users = \App\Models\User::orderBy('name')->get();
+        return view('setting.approval_workflow.create', compact('modules', 'userTypes', 'roles', 'users'));
     }
 
     public function store(Request $request)
@@ -30,7 +32,10 @@ class ApprovalWorkflowController extends Controller
             'type' => 'required|in:sequential,random',
             'required_approvals' => 'nullable|integer|min:1|max:' . max(1, count($request->steps ?? [])),
             'steps' => 'required|array|min:1',
-            'steps.*.required_user_type' => 'required|string',
+            'steps.*.type' => 'required|in:user-type,role-user,specific-user',
+            'steps.*.required_user_type' => 'nullable|required_if:steps.*.type,user-type,role-user|string',
+            'steps.*.role_id' => 'nullable|required_if:steps.*.type,role-user|exists:roles,id',
+            'steps.*.user_id' => 'nullable|required_if:steps.*.type,specific-user|exists:users,id',
         ]);
 
         DB::beginTransaction();
@@ -45,10 +50,25 @@ class ApprovalWorkflowController extends Controller
             ]);
 
             foreach ($request->steps as $index => $step) {
+                // Determine a descriptive step name based on its type
+                $stepName = 'Step ' . ($index + 1) . ' - ';
+                if ($step['type'] === 'user-type') {
+                    $stepName .= ucfirst(str_replace('-', ' ', $step['required_user_type']));
+                } elseif ($step['type'] === 'role-user') {
+                    $roleName = \Spatie\Permission\Models\Role::find($step['role_id'])->name ?? 'Role';
+                    $stepName .= ucfirst(str_replace('-', ' ', $step['required_user_type'])) . ' (' . $roleName . ')';
+                } elseif ($step['type'] === 'specific-user') {
+                    $userName = \App\Models\User::find($step['user_id'])->name ?? 'User';
+                    $stepName .= $userName;
+                }
+
                 $workflow->steps()->create([
-                    'name' => 'Step ' . ($index + 1) . ' - ' . ucfirst(str_replace('-', ' ', $step['required_user_type'])),
+                    'name' => $stepName,
                     'step_order' => $index + 1,
-                    'required_user_type' => $step['required_user_type'],
+                    'type' => $step['type'],
+                    'required_user_type' => $step['required_user_type'] ?? null,
+                    'role_id' => $step['role_id'] ?? null,
+                    'user_id' => $step['user_id'] ?? null,
                 ]);
             }
 
@@ -66,7 +86,9 @@ class ApprovalWorkflowController extends Controller
         $workflow = ApprovalWorkflow::with('steps')->findOrFail($id);
         $modules = config('approval-engine.modules');
         $userTypes = UserType::cases();
-        return view('setting.approval_workflow.edit', compact('workflow', 'modules', 'userTypes'));
+        $roles = \Spatie\Permission\Models\Role::orderBy('name')->get();
+        $users = \App\Models\User::orderBy('name')->get();
+        return view('setting.approval_workflow.edit', compact('workflow', 'modules', 'userTypes', 'roles', 'users'));
     }
 
     public function update(Request $request, $id)
@@ -76,7 +98,10 @@ class ApprovalWorkflowController extends Controller
             'type' => 'required|in:sequential,random',
             'required_approvals' => 'nullable|integer|min:1|max:' . max(1, count($request->steps ?? [])),
             'steps' => 'required|array|min:1',
-            'steps.*.required_user_type' => 'required|string',
+            'steps.*.type' => 'required|in:user-type,role-user,specific-user',
+            'steps.*.required_user_type' => 'nullable|required_if:steps.*.type,user-type,role-user|string',
+            'steps.*.role_id' => 'nullable|required_if:steps.*.type,role-user|exists:roles,id',
+            'steps.*.user_id' => 'nullable|required_if:steps.*.type,specific-user|exists:users,id',
         ]);
 
         DB::beginTransaction();
@@ -94,10 +119,25 @@ class ApprovalWorkflowController extends Controller
             $workflow->steps()->delete();
 
             foreach ($request->steps as $index => $step) {
+                // Determine a descriptive step name based on its type
+                $stepName = 'Step ' . ($index + 1) . ' - ';
+                if ($step['type'] === 'user-type') {
+                    $stepName .= ucfirst(str_replace('-', ' ', $step['required_user_type']));
+                } elseif ($step['type'] === 'role-user') {
+                    $roleName = \Spatie\Permission\Models\Role::find($step['role_id'])->name ?? 'Role';
+                    $stepName .= ucfirst(str_replace('-', ' ', $step['required_user_type'])) . ' (' . $roleName . ')';
+                } elseif ($step['type'] === 'specific-user') {
+                    $userName = \App\Models\User::find($step['user_id'])->name ?? 'User';
+                    $stepName .= $userName;
+                }
+
                 $workflow->steps()->create([
-                    'name' => 'Step ' . ($index + 1) . ' - ' . ucfirst(str_replace('-', ' ', $step['required_user_type'])),
+                    'name' => $stepName,
                     'step_order' => $index + 1,
-                    'required_user_type' => $step['required_user_type'],
+                    'type' => $step['type'],
+                    'required_user_type' => $step['required_user_type'] ?? null,
+                    'role_id' => $step['role_id'] ?? null,
+                    'user_id' => $step['user_id'] ?? null,
                 ]);
             }
 
