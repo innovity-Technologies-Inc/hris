@@ -58,19 +58,19 @@ class PermissionSeeder extends Seeder
             [
                 'name' => 'Leaves',
                 'icon' => 'calendar-days',
-                'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'supervisor-approve']
+                'actions' => ['view', 'create', 'edit', 'delete']
             ],
 
             [
                 'name' => 'Movement',
                 'icon' => 'person-walking-arrow-right',
-                'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'supervisor-approve']
+                'actions' => ['view', 'create', 'edit', 'delete']
             ],
 
             [
                 'name' => 'Transfers',
                 'icon' => 'shuffle',
-                'actions' => ['view', 'create', 'edit', 'delete', 'approve']
+                'actions' => ['view', 'create', 'edit', 'delete']
             ],
 
             [
@@ -79,11 +79,11 @@ class PermissionSeeder extends Seeder
                 'submenus' => [
                     ['name' => 'Promotions', 'route' => 'promotion.index', 'actions' => ['view', 'create', 'edit', 'delete']],
                     ['name' => 'Increments', 'route' => 'increment.index', 'actions' => ['view', 'create', 'edit', 'delete']],
-                    ['name' => 'Bonuses', 'route' => 'bonus.index', 'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'management-approve']],
+                    ['name' => 'Bonuses', 'route' => 'bonus.index', 'actions' => ['view', 'create', 'edit', 'delete']],
                     ['name' => 'Penalty Management', 'slug' => 'penalty-management', 'route' => 'payroll.penalty.index', 'actions' => ['view', 'create', 'edit', 'delete']],
-                    ['name' => 'Advance Salary', 'route' => 'advance-salary.index', 'actions' => ['view', 'create', 'edit', 'delete', 'approve']],
-                    ['name' => 'Arrear Management', 'slug' => 'arrear', 'route' => 'arrear.index', 'actions' => ['view', 'create', 'edit', 'delete', 'approve']],
-                    ['name' => 'Salary', 'route' => 'salary.index', 'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'management-approve']],
+                    ['name' => 'Advance Salary', 'route' => 'advance-salary.index', 'actions' => ['view', 'create', 'edit', 'delete']],
+                    ['name' => 'Arrear Management', 'slug' => 'arrear', 'route' => 'arrear.index', 'actions' => ['view', 'create', 'edit', 'delete']],
+                    ['name' => 'Salary', 'route' => 'salary.index', 'actions' => ['view', 'create', 'edit', 'delete']],
                     ['name' => 'Disbursement', 'slug' => 'disbursement', 'route' => 'disbursement.index', 'actions' => ['view', 'process']],
                 ]
             ],
@@ -143,7 +143,7 @@ class PermissionSeeder extends Seeder
                 'submenus' => [
                     ['name' => 'Vehicles', 'route' => 'transport.vehicles.index'],
                     ['name' => 'Assign Driver', 'route' => 'transport.vehicle_drivers.index'],
-                    ['name' => 'Vehicle Requisition', 'route' => 'transport.vehicle_requisitions.index', 'actions' => ['view', 'create', 'edit', 'delete', 'hr-approve', 'supervisor-approve']],
+                    ['name' => 'Vehicle Requisition', 'route' => 'transport.vehicle_requisitions.index', 'actions' => ['view', 'create', 'edit', 'delete']],
                     ['name' => 'Employee Transport', 'route' => 'transport.employee_transports.index', 'actions' => ['view', 'create', 'edit', 'delete',]],
                     ['name' => 'Vehicle Allocation', 'route' => 'transport.vehicle_allocations.dashboard', 'actions' => ['view', 'create', 'edit', 'delete']],
                 ]
