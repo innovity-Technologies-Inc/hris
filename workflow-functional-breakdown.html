@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+           <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <script>
         tailwind.config = {
             theme: {
@@ -30,17 +30,17 @@
             }
         }
     </script>
-    
+
     <style>
         body {
             background-color: #0f172a;
             color: #e2e8f0;
-            background-image: 
+            background-image:
                 radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
                 radial-gradient(circle at 85% 30%, rgba(236, 72, 153, 0.15) 0%, transparent 50%);
             background-attachment: fixed;
         }
-        
+
         /* Glassmorphism Classes */
         .glass-card {
             background: rgba(30, 41, 59, 0.7);
@@ -50,7 +50,7 @@
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             transition: all 0.3s ease;
         }
-        
+
         .glass-card:hover {
             border-color: rgba(99, 102, 241, 0.3);
             transform: translateY(-2px);
@@ -60,7 +60,7 @@
             position: relative;
             transition: all 0.3s ease;
         }
-        
+
         .tab-btn::after {
             content: '';
             position: absolute;
@@ -75,7 +75,7 @@
         .tab-btn.active::after {
             width: 100%;
         }
-        
+
         .tab-btn.active {
             color: #fff;
             font-weight: 600;
@@ -115,9 +115,9 @@
     </style>
 </head>
 <body class="min-h-screen antialiased p-6 md:p-10">
-    
+
     <div class="max-w-6xl mx-auto">
-        
+
         <!-- Header -->
         <header class="text-center mb-12 animate-[fadeIn_0.5s_ease-out]">
             <div class="inline-flex items-center justify-center p-3 mb-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400">
@@ -146,7 +146,7 @@
             <!-- TAB 1: Core Cycle -->
             <div id="tab-overview" class="tab-content active">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    
+
                     <!-- Step 1 -->
                     <div class="glass-card rounded-2xl p-8 relative overflow-hidden group">
                         <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
@@ -227,7 +227,7 @@
             <!-- TAB 2: Database Models -->
             <div id="tab-database" class="tab-content">
                 <div class="space-y-8">
-                    
+
                     <!-- Table 1 -->
                     <div class="glass-card rounded-2xl overflow-hidden border border-indigo-500/20">
                         <div class="bg-indigo-500/10 p-5 border-b border-indigo-500/20 flex items-center justify-between">
@@ -350,7 +350,7 @@
             <!-- TAB 3: Methods & Traits -->
             <div id="tab-methods" class="tab-content">
                 <div class="space-y-6">
-                    
+
                     <div class="glass-card rounded-2xl p-8 border-l-4 border-indigo-500">
                         <h3 class="text-2xl font-bold text-white mb-2 flex items-center">
                             <i class="fa-solid fa-code-branch text-indigo-500 mr-3"></i> The <code class="mx-2 text-indigo-300">Approvable</code> Trait
@@ -358,7 +358,7 @@
                         <p class="text-slate-300 mb-4">
                             Attached to subject models (e.g., <code>Leave</code>, <code>Salary</code>). It provides the core relationship methods and the ignition switch to begin workflows.
                         </p>
-                        
+
                         <div class="bg-slate-900 rounded-lg p-4 font-mono text-sm border border-slate-700 shadow-inner overflow-x-auto">
                             <div class="text-slate-400 mb-2">// In a Controller (e.g., SalaryController@store)</div>
                             <div>
@@ -399,7 +399,7 @@
             </div>
 
         </main>
-        
+
         <footer class="mt-16 text-center text-slate-500 text-sm pb-8">
             <p>&copy; Innovity Technologies Inc. - HRMS Documentation</p>
         </footer>
@@ -413,7 +413,7 @@
                 // Remove active classes
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
                 document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                
+
                 // Add active to clicked tab
                 btn.classList.add('active');
                 document.getElementById(btn.dataset.target).classList.add('active');

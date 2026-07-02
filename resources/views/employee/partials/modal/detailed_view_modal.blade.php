@@ -58,7 +58,7 @@
 
                     <!-- 2. Personal Information -->
                     <div class="card border shadow-none mb-3">
-                        <div class="card-header bg-light py-2">
+                        <div class="card-header bg-body-secondary py-2">
                             <h6 class="mb-0 fw-bold">Personal Information</h6>
                         </div>
                         <div class="card-body">
@@ -83,7 +83,7 @@
 
                     <!-- 3. Birth & Identification Documents -->
                     <div class="card border shadow-none mb-3">
-                        <div class="card-header bg-light py-2">
+                        <div class="card-header bg-body-secondary py-2">
                             <h6 class="mb-0 fw-bold">Birth & Identification Documents</h6>
                         </div>
                         <div class="card-body">
@@ -106,7 +106,7 @@
 
                     <!-- 4. Contact Information -->
                     <div class="card border shadow-none mb-3">
-                        <div class="card-header bg-light py-2">
+                        <div class="card-header bg-body-secondary py-2">
                             <h6 class="mb-0 fw-bold">Contact Information</h6>
                         </div>
                         <div class="card-body">
@@ -123,7 +123,7 @@
 
                     <!-- 5. Present Address -->
                     <div class="card border shadow-none mb-3">
-                        <div class="card-header bg-light py-2">
+                        <div class="card-header bg-body-secondary py-2">
                             <h6 class="mb-0 fw-bold">Present Address</h6>
                         </div>
                         <div class="card-body">
@@ -133,7 +133,7 @@
 
                     <!-- 6. Permanent Address -->
                     <div class="card border shadow-none mb-3">
-                        <div class="card-header bg-light py-2">
+                        <div class="card-header bg-body-secondary py-2">
                             <h6 class="mb-0 fw-bold">Permanent Address</h6>
                         </div>
                         <div class="card-body">
@@ -143,7 +143,7 @@
 
                     <!-- 7. Reference Information -->
                     <div class="card border shadow-none mb-3">
-                        <div class="card-header bg-light py-2">
+                        <div class="card-header bg-body-secondary py-2">
                             <h6 class="mb-0 fw-bold">Reference / Emergency Contact</h6>
                         </div>
                         <div class="card-body">
@@ -153,7 +153,7 @@
 
                     <!-- 8. Office Information -->
                     <div id="section_office_info_card" class="card border shadow-none mb-3">
-                        <div class="card-header bg-light py-2">
+                        <div class="card-header bg-body-secondary py-2">
                             <h6 class="mb-0 fw-bold">Office Information</h6>
                         </div>
                         <div class="card-body">
@@ -206,7 +206,7 @@
 
                     <!-- 9. Education Information -->
                     <div id="section_education" class="card border shadow-none mb-3 d-none">
-                        <div class="card-header bg-light py-2">
+                        <div class="card-header bg-body-secondary py-2">
                             <h6 class="mb-0 fw-bold">Education Information</h6>
                         </div>
                         <div class="card-body">
@@ -216,7 +216,7 @@
 
                     <!-- 10. Training Information -->
                     <div id="section_training" class="card border shadow-none mb-3 d-none">
-                        <div class="card-header bg-light py-2">
+                        <div class="card-header bg-body-secondary py-2">
                             <h6 class="mb-0 fw-bold">Training Information</h6>
                         </div>
                         <div class="card-body">
@@ -226,7 +226,7 @@
 
                     <!-- 11. Employment History -->
                     <div id="section_history" class="card border shadow-none mb-3 d-none">
-                        <div class="card-header bg-light py-2">
+                        <div class="card-header bg-body-secondary py-2">
                             <h6 class="mb-0 fw-bold">Employment History</h6>
                         </div>
                         <div class="card-body">
@@ -236,7 +236,7 @@
 
                     <!-- 12. Nominee Information -->
                     <div id="section_nominee" class="card border shadow-none mb-3 d-none">
-                        <div class="card-header bg-light py-2">
+                        <div class="card-header bg-body-secondary py-2">
                             <h6 class="mb-0 fw-bold">Emergency Contact Information</h6>
                         </div>
                         <div class="card-body" id="detailed_nominee_body"></div>
@@ -244,7 +244,7 @@
 
                     <!-- 13. Bank Account Information -->
                     <div id="section_bank" class="card border shadow-none mb-3 d-none">
-                        <div class="card-header bg-light py-2">
+                        <div class="card-header bg-body-secondary py-2">
                             <h6 class="mb-0 fw-bold">Accounts Information</h6>
                         </div>
                         <div class="card-body">
@@ -261,7 +261,7 @@
 
                     <!-- 14. Salary Breakdown -->
                     <div id="section_salary" class="card border shadow-none mb-3 d-none">
-                        <div class="card-header bg-light py-2">
+                        <div class="card-header bg-body-secondary py-2">
                             <h6 class="mb-0 fw-bold">Salary Breakdown</h6>
                         </div>
                         <div class="card-body">
@@ -271,7 +271,7 @@
 
                     <!-- 15. Policies & Current Plans -->
                     <div class="card border shadow-none mb-3">
-                        <div class="card-header bg-light py-2">
+                        <div class="card-header bg-body-secondary py-2">
                             <h6 class="mb-0 fw-bold">Policies & Current Plans</h6>
                         </div>
                         <div class="card-body">
@@ -290,7 +290,7 @@
 
                     <!-- 16. Leave Information -->
                     <div class="card border shadow-none mb-3">
-                        <div class="card-header bg-light py-2">
+                        <div class="card-header bg-body-secondary py-2">
                             <h6 class="mb-0 fw-bold">Leave Information</h6>
                         </div>
                         <div class="card-body">
@@ -318,9 +318,8 @@
 
 <style>
     .glass-modal {
-        background: rgba(255, 255, 255, 0.9);
         backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        background-color: var(--bs-modal-bg);
     }
     #detailedViewModalBody label.data-label {
         color: #974063 !important;
@@ -333,7 +332,7 @@
     }
     #detailedViewModalBody span.data-value {
         display: block;
-        color: #333;
+        color: var(--bs-body-color);
         font-weight: 500;
         font-size: 0.85rem;
     }

@@ -13,8 +13,21 @@ class ProfileUpdateRequestController extends Controller
     public function index(Request $request, FlexSearch $flexSearch)
     {
         $query = ProfileUpdateRequest::with('employee')->latest();
-        $requests = $flexSearch->search($query, $request->all(), ['employee.first_name', 'employee.last_name', 'section', 'status']);
-        
+
+        $searchableColumns = ['section', 'status'];
+        $keyword = $request->input('search');
+        $filters = [];
+
+        $requests = $flexSearch->apply($query, $filters, $keyword, $searchableColumns)
+            ->paginate(15);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'html' => view('employee.profile_update_requests.partials.table', compact('requests'))->render(),
+                'pagination' => $requests->links()->render(),
+            ]);
+        }
+
         return view('employee.profile_update_requests.index', compact('requests'));
     }
 

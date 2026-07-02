@@ -1,78 +1,116 @@
 @extends('structure.master')
-@section('title', 'Profile Update Requests')
 
 @section('content')
 <div class="row">
-    <div class="col-12">
-        <div class="page-title-box">
-            <h4 class="page-title">Profile Update Requests</h4>
+    <div class="col-lg-12">
+        <div class="card border-0 shadow-sm rounded">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Profile Update Requests</h5>
+            </div><!-- end card header -->
+            <div class="card-header border-bottom p-4">
+                <div class="row align-items-start">
+                    {{-- Filter Section --}}
+                    <div class="col-md-12">
+                        <div class="border rounded shadow-sm p-3 filter-section-bg">
+                            <form id="searchForm">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label text-muted small fw-semibold mb-1">Keyword Search</label>
+                                        <div class="input-group input-group-md">
+                                            <input type="text" name="search" class="form-control border-end-0" placeholder="Search by section, status..." value="{{ request('search') }}">
+                                            <span class="input-group-text border-start-0 input-group-bg">
+                                                <i class="mdi mdi-magnify text-muted"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label text-muted small fw-semibold mb-1">Status</label>
+                                        <select name="status" class="form-select">
+                                            <option value="">All Status</option>
+                                            <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
+                                            <option value="approved" {{ request('status') === 'approved' ? 'selected' : '' }}>Approved</option>
+                                            <option value="rejected" {{ request('status') === 'rejected' ? 'selected' : '' }}>Rejected</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 d-flex align-items-end">
+                                        <button type="submit" class="btn btn-primary btn-md w-100">
+                                            <i class="mdi mdi-filter-variant me-1"></i> Filter
+                                        </button>
+                                    </div>
+                                    <div class="col-md-1 d-flex align-items-end">
+                                        <button type="button" id="resetBtn" class="btn btn-outline-secondary btn-md w-100">
+                                            <i class="mdi mdi-refresh me-1"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h4 class="header-title">List of Requests</h4>
+    <div class="col-lg-12 mt-3">
+        <div class="card border-0 shadow-sm rounded">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Requests List</h5>
             </div>
             <div class="card-body">
-                <table class="table table-bordered table-striped dt-responsive nowrap w-100">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Employee Name</th>
-                            <th>Section</th>
-                            <th>Status</th>
-                            <th>Requested At</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($requests as $index => $request)
-                        <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $request->employee->full_name ?? 'N/A' }} ({{ $request->employee->punch_card_no ?? '' }})</td>
-                            <td><span class="badge bg-info text-capitalize">{{ str_replace('_', ' ', $request->section) }}</span></td>
-                            <td>
-                                @if($request->status === 'pending')
-                                    <span class="badge bg-warning">Pending</span>
-                                @elseif($request->status === 'approved')
-                                    <span class="badge bg-success">Approved</span>
-                                @else
-                                    <span class="badge bg-danger">Rejected</span>
-                                @endif
-                            </td>
-                            <td>{{ $request->created_at->format('d M Y, h:i A') }}</td>
-                            <td>
-                                <a href="{{ route('profile_update_requests.show', $request->id) }}" class="btn btn-sm btn-primary">
-                                    <i class="mdi mdi-eye"></i> View
-                                </a>
-                                @if(auth()->user()->can('profile-update-requests.delete'))
-                                <button type="button" class="btn btn-sm btn-danger" onclick="deleteRequest({{ $request->id }})">
-                                    <i class="mdi mdi-trash-can"></i> Delete
-                                </button>
-                                @endif
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-                
-                @if(method_exists($requests, 'links'))
-                <div class="mt-3">
-                    {{ $requests->links() }}
+                <div id="tableContainer">
+                    @include('employee.profile_update_requests.partials.table', ['requests' => $requests])
                 </div>
-                @endif
             </div>
         </div>
     </div>
 </div>
 @endsection
 
-@section('script')
+@push('scripts')
 <script>
-    function deleteRequest(id) {
+$(document).ready(function() {
+    const searchForm = $('#searchForm');
+    const tableContainer = $('#tableContainer');
+
+    function fetchResults(url = "{{ route('profile_update_requests.index') }}") {
+        const queryString = searchForm.serialize();
+        $.ajax({
+            url: url,
+            data: queryString,
+            beforeSend: function() {
+                tableContainer.html('<div class="text-center py-4 text-muted">Loading...</div>');
+            },
+            success: function(response) {
+                tableContainer.html(response.html);
+                if (typeof feather !== 'undefined') {
+                    feather.replace();
+                }
+                const newUrl = '?' + queryString;
+                window.history.pushState(null, '', newUrl || location.pathname);
+            }
+        });
+    }
+
+    searchForm.on('submit', function(e) {
+        e.preventDefault();
+        fetchResults();
+    });
+
+    searchForm.on('input change', 'input, select', function() {
+        fetchResults();
+    });
+
+    $('#resetBtn').on('click', function() {
+        searchForm[0].reset();
+        window.location.href = "{{ route('profile_update_requests.index') }}";
+    });
+
+    $(document).on('click', '.pagination a', function(e) {
+        e.preventDefault();
+        fetchResults($(this).attr('href'));
+    });
+
+    window.deleteRequest = function(id) {
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
@@ -85,15 +123,16 @@
             if (result.isConfirmed) {
                 axios.delete('{{ url('employees/update-requests') }}/' + id)
                     .then(response => {
-                        if(response.data.success) {
+                        if (response.data.success) {
                             Swal.fire("Deleted!", response.data.message, "success").then(() => location.reload());
                         }
                     })
-                    .catch(error => {
+                    .catch(() => {
                         Swal.fire("Error!", "Something went wrong.", "error");
                     });
             }
         });
-    }
+    };
+});
 </script>
-@endsection
+@endpush

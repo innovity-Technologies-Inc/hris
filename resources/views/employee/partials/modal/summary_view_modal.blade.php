@@ -29,7 +29,7 @@
                         <!-- 1. Basic Summary Info -->
                         <div class="col-12">
                             <div class="card border shadow-none">
-                                <div class="card-body bg-light-subtle rounded">
+                                <div class="card-body bg-body-secondary-subtle rounded">
                                     <div class="row align-items-center">
                                         <div class="col-md-1 text-center">
                                             <img id="summary_photo" src="" alt="Photo" class="img-fluid rounded-circle border" style="width: 60px; height: 60px; object-fit: cover;">
@@ -52,7 +52,7 @@
                         <!-- 2. General Information (Important Data) -->
                         <div class="col-md-4">
                             <div class="card border shadow-none h-100">
-                                <div class="card-header bg-light py-2"><h6 class="mb-0 fw-bold small text-uppercase">General Information</h6></div>
+                                <div class="card-header bg-body-secondary py-2"><h6 class="mb-0 fw-bold small text-uppercase">General Information</h6></div>
                                 <div class="card-body">
                                     <div class="mb-2"><label class="data-label">Personal Mobile</label><span class="data-value" id="summary_personal_mobile"></span></div>
                                     <div class="mb-2"><label class="data-label">Personal Email</label><span class="data-value" id="summary_personal_email"></span></div>
@@ -65,7 +65,7 @@
                         <!-- 3. Office Information (Current Only) -->
                         <div class="col-md-4">
                             <div class="card border shadow-none h-100">
-                                <div class="card-header bg-light py-2"><h6 class="mb-0 fw-bold small text-uppercase">Current Office</h6></div>
+                                <div class="card-header bg-body-secondary py-2"><h6 class="mb-0 fw-bold small text-uppercase">Current Office</h6></div>
                                 <div class="card-body">
                                     <div class="mb-2"><label class="data-label">Company</label><span class="data-value fw-bold" id="summary_current_company"></span></div>
                                     <div class="mb-2"><label class="data-label">Designation</label><span class="data-value" id="summary_current_designation"></span></div>
@@ -79,7 +79,7 @@
                         <!-- 4. Policies & Active Plans -->
                         <div class="col-md-4">
                             <div class="card border shadow-none h-100">
-                                <div class="card-header bg-light py-2"><h6 class="mb-0 fw-bold small text-uppercase">Active Policies & Plans</h6></div>
+                                <div class="card-header bg-body-secondary py-2"><h6 class="mb-0 fw-bold small text-uppercase">Active Policies & Plans</h6></div>
                                 <div class="card-body">
                                     <label class="data-label">Policy Tags</label>
                                     <div id="summary_policy_body" class="mb-3 d-flex flex-wrap gap-1"></div>
@@ -93,7 +93,7 @@
                         <!-- 5. Education & Experience -->
                         <div class="col-md-6">
                             <div class="card border shadow-none h-100">
-                                <div class="card-header bg-light py-2"><h6 class="mb-0 fw-bold small text-uppercase">Education & Career</h6></div>
+                                <div class="card-header bg-body-secondary py-2"><h6 class="mb-0 fw-bold small text-uppercase">Education & Career</h6></div>
                                 <div class="card-body">
                                     <div class="mb-3">
                                         <label class="data-label">Qualification</label>
@@ -110,7 +110,7 @@
                         <!-- 6. Trainings (Titles Only) -->
                         <div class="col-md-6">
                             <div class="card border shadow-none h-100">
-                                <div class="card-header bg-light py-2"><h6 class="mb-0 fw-bold small text-uppercase">Professional Trainings</h6></div>
+                                <div class="card-header bg-body-secondary py-2"><h6 class="mb-0 fw-bold small text-uppercase">Professional Trainings</h6></div>
                                 <div class="card-body">
                                     <div id="summary_training_titles" class="d-flex flex-wrap gap-2"></div>
                                 </div>
@@ -120,7 +120,7 @@
                         <!-- 7. Nominee (Name & Relation Only) -->
                         <div class="col-12">
                             <div class="card border shadow-none">
-                                <div class="card-header bg-light py-2"><h6 class="mb-0 fw-bold small text-uppercase">Emergency Contact Summary</h6></div>
+                                <div class="card-header bg-body-secondary py-2"><h6 class="mb-0 fw-bold small text-uppercase">Emergency Contact Summary</h6></div>
                                 <div class="card-body py-2">
                                     <div class="row align-items-center">
                                         <div class="col-md-6 border-end">
@@ -147,9 +147,8 @@
 
 <style>
     .glass-modal {
-        background: rgba(255, 255, 255, 0.9);
         backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        background-color: var(--bs-modal-bg);
     }
     #summaryViewModalBody .data-label {
         color: #974063 !important;
@@ -162,7 +161,7 @@
     }
     #summaryViewModalBody .data-value {
         display: block;
-        color: #333;
+        color: var(--bs-body-color);
         font-weight: 500;
         font-size: 0.85rem;
     }
