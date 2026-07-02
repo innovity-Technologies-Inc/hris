@@ -14,7 +14,7 @@
                         <div class="border rounded shadow-sm p-3 filter-section-bg">
                             <form id="searchForm">
                                 <div class="row g-3">
-                                    <div class="col-md-6">
+                                    <div class="col-md-7">
                                         <label class="form-label text-muted small fw-semibold mb-1">Keyword Search</label>
                                         <div class="input-group input-group-md">
                                             <input type="text" name="search" class="form-control border-end-0" placeholder="Search by section, status..." value="{{ request('search') }}">
@@ -33,13 +33,8 @@
                                         </select>
                                     </div>
                                     <div class="col-md-2 d-flex align-items-end">
-                                        <button type="submit" class="btn btn-primary btn-md w-100">
-                                            <i class="mdi mdi-filter-variant me-1"></i> Filter
-                                        </button>
-                                    </div>
-                                    <div class="col-md-1 d-flex align-items-end">
                                         <button type="button" id="resetBtn" class="btn btn-outline-secondary btn-md w-100">
-                                            <i class="mdi mdi-refresh me-1"></i>
+                                            <i class="mdi mdi-refresh me-1"></i> Reset
                                         </button>
                                     </div>
                                 </div>
@@ -93,7 +88,6 @@ $(document).ready(function() {
 
     searchForm.on('submit', function(e) {
         e.preventDefault();
-        fetchResults();
     });
 
     searchForm.on('input change', 'input, select', function() {
