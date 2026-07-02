@@ -1,0 +1,2002 @@
+[
+    {
+        "id": 1,
+        "employee_id": 1,
+        "histories": "[{\"end_date\": \"2021-07-16\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-12-05\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:29",
+        "updated_at": "2026-07-02 17:19:29",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 2,
+        "employee_id": 2,
+        "histories": "[{\"end_date\": \"2023-05-24\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-05-01\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:29",
+        "updated_at": "2026-07-02 17:19:29",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 3,
+        "employee_id": 3,
+        "histories": "[{\"end_date\": \"2024-11-17\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-04-04\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:29",
+        "updated_at": "2026-07-02 17:19:29",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 4,
+        "employee_id": 4,
+        "histories": "[{\"end_date\": \"2023-12-11\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2016-09-11\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:29",
+        "updated_at": "2026-07-02 17:19:29",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 5,
+        "employee_id": 5,
+        "histories": "[{\"end_date\": \"2022-02-12\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-11-13\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:29",
+        "updated_at": "2026-07-02 17:19:29",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 6,
+        "employee_id": 6,
+        "histories": "[{\"end_date\": \"2021-10-02\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-03-18\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:29",
+        "updated_at": "2026-07-02 17:19:29",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 7,
+        "employee_id": 7,
+        "histories": "[{\"end_date\": \"2024-03-04\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-10-17\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:29",
+        "updated_at": "2026-07-02 17:19:29",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 8,
+        "employee_id": 8,
+        "histories": "[{\"end_date\": \"2021-11-10\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-06-07\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:29",
+        "updated_at": "2026-07-02 17:19:29",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 9,
+        "employee_id": 9,
+        "histories": "[{\"end_date\": \"2023-05-22\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-04-11\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:29",
+        "updated_at": "2026-07-02 17:19:29",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 10,
+        "employee_id": 10,
+        "histories": "[{\"end_date\": \"2025-04-28\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2016-11-24\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:29",
+        "updated_at": "2026-07-02 17:19:29",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 11,
+        "employee_id": 11,
+        "histories": "[{\"end_date\": \"2023-03-23\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-02-01\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:30",
+        "updated_at": "2026-07-02 17:19:30",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 12,
+        "employee_id": 12,
+        "histories": "[{\"end_date\": \"2024-11-02\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-09-28\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:30",
+        "updated_at": "2026-07-02 17:19:30",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 13,
+        "employee_id": 13,
+        "histories": "[{\"end_date\": \"2024-02-28\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-05-22\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:30",
+        "updated_at": "2026-07-02 17:19:30",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 14,
+        "employee_id": 14,
+        "histories": "[{\"end_date\": \"2023-12-31\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-01-03\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:30",
+        "updated_at": "2026-07-02 17:19:30",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 15,
+        "employee_id": 15,
+        "histories": "[{\"end_date\": \"2023-07-06\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2016-10-31\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:30",
+        "updated_at": "2026-07-02 17:19:30",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 16,
+        "employee_id": 16,
+        "histories": "[{\"end_date\": \"2024-10-11\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-05-25\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:30",
+        "updated_at": "2026-07-02 17:19:30",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 17,
+        "employee_id": 17,
+        "histories": "[{\"end_date\": \"2021-09-15\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-09-19\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:30",
+        "updated_at": "2026-07-02 17:19:30",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 18,
+        "employee_id": 18,
+        "histories": "[{\"end_date\": \"2025-02-22\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-02-12\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:30",
+        "updated_at": "2026-07-02 17:19:30",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 19,
+        "employee_id": 19,
+        "histories": "[{\"end_date\": \"2022-08-14\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-07-17\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:30",
+        "updated_at": "2026-07-02 17:19:30",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 20,
+        "employee_id": 20,
+        "histories": "[{\"end_date\": \"2021-12-16\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-07-21\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:30",
+        "updated_at": "2026-07-02 17:19:30",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 21,
+        "employee_id": 21,
+        "histories": "[{\"end_date\": \"2023-09-13\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-01-21\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:30",
+        "updated_at": "2026-07-02 17:19:30",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 22,
+        "employee_id": 22,
+        "histories": "[{\"end_date\": \"2022-03-21\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2016-12-29\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:30",
+        "updated_at": "2026-07-02 17:19:30",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 23,
+        "employee_id": 23,
+        "histories": "[{\"end_date\": \"2024-09-08\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2021-05-04\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:30",
+        "updated_at": "2026-07-02 17:19:30",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 24,
+        "employee_id": 24,
+        "histories": "[{\"end_date\": \"2022-08-02\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-11-06\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:30",
+        "updated_at": "2026-07-02 17:19:30",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 25,
+        "employee_id": 25,
+        "histories": "[{\"end_date\": \"2024-02-12\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-08-10\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:30",
+        "updated_at": "2026-07-02 17:19:30",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 26,
+        "employee_id": 26,
+        "histories": "[{\"end_date\": \"2024-07-02\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-11-14\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:30",
+        "updated_at": "2026-07-02 17:19:30",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 27,
+        "employee_id": 27,
+        "histories": "[{\"end_date\": \"2022-01-04\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2016-09-25\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:30",
+        "updated_at": "2026-07-02 17:19:30",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 28,
+        "employee_id": 28,
+        "histories": "[{\"end_date\": \"2025-01-21\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-03-14\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:30",
+        "updated_at": "2026-07-02 17:19:30",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 29,
+        "employee_id": 29,
+        "histories": "[{\"end_date\": \"2024-11-08\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-08-28\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:30",
+        "updated_at": "2026-07-02 17:19:30",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 30,
+        "employee_id": 30,
+        "histories": "[{\"end_date\": \"2022-11-24\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-01-22\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:30",
+        "updated_at": "2026-07-02 17:19:30",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 31,
+        "employee_id": 31,
+        "histories": "[{\"end_date\": \"2022-07-30\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-04-03\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:30",
+        "updated_at": "2026-07-02 17:19:30",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 32,
+        "employee_id": 32,
+        "histories": "[{\"end_date\": \"2021-11-23\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-11-01\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:30",
+        "updated_at": "2026-07-02 17:19:30",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 33,
+        "employee_id": 33,
+        "histories": "[{\"end_date\": \"2022-04-15\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-06-22\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:30",
+        "updated_at": "2026-07-02 17:19:30",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 34,
+        "employee_id": 34,
+        "histories": "[{\"end_date\": \"2025-05-27\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-06-25\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:30",
+        "updated_at": "2026-07-02 17:19:30",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 35,
+        "employee_id": 35,
+        "histories": "[{\"end_date\": \"2022-02-02\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-01-12\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:30",
+        "updated_at": "2026-07-02 17:19:30",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 36,
+        "employee_id": 36,
+        "histories": "[{\"end_date\": \"2024-06-23\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-02-11\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:30",
+        "updated_at": "2026-07-02 17:19:30",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 37,
+        "employee_id": 37,
+        "histories": "[{\"end_date\": \"2025-04-13\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-07-20\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:30",
+        "updated_at": "2026-07-02 17:19:30",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 38,
+        "employee_id": 38,
+        "histories": "[{\"end_date\": \"2023-03-03\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-09-22\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:31",
+        "updated_at": "2026-07-02 17:19:31",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 39,
+        "employee_id": 39,
+        "histories": "[{\"end_date\": \"2025-02-25\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-02-26\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:31",
+        "updated_at": "2026-07-02 17:19:31",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 40,
+        "employee_id": 40,
+        "histories": "[{\"end_date\": \"2022-02-08\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-09-22\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:31",
+        "updated_at": "2026-07-02 17:19:31",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 41,
+        "employee_id": 41,
+        "histories": "[{\"end_date\": \"2024-04-24\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2021-04-24\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:31",
+        "updated_at": "2026-07-02 17:19:31",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 42,
+        "employee_id": 42,
+        "histories": "[{\"end_date\": \"2024-10-25\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-11-30\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:31",
+        "updated_at": "2026-07-02 17:19:31",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 43,
+        "employee_id": 43,
+        "histories": "[{\"end_date\": \"2023-07-04\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-11-22\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:31",
+        "updated_at": "2026-07-02 17:19:31",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 44,
+        "employee_id": 44,
+        "histories": "[{\"end_date\": \"2023-02-23\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-09-03\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:31",
+        "updated_at": "2026-07-02 17:19:31",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 45,
+        "employee_id": 45,
+        "histories": "[{\"end_date\": \"2022-05-25\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-02-07\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:31",
+        "updated_at": "2026-07-02 17:19:31",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 46,
+        "employee_id": 46,
+        "histories": "[{\"end_date\": \"2022-10-08\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-03-02\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:31",
+        "updated_at": "2026-07-02 17:19:31",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 47,
+        "employee_id": 47,
+        "histories": "[{\"end_date\": \"2023-11-18\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-08-07\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:31",
+        "updated_at": "2026-07-02 17:19:31",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 48,
+        "employee_id": 48,
+        "histories": "[{\"end_date\": \"2024-01-04\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-06-07\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:31",
+        "updated_at": "2026-07-02 17:19:31",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 49,
+        "employee_id": 49,
+        "histories": "[{\"end_date\": \"2022-05-31\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-09-17\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:31",
+        "updated_at": "2026-07-02 17:19:31",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 50,
+        "employee_id": 50,
+        "histories": "[{\"end_date\": \"2024-10-08\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-05-06\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:31",
+        "updated_at": "2026-07-02 17:19:31",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 51,
+        "employee_id": 51,
+        "histories": "[{\"end_date\": \"2024-06-13\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-09-09\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:31",
+        "updated_at": "2026-07-02 17:19:31",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 52,
+        "employee_id": 52,
+        "histories": "[{\"end_date\": \"2025-01-18\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-02-07\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:31",
+        "updated_at": "2026-07-02 17:19:31",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 53,
+        "employee_id": 53,
+        "histories": "[{\"end_date\": \"2021-11-28\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-07-19\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:31",
+        "updated_at": "2026-07-02 17:19:31",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 54,
+        "employee_id": 54,
+        "histories": "[{\"end_date\": \"2024-07-19\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-10-28\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:31",
+        "updated_at": "2026-07-02 17:19:31",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 55,
+        "employee_id": 55,
+        "histories": "[{\"end_date\": \"2024-02-26\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-02-14\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:31",
+        "updated_at": "2026-07-02 17:19:31",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 56,
+        "employee_id": 56,
+        "histories": "[{\"end_date\": \"2022-11-04\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-01-20\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:31",
+        "updated_at": "2026-07-02 17:19:31",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 57,
+        "employee_id": 57,
+        "histories": "[{\"end_date\": \"2024-07-18\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-06-05\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:31",
+        "updated_at": "2026-07-02 17:19:31",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 58,
+        "employee_id": 58,
+        "histories": "[{\"end_date\": \"2024-04-29\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-07-16\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:31",
+        "updated_at": "2026-07-02 17:19:31",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 59,
+        "employee_id": 59,
+        "histories": "[{\"end_date\": \"2024-10-16\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-02-08\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:31",
+        "updated_at": "2026-07-02 17:19:31",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 60,
+        "employee_id": 60,
+        "histories": "[{\"end_date\": \"2023-07-10\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2016-10-22\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:31",
+        "updated_at": "2026-07-02 17:19:31",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 61,
+        "employee_id": 61,
+        "histories": "[{\"end_date\": \"2025-02-17\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-05-09\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:32",
+        "updated_at": "2026-07-02 17:19:32",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 62,
+        "employee_id": 62,
+        "histories": "[{\"end_date\": \"2022-12-04\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-07-06\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:32",
+        "updated_at": "2026-07-02 17:19:32",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 63,
+        "employee_id": 63,
+        "histories": "[{\"end_date\": \"2025-04-14\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-02-11\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:32",
+        "updated_at": "2026-07-02 17:19:32",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 64,
+        "employee_id": 64,
+        "histories": "[{\"end_date\": \"2021-07-12\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-05-08\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:32",
+        "updated_at": "2026-07-02 17:19:32",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 65,
+        "employee_id": 65,
+        "histories": "[{\"end_date\": \"2023-12-30\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-03-01\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:32",
+        "updated_at": "2026-07-02 17:19:32",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 66,
+        "employee_id": 66,
+        "histories": "[{\"end_date\": \"2024-12-15\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-07-31\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:32",
+        "updated_at": "2026-07-02 17:19:32",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 67,
+        "employee_id": 67,
+        "histories": "[{\"end_date\": \"2025-04-01\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-06-24\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:32",
+        "updated_at": "2026-07-02 17:19:32",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 68,
+        "employee_id": 68,
+        "histories": "[{\"end_date\": \"2022-11-22\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-04-14\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:32",
+        "updated_at": "2026-07-02 17:19:32",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 69,
+        "employee_id": 69,
+        "histories": "[{\"end_date\": \"2025-03-30\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-03-28\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:32",
+        "updated_at": "2026-07-02 17:19:32",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 70,
+        "employee_id": 70,
+        "histories": "[{\"end_date\": \"2023-07-20\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-06-28\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:32",
+        "updated_at": "2026-07-02 17:19:32",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 71,
+        "employee_id": 71,
+        "histories": "[{\"end_date\": \"2022-06-17\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-01-07\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:32",
+        "updated_at": "2026-07-02 17:19:32",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 72,
+        "employee_id": 72,
+        "histories": "[{\"end_date\": \"2025-04-18\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-07-22\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:32",
+        "updated_at": "2026-07-02 17:19:32",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 73,
+        "employee_id": 73,
+        "histories": "[{\"end_date\": \"2024-05-16\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-04-26\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:32",
+        "updated_at": "2026-07-02 17:19:32",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 74,
+        "employee_id": 74,
+        "histories": "[{\"end_date\": \"2024-09-26\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-11-19\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:32",
+        "updated_at": "2026-07-02 17:19:32",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 75,
+        "employee_id": 75,
+        "histories": "[{\"end_date\": \"2024-12-08\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-08-30\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:32",
+        "updated_at": "2026-07-02 17:19:32",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 76,
+        "employee_id": 76,
+        "histories": "[{\"end_date\": \"2023-09-14\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2016-12-29\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:32",
+        "updated_at": "2026-07-02 17:19:32",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 77,
+        "employee_id": 77,
+        "histories": "[{\"end_date\": \"2021-11-13\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-05-29\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:32",
+        "updated_at": "2026-07-02 17:19:32",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 78,
+        "employee_id": 78,
+        "histories": "[{\"end_date\": \"2024-11-16\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2021-02-11\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:32",
+        "updated_at": "2026-07-02 17:19:32",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 79,
+        "employee_id": 79,
+        "histories": "[{\"end_date\": \"2021-09-14\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-03-29\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:32",
+        "updated_at": "2026-07-02 17:19:32",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 80,
+        "employee_id": 80,
+        "histories": "[{\"end_date\": \"2022-01-18\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-12-18\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:32",
+        "updated_at": "2026-07-02 17:19:32",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 81,
+        "employee_id": 81,
+        "histories": "[{\"end_date\": \"2023-05-15\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-09-12\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:32",
+        "updated_at": "2026-07-02 17:19:32",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 82,
+        "employee_id": 82,
+        "histories": "[{\"end_date\": \"2025-05-13\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-02-15\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:32",
+        "updated_at": "2026-07-02 17:19:32",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 83,
+        "employee_id": 83,
+        "histories": "[{\"end_date\": \"2022-11-15\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-01-08\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:32",
+        "updated_at": "2026-07-02 17:19:32",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 84,
+        "employee_id": 84,
+        "histories": "[{\"end_date\": \"2023-01-20\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-10-25\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:32",
+        "updated_at": "2026-07-02 17:19:32",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 85,
+        "employee_id": 85,
+        "histories": "[{\"end_date\": \"2024-01-13\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-08-06\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:33",
+        "updated_at": "2026-07-02 17:19:33",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 86,
+        "employee_id": 86,
+        "histories": "[{\"end_date\": \"2024-07-28\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-01-16\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:33",
+        "updated_at": "2026-07-02 17:19:33",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 87,
+        "employee_id": 87,
+        "histories": "[{\"end_date\": \"2024-09-12\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-03-03\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:33",
+        "updated_at": "2026-07-02 17:19:33",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 88,
+        "employee_id": 88,
+        "histories": "[{\"end_date\": \"2025-02-12\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-01-17\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:33",
+        "updated_at": "2026-07-02 17:19:33",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 89,
+        "employee_id": 89,
+        "histories": "[{\"end_date\": \"2023-09-13\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-05-20\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:33",
+        "updated_at": "2026-07-02 17:19:33",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 90,
+        "employee_id": 90,
+        "histories": "[{\"end_date\": \"2021-08-09\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-05-12\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:33",
+        "updated_at": "2026-07-02 17:19:33",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 91,
+        "employee_id": 91,
+        "histories": "[{\"end_date\": \"2025-03-31\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2021-02-08\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:33",
+        "updated_at": "2026-07-02 17:19:33",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 92,
+        "employee_id": 92,
+        "histories": "[{\"end_date\": \"2021-12-17\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2016-09-07\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:33",
+        "updated_at": "2026-07-02 17:19:33",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 93,
+        "employee_id": 93,
+        "histories": "[{\"end_date\": \"2022-12-02\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-07-03\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:33",
+        "updated_at": "2026-07-02 17:19:33",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 94,
+        "employee_id": 94,
+        "histories": "[{\"end_date\": \"2024-02-03\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-10-03\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:33",
+        "updated_at": "2026-07-02 17:19:33",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 95,
+        "employee_id": 95,
+        "histories": "[{\"end_date\": \"2022-02-21\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-11-28\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:33",
+        "updated_at": "2026-07-02 17:19:33",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 96,
+        "employee_id": 96,
+        "histories": "[{\"end_date\": \"2025-06-21\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-01-28\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:33",
+        "updated_at": "2026-07-02 17:19:33",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 97,
+        "employee_id": 97,
+        "histories": "[{\"end_date\": \"2022-03-04\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-09-20\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:33",
+        "updated_at": "2026-07-02 17:19:33",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 98,
+        "employee_id": 98,
+        "histories": "[{\"end_date\": \"2022-04-16\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-01-31\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:33",
+        "updated_at": "2026-07-02 17:19:33",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 99,
+        "employee_id": 99,
+        "histories": "[{\"end_date\": \"2024-05-19\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-07-14\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:33",
+        "updated_at": "2026-07-02 17:19:33",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 100,
+        "employee_id": 100,
+        "histories": "[{\"end_date\": \"2021-07-09\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-04-24\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:33",
+        "updated_at": "2026-07-02 17:19:33",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 101,
+        "employee_id": 101,
+        "histories": "[{\"end_date\": \"2021-09-28\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2021-03-14\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:33",
+        "updated_at": "2026-07-02 17:19:33",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 102,
+        "employee_id": 102,
+        "histories": "[{\"end_date\": \"2021-07-15\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2021-02-09\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:33",
+        "updated_at": "2026-07-02 17:19:33",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 103,
+        "employee_id": 103,
+        "histories": "[{\"end_date\": \"2024-02-02\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-04-18\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:33",
+        "updated_at": "2026-07-02 17:19:33",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 104,
+        "employee_id": 104,
+        "histories": "[{\"end_date\": \"2024-07-21\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-02-05\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:33",
+        "updated_at": "2026-07-02 17:19:33",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 105,
+        "employee_id": 105,
+        "histories": "[{\"end_date\": \"2025-06-07\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2016-10-05\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:33",
+        "updated_at": "2026-07-02 17:19:33",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 106,
+        "employee_id": 106,
+        "histories": "[{\"end_date\": \"2024-04-03\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-01-25\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:33",
+        "updated_at": "2026-07-02 17:19:33",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 107,
+        "employee_id": 107,
+        "histories": "[{\"end_date\": \"2025-05-02\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-04-20\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:34",
+        "updated_at": "2026-07-02 17:19:34",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 108,
+        "employee_id": 108,
+        "histories": "[{\"end_date\": \"2022-02-06\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-02-24\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:34",
+        "updated_at": "2026-07-02 17:19:34",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 109,
+        "employee_id": 109,
+        "histories": "[{\"end_date\": \"2021-12-18\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2021-03-22\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:34",
+        "updated_at": "2026-07-02 17:19:34",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 110,
+        "employee_id": 110,
+        "histories": "[{\"end_date\": \"2024-10-25\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-06-17\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:34",
+        "updated_at": "2026-07-02 17:19:34",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 111,
+        "employee_id": 111,
+        "histories": "[{\"end_date\": \"2022-07-09\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-11-17\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:34",
+        "updated_at": "2026-07-02 17:19:34",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 112,
+        "employee_id": 112,
+        "histories": "[{\"end_date\": \"2022-04-17\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-08-07\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:34",
+        "updated_at": "2026-07-02 17:19:34",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 113,
+        "employee_id": 113,
+        "histories": "[{\"end_date\": \"2024-08-19\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-02-11\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:34",
+        "updated_at": "2026-07-02 17:19:34",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 114,
+        "employee_id": 114,
+        "histories": "[{\"end_date\": \"2025-01-13\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-05-23\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:34",
+        "updated_at": "2026-07-02 17:19:34",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 115,
+        "employee_id": 115,
+        "histories": "[{\"end_date\": \"2022-07-19\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-10-26\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:34",
+        "updated_at": "2026-07-02 17:19:34",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 116,
+        "employee_id": 116,
+        "histories": "[{\"end_date\": \"2023-10-09\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-07-02\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:34",
+        "updated_at": "2026-07-02 17:19:34",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 117,
+        "employee_id": 117,
+        "histories": "[{\"end_date\": \"2022-08-21\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2021-03-04\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:34",
+        "updated_at": "2026-07-02 17:19:34",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 118,
+        "employee_id": 118,
+        "histories": "[{\"end_date\": \"2021-12-24\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-01-14\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:34",
+        "updated_at": "2026-07-02 17:19:34",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 119,
+        "employee_id": 119,
+        "histories": "[{\"end_date\": \"2022-12-22\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-02-02\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:34",
+        "updated_at": "2026-07-02 17:19:34",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 120,
+        "employee_id": 120,
+        "histories": "[{\"end_date\": \"2024-11-03\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-05-08\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:34",
+        "updated_at": "2026-07-02 17:19:34",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 121,
+        "employee_id": 121,
+        "histories": "[{\"end_date\": \"2021-10-30\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2016-10-30\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:34",
+        "updated_at": "2026-07-02 17:19:34",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 122,
+        "employee_id": 122,
+        "histories": "[{\"end_date\": \"2025-05-20\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-05-13\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:34",
+        "updated_at": "2026-07-02 17:19:34",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 123,
+        "employee_id": 123,
+        "histories": "[{\"end_date\": \"2023-03-21\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-01-27\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:34",
+        "updated_at": "2026-07-02 17:19:34",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 124,
+        "employee_id": 124,
+        "histories": "[{\"end_date\": \"2022-04-02\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-10-22\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:34",
+        "updated_at": "2026-07-02 17:19:34",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 125,
+        "employee_id": 125,
+        "histories": "[{\"end_date\": \"2023-06-17\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-12-13\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:34",
+        "updated_at": "2026-07-02 17:19:34",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 126,
+        "employee_id": 126,
+        "histories": "[{\"end_date\": \"2025-03-05\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-05-05\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:34",
+        "updated_at": "2026-07-02 17:19:34",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 127,
+        "employee_id": 127,
+        "histories": "[{\"end_date\": \"2023-05-17\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-02-16\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:34",
+        "updated_at": "2026-07-02 17:19:34",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 128,
+        "employee_id": 128,
+        "histories": "[{\"end_date\": \"2023-04-13\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-03-16\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:34",
+        "updated_at": "2026-07-02 17:19:34",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 129,
+        "employee_id": 129,
+        "histories": "[{\"end_date\": \"2024-07-05\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2016-07-16\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:34",
+        "updated_at": "2026-07-02 17:19:34",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 130,
+        "employee_id": 130,
+        "histories": "[{\"end_date\": \"2024-07-19\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-01-24\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:34",
+        "updated_at": "2026-07-02 17:19:34",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 131,
+        "employee_id": 131,
+        "histories": "[{\"end_date\": \"2024-10-24\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-06-27\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:34",
+        "updated_at": "2026-07-02 17:19:34",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 132,
+        "employee_id": 132,
+        "histories": "[{\"end_date\": \"2024-01-26\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-06-12\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:35",
+        "updated_at": "2026-07-02 17:19:35",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 133,
+        "employee_id": 133,
+        "histories": "[{\"end_date\": \"2023-07-26\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-04-04\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:35",
+        "updated_at": "2026-07-02 17:19:35",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 134,
+        "employee_id": 134,
+        "histories": "[{\"end_date\": \"2024-02-02\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-09-22\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:35",
+        "updated_at": "2026-07-02 17:19:35",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 135,
+        "employee_id": 135,
+        "histories": "[{\"end_date\": \"2025-03-28\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-11-27\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:35",
+        "updated_at": "2026-07-02 17:19:35",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 136,
+        "employee_id": 136,
+        "histories": "[{\"end_date\": \"2024-05-15\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-07-04\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:35",
+        "updated_at": "2026-07-02 17:19:35",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 137,
+        "employee_id": 137,
+        "histories": "[{\"end_date\": \"2023-11-29\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-06-16\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:35",
+        "updated_at": "2026-07-02 17:19:35",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 138,
+        "employee_id": 138,
+        "histories": "[{\"end_date\": \"2022-06-20\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-03-24\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:35",
+        "updated_at": "2026-07-02 17:19:35",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 139,
+        "employee_id": 139,
+        "histories": "[{\"end_date\": \"2022-11-12\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-08-05\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:35",
+        "updated_at": "2026-07-02 17:19:35",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 140,
+        "employee_id": 140,
+        "histories": "[{\"end_date\": \"2024-08-08\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-03-05\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:35",
+        "updated_at": "2026-07-02 17:19:35",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 141,
+        "employee_id": 141,
+        "histories": "[{\"end_date\": \"2023-07-10\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-04-25\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:35",
+        "updated_at": "2026-07-02 17:19:35",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 142,
+        "employee_id": 142,
+        "histories": "[{\"end_date\": \"2021-11-24\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-04-14\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:35",
+        "updated_at": "2026-07-02 17:19:35",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 143,
+        "employee_id": 143,
+        "histories": "[{\"end_date\": \"2022-02-21\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2021-04-06\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:35",
+        "updated_at": "2026-07-02 17:19:35",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 144,
+        "employee_id": 144,
+        "histories": "[{\"end_date\": \"2021-09-01\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2016-10-04\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:35",
+        "updated_at": "2026-07-02 17:19:35",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 145,
+        "employee_id": 145,
+        "histories": "[{\"end_date\": \"2024-12-16\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-10-07\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:35",
+        "updated_at": "2026-07-02 17:19:35",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 146,
+        "employee_id": 146,
+        "histories": "[{\"end_date\": \"2023-11-11\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-08-24\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:35",
+        "updated_at": "2026-07-02 17:19:35",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 147,
+        "employee_id": 147,
+        "histories": "[{\"end_date\": \"2025-03-26\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-02-09\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:35",
+        "updated_at": "2026-07-02 17:19:35",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 148,
+        "employee_id": 148,
+        "histories": "[{\"end_date\": \"2022-04-19\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-12-29\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:35",
+        "updated_at": "2026-07-02 17:19:35",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 149,
+        "employee_id": 149,
+        "histories": "[{\"end_date\": \"2022-06-26\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-09-04\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:35",
+        "updated_at": "2026-07-02 17:19:35",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 150,
+        "employee_id": 150,
+        "histories": "[{\"end_date\": \"2025-01-31\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-08-15\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:35",
+        "updated_at": "2026-07-02 17:19:35",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 151,
+        "employee_id": 151,
+        "histories": "[{\"end_date\": \"2025-01-03\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-01-04\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:35",
+        "updated_at": "2026-07-02 17:19:35",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 152,
+        "employee_id": 152,
+        "histories": "[{\"end_date\": \"2025-05-19\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2016-10-30\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:35",
+        "updated_at": "2026-07-02 17:19:35",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 153,
+        "employee_id": 153,
+        "histories": "[{\"end_date\": \"2022-08-15\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-02-11\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:35",
+        "updated_at": "2026-07-02 17:19:35",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 154,
+        "employee_id": 154,
+        "histories": "[{\"end_date\": \"2023-03-10\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-03-15\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:36",
+        "updated_at": "2026-07-02 17:19:36",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 155,
+        "employee_id": 155,
+        "histories": "[{\"end_date\": \"2023-08-05\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-05-06\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:36",
+        "updated_at": "2026-07-02 17:19:36",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 156,
+        "employee_id": 156,
+        "histories": "[{\"end_date\": \"2022-06-20\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-09-07\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:36",
+        "updated_at": "2026-07-02 17:19:36",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 157,
+        "employee_id": 157,
+        "histories": "[{\"end_date\": \"2025-05-28\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2016-10-30\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:36",
+        "updated_at": "2026-07-02 17:19:36",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 158,
+        "employee_id": 158,
+        "histories": "[{\"end_date\": \"2022-05-05\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-05-14\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:36",
+        "updated_at": "2026-07-02 17:19:36",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 159,
+        "employee_id": 159,
+        "histories": "[{\"end_date\": \"2024-07-15\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-03-06\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:36",
+        "updated_at": "2026-07-02 17:19:36",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 160,
+        "employee_id": 160,
+        "histories": "[{\"end_date\": \"2024-06-15\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-02-25\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:36",
+        "updated_at": "2026-07-02 17:19:36",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 161,
+        "employee_id": 161,
+        "histories": "[{\"end_date\": \"2022-07-25\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-09-23\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:36",
+        "updated_at": "2026-07-02 17:19:36",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 162,
+        "employee_id": 162,
+        "histories": "[{\"end_date\": \"2023-07-28\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-02-14\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:36",
+        "updated_at": "2026-07-02 17:19:36",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 163,
+        "employee_id": 163,
+        "histories": "[{\"end_date\": \"2023-08-15\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-07-23\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:36",
+        "updated_at": "2026-07-02 17:19:36",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 164,
+        "employee_id": 164,
+        "histories": "[{\"end_date\": \"2025-02-07\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2021-04-10\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:36",
+        "updated_at": "2026-07-02 17:19:36",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 165,
+        "employee_id": 165,
+        "histories": "[{\"end_date\": \"2025-06-11\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-03-11\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:36",
+        "updated_at": "2026-07-02 17:19:36",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 166,
+        "employee_id": 166,
+        "histories": "[{\"end_date\": \"2022-06-17\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-10-13\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:36",
+        "updated_at": "2026-07-02 17:19:36",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 167,
+        "employee_id": 167,
+        "histories": "[{\"end_date\": \"2024-08-19\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-11-02\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:36",
+        "updated_at": "2026-07-02 17:19:36",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 168,
+        "employee_id": 168,
+        "histories": "[{\"end_date\": \"2024-12-18\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-01-02\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:36",
+        "updated_at": "2026-07-02 17:19:36",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 169,
+        "employee_id": 169,
+        "histories": "[{\"end_date\": \"2025-05-25\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-01-29\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:36",
+        "updated_at": "2026-07-02 17:19:36",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 170,
+        "employee_id": 170,
+        "histories": "[{\"end_date\": \"2021-09-16\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-05-08\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:36",
+        "updated_at": "2026-07-02 17:19:36",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 171,
+        "employee_id": 171,
+        "histories": "[{\"end_date\": \"2022-01-29\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-07-15\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:36",
+        "updated_at": "2026-07-02 17:19:36",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 172,
+        "employee_id": 172,
+        "histories": "[{\"end_date\": \"2024-05-26\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-06-19\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:36",
+        "updated_at": "2026-07-02 17:19:36",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 173,
+        "employee_id": 173,
+        "histories": "[{\"end_date\": \"2023-05-28\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-02-20\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:36",
+        "updated_at": "2026-07-02 17:19:36",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 174,
+        "employee_id": 174,
+        "histories": "[{\"end_date\": \"2024-10-09\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-08-30\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:36",
+        "updated_at": "2026-07-02 17:19:36",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 175,
+        "employee_id": 175,
+        "histories": "[{\"end_date\": \"2023-11-24\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-02-17\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:36",
+        "updated_at": "2026-07-02 17:19:36",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 176,
+        "employee_id": 176,
+        "histories": "[{\"end_date\": \"2023-06-24\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-12-01\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:36",
+        "updated_at": "2026-07-02 17:19:36",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 177,
+        "employee_id": 177,
+        "histories": "[{\"end_date\": \"2022-10-13\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-10-17\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:36",
+        "updated_at": "2026-07-02 17:19:36",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 178,
+        "employee_id": 178,
+        "histories": "[{\"end_date\": \"2021-09-16\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-01-04\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:36",
+        "updated_at": "2026-07-02 17:19:36",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 179,
+        "employee_id": 179,
+        "histories": "[{\"end_date\": \"2024-03-03\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-08-09\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:37",
+        "updated_at": "2026-07-02 17:19:37",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 180,
+        "employee_id": 180,
+        "histories": "[{\"end_date\": \"2022-07-02\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-07-02\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:37",
+        "updated_at": "2026-07-02 17:19:37",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 181,
+        "employee_id": 181,
+        "histories": "[{\"end_date\": \"2023-04-27\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-11-28\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:37",
+        "updated_at": "2026-07-02 17:19:37",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 182,
+        "employee_id": 182,
+        "histories": "[{\"end_date\": \"2022-05-14\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2016-12-29\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:37",
+        "updated_at": "2026-07-02 17:19:37",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 183,
+        "employee_id": 183,
+        "histories": "[{\"end_date\": \"2022-10-22\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-11-29\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:37",
+        "updated_at": "2026-07-02 17:19:37",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 184,
+        "employee_id": 184,
+        "histories": "[{\"end_date\": \"2022-12-08\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-05-17\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:37",
+        "updated_at": "2026-07-02 17:19:37",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 185,
+        "employee_id": 185,
+        "histories": "[{\"end_date\": \"2022-09-09\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-06-15\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:37",
+        "updated_at": "2026-07-02 17:19:37",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 186,
+        "employee_id": 186,
+        "histories": "[{\"end_date\": \"2023-05-01\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-04-13\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:37",
+        "updated_at": "2026-07-02 17:19:37",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 187,
+        "employee_id": 187,
+        "histories": "[{\"end_date\": \"2024-01-25\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-02-01\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:37",
+        "updated_at": "2026-07-02 17:19:37",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 188,
+        "employee_id": 188,
+        "histories": "[{\"end_date\": \"2021-12-11\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-01-20\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:37",
+        "updated_at": "2026-07-02 17:19:37",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 189,
+        "employee_id": 189,
+        "histories": "[{\"end_date\": \"2024-06-03\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-08-19\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:37",
+        "updated_at": "2026-07-02 17:19:37",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 190,
+        "employee_id": 190,
+        "histories": "[{\"end_date\": \"2021-08-14\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-01-18\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:37",
+        "updated_at": "2026-07-02 17:19:37",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 191,
+        "employee_id": 191,
+        "histories": "[{\"end_date\": \"2023-03-31\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-07-08\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:37",
+        "updated_at": "2026-07-02 17:19:37",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 192,
+        "employee_id": 192,
+        "histories": "[{\"end_date\": \"2022-02-17\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-03-27\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:37",
+        "updated_at": "2026-07-02 17:19:37",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 193,
+        "employee_id": 193,
+        "histories": "[{\"end_date\": \"2022-03-28\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-07-23\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:37",
+        "updated_at": "2026-07-02 17:19:37",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 194,
+        "employee_id": 194,
+        "histories": "[{\"end_date\": \"2023-05-24\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-01-28\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:37",
+        "updated_at": "2026-07-02 17:19:37",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 195,
+        "employee_id": 195,
+        "histories": "[{\"end_date\": \"2024-10-10\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-12-01\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:37",
+        "updated_at": "2026-07-02 17:19:37",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 196,
+        "employee_id": 196,
+        "histories": "[{\"end_date\": \"2024-02-21\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2020-12-21\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:37",
+        "updated_at": "2026-07-02 17:19:37",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 197,
+        "employee_id": 197,
+        "histories": "[{\"end_date\": \"2023-08-28\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2021-01-31\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:37",
+        "updated_at": "2026-07-02 17:19:37",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 198,
+        "employee_id": 198,
+        "histories": "[{\"end_date\": \"2022-09-03\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2017-12-28\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:37",
+        "updated_at": "2026-07-02 17:19:37",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 199,
+        "employee_id": 199,
+        "histories": "[{\"end_date\": \"2022-05-11\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2018-07-31\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:37",
+        "updated_at": "2026-07-02 17:19:37",
+        "created_by": null,
+        "updated_by": null
+    },
+    {
+        "id": 200,
+        "employee_id": 200,
+        "histories": "[{\"end_date\": \"2023-06-07\", \"designation\": \"Executive Developer\", \"achievements\": \"Improved system performance by 30%.\", \"company_name\": \"Previous Solution Ltd\", \"joining_date\": \"2019-11-24\", \"job_description\": \"Managed enterprise systems and databases.\"}]",
+        "status": "active",
+        "created_at": "2026-07-02 17:19:37",
+        "updated_at": "2026-07-02 17:19:37",
+        "created_by": null,
+        "updated_by": null
+    }
+]
