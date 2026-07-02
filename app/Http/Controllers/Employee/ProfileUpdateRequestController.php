@@ -56,7 +56,7 @@ class ProfileUpdateRequestController extends Controller
 
         // Start the approval workflow
         try {
-            $updateRequest->startWorkflow('ProfileUpdateRequest');
+            $updateRequest->startWorkflow('profile-update');
         } catch (\Exception $e) {
             \Log::error('Approval workflow failed for profile update request: ' . $e->getMessage());
         }

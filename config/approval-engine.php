@@ -27,13 +27,14 @@ return [
     |
     */
     'modules' => [
-        'leave' => 'Leave',
-        'promotion' => 'Promotion',
-        'increment' => 'Increment',
-        'career-movement' => 'Career Movement',
-        'travel-movement' => 'Travel Movement',
         'bonus' => 'Bonus',
+        'career-movement' => 'Career Movement',
+        'increment' => 'Increment',
+        'leave' => 'Leave',
+        'profile-update' => 'Profile Update',
+        'promotion' => 'Promotion',
         'salary' => 'Salary',
+        'travel-movement' => 'Travel Movement',
 
     ],
 
