@@ -148,13 +148,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
-                            ${generateAddressField('present_address', 'address_line', 'Address Line/House/Road', data.present_address?.address_line)}
+                            ${generateAddressField('present_address', 'line_1', 'Address Line 1', data.present_address?.line_1)}
+                            ${generateAddressField('present_address', 'line_2', 'Address Line 2', data.present_address?.line_2)}
                             ${generateAddressField('present_address', 'village', 'Village/Area', data.present_address?.village)}
                             ${generateAddressField('present_address', 'post_office', 'Post Office', data.present_address?.post_office)}
-                            ${generateAddressField('present_address', 'thana', 'Thana/Upazila', data.present_address?.thana)}
+                            ${generateAddressField('present_address', 'police_station', 'Police Station/Thana', data.present_address?.police_station)}
                             ${generateAddressField('present_address', 'district', 'District', data.present_address?.district)}
-                            ${generateAddressField('present_address', 'state', 'State/Province', data.present_address?.state)}
+                            ${generateAddressField('present_address', 'division', 'Division', data.present_address?.division)}
                             ${generateAddressField('present_address', 'zip_code', 'Zip Code', data.present_address?.zip_code)}
+                            ${generateAddressField('present_address', 'state', 'State/Province', data.present_address?.state)}
                             ${generateAddressField('present_address', 'country', 'Country', data.present_address?.country)}
                         </div>
                     </div>
@@ -167,13 +169,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
-                            ${generateAddressField('permanent_address', 'address_line', 'Address Line/House/Road', data.permanent_address?.address_line)}
+                            ${generateAddressField('permanent_address', 'line_1', 'Address Line 1', data.permanent_address?.line_1)}
+                            ${generateAddressField('permanent_address', 'line_2', 'Address Line 2', data.permanent_address?.line_2)}
                             ${generateAddressField('permanent_address', 'village', 'Village/Area', data.permanent_address?.village)}
                             ${generateAddressField('permanent_address', 'post_office', 'Post Office', data.permanent_address?.post_office)}
-                            ${generateAddressField('permanent_address', 'thana', 'Thana/Upazila', data.permanent_address?.thana)}
+                            ${generateAddressField('permanent_address', 'police_station', 'Police Station/Thana', data.permanent_address?.police_station)}
                             ${generateAddressField('permanent_address', 'district', 'District', data.permanent_address?.district)}
-                            ${generateAddressField('permanent_address', 'state', 'State/Province', data.permanent_address?.state)}
+                            ${generateAddressField('permanent_address', 'division', 'Division', data.permanent_address?.division)}
                             ${generateAddressField('permanent_address', 'zip_code', 'Zip Code', data.permanent_address?.zip_code)}
+                            ${generateAddressField('permanent_address', 'state', 'State/Province', data.permanent_address?.state)}
                             ${generateAddressField('permanent_address', 'country', 'Country', data.permanent_address?.country)}
                         </div>
                     </div>
@@ -186,10 +190,20 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
-                            ${generateAddressField('reference_address', 'name', 'Reference Name', data.reference_address?.name)}
-                            ${generateAddressField('reference_address', 'relation', 'Relation', data.reference_address?.relation)}
+                            ${generateAddressField('reference_address', 'emp_id', 'Reference Employee ID', data.reference_address?.emp_id)}
+                            ${generateAddressField('reference_address', 'reference_name', 'Reference Name', data.reference_address?.reference_name)}
+                            ${generateAddressField('reference_address', 'reference_designation', 'Reference Designation', data.reference_address?.reference_designation)}
+                            ${generateAddressField('reference_address', 'line_1', 'Address Line 1', data.reference_address?.line_1)}
+                            ${generateAddressField('reference_address', 'village', 'Village/Area', data.reference_address?.village)}
+                            ${generateAddressField('reference_address', 'post_office', 'Post Office', data.reference_address?.post_office)}
+                            ${generateAddressField('reference_address', 'district', 'District', data.reference_address?.district)}
+                            ${generateAddressField('reference_address', 'division', 'Division', data.reference_address?.division)}
+                            ${generateAddressField('reference_address', 'zip_code', 'Zip Code', data.reference_address?.zip_code)}
+                            ${generateAddressField('reference_address', 'state', 'State/Province', data.reference_address?.state)}
+                            ${generateAddressField('reference_address', 'country', 'Country', data.reference_address?.country)}
+                            ${generateAddressField('reference_address', 'phone', 'Phone', data.reference_address?.phone)}
                             ${generateAddressField('reference_address', 'mobile', 'Mobile', data.reference_address?.mobile)}
-                            ${generateAddressField('reference_address', 'address', 'Address', data.reference_address?.address)}
+                            ${generateAddressField('reference_address', 'email', 'Email', data.reference_address?.email)}
                         </div>
                     </div>
                 </div>

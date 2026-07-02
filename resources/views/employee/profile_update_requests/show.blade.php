@@ -120,9 +120,7 @@
                 <!-- Approval Workflow Actions -->
                 <div class="mt-4 border-top pt-3">
                     <h5 class="mb-3">Approval Workflow Actions</h5>
-                    <!-- The Approval Engine will hook into this if the traits/components are used. -->
-                    <!-- Otherwise, you can place standard Approve/Reject buttons here -->
-                    @include('components.approval_timeline', ['model' => $updateRequest])
+                    @include('approval_engine.workflow_history', ['approvable' => $updateRequest])
                 </div>
             </div>
         </div>
