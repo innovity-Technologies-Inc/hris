@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             UserAndRoleSeeder::class,
             AttendanceSeeder::class,
             PenaltySeeder::class,
+            ApprovalWorkflowSeeder::class,
         ]);
     }
 }
