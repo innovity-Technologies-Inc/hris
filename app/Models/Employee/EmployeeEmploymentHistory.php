@@ -4,14 +4,14 @@ namespace App\Models\Employee;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
 use App\Traits\Userstamps;
 use App\Traits\Auditable;
+use App\Traits\OrganizationScoped;
 
 class EmployeeEmploymentHistory extends Model
 {
     use Userstamps, Auditable;
-    use HasFactory;
+    use HasFactory, OrganizationScoped;
 
     protected $fillable = [
         'employee_id',
@@ -28,4 +28,3 @@ class EmployeeEmploymentHistory extends Model
         return $this->belongsTo(Employee::class);
     }
 }
-

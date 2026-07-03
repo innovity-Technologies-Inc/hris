@@ -4,9 +4,12 @@ namespace App\Models\Employee;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\OrganizationScoped;
+
 class ProfileUpdateRequest extends Model
 {
     use \Innovity\ApprovalEngine\Traits\Approvable;
+    use OrganizationScoped;
 
     protected $fillable = [
         'employee_id',
