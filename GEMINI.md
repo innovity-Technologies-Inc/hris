@@ -48,6 +48,9 @@ This project is a comprehensive Human Resource Management System (HRMS) built wi
 - **Validation**: ALWAYS use dedicated Request classes for validation.
 - **Search Implementation**: Refer to `EmployeeSearchController.php` for standard FlexSearch implementation patterns.
 - **Error Handling**: Use try-catch blocks in services and log errors when necessary.
+- **Model Scoping & Workflows**: 
+    - Every model that maps to employee records or has branch/company/section context limitations MUST use the `App\Traits\OrganizationScoped` trait to ensure query safety.
+    - Every model requiring approval workflows MUST implement the `\Innovity\ApprovalEngine\Traits\Approvable` trait.
 
 ## 📦 Key Packages
 - `daiyanmozumder/laravel-flexsearch`: Core filtering engine.

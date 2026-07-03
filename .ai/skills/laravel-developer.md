@@ -66,6 +66,9 @@ After implementation and verification are complete:
 
 - **Strict Typing**: Use PHP 8.2+ type hints for all method arguments and return types.
 - **FlexSearch**: Use `daiyanmozumder/laravel-flexsearch` for all table filtering and searching.
+- **Model Scoping & Workflows**:
+    - **MUST** include the `App\Traits\OrganizationScoped` trait on any newly created model that has an `employee_id` or requires branch/company/section context limits to prevent data leaks.
+    - **MUST** include the `\Innovity\ApprovalEngine\Traits\Approvable` trait on any model integrated with the approval engine workflows.
 - **UI/UX**: Strictly follow `.ai/guidelines/design-guidelines.md`.
 - **Coding Standards**: Strictly follow `.ai/guidelines/coding-style.md`.
 - **Testing & Safety**: Strictly follow `.ai/guidelines/testing-guidelines.md` and `.ai/guidelines/testing-safety-guideline.md`.
