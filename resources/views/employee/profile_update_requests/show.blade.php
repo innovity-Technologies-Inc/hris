@@ -17,16 +17,16 @@
             <div class="card-body text-center p-4">
                 <div class="mb-3 d-flex justify-content-center">
                     {!! \App\HelperClass::generateAvatar(
-                        $updateRequest->employee->photo_path ?? null,
-                        $updateRequest->employee->full_name ?? 'N/A',
+                        $updateRequest->employee?->photo_path ?? null,
+                        $updateRequest->employee?->full_name ?? 'N/A',
                         90,
                         '#974063',
                         'img-thumbnail rounded-circle shadow-sm border border-2 border-primary',
-                        $updateRequest->employee->id ?? 0,
+                        $updateRequest->employee?->id ?? 0,
                     ) !!}
                 </div>
-                <h4 class="mb-1 fw-bold text-dark">{{ $updateRequest->employee->full_name }}</h4>
-                <p class="text-muted font-14 mb-3"><i class="mdi mdi-card-account-details-outline me-1"></i>{{ $updateRequest->employee->punch_card_no }}</p>
+                <h4 class="mb-1 fw-bold text-dark">{{ $updateRequest->employee?->full_name ?? 'N/A' }}</h4>
+                <p class="text-muted font-14 mb-3"><i class="mdi mdi-card-account-details-outline me-1"></i>{{ $updateRequest->employee?->punch_card_no ?? 'N/A' }}</p>
                 
                 <hr class="my-3 opacity-50">
 
