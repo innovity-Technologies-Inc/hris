@@ -15,16 +15,16 @@
                 <td>
                     <div class="d-flex align-items-center">
                         {!! \App\HelperClass::generateAvatar(
-                            $updateRequest->employee->photo_path ?? null,
-                            $updateRequest->employee->full_name ?? 'N/A',
+                            $updateRequest->employee?->photo_path ?? null,
+                            $updateRequest->employee?->full_name ?? 'N/A',
                             32,
                             '#974063',
                             'me-2',
-                            $updateRequest->employee->id ?? 0,
+                            $updateRequest->employee?->id ?? 0,
                         ) !!}
                         <div>
-                            <h6 class="mb-0 fw-bold">{{ $updateRequest->employee->full_name ?? 'N/A' }}</h6>
-                            <small class="text-muted">{{ $updateRequest->employee->punch_card_no ?? '' }}</small>
+                            <h6 class="mb-0 fw-bold">{{ $updateRequest->employee?->full_name ?? 'N/A' }}</h6>
+                            <small class="text-muted">{{ $updateRequest->employee?->punch_card_no ?? '' }}</small>
                         </div>
                     </div>
                 </td>

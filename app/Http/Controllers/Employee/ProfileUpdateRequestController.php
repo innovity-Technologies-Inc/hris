@@ -12,9 +12,7 @@ class ProfileUpdateRequestController extends Controller
 {
     public function index(Request $request, FlexSearch $flexSearch)
     {
-        $query = ProfileUpdateRequest::with(['employee' => function($q) {
-            $q->withoutGlobalScopes();
-        }])->latest();
+        $query = ProfileUpdateRequest::with('employee')->latest();
 
         $searchableColumns = ['section', 'status'];
         $keyword = $request->input('search');
@@ -35,9 +33,7 @@ class ProfileUpdateRequestController extends Controller
 
     public function show($id)
     {
-        $updateRequest = ProfileUpdateRequest::with(['employee' => function($q) {
-            $q->withoutGlobalScopes();
-        }])->findOrFail($id);
+        $updateRequest = ProfileUpdateRequest::with('employee')->findOrFail($id);
         return view('employee.profile_update_requests.show', compact('updateRequest'));
     }
 
