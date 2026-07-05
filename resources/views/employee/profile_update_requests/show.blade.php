@@ -2,14 +2,6 @@
 @section('title', 'Review Profile Update Request')
 
 @section('content')
-<div class="row mb-3">
-    <div class="col-12">
-        <div class="page-title-box">
-            <h4 class="page-title text-dark fw-bold">Review Profile Update Request</h4>
-        </div>
-    </div>
-</div>
-
 <div class="row g-4">
     <!-- Left Column: Employee Info Profile Card -->
     <div class="col-lg-4">

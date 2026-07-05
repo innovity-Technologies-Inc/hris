@@ -12,6 +12,11 @@ class ProfileUpdateRequestController extends Controller
 {
     public function index(Request $request, FlexSearch $flexSearch)
     {
+        $title = 'Profile Update Requests';
+        $section = 'Employee';
+        $sub_section = 'Profile Update Requests';
+        $section_url = route('profile_update_requests.index');
+
         $query = ProfileUpdateRequest::with('employee')->latest();
 
         $searchableColumns = ['section', 'status'];
@@ -28,13 +33,18 @@ class ProfileUpdateRequestController extends Controller
             ]);
         }
 
-        return view('employee.profile_update_requests.index', compact('requests'));
+        return view('employee.profile_update_requests.index', compact('requests', 'title', 'section', 'sub_section', 'section_url'));
     }
 
     public function show($id)
     {
+        $title = 'Review Profile Update Request';
+        $section = 'Employee';
+        $sub_section = 'Review Update Request';
+        $section_url = route('profile_update_requests.index');
+
         $updateRequest = ProfileUpdateRequest::with('employee')->findOrFail($id);
-        return view('employee.profile_update_requests.show', compact('updateRequest'));
+        return view('employee.profile_update_requests.show', compact('updateRequest', 'title', 'section', 'sub_section', 'section_url'));
     }
 
     public function store(Request $request)
