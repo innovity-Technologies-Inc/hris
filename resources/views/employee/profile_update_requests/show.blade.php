@@ -104,51 +104,62 @@
                                                 foreach ($val as $index => $row) {
                                                     if ($key === 'educations') {
                                                         $title = $row['education_title'] ?? $row['exam_degree_title'] ?? $row['degree'] ?? 'Degree/Exam';
-                                                        $institute = $row['institute'] ?? $row['board'] ?? $row['university'] ?? 'Institution';
-                                                        $passingYear = $row['passing_year'] ?? $row['year'] ?? '';
-                                                        $result = $row['result_grade'] ?? $row['result'] ?? $row['gpa_cgpa'] ?? '';
 
                                                         if ($index > 0) {
                                                             $html .= '<hr class="my-2 opacity-50">';
                                                         }
                                                         $html .= '<div class="text-start font-12">';
                                                         $html .= '  <div class="fw-bold text-primary mb-1">Education #' . ($index + 1) . ': ' . e($title) . '</div>';
-                                                        $html .= '  <div class="mb-0.5"><strong>Institution:</strong> ' . e($institute) . '</div>';
-                                                        if ($passingYear) {
-                                                            $html .= '  <div class="mb-0.5"><strong>Passing Year:</strong> ' . e($passingYear) . '</div>';
-                                                        }
-                                                        if ($result) {
-                                                            $html .= '  <div class="mb-0.5"><strong>Result:</strong> ' . e($result) . '</div>';
+                                                        foreach ($row as $k => $v) {
+                                                            $label = ucwords(str_replace('_', ' ', $k));
+                                                            if (is_array($v)) {
+                                                                $v = json_encode($v);
+                                                            }
+                                                            $displayVal = (string)$v;
+                                                            if (in_array(strtolower($displayVal), ['yes', 'no', 'permanent', 'contractual', 'active', 'inactive'])) {
+                                                                $displayVal = ucfirst(strtolower($displayVal));
+                                                            }
+                                                            $html .= '<div class="mb-0.5"><strong>' . $label . ':</strong> ' . e($displayVal) . '</div>';
                                                         }
                                                         $html .= '</div>';
                                                     } elseif ($key === 'trainings') {
                                                         $title = $row['training_title'] ?? $row['course'] ?? $row['title'] ?? 'Training Course';
-                                                        $institute = $row['institute'] ?? $row['organization'] ?? 'Institution';
-                                                        $duration = $row['duration'] ?? $row['passing_year'] ?? '';
 
                                                         if ($index > 0) {
                                                             $html .= '<hr class="my-2 opacity-50">';
                                                         }
                                                         $html .= '<div class="text-start font-12">';
                                                         $html .= '  <div class="fw-bold text-success mb-1">Training #' . ($index + 1) . ': ' . e($title) . '</div>';
-                                                        $html .= '  <div class="mb-0.5"><strong>Institution:</strong> ' . e($institute) . '</div>';
-                                                        if ($duration) {
-                                                            $html .= '  <div class="mb-0.5"><strong>Duration/Year:</strong> ' . e($duration) . '</div>';
+                                                        foreach ($row as $k => $v) {
+                                                            $label = ucwords(str_replace('_', ' ', $k));
+                                                            if (is_array($v)) {
+                                                                $v = json_encode($v);
+                                                            }
+                                                            $displayVal = (string)$v;
+                                                            if (in_array(strtolower($displayVal), ['yes', 'no', 'permanent', 'contractual', 'active', 'inactive'])) {
+                                                                $displayVal = ucfirst(strtolower($displayVal));
+                                                            }
+                                                            $html .= '<div class="mb-0.5"><strong>' . $label . ':</strong> ' . e($displayVal) . '</div>';
                                                         }
                                                         $html .= '</div>';
                                                     } elseif ($key === 'histories') {
                                                         $company = $row['company_name'] ?? $row['company'] ?? 'Company';
-                                                        $designation = $row['designation'] ?? 'Designation';
-                                                        $period = isset($row['start_date']) ? ($row['start_date'] . ' - ' . ($row['end_date'] ?? 'Present')) : ($row['duration'] ?? '');
 
                                                         if ($index > 0) {
                                                             $html .= '<hr class="my-2 opacity-50">';
                                                         }
                                                         $html .= '<div class="text-start font-12">';
                                                         $html .= '  <div class="fw-bold text-info mb-1">History #' . ($index + 1) . ': ' . e($company) . '</div>';
-                                                        $html .= '  <div class="mb-0.5"><strong>Designation:</strong> ' . e($designation) . '</div>';
-                                                        if ($period) {
-                                                            $html .= '  <div class="mb-0.5"><strong>Period:</strong> ' . e($period) . '</div>';
+                                                        foreach ($row as $k => $v) {
+                                                            $label = ucwords(str_replace('_', ' ', $k));
+                                                            if (is_array($v)) {
+                                                                $v = json_encode($v);
+                                                            }
+                                                            $displayVal = (string)$v;
+                                                            if (in_array(strtolower($displayVal), ['yes', 'no', 'permanent', 'contractual', 'active', 'inactive'])) {
+                                                                $displayVal = ucfirst(strtolower($displayVal));
+                                                            }
+                                                            $html .= '<div class="mb-0.5"><strong>' . $label . ':</strong> ' . e($displayVal) . '</div>';
                                                         }
                                                         $html .= '</div>';
                                                     } else {
