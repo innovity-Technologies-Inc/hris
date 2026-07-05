@@ -2,7 +2,7 @@
 
 ## 2026-07-05
 
-**Goal**: Implement Admin profile update requests (Office Info, Policy Tag, Salary Breakdown, Bank Account) and verify propagation. Also verify profile detailed view and PDF features after removing Pay Grade from office info. Validate comparison view formatting changes (no horizontal scroll, comma-separated weekends, capitalized yes/no/permanent etc., and clean flat list layouts showing all JSON fields dynamically across all list and object sections).
+**Goal**: Implement Admin profile update requests (Office Info, Policy Tag, Salary Breakdown, Bank Account) and verify propagation. Also verify profile detailed view and PDF features after removing Pay Grade from office info. Validate comparison view formatting changes (no horizontal scroll, comma-separated weekends, capitalized yes/no/permanent etc., clean flat list layouts showing all JSON fields dynamically, with database ID keys hidden and clean non-id label headers).
 
 **Exact Command**: `php artisan config:clear && vendor/bin/pest tests/Feature/EmployeeDetailedViewTest.php tests/Feature/Employee/ProfileUpdateRequestTest.php`
 

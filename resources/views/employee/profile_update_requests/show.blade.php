@@ -111,7 +111,14 @@
                                                         $html .= '<div class="text-start font-12">';
                                                         $html .= '  <div class="fw-bold text-primary mb-1">Education #' . ($index + 1) . ': ' . e($title) . '</div>';
                                                         foreach ($row as $k => $v) {
-                                                            $label = ucwords(str_replace('_', ' ', $k));
+                                                            if (in_array(strtolower($k), ['id', 'employee_id', 'created_at', 'updated_at'])) {
+                                                                continue;
+                                                            }
+                                                            $cleanK = $k;
+                                                            if (str_ends_with(strtolower($cleanK), '_id')) {
+                                                                $cleanK = substr($cleanK, 0, -3);
+                                                            }
+                                                            $label = ucwords(str_replace('_', ' ', $cleanK));
                                                             if (is_array($v)) {
                                                                 $v = json_encode($v);
                                                             }
@@ -131,7 +138,14 @@
                                                         $html .= '<div class="text-start font-12">';
                                                         $html .= '  <div class="fw-bold text-success mb-1">Training #' . ($index + 1) . ': ' . e($title) . '</div>';
                                                         foreach ($row as $k => $v) {
-                                                            $label = ucwords(str_replace('_', ' ', $k));
+                                                            if (in_array(strtolower($k), ['id', 'employee_id', 'created_at', 'updated_at'])) {
+                                                                continue;
+                                                            }
+                                                            $cleanK = $k;
+                                                            if (str_ends_with(strtolower($cleanK), '_id')) {
+                                                                $cleanK = substr($cleanK, 0, -3);
+                                                            }
+                                                            $label = ucwords(str_replace('_', ' ', $cleanK));
                                                             if (is_array($v)) {
                                                                 $v = json_encode($v);
                                                             }
@@ -151,7 +165,14 @@
                                                         $html .= '<div class="text-start font-12">';
                                                         $html .= '  <div class="fw-bold text-info mb-1">History #' . ($index + 1) . ': ' . e($company) . '</div>';
                                                         foreach ($row as $k => $v) {
-                                                            $label = ucwords(str_replace('_', ' ', $k));
+                                                            if (in_array(strtolower($k), ['id', 'employee_id', 'created_at', 'updated_at'])) {
+                                                                continue;
+                                                            }
+                                                            $cleanK = $k;
+                                                            if (str_ends_with(strtolower($cleanK), '_id')) {
+                                                                $cleanK = substr($cleanK, 0, -3);
+                                                            }
+                                                            $label = ucwords(str_replace('_', ' ', $cleanK));
                                                             if (is_array($v)) {
                                                                 $v = json_encode($v);
                                                             }
@@ -172,7 +193,14 @@
                                                         $titleStr = $title ? ': ' . $title : '';
                                                         $html .= '  <div class="fw-bold text-primary mb-1">Item #' . ($index + 1) . $titleStr . '</div>';
                                                         foreach ($row as $k => $v) {
-                                                            $label = ucwords(str_replace('_', ' ', $k));
+                                                            if (in_array(strtolower($k), ['id', 'employee_id', 'created_at', 'updated_at'])) {
+                                                                continue;
+                                                            }
+                                                            $cleanK = $k;
+                                                            if (str_ends_with(strtolower($cleanK), '_id')) {
+                                                                $cleanK = substr($cleanK, 0, -3);
+                                                            }
+                                                            $label = ucwords(str_replace('_', ' ', $cleanK));
                                                             if (is_array($v)) {
                                                                 $v = json_encode($v);
                                                             }
@@ -192,6 +220,14 @@
                                             // If it is an associative array (e.g. addresses)
                                             $html = '<ul class="list-unstyled mb-0 font-12">';
                                             foreach ($val as $k => $v) {
+                                                if (in_array(strtolower($k), ['id', 'employee_id', 'created_at', 'updated_at'])) {
+                                                    continue;
+                                                }
+                                                $cleanK = $k;
+                                                if (str_ends_with(strtolower($cleanK), '_id')) {
+                                                    $cleanK = substr($cleanK, 0, -3);
+                                                }
+                                                $label = ucwords(str_replace('_', ' ', $cleanK));
                                                 if (is_array($v)) {
                                                     $v = json_encode($v);
                                                 }
@@ -199,7 +235,7 @@
                                                 if (in_array(strtolower($displayVal), ['yes', 'no', 'permanent', 'contractual', 'active', 'inactive'])) {
                                                     $displayVal = ucfirst(strtolower($displayVal));
                                                 }
-                                                $html .= '<li class="mb-1"><strong>' . ucfirst(str_replace('_', ' ', $k)) . ':</strong> ' . e($displayVal) . '</li>';
+                                                $html .= '<li class="mb-1"><strong>' . $label . ':</strong> ' . e($displayVal) . '</li>';
                                             }
                                             $html .= '</ul>';
                                             return $html;
@@ -230,9 +266,15 @@
                                     $prevStr = is_array($prevVal) ? json_encode($prevVal) : $prevVal;
                                     $reqStr = is_array($reqVal) ? json_encode($reqVal) : $reqVal;
                                     $hasChanged = $prevStr != $reqStr;
+                                    
+                                    $cleanKey = $key;
+                                    if (str_ends_with(strtolower($cleanKey), '_id')) {
+                                        $cleanKey = substr($cleanKey, 0, -3);
+                                    }
+                                    $displayKey = ucwords(str_replace('_', ' ', $cleanKey));
                                 @endphp
                                 <tr class="{{ $hasChanged ? 'table-warning-subtle' : '' }}">
-                                    <td class="fw-semibold text-capitalize text-dark py-2.5 px-3">{{ str_replace('_', ' ', $key) }}</td>
+                                    <td class="fw-semibold text-capitalize text-dark py-2.5 px-3">{{ $displayKey }}</td>
                                     <td class="py-2.5 px-3 text-muted">{!! formatProfileUpdateData($prevVal, $key) !!}</td>
                                     <td class="py-2.5 px-3 {{ $hasChanged ? 'text-primary fw-bold bg-light-subtle' : 'text-muted' }}">
                                         {!! formatProfileUpdateData($reqVal, $key) !!}
