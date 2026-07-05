@@ -2,7 +2,7 @@
 
 ## 2026-07-05
 
-**Goal**: Implement Admin profile update requests (Office Info, Policy Tag, Salary Breakdown, Bank Account) and verify propagation. Also verify profile detailed view and PDF features after removing Pay Grade from office info. Validate comparison view formatting changes (no horizontal scroll, comma-separated weekends, capitalized yes/no/permanent etc., and clean, iconless left-bordered accent card styling for educations, trainings, and histories).
+**Goal**: Implement Admin profile update requests (Office Info, Policy Tag, Salary Breakdown, Bank Account) and verify propagation. Also verify profile detailed view and PDF features after removing Pay Grade from office info. Validate comparison view formatting changes (no horizontal scroll, comma-separated weekends, capitalized yes/no/permanent etc., clean left-bordered accent cards, and premium layout styling upgrades on the show view).
 
 **Exact Command**: `php artisan config:clear && vendor/bin/pest tests/Feature/EmployeeDetailedViewTest.php tests/Feature/Employee/ProfileUpdateRequestTest.php`
 
