@@ -80,7 +80,7 @@
                         <tbody>
                             @php
                                 if (!function_exists('formatProfileUpdateData')) {
-                                    function formatProfileUpdateData($val) {
+                                    function formatProfileUpdateData($val, $key = null) {
                                         if (is_array($val)) {
                                             if (empty($val)) {
                                                 return '<span class="text-muted font-12">Empty</span>';
@@ -100,22 +100,89 @@
 
                                             // If it is a sequential list of objects (e.g. educations, trainings, histories)
                                             if (isset($val[0]) && is_array($val[0])) {
-                                                $html = '<div class="d-flex flex-column gap-2">';
+                                                $html = '<div class="d-flex flex-column gap-3">';
                                                 foreach ($val as $index => $row) {
-                                                    $html .= '<div class="card border border-light-subtle shadow-none bg-light-subtle p-2.5 rounded-3 mb-0 font-12 text-start">';
-                                                    $html .= '<div class="fw-bold border-bottom pb-1 mb-2 text-primary"># ' . ($index + 1) . '</div>';
-                                                    foreach ($row as $k => $v) {
-                                                        $label = ucwords(str_replace('_', ' ', $k));
-                                                        if (is_array($v)) {
-                                                            $v = json_encode($v);
+                                                    if ($key === 'educations') {
+                                                        $title = $row['education_title'] ?? $row['exam_degree_title'] ?? $row['degree'] ?? 'Degree/Exam';
+                                                        $institute = $row['institute'] ?? $row['board'] ?? $row['university'] ?? 'Institution';
+                                                        $passingYear = $row['passing_year'] ?? $row['year'] ?? '';
+                                                        $result = $row['result_grade'] ?? $row['result'] ?? $row['gpa_cgpa'] ?? '';
+
+                                                        $html .= '<div class="card border border-light-subtle shadow-sm rounded-3 p-3 mb-0 bg-white text-start">';
+                                                        $html .= '  <div class="d-flex align-items-center justify-content-between border-bottom pb-2 mb-2">';
+                                                        $html .= '    <div class="d-flex align-items-center gap-2">';
+                                                        $html .= '      <span class="avatar-title rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="mdi mdi-school font-16"></i></span>';
+                                                        $html .= '      <h6 class="mb-0 fw-bold text-dark text-wrap">' . e($title) . '</h6>';
+                                                        $html .= '    </div>';
+                                                        $html .= '    <span class="badge bg-primary-subtle text-primary fw-semibold">#' . ($index + 1) . '</span>';
+                                                        $html .= '  </div>';
+                                                        $html .= '  <div class="font-12 text-muted mb-2"><i class="mdi mdi-office-building me-1 text-muted"></i>' . e($institute) . '</div>';
+                                                        $html .= '  <div class="d-flex flex-wrap gap-2 mt-1">';
+                                                        if ($passingYear) {
+                                                            $html .= '    <span class="badge bg-light text-dark border"><i class="mdi mdi-calendar me-1 text-muted"></i>Year: ' . e($passingYear) . '</span>';
                                                         }
-                                                        $displayVal = (string)$v;
-                                                        if (in_array(strtolower($displayVal), ['yes', 'no', 'permanent', 'contractual', 'active', 'inactive'])) {
-                                                            $displayVal = ucfirst(strtolower($displayVal));
+                                                        if ($result) {
+                                                            $html .= '    <span class="badge bg-success-subtle text-success border border-success-subtle"><i class="mdi mdi-certificate me-1 text-success"></i>Result: ' . e($result) . '</span>';
                                                         }
-                                                        $html .= '<div class="mb-1 text-wrap"><strong>' . $label . ':</strong> ' . e($displayVal) . '</div>';
+                                                        $html .= '  </div>';
+                                                        $html .= '</div>';
+                                                    } elseif ($key === 'trainings') {
+                                                        $title = $row['training_title'] ?? $row['course'] ?? $row['title'] ?? 'Training Course';
+                                                        $institute = $row['institute'] ?? $row['organization'] ?? 'Institution';
+                                                        $duration = $row['duration'] ?? $row['passing_year'] ?? '';
+
+                                                        $html .= '<div class="card border border-light-subtle shadow-sm rounded-3 p-3 mb-0 bg-white text-start">';
+                                                        $html .= '  <div class="d-flex align-items-center justify-content-between border-bottom pb-2 mb-2">';
+                                                        $html .= '    <div class="d-flex align-items-center gap-2">';
+                                                        $html .= '      <span class="avatar-title rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="mdi mdi-certificate font-16"></i></span>';
+                                                        $html .= '      <h6 class="mb-0 fw-bold text-dark text-wrap">' . e($title) . '</h6>';
+                                                        $html .= '    </div>';
+                                                        $html .= '    <span class="badge bg-success-subtle text-success fw-semibold">#' . ($index + 1) . '</span>';
+                                                        $html .= '  </div>';
+                                                        $html .= '  <div class="font-12 text-muted mb-2"><i class="mdi mdi-office-building me-1 text-muted"></i>' . e($institute) . '</div>';
+                                                        if ($duration) {
+                                                            $html .= '  <div class="d-flex flex-wrap gap-2 mt-1">';
+                                                            $html .= '    <span class="badge bg-light text-dark border"><i class="mdi mdi-clock-outline me-1 text-muted"></i>' . e($duration) . '</span>';
+                                                            $html .= '  </div>';
+                                                        }
+                                                        $html .= '</div>';
+                                                    } elseif ($key === 'histories') {
+                                                        $company = $row['company_name'] ?? $row['company'] ?? 'Company';
+                                                        $designation = $row['designation'] ?? 'Designation';
+                                                        $period = isset($row['start_date']) ? ($row['start_date'] . ' - ' . ($row['end_date'] ?? 'Present')) : ($row['duration'] ?? '');
+
+                                                        $html .= '<div class="card border border-light-subtle shadow-sm rounded-3 p-3 mb-0 bg-white text-start">';
+                                                        $html .= '  <div class="d-flex align-items-center justify-content-between border-bottom pb-2 mb-2">';
+                                                        $html .= '    <div class="d-flex align-items-center gap-2">';
+                                                        $html .= '      <span class="avatar-title rounded-circle bg-info bg-opacity-10 text-info d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="mdi mdi-briefcase font-16"></i></span>';
+                                                        $html .= '      <h6 class="mb-0 fw-bold text-dark text-wrap">' . e($company) . '</h6>';
+                                                        $html .= '    </div>';
+                                                        $html .= '    <span class="badge bg-info-subtle text-info fw-semibold">#' . ($index + 1) . '</span>';
+                                                        $html .= '  </div>';
+                                                        $html .= '  <div class="font-12 text-muted mb-2"><i class="mdi mdi-account-tie me-1 text-muted"></i>' . e($designation) . '</div>';
+                                                        if ($period) {
+                                                            $html .= '  <div class="d-flex flex-wrap gap-2 mt-1">';
+                                                            $html .= '    <span class="badge bg-light text-dark border"><i class="mdi mdi-calendar-range me-1 text-muted"></i>' . e($period) . '</span>';
+                                                            $html .= '  </div>';
+                                                        }
+                                                        $html .= '</div>';
+                                                    } else {
+                                                        // Generic fallback card formatting
+                                                        $html .= '<div class="card border border-light-subtle shadow-none bg-light-subtle p-2.5 rounded-3 mb-0 font-12 text-start">';
+                                                        $html .= '<div class="fw-bold border-bottom pb-1 mb-2 text-primary"># ' . ($index + 1) . '</div>';
+                                                        foreach ($row as $k => $v) {
+                                                            $label = ucwords(str_replace('_', ' ', $k));
+                                                            if (is_array($v)) {
+                                                                $v = json_encode($v);
+                                                            }
+                                                            $displayVal = (string)$v;
+                                                            if (in_array(strtolower($displayVal), ['yes', 'no', 'permanent', 'contractual', 'active', 'inactive'])) {
+                                                                $displayVal = ucfirst(strtolower($displayVal));
+                                                            }
+                                                            $html .= '<div class="mb-1 text-wrap"><strong>' . $label . ':</strong> ' . e($displayVal) . '</div>';
+                                                        }
+                                                        $html .= '</div>';
                                                     }
-                                                    $html .= '</div>';
                                                 }
                                                 $html .= '</div>';
                                                 return $html;
@@ -165,9 +232,9 @@
                                 @endphp
                                 <tr class="{{ $hasChanged ? 'table-warning-subtle' : '' }}">
                                     <td class="fw-semibold text-capitalize text-dark py-2.5">{{ str_replace('_', ' ', $key) }}</td>
-                                    <td class="py-2.5 text-muted">{!! formatProfileUpdateData($prevVal) !!}</td>
+                                    <td class="py-2.5 text-muted">{!! formatProfileUpdateData($prevVal, $key) !!}</td>
                                     <td class="py-2.5 {{ $hasChanged ? 'text-primary fw-bold bg-light-subtle' : 'text-muted' }}">
-                                        {!! formatProfileUpdateData($reqVal) !!}
+                                        {!! formatProfileUpdateData($reqVal, $key) !!}
                                     </td>
                                 </tr>
                             @endforeach
