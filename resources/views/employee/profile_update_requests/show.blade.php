@@ -108,42 +108,32 @@
                                                         $passingYear = $row['passing_year'] ?? $row['year'] ?? '';
                                                         $result = $row['result_grade'] ?? $row['result'] ?? $row['gpa_cgpa'] ?? '';
 
-                                                        $html .= '<div class="card border border-light-subtle shadow-sm rounded-3 p-3 mb-0 bg-white text-start">';
-                                                        $html .= '  <div class="d-flex align-items-center justify-content-between border-bottom pb-2 mb-2">';
-                                                        $html .= '    <div class="d-flex align-items-center gap-2">';
-                                                        $html .= '      <span class="avatar-title rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="mdi mdi-school font-16"></i></span>';
-                                                        $html .= '      <h6 class="mb-0 fw-bold text-dark text-wrap">' . e($title) . '</h6>';
-                                                        $html .= '    </div>';
-                                                        $html .= '    <span class="badge bg-primary-subtle text-primary fw-semibold">#' . ($index + 1) . '</span>';
+                                                        $html .= '<div class="card border-0 border-start border-primary border-3 shadow-none bg-light p-2.5 rounded-3 mb-0 font-12 text-start">';
+                                                        $html .= '  <div class="d-flex align-items-center justify-content-between border-bottom pb-1 mb-2">';
+                                                        $html .= '    <h6 class="mb-0 fw-bold text-dark text-wrap">' . e($title) . '</h6>';
+                                                        $html .= '    <span class="badge bg-primary text-white fw-semibold px-2 py-0.5">Education #' . ($index + 1) . '</span>';
                                                         $html .= '  </div>';
-                                                        $html .= '  <div class="font-12 text-muted mb-2"><i class="mdi mdi-office-building me-1 text-muted"></i>' . e($institute) . '</div>';
-                                                        $html .= '  <div class="d-flex flex-wrap gap-2 mt-1">';
+                                                        $html .= '  <div class="mb-1 text-dark"><strong>Institution:</strong> ' . e($institute) . '</div>';
                                                         if ($passingYear) {
-                                                            $html .= '    <span class="badge bg-light text-dark border"><i class="mdi mdi-calendar me-1 text-muted"></i>Year: ' . e($passingYear) . '</span>';
+                                                            $html .= '  <div class="mb-1 text-dark"><strong>Passing Year:</strong> ' . e($passingYear) . '</div>';
                                                         }
                                                         if ($result) {
-                                                            $html .= '    <span class="badge bg-success-subtle text-success border border-success-subtle"><i class="mdi mdi-certificate me-1 text-success"></i>Result: ' . e($result) . '</span>';
+                                                            $html .= '  <div class="mb-1 text-dark"><strong>Result:</strong> ' . e($result) . '</div>';
                                                         }
-                                                        $html .= '  </div>';
                                                         $html .= '</div>';
                                                     } elseif ($key === 'trainings') {
                                                         $title = $row['training_title'] ?? $row['course'] ?? $row['title'] ?? 'Training Course';
                                                         $institute = $row['institute'] ?? $row['organization'] ?? 'Institution';
                                                         $duration = $row['duration'] ?? $row['passing_year'] ?? '';
 
-                                                        $html .= '<div class="card border border-light-subtle shadow-sm rounded-3 p-3 mb-0 bg-white text-start">';
-                                                        $html .= '  <div class="d-flex align-items-center justify-content-between border-bottom pb-2 mb-2">';
-                                                        $html .= '    <div class="d-flex align-items-center gap-2">';
-                                                        $html .= '      <span class="avatar-title rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="mdi mdi-certificate font-16"></i></span>';
-                                                        $html .= '      <h6 class="mb-0 fw-bold text-dark text-wrap">' . e($title) . '</h6>';
-                                                        $html .= '    </div>';
-                                                        $html .= '    <span class="badge bg-success-subtle text-success fw-semibold">#' . ($index + 1) . '</span>';
+                                                        $html .= '<div class="card border-0 border-start border-success border-3 shadow-none bg-light p-2.5 rounded-3 mb-0 font-12 text-start">';
+                                                        $html .= '  <div class="d-flex align-items-center justify-content-between border-bottom pb-1 mb-2">';
+                                                        $html .= '    <h6 class="mb-0 fw-bold text-dark text-wrap">' . e($title) . '</h6>';
+                                                        $html .= '    <span class="badge bg-success text-white fw-semibold px-2 py-0.5">Training #' . ($index + 1) . '</span>';
                                                         $html .= '  </div>';
-                                                        $html .= '  <div class="font-12 text-muted mb-2"><i class="mdi mdi-office-building me-1 text-muted"></i>' . e($institute) . '</div>';
+                                                        $html .= '  <div class="mb-1 text-dark"><strong>Institution:</strong> ' . e($institute) . '</div>';
                                                         if ($duration) {
-                                                            $html .= '  <div class="d-flex flex-wrap gap-2 mt-1">';
-                                                            $html .= '    <span class="badge bg-light text-dark border"><i class="mdi mdi-clock-outline me-1 text-muted"></i>' . e($duration) . '</span>';
-                                                            $html .= '  </div>';
+                                                            $html .= '  <div class="mb-1 text-dark"><strong>Duration/Year:</strong> ' . e($duration) . '</div>';
                                                         }
                                                         $html .= '</div>';
                                                     } elseif ($key === 'histories') {
@@ -151,19 +141,14 @@
                                                         $designation = $row['designation'] ?? 'Designation';
                                                         $period = isset($row['start_date']) ? ($row['start_date'] . ' - ' . ($row['end_date'] ?? 'Present')) : ($row['duration'] ?? '');
 
-                                                        $html .= '<div class="card border border-light-subtle shadow-sm rounded-3 p-3 mb-0 bg-white text-start">';
-                                                        $html .= '  <div class="d-flex align-items-center justify-content-between border-bottom pb-2 mb-2">';
-                                                        $html .= '    <div class="d-flex align-items-center gap-2">';
-                                                        $html .= '      <span class="avatar-title rounded-circle bg-info bg-opacity-10 text-info d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="mdi mdi-briefcase font-16"></i></span>';
-                                                        $html .= '      <h6 class="mb-0 fw-bold text-dark text-wrap">' . e($company) . '</h6>';
-                                                        $html .= '    </div>';
-                                                        $html .= '    <span class="badge bg-info-subtle text-info fw-semibold">#' . ($index + 1) . '</span>';
+                                                        $html .= '<div class="card border-0 border-start border-info border-3 shadow-none bg-light p-2.5 rounded-3 mb-0 font-12 text-start">';
+                                                        $html .= '  <div class="d-flex align-items-center justify-content-between border-bottom pb-1 mb-2">';
+                                                        $html .= '    <h6 class="mb-0 fw-bold text-dark text-wrap">' . e($company) . '</h6>';
+                                                        $html .= '    <span class="badge bg-info text-white fw-semibold px-2 py-0.5">History #' . ($index + 1) . '</span>';
                                                         $html .= '  </div>';
-                                                        $html .= '  <div class="font-12 text-muted mb-2"><i class="mdi mdi-account-tie me-1 text-muted"></i>' . e($designation) . '</div>';
+                                                        $html .= '  <div class="mb-1 text-dark"><strong>Designation:</strong> ' . e($designation) . '</div>';
                                                         if ($period) {
-                                                            $html .= '  <div class="d-flex flex-wrap gap-2 mt-1">';
-                                                            $html .= '    <span class="badge bg-light text-dark border"><i class="mdi mdi-calendar-range me-1 text-muted"></i>' . e($period) . '</span>';
-                                                            $html .= '  </div>';
+                                                            $html .= '  <div class="mb-1 text-dark"><strong>Period:</strong> ' . e($period) . '</div>';
                                                         }
                                                         $html .= '</div>';
                                                     } else {
