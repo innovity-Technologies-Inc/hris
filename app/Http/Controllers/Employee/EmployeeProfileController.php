@@ -10,6 +10,7 @@ use App\Imports\Employee\EmployeeOfficeInformationImport;
 use App\Models\Employee\Employee;
 use App\Models\Employee\EmployeeEligiblePlan;
 use App\Models\Employee\EmployeeOfficeInfo;
+use App\Models\Employee\ProfileUpdateRequest;
 use App\Services\Employee\EmployeeServices;
 use App\Services\Employee\EmployeeProfilePdfService;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
@@ -378,9 +379,32 @@ class EmployeeProfileController extends Controller
         $validated = $this->empServices->employeeOfficeInfoValidation($request);
         $employee_office_info = EmployeeOfficeInfo::where('employee_id', $id)->first();
 
-        try{
+        try {
+            $workflowActive = \Innovity\ApprovalEngine\Models\Workflow::where('module', 'office-information')->where('is_active', true)->exists();
+
+            if ($workflowActive) {
+                // Remove employee_id from validated fields for comparison if needed
+                $compareFields = $validated;
+                unset($compareFields['employee_id']);
+                
+                $updateRequest = ProfileUpdateRequest::createAdminRequest($id, 'office-information', $compareFields, $employee_office_info);
+
+                if ($updateRequest) {
+                    return redirect()->route('employee.profile.office_informations', $id)->with([
+                        'message' => 'Office Info update request submitted for approval.',
+                        'alert-type' => 'success'
+                    ]);
+                } else {
+                    return redirect()->route('employee.profile.office_informations', $id)->with([
+                        'message' => 'No changes detected. Profile remains unchanged.',
+                        'alert-type' => 'info'
+                    ]);
+                }
+            }
+
+            // No active workflow, save directly
             $this->empServices->employeeOfficeInfoSave($request, $validated, $employee_office_info);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Error in EmployeeProfileController@officeInfoUpdate: ' . $e->getMessage(), ['exception' => $e]);
 
             return redirect()->back()->with([
@@ -389,9 +413,9 @@ class EmployeeProfileController extends Controller
             ]);
         }
         return redirect()->route('employee.profile.office_informations', $id)->with([
-                'message' => 'Office Info Updated Successfully',
-                'alert-type' => 'success'
-            ]);
+            'message' => 'Office Info Updated Successfully',
+            'alert-type' => 'success'
+        ]);
     }
 
     public function showOfficeInfo($id){

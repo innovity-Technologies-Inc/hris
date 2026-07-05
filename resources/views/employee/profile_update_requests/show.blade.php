@@ -24,6 +24,15 @@
 
                 <div class="text-start mt-3">
                     <div class="d-flex justify-content-between align-items-center mb-2 font-13 text-muted">
+                        <strong>Request Type:</strong>
+                        @if(($updateRequest->type ?? 'employee') === 'admin')
+                            <span class="badge bg-primary-subtle text-primary text-capitalize px-2.5 py-1 fw-normal">Admin Edit</span>
+                        @else
+                            <span class="badge bg-secondary-subtle text-secondary text-capitalize px-2.5 py-1 fw-normal">Employee Submission</span>
+                        @endif
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-2 font-13 text-muted">
                         <strong>Requested Section:</strong>
                         <span class="badge bg-info-subtle text-info text-capitalize px-2.5 py-1 fw-normal">
                             {{ str_replace('_', ' ', $updateRequest->section) }}

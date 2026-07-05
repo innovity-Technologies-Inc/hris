@@ -10,6 +10,7 @@ use App\Models\Employee\EmployeeBankAccount;
 use App\Services\Employee\EmployeeServices;
 use Illuminate\Http\Request;
 use App\Models\Employee\EmployeeSalaryBreakdown;
+use App\Models\Employee\ProfileUpdateRequest;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -155,9 +156,32 @@ class EmployeeSalaryBreakdownController extends Controller
 
         $validated = $this->empServices->employeeSalaryBreakdownValidation($request);
         $employeeData = EmployeeSalaryBreakdown::findOrFail($id);
+        $employee = $employeeData->employee_id;
+
         try {
+            $workflowActive = \Innovity\ApprovalEngine\Models\Workflow::where('module', 'salary-breakdown')->where('is_active', true)->exists();
+
+            if ($workflowActive) {
+                // Remove employee_id from validated fields for comparison if needed
+                $compareFields = $validated;
+                unset($compareFields['employee_id']);
+
+                $updateRequest = ProfileUpdateRequest::createAdminRequest($employee, 'salary-breakdown', $compareFields, $employeeData);
+
+                if ($updateRequest) {
+                    return redirect()
+                        ->route('employee.profile.salary_breakdown', $employee)
+                        ->with(['message' => 'Employee salary breakdown update request submitted for approval.',
+                            'alert-type' => 'success']);
+                } else {
+                    return redirect()
+                        ->route('employee.profile.salary_breakdown', $employee)
+                        ->with(['message' => 'No changes detected. Profile remains unchanged.',
+                            'alert-type' => 'info']);
+                }
+            }
+
             $employeeData = $this->empServices->employeeSalaryBreakdownInfoSave($validated, $employeeData);
-            $employee = $employeeData->employee_id;
             return redirect()
                 ->route('employee.profile.salary_breakdown', $employee)
                 ->with(['message' => 'Employee salary breakdown updated successfully.',

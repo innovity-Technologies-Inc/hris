@@ -258,3 +258,81 @@ test('it can submit emergency contact nominee update request and apply changes u
     expect($nomineeRecord->mobile)->toBe('987654321');
     expect($nomineeRecord->nid)->toBe('1122334455');
 });
+
+test('it creates admin profile update request for office info update and propagates upon approval', function () {
+    $admin = User::factory()->create([
+        'user_type' => UserType::Group,
+    ]);
+
+    $permission = \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'employee-management.edit', 'guard_name' => 'web']);
+    $admin->givePermissionTo($permission);
+
+    $this->actingAs($admin);
+
+    // Create office info workflow
+    $officeWorkflow = Workflow::create([
+        'name' => 'Office Info Workflow',
+        'module' => 'office-information',
+        'type' => 'sequential',
+        'total_steps' => 1,
+        'is_active' => true
+    ]);
+
+    $officeWorkflow->steps()->create([
+        'name' => 'Step 1 - HR Approve',
+        'step_order' => 1,
+        'type' => 'user-type',
+        'required_user_type' => 'company'
+    ]);
+
+    // Create initial office info for the employee
+    $officeInfo = \App\Models\Employee\EmployeeOfficeInfo::create([
+        'employee_id' => $this->employee->id,
+        'hr_file_no' => 'F1234',
+        'date_of_join' => '2026-01-01',
+        'orientation_required' => 'no',
+    ]);
+
+    // Submit edit to office info
+    $payload = [
+        'employee_id' => $this->employee->id,
+        'hr_file_no' => 'F9999',
+        'date_of_join' => '2026-01-01',
+        'orientation_required' => 'no',
+    ];
+
+    $response = $this->put(route('employee.office_informations.update', $this->employee->id), $payload);
+
+    $response->assertRedirect();
+    $response->assertSessionHas('message', 'Office Info update request submitted for approval.');
+
+    // Assert request record created
+    $requestRecord = ProfileUpdateRequest::where('employee_id', $this->employee->id)
+        ->where('section', 'office-information')
+        ->where('type', 'admin')
+        ->first();
+
+    expect($requestRecord)->not->toBeNull();
+    expect($requestRecord->status)->toBe('pending');
+    expect($requestRecord->requested_data['hr_file_no'])->toBe('F9999');
+
+    // Live table should NOT be updated yet
+    $officeInfo->refresh();
+    expect($officeInfo->hr_file_no)->toBe('F1234');
+
+    // Simulating approval
+    $approvalRequest = ApprovalRequest::create([
+        'workflow_id' => $officeWorkflow->id,
+        'approvable_type' => ProfileUpdateRequest::class,
+        'approvable_id' => $requestRecord->id,
+        'status' => 'approved'
+    ]);
+
+    $event = new ApprovalCompleted($approvalRequest);
+    $listener = new WorkflowStatusListener();
+    $listener->handleCompleted($event);
+
+    // Verify propagation
+    $officeInfo->refresh();
+    expect($officeInfo->hr_file_no)->toBe('F9999');
+});

@@ -1,5 +1,20 @@
 # Test Log
 
+## 2026-07-05
+
+**Goal**: Implement Admin profile update requests (Office Info, Policy Tag, Salary Breakdown, Bank Account) and verify propagation.
+
+**Exact Command**: `php artisan config:clear && vendor/bin/pest tests/Feature/Employee/ProfileUpdateRequestTest.php`
+
+**Results**:
+- `it can submit general section update request and apply changes upon approval`: ✅ PASSED
+- `it can submit education section update request and apply changes upon approval`: ✅ PASSED
+- `it can submit employment history update request and apply changes upon approval`: ✅ PASSED
+- `it can submit emergency contact nominee update request and apply changes upon approval`: ✅ PASSED
+- `it creates admin profile update request for office info update and propagates upon approval`: ✅ PASSED
+
+**Status**: ✅ SUCCESS
+
 ## 2026-05-21
 
 **Goal**: Complete Transfer Module implementation and fix Leave models namespaces.

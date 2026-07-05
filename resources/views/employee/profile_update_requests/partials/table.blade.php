@@ -3,6 +3,7 @@
         <thead>
             <tr>
                 <th scope="col" class="text-muted small fw-bold text-uppercase">Employee</th>
+                <th scope="col" class="text-muted small fw-bold text-uppercase">Type</th>
                 <th scope="col" class="text-muted small fw-bold text-uppercase">Section</th>
                 <th scope="col" class="text-muted small fw-bold text-uppercase">Status</th>
                 <th scope="col" class="text-muted small fw-bold text-uppercase">Requested At</th>
@@ -15,18 +16,25 @@
                 <td>
                     <div class="d-flex align-items-center">
                         {!! \App\HelperClass::generateAvatar(
-                            $updateRequest->employee?->photo_path ?? null,
-                            $updateRequest->employee?->full_name ?? 'N/A',
-                            32,
-                            '#974063',
-                            'me-2',
-                            $updateRequest->employee?->id ?? 0,
-                        ) !!}
+                             $updateRequest->employee?->photo_path ?? null,
+                             $updateRequest->employee?->full_name ?? 'N/A',
+                             32,
+                             '#974063',
+                             'me-2',
+                             $updateRequest->employee?->id ?? 0,
+                         ) !!}
                         <div>
                             <h6 class="mb-0 fw-bold">{{ $updateRequest->employee?->full_name ?? 'N/A' }}</h6>
                             <small class="text-muted">{{ $updateRequest->employee?->punch_card_no ?? '' }}</small>
                         </div>
                     </div>
+                </td>
+                <td>
+                    @if(($updateRequest->type ?? 'employee') === 'admin')
+                        <span class="badge bg-primary-subtle text-primary fw-normal px-2 py-1 text-capitalize">Admin</span>
+                    @else
+                        <span class="badge bg-secondary-subtle text-secondary fw-normal px-2 py-1 text-capitalize">Employee</span>
+                    @endif
                 </td>
                 <td>
                     <span class="badge bg-info-subtle text-info fw-normal px-2 py-1 text-capitalize">
@@ -56,7 +64,7 @@
             </tr>
             @empty
             <tr>
-                <td colspan="5" class="text-center py-5">
+                <td colspan="6" class="text-center py-5">
                     <div class="text-muted">
                         <i data-feather="clipboard" class="mb-3" style="height: 48px; width: 48px; opacity: 0.5;"></i>
                         <p class="mb-0">No profile update requests found.</p>

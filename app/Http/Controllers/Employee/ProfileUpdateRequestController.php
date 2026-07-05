@@ -19,6 +19,13 @@ class ProfileUpdateRequestController extends Controller
 
         $query = ProfileUpdateRequest::with('employee')->latest();
 
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+
         $searchableColumns = ['section', 'status'];
         $keyword = $request->input('search');
         $filters = [];

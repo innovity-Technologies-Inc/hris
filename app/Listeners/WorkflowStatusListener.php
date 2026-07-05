@@ -76,7 +76,7 @@ class WorkflowStatusListener
             }
         }
 
-        if ($request->workflow->module === 'profile-update') {
+        if (in_array($request->workflow->module, ['profile-update', 'office-information', 'employee-policy', 'salary-breakdown', 'employee-bank-account'])) {
             if ($approvable instanceof \App\Models\Employee\ProfileUpdateRequest) {
                 $approvable->update([
                     'status' => 'approved'
@@ -86,6 +86,9 @@ class WorkflowStatusListener
                 if ($employee) {
                     $section = $approvable->section;
                     $reqData = $approvable->requested_data ?? [];
+                    $reqData['employee_id'] = $approvable->employee_id;
+
+                    $employeeServices = app(\App\Services\Employee\EmployeeServices::class);
 
                     if ($section === 'general') {
                         $employee->update($reqData);
@@ -111,6 +114,20 @@ class WorkflowStatusListener
                             ['employee_id' => $employee->id],
                             array_merge($reqData, ['status' => 'active'])
                         );
+                    } elseif ($section === 'office-information') {
+                        $employeeOfficeInfo = \App\Models\Employee\EmployeeOfficeInfo::where('employee_id', $employee->id)->first();
+                        $req = new \Illuminate\Http\Request();
+                        $req->replace($reqData);
+                        $employeeServices->employeeOfficeInfoSave($req, $reqData, $employeeOfficeInfo);
+                    } elseif ($section === 'employee-policy') {
+                        $employeePlan = \App\Models\Employee\EmployeeEligiblePlan::where('employee_id', $employee->id)->first();
+                        $employeeServices->employeeEligiblePanInfoSave($reqData, $employeePlan);
+                    } elseif ($section === 'salary-breakdown') {
+                        $employeeSalary = \App\Models\Employee\EmployeeSalaryBreakdown::where('employee_id', $employee->id)->first();
+                        $employeeServices->employeeSalaryBreakdownInfoSave($reqData, $employeeSalary);
+                    } elseif ($section === 'employee-bank-account') {
+                        $employeeBank = \App\Models\Employee\EmployeeBankAccount::where('employee_id', $employee->id)->first();
+                        $employeeServices->employeeBankAccountsInfoSave($reqData, $employeeBank);
                     }
                 }
             }
@@ -160,7 +177,7 @@ class WorkflowStatusListener
             }
         }
 
-        if ($request->workflow->module === 'profile-update') {
+        if (in_array($request->workflow->module, ['profile-update', 'office-information', 'employee-policy', 'salary-breakdown', 'employee-bank-account'])) {
             if ($approvable instanceof \App\Models\Employee\ProfileUpdateRequest) {
                 $approvable->update([
                     'status' => 'rejected'

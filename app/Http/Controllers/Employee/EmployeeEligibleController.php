@@ -8,6 +8,7 @@ use App\Enums\UserType;
 use App\Imports\Employee\EmployeeEligiblePlanImport;
 use App\Models\Employee\EmployeeEducationExperienceTraining;
 use App\Models\Employee\EmployeeEligiblePlan;
+use App\Models\Employee\ProfileUpdateRequest;
 use App\Models\Employee\Employee;
 use App\Models\Employee\EmployeeNominee;
 use App\Services\Employee\EmployeeServices;
@@ -157,9 +158,32 @@ class EmployeeEligibleController extends Controller
 
         $validated = $this->empServices->employeeEligiblePlanValidation($request);
         $employeePlan = EmployeeEligiblePlan::findOrFail($id);
+        $employee = $employeePlan->employee_id;
+
         try {
+            $workflowActive = \Innovity\ApprovalEngine\Models\Workflow::where('module', 'employee-policy')->where('is_active', true)->exists();
+
+            if ($workflowActive) {
+                // Remove employee_id from validated fields for comparison if needed
+                $compareFields = $validated;
+                unset($compareFields['employee_id']);
+
+                $updateRequest = ProfileUpdateRequest::createAdminRequest($employee, 'employee-policy', $compareFields, $employeePlan);
+
+                if ($updateRequest) {
+                    return redirect()
+                        ->route('employee.profile.eligible_plans', $employee)
+                        ->with(['message' => 'Employee policy tag update request submitted for approval.',
+                            'alert-type' => 'success']);
+                } else {
+                    return redirect()
+                        ->route('employee.profile.eligible_plans', $employee)
+                        ->with(['message' => 'No changes detected. Profile remains unchanged.',
+                            'alert-type' => 'info']);
+                }
+            }
+
             $employeeEligiblePlan = $this->empServices->employeeEligiblePanInfoSave($validated, $employeePlan);
-            $employee = $employeeEligiblePlan->employee_id;
             return redirect()
                 ->route('employee.profile.eligible_plans', $employee)
                 ->with(['message' => 'Employee eligible plans updated successfully.',

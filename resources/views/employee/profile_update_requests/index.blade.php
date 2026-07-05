@@ -16,7 +16,7 @@
             <div class="card-body p-4">
                 <form id="searchForm">
                     <div class="row g-3 align-items-end">
-                        <div class="col-md-7">
+                        <div class="col-md-5">
                             <label class="form-label text-muted small fw-semibold mb-1">Keyword Search</label>
                             <div class="input-group input-group-md">
                                 <input type="text" name="search" class="form-control border-end-0" placeholder="Search by section, status..." value="{{ request('search') }}">
@@ -24,6 +24,14 @@
                                     <i class="mdi mdi-magnify"></i>
                                 </span>
                             </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label text-muted small fw-semibold mb-1">Type</label>
+                            <select name="type" class="form-select">
+                                <option value="">All Types</option>
+                                <option value="employee" {{ request('type') === 'employee' ? 'selected' : '' }}>Employee</option>
+                                <option value="admin" {{ request('type') === 'admin' ? 'selected' : '' }}>Admin</option>
+                            </select>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label text-muted small fw-semibold mb-1">Status</label>

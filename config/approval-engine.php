@@ -29,11 +29,15 @@ return [
     'modules' => [
         'bonus' => 'Bonus',
         'career-movement' => 'Career Movement',
+        'employee-bank-account' => 'Employee Bank Account',
+        'employee-policy' => 'Employee Policy',
         'increment' => 'Increment',
         'leave' => 'Leave',
+        'office-information' => 'Office Information',
         'profile-update' => 'Profile Update',
         'promotion' => 'Promotion',
         'salary' => 'Salary',
+        'salary-breakdown' => 'Salary Breakdown',
         'travel-movement' => 'Travel Movement',
 
     ],

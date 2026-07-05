@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Enums\UserType;
 use App\Imports\Employee\EmployeeBankAccountDetailsImport;
 use App\Models\Employee\EmployeeBankAccount;
+use App\Models\Employee\ProfileUpdateRequest;
 use App\Models\Employee\Employee;
 use App\Models\Company\Bank;
 use App\Models\Company\Branch;
@@ -151,9 +152,32 @@ class EmployeeBankAccountController extends Controller
 
         $validated = $this->empServices->employeeBankAccountsInfoValidation($request);
         $employeeData = EmployeeBankAccount::findOrFail($id);
+        $employee = $employeeData->employee_id;
+
         try {
+            $workflowActive = \Innovity\ApprovalEngine\Models\Workflow::where('module', 'employee-bank-account')->where('is_active', true)->exists();
+
+            if ($workflowActive) {
+                // Remove employee_id from validated fields for comparison if needed
+                $compareFields = $validated;
+                unset($compareFields['employee_id']);
+
+                $updateRequest = ProfileUpdateRequest::createAdminRequest($employee, 'employee-bank-account', $compareFields, $employeeData);
+
+                if ($updateRequest) {
+                    return redirect()
+                        ->route('employee.profile.bank_accounts', $employee)
+                        ->with(['message' => 'Employee bank account update request submitted for approval.',
+                            'alert-type' => 'success']);
+                } else {
+                    return redirect()
+                        ->route('employee.profile.bank_accounts', $employee)
+                        ->with(['message' => 'No changes detected. Profile remains unchanged.',
+                            'alert-type' => 'info']);
+                }
+            }
+
             $employeeData = $this->empServices->employeeBankAccountsInfoSave($validated, $employeeData);
-            $employee = $employeeData->employee_id;
             return redirect()
                 ->route('employee.profile.bank_accounts', $employee)
                 ->with(['message' => 'Employee bank account details updated successfully.',
