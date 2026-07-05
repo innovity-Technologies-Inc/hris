@@ -79,6 +79,79 @@
                         </thead>
                         <tbody>
                             @php
+                                if (!function_exists('resolveRelationName')) {
+                                    function resolveRelationName($key, $id) {
+                                        if (!$id || !is_numeric($id)) {
+                                            return $id;
+                                        }
+
+                                        $normalizedKey = strtolower($key);
+                                        
+                                        $modelMap = [
+                                            'company_id'            => [\App\Models\Company\Company::class, 'name'],
+                                            'joining_company_id'    => [\App\Models\Company\Company::class, 'name'],
+                                            'current_company_id'    => [\App\Models\Company\Company::class, 'name'],
+                                            
+                                            'business_unit_id'      => [\App\Models\Company\CompanyLocation::class, 'name'],
+                                            'joining_business_unit_id' => [\App\Models\Company\CompanyLocation::class, 'name'],
+                                            'current_business_unit_id' => [\App\Models\Company\CompanyLocation::class, 'name'],
+                                            
+                                            'division_id'           => [\App\Models\Company\Division::class, 'name'],
+                                            'joining_division_id'   => [\App\Models\Company\Division::class, 'name'],
+                                            'current_division_id'   => [\App\Models\Company\Division::class, 'name'],
+                                            
+                                            'department_id'         => [\App\Models\Company\Department::class, 'name'],
+                                            'joining_department_id' => [\App\Models\Company\Department::class, 'name'],
+                                            'current_department_id' => [\App\Models\Company\Department::class, 'name'],
+                                            
+                                            'section_id'            => [\App\Models\Company\Section::class, 'name'],
+                                            'joining_section_id'    => [\App\Models\Company\Section::class, 'name'],
+                                            'current_section_id'    => [\App\Models\Company\Section::class, 'name'],
+                                            
+                                            'designation_id'        => [\App\Models\Company\Designation::class, 'name'],
+                                            'joining_designation_id'=> [\App\Models\Company\Designation::class, 'name'],
+                                            'current_designation_id'=> [\App\Models\Company\Designation::class, 'name'],
+                                            
+                                            'grade_id'              => [\App\Models\Company\SalaryGrade::class, 'name'],
+                                            'salary_grade_id'       => [\App\Models\Company\SalaryGrade::class, 'name'],
+                                        ];
+
+                                        if (array_key_exists($normalizedKey, $modelMap)) {
+                                            [$class, $field] = $modelMap[$normalizedKey];
+                                            try {
+                                                $record = $class::find($id);
+                                                if ($record) {
+                                                    return $record->{$field} ?? $record->title ?? $record->name ?? $id;
+                                                }
+                                            } catch (\Exception $e) {
+                                                // Fail silently
+                                            }
+                                        }
+
+                                        if (str_ends_with($normalizedKey, '_id')) {
+                                            $possibleModelName = substr($normalizedKey, 0, -3);
+                                            if (str_starts_with($possibleModelName, 'joining_')) {
+                                                $possibleModelName = substr($possibleModelName, 8);
+                                            } elseif (str_starts_with($possibleModelName, 'current_')) {
+                                                $possibleModelName = substr($possibleModelName, 8);
+                                            }
+                                            $possibleClass = 'App\\Models\\Company\\' . ucfirst(\Illuminate\Support\Str::camel($possibleModelName));
+                                            if (class_exists($possibleClass)) {
+                                                try {
+                                                    $record = $possibleClass::find($id);
+                                                    if ($record) {
+                                                        return $record->name ?? $record->title ?? $id;
+                                                    }
+                                                } catch (\Exception $e) {
+                                                    // Fail silently
+                                                }
+                                            }
+                                        }
+
+                                        return $id;
+                                    }
+                                }
+
                                 if (!function_exists('formatProfileUpdateData')) {
                                     function formatProfileUpdateData($val, $key = null) {
                                         if (is_array($val)) {
@@ -123,6 +196,9 @@
                                                                 $v = json_encode($v);
                                                             }
                                                             $displayVal = (string)$v;
+                                                            if (str_ends_with(strtolower($k), '_id') && is_numeric($displayVal)) {
+                                                                $displayVal = resolveRelationName($k, $displayVal);
+                                                            }
                                                             if (in_array(strtolower($displayVal), ['yes', 'no', 'permanent', 'contractual', 'active', 'inactive'])) {
                                                                 $displayVal = ucfirst(strtolower($displayVal));
                                                             }
@@ -150,6 +226,9 @@
                                                                 $v = json_encode($v);
                                                             }
                                                             $displayVal = (string)$v;
+                                                            if (str_ends_with(strtolower($k), '_id') && is_numeric($displayVal)) {
+                                                                $displayVal = resolveRelationName($k, $displayVal);
+                                                            }
                                                             if (in_array(strtolower($displayVal), ['yes', 'no', 'permanent', 'contractual', 'active', 'inactive'])) {
                                                                 $displayVal = ucfirst(strtolower($displayVal));
                                                             }
@@ -177,6 +256,9 @@
                                                                 $v = json_encode($v);
                                                             }
                                                             $displayVal = (string)$v;
+                                                            if (str_ends_with(strtolower($k), '_id') && is_numeric($displayVal)) {
+                                                                $displayVal = resolveRelationName($k, $displayVal);
+                                                            }
                                                             if (in_array(strtolower($displayVal), ['yes', 'no', 'permanent', 'contractual', 'active', 'inactive'])) {
                                                                 $displayVal = ucfirst(strtolower($displayVal));
                                                             }
@@ -205,6 +287,9 @@
                                                                 $v = json_encode($v);
                                                             }
                                                             $displayVal = (string)$v;
+                                                            if (str_ends_with(strtolower($k), '_id') && is_numeric($displayVal)) {
+                                                                $displayVal = resolveRelationName($k, $displayVal);
+                                                            }
                                                             if (in_array(strtolower($displayVal), ['yes', 'no', 'permanent', 'contractual', 'active', 'inactive'])) {
                                                                 $displayVal = ucfirst(strtolower($displayVal));
                                                             }
@@ -232,6 +317,9 @@
                                                     $v = json_encode($v);
                                                 }
                                                 $displayVal = (string)$v;
+                                                if (str_ends_with(strtolower($k), '_id') && is_numeric($displayVal)) {
+                                                    $displayVal = resolveRelationName($k, $displayVal);
+                                                }
                                                 if (in_array(strtolower($displayVal), ['yes', 'no', 'permanent', 'contractual', 'active', 'inactive'])) {
                                                     $displayVal = ucfirst(strtolower($displayVal));
                                                 }
@@ -243,6 +331,9 @@
 
                                         if (is_scalar($val)) {
                                             $valStr = (string)$val;
+                                            if ($key && str_ends_with(strtolower($key), '_id') && is_numeric($valStr)) {
+                                                $valStr = resolveRelationName($key, $valStr);
+                                            }
                                             if (in_array(strtolower($valStr), ['yes', 'no', 'permanent', 'contractual', 'active', 'inactive'])) {
                                                 return ucfirst(strtolower($valStr));
                                             }
