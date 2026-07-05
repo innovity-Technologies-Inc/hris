@@ -2,9 +2,9 @@
 
 ## 2026-07-05
 
-**Goal**: Implement Admin profile update requests (Office Info, Policy Tag, Salary Breakdown, Bank Account) and verify propagation. Also verify profile detailed view and PDF features after removing Pay Grade from office info.
+**Goal**: Implement Admin profile update requests (Office Info, Policy Tag, Salary Breakdown, Bank Account) and verify propagation. Also verify profile detailed view and PDF features after removing Pay Grade from office info. Validate comparison view formatting changes (no horizontal scroll, comma-separated weekends, capitalized yes/no/permanent etc.).
 
-**Exact Command**: `vendor/bin/pest tests/Feature/EmployeeDetailedViewTest.php tests/Feature/Employee/ProfileUpdateRequestTest.php`
+**Exact Command**: `php artisan config:clear && vendor/bin/pest tests/Feature/EmployeeDetailedViewTest.php tests/Feature/Employee/ProfileUpdateRequestTest.php`
 
 **Results**:
 - `it can submit general section update request and apply changes upon approval`: ✅ PASSED

@@ -86,23 +86,38 @@
                                                 return '<span class="text-muted font-12">Empty</span>';
                                             }
 
+                                            // If it is a simple list of values (e.g. weekends: ["Friday", "Saturday"])
+                                            if (array_is_list($val) && !is_array($val[0])) {
+                                                $formattedList = array_map(function($item) {
+                                                    $itemStr = is_array($item) ? json_encode($item) : (string)$item;
+                                                    if (in_array(strtolower($itemStr), ['yes', 'no', 'permanent', 'contractual', 'active', 'inactive'])) {
+                                                        return ucfirst(strtolower($itemStr));
+                                                    }
+                                                    return $itemStr;
+                                                }, $val);
+                                                return e(implode(', ', $formattedList));
+                                            }
+
                                             // If it is a sequential list of objects (e.g. educations, trainings, histories)
                                             if (isset($val[0]) && is_array($val[0])) {
-                                                $html = '<div class="table-responsive"><table class="table table-sm table-bordered m-0 font-12 bg-white">';
-                                                $headers = array_keys($val[0]);
-                                                $html .= '<thead class="table-light"><tr>';
-                                                foreach ($headers as $h) {
-                                                    $html .= '<th class="py-1">' . ucfirst(str_replace('_', ' ', $h)) . '</th>';
-                                                }
-                                                $html .= '</tr></thead><tbody>';
-                                                foreach ($val as $row) {
-                                                    $html .= '<tr>';
-                                                    foreach ($headers as $h) {
-                                                        $html .= '<td class="py-1">' . e($row[$h] ?? 'N/A') . '</td>';
+                                                $html = '<div class="d-flex flex-column gap-2">';
+                                                foreach ($val as $index => $row) {
+                                                    $html .= '<div class="card border border-light-subtle shadow-none bg-light-subtle p-2.5 rounded-3 mb-0 font-12 text-start">';
+                                                    $html .= '<div class="fw-bold border-bottom pb-1 mb-2 text-primary"># ' . ($index + 1) . '</div>';
+                                                    foreach ($row as $k => $v) {
+                                                        $label = ucwords(str_replace('_', ' ', $k));
+                                                        if (is_array($v)) {
+                                                            $v = json_encode($v);
+                                                        }
+                                                        $displayVal = (string)$v;
+                                                        if (in_array(strtolower($displayVal), ['yes', 'no', 'permanent', 'contractual', 'active', 'inactive'])) {
+                                                            $displayVal = ucfirst(strtolower($displayVal));
+                                                        }
+                                                        $html .= '<div class="mb-1 text-wrap"><strong>' . $label . ':</strong> ' . e($displayVal) . '</div>';
                                                     }
-                                                    $html .= '</tr>';
+                                                    $html .= '</div>';
                                                 }
-                                                $html .= '</tbody></table></div>';
+                                                $html .= '</div>';
                                                 return $html;
                                             }
 
@@ -112,12 +127,25 @@
                                                 if (is_array($v)) {
                                                     $v = json_encode($v);
                                                 }
-                                                $html .= '<li class="mb-1"><strong>' . ucfirst(str_replace('_', ' ', $k)) . ':</strong> ' . e($v) . '</li>';
+                                                $displayVal = (string)$v;
+                                                if (in_array(strtolower($displayVal), ['yes', 'no', 'permanent', 'contractual', 'active', 'inactive'])) {
+                                                    $displayVal = ucfirst(strtolower($displayVal));
+                                                }
+                                                $html .= '<li class="mb-1"><strong>' . ucfirst(str_replace('_', ' ', $k)) . ':</strong> ' . e($displayVal) . '</li>';
                                             }
                                             $html .= '</ul>';
                                             return $html;
                                         }
-                                        return e($val);
+
+                                        if (is_scalar($val)) {
+                                            $valStr = (string)$val;
+                                            if (in_array(strtolower($valStr), ['yes', 'no', 'permanent', 'contractual', 'active', 'inactive'])) {
+                                                return ucfirst(strtolower($valStr));
+                                            }
+                                            return e($valStr);
+                                        }
+
+                                        return e((string)$val);
                                     }
                                 }
 
