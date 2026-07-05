@@ -168,7 +168,9 @@
                                                             $html .= '<hr class="my-2 opacity-50">';
                                                         }
                                                         $html .= '<div class="text-start font-12">';
-                                                        $html .= '  <div class="fw-bold text-primary mb-1">Item #' . ($index + 1) . '</div>';
+                                                        $title = $row['name'] ?? $row['full_name'] ?? $row['nominee_name'] ?? $row['contact_name'] ?? $row['relation_type'] ?? '';
+                                                        $titleStr = $title ? ': ' . $title : '';
+                                                        $html .= '  <div class="fw-bold text-primary mb-1">Item #' . ($index + 1) . $titleStr . '</div>';
                                                         foreach ($row as $k => $v) {
                                                             $label = ucwords(str_replace('_', ' ', $k));
                                                             if (is_array($v)) {
