@@ -158,9 +158,8 @@
                         </div>
                         <div class="card-body">
                             <div class="row g-3">
-                                <div class="col-md-3"><label class="data-label">Employee Type</label><span class="data-value" id="detailed_emp_type"></span></div>
-                                <div class="col-md-3"><label class="data-label">HR File Number</label><span class="data-value" id="detailed_hr_file_no"></span></div>
-                                <div class="col-md-3"><label class="data-label">Pay Grade</label><span class="data-value" id="detailed_pay_grade"></span></div>
+                                <div class="col-md-4"><label class="data-label">Employee Type</label><span class="data-value" id="detailed_emp_type"></span></div>
+                                <div class="col-md-4"><label class="data-label">HR File Number</label><span class="data-value" id="detailed_hr_file_no"></span></div>
                                 <div class="col-md-12"><label class="data-label">File Note</label><span class="data-value" id="detailed_file_note"></span></div>
                                 <div class="col-12"><hr class="my-1"></div>
                                 <div class="col-md-4"><label class="data-label">Joining Company</label><span class="data-value" id="detailed_joining_company"></span></div>

@@ -323,7 +323,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (data.office_info) {
             const oi = data.office_info;
             const officeFields = {
-                'detailed_emp_type': oi.emp_type, 'detailed_hr_file_no': oi.hr_file_no, 'detailed_pay_grade': oi.get_grade?.grade_name,
+                'detailed_emp_type': oi.emp_type, 'detailed_hr_file_no': oi.hr_file_no,
                 'detailed_file_note': oi.file_note, 'detailed_joining_company': oi.get_joining_company?.name,
                 'detailed_joining_bu': oi.get_joining_business_unit?.name, 'detailed_joining_division': oi.get_joining_division?.name,
                 'detailed_joining_department': oi.get_joining_department?.department_name, 'detailed_joining_section': oi.get_joining_section?.name,

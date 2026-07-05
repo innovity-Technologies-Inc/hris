@@ -66,10 +66,6 @@
                                             <td class="fw-semibold">HR File Number</td>
                                             <td>{{$employee_office_info->hr_file_no ?? 'N/A'}}</td>
                                         </tr>
-                                        <tr>
-                                            <td class="fw-semibold">Pay Grade</td>
-                                            <td>{{$employee_office_info->getGrade->grade_name  ?? 'N/A'}}</td>
-                                        </tr>
                                         </tbody>
                                     </table>
                                 </div>

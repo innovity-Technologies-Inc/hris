@@ -37,15 +37,7 @@
                                     @enderror
                                 </div>
 
-                                <div class="col-lg-6">
-                                    <label for="grade_id" class="form-label fw-semibold">Pay Grade</label>
-                                    <select class="form-select select2_list" id="grade_id" name="grade_id" data-placeholder="Select Grade">
-                                        <option value="">Select Grade</option>
-                                    </select>
-                                    @error('grade_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+
 
                                 <div class="col-lg-6">
                                     <label for="hr_file_no" class="form-label fw-semibold">HR File Number</label>
@@ -633,23 +625,9 @@
                     });
             });
 
-            // --- Pay Grade Loader ---
-            function loadGrades(selectedGrade = null) {
-                $.get('/get-grades', function(data) {
-                    let $gradeSelect = $('#grade_id');
-                    $gradeSelect.html('<option value="">Select Grade</option>');
-                    $.each(data, function(_, value) {
-                        let selected = (selectedGrade == value.id) ? 'selected' : '';
-                        let label = (value.grade_code ? value.grade_code + ' - ' : '') + (value.grade_name || value.name);
-                        $gradeSelect.append(`<option value="${value.id}" ${selected}>${label}</option>`);
-                    });
-                });
-            }
-
             // --- Initial Load in Edit Mode ---
             @if($isEdit)
                 silenceChangeEvents = true;
-                loadGrades("{{ old('grade_id', $employee_office_info->grade_id) }}");
 
                 loadHierarchy(
                     'joining',
@@ -672,8 +650,6 @@
                 }).catch(() => {
                     silenceChangeEvents = false;
                 });
-            @else
-                loadGrades();
             @endif
         });
     </script>

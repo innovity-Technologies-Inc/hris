@@ -126,7 +126,7 @@
     <div class="sub-header">Payroll & Identification</div>
     <table class="info-grid">
         <tr><td class="label">Employee Type</td><td class="value">{{ $officeInfo->emp_type ?? 'N/A' }}</td><td class="label">HR File No</td><td class="value">{{ $officeInfo->hr_file_no ?? 'N/A' }}</td></tr>
-        <tr><td class="label">Pay Grade</td><td class="value">{{ $officeInfo->getGrade?->grade_name ?? 'N/A' }}</td><td class="label">Status</td><td class="value">{{ strtoupper($employee->status ?? 'N/A') }}</td></tr>
+        <tr><td class="label">Status</td><td class="value" colspan="3">{{ strtoupper($employee->status ?? 'N/A') }}</td></tr>
         <tr><td class="label">File Note</td><td class="value" colspan="3">{{ $officeInfo->file_note ?? 'N/A' }}</td></tr>
     </table>
     <div class="sub-header">Joining Details</div>

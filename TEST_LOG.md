@@ -2,9 +2,9 @@
 
 ## 2026-07-05
 
-**Goal**: Implement Admin profile update requests (Office Info, Policy Tag, Salary Breakdown, Bank Account) and verify propagation.
+**Goal**: Implement Admin profile update requests (Office Info, Policy Tag, Salary Breakdown, Bank Account) and verify propagation. Also verify profile detailed view and PDF features after removing Pay Grade from office info.
 
-**Exact Command**: `php artisan config:clear && vendor/bin/pest tests/Feature/Employee/ProfileUpdateRequestTest.php`
+**Exact Command**: `vendor/bin/pest tests/Feature/EmployeeDetailedViewTest.php tests/Feature/Employee/ProfileUpdateRequestTest.php`
 
 **Results**:
 - `it can submit general section update request and apply changes upon approval`: ✅ PASSED
@@ -12,6 +12,10 @@
 - `it can submit employment history update request and apply changes upon approval`: ✅ PASSED
 - `it can submit emergency contact nominee update request and apply changes upon approval`: ✅ PASSED
 - `it creates admin profile update request for office info update and propagates upon approval`: ✅ PASSED
+- `admin can fetch detailed employee profile json`: ✅ PASSED
+- `employee can fetch their own detailed profile json`: ✅ PASSED
+- `employee cannot fetch other employee detailed profile json`: ✅ PASSED
+- `admin can download detailed profile pdf`: ✅ PASSED
 
 **Status**: ✅ SUCCESS
 
