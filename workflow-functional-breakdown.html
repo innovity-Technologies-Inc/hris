@@ -1,9 +1,9 @@
-           <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Innovity Approval Engine - Functional Breakdown</title>
+    <title>Innovity Approval Engine - Complete Tutorial & Guide</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
@@ -112,6 +112,22 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.3);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(99, 102, 241, 0.5);
+        }
     </style>
 </head>
 <body class="min-h-screen antialiased p-6 md:p-10">
@@ -124,50 +140,50 @@
                 <i class="fa-solid fa-sitemap text-2xl"></i>
             </div>
             <h1 class="text-4xl md:text-5xl font-bold mb-4">Innovity <span class="gradient-text">Approval Engine</span></h1>
-            <p class="text-slate-400 text-lg max-w-2xl mx-auto">An interactive breakdown of the HRMS Approval Workflow Engine architecture, core methods, and database schemas.</p>
+            <p class="text-slate-400 text-lg max-w-3xl mx-auto">A comprehensive implementation tutorial and interactive dashboard detailing architecture, schemas, listeners, and timeline flows.</p>
         </header>
 
         <!-- Navigation Tabs -->
         <div class="glass-card rounded-2xl p-2 mb-8 flex flex-wrap gap-2 justify-center sticky top-4 z-50">
             <button class="tab-btn active px-6 py-3 rounded-xl text-slate-300 hover:text-white hover:bg-white/5" data-target="tab-overview">
-                <i class="fa-solid fa-bolt mr-2"></i> Core Cycle
+                <i class="fa-solid fa-circle-nodes mr-2"></i> Architecture Overview
             </button>
             <button class="tab-btn px-6 py-3 rounded-xl text-slate-300 hover:text-white hover:bg-white/5" data-target="tab-database">
                 <i class="fa-solid fa-database mr-2"></i> Database Models
             </button>
-            <button class="tab-btn px-6 py-3 rounded-xl text-slate-300 hover:text-white hover:bg-white/5" data-target="tab-methods">
-                <i class="fa-solid fa-code mr-2"></i> Methods & Traits
+            <button class="tab-btn px-6 py-3 rounded-xl text-slate-300 hover:text-white hover:bg-white/5" data-target="tab-tutorial">
+                <i class="fa-solid fa-book-open mr-2"></i> Integration Tutorial
             </button>
             <button class="tab-btn px-6 py-3 rounded-xl text-slate-300 hover:text-white hover:bg-white/5" data-target="tab-controller-lifecycle">
                 <i class="fa-solid fa-arrows-spin mr-2"></i> Controller Lifecycle
             </button>
             <button class="tab-btn px-6 py-3 rounded-xl text-slate-300 hover:text-white hover:bg-white/5" data-target="tab-events">
-                <i class="fa-solid fa-circle-nodes mr-2"></i> Workflow Events
+                <i class="fa-solid fa-bell-concierge mr-2"></i> Workflow Events
             </button>
         </div>
 
         <!-- Main Content Area -->
         <main class="min-h-[60vh]">
 
-            <!-- TAB 1: Core Cycle -->
+            <!-- TAB 1: Architecture Overview -->
             <div id="tab-overview" class="tab-content active">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                     <!-- Step 1 -->
                     <div class="glass-card rounded-2xl p-8 relative overflow-hidden group">
                         <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
-                            <i class="fa-solid fa-play text-8xl text-indigo-500"></i>
+                            <i class="fa-solid fa-circle-play text-8xl text-indigo-500"></i>
                         </div>
                         <div class="inline-block px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-400 text-sm font-semibold mb-4 border border-indigo-500/30">
-                            Step 1
+                            Phase 1
                         </div>
-                        <h3 class="text-2xl font-bold text-white mb-3">Initiation</h3>
+                        <h3 class="text-2xl font-bold text-white mb-3">Workflow Ignition</h3>
                         <p class="text-slate-300 mb-4 leading-relaxed">
-                            The workflow starts via the <code class="text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded">startWorkflow()</code> method provided by the <code class="text-indigo-400">Approvable</code> trait.
+                            The workflow starts via the helper <code class="text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded">startWorkflow()</code> method provided by the package trait attached to target models.
                         </p>
-                        <ul class="space-y-2 text-slate-400">
-                            <li><i class="fa-solid fa-check text-green-400 mr-2"></i> Looks up active blueprint for module.</li>
-                            <li><i class="fa-solid fa-check text-green-400 mr-2"></i> Creates <code class="text-indigo-300">ApprovalRequest</code> (Master Tracker).</li>
+                        <ul class="space-y-2 text-slate-400 text-sm">
+                            <li><i class="fa-solid fa-check text-green-400 mr-2"></i> Resolves active blueprint matching the module.</li>
+                            <li><i class="fa-solid fa-check text-green-400 mr-2"></i> Generates polymorphic <code class="text-indigo-300">ApprovalRequest</code>.</li>
                             <li><i class="fa-solid fa-check text-green-400 mr-2"></i> Dispatches <code class="text-indigo-300">ApprovalRequested</code> event.</li>
                         </ul>
                     </div>
@@ -178,53 +194,54 @@
                             <i class="fa-solid fa-share-nodes text-8xl text-pink-500"></i>
                         </div>
                         <div class="inline-block px-3 py-1 rounded-full bg-pink-500/20 text-pink-400 text-sm font-semibold mb-4 border border-pink-500/30">
-                            Step 2
+                            Phase 2
                         </div>
                         <h3 class="text-2xl font-bold text-white mb-3">Task Emission</h3>
                         <p class="text-slate-300 mb-4 leading-relaxed">
-                            The <code class="text-pink-400">TaskEmitter</code> determines how to generate actionable tasks (<code class="text-indigo-300">ApprovalStepRequests</code>).
+                            The package's <code class="text-pink-400">TaskEmitter</code> decides how steps should be generated in the database.
                         </p>
                         <div class="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
-                            <p class="text-sm text-slate-300"><strong class="text-indigo-400">Sequential:</strong> Emits one step at a time based on order.</p>
-                            <div class="h-px w-full bg-slate-700 my-2"></div>
-                            <p class="text-sm text-slate-300"><strong class="text-pink-400">Random:</strong> Emits all required steps simultaneously.</p>
+                            <p class="text-sm text-slate-300 mb-2"><strong class="text-indigo-400">Sequential:</strong> Emits task requests one order tier at a time.</p>
+                            <p class="text-sm text-slate-300"><strong class="text-pink-400">Random:</strong> Emits all required step requests simultaneously.</p>
                         </div>
                     </div>
 
                     <!-- Step 3 -->
                     <div class="glass-card rounded-2xl p-8 relative overflow-hidden group">
                         <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
-                            <i class="fa-solid fa-bell text-8xl text-emerald-500"></i>
+                            <i class="fa-solid fa-bullhorn text-8xl text-emerald-500"></i>
                         </div>
                         <div class="inline-block px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-semibold mb-4 border border-emerald-500/30">
-                            Step 3
+                            Phase 3
                         </div>
-                        <h3 class="text-2xl font-bold text-white mb-3">Routing & Notifications</h3>
+                        <h3 class="text-2xl font-bold text-white mb-3">Resolver & Alerts</h3>
                         <p class="text-slate-300 mb-4 leading-relaxed">
-                            The <code class="text-emerald-400">ApproverResolver</code> determines exactly <em>who</em> holds the required authority level for the given employee.
+                            Resolves exact reviewer user IDs and fires notifications in real-time.
                         </p>
                         <ul class="space-y-2 text-slate-400 text-sm">
-                            <li><i class="fa-solid fa-envelope text-slate-500 mr-2"></i> Generates standard email notifications.</li>
-                            <li><i class="fa-solid fa-desktop text-slate-500 mr-2"></i> Generates in-app dashboard bell alerts.</li>
-                            <li><i class="fa-solid fa-link text-slate-500 mr-2"></i> Dynamically builds redirect URLs (e.g., <code class="text-xs">{module}.show</code>).</li>
+                            <li><i class="fa-solid fa-user-shield text-slate-400 mr-2"></i> Resolves reviewer via <code class="text-emerald-300">ApproverResolver</code>.</li>
+                            <li><i class="fa-solid fa-envelope text-slate-400 mr-2"></i> Fires email and dashboard notification.</li>
+                            <li><i class="fa-solid fa-link text-slate-400 mr-2"></i> Directs users to the detail review forms.</li>
                         </ul>
                     </div>
 
                     <!-- Step 4 -->
                     <div class="glass-card rounded-2xl p-8 relative overflow-hidden group">
                         <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
-                            <i class="fa-solid fa-gavel text-8xl text-amber-500"></i>
+                            <i class="fa-solid fa-circle-check text-8xl text-amber-500"></i>
                         </div>
                         <div class="inline-block px-3 py-1 rounded-full bg-amber-500/20 text-amber-400 text-sm font-semibold mb-4 border border-amber-500/30">
-                            Step 4
+                            Phase 4
                         </div>
-                        <h3 class="text-2xl font-bold text-white mb-3">Processing & Finalization</h3>
+                        <h3 class="text-2xl font-bold text-white mb-3">Action Resolution</h3>
                         <p class="text-slate-300 mb-4 leading-relaxed">
-                            The <code class="text-amber-400">ApprovalResolver</code> processes Approve/Reject actions via AJAX.
+                            Processes step choices and fires completion signals to apply mutations.
                         </p>
-                        <p class="text-sm text-slate-400">
-                            Once logic concludes, it emits <code class="text-indigo-300">ApprovalCompleted</code> or <code class="text-pink-300">ApprovalRejected</code>. Finally, the <code class="text-amber-300">WorkflowStatusListener</code> updates the core HRMS model status in the main app.
-                        </p>
+                        <ul class="space-y-2 text-slate-400 text-sm">
+                            <li><i class="fa-solid fa-gavel text-slate-400 mr-2"></i> Lock task row via <code class="text-amber-300">lockForUpdate()</code>.</li>
+                            <li><i class="fa-solid fa-share text-slate-400 mr-2"></i> Dispatches <code class="text-indigo-300">ApprovalCompleted</code> event.</li>
+                            <li><i class="fa-solid fa-database text-slate-400 mr-2"></i> Dynamic listeners apply changes to core tables.</li>
+                        </ul>
                     </div>
 
                 </div>
@@ -353,55 +370,63 @@
                 </div>
             </div>
 
-            <!-- TAB 3: Methods & Traits -->
-            <div id="tab-methods" class="tab-content">
+            <!-- TAB 3: Integration Tutorial -->
+            <div id="tab-tutorial" class="tab-content">
                 <div class="space-y-6">
 
+                    <!-- Step 1 Card -->
                     <div class="glass-card rounded-2xl p-8 border-l-4 border-indigo-500">
                         <h3 class="text-2xl font-bold text-white mb-2 flex items-center">
-                            <i class="fa-solid fa-code-branch text-indigo-500 mr-3"></i> The <code class="mx-2 text-indigo-300">Approvable</code> Trait
+                            <span class="bg-indigo-500/20 text-indigo-400 text-sm px-3 py-1 rounded-lg mr-3">Step 1</span> Attach the Trait
                         </h3>
                         <p class="text-slate-300 mb-4">
-                            Attached to subject models (e.g., <code>Leave</code>, <code>Salary</code>). It provides the core relationship methods and the ignition switch to begin workflows.
+                            Attach the <code>Approvable</code> trait to your Eloquent models to hook them into the engine:
                         </p>
-
-                        <div class="bg-slate-900 rounded-lg p-4 font-mono text-sm border border-slate-700 shadow-inner overflow-x-auto">
-                            <div class="text-slate-400 mb-2">// In a Controller (e.g., SalaryController@store)</div>
-                            <div>
-                                <span class="text-pink-400">$salary</span><span class="text-slate-300">-></span><span class="text-emerald-400">startWorkflow</span><span class="text-slate-300">(</span><span class="text-amber-300">'salary'</span><span class="text-slate-300">);</span>
-                            </div>
+                        <div class="bg-slate-900 rounded-lg p-4 font-mono text-sm border border-slate-700 overflow-x-auto">
+                            <span class="text-pink-400">use</span> <span class="text-emerald-400">Innovity\ApprovalEngine\Traits\Approvable</span>;<br><br>
+                            <span class="text-pink-400">class</span> <span class="text-amber-400">Leave</span> <span class="text-pink-400">extends</span> <span class="text-amber-400">Model</span> {<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-pink-400">use</span> <span class="text-emerald-400">Approvable</span>;<br>
+                            }
                         </div>
-                        <p class="mt-4 text-sm text-slate-400 italic">
-                            *Note: Workflows do NOT trigger automatically on model save. You must manually call this method to prevent Drafts from emitting tasks.
-                        </p>
                     </div>
 
+                    <!-- Step 2 Card -->
                     <div class="glass-card rounded-2xl p-8 border-l-4 border-pink-500">
                         <h3 class="text-2xl font-bold text-white mb-2 flex items-center">
-                            <i class="fa-solid fa-users-gear text-pink-500 mr-3"></i> <code class="text-pink-300">ApproverResolver</code>
+                            <span class="bg-pink-500/20 text-pink-400 text-sm px-3 py-1 rounded-lg mr-3">Step 2</span> Bind ApproverResolver
                         </h3>
                         <p class="text-slate-300 mb-4">
-                            Implements <code>ApproverResolverInterface</code> to bridge the package with HRMS business logic.
+                            Implement the resolver class to look up authorized approvers for steps dynamically, then bind it in <code>AppServiceProvider</code>:
                         </p>
-                        <ul class="list-disc pl-5 space-y-2 text-slate-400">
-                            <li>Uses <code>withoutGlobalScopes()</code> to securely resolve users regardless of acting contexts.</li>
-                            <li>Matches target <code>UserType</code> against the employee's current departmental structural IDs.</li>
-                        </ul>
+                        <div class="bg-slate-900 rounded-lg p-4 font-mono text-sm border border-slate-700 overflow-x-auto">
+                            <span class="text-slate-400">// In AppServiceProvider@register</span><br>
+                            <span class="text-pink-400">$this</span>->app-><span class="text-emerald-400">bind</span>(<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;ApproverResolverInterface::<span class="text-pink-400">class</span>,<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;ApproverResolver::<span class="text-pink-400">class</span><br>
+                            );
+                        </div>
                     </div>
 
-                    <div class="glass-card rounded-2xl p-8 border-l-4 border-amber-500">
+                    <!-- Step 3 Card -->
+                    <div class="glass-card rounded-2xl p-8 border-l-4 border-emerald-500">
                         <h3 class="text-2xl font-bold text-white mb-2 flex items-center">
-                            <i class="fa-solid fa-ear-listen text-amber-500 mr-3"></i> <code class="text-amber-300">WorkflowStatusListener</code>
+                            <span class="bg-emerald-500/20 text-emerald-400 text-sm px-3 py-1 rounded-lg mr-3">Step 3</span> Decouple Event Listeners
                         </h3>
                         <p class="text-slate-300 mb-4">
-                            The final puzzle piece. Listens to <code>ApprovalCompleted</code> and <code>ApprovalRejected</code>.
+                            Define a mapping array of modules to dedicated listeners inside your provider, then bind closures inside `boot()` to route execution dynamically:
                         </p>
-                        <p class="text-slate-400 text-sm">
-                            It takes the completed payload from the package and physically mutates the main HRMS model (like setting <code>status = 'approved'</code> on the Leave record) ensuring strict separation of concerns.
-                        </p>
+                        <div class="bg-slate-900 rounded-lg p-4 font-mono text-sm border border-slate-700 overflow-x-auto">
+                            <span class="text-pink-400">private array</span> <span class="text-indigo-400">$workflowListeners</span> = [<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-amber-300">'leave'</span> => \App\Listeners\Workflow\LeaveWorkflowListener::<span class="text-pink-400">class</span>,<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-amber-300">'promotion'</span> => \App\Listeners\Workflow\PromotionWorkflowListener::<span class="text-pink-400">class</span>,<br>
+                            ];
+                        </div>
                     </div>
 
-            <!-- TAB: Controller Lifecycle -->
+                </div>
+            </div>
+
+            <!-- TAB 4: Controller Lifecycle -->
             <div id="tab-controller-lifecycle" class="tab-content">
                 <div class="space-y-6">
 
@@ -415,7 +440,7 @@
 
                         <!-- Timeline steps -->
                         <div class="space-y-6 relative before:absolute before:inset-0 before:left-2 before:h-full before:w-0.5 before:bg-slate-700">
-                            
+
                             <!-- step 1 -->
                             <div class="relative pl-8">
                                 <div class="absolute left-0 top-1.5 w-4 h-4 rounded-full bg-indigo-500 border-2 border-slate-900"></div>
