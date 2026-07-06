@@ -917,7 +917,7 @@ Route::prefix('settings')->middleware('auth')->group(function () {
     });
 
     // Workflow Action Route (Global)
-    Route::post('/workflow-action/{stepRequestId}', [\App\Http\Controllers\ApprovalActionController::class, 'action'])->name('approval.action');
+    Route::post('/workflow-action/{id}', [\Innovity\ApprovalEngine\Http\Controllers\ApprovalActionController::class, 'action'])->name('approval.action');
 
     Route::controller(SettingsController::class)->group(function (){
        Route::middleware('permission:general-settings.view')->group(function () {
