@@ -138,6 +138,9 @@
             <button class="tab-btn px-6 py-3 rounded-xl text-slate-300 hover:text-white hover:bg-white/5" data-target="tab-methods">
                 <i class="fa-solid fa-code mr-2"></i> Methods & Traits
             </button>
+            <button class="tab-btn px-6 py-3 rounded-xl text-slate-300 hover:text-white hover:bg-white/5" data-target="tab-events">
+                <i class="fa-solid fa-circle-nodes mr-2"></i> Workflow Events
+            </button>
         </div>
 
         <!-- Main Content Area -->
@@ -392,6 +395,73 @@
                         </p>
                         <p class="text-slate-400 text-sm">
                             It takes the completed payload from the package and physically mutates the main HRMS model (like setting <code>status = 'approved'</code> on the Leave record) ensuring strict separation of concerns.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- TAB 4: Workflow Events -->
+            <div id="tab-events" class="tab-content">
+                <div class="space-y-6">
+
+                    <div class="glass-card rounded-2xl p-8 border-l-4 border-indigo-500">
+                        <h3 class="text-2xl font-bold text-white mb-2 flex items-center">
+                            <i class="fa-solid fa-file-signature text-indigo-500 mr-3"></i> <code>ApprovalRequested</code>
+                        </h3>
+                        <p class="text-slate-300 mb-2">
+                            Dispatched during request initialization inside the package generator class.
+                        </p>
+                        <p class="text-slate-400 text-sm">
+                            <strong>File Path:</strong> <code class="text-xs text-indigo-300">vendor/innovity/laravel-approval-engine/src/Services/WorkflowGenerator.php</code>
+                        </p>
+                        <p class="text-slate-400 text-sm">
+                            <strong>Trigger:</strong> Fired when an approvable model initiates a new workflow via <code>$approvable->startWorkflow()</code>.
+                        </p>
+                    </div>
+
+                    <div class="glass-card rounded-2xl p-8 border-l-4 border-pink-500">
+                        <h3 class="text-2xl font-bold text-white mb-2 flex items-center">
+                            <i class="fa-solid fa-user-check text-pink-500 mr-3"></i> <code>ApprovalStepApproved</code>
+                        </h3>
+                        <p class="text-slate-300 mb-2">
+                            Dispatched when a single step is approved.
+                        </p>
+                        <p class="text-slate-400 text-sm">
+                            <strong>File Path:</strong> <code class="text-xs text-pink-300">vendor/innovity/laravel-approval-engine/src/Services/ApprovalResolver.php</code>
+                        </p>
+                        <p class="text-slate-400 text-sm">
+                            <strong>Trigger:</strong> Fired when an individual step request is approved by an assigned reviewer.
+                        </p>
+                    </div>
+
+                    <div class="glass-card rounded-2xl p-8 border-l-4 border-emerald-500">
+                        <h3 class="text-2xl font-bold text-white mb-2 flex items-center">
+                            <i class="fa-solid fa-square-check text-emerald-500 mr-3"></i> <code>ApprovalCompleted</code>
+                        </h3>
+                        <p class="text-slate-300 mb-2">
+                            Dispatched when the overall workflow satisfies all required approvals.
+                        </p>
+                        <p class="text-slate-400 text-sm">
+                            <strong>File Path:</strong> <code class="text-xs text-emerald-300">vendor/innovity/laravel-approval-engine/src/Services/ApprovalResolver.php</code>
+                        </p>
+                        <p class="text-slate-400 text-sm">
+                            <strong>Trigger:</strong> Fired when all blueprint step requirements are satisfied, completing the entire workflow successfully.
+                        </p>
+                    </div>
+
+                    <div class="glass-card rounded-2xl p-8 border-l-4 border-amber-500">
+                        <h3 class="text-2xl font-bold text-white mb-2 flex items-center">
+                            <i class="fa-solid fa-rectangle-xmark text-amber-500 mr-3"></i> <code>ApprovalRejected</code>
+                        </h3>
+                        <p class="text-slate-300 mb-2">
+                            Dispatched when the overall workflow is rejected.
+                        </p>
+                        <p class="text-slate-400 text-sm">
+                            <strong>File Path:</strong> <code class="text-xs text-amber-300">vendor/innovity/laravel-approval-engine/src/Services/ApprovalResolver.php</code>
+                        </p>
+                        <p class="text-slate-400 text-sm">
+                            <strong>Trigger:</strong> Fired when a step rejection fails the sequential flow or mathematically prevents the random flow from succeeding.
                         </p>
                     </div>
 

@@ -91,3 +91,27 @@ Once the `Innovity\ApprovalEngine` finishes its mathematics, its job is strictly
 *   It then fetches the core `Promotion` model and physically updates its status column from `pending` to `approved` or `rejected`. 
 
 This clean separation ensures the package strictly handles the rules and timeline of the workflow, while the HRMS system handles the organizational security scoping, email notifications, and final model mutations!
+
+## Workflow Events & Dispatching
+
+The engine fires system-wide events at critical transition points in the workflow. These events are dispatched by the package and can be listened to by the application to execute custom side effects (like updating live databases or logging audits).
+
+### 1. `ApprovalRequested`
+*   **Namespace:** `Innovity\ApprovalEngine\Events\ApprovalRequested`
+*   **Where it is generated:** Inside `vendor/innovity/laravel-approval-engine/src/Services/WorkflowGenerator.php` (during request initialization).
+*   **Trigger:** When an approvable model initiates a new workflow via `$approvable->startWorkflow()`.
+
+### 2. `ApprovalStepApproved`
+*   **Namespace:** `Innovity\ApprovalEngine\Events\ApprovalStepApproved`
+*   **Where it is generated:** Inside `vendor/innovity/laravel-approval-engine/src/Services/ApprovalResolver.php` (during step approval).
+*   **Trigger:** When an individual step request is approved by an assigned reviewer.
+
+### 3. `ApprovalCompleted`
+*   **Namespace:** `Innovity\ApprovalEngine\Events\ApprovalCompleted`
+*   **Where it is generated:** Inside `vendor/innovity/laravel-approval-engine/src/Services/ApprovalResolver.php` (upon workflow success).
+*   **Trigger:** When the total approved steps meet the blueprint's threshold (sequential or random), completing the entire workflow successfully.
+
+### 4. `ApprovalRejected`
+*   **Namespace:** `Innovity\ApprovalEngine\Events\ApprovalRejected`
+*   **Where it is generated:** Inside `vendor/innovity/laravel-approval-engine/src/Services/ApprovalResolver.php` (upon workflow failure).
+*   **Trigger:** When a step rejection makes it mathematically impossible to satisfy the required approvals, or when any step in a sequential workflow is rejected.
