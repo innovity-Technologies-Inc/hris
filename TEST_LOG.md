@@ -2,6 +2,22 @@
 
 ## 2026-07-06
 
+**Goal**: Refactor the profile field configuration and profile update request logic to follow the Request -> Service -> Thin Controller design pattern, and verify using the ProfileUpdateRequestTest.
+
+**Exact Command**: `php artisan config:clear && php artisan test tests/Feature/Employee/ProfileUpdateRequestTest.php`
+
+**Results**:
+- `it can submit general section update request and apply changes upon approval`: ✅ PASSED
+- `it can submit education section update request and apply changes upon approval`: ✅ PASSED
+- `it can submit employment history update request and apply changes upon approval`: ✅ PASSED
+- `it can submit emergency contact nominee update request and apply changes upon approval`: ✅ PASSED
+- `it creates admin profile update request for office info update and propagates upon approval`: ✅ PASSED
+- `it generates custom notification redirecting to profile_update_requests.show when approval step is created`: ✅ PASSED
+
+**Status**: ✅ SUCCESS
+
+## 2026-07-06 (Decoupled Listeners / Document Updates)
+
 **Goal**: Verify that when a profile update request approval step is created, notifications generated for the workflow (e.g. office-info, bank-accounts, policy-tag, salary-breakdown) correctly redirect to the review page (`profile_update_requests.show`). Also document the workflow events and ApprovalActionController lifecycle sequence diagram inside both the workflow-functional-breakdown markdown and HTML files, secure the controller using transactions and locks for concurrent safety, create the package integration plan in the root directory, update the package, delete the local controller, point route to package controller, implement SweetAlert2 for approval workflow and profile update request deletion, design the decoupled workflow event listener plan in the root directory, implement the decoupled workflow event listeners mapping inside AppServiceProvider, and convert both functional breakdown documents into comprehensive developer tutorials.
 
 **Exact Command**: `php artisan config:clear && vendor/bin/pest tests/Feature/EmployeeDetailedViewTest.php tests/Feature/Employee/ProfileUpdateRequestTest.php`
