@@ -579,8 +579,23 @@
 
     let profileFieldConfigObserver = null;
 
+    function getCurrentSection() {
+        const path = window.location.pathname;
+        if (path.includes('general-informations')) return 'general';
+        if (path.includes('office-informations')) return 'office-information';
+        if (path.includes('eligible-plans')) return 'employee-policy';
+        if (path.includes('education') || path.includes('training') || path.includes('experience')) return 'education';
+        if (path.includes('employment-histories')) return 'employment_history';
+        if (path.includes('nominee') || path.includes('emergency')) return 'emergency_contact';
+        if (path.includes('salary-breakdown') || path.includes('salary')) return 'salary-breakdown';
+        if (path.includes('bank-account') || path.includes('bank')) return 'employee-bank-account';
+        return null;
+    }
+
     function applyFieldRequirements() {
         if (!window.profileFieldConfigs) return;
+
+        const currentSection = getCurrentSection();
 
         // Temporarily disconnect observer to avoid infinite recursion loops
         if (profileFieldConfigObserver) {
@@ -588,6 +603,9 @@
         }
         
         window.profileFieldConfigs.forEach(config => {
+            // Only apply configuration for the current section if we are on a specific section form page
+            if (currentSection && config.section !== currentSection) return;
+
             const field = config.field_name;
             const isRequired = config.is_required;
             
