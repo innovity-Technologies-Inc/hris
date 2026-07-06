@@ -922,9 +922,11 @@ Route::prefix('settings')->middleware('auth')->group(function () {
     Route::controller(SettingsController::class)->group(function (){
        Route::middleware('permission:general-settings.view')->group(function () {
            Route::get('general-settings', 'generalSettingIndex')->name('setting.general_settings');
+           Route::get('profile-field-config', 'profileFieldConfigIndex')->name('setting.profile_field_config');
        });
        Route::middleware('permission:general-settings.create')->group(function () {
            Route::post('general-settings/save', 'generalSettingSave')->name('setting.general_settings.store');
+           Route::post('profile-field-config/save', 'profileFieldConfigSave')->name('setting.profile_field_config.save');
        });
 
        Route::middleware('permission:smtp.view')->group(function () {

@@ -174,6 +174,8 @@ class EmployeeServices
             'signature_path' => 'nullable|file|mimes:jpeg,png,jpg,webp|max:2048',
             'experience_attachment_path' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
         ];
+        
+        $rules = $this->applyProfileFieldConfigRules($rules, 'general');
 
         $validated = $request->validate($rules,
             // Custom error messages
@@ -353,7 +355,7 @@ class EmployeeServices
 
     public function employeeOfficeInfoValidation($request)
     {
-        $validated = $request->validate([
+        $rules = [
             // Basic Identifiers
             'employee_id' => 'required|integer',
             'emp_type' => 'nullable|in:permanent,contractual',
@@ -406,7 +408,11 @@ class EmployeeServices
             'pf_effective_date' => 'nullable|date',
             'can_apply_advance' => 'nullable|in:yes,no',
             'gratuity_eligible' => 'nullable|in:yes,no',
-        ], [
+        ];
+
+        $rules = $this->applyProfileFieldConfigRules($rules, 'office-information');
+
+        $validated = $request->validate($rules, [
             // 🧾 Custom Messages
             'emp_type.in' => 'Employment type must be either Permanent or Contractual.',
             'orientation_to.after_or_equal' => 'Orientation end date must be after or equal to the start date.',
@@ -473,7 +479,7 @@ class EmployeeServices
 
     public function employeeEligiblePlanValidation($request)
     {
-        $validated = $request->validate([
+        $rules = [
             'employee_id' => 'required',
 
             // Shift Plan
@@ -535,7 +541,11 @@ class EmployeeServices
             'meal_plan_from' => 'nullable|date',
             'meal_plan_to' => 'nullable|date|after_or_equal:meal_plan_from',
             'meal_plan_status' => 'nullable|in:active,inactive',
-        ],
+        ];
+
+        $rules = $this->applyProfileFieldConfigRules($rules, 'employee-policy');
+
+        $validated = $request->validate($rules,
             [
                 'employee_id.required' => 'The employee field is required.',
                 'employee_id.exists' => 'The selected employee is invalid.',
@@ -598,7 +608,7 @@ class EmployeeServices
 
     public function employeeEducationInfoValidation($request)
     {
-        $validated = $request->validate([
+        $rules = [
             'employee_id' => 'required',
             'educations' => 'nullable|array',
             'educations.*.education_title' => 'nullable|string|max:255',
@@ -619,7 +629,11 @@ class EmployeeServices
             'trainings.*.duration' => 'nullable|string|max:100',
             'trainings.*.from_date' => 'nullable|date',
             'trainings.*.to_date' => 'nullable|date|after_or_equal:trainings.*.from_date',
-        ], [
+        ];
+
+        $rules = $this->applyProfileFieldConfigRules($rules, 'education');
+
+        $validated = $request->validate($rules, [
             // Employee ID
             'employee_id.required' => 'Employee is required.',
 
@@ -677,7 +691,7 @@ class EmployeeServices
 
     public function employeeNomineeInfoValidation($request)
     {
-        $validated = $request->validate([
+        $rules = [
             'employee_id' => 'required|integer|exists:employees,id',
             'nominee_name' => 'required|string|max:255',
             'relation' => 'required|string|max:100',
@@ -704,7 +718,11 @@ class EmployeeServices
             'state' => 'nullable|string|max:255',
             'zip_code' => 'nullable|string|max:20',
             'country' => 'required|string|max:100',
-        ], [
+        ];
+
+        $rules = $this->applyProfileFieldConfigRules($rules, 'emergency_contact');
+
+        $validated = $request->validate($rules, [
             'employee_id.required' => 'Employee ID is required.',
             'employee_id.exists' => 'The selected employee does not exist.',
             'nominee_name.required' => 'Nominee name is required.',
@@ -777,10 +795,13 @@ class EmployeeServices
             'gross_salary' => 'required|numeric|min:0',
         ];
 
+        $rules = $this->applyProfileFieldConfigRules($rules, 'salary-breakdown');
+
         // Custom validation for Pay Scale range
         if ($request->has('pay_scale_id') && $request->has('gross_salary')) {
             $payScale = \App\Models\Company\PayScale::find($request->pay_scale_id);
             if ($payScale) {
+                // Keep it required if the config says so, otherwise nullable
                 $rules['gross_salary'] .= "|numeric|min:{$payScale->min_salary}|max:{$payScale->max_salary}";
             }
         }
@@ -866,7 +887,7 @@ class EmployeeServices
 
     public function employeeBankAccountsInfoValidation($request)
     {
-        $validated = $request->validate([
+        $rules = [
             'employee_id' => 'required',
             'bank_id' => 'required',
             'branch_id' => 'nullable',
@@ -874,7 +895,11 @@ class EmployeeServices
             'account_number' => 'required|string|max:255',
             'status' => 'required|in:active,inactive',
             'remarks' => 'nullable|string',
-        ], [
+        ];
+
+        $rules = $this->applyProfileFieldConfigRules($rules, 'employee-bank-account');
+
+        $validated = $request->validate($rules, [
             'employee_id.required' => 'Please select an employee.',
             'employee_id.exists' => 'The selected employee does not exist.',
             'bank_id.required' => 'Please select a bank.',
@@ -1076,7 +1101,7 @@ class EmployeeServices
      */
     public function employeeEmploymentHistoryValidation($request)
     {
-        return $request->validate([
+        $rules = [
             'employee_id' => 'required|exists:employees,id',
             'histories' => 'required|array|min:1',
             'histories.*.company_name' => 'required|string|max:255',
@@ -1085,7 +1110,11 @@ class EmployeeServices
             'histories.*.end_date' => 'nullable|date|after_or_equal:histories.*.joining_date',
             'histories.*.job_description' => 'nullable|string',
             'histories.*.achievements' => 'nullable|string',
-        ]);
+        ];
+
+        $rules = $this->applyProfileFieldConfigRules($rules, 'employment_history');
+
+        return $request->validate($rules);
     }
 
     /**
@@ -1232,6 +1261,57 @@ class EmployeeServices
                 ['employee_id' => $employee->id]
             );
         }
+    }
+
+    /**
+     * Adjust rules dynamically based on profile field configurations.
+     */
+    private function applyProfileFieldConfigRules(array $rules, string $section): array
+    {
+        $configs = \App\Models\Setting\ProfileFieldConfig::where('section', $section)->get()->keyBy('field_name');
+
+        foreach ($rules as $field => $ruleStr) {
+            $configKey = $field;
+
+            // Handle nested dot notation (e.g. present_address.line_1 -> present_address)
+            if (str_contains($field, '.')) {
+                $parts = explode('.', $field);
+                $configKey = $parts[0];
+            }
+
+            // Handle suffix mapping (e.g. shift_plan_from -> shift_plan)
+            if (!isset($configs[$configKey])) {
+                foreach (['shift_plan', 'leave_plan', 'ot_plan', 'day_off_work_plan', 'roster_plans', 'bonus_plan', 'allowance_plan', 'late_deduction_plan', 'early_out_deduction_plan', 'medical_plan', 'excessive_late_plan', 'meal_plan'] as $planPrefix) {
+                    if (str_starts_with($field, $planPrefix . '_')) {
+                        $configKey = $planPrefix;
+                        break;
+                    }
+                }
+            }
+
+            if (isset($configs[$configKey])) {
+                $isRequired = $configs[$configKey]->is_required;
+                $ruleArray = is_string($ruleStr) ? explode('|', $ruleStr) : $ruleStr;
+
+                if ($isRequired) {
+                    // Ensure rule has 'required', remove 'nullable' and 'sometimes'
+                    if (!in_array('required', $ruleArray)) {
+                        $ruleArray[] = 'required';
+                    }
+                    $ruleArray = array_filter($ruleArray, fn($r) => $r !== 'nullable' && $r !== 'sometimes');
+                } else {
+                    // Ensure rule has 'nullable', remove 'required'
+                    if (!in_array('nullable', $ruleArray)) {
+                        $ruleArray[] = 'nullable';
+                    }
+                    $ruleArray = array_filter($ruleArray, fn($r) => $r !== 'required');
+                }
+
+                $rules[$field] = implode('|', array_unique($ruleArray));
+            }
+        }
+
+        return $rules;
     }
 }
 

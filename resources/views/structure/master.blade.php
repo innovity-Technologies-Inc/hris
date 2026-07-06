@@ -570,7 +570,74 @@
     });
 </script>
 
+<script>
+    window.profileFieldConfigs = {!! json_encode(\App\Models\Setting\ProfileFieldConfig::all()->map(fn($c) => [
+        'section' => $c->section,
+        'field_name' => $c->field_name,
+        'is_required' => (bool)$c->is_required
+    ])) !!};
 
+    function applyFieldRequirements() {
+        if (!window.profileFieldConfigs) return;
+        
+        window.profileFieldConfigs.forEach(config => {
+            const field = config.field_name;
+            const isRequired = config.is_required;
+            
+            const querySelector = `[name="${field}"], [name="${field}[]"], [name^="${field}["]`;
+            const inputs = document.querySelectorAll(querySelector);
+            
+            inputs.forEach(input => {
+                if (input.type === 'hidden') return;
+                
+                if (isRequired) {
+                    input.required = true;
+                    input.setAttribute('required', 'required');
+                } else {
+                    input.required = false;
+                    input.removeAttribute('required');
+                }
+                
+                let label = null;
+                if (input.id) {
+                    label = document.querySelector(`label[for="${input.id}"]`);
+                }
+                if (!label) {
+                    label = input.closest('.mb-3, .form-group, .col-lg-4, .col-md-6, .col-lg-3, .col-12')?.querySelector('label');
+                }
+                
+                if (label) {
+                    const asterisk = label.querySelector('.text-danger');
+                    if (isRequired) {
+                        if (!asterisk) {
+                            label.innerHTML = label.innerHTML.trim();
+                            if (!label.innerHTML.includes('*')) {
+                                label.innerHTML += ' <span class="text-danger">*</span>';
+                            }
+                        }
+                    } else {
+                        if (asterisk) {
+                            asterisk.remove();
+                        }
+                        const htmlWithoutAsterisk = label.innerHTML.replace(/\s*\*\s*$/, '').trim();
+                        if (label.innerHTML !== htmlWithoutAsterisk) {
+                            label.innerHTML = htmlWithoutAsterisk;
+                        }
+                    }
+                }
+            });
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        applyFieldRequirements();
+        
+        const observer = new MutationObserver(function() {
+            applyFieldRequirements();
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+    });
+</script>
 
 </body>
 

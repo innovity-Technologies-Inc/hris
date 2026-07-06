@@ -240,6 +240,22 @@ class HelperClass
         return $string;
     }
 
+    /**
+     * Check if a profile field is configured as required.
+     */
+    public static function isProfileFieldRequired($section, $fieldName)
+    {
+        static $configs = null;
+        if ($configs === null) {
+            if (\Illuminate\Support\Facades\Schema::hasTable('profile_field_configs')) {
+                $configs = \App\Models\Setting\ProfileFieldConfig::all();
+            } else {
+                $configs = collect();
+            }
+        }
 
+        $config = $configs->where('section', $section)->where('field_name', $fieldName)->first();
+        return $config ? (bool)$config->is_required : false;
+    }
 }
 

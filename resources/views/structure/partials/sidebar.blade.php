@@ -784,6 +784,10 @@
                                 <a class='tp-link @if (Route::is('setting.general_settings.*')) menuitem-active @endif'
                                     href='{{ route('setting.general_settings') }}'>General</a>
                             </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('setting.profile_field_config*')) menuitem-active @endif'
+                                    href='{{ route('setting.profile_field_config') }}'>Profile Fields</a>
+                            </li>
                             @endif
                             @if(auth()->user()->can('general-settings.view'))
                             <li>

@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             AttendanceSeeder::class,
             PenaltySeeder::class,
             ApprovalWorkflowSeeder::class,
+            ProfileFieldConfigSeeder::class,
         ]);
     }
 }

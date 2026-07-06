@@ -7,6 +7,7 @@ use App\HelperClass;
 use App\Mail\Dashboard\TestMail;
 use App\Models\Setting\GeneralSetting;
 use App\Models\Setting\MailSetting;
+use App\Models\Setting\ProfileFieldConfig;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -205,6 +206,64 @@ class SettingsController extends Controller
                 'success' => false,
                 'message' => $e->getMessage()
             ], 500);
+        }
+    }
+
+    /**
+     * Display the Profile Field Configuration settings page.
+     */
+    public function profileFieldConfigIndex(Request $request)
+    {
+        $title = 'Profile Field Configuration';
+        $section = 'Settings';
+
+        $configs = ProfileFieldConfig::orderByRaw("FIELD(section, 'general', 'office-information', 'employee-policy', 'education', 'employment_history', 'emergency_contact', 'salary-breakdown', 'employee-bank-account')")
+            ->orderBy('id')
+            ->get()
+            ->groupBy('section');
+
+        $sectionLabels = [
+            'general' => 'General Information',
+            'office-information' => 'Office Information',
+            'employee-policy' => 'Employee Policy (Eligible Plans)',
+            'education' => 'Education & Training',
+            'employment_history' => 'Employment History',
+            'emergency_contact' => 'Emergency Contact / Nominee',
+            'salary-breakdown' => 'Salary Breakdown',
+            'employee-bank-account' => 'Bank Account',
+        ];
+
+        return view('setting.profile_field_config', compact('title', 'section', 'configs', 'sectionLabels'));
+    }
+
+    /**
+     * Save Profile Field Configuration settings.
+     */
+    public function profileFieldConfigSave(Request $request)
+    {
+        try {
+            $requiredFields = $request->input('required_fields', []);
+
+            // Set all to optional first, then mark selected as required
+            ProfileFieldConfig::query()->update(['is_required' => false]);
+
+            if (!empty($requiredFields)) {
+                ProfileFieldConfig::whereIn('id', $requiredFields)->update(['is_required' => true]);
+            }
+
+            // Clear cached configs
+            cache()->forget('profile_field_configs');
+
+            return redirect()->back()->with([
+                'message' => 'Profile field configuration saved successfully.',
+                'alert-type' => 'success'
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Profile Field Config Save Error: ' . $e->getMessage());
+            return redirect()->back()->with([
+                'message' => 'Something went wrong while saving configuration.',
+                'alert-type' => 'error'
+            ]);
         }
     }
 }

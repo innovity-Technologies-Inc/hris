@@ -68,6 +68,15 @@ class AppServiceProvider extends ServiceProvider
         }
         
         Paginator::useBootstrap();
+
+        // Custom Blade directives for dynamic profile field configuration
+        \Illuminate\Support\Facades\Blade::directive('required_asterisk', function ($expression) {
+            return "<?php if(\\App\\HelperClass::isProfileFieldRequired({$expression})): echo '<span class=\"text-danger\">*</span>'; endif; ?>";
+        });
+
+        \Illuminate\Support\Facades\Blade::directive('required_attribute', function ($expression) {
+            return "<?php if(\\App\\HelperClass::isProfileFieldRequired({$expression})): echo 'required'; endif; ?>";
+        });
         
         // 1. Listen for Approval Completed Events dynamically
         Event::listen(ApprovalCompleted::class, function (ApprovalCompleted $event) {
