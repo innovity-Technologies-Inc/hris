@@ -2,6 +2,28 @@
 
 ## 2026-07-06
 
+**Goal**: Refactor validation across all 9 employee profile sections (General, Office Info, Policy Tag/Plans, Education, Nominee, Salary Breakdown, Bank Accounts, Employment History, Plan Assignment) to use dedicated FormRequest classes. Confirm authorization checks and rules behave identically.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/EmployeeProfileRestrictionTest.php tests/Feature/Employee/ProfileUpdateRequestTest.php`
+
+**Results**:
+- `employee user cannot access office information creation`: ✅ PASSED
+- `employee user cannot edit eligible plans`: ✅ PASSED
+- `employee user cannot access salary breakdown creation`: ✅ PASSED
+- `employee user cannot access bank account creation`: ✅ PASSED
+- `employee user cannot assign plans`: ✅ PASSED
+- `employee user cannot access leave application creation`: ✅ PASSED
+- `it can submit general section update request and apply changes upon approval`: ✅ PASSED
+- `it can submit education section update request and apply changes upon approval`: ✅ PASSED
+- `it can submit employment history update request and apply changes upon approval`: ✅ PASSED
+- `it can submit emergency contact nominee update request and apply changes upon approval`: ✅ PASSED
+- `it creates admin profile update request for office info update and propagates upon approval`: ✅ PASSED
+- `it generates custom notification redirecting to profile_update_requests.show when approval step is created`: ✅ PASSED
+
+**Status**: ✅ SUCCESS
+
+## 2026-07-06 (Request-Service-Controller Refactor)
+
 **Goal**: Refactor the profile field configuration and profile update request logic to follow the Request -> Service -> Thin Controller design pattern, and verify using the ProfileUpdateRequestTest.
 
 **Exact Command**: `php artisan config:clear && php artisan test tests/Feature/Employee/ProfileUpdateRequestTest.php`
