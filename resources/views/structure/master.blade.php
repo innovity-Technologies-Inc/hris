@@ -577,8 +577,15 @@
         'is_required' => (bool)$c->is_required
     ])) !!};
 
+    let profileFieldConfigObserver = null;
+
     function applyFieldRequirements() {
         if (!window.profileFieldConfigs) return;
+
+        // Temporarily disconnect observer to avoid infinite recursion loops
+        if (profileFieldConfigObserver) {
+            profileFieldConfigObserver.disconnect();
+        }
         
         window.profileFieldConfigs.forEach(config => {
             const field = config.field_name;
@@ -590,12 +597,16 @@
             inputs.forEach(input => {
                 if (input.type === 'hidden') return;
                 
-                if (isRequired) {
-                    input.required = true;
-                    input.setAttribute('required', 'required');
-                } else {
-                    input.required = false;
-                    input.removeAttribute('required');
+                // Only update attribute if value has changed to optimize performance
+                const currentlyRequired = input.required || input.hasAttribute('required');
+                if (isRequired !== currentlyRequired) {
+                    if (isRequired) {
+                        input.required = true;
+                        input.setAttribute('required', 'required');
+                    } else {
+                        input.required = false;
+                        input.removeAttribute('required');
+                    }
                 }
                 
                 let label = null;
@@ -610,32 +621,33 @@
                     const asterisk = label.querySelector('.text-danger');
                     if (isRequired) {
                         if (!asterisk) {
-                            label.innerHTML = label.innerHTML.trim();
-                            if (!label.innerHTML.includes('*')) {
-                                label.innerHTML += ' <span class="text-danger">*</span>';
-                            }
+                            const span = document.createElement('span');
+                            span.className = 'text-danger';
+                            span.textContent = ' *';
+                            label.appendChild(span);
                         }
                     } else {
                         if (asterisk) {
                             asterisk.remove();
                         }
-                        const htmlWithoutAsterisk = label.innerHTML.replace(/\s*\*\s*$/, '').trim();
-                        if (label.innerHTML !== htmlWithoutAsterisk) {
-                            label.innerHTML = htmlWithoutAsterisk;
-                        }
                     }
                 }
             });
         });
+
+        // Reconnect observer
+        if (profileFieldConfigObserver) {
+            profileFieldConfigObserver.observe(document.body, { childList: true, subtree: true });
+        }
     }
 
     document.addEventListener('DOMContentLoaded', function() {
         applyFieldRequirements();
         
-        const observer = new MutationObserver(function() {
+        profileFieldConfigObserver = new MutationObserver(function() {
             applyFieldRequirements();
         });
-        observer.observe(document.body, { childList: true, subtree: true });
+        profileFieldConfigObserver.observe(document.body, { childList: true, subtree: true });
     });
 </script>
 
