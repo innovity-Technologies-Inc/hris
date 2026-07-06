@@ -84,26 +84,47 @@
     document.addEventListener('DOMContentLoaded', function() {
         const deleteBtns = document.querySelectorAll('.delete-btn');
         deleteBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                if (confirm('Are you sure you want to delete this workflow?')) {
-                    const url = this.getAttribute('data-url');
-                    
-                    axios.delete(url, {
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        }
-                    })
-                    .then(response => {
-                        window.location.reload();
-                    })
-                    .catch(error => {
-                        let errorMsg = 'Something went wrong. Please try again later.';
-                        if (error.response && error.response.data && error.response.data.message) {
-                            errorMsg = error.response.data.message;
-                        }
-                        alert(errorMsg);
-                    });
-                }
+            btn.addEventListener('click', function(event) {
+                event.preventDefault();
+                const url = this.getAttribute('data-url');
+                
+                Swal.fire({
+                    title: 'Are you sure you want to delete?',
+                    text: 'You won\'t be able to revert!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Confirm'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        axios.delete(url, {
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            }
+                        })
+                        .then(response => {
+                            Swal.fire({
+                                title: 'Deleted!',
+                                text: response.data.message || 'Workflow has been deleted.',
+                                icon: 'success'
+                            }).then(() => {
+                                window.location.reload();
+                            });
+                        })
+                        .catch(error => {
+                            let errorMsg = 'Something went wrong. Please try again later.';
+                            if (error.response && error.response.data && error.response.data.message) {
+                                errorMsg = error.response.data.message;
+                            }
+                            Swal.fire({
+                                title: 'Error!',
+                                text: errorMsg,
+                                icon: 'error'
+                            });
+                        });
+                    }
+                });
             });
         });
     });
