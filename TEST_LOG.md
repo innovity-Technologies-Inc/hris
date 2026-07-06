@@ -2,7 +2,7 @@
 
 ## 2026-07-06
 
-**Goal**: Verify that when a profile update request approval step is created, notifications generated for the workflow (e.g. office-info, bank-accounts, policy-tag, salary-breakdown) correctly redirect to the review page (`profile_update_requests.show`). Also document the workflow events and ApprovalActionController lifecycle sequence diagram inside both the workflow-functional-breakdown markdown and HTML files, secure the controller using transactions and locks for concurrent safety, create the package integration plan in the root directory, update the package, delete the local controller, point route to package controller, and implement SweetAlert2 for approval workflow deletion.
+**Goal**: Verify that when a profile update request approval step is created, notifications generated for the workflow (e.g. office-info, bank-accounts, policy-tag, salary-breakdown) correctly redirect to the review page (`profile_update_requests.show`). Also document the workflow events and ApprovalActionController lifecycle sequence diagram inside both the workflow-functional-breakdown markdown and HTML files, secure the controller using transactions and locks for concurrent safety, create the package integration plan in the root directory, update the package, delete the local controller, point route to package controller, and implement SweetAlert2 for approval workflow and profile update request deletion.
 
 **Exact Command**: `php artisan config:clear && vendor/bin/pest tests/Feature/EmployeeDetailedViewTest.php tests/Feature/Employee/ProfileUpdateRequestTest.php`
 

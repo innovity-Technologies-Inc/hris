@@ -114,22 +114,53 @@ $(document).ready(function() {
 });
 
 function deleteRequest(id) {
-    if(confirm('Are you sure you want to delete this profile update request?')) {
-        $.ajax({
-            url: `/employees/update-requests/${id}`,
-            type: 'DELETE',
-            data: {
-                _token: '{{ csrf_token() }}'
-            },
-            success: function(response) {
-                if(response.success) {
-                    location.reload();
-                } else {
-                    alert(response.message || 'Something went wrong.');
+    Swal.fire({
+        title: 'Are you sure you want to delete?',
+        text: 'You won\'t be able to revert!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Confirm'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: `/employees/update-requests/${id}`,
+                type: 'DELETE',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if(response.success) {
+                        Swal.fire({
+                            title: 'Deleted!',
+                            text: response.message || 'Request has been deleted.',
+                            icon: 'success'
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: response.message || 'Something went wrong.',
+                            icon: 'error'
+                        });
+                    }
+                },
+                error: function(xhr) {
+                    let errorMsg = 'Something went wrong. Please try again later.';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMsg = xhr.responseJSON.message;
+                    }
+                    Swal.fire({
+                        title: 'Error!',
+                        text: errorMsg,
+                        icon: 'error'
+                    });
                 }
-            }
-        });
-    }
+            });
+        }
+    });
 }
 </script>
 @endpush
