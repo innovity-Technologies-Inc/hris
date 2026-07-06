@@ -102,8 +102,7 @@
                                     <table class="table table-hover align-middle mb-0">
                                         <thead class="table-light">
                                             <tr>
-                                                <th class="border-0 fw-semibold text-muted" style="width: 50%;">Field Name</th>
-                                                <th class="border-0 fw-semibold text-muted" style="width: 25%;">Database Column</th>
+                                                <th class="border-0 fw-semibold text-muted" style="width: 75%;">Field Name</th>
                                                 <th class="border-0 fw-semibold text-muted text-center" style="width: 25%;">Required</th>
                                             </tr>
                                         </thead>
@@ -115,9 +114,6 @@
                                                             <i class="bi bi-dot text-muted fs-4 me-1"></i>
                                                             <span class="fw-medium">{{ $field->label }}</span>
                                                         </div>
-                                                    </td>
-                                                    <td>
-                                                        <code class="text-muted bg-light rounded px-2 py-1 small">{{ $field->field_name }}</code>
                                                     </td>
                                                     <td class="text-center">
                                                         <div class="form-check form-switch d-flex justify-content-center mb-0">
