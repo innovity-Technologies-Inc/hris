@@ -125,7 +125,7 @@
                                                                    id="field-{{ $field->id }}"
                                                                    role="switch"
                                                                    {{ $field->is_required ? 'checked' : '' }}
-                                                                   style="width: 3rem; height: 1.5rem; cursor: pointer;">
+                                                                   style="width: 2.5rem; height: 1.25rem; cursor: pointer;">
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -210,12 +210,34 @@
     [aria-expanded="true"] .accordion-chevron {
         transform: rotate(180deg);
     }
+    /* Remove outline/black border from accordion header buttons */
+    #profileFieldAccordion button.btn,
+    #profileFieldAccordion button.btn:focus,
+    #profileFieldAccordion button.btn:active,
+    #profileFieldAccordion button.btn:hover {
+        outline: none !important;
+        box-shadow: none !important;
+        border-color: transparent !important;
+    }
+    /* Ensure unchecked toggle switches are visible instead of blank */
+    .form-switch .form-check-input {
+        background-color: rgba(0, 0, 0, 0.1);
+        border-color: rgba(0, 0, 0, 0.15);
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%280, 0, 0, 0.3%29'/%3e%3c/svg%3e");
+    }
+    [data-bs-theme="dark"] .form-switch .form-check-input {
+        background-color: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.25);
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%28255, 255, 255, 0.6%29'/%3e%3c/svg%3e");
+    }
     .form-check-input:checked {
-        background-color: #dc3545;
-        border-color: #dc3545;
+        background-color: #dc3545 !important;
+        border-color: #dc3545 !important;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e") !important;
     }
     .form-switch .form-check-input:focus {
-        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25) !important;
+        border-color: rgba(220, 53, 69, 0.5) !important;
     }
     .table tbody tr:hover {
         background-color: rgba(0, 0, 0, 0.02);
