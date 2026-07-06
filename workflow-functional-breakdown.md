@@ -92,6 +92,41 @@ Once the `Innovity\ApprovalEngine` finishes its mathematics, its job is strictly
 
 This clean separation ensures the package strictly handles the rules and timeline of the workflow, while the HRMS system handles the organizational security scoping, email notifications, and final model mutations!
 
+## Lifecycle of the ApprovalActionController
+
+The `ApprovalActionController` handles the HTTP request submitted by a reviewer to approve or reject a workflow step. Here is the sequential flow of how it is triggered and executed:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Creator as User / Admin
+    actor Approver as Reviewer / Approver
+    participant CC as Creation Controller
+    participant AE as Approval Engine
+    participant SP as AppServiceProvider
+    participant View as Request Details View
+    participant AAC as ApprovalActionController
+
+    Creator->>CC: Submits Request (e.g. Leave, Office Info)
+    CC->>AE: $model->startWorkflow()
+    AE->>AE: Creates Master Request & Step 1 Request (Task)
+    AE-->>SP: Triggers ApprovalStepRequest Created Event
+    SP-->>Approver: Sends Notification (Bell alert/Email with show link)
+    
+    Approver->>View: Clicks Notification / Visits Show Page
+    View-->>Approver: Renders Approve/Reject Action Buttons
+    Approver->>View: Clicks "Approve" or "Reject"
+    View->>AAC: AJAX POST /approval-step-request/{id}/action
+    AAC->>AE: Resolves Step Status
+```
+
+### Process Details:
+1. **Workflow Initiation:** When a creation controller calls `$leave->startWorkflow('leave')`, the master request and first pending task request are created in the database.
+2. **Reviewer Notification:** An event listener in `AppServiceProvider` catches the step creation, resolves the target approver via `ApproverResolver`, and sends an in-app notification link (e.g. `/update-requests/{id}`).
+3. **Show Page Rendering:** The reviewer visits the request details view where the `workflow_history` view component displays the action form (Comments input and Approve/Reject buttons) for the authorized user.
+4. **AJAX Action Submission:** The reviewer inputs comments and clicks the action button. An Axios AJAX `POST` call is triggered to `POST /approval-step-request/{id}/action`.
+5. **Controller Execution:** The request hits `ApprovalActionController@action`, which locks the step request row (`lockForUpdate`), checks that the status is still `pending`, executes the approval or rejection inside a database transaction, and returns the final JSON response.
+
 ## Workflow Events & Dispatching
 
 The engine fires system-wide events at critical transition points in the workflow. These events are dispatched by the package and can be listened to by the application to execute custom side effects (like updating live databases or logging audits).
