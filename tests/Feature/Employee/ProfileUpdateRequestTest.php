@@ -10,7 +10,7 @@ use App\Models\Employee\EmployeeNominee;
 use Innovity\ApprovalEngine\Models\Workflow;
 use Innovity\ApprovalEngine\Models\ApprovalRequest;
 use Innovity\ApprovalEngine\Events\ApprovalCompleted;
-use App\Listeners\WorkflowStatusListener;
+use App\Listeners\Workflow\ProfileUpdateWorkflowListener;
 
 beforeEach(function () {
     $this->employee = Employee::factory()->create([
@@ -96,7 +96,7 @@ test('it can submit general section update request and apply changes upon approv
     ]);
 
     $event = new ApprovalCompleted($approvalRequest);
-    $listener = new WorkflowStatusListener();
+    $listener = new ProfileUpdateWorkflowListener();
     $listener->handleCompleted($event);
 
     // Verify changes applied to the Employee
@@ -155,7 +155,7 @@ test('it can submit education section update request and apply changes upon appr
     ]);
 
     $event = new ApprovalCompleted($approvalRequest);
-    $listener = new WorkflowStatusListener();
+    $listener = new ProfileUpdateWorkflowListener();
     $listener->handleCompleted($event);
 
     // Verify changes applied to EmployeeEducationExperienceTraining
@@ -202,7 +202,7 @@ test('it can submit employment history update request and apply changes upon app
     ]);
 
     $event = new ApprovalCompleted($approvalRequest);
-    $listener = new WorkflowStatusListener();
+    $listener = new ProfileUpdateWorkflowListener();
     $listener->handleCompleted($event);
 
     // Verify EmployeeEmploymentHistory updated
@@ -247,7 +247,7 @@ test('it can submit emergency contact nominee update request and apply changes u
     ]);
 
     $event = new ApprovalCompleted($approvalRequest);
-    $listener = new WorkflowStatusListener();
+    $listener = new ProfileUpdateWorkflowListener();
     $listener->handleCompleted($event);
 
     // Verify EmployeeNominee updated
@@ -329,7 +329,7 @@ test('it creates admin profile update request for office info update and propaga
     ]);
 
     $event = new ApprovalCompleted($approvalRequest);
-    $listener = new WorkflowStatusListener();
+    $listener = new ProfileUpdateWorkflowListener();
     $listener->handleCompleted($event);
 
     // Verify propagation

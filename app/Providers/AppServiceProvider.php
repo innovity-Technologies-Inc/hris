@@ -17,14 +17,28 @@ use Illuminate\Support\Facades\View;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Route;
 use App\Services\ApproverResolver;
+use Illuminate\Support\Facades\Event;
 use Innovity\ApprovalEngine\Contracts\ApproverResolverInterface;
 use Innovity\ApprovalEngine\Events\ApprovalCompleted;
 use Innovity\ApprovalEngine\Events\ApprovalRejected;
-use Illuminate\Support\Facades\Event;
-use App\Listeners\WorkflowStatusListener;
 
 class AppServiceProvider extends ServiceProvider
 {
+    /**
+     * Map of modules to their dedicated listener classes.
+     */
+    private array $workflowListeners = [
+        'promotion'                => \App\Listeners\Workflow\PromotionWorkflowListener::class,
+        'increment'                => \App\Listeners\Workflow\IncrementWorkflowListener::class,
+        'leave'                    => \App\Listeners\Workflow\LeaveWorkflowListener::class,
+        'salary'                   => \App\Listeners\Workflow\PayrollWorkflowListener::class,
+        'bonus'                    => \App\Listeners\Workflow\PayrollWorkflowListener::class,
+        'profile-update'           => \App\Listeners\Workflow\ProfileUpdateWorkflowListener::class,
+        'office-information'       => \App\Listeners\Workflow\ProfileUpdateWorkflowListener::class,
+        'employee-policy'          => \App\Listeners\Workflow\ProfileUpdateWorkflowListener::class,
+        'salary-breakdown'         => \App\Listeners\Workflow\ProfileUpdateWorkflowListener::class,
+        'employee-bank-account'    => \App\Listeners\Workflow\ProfileUpdateWorkflowListener::class,
+    ];
     /**
      * Register any application services.
      */
@@ -55,8 +69,29 @@ class AppServiceProvider extends ServiceProvider
         
         Paginator::useBootstrap();
         
-        Event::listen(ApprovalCompleted::class, [WorkflowStatusListener::class, 'handleCompleted']);
-        Event::listen(ApprovalRejected::class, [WorkflowStatusListener::class, 'handleRejected']);
+        // 1. Listen for Approval Completed Events dynamically
+        Event::listen(ApprovalCompleted::class, function (ApprovalCompleted $event) {
+            $module = $event->approvalRequest->workflow->module;
+            
+            if (isset($this->workflowListeners[$module])) {
+                $listener = app($this->workflowListeners[$module]);
+                if (method_exists($listener, 'handleCompleted')) {
+                    $listener->handleCompleted($event);
+                }
+            }
+        });
+
+        // 2. Listen for Approval Rejected Events dynamically
+        Event::listen(ApprovalRejected::class, function (ApprovalRejected $event) {
+            $module = $event->approvalRequest->workflow->module;
+            
+            if (isset($this->workflowListeners[$module])) {
+                $listener = app($this->workflowListeners[$module]);
+                if (method_exists($listener, 'handleRejected')) {
+                    $listener->handleRejected($event);
+                }
+            }
+        });
 
         //Google Api Key Configuration
         // Avoid error during migrate
