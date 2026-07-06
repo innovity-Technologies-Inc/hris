@@ -167,134 +167,155 @@
 
             <!-- TAB 1: Architecture Overview -->
             <div id="tab-overview" class="tab-content active">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-8">
 
-                    <!-- Step 1 -->
-                    <div class="glass-card rounded-2xl p-8 relative overflow-hidden group">
-                        <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
-                            <i class="fa-solid fa-circle-play text-8xl text-indigo-500"></i>
-                        </div>
-                        <div class="inline-block px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-400 text-sm font-semibold mb-4 border border-indigo-500/30">
-                            Phase 1
-                        </div>
-                        <h3 class="text-2xl font-bold text-white mb-3">Workflow Ignition</h3>
-                        <p class="text-slate-300 mb-4 leading-relaxed">
-                            Triggered manually via host app controllers calling:
-                            <code class="text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-mono block mt-2 text-xs">$model->startWorkflow(string $module)</code>
+                    <!-- Architecture Overview Header -->
+                    <div class="glass-card rounded-2xl p-6 border border-indigo-500/20 bg-indigo-500/5">
+                        <h3 class="text-xl font-bold text-white mb-2"><i class="fa-solid fa-circle-nodes text-indigo-400 mr-2"></i> Decoupled Workflow Execution</h3>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            The package handles state management, timeline routing, and decision validation. The host application handles structural security, notifications, and final database adjustments via clean event routing mappings.
                         </p>
-                        <div class="border-t border-slate-700/50 pt-4 mt-2">
-                            <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Technical Details:</h4>
-                            <ul class="space-y-2 text-slate-300 text-sm">
-                                <li>
-                                    <strong class="text-indigo-400">Trait:</strong> 
-                                    <code class="text-xs text-pink-300">Innovity\ApprovalEngine\Traits\Approvable</code>
-                                </li>
-                                <li>
-                                    <strong class="text-indigo-400">Generator:</strong> 
-                                    <code class="text-xs text-pink-300">WorkflowGenerator::generate()</code> looks up active blueprints in <code class="text-slate-400">approval_workflows</code> table matching the module identifier.
-                                </li>
-                                <li>
-                                    <strong class="text-indigo-400">Master Record:</strong> 
-                                    Creates a polymorphic record in the <code class="text-slate-400">approval_requests</code> table.
-                                </li>
-                            </ul>
-                        </div>
                     </div>
 
-                    <!-- Step 2 -->
-                    <div class="glass-card rounded-2xl p-8 relative overflow-hidden group">
-                        <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
-                            <i class="fa-solid fa-share-nodes text-8xl text-pink-500"></i>
-                        </div>
-                        <div class="inline-block px-3 py-1 rounded-full bg-pink-500/20 text-pink-400 text-sm font-semibold mb-4 border border-pink-500/30">
-                            Phase 2
-                        </div>
-                        <h3 class="text-2xl font-bold text-white mb-3">Task Emission</h3>
-                        <p class="text-slate-300 mb-4 leading-relaxed">
-                            Deals workflow task records using the package's core emission service:
-                            <code class="text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-mono block mt-2 text-xs">TaskEmitter::emit(ApprovalRequest $request)</code>
-                        </p>
-                        <div class="border-t border-slate-700/50 pt-4 mt-2">
-                            <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Technical Details:</h4>
-                            <ul class="space-y-2 text-slate-300 text-sm">
-                                <li>
-                                    <strong class="text-pink-400">Sequential Mode:</strong> 
-                                    Calls <code class="text-xs text-pink-300">emitSequential()</code> to emit a single tier at a time matching the current order.
-                                </li>
-                                <li>
-                                    <strong class="text-pink-400">Random Mode:</strong> 
-                                    Calls <code class="text-xs text-pink-300">emitRandom()</code> to publish task requests for all blueprint steps simultaneously.
-                                </li>
-                                <li>
-                                    <strong class="text-pink-400">Result:</strong> 
-                                    Creates task entries in the <code class="text-slate-400">approval_step_requests</code> table.
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                    <!-- Step 3 -->
-                    <div class="glass-card rounded-2xl p-8 relative overflow-hidden group">
-                        <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
-                            <i class="fa-solid fa-bullhorn text-8xl text-emerald-500"></i>
-                        </div>
-                        <div class="inline-block px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-semibold mb-4 border border-emerald-500/30">
-                            Phase 3
-                        </div>
-                        <h3 class="text-2xl font-bold text-white mb-3">Resolver &amp; Alerts</h3>
-                        <p class="text-slate-300 mb-4 leading-relaxed">
-                            Intercepts step creations, resolves reviewer User IDs, and triggers notification dispatches:
-                        </p>
-                        <div class="border-t border-slate-700/50 pt-4 mt-2">
-                            <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Technical Details:</h4>
-                            <ul class="space-y-2 text-slate-300 text-sm">
-                                <li>
-                                    <strong class="text-emerald-400">Eloquent Hook:</strong> 
-                                    Listens to <code class="text-xs text-pink-300">ApprovalStepRequest::created()</code> in the AppServiceProvider boot process.
-                                </li>
-                                <li>
-                                    <strong class="text-emerald-400">Resolution:</strong> 
-                                    Calls <code class="text-xs text-pink-300">ApproverResolverInterface::resolve()</code> which runs without tenant global scopes.
-                                </li>
-                                <li>
-                                    <strong class="text-emerald-400">Redirect Build:</strong> 
-                                    Checks <code class="text-xs text-pink-300">Route::has($module . '.show')</code> to dynamically establish direct landing URLs.
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                        <!-- Phase 1 -->
+                        <div class="glass-card rounded-2xl p-8 relative overflow-hidden group border border-slate-700/50">
+                            <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                                <i class="fa-solid fa-circle-play text-8xl text-indigo-500"></i>
+                            </div>
+                            <div class="inline-block px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-400 text-sm font-semibold mb-4 border border-indigo-500/30">
+                                Phase 1: Workflow Ignition
+                            </div>
+                            <h3 class="text-2xl font-bold text-white mb-3">Initiating Approval</h3>
+                            <p class="text-slate-300 mb-4 leading-relaxed">
+                                The workflow starts when the host application model requests an approval process by executing:
+                                <code class="text-pink-400 bg-pink-400/10 px-2 py-1 rounded font-mono block mt-2 text-xs">$model->startWorkflow(string $module)</code>
+                            </p>
 
-                    <!-- Step 4 -->
-                    <div class="glass-card rounded-2xl p-8 relative overflow-hidden group">
-                        <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
-                            <i class="fa-solid fa-circle-check text-8xl text-amber-500"></i>
+                            <div class="border-t border-slate-700/50 pt-4 space-y-4">
+                                <div>
+                                    <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Trait Class &amp; Helper Path:</h4>
+                                    <code class="text-xs text-indigo-300 font-mono">vendor/innovity/laravel-approval-engine/src/Traits/Approvable.php</code>
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Blueprint Lookup:</h4>
+                                    <p class="text-xs text-slate-400 leading-relaxed">
+                                        Instantiates <code class="text-pink-300">WorkflowGenerator::generate($approvable, string $module)</code> which queries active records in the <code class="text-slate-300 font-mono">approval_workflows</code> table where <code class="text-slate-300 font-mono">module = $module</code>.
+                                    </p>
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Database Insertion:</h4>
+                                    <p class="text-xs text-slate-400 leading-relaxed">
+                                        Generates a master record in the <code class="text-slate-300 font-mono">approval_requests</code> table with status <code class="text-emerald-400 font-mono">'pending'</code> and serialized request data payloads.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="inline-block px-3 py-1 rounded-full bg-amber-500/20 text-amber-400 text-sm font-semibold mb-4 border border-amber-500/30">
-                            Phase 4
-                        </div>
-                        <h3 class="text-2xl font-bold text-white mb-3">Action Resolution</h3>
-                        <p class="text-slate-300 mb-4 leading-relaxed">
-                            Handles POST requests, locks data rows, processes decisions, and broadcasts results:
-                        </p>
-                        <div class="border-t border-slate-700/50 pt-4 mt-2">
-                            <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Technical Details:</h4>
-                            <ul class="space-y-2 text-slate-300 text-sm">
-                                <li>
-                                    <strong class="text-amber-400">Action controller:</strong> 
-                                    Hits <code class="text-xs text-pink-300">ApprovalActionController@action</code>, applying database-level locking <code class="text-xs text-pink-300">lockForUpdate()</code>.
-                                </li>
-                                <li>
-                                    <strong class="text-amber-400">Status processing:</strong> 
-                                    Delegates calculations to <code class="text-xs text-pink-300">ApprovalResolver::resolve()</code> inside the package.
-                                </li>
-                                <li>
-                                    <strong class="text-amber-400">System Broadcast:</strong> 
-                                    Fires <code class="text-xs text-pink-300">ApprovalCompleted</code> / <code class="text-xs text-pink-300">ApprovalRejected</code> events which are routed to separate listeners.
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
 
+                        <!-- Phase 2 -->
+                        <div class="glass-card rounded-2xl p-8 relative overflow-hidden group border border-slate-700/50">
+                            <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                                <i class="fa-solid fa-share-nodes text-8xl text-pink-500"></i>
+                            </div>
+                            <div class="inline-block px-3 py-1 rounded-full bg-pink-500/20 text-pink-400 text-sm font-semibold mb-4 border border-pink-500/30">
+                                Phase 2: Task Emission
+                            </div>
+                            <h3 class="text-2xl font-bold text-white mb-3">Distributing Tasks</h3>
+                            <p class="text-slate-300 mb-4 leading-relaxed">
+                                Decides which approval step requests are written to the database using the engine's Task Emitter:
+                                <code class="text-pink-400 bg-pink-400/10 px-2 py-1 rounded font-mono block mt-2 text-xs">TaskEmitter::emit(ApprovalRequest $request)</code>
+                            </p>
+
+                            <div class="border-t border-slate-700/50 pt-4 space-y-4">
+                                <div>
+                                    <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Emitter File Path:</h4>
+                                    <code class="text-xs text-pink-300 font-mono">vendor/innovity/laravel-approval-engine/src/Services/TaskEmitter.php</code>
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Sequential Step Mapping:</h4>
+                                    <p class="text-xs text-slate-400 leading-relaxed">
+                                        Invokes <code class="text-pink-300">emitSequential()</code>, finding the next uncompleted order step (e.g. step 1, then step 2) and inserting a single pending task.
+                                    </p>
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Random Step Mapping:</h4>
+                                    <p class="text-xs text-slate-400 leading-relaxed">
+                                        Invokes <code class="text-pink-300">emitRandom()</code>, creating active task request entries in the database for all steps simultaneously.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Phase 3 -->
+                        <div class="glass-card rounded-2xl p-8 relative overflow-hidden group border border-slate-700/50">
+                            <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                                <i class="fa-solid fa-bullhorn text-8xl text-emerald-500"></i>
+                            </div>
+                            <div class="inline-block px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-semibold mb-4 border border-emerald-500/30">
+                                Phase 3: Resolver &amp; Alerts
+                            </div>
+                            <h3 class="text-2xl font-bold text-white mb-3">Notification Routing</h3>
+                            <p class="text-slate-300 mb-4 leading-relaxed">
+                                Listens for step insertions and resolves which users are authorized to approve the current step:
+                            </p>
+
+                            <div class="border-t border-slate-700/50 pt-4 space-y-4">
+                                <div>
+                                    <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Dynamic Database Hook:</h4>
+                                    <p class="text-xs text-slate-400 leading-relaxed">
+                                        Listens via <code class="text-emerald-300">ApprovalStepRequest::created(closure)</code> defined inside <code class="text-xs text-indigo-300">AppServiceProvider@boot</code>.
+                                    </p>
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Approver Resolution Interface:</h4>
+                                    <p class="text-xs text-slate-400 leading-relaxed">
+                                        Resolves User IDs via <code class="text-emerald-300">ApproverResolverInterface::resolve($stepId, $approvable)</code> which operates without global scopes.
+                                    </p>
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Notification Builders:</h4>
+                                    <p class="text-xs text-slate-400 leading-relaxed">
+                                        Checks if a dynamic route named <code class="text-slate-300 font-mono">"$module.show"</code> exists to construct direct redirect links, then builds in-app alerts and dispatches emails.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Phase 4 -->
+                        <div class="glass-card rounded-2xl p-8 relative overflow-hidden group border border-slate-700/50">
+                            <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                                <i class="fa-solid fa-circle-check text-8xl text-amber-500"></i>
+                            </div>
+                            <div class="inline-block px-3 py-1 rounded-full bg-amber-500/20 text-amber-400 text-sm font-semibold mb-4 border border-amber-500/30">
+                                Phase 4: Action Resolution
+                            </div>
+                            <h3 class="text-2xl font-bold text-white mb-3">Decision Processing</h3>
+                            <p class="text-slate-300 mb-4 leading-relaxed">
+                                Validates reviews, executes locks, updates statuses, and fires completion triggers:
+                            </p>
+
+                            <div class="border-t border-slate-700/50 pt-4 space-y-4">
+                                <div>
+                                    <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Secure Controller Path:</h4>
+                                    <code class="text-xs text-pink-300 font-mono">vendor/innovity/laravel-approval-engine/src/Http/Controllers/ApprovalActionController.php</code>
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Concurrent Isolation:</h4>
+                                    <p class="text-xs text-slate-400 leading-relaxed">
+                                        Runs query locks (<code class="text-pink-300">lockForUpdate()</code>) inside a transaction (<code class="text-pink-300">DB::transaction</code>) to prevent race conditions during double-submissions.
+                                    </p>
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Decision Delegation:</h4>
+                                    <p class="text-xs text-slate-400 leading-relaxed">
+                                        Updates step logs and determines workflow outcomes in <code class="text-pink-300">ApprovalResolver::resolve($stepRequest, $status, $comments)</code>, broadcasting completion events.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
 
