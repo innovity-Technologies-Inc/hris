@@ -377,10 +377,26 @@
                     <!-- Step 1 Card -->
                     <div class="glass-card rounded-2xl p-8 border-l-4 border-indigo-500">
                         <h3 class="text-2xl font-bold text-white mb-2 flex items-center">
-                            <span class="bg-indigo-500/20 text-indigo-400 text-sm px-3 py-1 rounded-lg mr-3">Step 1</span> Attach the Trait
+                            <span class="bg-indigo-500/20 text-indigo-400 text-sm px-3 py-1 rounded-lg mr-3">Step 1</span> Install &amp; Publish Assets
                         </h3>
                         <p class="text-slate-300 mb-4">
-                            Attach the <code>Approvable</code> trait to your Eloquent models to hook them into the engine:
+                            Install the package via Composer, publish config/migration files, and run database migrations:
+                        </p>
+                        <div class="bg-slate-900 rounded-lg p-4 font-mono text-sm border border-slate-700 overflow-x-auto text-indigo-300">
+                            composer require innovity/laravel-approval-engine<br>
+                            php artisan vendor:publish --tag=approval-engine-config<br>
+                            php artisan vendor:publish --tag=approval-engine-migrations<br>
+                            php artisan migrate
+                        </div>
+                    </div>
+
+                    <!-- Step 2 Card -->
+                    <div class="glass-card rounded-2xl p-8 border-l-4 border-pink-500">
+                        <h3 class="text-2xl font-bold text-white mb-2 flex items-center">
+                            <span class="bg-pink-500/20 text-pink-400 text-sm px-3 py-1 rounded-lg mr-3">Step 2</span> Implement the Approvable Trait
+                        </h3>
+                        <p class="text-slate-300 mb-4">
+                            Attach the <code>Approvable</code> trait to any Eloquent model that requires approval workflows:
                         </p>
                         <div class="bg-slate-900 rounded-lg p-4 font-mono text-sm border border-slate-700 overflow-x-auto">
                             <span class="text-pink-400">use</span> <span class="text-emerald-400">Innovity\ApprovalEngine\Traits\Approvable</span>;<br><br>
@@ -390,14 +406,23 @@
                         </div>
                     </div>
 
-                    <!-- Step 2 Card -->
-                    <div class="glass-card rounded-2xl p-8 border-l-4 border-pink-500">
+                    <!-- Step 3 Card -->
+                    <div class="glass-card rounded-2xl p-8 border-l-4 border-emerald-500">
                         <h3 class="text-2xl font-bold text-white mb-2 flex items-center">
-                            <span class="bg-pink-500/20 text-pink-400 text-sm px-3 py-1 rounded-lg mr-3">Step 2</span> Bind ApproverResolver
+                            <span class="bg-emerald-500/20 text-emerald-400 text-sm px-3 py-1 rounded-lg mr-3">Step 3</span> Implement Approver Resolver
                         </h3>
                         <p class="text-slate-300 mb-4">
-                            Implement the resolver class to look up authorized approvers for steps dynamically, then bind it in <code>AppServiceProvider</code>:
+                            Create the <code>ApproverResolver</code> service and bind the <code>ApproverResolverInterface</code> inside <code>AppServiceProvider@register</code>:
                         </p>
+                        <div class="bg-slate-900 rounded-lg p-4 font-mono text-xs border border-slate-700 overflow-x-auto mb-4">
+                            <span class="text-pink-400">namespace</span> App\Services;<br><br>
+                            <span class="text-pink-400">use</span> Innovity\ApprovalEngine\Contracts\ApproverResolverInterface;<br><br>
+                            <span class="text-pink-400">class</span> <span class="text-amber-400">ApproverResolver</span> <span class="text-pink-400">implements</span> <span class="text-emerald-400">ApproverResolverInterface</span> {<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-pink-400">public function</span> <span class="text-sky-400">resolve</span>(string $stepId, $approvable): array {<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-slate-400">// Query database and return array of authorized approver user IDs...</span><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                            }
+                        </div>
                         <div class="bg-slate-900 rounded-lg p-4 font-mono text-sm border border-slate-700 overflow-x-auto">
                             <span class="text-slate-400">// In AppServiceProvider@register</span><br>
                             <span class="text-pink-400">$this</span>->app-><span class="text-emerald-400">bind</span>(<br>
@@ -407,19 +432,53 @@
                         </div>
                     </div>
 
-                    <!-- Step 3 Card -->
-                    <div class="glass-card rounded-2xl p-8 border-l-4 border-emerald-500">
+                    <!-- Step 4 Card -->
+                    <div class="glass-card rounded-2xl p-8 border-l-4 border-amber-500">
                         <h3 class="text-2xl font-bold text-white mb-2 flex items-center">
-                            <span class="bg-emerald-500/20 text-emerald-400 text-sm px-3 py-1 rounded-lg mr-3">Step 3</span> Decouple Event Listeners
+                            <span class="bg-amber-500/20 text-amber-400 text-sm px-3 py-1 rounded-lg mr-3">Step 4</span> Decouple Event Listeners (Service Provider)
                         </h3>
                         <p class="text-slate-300 mb-4">
-                            Define a mapping array of modules to dedicated listeners inside your provider, then bind closures inside `boot()` to route execution dynamically:
+                            Define the registry map and listen dynamically in <code>AppServiceProvider@boot</code>:
                         </p>
-                        <div class="bg-slate-900 rounded-lg p-4 font-mono text-sm border border-slate-700 overflow-x-auto">
+                        <div class="bg-slate-900 rounded-lg p-4 font-mono text-xs border border-slate-700 overflow-x-auto mb-4">
                             <span class="text-pink-400">private array</span> <span class="text-indigo-400">$workflowListeners</span> = [<br>
                             &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-amber-300">'leave'</span> => \App\Listeners\Workflow\LeaveWorkflowListener::<span class="text-pink-400">class</span>,<br>
                             &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-amber-300">'promotion'</span> => \App\Listeners\Workflow\PromotionWorkflowListener::<span class="text-pink-400">class</span>,<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-amber-300">'office-information'</span> => \App\Listeners\Workflow\ProfileUpdateWorkflowListener::<span class="text-pink-400">class</span>,<br>
                             ];
+                        </div>
+                        <div class="bg-slate-900 rounded-lg p-4 font-mono text-xs border border-slate-700 overflow-x-auto">
+                            <span class="text-slate-400">// In AppServiceProvider@boot</span><br>
+                            Event::<span class="text-sky-400">listen</span>(ApprovalCompleted::<span class="text-pink-400">class</span>, <span class="text-pink-400">function</span> (ApprovalCompleted $event) {<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;$module = $event->approvalRequest->workflow->module;<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-pink-400">if</span> (isset($this->workflowListeners[$module])) {<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$listener = app($this->workflowListeners[$module]);<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$listener->handleCompleted($event);<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                            });
+                        </div>
+                    </div>
+
+                    <!-- Step 5 Card -->
+                    <div class="glass-card rounded-2xl p-8 border-l-4 border-red-500">
+                        <h3 class="text-2xl font-bold text-white mb-2 flex items-center">
+                            <span class="bg-red-500/20 text-red-400 text-sm px-3 py-1 rounded-lg mr-3">Step 5</span> SweetAlert2 &amp; Axios Confirmations
+                        </h3>
+                        <p class="text-slate-300 mb-4">
+                            Catch decision actions on the frontend and submit dynamically:
+                        </p>
+                        <div class="bg-slate-900 rounded-lg p-4 font-mono text-xs border border-slate-700 overflow-x-auto">
+                            Swal.fire({<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;title: 'Are you sure?',<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;icon: 'warning',<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;showCancelButton: true,<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;confirmButtonText: 'Confirm'<br>
+                            }).then((result) => {<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-pink-400">if</span> (result.isConfirmed) {<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;axios.post(formAction, new FormData(form))<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.then(res => Swal.fire('Success', res.data.message, 'success'));<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                            });
                         </div>
                     </div>
 
