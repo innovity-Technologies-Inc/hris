@@ -60,18 +60,16 @@ class AppServiceProvider extends ServiceProvider
 
         //Google Api Key Configuration
         // Avoid error during migrate
-        if (!Schema::hasTable('api_keys')) {
-            return;
-        }
+        if (Schema::hasTable('api_keys')) {
+            // Cache for performance
+            $mapsKey = cache()->rememberForever('google_maps_api_key', function () {
+                return ApiKey::first()?->google_maps_api_key;
+            });
 
-        // Cache for performance
-        $mapsKey = cache()->rememberForever('google_maps_api_key', function () {
-            return ApiKey::first()?->google_maps_api_key;
-        });
-
-        // Override config if DB value exists
-        if (!empty($mapsKey)) {
-            config()->set('services.google.maps_key', $mapsKey);
+            // Override config if DB value exists
+            if (!empty($mapsKey)) {
+                config()->set('services.google.maps_key', $mapsKey);
+            }
         }
 
         // 1. Prevent errors during migrations or if table doesn't exist yet
@@ -112,21 +110,26 @@ class AppServiceProvider extends ServiceProvider
                                 \Illuminate\Support\Facades\Log::error('Mail Notification error: ' . $e->getMessage());
                             }
                             
-                            try {
-                                $moduleName = $stepRequest->approvalRequest->workflow->module ?? '';
-                                $module = ucfirst($moduleName ?: 'Item');
-                                $url = \Illuminate\Support\Facades\Route::has($moduleName . '.show') 
-                                        ? route($moduleName . '.show', $approvable->id, false) 
-                                        : '/' . $moduleName;
+                             try {
+                                 $moduleName = $stepRequest->approvalRequest->workflow->module ?? '';
+                                 $module = ucfirst($moduleName ?: 'Item');
+                                 
+                                 if ($approvable instanceof \App\Models\Employee\ProfileUpdateRequest) {
+                                     $url = route('profile_update_requests.show', $approvable->id, false);
+                                 } else {
+                                     $url = \Illuminate\Support\Facades\Route::has($moduleName . '.show') 
+                                             ? route($moduleName . '.show', $approvable->id, false) 
+                                             : '/' . $moduleName;
+                                 }
 
-                                app(\App\Services\Setting\NotificationServices::class)->createNotification(
-                                    $user->user_type->value ?? $user->user_type,
-                                    $user->id,
-                                    'Approval Action Required',
-                                    "You have a new $module approval request pending your action.",
-                                    ['url' => $url, 'type' => 'approval_request']
-                                );
-                            } catch (\Exception $e) {
+                                 app(\App\Services\Setting\NotificationServices::class)->createNotification(
+                                     $user->user_type->value ?? $user->user_type,
+                                     $user->id,
+                                     'Approval Action Required',
+                                     "You have a new $module approval request pending your action.",
+                                     ['url' => $url, 'type' => 'approval_request']
+                                 );
+                             } catch (\Exception $e) {
                                 \Illuminate\Support\Facades\Log::error('Custom Notification error: ' . $e->getMessage());
                             }
                         }

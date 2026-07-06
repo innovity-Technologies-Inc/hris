@@ -1,5 +1,25 @@
 # Test Log
 
+## 2026-07-06
+
+**Goal**: Verify that when a profile update request approval step is created, notifications generated for the workflow (e.g. office-info, bank-accounts, policy-tag, salary-breakdown) correctly redirect to the review page (`profile_update_requests.show`).
+
+**Exact Command**: `php artisan config:clear && vendor/bin/pest tests/Feature/EmployeeDetailedViewTest.php tests/Feature/Employee/ProfileUpdateRequestTest.php`
+
+**Results**:
+- `it can submit general section update request and apply changes upon approval`: ✅ PASSED
+- `it can submit education section update request and apply changes upon approval`: ✅ PASSED
+- `it can submit employment history update request and apply changes upon approval`: ✅ PASSED
+- `it can submit emergency contact nominee update request and apply changes upon approval`: ✅ PASSED
+- `it creates admin profile update request for office info update and propagates upon approval`: ✅ PASSED
+- `it generates custom notification redirecting to profile_update_requests.show when approval step is created`: ✅ PASSED
+- `admin can fetch detailed employee profile json`: ✅ PASSED
+- `employee can fetch their own detailed profile json`: ✅ PASSED
+- `employee cannot fetch other employee detailed profile json`: ✅ PASSED
+- `admin can download detailed profile pdf`: ✅ PASSED
+
+Status: ✅ SUCCESS
+
 ## 2026-07-05
 
 **Goal**: Implement Admin profile update requests (Office Info, Policy Tag, Salary Breakdown, Bank Account) and verify propagation. Also verify profile detailed view and PDF features after removing Pay Grade from office info. Validate comparison view formatting changes (no horizontal scroll, comma-separated weekends, capitalized yes/no/permanent etc., clean flat list layouts showing all JSON fields dynamically, with database ID keys resolved to titles/names where applicable).

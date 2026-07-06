@@ -336,3 +336,87 @@ test('it creates admin profile update request for office info update and propaga
     $officeInfo->refresh();
     expect($officeInfo->hr_file_no)->toBe('F9999');
 });
+
+test('it generates custom notification redirecting to profile_update_requests.show when approval step is created', function () {
+    \Illuminate\Support\Facades\Notification::fake();
+
+    $approver = User::factory()->create([
+        'user_type' => UserType::Company,
+    ]);
+
+    // Create office info workflow
+    $officeWorkflow = Workflow::create([
+        'name' => 'Office Info Workflow',
+        'module' => 'office-information',
+        'type' => 'sequential',
+        'total_steps' => 1,
+        'is_active' => true
+    ]);
+
+    $step = $officeWorkflow->steps()->create([
+        'name' => 'Step 1 - Company Approve',
+        'step_order' => 1,
+        'type' => 'user-type',
+        'required_user_type' => 'company'
+    ]);
+
+    // Create ProfileUpdateRequest
+    $requestRecord = ProfileUpdateRequest::create([
+        'employee_id' => $this->employee->id,
+        'section' => 'office-information',
+        'type' => 'admin',
+        'previous_data' => [],
+        'requested_data' => ['hr_file_no' => 'F9999'],
+        'status' => 'pending',
+    ]);
+
+    // Simulating ApprovalRequest creation (Approvable)
+    $approvalRequest = ApprovalRequest::create([
+        'workflow_id' => $officeWorkflow->id,
+        'approvable_type' => ProfileUpdateRequest::class,
+        'approvable_id' => $requestRecord->id,
+        'status' => 'pending'
+    ]);
+
+    // Bind custom ApproverResolver so it resolves to our approver
+    app()->bind(\Innovity\ApprovalEngine\Contracts\ApproverResolverInterface::class, function () use ($approver) {
+        return new class($approver) implements \Innovity\ApprovalEngine\Contracts\ApproverResolverInterface {
+            public function __construct(private $approver) {}
+            public function resolve(string $stepId, $approvable): array {
+                return [$this->approver->id];
+            }
+        };
+    });
+
+    // Create the step request (triggers the created event handler in AppServiceProvider)
+    $stepRequest = $approvalRequest->stepRequests()->create([
+        'workflow_step_id' => $step->id,
+        'status' => 'pending',
+    ]);
+
+    // Verify a custom notification was written to DB with the correct url
+    $notification = \App\Models\Setting\Notification::where('user_id', $approver->id)
+        ->where('title', 'Approval Action Required')
+        ->first();
+
+    expect($notification)->not->toBeNull();
+    expect($notification->data['url'])->toBe(route('profile_update_requests.show', $requestRecord->id, false));
+    expect($notification->data['type'])->toBe('approval_request');
+
+    // Verify Notification facade was sent ApprovalActionRequiredNotification
+    \Illuminate\Support\Facades\Notification::assertSentTo(
+        $approver,
+        \App\Notifications\Approval\ApprovalActionRequiredNotification::class,
+        function ($notification) use ($requestRecord) {
+            // Check toArray
+            $data = $notification->toArray($this->user);
+            expect($data['url'])->toBe(route('profile_update_requests.show', $requestRecord->id, false));
+
+            // Check toMail
+            $mail = $notification->toMail($this->user);
+            expect($mail->actionUrl)->toBe(route('profile_update_requests.show', $requestRecord->id));
+
+            return true;
+        }
+    );
+});

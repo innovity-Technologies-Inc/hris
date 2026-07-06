@@ -38,9 +38,13 @@ class ApprovalActionRequiredNotification extends Notification
         $module = ucfirst($moduleName ?: 'Item');
         
         $approvable = $this->stepRequest->approvalRequest->approvable;
-        $url = \Illuminate\Support\Facades\Route::has($moduleName . '.show') && $approvable
-                ? route($moduleName . '.show', $approvable->id) 
-                : url('/' . $moduleName);
+        if ($approvable instanceof \App\Models\Employee\ProfileUpdateRequest) {
+            $url = route('profile_update_requests.show', $approvable->id);
+        } else {
+            $url = \Illuminate\Support\Facades\Route::has($moduleName . '.show') && $approvable
+                    ? route($moduleName . '.show', $approvable->id) 
+                    : url('/' . $moduleName);
+        }
 
         return (new MailMessage)
             ->subject("Action Required: $module Approval Request")
@@ -61,9 +65,13 @@ class ApprovalActionRequiredNotification extends Notification
         $module = ucfirst($moduleName ?: 'Item');
         
         $approvable = $this->stepRequest->approvalRequest->approvable;
-        $url = \Illuminate\Support\Facades\Route::has($moduleName . '.show') && $approvable
-                ? route($moduleName . '.show', $approvable->id, false) 
-                : '/' . $moduleName;
+        if ($approvable instanceof \App\Models\Employee\ProfileUpdateRequest) {
+            $url = route('profile_update_requests.show', $approvable->id, false);
+        } else {
+            $url = \Illuminate\Support\Facades\Route::has($moduleName . '.show') && $approvable
+                    ? route($moduleName . '.show', $approvable->id, false) 
+                    : '/' . $moduleName;
+        }
         
         return [
             'title' => 'Approval Action Required',
