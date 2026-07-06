@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Employee;
 
 use App\Http\Controllers\Controller;
-
 use App\Enums\UserType;
+use App\Http\Requests\Employee\EmployeeEmploymentHistoryRequest;
 use App\Models\Employee\EmployeeEmploymentHistory;
 use App\Services\Employee\EmployeeServices;
 use Illuminate\Http\Request;
@@ -39,9 +39,9 @@ class EmployeeEmploymentHistoryController extends Controller
         return view('employee.employment_histories.form', compact('employee', 'title', 'section', 'sub_section', 'section_url'));
     }
 
-    public function store(Request $request)
+    public function store(EmployeeEmploymentHistoryRequest $request)
     {
-        $validated = $this->empServices->employeeEmploymentHistoryValidation($request);
+        $validated = $request->validated();
         try {
             $history = $this->empServices->employeeEmploymentHistorySave($validated);
             return redirect()->route('employee.profile.employment_history', $history->employee_id)->with([
@@ -49,7 +49,7 @@ class EmployeeEmploymentHistoryController extends Controller
                 'alert-type' => 'success'
             ]);
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Error in EmployeeEmploymentHistoryController@store: ' . $e->getMessage(), ['exception' => $e]);
+            Log::error('Error in EmployeeEmploymentHistoryController@store: ' . $e->getMessage(), ['exception' => $e]);
 
             return redirect()->back()->with([
                 'message' => 'Something went wrong while saving employment history.',
@@ -103,9 +103,9 @@ class EmployeeEmploymentHistoryController extends Controller
         return view('employee.employment_histories.form', compact('historyData', 'employee', 'title', 'section', 'sub_section', 'section_url'));
     }
 
-    public function update(Request $request, $id)
+    public function update(EmployeeEmploymentHistoryRequest $request, $id)
     {
-        $validated = $this->empServices->employeeEmploymentHistoryValidation($request);
+        $validated = $request->validated();
         $history = EmployeeEmploymentHistory::where('employee_id', $id)->first();
 
         try {
@@ -120,7 +120,7 @@ class EmployeeEmploymentHistoryController extends Controller
                 'alert-type' => 'success'
             ]);
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Error in EmployeeEmploymentHistoryController@update: ' . $e->getMessage(), ['exception' => $e]);
+            Log::error('Error in EmployeeEmploymentHistoryController@update: ' . $e->getMessage(), ['exception' => $e]);
 
             return redirect()->back()->with([
                 'message' => 'Something went wrong while updating employment history.',
@@ -129,4 +129,3 @@ class EmployeeEmploymentHistoryController extends Controller
         }
     }
 }
-

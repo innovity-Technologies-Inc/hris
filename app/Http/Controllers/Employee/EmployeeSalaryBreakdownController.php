@@ -9,6 +9,7 @@ use App\Imports\Employee\SalaryBreakdownImport;
 use App\Models\Employee\EmployeeBankAccount;
 use App\Services\Employee\EmployeeServices;
 use Illuminate\Http\Request;
+use App\Http\Requests\Employee\EmployeeSalaryBreakdownRequest;
 use App\Models\Employee\EmployeeSalaryBreakdown;
 use App\Models\Employee\ProfileUpdateRequest;
 use Illuminate\Support\Facades\Log;
@@ -52,14 +53,14 @@ class EmployeeSalaryBreakdownController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(EmployeeSalaryBreakdownRequest $request)
     {
         // Restricted for Employees
         if (auth()->user()->user_type === UserType::Employee) {
             abort(403, 'Unauthorized access.');
         }
 
-        $validated = $this->empServices->employeeSalaryBreakdownValidation($request);
+        $validated = $request->validated();
 
         try {
             $employee = $this->empServices->employeeSalaryBreakdownInfoSave($validated);
@@ -147,14 +148,14 @@ class EmployeeSalaryBreakdownController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(EmployeeSalaryBreakdownRequest $request, $id)
     {
         // Restricted for Employees
         if (auth()->user()->user_type === UserType::Employee) {
             abort(403, 'Unauthorized access.');
         }
 
-        $validated = $this->empServices->employeeSalaryBreakdownValidation($request);
+        $validated = $request->validated();
         $employeeData = EmployeeSalaryBreakdown::findOrFail($id);
         $employee = $employeeData->employee_id;
 

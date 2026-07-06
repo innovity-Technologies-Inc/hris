@@ -20,6 +20,7 @@ use App\Models\Plan\OffDayPlan;
 use App\Models\Plan\OTPlan;
 use App\Models\Plan\RosterPlan;
 use App\Models\Plan\ShiftPlan;
+use App\Http\Requests\Employee\EmployeePlanAssignmentRequest;
 use App\Services\Employee\EmployeePlansServices;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -159,7 +160,7 @@ class EmployeePlansController extends Controller
 
     }
 
-    public function assignPlan(Request $request, $type)
+    public function assignPlan(EmployeePlanAssignmentRequest $request, $type)
     {
         // Restricted for Employees
         if (auth()->user()->user_type === UserType::Employee) {
@@ -168,19 +169,19 @@ class EmployeePlansController extends Controller
 
         try {
             if ($type === 'meal-plans') {
-                $validated = $this->empPlans->validation($request);
+                $validated = $request->validated();
                 $this->empPlans->mealPlanSave($validated, $request);
             } elseif ($type === 'shift-plans') {
-                $validated = $this->empPlans->validation($request);
+                $validated = $request->validated();
                 $this->empPlans->planSave($validated, EmployeeShiftPlan::class);
             } elseif ($type === 'roster-plans') {
-                $validated = $this->empPlans->validation($request);
+                $validated = $request->validated();
                 $this->empPlans->planSave($validated, EmployeeRosterPlan::class);
             } elseif ($type === 'ot-plans') {
-                $validated = $this->empPlans->validation($request);
+                $validated = $request->validated();
                 $this->empPlans->planSave($validated, EmployeeOtPlan::class);
             } elseif ($type === 'offday-plans') {
-                $validated = $this->empPlans->validation($request);
+                $validated = $request->validated();
                 $this->empPlans->multipleActivePlanSave($validated, EmployeeOffdayPlan::class);
             } elseif ($type === 'bonus-plans') {
                 $bonusPlans = EmployeeBonusPlan::where('employee_id', $request->employee_id)->get();

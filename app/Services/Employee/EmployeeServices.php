@@ -1264,6 +1264,14 @@ class EmployeeServices
     }
 
     /**
+     * Public wrapper to adjust rules dynamically based on profile field configurations.
+     */
+    public function getProfileFieldConfigRules(array $rules, string $section): array
+    {
+        return $this->applyProfileFieldConfigRules($rules, $section);
+    }
+
+    /**
      * Adjust rules dynamically based on profile field configurations.
      */
     private function applyProfileFieldConfigRules(array $rules, string $section): array

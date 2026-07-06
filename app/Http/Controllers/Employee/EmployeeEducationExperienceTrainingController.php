@@ -8,6 +8,7 @@ use App\Enums\UserType;
 use App\Imports\Employee\EmployeeEducationInfoImport;
 use App\Models\Employee\EmployeeEducationExperienceTraining;
 use App\Models\Employee\EmployeeOfficeInfo;
+use App\Http\Requests\Employee\EmployeeEducationRequest;
 use App\Services\Employee\EmployeeServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -39,9 +40,9 @@ class EmployeeEducationExperienceTrainingController extends Controller
 
         return view('employee.education_experience_trainings.form', compact('employee', 'title', 'section', 'sub_section', 'section_url'));
     }
-    public function store(Request $request)
+    public function store(EmployeeEducationRequest $request)
     {
-        $validated = $this->empServices->employeeEducationInfoValidation($request);
+        $validated = $request->validated();
         try{
             $employeeEduData = $this->empServices->employeeEducationInfoSave($validated);
         }catch(\Exception $e){
@@ -107,9 +108,9 @@ class EmployeeEducationExperienceTrainingController extends Controller
 
         return view('employee.education_experience_trainings.form', compact('employeeData', 'employee', 'title', 'section', 'sub_section', 'section_url'));
     }
-    public function update(Request $request, $id)
+    public function update(EmployeeEducationRequest $request, $id)
     {
-        $validated = $this->empServices->employeeEducationInfoValidation($request);
+        $validated = $request->validated();
         $employeeEduData = EmployeeEducationExperienceTraining::where('employee_id', $id)->first();
 
         try{

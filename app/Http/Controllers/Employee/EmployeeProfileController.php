@@ -11,6 +11,8 @@ use App\Models\Employee\Employee;
 use App\Models\Employee\EmployeeEligiblePlan;
 use App\Models\Employee\EmployeeOfficeInfo;
 use App\Models\Employee\ProfileUpdateRequest;
+use App\Http\Requests\Employee\EmployeeGeneralInfoRequest;
+use App\Http\Requests\Employee\EmployeeOfficeInfoRequest;
 use App\Services\Employee\EmployeeServices;
 use App\Services\Employee\EmployeeProfilePdfService;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
@@ -78,8 +80,8 @@ class EmployeeProfileController extends Controller
         return view('employee.profile', compact('title', 'section', 'sub_section', 'employee', 'section_url', 'roles'));
     }
 
-    public function generalInfoStore(Request $request){
-        $validated = $this->empServices->employeeInfoValidation($request);
+    public function generalInfoStore(EmployeeGeneralInfoRequest $request){
+        $validated = $request->validated();
         try{
             $employee = $this->empServices->employeeInfoSave($request, $validated);
         }catch(\Exception $e){
@@ -213,7 +215,7 @@ class EmployeeProfileController extends Controller
         }
     }
 
-    public function generalInfoUpdate(Request $request, $id){
+    public function generalInfoUpdate(EmployeeGeneralInfoRequest $request, $id){
         $employee = $this->empServices->getEmployeeById($id);
         if (!$employee) {
             abort(404, 'Employee not found');
@@ -227,7 +229,7 @@ class EmployeeProfileController extends Controller
             abort(403, 'Unauthorized access.');
         }
 
-        $validated = $this->empServices->employeeInfoValidation($request);
+        $validated = $request->validated();
         try{
             $this->empServices->employeeInfoSave($request,$validated, $id);
         }catch(\Exception $e){
@@ -287,13 +289,13 @@ class EmployeeProfileController extends Controller
             'sub_section', 'section_url', 'employee', 'companies', 'designations'));
     }
 
-    public function officeInfoStore(Request $request){
+    public function officeInfoStore(EmployeeOfficeInfoRequest $request){
         // Restricted for Employees
         if (auth()->user()->user_type === UserType::Employee) {
             abort(403, 'Unauthorized access.');
         }
 
-        $validated = $this->empServices->employeeOfficeInfoValidation($request);
+        $validated = $request->validated();
         try{
             $employee = $this->empServices->employeeOfficeInfoSave($request, $validated);
         }catch(\Exception $e){
@@ -360,7 +362,7 @@ class EmployeeProfileController extends Controller
 
     }
 
-    public function officeInfoUpdate(Request $request, $id){
+    public function officeInfoUpdate(EmployeeOfficeInfoRequest $request, $id){
         // Restricted for Employees
         if (auth()->user()->user_type === UserType::Employee) {
             abort(403, 'Unauthorized access.');
@@ -376,7 +378,7 @@ class EmployeeProfileController extends Controller
             abort(403, 'Unauthorized access to other profiles.');
         }
 
-        $validated = $this->empServices->employeeOfficeInfoValidation($request);
+        $validated = $request->validated();
         $employee_office_info = EmployeeOfficeInfo::where('employee_id', $id)->first();
 
         try {

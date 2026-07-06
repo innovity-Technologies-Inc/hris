@@ -3,15 +3,11 @@
 namespace App\Http\Controllers\Employee;
 
 use App\Http\Controllers\Controller;
-
 use App\Enums\UserType;
+use App\Http\Requests\Employee\EmployeeNomineeRequest;
 use App\Imports\Employee\EmployeeNomineeImport;
-use App\Imports\EmployeeNomineeInformationImport;
 use App\Models\Employee\Employee;
-use App\Models\Employee\EmployeeEligiblePlan;
 use App\Models\Employee\EmployeeNominee;
-use App\Models\Employee\EmployeeNomineeInfo;
-use App\Models\Employee\EmployeeSalaryBreakdown;
 use App\Services\Employee\EmployeeServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -44,13 +40,12 @@ class EmployeeNomineeController extends Controller
         return view('employee.nominee_information.form', compact('employee', 'title', 'section', 'sub_section', 'section_url'));
     }
 
-
-    public function store(Request $request){
-        $validated = $this->empServices->employeeNomineeInfoValidation($request);
+    public function store(EmployeeNomineeRequest $request){
+        $validated = $request->validated();
         try{
             $employee = $this->empServices->employeeNomineeInfoSave($request, $validated);
         }catch(\Exception $e){
-            \Illuminate\Support\Facades\Log::error('Error in EmployeeNomineeController@store: ' . $e->getMessage(), ['exception' => $e]);
+            Log::error('Error in EmployeeNomineeController@store: ' . $e->getMessage(), ['exception' => $e]);
 
             return redirect()->back()->with([
                 'message' => $e->getMessage(),
@@ -81,7 +76,6 @@ class EmployeeNomineeController extends Controller
         }
 
         $employee_nominee_info = EmployeeNominee::where('employee_id', $id)->first();
-//        dd($employee_nominee_info);
         if($employee_nominee_info){
             return view('employee.nominee_information.form', compact('title', 'section',
                 'sub_section', 'section_url', 'employee', 'employee_nominee_info'));
@@ -91,11 +85,10 @@ class EmployeeNomineeController extends Controller
                 'alert-type' => 'error'
             ]);
         }
-
     }
 
-    public function update(Request $request, $id){
-        $validated = $this->empServices->employeeNomineeInfoValidation($request);
+    public function update(EmployeeNomineeRequest $request, $id){
+        $validated = $request->validated();
         $employeeNomineeData = EmployeeNominee::findOrFail($id);
         try {
             $employeeNomineeData = $this->empServices->employeeNomineeInfoSave($request, $validated, $employeeNomineeData);
@@ -105,7 +98,7 @@ class EmployeeNomineeController extends Controller
                 ->with(['message' => 'Employee nominee information updated successfully.',
                     'alert-type' => 'success']);
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Error in EmployeeNomineeController@update: ' . $e->getMessage(), ['exception' => $e]);
+            Log::error('Error in EmployeeNomineeController@update: ' . $e->getMessage(), ['exception' => $e]);
             return redirect()
                 ->back()
                 ->withInput()
@@ -113,8 +106,6 @@ class EmployeeNomineeController extends Controller
                     'alert-type' => 'error']);
         }
     }
-
-
 
     public function show($id){
         $title = 'Employee Nominee Information';
@@ -133,7 +124,6 @@ class EmployeeNomineeController extends Controller
         }
 
         $employee_nominee_info = EmployeeNominee::where('employee_id', $id)->first();
-//        dd($employee_nominee_info);
         return view('employee.profile', compact('title', 'section', 'sub_section', 'employee', 'employee_nominee_info', 'section_url'));
     }
 
@@ -141,7 +131,6 @@ class EmployeeNomineeController extends Controller
         $request->validate([
             'file' => 'required|mimes:text/csv,text/plain,application/csv,text/comma-separated-values,text/anytext,application/octet-stream,application/txt,xlsx,csv,txt',
         ]);
-//    dd($request->all());
         try{
             Excel::import(new EmployeeNomineeImport(), $request->file('file'));
             return redirect()->route('employee.index')->with([
@@ -149,14 +138,12 @@ class EmployeeNomineeController extends Controller
                 'alert-type' => 'success'
             ]);
         }catch (\Exception $e){
-            \Illuminate\Support\Facades\Log::error('Error in EmployeeNomineeController@import: ' . $e->getMessage(), ['exception' => $e]);
+            Log::error('Error in EmployeeNomineeController@import: ' . $e->getMessage(), ['exception' => $e]);
 
             return redirect()->back()->with([
                 'message' => $e->getMessage(). 'Contact with your administrator',
                 'alert-type' => 'error'
             ]);
         }
-
     }
 }
-

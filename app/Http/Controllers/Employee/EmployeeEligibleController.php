@@ -11,6 +11,7 @@ use App\Models\Employee\EmployeeEligiblePlan;
 use App\Models\Employee\ProfileUpdateRequest;
 use App\Models\Employee\Employee;
 use App\Models\Employee\EmployeeNominee;
+use App\Http\Requests\Employee\EmployeeEligiblePlanRequest;
 use App\Services\Employee\EmployeeServices;
 
 use Illuminate\Http\Request;
@@ -53,14 +54,14 @@ class EmployeeEligibleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(EmployeeEligiblePlanRequest $request)
     {
         // Restricted for Employees
         if (auth()->user()->user_type === UserType::Employee) {
             abort(403, 'Unauthorized access.');
         }
 
-        $validated = $this->empServices->employeeEligiblePlanValidation($request);
+        $validated = $request->validated();
 
         try {
             $employee = $this->empServices->employeeEligiblePanInfoSave($validated);
@@ -149,14 +150,14 @@ class EmployeeEligibleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(EmployeeEligiblePlanRequest $request, $id)
     {
         // Restricted for Employees
         if (auth()->user()->user_type === UserType::Employee) {
             abort(403, 'Unauthorized access.');
         }
 
-        $validated = $this->empServices->employeeEligiblePlanValidation($request);
+        $validated = $request->validated();
         $employeePlan = EmployeeEligiblePlan::findOrFail($id);
         $employee = $employeePlan->employee_id;
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 
 use App\Enums\UserType;
 use App\Imports\Employee\EmployeeBankAccountDetailsImport;
+use App\Http\Requests\Employee\EmployeeBankAccountRequest;
 use App\Models\Employee\EmployeeBankAccount;
 use App\Models\Employee\ProfileUpdateRequest;
 use App\Models\Employee\Employee;
@@ -59,14 +60,14 @@ class EmployeeBankAccountController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(EmployeeBankAccountRequest $request)
     {
         // Restricted for Employees
         if (auth()->user()->user_type === UserType::Employee) {
             abort(403, 'Unauthorized access.');
         }
 
-        $validated = $this->empServices->employeeBankAccountsInfoValidation($request);
+        $validated = $request->validated();
 
         $employee = $this->empServices->employeeBankAccountsInfoSave($validated);
 
@@ -143,14 +144,14 @@ class EmployeeBankAccountController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(EmployeeBankAccountRequest $request, string $id)
     {
         // Restricted for Employees
         if (auth()->user()->user_type === UserType::Employee) {
             abort(403, 'Unauthorized access.');
         }
 
-        $validated = $this->empServices->employeeBankAccountsInfoValidation($request);
+        $validated = $request->validated();
         $employeeData = EmployeeBankAccount::findOrFail($id);
         $employee = $employeeData->employee_id;
 
