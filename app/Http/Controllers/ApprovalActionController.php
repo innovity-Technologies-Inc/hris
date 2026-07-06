@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Innovity\ApprovalEngine\Services\ApprovalResolver;
 use Innovity\ApprovalEngine\Models\ApprovalStepRequest;
+use Innovity\ApprovalEngine\Enums\ApprovalStatus;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ApprovalActionController extends Controller
 {
@@ -15,19 +17,29 @@ class ApprovalActionController extends Controller
             'comments' => 'required|string|max:1000'
         ]);
 
-        $stepRequest = ApprovalStepRequest::findOrFail($stepRequestId);
+        return DB::transaction(function () use ($request, $stepRequestId, $resolver) {
+            // Lock the row for update to prevent concurrent race conditions
+            $stepRequest = ApprovalStepRequest::lockForUpdate()->findOrFail($stepRequestId);
 
-        if ($request->action === 'approve') {
-            $resolver->approve($stepRequest, auth()->id(), $request->comments);
-            $message = 'Request successfully approved!';
-        } else {
-            $resolver->reject($stepRequest, auth()->id(), $request->comments);
-            $message = 'Request successfully rejected!';
-        }
+            if ($stepRequest->status !== ApprovalStatus::PENDING) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'This request has already been processed.'
+                ], 422);
+            }
 
-        return response()->json([
-            'status' => 'success',
-            'message' => $message
-        ]);
+            if ($request->action === 'approve') {
+                $resolver->approve($stepRequest, auth()->id(), $request->comments);
+                $message = 'Request successfully approved!';
+            } else {
+                $resolver->reject($stepRequest, auth()->id(), $request->comments);
+                $message = 'Request successfully rejected!';
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => $message
+            ]);
+        });
     }
 }

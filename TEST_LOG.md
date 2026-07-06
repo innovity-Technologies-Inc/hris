@@ -2,7 +2,7 @@
 
 ## 2026-07-06
 
-**Goal**: Verify that when a profile update request approval step is created, notifications generated for the workflow (e.g. office-info, bank-accounts, policy-tag, salary-breakdown) correctly redirect to the review page (`profile_update_requests.show`). Also document the workflow events generated inside the package inside both the workflow-functional-breakdown markdown and HTML files.
+**Goal**: Verify that when a profile update request approval step is created, notifications generated for the workflow (e.g. office-info, bank-accounts, policy-tag, salary-breakdown) correctly redirect to the review page (`profile_update_requests.show`). Also document the workflow events generated inside the package inside both the workflow-functional-breakdown markdown and HTML files, and secure the controller using transactions and locks for concurrent safety.
 
 **Exact Command**: `php artisan config:clear && vendor/bin/pest tests/Feature/EmployeeDetailedViewTest.php tests/Feature/Employee/ProfileUpdateRequestTest.php`
 
