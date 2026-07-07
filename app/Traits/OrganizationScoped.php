@@ -28,7 +28,8 @@ trait OrganizationScoped
                 }
 
                 // Use a static cache to avoid recursion and multiple queries
-                if (!array_key_exists($userId, static::$authEmployeeCache)) {
+                // Bypass cache in unit tests to prevent database state contamination between tests.
+                if (app()->runningUnitTests() || !array_key_exists($userId, static::$authEmployeeCache)) {
                     // We must use withoutGlobalScopes() here to avoid recursion
                     static::$authEmployeeCache[$userId] = $user->employee()
                         ->withoutGlobalScopes()

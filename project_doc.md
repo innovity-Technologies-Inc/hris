@@ -21,6 +21,10 @@ This is a robust Human Resource Management System (HRMS) built with Laravel 12. 
 - **Imports**: Bulk data handling via `maatwebsite/excel`. Import classes are located in `App\Imports`.
 - **AJAX Driven**: High interactivity using a `DataController` to provide dynamic dropdown data (e.g., getting departments based on company selection).
 
+### 4. Dynamic FormRequest Validation Hardening
+- **Validation Refactoring**: Shifted validation logic out of controllers into 9 dedicated form requests (e.g., [EmployeeGeneralInfoRequest](file:///P:/Project/Web/hrms/app/Http/Requests/Employee/EmployeeGeneralInfoRequest.php), [EmployeeOfficeInfoRequest](file:///P:/Project/Web/hrms/app/Http/Requests/Employee/EmployeeOfficeInfoRequest.php), [EmployeeSalaryBreakdownRequest](file:///P:/Project/Web/hrms/app/Http/Requests/Employee/EmployeeSalaryBreakdownRequest.php)).
+- **Dynamic Rule Modification**: These requests interact with the dynamic profile field configuration system to dynamically append or adjust validation rules (converting optional fields to `required` or vice-versa) at runtime before the requests hit controllers.
+
 ---
 
 ## 📦 Completed Modules
@@ -28,7 +32,8 @@ This is a robust Human Resource Management System (HRMS) built with Laravel 12. 
 ### 🏢 Company & Organization Setup
 - **Levels**: Group -> Company -> Division -> Department -> Section.
 - **Structure**: Manage organizational hierarchy and locations.
-- **Pay Groups**: Define payroll processing categorizations (Hourly, Monthly, Weekly) with dynamic salary processing date/day selection.
+- **Pay Groups**: Define payroll processing categorizations (Hourly, Monthly, Weekly) with dynamic salary processing date/day selection ([PayGroupController](file:///P:/Project/Web/hrms/app/Http/Controllers/Company/PayGroupController.php), [PayGroupServices](file:///P:/Project/Web/hrms/app/Services/Company/PayGroupServices.php), [PayGroup](file:///P:/Project/Web/hrms/app/Models/Company/PayGroup.php)).
+- **Movement Type Module**: Located under Company Setup ([MovementTypeController](file:///P:/Project/Web/hrms/app/Http/Controllers/Company/MovementTypeController.php), [MovementTypeRequest](file:///P:/Project/Web/hrms/app/Http/Requests/Company/MovementTypeRequest.php), [MovementType](file:///P:/Project/Web/hrms/app/Models/Company/MovementType.php)). Dynamically classifies reasons for employee status transitions (e.g. Performance Promotion, Annual Increment, Salary Decrement, Disciplinary Demotion). It integrates as a mandatory metadata classifier across all career movement modules.
 - **Support Data**: Banks, Branches, Salary Grades, Tofsils (Acts), and Gazette Locations.
 
 ### 👥 Employee Management
@@ -36,13 +41,41 @@ This is a robust Human Resource Management System (HRMS) built with Laravel 12. 
 - **Lifecycle**: Manage Nominees, Education/Experience, Bank Accounts, and Salary Breakdowns.
 - **Status**: Toggle employment status and manage movements (transfers).
 - **ID Cards**: Dynamic ID card generation with QR codes using `IDCardService` and `QrCodeService`.
+- **Profile Field Configuration & Tracker**:
+  - **Dynamic Field Configuration**: Managed via Settings ([SettingsController](file:///P:/Project/Web/hrms/app/Http/Controllers/Setting/SettingsController.php), [ProfileFieldConfigServices](file:///P:/Project/Web/hrms/app/Services/Setting/ProfileFieldConfigServices.php), [ProfileFieldConfig](file:///P:/Project/Web/hrms/app/Models/Setting/ProfileFieldConfig.php)). Allows HR Admins to toggle which fields are required/optional across all profile tabs.
+  - **Completion Progress Tracker**: Shows a real-time visual tracker displaying the completion percentage of an employee's profile to motivate data completeness.
+- **Employee Document Management**:
+  - **Document Storing**: Allows employees and administrators to upload and manage documents (certificates, contracts, resumes) directly on the employee's profile ([EmployeeDocument](file:///P:/Project/Web/hrms/app/Models/Employee/EmployeeDocument.php)).
+  - **Interactive Viewer**: Implements a dedicated media/viewer link to preview and download uploaded files securely within a responsive grid layout.
 - **Profile Review System**:
-    - **Workflow**: New employee profiles start as `incomplete`, move to `pending` upon submission, and finally to `active` after HR approval.
-    - **Review Dashboard**: A dedicated interface for HR to audit pending profiles.
-    - **Approval/Rejection**: HR can mark profiles as `incomplete` with a specific cause (triggering a feedback loop) or `active`.
-    - **Email Feedback**: Automated emails are dispatched to employees notifying them of their profile's review outcome (Approval or Incomplete with cause).
-    - **UI Alignment**: The review interface is designed to match the system-wide employee management style, featuring integrated search cards and high-performance filtering.
-    - **Sidebar Integration**: The "Profile Review" menu is logically positioned immediately following "Employee Information" for a streamlined HR auditing workflow.
+  - **Workflow**: New employee profiles start as `incomplete`, move to `pending` upon submission, and finally to `active` after HR approval.
+  - **Review Dashboard**: A dedicated interface for HR to audit pending profiles.
+  - **Approval/Rejection**: HR can mark profiles as `incomplete` with a specific cause (triggering a feedback loop) or `active`.
+  - **Email Feedback**: Automated emails are dispatched to employees notifying them of their profile's review outcome (Approval or Incomplete with cause).
+  - **UI Alignment**: The review interface is designed to match the system-wide employee management style, featuring integrated search cards and high-performance filtering.
+  - **Sidebar Integration**: The "Profile Review" menu is logically positioned immediately following "Employee Information" for a streamlined HR auditing workflow.
+- **Profile Update Request & Background Propagation Module**:
+  - **Self-Service Requests**: Allows employees to submit changes to their profiles. Instead of modifying core tables directly, changes are logged in [ProfileUpdateRequest](file:///P:/Project/Web/hrms/app/Models/Employee/ProfileUpdateRequest.php) and sent through the approval workflow ([ProfileUpdateRequestController](file:///P:/Project/Web/hrms/app/Http/Controllers/Employee/ProfileUpdateRequestController.php), [ProfileUpdateRequestServices](file:///P:/Project/Web/hrms/app/Services/Employee/ProfileUpdateRequestServices.php)).
+  - **Admin Request Overrides**: When an Admin attempts to modify organizational fields (Office Information, Policy Tag, Salary Breakdown, Bank Account), the system automatically intercepts changes, creates a pending `ProfileUpdateRequest` of type `admin`, and prompts for workflow approval.
+  - **Comparison & Audit Show View**: A detailed page that renders database records side-by-side with requested changes. Relational foreign key IDs are resolved dynamically into human-readable names, database `_id` suffixes are stripped from labels, and complex dynamic JSON arrays (such as education, training, and history grids) are parsed and displayed cleanly.
+  - **Background Auto-Propagation**: Managed by the decoupled [ProfileUpdateWorkflowListener](file:///P:/Project/Web/hrms/app/Listeners/Workflow/ProfileUpdateWorkflowListener.php). When a request is approved, the listener automatically synchronizes approved attributes into the respective core models, activating the updates.
+
+### ⚙️ Dynamic Approval Workflow Engine
+The Human Resource Management System integrates a custom package **`laravel-approval-engine`** ([laravel-approval-engine](file:///P:/Project/Web/hrms/workflow-functional-breakdown.md)) to support multi-stage approval pipelines.
+
+- **Polymorphic Integration**: Any database entity requiring approvals implements the `Innovity\ApprovalEngine\Traits\Approvable` trait. Workflows are initiated by invoking `$model->startWorkflow('module_name')` which automatically locks the record state and schedules steps.
+- **Dynamic Step Types**: Supports three types of sequential workflow steps:
+  - **`user-type`**: Resolves to all users matching an organization-scoped `UserType` enum (e.g. Department, Company) belonging to the same hierarchy as the requester.
+  - **`role-user`**: Restricts the step to users of a specific organizational unit who also hold a specific Spatie Role (e.g. Department Head).
+  - **`specific-user`**: Explicitly assigns approval authorization to a single User ID.
+- **Approver Resolution**: The engine delegates user queries to the custom [ApproverResolver](file:///P:/Project/Web/hrms/app/Services/ApproverResolver.php) service. It ignores global organization scopes to ensure that managers can fetch and approve subordinate records.
+- **Decoupled Workflow Event Listeners**: Business logic side-effects are decoupled from step processing. Decoupled listeners are registered dynamically in [AppServiceProvider](file:///P:/Project/Web/hrms/app/Providers/AppServiceProvider.php):
+  - **[LeaveWorkflowListener](file:///P:/Project/Web/hrms/app/Listeners/Workflow/LeaveWorkflowListener.php)**: Approves/rejects leaves and updates balances.
+  - **[PayrollWorkflowListener](file:///P:/Project/Web/hrms/app/Listeners/Workflow/PayrollWorkflowListener.php)**: Activates salary process batches (`salary`) or bonus process batches (`bonus`).
+  - **[ProfileUpdateWorkflowListener](file:///P:/Project/Web/hrms/app/Listeners/Workflow/ProfileUpdateWorkflowListener.php)**: Propagates general info, bank accounts, nominee details, education/training, office info, policy plan, salary breakdown, or bank account changes upon approval.
+  - **[PromotionWorkflowListener](file:///P:/Project/Web/hrms/app/Listeners/Workflow/PromotionWorkflowListener.php)** & **[DemotionWorkflowListener](file:///P:/Project/Web/hrms/app/Listeners/Workflow/DemotionWorkflowListener.php)**: Applies salary/designation mutations.
+  - **[IncrementWorkflowListener](file:///P:/Project/Web/hrms/app/Listeners/Workflow/IncrementWorkflowListener.php)** & **[DecrementWorkflowListener](file:///P:/Project/Web/hrms/app/Listeners/Workflow/DecrementWorkflowListener.php)**: Modifies gross salaries and updates breakdown structures.
+- **Reviewer UI Integration**: Actions are fully API-driven via Axios, backed by SweetAlert2 confirmation dialogs to prevent premature submissions, refreshing page states instantly.
 
 ### 🔔 Hierarchical Notification System
 A custom real-time notification engine with intelligent visibility rules based on the organizational chart.
@@ -63,14 +96,13 @@ Dedicated sub-system to define various HR policies:
 
 ### ⏱️ Attendance & Leaves
 - **Attendance**: Clock-in/out records, bulk imports, and detailed reporting.
-- **Leaves**: Leave application, approval workflows, and balance tracking.
+- **Leaves**: Leave application, approval workflows via LeaveWorkflowListener, and balance tracking.
 
 ### 💰 In-Depth Payroll & Benefits Module
 
 The Payroll & Benefits module is a highly flexible, transaction-safe, and organization-scoped financial processing engine. It manages the complete lifecycle of employee remuneration, deductions, adjustments, and final disbursement.
 
 #### 🏗️ 1. Core Architecture & Service Delegation
-The module follows a strict **Request -> Service -> API Controller** pattern:
 - **Thin Controllers**: [SalaryController](file:///P:/Project/Web/hrms/app/Http/Controllers/Payroll/SalaryController.php), [AdvanceSalaryController](file:///P:/Project/Web/hrms/app/Http/Controllers/Payroll/AdvanceSalaryController.php), [EmployeePenaltyController](file:///P:/Project/Web/hrms/app/Http/Controllers/Payroll/EmployeePenaltyController.php), and [DisbursementController](file:///P:/Project/Web/hrms/app/Http/Controllers/Payroll/DisbursementController.php) handle routing, input validation, and user responses (returning Blade templates or JSON structures).
 - **Business Logic Services**: Enacted in specialized classes including [PayrollServices](file:///P:/Project/Web/hrms/app/Services/Payroll/PayrollServices.php), [DisbursementServices](file:///P:/Project/Web/hrms/app/Services/Payroll/DisbursementServices.php), [EmployeePenaltyServices](file:///P:/Project/Web/hrms/app/Services/Payroll/EmployeePenaltyServices.php), [PayslipService](file:///P:/Project/Web/hrms/app/Services/Payroll/PayslipService.php), and [SalaryCertificateService](file:///P:/Project/Web/hrms/app/Services/Payroll/SalaryCertificateService.php).
 - **Transaction Safety**: All multi-step payroll processes, updates, and rollback deletions are wrapped inside Eloquent database transactions (`DB::transaction(...)`) to guarantee data integrity.
@@ -110,41 +142,50 @@ The system dynamically adapts its calculation engine depending on the employee's
 #### 🔄 3. Key Sub-Modules & Workflows
 
 ##### A. Salary Process & Rollback
-- **Processing**: Salary batches are initiated with a defined month/period. The system checks eligibility based on active employee office info and pay scale status. A dedicated **Salary Process Eligibility View** is provided to review and audit eligible employees before saving the batch.
-- **Deduction Granularity**: The system records individual late, excessive late, absent, and early exit count deductions in the `payrolls` table.
+- **Processing**: Salary batches are initiated with a defined month/period and Pay Group. The system checks eligibility based on active employee office info and pay scale status. A dedicated **Salary Process Eligibility View** is provided to review and audit eligible employees before saving the batch.
 - **Rollback Process**: When a process is rolled back or deleted via `rollbackSalaryProcess($id)`, the system updates all subtracted advances and penalties back to `approved` state, ensuring zero loss of adjustment records.
 
-##### B. Advance Salary Module
+##### B. Granular Payroll Deductions & Rollback Penalty Reversion
+- **Granular Columns**: The `payrolls` table stores separate columns for deductions: `late_deduction_amount`, `excessive_late_deduction_amount`, `absent_deduction_amount`, and `early_exit_deduction_amount` ([Payroll](file:///P:/Project/Web/hrms/app/Models/Payroll/Payroll.php)).
+- **Deduction Auditing**: Displays a detailed breakdown of deductions in the salary slip and payroll details view rather than a single aggregated deduction figure.
+- **Rollback Reset**: Reverting or deleting a salary process resets all deducted [EmployeePenalty](file:///P:/Project/Web/hrms/app/Models/Payroll/EmployeePenalty.php) and Advance records back to `approved` state in the database, preventing recovery logs from being lost.
+
+##### C. Advance Salary Module
 - **Purpose**: Processes cash/salary advances to employees that are automatically recovered in subsequent payroll processes.
 - **Calculations**: Supports both Fixed amounts and Percentage-based calculations (referencing basic salary or gross salary).
 - **Auto-Recovery**: During salary generation, the engine scans for active, approved advance salary records matching the target `deduction_month`. The recovery amount is subtracted from the final total salary, and the advance status is updated to `deducted`.
 - **Rollback Safety**: Rollback or deletion of a salary process restores the advance records back to `approved` status.
 
-##### C. Employee Penalties
+##### D. Employee Penalties
 - **Assignment**: Penalties are assigned to employees based on specific Penalty Plans and logged with occurrences and causes in the [EmployeePenalty](file:///P:/Project/Web/hrms/app/Models/Payroll/EmployeePenalty.php) model.
 - **Notifications**: Saving a penalty automatically invokes `notifyEmployee()`, dispatching a real-time notification to the target employee's user dashboard.
 - **Salary Deductions**: Approved penalties matching the payroll period are deducted from the employee's total earnings during salary generation, changing status to `deducted`.
 - **Rollback Integration**: Reverting or deleting a salary process resets the penalty status to `approved`.
 
-##### D. Arrears Management
+##### E. Arrears Management
 - **Purpose**: Manages outstanding/overdue payments.
 - **Workflow**: Logged under [Arrear](file:///P:/Project/Web/hrms/app/Models/Payroll/Arrear.php), approved arrear batches are included in the payroll process and cleared during final disbursement.
 
-##### E. Promotions & Increments
-- **Increments**: Increases are calculated as a flat amount or percentage of gross/basic salary.
-- **Promotions**: Designation and salary grades are revised.
-- **Modifications**: Once approved, the system updates the employee's `gross_salary` and breakdown and invokes `designationUpdate()` to update office parameters.
+##### F. Promotions, Increments & Safety Constraints
+- **Increments & Promotions**: Revised designation, salary grades, and gross salary break downs ([Promotion](file:///P:/Project/Web/hrms/app/Models/Payroll/Promotion.php), [Increment](file:///P:/Project/Web/hrms/app/Models/Payroll/Increment.php)). Once approved via their respective listeners, they update the employee's main records.
+- **Pay Scale Selection & Warning Alert**: Added pay scale selection to Increment/Promotion forms. Raises warning alerts if the proposed gross salary falls below the Pay Scale's minimum limit, preventing salary configuration errors.
 
-##### F. Bonus Management
+##### G. Demotions & Decrements
+- **Counterpart Actions**: Manages salary reductions and designation downgrades using [DecrementController](file:///P:/Project/Web/hrms/app/Http/Controllers/Payroll/DecrementController.php) and [DemotionController](file:///P:/Project/Web/hrms/app/Http/Controllers/Payroll/DemotionController.php).
+- **Decrement Calculations**: Decreases are applied as a flat amount or percentage of gross/basic salary.
+- **Demotion Workflows**: Revise designation and salary grades downwards.
+- **Process Safety**: Both modules submit requests via API/Axios, integrate with the Movement Type module, validate inputs against pay scale limits, and require Approval Workflow clearance before applying mutations.
+
+##### H. Bonus Management
 - **Workflow**: Compiles bonuses based on assigned plans.
-- **Processing**: Initiates standalone bonus batches or embeds them inside standard monthly salary payouts.
+- **Processing**: Initiates standalone bonus batches or embeds them inside standard monthly salary payouts. Both require approval workflows before activation.
 
 ---
 
 #### 💳 4. Payouts & Disbursement System
 Once a salary or bonus batch is approved, it enters the **Disbursement** pipeline handled by [DisbursementServices](file:///P:/Project/Web/hrms/app/Services/Payroll/DisbursementServices.php):
 - **Pending Batch Audits**: The dashboard computes statistics (eligible headcount, total batch cost, disbursed vs pending amounts, and headcount) for approved salary/bonus processes.
-- **Payment Processing**: HR selects records and defines a payment method (e.g., Cash, Bank Transfer, MFS) to initiate the disbursement batch.
+- **Payment Processing**: HR selects records and defines a payment method (e.g. Cash, Bank Transfer, MFS) to initiate the disbursement batch.
 - **Status Progression**: Inside a database transaction, individual records in the `payrolls` or `bonuses` tables are updated from `pending` to `paid` to prevent double-payouts.
 - **History & Documentation**: Disbursements support uploading physical files (e.g. bank sheets, receipts) and keep a historical log of who disbursed the funds, when, and the transaction note.
 
@@ -232,10 +273,10 @@ To ensure data integrity and prevent self-tampering, strict "hard overrides" are
 The system implements a rigorous **Row-Level Security (RLS)** strategy to ensure data privacy and multi-tenant integrity. This is handled automatically at the database level using Laravel Global Scopes.
 
 #### The `OrganizationScoped` Trait
-The core of the isolation engine is the `App\Traits\OrganizationScoped` trait. When added to any Eloquent model, it automatically intercepts all database queries (`SELECT`, `UPDATE`, `DELETE`) to inject security filters based on the authenticated user's context.
+The core of the isolation engine is the `App\Traits\OrganizationScoped` trait ([OrganizationScoped](file:///P:/Project/Web/hrms/app/Traits/OrganizationScoped.php)). When added to any Eloquent model, it automatically intercepts all database queries (`SELECT`, `UPDATE`, `DELETE`) to inject security filters based on the authenticated user's context.
 
 #### User Access Levels (`user_type`)
-Data visibility is determined by the `user_type` field in the `users` table:
+Data visibility is determined by the `user_type` field in the `users` table, which casts to the [UserType](file:///P:/Project/Web/hrms/app/Enums/UserType.php) enum:
 
 | User Type | Scope Coverage | Technical Logic |
 | :--- | :--- | :--- |

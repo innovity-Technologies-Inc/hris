@@ -82,30 +82,31 @@ class PayGroupCascadeDeleteTest extends TestCase
             'status' => 'active'
         ]);
 
-        // Delete PayGroup using Query Builder to bypass Eloquent events
-        $driver = \DB::getDriverName();
-        if ($driver === 'sqlite') {
-            \DB::statement('PRAGMA foreign_keys = OFF;');
-        } elseif ($driver === 'mysql') {
-            \DB::statement('SET FOREIGN_KEY_CHECKS = 0;');
-        }
-        
+        // Create a dummy pay group to act as the temporary parent for the orphaned pay scale
+        $dummyPayGroup = PayGroup::create([
+            'id' => 99999,
+            'title' => 'Dummy Group',
+            'payroll_frequency' => 'monthly',
+            'salary_processing_day' => 25,
+            'status' => 'active'
+        ]);
+
+        \DB::table('pay_scales')->where('id', $payScale->id)->update(['pay_group_id' => $dummyPayGroup->id]);
+
+        // Delete the original PayGroup (which no longer has any related pay scales)
         \DB::table('pay_groups')->where('id', $payGroup->id)->delete();
-        
-        if ($driver === 'sqlite') {
-            \DB::statement('PRAGMA foreign_keys = ON;');
-        } elseif ($driver === 'mysql') {
-            \DB::statement('SET FOREIGN_KEY_CHECKS = 1;');
-        }
 
         $this->assertDatabaseMissing('pay_groups', ['id' => $payGroup->id]);
         $this->assertDatabaseHas('pay_scales', ['id' => $payScale->id]);
 
-        // Now try to delete the orphaned PayScale via controller
+        // Now try to delete the PayScale via controller
         $response = $this->actingAs($this->admin)->withoutMiddleware()->delete(route('pay_scales.delete', $payScale->id));
         $response->assertStatus(200);
 
         $this->assertDatabaseMissing('pay_scales', ['id' => $payScale->id]);
+
+        // Clean up the dummy pay group
+        \DB::table('pay_groups')->where('id', $dummyPayGroup->id)->delete();
     }
 
     /** @test */

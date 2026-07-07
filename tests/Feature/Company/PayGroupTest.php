@@ -46,6 +46,8 @@ it('can store a new pay group', function () {
         'title' => 'Weekly Casual',
         'payroll_frequency' => 'Weekly',
         'salary_processing_day' => 'Friday',
+        'working_hours_per_day' => 8,
+        'working_days_per_cycle' => 6,
         'status' => 'active'
     ];
 
@@ -64,6 +66,8 @@ it('can update a pay group', function () {
         'title' => 'Old Title',
         'payroll_frequency' => 'Monthly',
         'salary_processing_day' => '1',
+        'working_hours_per_day' => 8,
+        'working_days_per_cycle' => 26,
         'status' => 'active'
     ]);
 
@@ -71,6 +75,8 @@ it('can update a pay group', function () {
         'title' => 'New Title',
         'payroll_frequency' => 'Monthly',
         'salary_processing_day' => '1',
+        'working_hours_per_day' => 8,
+        'working_days_per_cycle' => 26,
         'status' => 'inactive'
     ];
 

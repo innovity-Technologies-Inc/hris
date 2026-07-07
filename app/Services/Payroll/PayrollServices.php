@@ -19,6 +19,8 @@ use App\Models\Payroll\Increment;
 use App\Models\Payroll\Decrement;
 use App\Models\Payroll\Promotion;
 use App\Models\Payroll\Demotion;
+use App\Models\Payroll\Payroll;
+use App\Models\Payroll\PayrollProcess;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;

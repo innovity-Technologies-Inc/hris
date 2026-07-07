@@ -44,8 +44,8 @@ it('calculates employee dashboard statistics correctly', function () {
     $service = app(\App\Services\Employee\EmployeeDashboardServices::class);
     $stats = $service->getDashboardStats($this->employee->id);
 
-    expect($stats['total_earnings'])->toBe(57000.0) 
-        ->and($stats['total_bonus'])->toBe(10000.0)
+    expect((float)$stats['total_earnings'])->toBe(57000.0) 
+        ->and((float)$stats['total_bonus'])->toBe(10000.0)
         ->and($stats['tenure'])->toMatch('/\d+y \d+m \d+d/'); 
 });
 
