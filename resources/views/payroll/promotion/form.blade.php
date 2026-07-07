@@ -150,6 +150,29 @@
                                 @enderror
                             </div>
 
+                            {{-- Pay Scale --}}
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Pay Scale <span class="text-danger">*</span></label>
+                                <select name="pay_scale_id" id="pay_scale_id"
+                                    class="form-select @error('pay_scale_id') is-invalid @enderror" required>
+                                    <option value="">Select Pay Scale</option>
+                                    @foreach ($payScales as $scale)
+                                        <option value="{{ $scale->id }}"
+                                            data-min="{{ $scale->min_salary }}"
+                                            data-max="{{ $scale->max_salary }}"
+                                            {{ old('pay_scale_id', $promotionData->pay_scale_id ?? '') == $scale->id ? 'selected' : '' }}>
+                                            {{ $scale->title }} ({{ \App\HelperClass::getCurrency() }} {{ number_format($scale->min_salary, 0) }} - {{ number_format($scale->max_salary, 0) }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('pay_scale_id')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                                <small class="text-muted" id="payscale-range-hint" style="display: none;">
+                                    Selected Range: <span id="payscale-min-display">0.00</span> - <span id="payscale-max-display">0.00</span>
+                                </small>
+                            </div>
+
                             {{-- Increment Base --}}
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Promotional Increment Base <span class="text-danger">*</span></label>
@@ -254,7 +277,6 @@
 
             /**
              * 1. EMPLOYEE SELECTION HANDLER
-             * Fetches data via AJAX to display current state, but performs no calculations.
              */
             $('#employee_id').on('change', function() {
                 const employeeId = $(this).val();
@@ -264,7 +286,6 @@
                     return;
                 }
 
-                // A. Fetch Current Designation via AJAX
                 $.ajax({
                     url: `/get-current-designation/${employeeId}`,
                     type: 'GET',
@@ -272,15 +293,12 @@
                         const officeInfo = response.employee;
                         if (officeInfo) {
                             displayCurrentDesignation(officeInfo);
-
-                            // Pass current designation ID to the backend for reference
                             $('#previous_designation').val(officeInfo.current_designation_id || '');
                             $('#current-designation-section').show();
                         }
                     }
                 });
 
-                // B. Fetch Salary Breakdown via AJAX
                 $.ajax({
                     url: `/get-employee-salary/${employeeId}`,
                     type: 'GET',
@@ -288,12 +306,20 @@
                         const salary = response.employee;
                         if (salary) {
                             displaySalaryBreakdown(salary);
-
-                            // Hidden fields only store the existing values to inform the backend
                             $('#previous_basic_salary').val(salary.basic_salary || 0);
                             $('#previous_gross_salary').val(salary.gross_salary || 0);
-
                             $('#salary-breakdown-section').show();
+
+                            // Pre-select employee's current pay scale if not in edit mode
+                            @if(!isset($promotionData))
+                                if (salary.pay_scale_id) {
+                                    $('#pay_scale_id').val(salary.pay_scale_id).trigger('change');
+                                } else {
+                                    $('#pay_scale_id').val('').trigger('change');
+                                }
+                            @endif
+
+                            verifyPayScale();
                         }
                     }
                 });
@@ -301,10 +327,8 @@
 
             /**
              * 2. UI DISPLAY FUNCTIONS
-             * Renders the current database records into the view.
              */
             function displayCurrentDesignation(officeInfo) {
-                // Path: employee -> get_current_designation -> company_designation
                 const title = (officeInfo.get_current_designation)
                     ? officeInfo.get_current_designation.company_designation
                     : 'Not Assigned';
@@ -340,8 +364,65 @@
                 $('#gross-salary-display').text(formatCurrency(salary.gross_salary || 0));
             }
 
+            // 3. Pay Scale Change Handler & Verification
+            $('#pay_scale_id').on('change', function() {
+                const selectedOption = $(this).find('option:selected');
+                const min = parseFloat(selectedOption.data('min')) || 0;
+                const max = parseFloat(selectedOption.data('max')) || 0;
+
+                if (min > 0 || max > 0) {
+                    $('#payscale-min-display').text(formatCurrency(min));
+                    $('#payscale-max-display').text(formatCurrency(max));
+                    $('#payscale-range-hint').show();
+                } else {
+                    $('#payscale-range-hint').hide();
+                }
+
+                verifyPayScale();
+            });
+
+            function verifyPayScale() {
+                const currentBasicSalary = parseFloat($('#previous_basic_salary').val()) || 0;
+                const currentGrossSalary = parseFloat($('#previous_gross_salary').val()) || 0;
+                const base = $('#increment_base').val();
+                const method = $('#increment_method').val();
+                const amount = parseFloat($('#salary_increase_amount').val()) || 0;
+
+                let incrementValue = 0;
+                if (base && method && amount > 0) {
+                    if (method === 'percentage') {
+                        if (base === 'basic_salary') {
+                            incrementValue = currentBasicSalary * (amount / 100);
+                        } else {
+                            incrementValue = currentGrossSalary * (amount / 100);
+                        }
+                    } else {
+                        incrementValue = amount;
+                    }
+                }
+
+                const newGrossSalary = currentGrossSalary + incrementValue;
+
+                // Remove existing warning
+                $('#payscale-warning').remove();
+
+                const selectedOption = $('#pay_scale_id option:selected');
+                if (selectedOption.val()) {
+                    const min = parseFloat(selectedOption.data('min')) || 0;
+                    const max = parseFloat(selectedOption.data('max')) || 0;
+
+                    if (max > 0 && newGrossSalary > max) {
+                        const warningMsg = `Warning: The incremented salary (${formatCurrency(newGrossSalary)}) surpasses the selected pay scale maximum limit of (${formatCurrency(max)}).`;
+                        $('#pay_scale_id').after(`<div id="payscale-warning" class="alert alert-warning py-1 px-2 mt-2 mb-0 small text-danger"><i class="bi bi-exclamation-triangle"></i> ${warningMsg}</div>`);
+                    }
+                }
+            }
+
+            $('#increment_base, #increment_method').on('change', verifyPayScale);
+            $('#salary_increase_amount').on('input', verifyPayScale);
+
             /**
-             * 3. UTILITIES & INITIALIZATION
+             * 4. UTILITIES & INITIALIZATION
              */
             function formatCurrency(amount) {
                 return parseFloat(amount).toLocaleString('en-BD', {
@@ -350,18 +431,15 @@
                 });
             }
 
-            // Change hints for the user, but does not trigger calculation
             $('#increment_method').on('change', function() {
                 const method = $(this).val();
                 const hint = (method === 'percentage') ? 'Enter % (e.g. 10)' : 'Enter Fixed Amount';
                 $('#increment-hint').text(hint);
             });
 
-            // Initialize data if an employee is already selected (e.g., on page reload or edit)
             if ($('#employee_id').val()) {
                 $('#employee_id').trigger('change');
             }
         });
     </script>
 @endsection
-

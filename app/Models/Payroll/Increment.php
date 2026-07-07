@@ -17,6 +17,7 @@ class Increment extends Model
     use OrganizationScoped;
     protected $fillable = [
         'employee_id',
+        'pay_scale_id',
         'increment_base',
         'increment_method',
         'salary_increase_amount',
@@ -39,6 +40,11 @@ class Increment extends Model
     public function getEmployee()
     {
         return $this->belongsTo(Employee::class, 'employee_id', 'id');
+    }
+
+    public function payScale()
+    {
+        return $this->belongsTo(\App\Models\Company\PayScale::class, 'pay_scale_id');
     }
 
 }

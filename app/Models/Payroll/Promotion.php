@@ -17,6 +17,7 @@ class Promotion extends Model
     use OrganizationScoped;
     protected $fillable = [
         'employee_id',
+        'pay_scale_id',
         'previous_designation',
         'new_designation',
         'increment_base',
@@ -35,6 +36,11 @@ class Promotion extends Model
     public function getEmployee()
     {
         return $this->belongsTo(Employee::class, 'employee_id', 'id');
+    }
+
+    public function payScale()
+    {
+        return $this->belongsTo(\App\Models\Company\PayScale::class, 'pay_scale_id');
     }
 
     public function getPreviousDesignation()

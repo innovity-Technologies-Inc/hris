@@ -38,8 +38,8 @@ class HelperClass
 
 
     public static function getCurrency(){
-        $data = GeneralSetting::first()->currency;
-        return $data;
+        $setting = GeneralSetting::first();
+        return $setting ? $setting->currency : '৳';
     }
 
     public static function getGeneralSetting(){

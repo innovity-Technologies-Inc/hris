@@ -213,6 +213,7 @@ class PayrollServices
     {
         $data = [
             'employee_id' => $request->employee_id,
+            'pay_scale_id' => $request->pay_scale_id,
             'previous_designation' => $request->previous_designation,
             'new_designation' => $request->new_designation,
             'increment_base' => $request->increment_base,
@@ -275,6 +276,7 @@ class PayrollServices
     {
         $data = [
             'employee_id' => $request->employee_id,
+            'pay_scale_id' => $request->pay_scale_id,
             'increment_base' => $request->increment_base,
             'increment_method' => $request->increment_method,
             'salary_increase_amount' => $request->salary_increase_amount,
@@ -321,7 +323,8 @@ class PayrollServices
         $employee_id = $data->employee_id;
         $salaryData = EmployeeSalaryBreakdown::where('employee_id', $employee_id)->first();
         $newGrossSalary = $data->new_gross_salary;
-        $salaryData->update([
+        
+        $updatePayload = [
             'basic_salary' => $this->salaryCalculation($newGrossSalary, $salaryData->basic_salary_percentage),
             'house_allowance' => $this->salaryCalculation($newGrossSalary, $salaryData->house_allowance_percentage),
             'transport_allowance' => $this->salaryCalculation($newGrossSalary, $salaryData->transport_allowance_percentage),
@@ -329,7 +332,13 @@ class PayrollServices
             'medical_allowance' => $this->salaryCalculation($newGrossSalary, $salaryData->medical_allowance_percentage),
             'other_earnings' => $this->salaryCalculation($newGrossSalary, $salaryData->other_earnings_percentage),
             'gross_salary' => $newGrossSalary
-        ]);
+        ];
+
+        if (!empty($data->pay_scale_id)) {
+            $updatePayload['pay_scale_id'] = $data->pay_scale_id;
+        }
+
+        $salaryData->update($updatePayload);
     }
 
     public function designationUpdate($data)

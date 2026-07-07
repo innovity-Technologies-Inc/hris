@@ -38,13 +38,13 @@ class PromotionController extends Controller
     public function create(){
         $title = 'Add Employee Promotion';
         $employees = Employee::has('salary')->where('status', 'active')->get();
-//        dd($employees);
         $designations = Designation::all();
+        $payScales = \App\Models\Company\PayScale::with(['grade', 'payGroup'])->where('status', 'active')->get();
         $section = 'Employee Promotion';
         $section_url = route('promotion.index');
         $sub_section = 'Add';
         return view('payroll.promotion.form', compact('title', 'section', 'sub_section', 'section_url',
-            'designations', 'employees'));
+            'designations', 'employees', 'payScales'));
     }
 
     public function edit($id){
@@ -53,15 +53,17 @@ class PromotionController extends Controller
         $section_url = route('promotion.index');
         $designations = Designation::all();
         $employees = Employee::all()->where('status', 'active');
+        $payScales = \App\Models\Company\PayScale::with(['grade', 'payGroup'])->where('status', 'active')->get();
         $sub_section = 'Edit';
         $promotionData = Promotion::find($id);
         return view('payroll.promotion.form', compact('title', 'section', 'sub_section',
-            'section_url', 'promotionData', 'designations', 'employees'));
+            'section_url', 'promotionData', 'designations', 'employees', 'payScales'));
     }
 
     public function save(Request $request, $promotionData = null){
         $request->validate([
             'employee_id'              => 'required|exists:employees,id',
+            'pay_scale_id'             => 'nullable|exists:pay_scales,id',
             'previous_designation'     => 'required|exists:designations,id',
             'new_designation'          => 'required|exists:designations,id|different:previous_designation',
             'increment_base'           => 'required|in:basic_salary,gross_salary',
@@ -73,6 +75,8 @@ class PromotionController extends Controller
         ], [
             'employee_id.required'              => 'Please Select An Employee',
             'employee_id.exists'                => 'Selected Employee Is Invalid',
+
+            'pay_scale_id.exists'               => 'Selected Pay Scale Is Invalid',
 
             'previous_designation.required'     => 'Please Select Previous Designation',
             'previous_designation.exists'       => 'Previous Designation Is Invalid',

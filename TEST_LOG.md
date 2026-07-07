@@ -1,5 +1,18 @@
 # Test Log
 
+## 2026-07-07
+
+**Goal**: Implement pay scale integration in employee increments and promotions, add frontend pay scale verification warning if new gross salary surpasses scale limit, and verify changes via feature testing.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/Payroll/IncrementPromotionPayScaleTest.php`
+
+**Results**:
+- `it can store a new increment with pay scale`: ✅ PASSED
+- `it can store a new promotion with pay scale`: ✅ PASSED
+- `it updates employee salary breakdown pay_scale_id upon adjustment`: ✅ PASSED
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-06
 
 **Goal**: Refactor validation across all 9 employee profile sections (General, Office Info, Policy Tag/Plans, Education, Nominee, Salary Breakdown, Bank Accounts, Employment History, Plan Assignment) to use dedicated FormRequest classes. Confirm authorization checks and rules behave identically.
