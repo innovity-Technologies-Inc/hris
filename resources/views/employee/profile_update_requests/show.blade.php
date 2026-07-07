@@ -100,20 +100,20 @@
                                             'joining_division_id'   => [\App\Models\Company\Division::class, 'name'],
                                             'current_division_id'   => [\App\Models\Company\Division::class, 'name'],
                                             
-                                            'department_id'         => [\App\Models\Company\Department::class, 'name'],
-                                            'joining_department_id' => [\App\Models\Company\Department::class, 'name'],
-                                            'current_department_id' => [\App\Models\Company\Department::class, 'name'],
+                                            'department_id'         => [\App\Models\Company\Department::class, 'department_name'],
+                                            'joining_department_id' => [\App\Models\Company\Department::class, 'department_name'],
+                                            'current_department_id' => [\App\Models\Company\Department::class, 'department_name'],
                                             
                                             'section_id'            => [\App\Models\Company\Section::class, 'name'],
                                             'joining_section_id'    => [\App\Models\Company\Section::class, 'name'],
                                             'current_section_id'    => [\App\Models\Company\Section::class, 'name'],
                                             
-                                            'designation_id'        => [\App\Models\Company\Designation::class, 'name'],
-                                            'joining_designation_id'=> [\App\Models\Company\Designation::class, 'name'],
-                                            'current_designation_id'=> [\App\Models\Company\Designation::class, 'name'],
+                                            'designation_id'        => [\App\Models\Company\Designation::class, 'company_designation'],
+                                            'joining_designation_id'=> [\App\Models\Company\Designation::class, 'company_designation'],
+                                            'current_designation_id'=> [\App\Models\Company\Designation::class, 'company_designation'],
                                             
-                                            'grade_id'              => [\App\Models\Company\SalaryGrade::class, 'name'],
-                                            'salary_grade_id'       => [\App\Models\Company\SalaryGrade::class, 'name'],
+                                            'grade_id'              => [\App\Models\Company\SalaryGrade::class, 'grade_name'],
+                                            'salary_grade_id'       => [\App\Models\Company\SalaryGrade::class, 'grade_name'],
                                         ];
 
                                         if (array_key_exists($normalizedKey, $modelMap)) {
