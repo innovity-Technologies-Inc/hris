@@ -594,12 +594,40 @@
         function applyTransform(id) {
             const el = document.getElementById(id);
             if (el) {
-                el.style.transform = `scale(${scales[id]})`;
-                if (scales[id] > 1) {
-                    const offset = (scales[id] - 1) * 200;
-                    el.style.margin = `${offset}px`;
-                } else {
+                const scale = scales[id];
+                const svg = el.querySelector('svg');
+                if (svg) {
+                    svg.style.transition = 'width 0.2s ease, height 0.2s ease';
+                    if (!svg.dataset.origWidth) {
+                        const viewBox = svg.getAttribute('viewBox');
+                        if (viewBox) {
+                            const parts = viewBox.split(' ');
+                            svg.dataset.origWidth = parts[2];
+                            svg.dataset.origHeight = parts[3];
+                        } else {
+                            const rect = svg.getBoundingClientRect();
+                            svg.dataset.origWidth = rect.width || '800';
+                            svg.dataset.origHeight = rect.height || '500';
+                        }
+                    }
+                    const w = parseFloat(svg.dataset.origWidth);
+                    const h = parseFloat(svg.dataset.origHeight);
+                    
+                    if (scale === 1) {
+                        svg.style.width = '100%';
+                        svg.style.height = 'auto';
+                        svg.style.maxWidth = '100%';
+                    } else {
+                        svg.style.width = `${w * scale}px`;
+                        svg.style.height = `${h * scale}px`;
+                        svg.style.maxWidth = 'none';
+                    }
+                    el.style.transform = 'none';
                     el.style.margin = '0px';
+                } else {
+                    // Fallback to transform scale
+                    el.style.transform = `scale(${scale})`;
+                    el.style.transformOrigin = 'center center';
                 }
             }
         }
