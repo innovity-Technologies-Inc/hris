@@ -93,9 +93,13 @@ it('can store a new increment with pay scale', function () {
     ];
 
     $response = $this->actingAs($this->admin)
-        ->post(route('increment.store'), $data);
+        ->postJson(route('increment.store'), $data);
 
-    $response->assertRedirect(route('increment.index'));
+    $response->assertStatus(200)
+        ->assertJson([
+            'success' => true,
+            'redirect_url' => route('increment.index')
+        ]);
 
     $this->assertDatabaseHas('increments', [
         'employee_id' => $this->employee->id,
@@ -120,9 +124,13 @@ it('can store a new promotion with pay scale', function () {
     ];
 
     $response = $this->actingAs($this->admin)
-        ->post(route('promotion.store'), $data);
+        ->postJson(route('promotion.store'), $data);
 
-    $response->assertRedirect(route('promotion.index'));
+    $response->assertStatus(200)
+        ->assertJson([
+            'success' => true,
+            'redirect_url' => route('promotion.index')
+        ]);
 
     $this->assertDatabaseHas('promotions', [
         'employee_id' => $this->employee->id,

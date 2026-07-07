@@ -101,26 +101,26 @@ class IncrementController extends Controller
 
             if (!empty($incrementData)) {
                 $this->payrollService->incrementDataUpdate($incrementData, $data);
+                $message = 'Updated Successfully';
             } else {
                 $increment = $this->payrollService->incrementDataStore($data);
                 $increment->startWorkflow('increment');
+                $message = 'Added Successfully';
             }
+
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'redirect_url' => route('increment.index')
+            ]);
 
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->back()->with([
-                'message' => 'Something Went Wrong',
-                'alert-type' => 'error'
-            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Something Went Wrong: ' . $e->getMessage()
+            ], 500);
         }
-
-        Log::info('Added Successfully');
-
-        return redirect()->route('increment.index')->with([
-            'message' => 'Added Successfully',
-            'alert-type' => 'success'
-        ]);
-
     }
 
     public function show($id)

@@ -107,27 +107,27 @@ class PromotionController extends Controller
             $data = $result['data'];
             Log::info($data);
 
-                if (!empty($promotionData)) {
-                    $this->payrollService->promotionDataUpdate($promotionData, $data);
-                } else {
-                    $promotion = $this->payrollService->promotionDataStore($data);
-                    $promotion->startWorkflow('promotion');
-                }
+            if (!empty($promotionData)) {
+                $this->payrollService->promotionDataUpdate($promotionData, $data);
+                $message = 'Updated Successfully';
+            } else {
+                $promotion = $this->payrollService->promotionDataStore($data);
+                $promotion->startWorkflow('promotion');
+                $message = 'Added Successfully';
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'redirect_url' => route('promotion.index')
+            ]);
         }catch(\Exception $e){
             Log::error($e->getMessage());
-            return redirect()->back()->with([
-                'message' => 'Something Went Wrong',
-                'alert-type' => 'error'
-            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Something Went Wrong: ' . $e->getMessage()
+            ], 500);
         }
-
-        Log::info('Added Successfully');
-
-        return redirect()->route('promotion.index')->with([
-            'message' => 'Added Successfully',
-            'alert-type' => 'success'
-        ]);
-
     }
 
     public function show($id)

@@ -252,8 +252,84 @@
     </form>
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         $(document).ready(function() {
+
+            // Submit form via Axios
+            $('#employeeIncrementForm').on('submit', function(e) {
+                e.preventDefault();
+
+                // Clear prior validation errors
+                $('.text-danger.error-msg').remove();
+                $('.is-invalid').removeClass('is-invalid');
+
+                const form = $(this);
+                const actionUrl = form.attr('action');
+                const method = form.find('input[name="_method"]').val() || 'POST';
+                const formData = form.serialize();
+
+                axios({
+                    method: method,
+                    url: actionUrl,
+                    data: formData
+                })
+                .then(res => {
+                    if (res.data.success) {
+                        if (window.Swal) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: res.data.message,
+                                timer: 1500,
+                                showConfirmButton: false
+                            }).then(() => {
+                                window.location.href = res.data.redirect_url;
+                            });
+                        } else {
+                            window.location.href = res.data.redirect_url;
+                        }
+                    } else {
+                        if (window.Swal) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: res.data.message || 'Something went wrong'
+                            });
+                        } else {
+                            alert(res.data.message || 'Something went wrong');
+                        }
+                    }
+                })
+                .catch(err => {
+                    if (err.response && err.response.status === 422) {
+                        const errors = err.response.data.errors;
+                        Object.keys(errors).forEach(key => {
+                            const input = $(`[name="${key}"]`);
+                            input.addClass('is-invalid');
+                            input.after(`<small class="text-danger error-msg">${errors[key][0]}</small>`);
+                        });
+                        if (window.Swal) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Validation Error',
+                                text: 'Please correct the highlighted fields.'
+                            });
+                        }
+                    } else {
+                        const errMsg = err.response?.data?.message || 'Something went wrong.';
+                        if (window.Swal) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: errMsg
+                            });
+                        } else {
+                            alert(errMsg);
+                        }
+                    }
+                });
+            });
 
             // 1. Employee Selection Handler (AJAX)
             $('#employee_id').on('change', function() {
