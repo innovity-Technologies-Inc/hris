@@ -25,7 +25,7 @@
                             <span class="badge text-bg-danger">Inactive</span>
                         @endif
                     </td>
-                    <td class="text-end">
+                    <td class="text-start">
                         @can('movement-types.edit')
                         <button type="button" class="btn btn-primary btn-sm me-1 edit-movement-type" 
                                 data-id="{{ $type->id }}" title="Edit">
