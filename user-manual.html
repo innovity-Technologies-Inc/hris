@@ -198,17 +198,34 @@
                     </p>
                     
                     <h4 class="font-bold text-white text-md pt-2">Hierarchical Cascading Structure Diagram</h4>
-                    <div class="bg-slate-900/40 p-4 rounded-xl border border-slate-800 flex justify-center">
-                        <pre class="mermaid">
-                        graph TD
-                            Group[Group Level 0] -->|Contains| Company[Company Level 1]
-                            CompanyType[Company Type] -->|Classifies| Company
-                            Company -->|Has| Location[Location / Business Unit Level 2]
-                            Location -->|Has| Division[Division Level 3]
-                            Division -->|Has| Department[Department Level 4]
-                            Department -->|Has| Section[Section Level 5]
-                            Section -->|Applies to| Employee[Employee Placement]
-                        </pre>
+                    <div class="relative group">
+                        <!-- Zoom Controls -->
+                        <div class="absolute top-2 right-2 flex gap-1 z-10 bg-slate-950/80 border border-slate-800 rounded-lg p-1 opacity-60 hover:opacity-100 transition-opacity">
+                            <button onclick="zoomDiagram('zoom-hierarchy', 1.2)" class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 rounded transition" title="Zoom In">
+                                <i class="fa-solid fa-magnifying-glass-plus"></i>
+                            </button>
+                            <button onclick="zoomDiagram('zoom-hierarchy', 0.8)" class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 rounded transition" title="Zoom Out">
+                                <i class="fa-solid fa-magnifying-glass-minus"></i>
+                            </button>
+                            <button onclick="resetZoom('zoom-hierarchy')" class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 rounded transition" title="Reset">
+                                <i class="fa-solid fa-arrows-rotate"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="overflow-hidden border border-slate-800 rounded-xl bg-slate-900/40 p-8 flex justify-center">
+                            <div id="zoom-hierarchy" class="transition-transform duration-200 origin-center">
+                                <pre class="mermaid">
+                                graph TD
+                                    Group[Group Level 0] -->|Contains| Company[Company Level 1]
+                                    CompanyType[Company Type] -->|Classifies| Company
+                                    Company -->|Has| Location[Location / Business Unit Level 2]
+                                    Location -->|Has| Division[Division Level 3]
+                                    Division -->|Has| Department[Department Level 4]
+                                    Department -->|Has| Section[Section Level 5]
+                                    Section -->|Applies to| Employee[Employee Placement]
+                                </pre>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
@@ -458,17 +475,34 @@
                         </p>
 
                         <h4 class="font-bold text-white text-md pt-2">Salary Bounds Verification Flow Diagram</h4>
-                        <div class="bg-slate-900/40 p-4 rounded-xl border border-slate-800 flex justify-center">
-                            <pre class="mermaid">
-                            graph TD
-                                Start[Enter Adjustments in Form] --> Calc[Compute New Gross Salary]
-                                Calc --> Query[Fetch Selected Pay Scale min/max values]
-                                Query --> CheckMax{Is New Gross > Max?}
-                                CheckMax -->|Yes| WarnMax[Show warning: Gross exceeds pay scale max limit]
-                                CheckMax -->|No| CheckMin{Is New Gross < Min?}
-                                CheckMin -->|Yes| WarnMin[Show warning: Gross falls below pay scale min limit]
-                                CheckMin -->|No| Success[Salary is within range - No Warnings]
-                            </pre>
+                        <div class="relative group">
+                            <!-- Zoom Controls -->
+                            <div class="absolute top-2 right-2 flex gap-1 z-10 bg-slate-950/80 border border-slate-800 rounded-lg p-1 opacity-60 hover:opacity-100 transition-opacity">
+                                <button onclick="zoomDiagram('zoom-payscale', 1.2)" class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 rounded transition" title="Zoom In">
+                                    <i class="fa-solid fa-magnifying-glass-plus"></i>
+                                </button>
+                                <button onclick="zoomDiagram('zoom-payscale', 0.8)" class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 rounded transition" title="Zoom Out">
+                                    <i class="fa-solid fa-magnifying-glass-minus"></i>
+                                </button>
+                                <button onclick="resetZoom('zoom-payscale')" class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 rounded transition" title="Reset">
+                                    <i class="fa-solid fa-arrows-rotate"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="overflow-hidden border border-slate-800 rounded-xl bg-slate-900/40 p-8 flex justify-center">
+                                <div id="zoom-payscale" class="transition-transform duration-200 origin-center">
+                                    <pre class="mermaid">
+                                    graph TD
+                                        Start[Enter Adjustments in Form] --> Calc[Compute New Gross Salary]
+                                        Calc --> Query[Fetch Selected Pay Scale min/max values]
+                                        Query --> CheckMax{Is New Gross > Max?}
+                                        CheckMax -->|Yes| WarnMax[Show warning: Gross exceeds pay scale max limit]
+                                        CheckMax -->|No| CheckMin{Is New Gross < Min?}
+                                        CheckMin -->|Yes| WarnMin[Show warning: Gross falls below pay scale min limit]
+                                        CheckMin -->|No| Success[Salary is within range - No Warnings]
+                                    </pre>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -539,6 +573,30 @@
                 }
             });
         });
+
+        // Zoom & Reset Logic for diagrams
+        const scales = {};
+        function zoomDiagram(id, factor) {
+            if (!scales[id]) {
+                scales[id] = 1;
+            }
+            scales[id] *= factor;
+            // Bound zoom between 0.4 and 3.0
+            scales[id] = Math.min(Math.max(scales[id], 0.4), 3.0);
+            applyTransform(id);
+        }
+
+        function resetZoom(id) {
+            scales[id] = 1;
+            applyTransform(id);
+        }
+
+        function applyTransform(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.style.transform = `scale(${scales[id]})`;
+            }
+        }
     </script>
 </body>
 </html>
