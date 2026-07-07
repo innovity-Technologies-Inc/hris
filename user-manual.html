@@ -212,7 +212,7 @@
                             </button>
                         </div>
                         
-                        <div class="overflow-hidden border border-slate-800 rounded-xl bg-slate-900/40 p-8 flex justify-center">
+                        <div class="overflow-auto border border-slate-800 rounded-xl bg-slate-900/40 p-8 flex justify-center">
                             <div id="zoom-hierarchy" class="transition-transform duration-200 origin-center">
                                 <pre class="mermaid">
                                 graph TD
@@ -489,7 +489,7 @@
                                 </button>
                             </div>
                             
-                            <div class="overflow-hidden border border-slate-800 rounded-xl bg-slate-900/40 p-8 flex justify-center">
+                            <div class="overflow-auto border border-slate-800 rounded-xl bg-slate-900/40 p-8 flex justify-center">
                                 <div id="zoom-payscale" class="transition-transform duration-200 origin-center">
                                     <pre class="mermaid">
                                     graph TD
@@ -595,6 +595,12 @@
             const el = document.getElementById(id);
             if (el) {
                 el.style.transform = `scale(${scales[id]})`;
+                if (scales[id] > 1) {
+                    const offset = (scales[id] - 1) * 200;
+                    el.style.margin = `${offset}px`;
+                } else {
+                    el.style.margin = '0px';
+                }
             }
         }
     </script>
