@@ -154,6 +154,24 @@
                                 </small>
                             </div>
 
+                            {{-- Movement Type --}}
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Movement Type</label>
+                                <select name="movement_type_id" id="movement_type_id"
+                                    class="form-select @error('movement_type_id') is-invalid @enderror">
+                                    <option value="">Select Movement Type</option>
+                                    @foreach ($movementTypes as $type)
+                                        <option value="{{ $type->id }}"
+                                            {{ old('movement_type_id', $incrementData->movement_type_id ?? '') == $type->id ? 'selected' : '' }}>
+                                            {{ $type->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('movement_type_id')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+
                             {{-- Increment Base --}}
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Increment Base <span class="text-danger">*</span></label>

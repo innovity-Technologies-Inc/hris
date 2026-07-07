@@ -39,10 +39,11 @@ class DecrementController extends Controller
         $title = 'Add Employee Decrement';
         $employees = Employee::has('salary')->where('status', 'active')->get();
         $payScales = \App\Models\Company\PayScale::with(['grade', 'payGroup'])->where('status', 'active')->get();
+        $movementTypes = \App\Models\Company\MovementType::where('status', 'active')->get();
         $section = 'Employee Decrement';
         $section_url = route('decrement.index');
         $sub_section = 'Add';
-        return view('payroll.decrement.form', compact('title', 'section', 'sub_section', 'section_url', 'employees', 'payScales'));
+        return view('payroll.decrement.form', compact('title', 'section', 'sub_section', 'section_url', 'employees', 'payScales', 'movementTypes'));
     }
 
     public function edit($id)
@@ -52,9 +53,10 @@ class DecrementController extends Controller
         $section_url = route('decrement.index');
         $employees = Employee::has('salary')->where('status', 'active')->get();
         $payScales = \App\Models\Company\PayScale::with(['grade', 'payGroup'])->where('status', 'active')->get();
+        $movementTypes = \App\Models\Company\MovementType::where('status', 'active')->get();
         $sub_section = 'Edit';
         $decrementData = Decrement::find($id);
-        return view('payroll.decrement.form', compact('title', 'section', 'sub_section', 'section_url', 'decrementData', 'employees', 'payScales'));
+        return view('payroll.decrement.form', compact('title', 'section', 'sub_section', 'section_url', 'decrementData', 'employees', 'payScales', 'movementTypes'));
     }
 
     public function save(DecrementRequest $request, $decrementData = null)

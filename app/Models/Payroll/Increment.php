@@ -18,6 +18,7 @@ class Increment extends Model
     protected $fillable = [
         'employee_id',
         'pay_scale_id',
+        'movement_type_id',
         'increment_base',
         'increment_method',
         'salary_increase_amount',
@@ -45,6 +46,11 @@ class Increment extends Model
     public function payScale()
     {
         return $this->belongsTo(\App\Models\Company\PayScale::class, 'pay_scale_id');
+    }
+
+    public function movementType()
+    {
+        return $this->belongsTo(\App\Models\Company\MovementType::class, 'movement_type_id');
     }
 
 }

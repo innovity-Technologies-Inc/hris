@@ -149,6 +149,23 @@ Route::prefix('company-setup')->middleware('auth')->group(function () {
         });
     });
 
+    Route::controller(\App\Http\Controllers\Company\MovementTypeController::class)->group(function () {
+        Route::middleware('permission:movement-types.view')->group(function () {
+            Route::get('movement-types', 'index')->name('movement_types.index');
+            Route::get('movement-types/search', 'index')->name('movement_types.search');
+        });
+        Route::middleware('permission:movement-types.create')->group(function () {
+            Route::post('movement-types/store', 'store')->name('movement_types.store');
+        });
+        Route::middleware('permission:movement-types.edit')->group(function () {
+            Route::get('movement-types/{id}/edit', 'edit')->name('movement_types.edit');
+            Route::put('movement-types/{id}/update', 'update')->name('movement_types.update');
+        });
+        Route::middleware('permission:movement-types.delete')->group(function () {
+            Route::delete('movement-types/{id}/delete', 'destroy')->name('movement_types.delete');
+        });
+    });
+
     Route::controller(SalaryGradesController::class)->group(function () {
         Route::middleware('permission:salary-grades.view')->group(function () {
             Route::get('salary_grades', 'index')->name('salary_grades.index');

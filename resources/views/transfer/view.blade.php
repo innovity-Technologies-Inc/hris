@@ -58,6 +58,10 @@
                             <label class="text-muted small d-block">Section</label>
                             <span class="fw-medium">{{ $transfer->requestedSection->name ?? 'N/A' }}</span>
                         </div>
+                        <div class="info-item mb-2">
+                            <label class="text-muted small d-block">Movement Type</label>
+                            <span class="badge bg-dark fs-6">{{ $transfer->movementType->name ?? 'N/A' }}</span>
+                        </div>
                     </div>
                 </div>
 

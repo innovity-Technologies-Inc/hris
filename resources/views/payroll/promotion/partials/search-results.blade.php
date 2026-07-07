@@ -60,6 +60,12 @@
                                 <span class="fw-semibold text-success">
                                     {{ $promotion->getNewDesignation->company_designation ?? 'N/A' }}
                                 </span>
+                                @if($promotion->movementType)
+                                    <br>
+                                    <span class="badge bg-secondary mt-1">
+                                        {{ $promotion->movementType->name }}
+                                    </span>
+                                @endif
                             </td>
                             <td>
                                 <div class="fw-semibold text-success fs-6">

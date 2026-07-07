@@ -16,6 +16,7 @@ class DemotionRequest extends FormRequest
         return [
             'employee_id' => 'required|exists:employees,id',
             'pay_scale_id' => 'nullable|exists:pay_scales,id',
+            'movement_type_id' => 'nullable|exists:movement_types,id',
             'previous_designation' => 'required|exists:designations,id',
             'new_designation' => 'required|exists:designations,id|different:previous_designation',
             'decrement_base' => 'required|in:basic_salary,gross_salary',
@@ -33,6 +34,7 @@ class DemotionRequest extends FormRequest
             'employee_id.required' => 'Please Select An Employee',
             'employee_id.exists' => 'Selected Employee Is Invalid',
             'pay_scale_id.exists' => 'Selected Pay Scale Is Invalid',
+            'movement_type_id.exists' => 'Selected Movement Type Is Invalid',
             'previous_designation.required' => 'Please Select Previous Designation',
             'previous_designation.exists' => 'Previous Designation Is Invalid',
             'new_designation.required' => 'Please Select New Designation',

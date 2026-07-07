@@ -282,6 +282,7 @@ $(document).ready(function() {
             const applicantId = item.employee ? item.employee.applicant_id : 'N/A';
             const companyName = item.requested_company ? item.requested_company.name : 'Unknown Company';
             const unitName = item.requested_business_unit ? item.requested_business_unit.name : 'N/A';
+            const movementTypeBadge = item.movement_type ? `<span class="badge bg-secondary ms-1">${item.movement_type.name}</span>` : '';
 
             const row = `
                 <tr>
@@ -298,7 +299,7 @@ $(document).ready(function() {
                         </div>
                     </td>
                     <td>
-                        <div class="text-dark fw-medium">${companyName}</div>
+                        <div class="text-dark fw-medium">${companyName} ${movementTypeBadge}</div>
                         <small class="text-muted">${unitName}</small>
                     </td>
                     <td>${statusBadge}</td>

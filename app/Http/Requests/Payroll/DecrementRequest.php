@@ -16,6 +16,7 @@ class DecrementRequest extends FormRequest
         return [
             'employee_id' => 'required|exists:employees,id',
             'pay_scale_id' => 'nullable|exists:pay_scales,id',
+            'movement_type_id' => 'nullable|exists:movement_types,id',
             'decrement_base' => 'required|in:basic_salary,gross_salary',
             'decrement_method' => 'required|in:fixed,percentage',
             'salary_decrease_amount' => 'required|numeric|min:0',
@@ -31,6 +32,7 @@ class DecrementRequest extends FormRequest
             'employee_id.required' => 'Please Select An Employee',
             'employee_id.exists' => 'Selected Employee Is Invalid',
             'pay_scale_id.exists' => 'Selected Pay Scale Is Invalid',
+            'movement_type_id.exists' => 'Selected Movement Type Is Invalid',
             'decrement_base.required' => 'Please Select Decrement Base',
             'decrement_base.in' => 'Selected Decrement Base Is Invalid',
             'decrement_method.required' => 'Please Select Decrement Method',

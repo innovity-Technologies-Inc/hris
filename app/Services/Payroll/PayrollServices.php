@@ -214,6 +214,7 @@ class PayrollServices
         $data = [
             'employee_id' => $request->employee_id,
             'pay_scale_id' => $request->pay_scale_id,
+            'movement_type_id' => $request->movement_type_id,
             'previous_designation' => $request->previous_designation,
             'new_designation' => $request->new_designation,
             'increment_base' => $request->increment_base,
@@ -277,6 +278,7 @@ class PayrollServices
         $data = [
             'employee_id' => $request->employee_id,
             'pay_scale_id' => $request->pay_scale_id,
+            'movement_type_id' => $request->movement_type_id,
             'increment_base' => $request->increment_base,
             'increment_method' => $request->increment_method,
             'salary_increase_amount' => $request->salary_increase_amount,
@@ -318,6 +320,7 @@ class PayrollServices
         $data = [
             'employee_id' => $request->employee_id,
             'pay_scale_id' => $request->pay_scale_id,
+            'movement_type_id' => $request->movement_type_id,
             'decrement_base' => $request->decrement_base,
             'decrement_method' => $request->decrement_method,
             'salary_decrease_amount' => $request->salary_decrease_amount,
@@ -337,6 +340,7 @@ class PayrollServices
         $data = [
             'employee_id' => $request->employee_id,
             'pay_scale_id' => $request->pay_scale_id,
+            'movement_type_id' => $request->movement_type_id,
             'previous_designation' => $request->previous_designation,
             'new_designation' => $request->new_designation,
             'decrement_base' => $request->decrement_base,

@@ -72,7 +72,7 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <label class="text-muted small">Decrement Base</label>
                             <div class="fw-semibold">
                                 <span class="badge bg-info">
@@ -80,7 +80,7 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <label class="text-muted small">Decrement Method</label>
                             <div class="fw-semibold">
                                 <span class="badge bg-secondary">
@@ -88,7 +88,7 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <label class="text-muted small">Decrement Amount</label>
                             <div class="fw-semibold text-danger fs-5">
                                 @if ($decrementData->decrement_method === 'percentage')
@@ -96,6 +96,14 @@
                                 @else
                                     ৳{{ number_format($decrementData->salary_decrease_amount, 2) }}
                                 @endif
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="text-muted small">Movement Type</label>
+                            <div class="fw-semibold">
+                                <span class="badge bg-dark">
+                                    {{ $decrementData->movementType?->name ?? 'N/A' }}
+                                </span>
                             </div>
                         </div>
                     </div>

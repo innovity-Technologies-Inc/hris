@@ -18,6 +18,7 @@ class Decrement extends Model
     protected $fillable = [
         'employee_id',
         'pay_scale_id',
+        'movement_type_id',
         'decrement_base',
         'decrement_method',
         'salary_decrease_amount',
@@ -44,5 +45,10 @@ class Decrement extends Model
     public function payScale()
     {
         return $this->belongsTo(\App\Models\Company\PayScale::class, 'pay_scale_id');
+    }
+
+    public function movementType()
+    {
+        return $this->belongsTo(\App\Models\Company\MovementType::class, 'movement_type_id');
     }
 }

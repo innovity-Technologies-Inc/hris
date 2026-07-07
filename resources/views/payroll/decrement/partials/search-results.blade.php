@@ -63,6 +63,11 @@
                                     <span class="badge bg-info mb-1">
                                         {{ ucfirst($decrement->decrement_method) }}
                                     </span>
+                                    @if($decrement->movementType)
+                                        <span class="badge bg-secondary mb-1">
+                                            {{ $decrement->movementType->name }}
+                                        </span>
+                                    @endif
                                     <div class="fw-semibold text-primary">
                                         @if ($decrement->decrement_method === 'percentage')
                                             {{ $decrement->salary_decrease_amount }}%

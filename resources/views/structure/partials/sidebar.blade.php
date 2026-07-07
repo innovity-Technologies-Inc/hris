@@ -518,6 +518,7 @@
                     $canDesignations = auth()->user()->can('designations.view');
                     $canPayGroups = auth()->user()->can('pay-groups.view');
                     $canPayScales = auth()->user()->can('pay-scales.view');
+                    $canMovementTypes = auth()->user()->can('movement-types.view');
                     $canSalaryGrades = auth()->user()->can('salary-grades.view');
                     $canBanks = auth()->user()->can('banks.view');
                     $canBankBranches = auth()->user()->can('bank-branches.view');
@@ -526,7 +527,7 @@
                     $canJobCreations = auth()->user()->can('job-creations.view');
                     $canBulkUploadCompany = auth()->user()->can('employee-management.import');
 
-                    $showCompanyMenu = $canGroups || $canCompanyTypes || $canCompanies || $canCompanyBranches || $canDivisions || $canDepartments || $canSections || $canDesignations || $canPayGroups || $canPayScales || $canSalaryGrades || $canBanks || $canBankBranches || $canBankAccounts || $canHolidays || $canJobCreations || $canBulkUploadCompany;
+                    $showCompanyMenu = $canGroups || $canCompanyTypes || $canCompanies || $canCompanyBranches || $canDivisions || $canDepartments || $canSections || $canDesignations || $canPayGroups || $canPayScales || $canMovementTypes || $canSalaryGrades || $canBanks || $canBankBranches || $canBankAccounts || $canHolidays || $canJobCreations || $canBulkUploadCompany;
 
 
                     $companyOpen =
@@ -535,6 +536,8 @@
                         Route::is('company_types.*') ||
                         Route::is('company_locations.*') ||
                         Route::is('pay_groups.*') ||
+                        Route::is('pay_scales.*') ||
+                        Route::is('movement_types.*') ||
                         Route::is('banks.*') ||
                         Route::is('branches.*') ||
                         Route::is('salary_grades.*') ||
@@ -620,6 +623,13 @@
                             <li>
                                 <a class='tp-link @if (Route::is('pay_scales.*')) menuitem-active @endif'
                                     href='{{ route('pay_scales.index') }}'>Pay Scales</a>
+                            </li>
+                            @endif
+
+                            @if($canMovementTypes)
+                            <li>
+                                <a class='tp-link @if (Route::is('movement_types.*')) menuitem-active @endif'
+                                    href='{{ route('movement_types.index') }}'>Movement Types</a>
                             </li>
                             @endif
 

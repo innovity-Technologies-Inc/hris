@@ -103,10 +103,18 @@
                         <i class="mdi mdi-currency-bdt"></i> New Salary Details
                     </h6>
                     <div class="row">
-                        <div class="col-md-12 mb-3">
-                            <label class="text-muted small">New Basic Salary</label>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">New Gross Salary</label>
                             <div class="fw-semibold text-success fs-3">
                                 ৳{{ number_format($promotionData->new_gross_salary, 2) }}
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Movement Type</label>
+                            <div class="fw-semibold mt-1">
+                                <span class="badge bg-dark fs-6">
+                                    {{ $promotionData->movementType?->name ?? 'N/A' }}
+                                </span>
                             </div>
                         </div>
                     </div>

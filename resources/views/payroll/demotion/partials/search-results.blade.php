@@ -60,6 +60,12 @@
                                 <span class="fw-semibold text-danger">
                                     {{ $demotion->getNewDesignation->company_designation ?? 'N/A' }}
                                 </span>
+                                @if($demotion->movementType)
+                                    <br>
+                                    <span class="badge bg-secondary mt-1">
+                                        {{ $demotion->movementType->name }}
+                                    </span>
+                                @endif
                             </td>
                             <td>
                                 <div class="fw-semibold text-danger fs-6">

@@ -80,6 +80,11 @@ Each increment object should have:
                                     <span class="badge bg-info mb-1">
                                         {{ ucfirst($increment->increment_method) }}
                                     </span>
+                                    @if($increment->movementType)
+                                        <span class="badge bg-secondary mb-1">
+                                            {{ $increment->movementType->name }}
+                                        </span>
+                                    @endif
                                     <div class="fw-semibold text-primary">
                                         @if ($increment->increment_method === 'percentage')
                                             {{ $increment->salary_increase_amount }}%

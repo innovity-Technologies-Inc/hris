@@ -40,11 +40,12 @@ class IncrementController extends Controller
         $title = 'Add Employee Increment';
         $employees = Employee::has('salary')->where('status', 'active')->get();
         $payScales = \App\Models\Company\PayScale::with(['grade', 'payGroup'])->where('status', 'active')->get();
+        $movementTypes = \App\Models\Company\MovementType::where('status', 'active')->get();
         $section = 'Employee Increment';
         $section_url = route('increment.index');
         $sub_section = 'Add';
         return view('payroll.increment.form', compact('title', 'section',
-            'sub_section', 'section_url', 'employees', 'payScales'));
+            'sub_section', 'section_url', 'employees', 'payScales', 'movementTypes'));
     }
 
     public function edit($id)
@@ -54,10 +55,11 @@ class IncrementController extends Controller
         $section_url = route('increment.index');
         $employees = Employee::has('salary')->where('status', 'active')->get();
         $payScales = \App\Models\Company\PayScale::with(['grade', 'payGroup'])->where('status', 'active')->get();
+        $movementTypes = \App\Models\Company\MovementType::where('status', 'active')->get();
         $sub_section = 'Edit';
         $incrementData = Increment::find($id);
         return view('payroll.increment.form', compact('title', 'section', 'sub_section',
-            'section_url', 'incrementData', 'employees', 'payScales'));
+            'section_url', 'incrementData', 'employees', 'payScales', 'movementTypes'));
     }
 
     public function save(Request $request, $incrementData = null)
@@ -65,6 +67,7 @@ class IncrementController extends Controller
         $request->validate([
             'employee_id' => 'required|exists:employees,id',
             'pay_scale_id' => 'nullable|exists:pay_scales,id',
+            'movement_type_id' => 'nullable|exists:movement_types,id',
             'increment_base' => 'required|in:basic_salary,gross_salary',
             'increment_method' => 'required|in:fixed,percentage',
             'salary_increase_amount' => 'required|numeric|min:0',
@@ -76,6 +79,7 @@ class IncrementController extends Controller
             'employee_id.exists' => 'Selected Employee Is Invalid',
 
             'pay_scale_id.exists' => 'Selected Pay Scale Is Invalid',
+            'movement_type_id.exists' => 'Selected Movement Type Is Invalid',
 
             'increment_base.required' => 'Please Select Increment Base',
             'increment_base.in' => 'Selected Increment Base Is Invalid',

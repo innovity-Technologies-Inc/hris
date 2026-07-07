@@ -40,11 +40,12 @@ class PromotionController extends Controller
         $employees = Employee::has('salary')->where('status', 'active')->get();
         $designations = Designation::all();
         $payScales = \App\Models\Company\PayScale::with(['grade', 'payGroup'])->where('status', 'active')->get();
+        $movementTypes = \App\Models\Company\MovementType::where('status', 'active')->get();
         $section = 'Employee Promotion';
         $section_url = route('promotion.index');
         $sub_section = 'Add';
         return view('payroll.promotion.form', compact('title', 'section', 'sub_section', 'section_url',
-            'designations', 'employees', 'payScales'));
+            'designations', 'employees', 'payScales', 'movementTypes'));
     }
 
     public function edit($id){
@@ -54,16 +55,18 @@ class PromotionController extends Controller
         $designations = Designation::all();
         $employees = Employee::all()->where('status', 'active');
         $payScales = \App\Models\Company\PayScale::with(['grade', 'payGroup'])->where('status', 'active')->get();
+        $movementTypes = \App\Models\Company\MovementType::where('status', 'active')->get();
         $sub_section = 'Edit';
         $promotionData = Promotion::find($id);
         return view('payroll.promotion.form', compact('title', 'section', 'sub_section',
-            'section_url', 'promotionData', 'designations', 'employees', 'payScales'));
+            'section_url', 'promotionData', 'designations', 'employees', 'payScales', 'movementTypes'));
     }
 
     public function save(Request $request, $promotionData = null){
         $request->validate([
             'employee_id'              => 'required|exists:employees,id',
             'pay_scale_id'             => 'nullable|exists:pay_scales,id',
+            'movement_type_id'         => 'nullable|exists:movement_types,id',
             'previous_designation'     => 'required|exists:designations,id',
             'new_designation'          => 'required|exists:designations,id|different:previous_designation',
             'increment_base'           => 'required|in:basic_salary,gross_salary',
@@ -77,6 +80,7 @@ class PromotionController extends Controller
             'employee_id.exists'                => 'Selected Employee Is Invalid',
 
             'pay_scale_id.exists'               => 'Selected Pay Scale Is Invalid',
+            'movement_type_id.exists'           => 'Selected Movement Type Is Invalid',
 
             'previous_designation.required'     => 'Please Select Previous Designation',
             'previous_designation.exists'       => 'Previous Designation Is Invalid',

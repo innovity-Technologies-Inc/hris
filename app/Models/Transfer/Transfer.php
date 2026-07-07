@@ -26,6 +26,7 @@ class Transfer extends Model
 
     protected $fillable = [
         'employee_id',
+        'movement_type_id',
         'current_company_id',
         'current_business_unit_id',
         'current_division_id',
@@ -50,6 +51,11 @@ class Transfer extends Model
     public function employee(): BelongsTo
     {
         return $this->belongsTo(Employee::class);
+    }
+
+    public function movementType(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Company\MovementType::class, 'movement_type_id');
     }
 
     public function currentCompany(): BelongsTo

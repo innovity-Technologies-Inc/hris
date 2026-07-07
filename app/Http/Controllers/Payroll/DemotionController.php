@@ -42,10 +42,11 @@ class DemotionController extends Controller
         $employees = Employee::has('salary')->where('status', 'active')->get();
         $designations = Designation::all();
         $payScales = \App\Models\Company\PayScale::with(['grade', 'payGroup'])->where('status', 'active')->get();
+        $movementTypes = \App\Models\Company\MovementType::where('status', 'active')->get();
         $section = 'Employee Demotion';
         $section_url = route('demotion.index');
         $sub_section = 'Add';
-        return view('payroll.demotion.form', compact('title', 'section', 'sub_section', 'section_url', 'designations', 'employees', 'payScales'));
+        return view('payroll.demotion.form', compact('title', 'section', 'sub_section', 'section_url', 'designations', 'employees', 'payScales', 'movementTypes'));
     }
 
     public function edit($id)
@@ -56,9 +57,10 @@ class DemotionController extends Controller
         $designations = Designation::all();
         $employees = Employee::all()->where('status', 'active');
         $payScales = \App\Models\Company\PayScale::with(['grade', 'payGroup'])->where('status', 'active')->get();
+        $movementTypes = \App\Models\Company\MovementType::where('status', 'active')->get();
         $sub_section = 'Edit';
         $demotionData = Demotion::find($id);
-        return view('payroll.demotion.form', compact('title', 'section', 'sub_section', 'section_url', 'demotionData', 'designations', 'employees', 'payScales'));
+        return view('payroll.demotion.form', compact('title', 'section', 'sub_section', 'section_url', 'demotionData', 'designations', 'employees', 'payScales', 'movementTypes'));
     }
 
     public function save(DemotionRequest $request, $demotionData = null)

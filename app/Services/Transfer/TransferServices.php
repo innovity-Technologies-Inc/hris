@@ -36,7 +36,7 @@ class TransferServices
         $user = auth()->user();
         
         $query = Transfer::withoutGlobalScopes()
-            ->with(['employee', 'requestedCompany', 'requestedBusinessUnit']);
+            ->with(['employee', 'requestedCompany', 'requestedBusinessUnit', 'movementType']);
 
         // 1. Apply Scoping / Permissions manually since we bypassed global scopes
         if ($user->user_type !== UserType::Group) {
@@ -122,8 +122,9 @@ class TransferServices
                 $employee = Employee::with('officeInfo')->findOrFail($data['employee_id']);
                 $currentInfo = $employee->officeInfo;
 
-                $transfer = Transfer::create([
+                 $transfer = Transfer::create([
                     'employee_id' => $data['employee_id'],
+                    'movement_type_id' => $data['movement_type_id'] ?? null,
                     'current_company_id' => $currentInfo->current_company_id ?? null,
                     'current_business_unit_id' => $currentInfo->current_business_unit_id ?? null,
                     'current_division_id' => $currentInfo->current_division_id ?? null,

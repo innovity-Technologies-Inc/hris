@@ -73,6 +73,17 @@
                                     @if($levelWeight > 1) <input type="hidden" name="requested_company_id" id="hidden_company_id"> @endif
                                 </div>
 
+                                <!-- Movement Type -->
+                                <div class="col-md-6">
+                                    <label for="movement_type_id" class="form-label fw-semibold">Movement Type</label>
+                                    <select name="movement_type_id" id="movement_type_id" class="form-select select2_list">
+                                        <option value="">Select Movement Type</option>
+                                        @foreach($movementTypes as $type)
+                                            <option value="{{ $type->id }}">{{ $type->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
                                 <!-- Business Unit -->
                                 <div class="col-md-6">
                                     <label for="requested_business_unit_id" class="form-label fw-semibold">Business Unit / Branch</label>

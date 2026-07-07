@@ -18,6 +18,7 @@ class Promotion extends Model
     protected $fillable = [
         'employee_id',
         'pay_scale_id',
+        'movement_type_id',
         'previous_designation',
         'new_designation',
         'increment_base',
@@ -51,6 +52,11 @@ class Promotion extends Model
     public function getNewDesignation()
     {
         return $this->belongsTo(Designation::class, 'new_designation', 'id');
+    }
+
+    public function movementType()
+    {
+        return $this->belongsTo(\App\Models\Company\MovementType::class, 'movement_type_id');
     }
 
 }

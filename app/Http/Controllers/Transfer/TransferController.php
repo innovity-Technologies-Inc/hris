@@ -35,7 +35,9 @@ class TransferController extends Controller
         $level = $isEmployee ? ($setting->employee_transfer_level ?? 'company') : ($setting->supervisor_transfer_level ?? 'company');
         $levelWeight = $weights[$level] ?? 1;
 
-        return view('transfer.application', compact('title', 'section', 'setting', 'isEmployee', 'loggedInEmployeeId', 'levelWeight'));
+        $movementTypes = \App\Models\Company\MovementType::where('status', 'active')->get();
+
+        return view('transfer.application', compact('title', 'section', 'setting', 'isEmployee', 'loggedInEmployeeId', 'levelWeight', 'movementTypes'));
     }
 
     public function show($id)

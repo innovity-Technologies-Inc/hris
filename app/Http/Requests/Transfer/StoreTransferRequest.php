@@ -16,6 +16,7 @@ class StoreTransferRequest extends FormRequest
     {
         $rules = [
             'employee_id' => 'required|exists:employees,id',
+            'movement_type_id' => 'nullable|exists:movement_types,id',
             'requested_company_id' => 'required|exists:companies,id',
             'requested_business_unit_id' => 'nullable|exists:company_locations,id',
             'requested_division_id' => 'nullable|exists:divisions,id',
