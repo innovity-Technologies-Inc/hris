@@ -38,7 +38,9 @@ use App\Http\Controllers\Plan\OffDayPlansController;
 use App\Http\Controllers\Structure\OrganizationStructureController;
 use App\Http\Controllers\Plan\OTPlanController;
 use App\Http\Controllers\Payroll\IncrementController;
+use App\Http\Controllers\Payroll\DecrementController;
 use App\Http\Controllers\Payroll\PromotionController;
+use App\Http\Controllers\Payroll\DemotionController;
 use App\Http\Controllers\Plan\RosterPlansController;
 use App\Http\Controllers\Company\SalaryGradesController;
 use App\Http\Controllers\Company\SectionController;
@@ -1034,7 +1036,30 @@ Route::controller(EmployeeMovementsController::class)->prefix('movement')->middl
     });
 });
 
+// Payroll - Employee Demotion Routes
+
+Route::prefix('demotion')->name('demotion.')->controller(DemotionController::class)->middleware('auth')->group(function () {
+    Route::middleware('permission:demotions.view')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('view/{id}', 'show')->name('show');
+    });
+    Route::middleware('permission:demotions.create')->group(function () {
+        Route::get('create', 'create')->name('create');
+        Route::post('store', 'save')->name('store');
+    });
+    Route::middleware('permission:demotions.edit')->group(function () {
+        Route::get('adjustment', 'adjustment')->name('adjustment');
+        Route::get('edit/{id}', 'edit')->name('edit');
+        Route::put('{id}/update', 'save')->name('update');
+        Route::put('{id}/status-update', 'statusUpdate')->name('status.update');
+    });
+    Route::middleware('permission:demotions.delete')->group(function () {
+        Route::delete('{id}/delete', 'delete')->name('delete');
+    });
+});
+
 // Payroll - Employee Promotion Routes
+
 
 Route::prefix('promotion')->name('promotion.')->controller(PromotionController::class)->middleware('auth')->group(function () {
     Route::middleware('permission:promotions.view')->group(function () {
@@ -1074,6 +1099,28 @@ Route::prefix('increment')->name('increment.')->controller(IncrementController::
         Route::put('{id}/status-update', 'statusUpdate')->name('status.update');
     });
     Route::middleware('permission:increments.delete')->group(function () {
+        Route::delete('{id}/delete', 'delete')->name('delete');
+    });
+});
+
+// Payroll - Employee Decrement Routes
+
+Route::prefix('decrement')->name('decrement.')->controller(DecrementController::class)->middleware('auth')->group(function () {
+    Route::middleware('permission:decrements.view')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('view/{id}', 'show')->name('show');
+    });
+    Route::middleware('permission:decrements.create')->group(function () {
+        Route::get('create', 'create')->name('create');
+        Route::post('store', 'save')->name('store');
+    });
+    Route::middleware('permission:decrements.edit')->group(function () {
+        Route::get('adjustment', 'adjustment')->name('adjustment');
+        Route::get('edit/{id}', 'edit')->name('edit');
+        Route::put('{id}/update', 'save')->name('update');
+        Route::put('{id}/status-update', 'statusUpdate')->name('status.update');
+    });
+    Route::middleware('permission:decrements.delete')->group(function () {
         Route::delete('{id}/delete', 'delete')->name('delete');
     });
 });

@@ -29,7 +29,9 @@ class AppServiceProvider extends ServiceProvider
      */
     private array $workflowListeners = [
         'promotion'                => \App\Listeners\Workflow\PromotionWorkflowListener::class,
+        'demotion'                 => \App\Listeners\Workflow\DemotionWorkflowListener::class,
         'increment'                => \App\Listeners\Workflow\IncrementWorkflowListener::class,
+        'decrement'                => \App\Listeners\Workflow\DecrementWorkflowListener::class,
         'leave'                    => \App\Listeners\Workflow\LeaveWorkflowListener::class,
         'salary'                   => \App\Listeners\Workflow\PayrollWorkflowListener::class,
         'bonus'                    => \App\Listeners\Workflow\PayrollWorkflowListener::class,

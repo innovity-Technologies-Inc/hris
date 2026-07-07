@@ -29,6 +29,7 @@ return [
     'modules' => [
         'bonus' => 'Bonus',
         'career-movement' => 'Career Movement',
+        'decrement' => 'Decrement',
         'employee-bank-account' => 'Employee Bank Account',
         'employee-policy' => 'Employee Policy',
         'increment' => 'Increment',
@@ -36,6 +37,7 @@ return [
         'office-information' => 'Office Information',
         'profile-update' => 'Profile Update',
         'promotion' => 'Promotion',
+        'demotion' => 'Demotion',
         'salary' => 'Salary',
         'salary-breakdown' => 'Salary Breakdown',
         'travel-movement' => 'Travel Movement',

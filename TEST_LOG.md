@@ -1,6 +1,20 @@
 # Test Log
 
-## 2026-07-07
+## 2026-07-07 (Session 2)
+
+**Goal**: Create new payroll modules for Demotions and Decrements utilizing subtraction calculations, Axios-based form saving, Pay Scale warnings, and verify them via feature testing.
+
+**Exact Command**: `php artisan route:clear && php artisan config:clear && vendor\bin\pest tests/Feature/Payroll/DemotionDecrementPayScaleTest.php`
+
+**Results**:
+- `it can store a new decrement with pay scale`: ✅ PASSED
+- `it can store a new demotion with pay scale`: ✅ PASSED
+- `it updates employee salary breakdown pay_scale_id upon decrement adjustment`: ✅ PASSED
+- `it updates employee salary breakdown pay_scale_id and designation upon demotion adjustment`: ✅ PASSED
+
+**Status**: ✅ SUCCESS
+
+## 2026-07-07 (Session 1)
 
 **Goal**: Implement pay scale integration in employee increments and promotions, add frontend pay scale verification warning if new gross salary surpasses scale limit, and verify changes via feature testing.
 

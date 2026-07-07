@@ -16,9 +16,9 @@ use App\Models\Payroll\AdvanceSalary;
 use App\Models\Payroll\Arrear;
 use App\Models\Payroll\Bonus;
 use App\Models\Payroll\Increment;
-use App\Models\Payroll\Payroll;
-use App\Models\Payroll\PayrollProcess;
+use App\Models\Payroll\Decrement;
 use App\Models\Payroll\Promotion;
+use App\Models\Payroll\Demotion;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
@@ -311,6 +311,110 @@ class PayrollServices
     {
         $increment = Increment::find($id);
         $increment->update($data);
+    }
+
+    public function decrementRequestData($request)
+    {
+        $data = [
+            'employee_id' => $request->employee_id,
+            'pay_scale_id' => $request->pay_scale_id,
+            'decrement_base' => $request->decrement_base,
+            'decrement_method' => $request->decrement_method,
+            'salary_decrease_amount' => $request->salary_decrease_amount,
+            'effective_from' => $request->effective_from,
+            'effective_to' => $request->effective_to,
+        ];
+
+        $result = $this->decrementSalaryData($data);
+
+        return [
+            'data' => $result['data'],
+        ];
+    }
+
+    public function demotionRequestData($request)
+    {
+        $data = [
+            'employee_id' => $request->employee_id,
+            'pay_scale_id' => $request->pay_scale_id,
+            'previous_designation' => $request->previous_designation,
+            'new_designation' => $request->new_designation,
+            'decrement_base' => $request->decrement_base,
+            'decrement_method' => $request->decrement_method,
+            'salary_decrease_amount' => $request->salary_decrease_amount,
+            'effective_from' => $request->effective_from,
+            'effective_to' => $request->effective_to,
+        ];
+
+        $result = $this->decrementSalaryData($data);
+
+        return [
+            'data' => $result['data'],
+        ];
+    }
+
+    public function decrementSalaryData($data)
+    {
+        $employeeSalary = EmployeeSalaryBreakdown::where('employee_id', $data['employee_id'])->first();
+        $decrement_result = $this->decrementCalculation($data, $employeeSalary);
+        $data['new_gross_salary'] = $decrement_result['new_gross_salary'];
+        $data['decrement_amount_value'] = $decrement_result['decrement_value'];
+        $data['previous_basic_salary'] = $employeeSalary->basic_salary;
+        $data['previous_gross_salary'] = $employeeSalary->gross_salary;
+        return [
+            'data' => $data,
+        ];
+    }
+
+    public function decrementCalculation($data, $employeeSalary)
+    {
+        $decrementBase = $data['decrement_base'];
+        $decrementMethod = $data['decrement_method'];
+        $decrementAmount = $data['salary_decrease_amount'];
+        $basicSalary = $employeeSalary->basic_salary;
+        $grossSalary = $employeeSalary->gross_salary;
+        if ($decrementBase == 'basic_salary') {
+            if ($decrementMethod == 'percentage') {
+                $decrementValue = $basicSalary * ($decrementAmount / 100);
+            } else {
+                $decrementValue = $decrementAmount;
+            }
+        } else {
+            if ($decrementMethod == 'percentage') {
+                $decrementValue = $grossSalary * ($decrementAmount / 100);
+            } else {
+                $decrementValue = $decrementAmount;
+            }
+        }
+
+        $newGrossSalary = max(0, $grossSalary - $decrementValue);
+
+        return [
+            'new_gross_salary' => $newGrossSalary,
+            'decrement_value' => $decrementValue,
+        ];
+    }
+
+    public function decrementDataStore($data)
+    {
+        return Decrement::create($data);
+    }
+
+    public function decrementDataUpdate($id, $data)
+    {
+        $decrement = Decrement::find($id);
+        $decrement->update($data);
+    }
+
+    public function demotionDataStore($data)
+    {
+        return Demotion::create($data);
+    }
+
+    public function demotionDataUpdate($id, $data)
+    {
+        $demotion = Demotion::find($id);
+        $demotion->update($data);
     }
 
     public function salaryCalculation($data1, $data2)

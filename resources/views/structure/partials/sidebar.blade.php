@@ -290,13 +290,15 @@
                 <!-- Payroll Menu -->
                 @php
                     $canPromotions = auth()->user()->can('promotions.view');
+                    $canDemotions = auth()->user()->can('demotions.view');
                     $canIncrements = auth()->user()->can('increments.view');
+                    $canDecrements = auth()->user()->can('decrements.view');
                     $canBonuses = auth()->user()->can('bonuses.view');
                     $canAdvanceSalary = auth()->user()->can('advance-salary.view');
                     $canArrear = auth()->user()->can('arrear.view');
                     $canSalary = auth()->user()->can('salary.view');
-                    $showPayrollMenu = $canPromotions || $canIncrements || $canBonuses || $canAdvanceSalary || $canArrear || $canSalary;
-                    $payrollOpen = request()->is('promotion*') || request()->is('increment*') || request()->is('bonus*')
+                    $showPayrollMenu = $canPromotions || $canDemotions || $canIncrements || $canDecrements || $canBonuses || $canAdvanceSalary || $canArrear || $canSalary;
+                    $payrollOpen = request()->is('promotion*') || request()->is('demotion*') || request()->is('increment*') || request()->is('decrement*') || request()->is('bonus*')
                     || request()->is('advance-salary*') || request()->is('arrear*') || request()->is('salary*');
                 @endphp
                 @if($showPayrollMenu)
@@ -315,10 +317,22 @@
                                     href='{{ route('promotion.index') }}'>Promotions</a>
                             </li>
                             @endif
+                            @if($canDemotions)
+                            <li>
+                                <a class='tp-link @if (request()->is('demotion') && !request()->is('demotion/create')) menuitem-active @endif'
+                                    href='{{ route('demotion.index') }}'>Demotions</a>
+                            </li>
+                            @endif
                             @if($canIncrements)
                             <li>
                                 <a class='tp-link @if (request()->is('increment') && !request()->is('increment/create')) menuitem-active @endif'
                                     href='{{ route('increment.index') }}'>Increments</a>
+                            </li>
+                            @endif
+                            @if($canDecrements)
+                            <li>
+                                <a class='tp-link @if (request()->is('decrement') && !request()->is('decrement/create')) menuitem-active @endif'
+                                    href='{{ route('decrement.index') }}'>Decrements</a>
                             </li>
                             @endif
                             @if($canBonuses)
