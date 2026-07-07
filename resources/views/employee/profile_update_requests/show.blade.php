@@ -119,7 +119,7 @@
                                         if (array_key_exists($normalizedKey, $modelMap)) {
                                             [$class, $field] = $modelMap[$normalizedKey];
                                             try {
-                                                $record = $class::find($id);
+                                                $record = $class::withoutGlobalScopes()->find($id);
                                                 if ($record) {
                                                     return $record->{$field} ?? $record->title ?? $record->name ?? $id;
                                                 }
@@ -138,7 +138,7 @@
                                             $possibleClass = 'App\\Models\\Company\\' . ucfirst(\Illuminate\Support\Str::camel($possibleModelName));
                                             if (class_exists($possibleClass)) {
                                                 try {
-                                                    $record = $possibleClass::find($id);
+                                                    $record = $possibleClass::withoutGlobalScopes()->find($id);
                                                     if ($record) {
                                                         return $record->name ?? $record->title ?? $id;
                                                     }
