@@ -384,15 +384,17 @@ Status: ✅ SUCCESS
 
 **Status**: ✅ SUCCESS
 
-## 2026-07-07 (Documentation Verification and Environment Fixes)
+## 2026-07-07 (MySQL Testing Environment Setup and Verification)
 
-**Goal**: Update `project_doc.md` with all new modules and fix test environment issues (SQLite compatibility for dates/JSON, missing model imports, missing properties in test seeds).
+**Goal**: Configure the Pest testing environment to target the MySQL `hrms_test` database (on port 3307) rather than SQLite `:memory:`, revert the SQLite-specific driver logic, and verify the sequential test run passes successfully.
 
-**Exact Command**: `vendor/bin/pest`
+**Exact Command**: `php artisan config:clear && php artisan test`
 
 **Results**:
-- `All 134 feature and unit tests`: ✅ PASSED (including fixes for `PayrollServices` namespace imports, SQLite `DATE_ADD` and `whereJsonContains` fallbacks, `PayGroupTest` required parameters, `EmployeeDashboardTest` strict assertions, `PayGroupCascadeDeleteTest` SQLite transaction cascade fix, and `OrganizationScopedTest` seed dependencies).
+- `All 134 feature and unit tests`: ✅ PASSED (fully verified on the MySQL `hrms_test` database, with sequential process execution preventing concurrency lockouts).
+- Reverted all SQLite-specific compatibility checks in [CheckAlerts.php](file:///P:/Project/Web/hrms/app/Console/Commands/CheckAlerts.php) and [EmployeeReportServices.php](file:///P:/Project/Web/hrms/app/Services/Employee/EmployeeReportServices.php).
 
 **Status**: ✅ SUCCESS
+
 
 

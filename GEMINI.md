@@ -62,7 +62,7 @@ This project is a comprehensive Human Resource Management System (HRMS) built wi
 ## 🧪 Testing & Verification Standards
 Refer to [.ai/guidelines/testing-guidelines.md](.ai/guidelines/testing-guidelines.md) for full details.
 - **Framework**: Use **Pest** for all new tests.
-- **Environment**: Use **SQLite in-memory** (`:memory:`) for testing to ensure speed and isolation.
+- **Environment**: Use **MySQL test database** (`hrms_test`) for testing to ensure speed and isolation.
 - **Mandatory Logging**: Every time a test is requested or executed, you **MUST** update `TEST_LOG.md` with the following details:
     - Date of execution.
     - The original instruction/goal.

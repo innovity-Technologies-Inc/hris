@@ -129,21 +129,12 @@ class CheckAlerts extends Command
     {
         $thresholdDate = $today->copy()->addDays($days)->toDateString();
 
-        if (\Illuminate\Support\Facades\DB::getDriverName() === 'sqlite') {
-            $employees = Employee::whereHas('officeInfo', function($query) use ($today, $thresholdDate) {
-                $query->whereRaw("date(date_of_join, '+' || probation_duration || ' days') BETWEEN ? AND ?", [
-                    $today->toDateString(), 
-                    $thresholdDate
-                ]);
-            })->with('officeInfo')->get();
-        } else {
-            $employees = Employee::whereHas('officeInfo', function($query) use ($today, $thresholdDate) {
-                $query->whereRaw("DATE_ADD(date_of_join, INTERVAL probation_duration DAY) BETWEEN ? AND ?", [
-                    $today->toDateString(), 
-                    $thresholdDate
-                ]);
-            })->with('officeInfo')->get();
-        }
+        $employees = Employee::whereHas('officeInfo', function($query) use ($today, $thresholdDate) {
+            $query->whereRaw("DATE_ADD(date_of_join, INTERVAL probation_duration DAY) BETWEEN ? AND ?", [
+                $today->toDateString(), 
+                $thresholdDate
+            ]);
+        })->with('officeInfo')->get();
 
         foreach ($employees as $employee) {
             $probationEndDate = Carbon::parse($employee->officeInfo->date_of_join)
@@ -174,21 +165,9 @@ class CheckAlerts extends Command
      */
     protected function notificationExists(int $userId, array $data): bool
     {
-        $query = Notification::where('user_id', $userId);
-        if (\Illuminate\Support\Facades\DB::getDriverName() === 'sqlite') {
-            return $query->get()->contains(function($notif) use ($data) {
-                $notifData = is_string($notif->data) ? json_decode($notif->data, true) : $notif->data;
-                if (!is_array($notifData)) return false;
-                foreach ($data as $key => $val) {
-                    if (!array_key_exists($key, $notifData) || $notifData[$key] != $val) {
-                        return false;
-                    }
-                }
-                return true;
-            });
-        }
-
-        return $query->whereJsonContains('data', $data)->exists();
+        return Notification::where('user_id', $userId)
+            ->whereJsonContains('data', $data)
+            ->exists();
     }
 
     protected function sendToNonEmployees(string $title, string $message, array $data, Employee $employee)

@@ -238,12 +238,8 @@ class EmployeeReportServices
     {
         $currentMonth = Carbon::now()->month;
         
-        $orderBy = \Illuminate\Support\Facades\DB::getDriverName() === 'sqlite' 
-            ? "strftime('%d', date_of_birth) ASC" 
-            : 'DAY(date_of_birth) ASC';
-
         return Employee::whereMonth('date_of_birth', $currentMonth)
-            ->orderByRaw($orderBy)
+            ->orderByRaw('DAY(date_of_birth) ASC')
             ->get()
             ->map(function($emp) {
                 return [
@@ -269,12 +265,9 @@ class EmployeeReportServices
             ->whereYear('date_of_join', Carbon::now()->year)
             ->count();
         
-        $avgDaysSelect = \Illuminate\Support\Facades\DB::getDriverName() === 'sqlite' 
-            ? "AVG(julianday('now') - julianday(date_of_join)) as avg_days" 
-            : 'AVG(DATEDIFF(NOW(), date_of_join)) as avg_days';
-
+        // Average Tenure
         $avgTenureDays = EmployeeOfficeInfo::whereNotNull('date_of_join')
-            ->select(DB::raw($avgDaysSelect))
+            ->select(DB::raw('AVG(DATEDIFF(NOW(), date_of_join)) as avg_days'))
             ->first()
             ->avg_days ?? 0;
         
