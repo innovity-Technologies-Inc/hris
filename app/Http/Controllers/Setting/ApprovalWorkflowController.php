@@ -46,7 +46,7 @@ class ApprovalWorkflowController extends Controller
                 'type' => $request->type,
                 'total_steps' => count($request->steps),
                 'required_approvals' => $request->type === 'random' ? $request->required_approvals : null,
-                'is_active' => $request->has('is_active') ? true : false,
+                'is_active' => $request->is_active == '1',
             ]);
 
             foreach ($request->steps as $index => $step) {
@@ -113,7 +113,7 @@ class ApprovalWorkflowController extends Controller
                 'type' => $request->type,
                 'total_steps' => count($request->steps),
                 'required_approvals' => $request->type === 'random' ? $request->required_approvals : null,
-                'is_active' => $request->has('is_active') ? true : false,
+                'is_active' => $request->is_active == '1',
             ]);
 
             $workflow->steps()->delete();
