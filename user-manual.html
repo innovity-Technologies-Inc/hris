@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HRMS - Complete User Manual & Documentation</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Mermaid.js CDN for Diagrams -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        mono: ['Inter', 'monospace'],
+                    },
+                    colors: {
+                        primary: '#6366f1',
+                        secondary: '#ec4899',
+                        dark: '#0f172a',
+                        glass: 'rgba(30, 41, 59, 0.7)',
+                        glassBorder: 'rgba(255, 255, 255, 0.08)',
+                    }
+                }
+            }
+        }
+        mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+    </script>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #e2e8f0;
+            background-image:
+                radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 85% 30%, rgba(236, 72, 153, 0.1) 0%, transparent 40%);
+            background-attachment: fixed;
+            font-family: 'Outfit', sans-serif;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.3);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(99, 102, 241, 0.5);
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .nav-link.active {
+            background: linear-gradient(90deg, rgba(99, 102, 241, 0.2), rgba(236, 72, 153, 0.05));
+            border-left: 4px solid #6366f1;
+            color: #ffffff;
+        }
+        .tab-btn {
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: linear-gradient(90deg, #6366f1, #ec4899);
+            transition: width 0.2s ease;
+        }
+        .tab-btn.active::after {
+            width: 100%;
+        }
+        .tab-btn.active {
+            color: #ffffff;
+            font-weight: 600;
+        }
+        .content-tab {
+            display: none;
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+        .content-tab.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="glass-panel sticky top-0 z-50 border-b px-6 py-4 flex items-center justify-between shadow-lg">
+        <div class="flex items-center gap-3">
+            <div class="bg-gradient-to-tr from-primary to-secondary p-2 rounded-xl text-white shadow-md">
+                <i class="fa-solid fa-book-open text-xl"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                    HRMS User Manual <span class="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full border border-primary/30">V1.2</span>
+                </h1>
+                <p class="text-xs text-slate-400">Complete logic, workflow patterns, and step-by-step tutorials</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-4">
+            <span class="text-xs text-slate-400"><i class="fa-solid fa-circle-info text-primary mr-1"></i> Unified Document</span>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="flex-grow flex relative">
+        <!-- Sidebar -->
+        <aside class="w-80 border-r border-slate-800 glass-panel flex flex-col shrink-0 sticky top-[73px] h-[calc(100vh-73px)] z-30">
+            <div class="p-4 border-b border-slate-800">
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-500">
+                        <i class="fa-solid fa-magnify"></i>
+                    </span>
+                    <input type="text" id="moduleSearch" 
+                           class="w-full pl-9 pr-4 py-2 bg-slate-900/60 border border-slate-800 rounded-lg text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-primary transition"
+                           placeholder="Search modules...">
+                </div>
+            </div>
+            <div class="flex-grow overflow-y-auto p-4 space-y-6" id="sidebarNav">
+                <!-- Group 1: Company Info -->
+                <div>
+                    <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center justify-between">
+                        <span>Company Info</span>
+                        <span class="bg-indigo-500/10 text-indigo-400 text-[10px] px-1.5 py-0.5 rounded border border-indigo-500/20">Master Data</span>
+                    </h3>
+                    <ul class="space-y-1 text-sm font-medium">
+                        <li>
+                            <button onclick="showModule('groups')" id="nav-groups" class="nav-link w-full text-left px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-900/30 transition flex items-center gap-2">
+                                <i class="fa-solid fa-users-rectangle w-5 text-indigo-400"></i> Groups Setup
+                            </button>
+                        </li>
+                        <li>
+                            <button onclick="showModule('company-types')" id="nav-company-types" class="nav-link w-full text-left px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-900/30 transition flex items-center gap-2">
+                                <i class="fa-solid fa-building-circle-check w-5 text-indigo-400"></i> Company Types
+                            </button>
+                        </li>
+                        <li>
+                            <button onclick="showModule('companies')" id="nav-companies" class="nav-link w-full text-left px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-900/30 transition flex items-center gap-2">
+                                <i class="fa-solid fa-building w-5 text-indigo-400"></i> Companies Setup
+                            </button>
+                        </li>
+                        <li>
+                            <button onclick="showModule('business-units')" id="nav-business-units" class="nav-link w-full text-left px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-900/30 transition flex items-center gap-2">
+                                <i class="fa-solid fa-location-dot w-5 text-indigo-400"></i> Business Units / Branches
+                            </button>
+                        </li>
+                        <li>
+                            <button onclick="showModule('divisions')" id="nav-divisions" class="nav-link w-full text-left px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-900/30 transition flex items-center gap-2">
+                                <i class="fa-solid fa-network-wired w-5 text-indigo-400"></i> Divisions
+                            </button>
+                        </li>
+                        <li>
+                            <button onclick="showModule('departments')" id="nav-departments" class="nav-link w-full text-left px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-900/30 transition flex items-center gap-2">
+                                <i class="fa-solid fa-folder-tree w-5 text-indigo-400"></i> Departments
+                            </button>
+                        </li>
+                        <li>
+                            <button onclick="showModule('sections')" id="nav-sections" class="nav-link w-full text-left px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-900/30 transition flex items-center gap-2">
+                                <i class="fa-solid fa-diagram-project w-5 text-indigo-400"></i> Sections Setup
+                            </button>
+                        </li>
+                        <li>
+                            <button onclick="showModule('designations')" id="nav-designations" class="nav-link w-full text-left px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-900/30 transition flex items-center gap-2">
+                                <i class="fa-solid fa-id-card-clip w-5 text-indigo-400"></i> Designations
+                            </button>
+                        </li>
+                        <li>
+                            <button onclick="showModule('pay-groups')" id="nav-pay-groups" class="nav-link w-full text-left px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-900/30 transition flex items-center gap-2">
+                                <i class="fa-solid fa-coins w-5 text-indigo-400"></i> Pay Groups
+                            </button>
+                        </li>
+                        <li>
+                            <button onclick="showModule('salary-grades')" id="nav-salary-grades" class="nav-link w-full text-left px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-900/30 transition flex items-center gap-2">
+                                <i class="fa-solid fa-award w-5 text-indigo-400"></i> Salary Grades
+                            </button>
+                        </li>
+                        <li>
+                            <button onclick="showModule('pay-scales')" id="nav-pay-scales" class="nav-link w-full text-left px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-900/30 transition flex items-center gap-2">
+                                <i class="fa-solid fa-scale-balanced w-5 text-indigo-400"></i> Pay Scales Setup
+                            </button>
+                        </li>
+                        <li>
+                            <button onclick="showModule('movement-types')" id="nav-movement-types" class="nav-link w-full text-left px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-900/30 transition flex items-center gap-2">
+                                <i class="fa-solid fa-shuffle w-5 text-indigo-400"></i> Movement Types
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Group 2: Future Additions Placeholder -->
+                <div class="pt-4 border-t border-slate-800">
+                    <h3 class="text-xs font-bold text-slate-600 uppercase tracking-widest mb-3">
+                        Payroll & movements
+                    </h3>
+                    <div class="p-3 bg-slate-950/40 rounded-lg border border-slate-900 text-xs text-slate-500 italic">
+                        <i class="fa-solid fa-clock mr-1 text-slate-600"></i> Documentation expansion modules for Increment, Decrement, Promotion, Demotion, and Transfers will be added here in upcoming versions.
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <main class="flex-grow p-8 overflow-y-auto h-[calc(100vh-73px)]">
+            <!-- Module Sections -->
+            <div id="moduleContent" class="max-w-4xl mx-auto space-y-12">
+                <!-- Fallback/Intro -->
+                <div id="intro-module" class="glass-panel p-8 rounded-2xl shadow-xl space-y-6">
+                    <div class="text-center space-y-4">
+                        <div class="inline-flex bg-gradient-to-tr from-primary to-secondary p-4 rounded-full text-white shadow-lg mx-auto">
+                            <i class="fa-solid fa-graduation-cap text-3xl"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-white">Welcome to the HRMS Documentation</h2>
+                        <p class="text-slate-400 max-w-lg mx-auto text-sm">
+                            Use the sidebar on the left to navigate through the HRMS modules. Each section contains the exact business logic formulas, purposes, how-to instructions, and structural database relationship schemas.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Template for dynamic modules -->
+                <!-- Module: Groups -->
+                <section id="module-groups" class="module-section hidden space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                        <div>
+                            <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-users-rectangle text-primary"></i> Groups Setup
+                            </h2>
+                            <p class="text-sm text-slate-400">Conglomerate organization levels (Holding Group entities)</p>
+                        </div>
+                        <span class="bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs px-2.5 py-1 rounded-full font-semibold">Hierarchy Level 0</span>
+                    </div>
+
+                    <!-- Inner Tabs -->
+                    <div class="flex gap-2 border-b border-slate-800 pb-1">
+                        <button onclick="switchTab('groups', 'purpose')" class="tab-btn-groups tab-btn active text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-groups-purpose">Purpose</button>
+                        <button onclick="switchTab('groups', 'logic')" class="tab-btn-groups tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-groups-logic">Business Logic</button>
+                        <button onclick="switchTab('groups', 'howto')" class="tab-btn-groups tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-groups-howto">How-To</button>
+                        <button onclick="switchTab('groups', 'diagram')" class="tab-btn-groups tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-groups-diagram">Relationships</button>
+                    </div>
+
+                    <!-- Tab Contents -->
+                    <div id="content-groups-purpose" class="content-tab-groups content-tab active space-y-4">
+                        <h4 class="font-bold text-white text-lg">Purpose & Objective</h4>
+                        <p class="text-slate-300 leading-relaxed text-sm">
+                            The **Groups Setup** functions as the root organizational tier in the system. It represents the corporate parent, conglomerate group, or holding company. This categorization allows a single HR installation to manage multiple independent subsidiaries (Companies) while supporting cross-group configurations, consolidating global compliance settings, and performing comprehensive multi-subsidiary auditing.
+                        </p>
+                    </div>
+
+                    <div id="content-groups-logic" class="content-tab-groups content-tab space-y-4">
+                        <h4 class="font-bold text-white text-lg">System & Validation Logic</h4>
+                        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 text-sm space-y-2">
+                            <p class="text-slate-300"><strong class="text-white">Hierarchical Root:</strong> Sub-modules (Companies, Business Units) require parent-level references. Deleting a Group triggers cascading validation checks to ensure no orphaned child entities exist.</p>
+                            <p class="text-slate-300"><strong class="text-white">Active Scoping:</strong> Organization-scoped traits (`OrganizationScoped`) utilize the mapped company structure. If a company belongs to a parent Group, security middleware blocks unauthorized cross-group database reads.</p>
+                        </div>
+                    </div>
+
+                    <div id="content-groups-howto" class="content-tab-groups content-tab space-y-4 text-sm">
+                        <h4 class="font-bold text-white text-lg">How to Do the Task</h4>
+                        <ol class="list-decimal list-inside space-y-2 text-slate-300">
+                            <li>Navigate to <strong class="text-white">Company Setup &gt; Groups</strong>.</li>
+                            <li>Click the <strong class="text-yellow-500">Create</strong> button. A side-drawer or modal form will slide open.</li>
+                            <li>Enter the conglomerate group name (e.g., <i>Innovity Technologies Inc</i>).</li>
+                            <li>Select status (<strong class="text-green-400">Active</strong>) and save.</li>
+                        </ol>
+                    </div>
+
+                    <div id="content-groups-diagram" class="content-tab-groups content-tab space-y-4">
+                        <h4 class="font-bold text-white text-lg text-center">Entity Relationship Mapping</h4>
+                        <div class="bg-slate-900/40 p-4 rounded-xl border border-slate-800 flex justify-center">
+                            <pre class="mermaid">
+                            graph TD
+                                Group[Group Model] -->|1 : N| Company[Company Model]
+                                Group -->|Cascades| Company
+                            </pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Module: Company Types -->
+                <section id="module-company-types" class="module-section hidden space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                        <div>
+                            <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-building-circle-check text-primary"></i> Company Types
+                            </h2>
+                            <p class="text-sm text-slate-400">Subsidiary legal entity classifications</p>
+                        </div>
+                        <span class="bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs px-2.5 py-1 rounded-full font-semibold">Metadata Classification</span>
+                    </div>
+
+                    <!-- Inner Tabs -->
+                    <div class="flex gap-2 border-b border-slate-800 pb-1">
+                        <button onclick="switchTab('company-types', 'purpose')" class="tab-btn-company-types tab-btn active text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-company-types-purpose">Purpose</button>
+                        <button onclick="switchTab('company-types', 'logic')" class="tab-btn-company-types tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-company-types-logic">Business Logic</button>
+                        <button onclick="switchTab('company-types', 'howto')" class="tab-btn-company-types tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-company-types-howto">How-To</button>
+                        <button onclick="switchTab('company-types', 'diagram')" class="tab-btn-company-types tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-company-types-diagram">Relationships</button>
+                    </div>
+
+                    <!-- Tab Contents -->
+                    <div id="content-company-types-purpose" class="content-company-types-groups content-tab active space-y-4">
+                        <h4 class="font-bold text-white text-lg">Purpose & Objective</h4>
+                        <p class="text-slate-300 leading-relaxed text-sm text-sm">
+                            The **Company Types** module catalogs corporate legal definitions (e.g. <i>Joint Venture, Private Limited Company, Sole Proprietorship, NGO</i>). Defining these types assists in structural compliance reporting, taxation workflows, and applying specialized regulatory rules across subsidiary businesses.
+                        </p>
+                    </div>
+
+                    <div id="content-company-types-logic" class="content-company-types-groups content-tab space-y-4">
+                        <h4 class="font-bold text-white text-lg">System & Validation Logic</h4>
+                        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 text-sm space-y-2">
+                            <p class="text-slate-300"><strong class="text-white">Classification Reference:</strong> Mapped to the `Company` creation model via foreign key. This mapping guarantees that no company can be created with an invalid or untracked business entity type.</p>
+                            <p class="text-slate-300"><strong class="text-white">Integrity Guard:</strong> The system prevents the deletion of a Company Type if it is currently assigned to one or more active companies.</p>
+                        </div>
+                    </div>
+
+                    <div id="content-company-types-howto" class="content-company-types-groups content-tab space-y-4 text-sm">
+                        <h4 class="font-bold text-white text-lg">How to Do the Task</h4>
+                        <ol class="list-decimal list-inside space-y-2 text-slate-300">
+                            <li>Navigate to <strong class="text-white">Company Setup &gt; Company Types</strong>.</li>
+                            <li>Click <strong class="text-yellow-500">Create</strong>.</li>
+                            <li>Enter the legal status title (e.g., <i>Private Limited</i>).</li>
+                            <li>Set status to <strong class="text-green-400">Active</strong> and click Save.</li>
+                        </ol>
+                    </div>
+
+                    <div id="content-company-types-diagram" class="content-company-types-groups content-tab space-y-4">
+                        <h4 class="font-bold text-white text-lg text-center">Entity Relationship Mapping</h4>
+                        <div class="bg-slate-900/40 p-4 rounded-xl border border-slate-800 flex justify-center">
+                            <pre class="mermaid">
+                            graph TD
+                                Type[Company Type Model] -->|1 : N| Company[Company Model]
+                                Company -->|Foreign Key Checks| Type
+                            </pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Module: Companies -->
+                <section id="module-companies" class="module-section hidden space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                        <div>
+                            <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-building text-primary"></i> Companies Setup
+                            </h2>
+                            <p class="text-sm text-slate-400">Independent business subsidiaries and legal entities</p>
+                        </div>
+                        <span class="bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs px-2.5 py-1 rounded-full font-semibold">Hierarchy Level 1</span>
+                    </div>
+
+                    <!-- Inner Tabs -->
+                    <div class="flex gap-2 border-b border-slate-800 pb-1">
+                        <button onclick="switchTab('companies', 'purpose')" class="tab-btn-companies tab-btn active text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-companies-purpose">Purpose</button>
+                        <button onclick="switchTab('companies', 'logic')" class="tab-btn-companies tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-companies-logic">Business Logic</button>
+                        <button onclick="switchTab('companies', 'howto')" class="tab-btn-companies tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-companies-howto">How-To</button>
+                        <button onclick="switchTab('companies', 'diagram')" class="tab-btn-companies tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-companies-diagram">Relationships</button>
+                    </div>
+
+                    <!-- Tab Contents -->
+                    <div id="content-companies-purpose" class="content-companies-groups content-tab active space-y-4">
+                        <h4 class="font-bold text-white text-lg">Purpose & Objective</h4>
+                        <p class="text-slate-300 leading-relaxed text-sm">
+                            The **Companies** module configures distinct commercial subsidiaries under the corporate group parent. Each company acts as an isolated entity with its own tax registry number, logo branding, payroll accounts, holiday tables, and organizational structures.
+                        </p>
+                    </div>
+
+                    <div id="content-companies-logic" class="content-companies-groups content-tab space-y-4">
+                        <h4 class="font-bold text-white text-lg">System & Validation Logic</h4>
+                        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 text-sm space-y-2">
+                            <p class="text-slate-300"><strong class="text-white">BelongsTo Relationships:</strong> Mapped to `groups.id` and `company_types.id` as parent metadata entities.</p>
+                            <p class="text-slate-300"><strong class="text-white">Organization Isolation:</strong> Mapped as the primary contextual filter for security constraints. Query scoping policies prevent an HR manager at "Company A" from viewing metadata records belonging to "Company B".</p>
+                        </div>
+                    </div>
+
+                    <div id="content-companies-howto" class="content-companies-groups content-tab space-y-4 text-sm">
+                        <h4 class="font-bold text-white text-lg">How to Do the Task</h4>
+                        <ol class="list-decimal list-inside space-y-2 text-slate-300">
+                            <li>Navigate to <strong class="text-white">Company Setup &gt; Companies</strong>.</li>
+                            <li>Click <strong class="text-yellow-500">Create</strong>.</li>
+                            <li>Fill out the entity fields: Group, Company Type, legal name, tax registry code (TIN/BIN), and address.</li>
+                            <li>Toggle the active status checkmark and save.</li>
+                        </ol>
+                    </div>
+
+                    <div id="content-companies-diagram" class="content-companies-groups content-tab space-y-4">
+                        <h4 class="font-bold text-white text-lg text-center">Entity Relationship Mapping</h4>
+                        <div class="bg-slate-900/40 p-4 rounded-xl border border-slate-800 flex justify-center">
+                            <pre class="mermaid">
+                            graph TD
+                                Group[Group Model] -->|1 : N| Company[Company Model]
+                                Type[Company Type] -->|1 : N| Company
+                                Company -->|1 : N| Location[Company Location / Branch]
+                            </pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Module: Business Units -->
+                <section id="module-business-units" class="module-section hidden space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                        <div>
+                            <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-location-dot text-primary"></i> Business Units / Branches
+                            </h2>
+                            <p class="text-sm text-slate-400">Physical branches, office facilities, and geographic locations</p>
+                        </div>
+                        <span class="bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs px-2.5 py-1 rounded-full font-semibold">Hierarchy Level 2</span>
+                    </div>
+
+                    <!-- Inner Tabs -->
+                    <div class="flex gap-2 border-b border-slate-800 pb-1">
+                        <button onclick="switchTab('business-units', 'purpose')" class="tab-btn-business-units tab-btn active text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-business-units-purpose">Purpose</button>
+                        <button onclick="switchTab('business-units', 'logic')" class="tab-btn-business-units tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-business-units-logic">Business Logic</button>
+                        <button onclick="switchTab('business-units', 'howto')" class="tab-btn-business-units tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-business-units-howto">How-To</button>
+                        <button onclick="switchTab('business-units', 'diagram')" class="tab-btn-business-units tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-business-units-diagram">Relationships</button>
+                    </div>
+
+                    <!-- Tab Contents -->
+                    <div id="content-business-units-purpose" class="content-business-units-groups content-tab active space-y-4">
+                        <h4 class="font-bold text-white text-lg">Purpose & Objective</h4>
+                        <p class="text-slate-300 leading-relaxed text-sm">
+                            The **Business Units / Branches** module represents geographical structures, physical factories, plants, corporate offices, or logistical warehouses. This maps employees to physical locations, enabling location-scoped attendance logging (via IP/geolocation) and local regulatory compliance.
+                        </p>
+                    </div>
+
+                    <div id="content-business-units-logic" class="content-business-units-groups content-tab space-y-4">
+                        <h4 class="font-bold text-white text-lg">System & Validation Logic</h4>
+                        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 text-sm space-y-2">
+                            <p class="text-slate-300"><strong class="text-white">Cascading Hierarchy:</strong> Every Location is mapped to a parent `company_id`. Deleting a company triggers a cascade check blocking deletion if active branches reference it.</p>
+                            <p class="text-slate-300"><strong class="text-white">Attendance Binding:</strong> Allows binding regional holiday lists and shift planners specifically to a location.</p>
+                        </div>
+                    </div>
+
+                    <div id="content-business-units-howto" class="content-business-units-groups content-tab space-y-4 text-sm">
+                        <h4 class="font-bold text-white text-lg">How to Do the Task</h4>
+                        <ol class="list-decimal list-inside space-y-2 text-slate-300">
+                            <li>Navigate to <strong class="text-white">Company Setup &gt; Company Locations</strong>.</li>
+                            <li>Click <strong class="text-yellow-500">Create</strong>.</li>
+                            <li>Select the parent Company.</li>
+                            <li>Enter the location details (e.g. <i>Uttara Branch Office, Dhaka Factory</i>).</li>
+                            <li>Define address, contact numbers, and save.</li>
+                        </ol>
+                    </div>
+
+                    <div id="content-business-units-diagram" class="content-business-units-groups content-tab space-y-4">
+                        <h4 class="font-bold text-white text-lg text-center">Entity Relationship Mapping</h4>
+                        <div class="bg-slate-900/40 p-4 rounded-xl border border-slate-800 flex justify-center">
+                            <pre class="mermaid">
+                            graph TD
+                                Company[Company Model] -->|1 : N| Location[Company Location Model]
+                                Location -->|1 : N| Division[Division Model]
+                            </pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Module: Divisions -->
+                <section id="module-divisions" class="module-section hidden space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                        <div>
+                            <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-network-wired text-primary"></i> Divisions
+                            </h2>
+                            <p class="text-sm text-slate-400">High-level operational functional categories within the company</p>
+                        </div>
+                        <span class="bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs px-2.5 py-1 rounded-full font-semibold">Hierarchy Level 3</span>
+                    </div>
+
+                    <!-- Inner Tabs -->
+                    <div class="flex gap-2 border-b border-slate-800 pb-1">
+                        <button onclick="switchTab('divisions', 'purpose')" class="tab-btn-divisions tab-btn active text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-divisions-purpose">Purpose</button>
+                        <button onclick="switchTab('divisions', 'logic')" class="tab-btn-divisions tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-divisions-logic">Business Logic</button>
+                        <button onclick="switchTab('divisions', 'howto')" class="tab-btn-divisions tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-divisions-howto">How-To</button>
+                        <button onclick="switchTab('divisions', 'diagram')" class="tab-btn-divisions tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-divisions-diagram">Relationships</button>
+                    </div>
+
+                    <!-- Tab Contents -->
+                    <div id="content-divisions-purpose" class="content-divisions-groups content-tab active space-y-4">
+                        <h4 class="font-bold text-white text-lg">Purpose & Objective</h4>
+                        <p class="text-slate-300 leading-relaxed text-sm">
+                            The **Divisions** module divides companies or business locations into broad structural clusters (e.g. <i>Engineering, Corporate Sales, Human Resources, Operations</i>). Operational divisions aggregate multiple localized departments and teams.
+                        </p>
+                    </div>
+
+                    <div id="content-divisions-logic" class="content-divisions-groups content-tab space-y-4">
+                        <h4 class="font-bold text-white text-lg">System & Validation Logic</h4>
+                        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 text-sm space-y-2">
+                            <p class="text-slate-300"><strong class="text-white">Cascading Dropdowns:</strong> Inside employee placement forms, selecting a parent Company limits the selectable Divisions to those mapped to that company.</p>
+                            <p class="text-slate-300"><strong class="text-white">Organization Scoped:</strong> Automatically limits data access by adding `company_id` to query constraints.</p>
+                        </div>
+                    </div>
+
+                    <div id="content-divisions-howto" class="content-divisions-groups content-tab space-y-4 text-sm">
+                        <h4 class="font-bold text-white text-lg">How to Do the Task</h4>
+                        <ol class="list-decimal list-inside space-y-2 text-slate-300">
+                            <li>Navigate to <strong class="text-white">Company Setup &gt; Divisions</strong>.</li>
+                            <li>Click <strong class="text-yellow-500">Create</strong>.</li>
+                            <li>Select parent Company and geographic Location/Branch.</li>
+                            <li>Enter division name (e.g. <i>Information Technology</i>) and save.</li>
+                        </ol>
+                    </div>
+
+                    <div id="content-divisions-diagram" class="content-divisions-groups content-tab space-y-4">
+                        <h4 class="font-bold text-white text-lg text-center">Entity Relationship Mapping</h4>
+                        <div class="bg-slate-900/40 p-4 rounded-xl border border-slate-800 flex justify-center">
+                            <pre class="mermaid">
+                            graph TD
+                                Location[Company Location Model] -->|1 : N| Division[Division Model]
+                                Division -->|1 : N| Department[Department Model]
+                            </pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Module: Departments -->
+                <section id="module-departments" class="module-section hidden space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                        <div>
+                            <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-folder-tree text-primary"></i> Departments
+                            </h2>
+                            <p class="text-sm text-slate-400">Functional business units and departments</p>
+                        </div>
+                        <span class="bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs px-2.5 py-1 rounded-full font-semibold">Hierarchy Level 4</span>
+                    </div>
+
+                    <!-- Inner Tabs -->
+                    <div class="flex gap-2 border-b border-slate-800 pb-1">
+                        <button onclick="switchTab('departments', 'purpose')" class="tab-btn-departments tab-btn active text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-departments-purpose">Purpose</button>
+                        <button onclick="switchTab('departments', 'logic')" class="tab-btn-departments tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-departments-logic">Business Logic</button>
+                        <button onclick="switchTab('departments', 'howto')" class="tab-btn-departments tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-departments-howto">How-To</button>
+                        <button onclick="switchTab('departments', 'diagram')" class="tab-btn-departments tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-departments-diagram">Relationships</button>
+                    </div>
+
+                    <!-- Tab Contents -->
+                    <div id="content-departments-purpose" class="content-departments-groups content-tab active space-y-4">
+                        <h4 class="font-bold text-white text-lg">Purpose & Objective</h4>
+                        <p class="text-slate-300 leading-relaxed text-sm">
+                            The **Departments** module represents core operational departments (e.g. <i>Software Development, Technical Support, QA, Marketing</i>). Departments group staff under specific leadership/supervisors and establish boundaries for cost-center accounting and division-level budgeting.
+                        </p>
+                    </div>
+
+                    <div id="content-departments-logic" class="content-departments-groups content-tab space-y-4">
+                        <h4 class="font-bold text-white text-lg">System & Validation Logic</h4>
+                        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 text-sm space-y-2">
+                            <p class="text-slate-300"><strong class="text-white">Cascading Filters:</strong> Selection is limited to the parent Division. Mapped foreign keys (`division_id`) are checked during validation requests.</p>
+                            <p class="text-slate-300"><strong class="text-white">Org Structure Scoping:</strong> Automatically inherits security scoping constraints from the parent company model.</p>
+                        </div>
+                    </div>
+
+                    <div id="content-departments-howto" class="content-departments-groups content-tab space-y-4 text-sm">
+                        <h4 class="font-bold text-white text-lg">How to Do the Task</h4>
+                        <ol class="list-decimal list-inside space-y-2 text-slate-300">
+                            <li>Navigate to <strong class="text-white">Company Setup &gt; Departments</strong>.</li>
+                            <li>Click <strong class="text-yellow-500">Create</strong>.</li>
+                            <li>Select parent Company, Location, and Division.</li>
+                            <li>Type in department name (e.g. <i>QA Department</i>) and save.</li>
+                        </ol>
+                    </div>
+
+                    <div id="content-departments-diagram" class="content-departments-groups content-tab space-y-4">
+                        <h4 class="font-bold text-white text-lg text-center">Entity Relationship Mapping</h4>
+                        <div class="bg-slate-900/40 p-4 rounded-xl border border-slate-800 flex justify-center">
+                            <pre class="mermaid">
+                            graph TD
+                                Division[Division Model] -->|1 : N| Department[Department Model]
+                                Department -->|1 : N| Section[Section Model]
+                            </pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Module: Sections -->
+                <section id="module-sections" class="module-section hidden space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                        <div>
+                            <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-diagram-project text-primary"></i> Sections Setup
+                            </h2>
+                            <p class="text-sm text-slate-400">Granular work groups and operational teams</p>
+                        </div>
+                        <span class="bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs px-2.5 py-1 rounded-full font-semibold">Hierarchy Level 5</span>
+                    </div>
+
+                    <!-- Inner Tabs -->
+                    <div class="flex gap-2 border-b border-slate-800 pb-1">
+                        <button onclick="switchTab('sections', 'purpose')" class="tab-btn-sections tab-btn active text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-sections-purpose">Purpose</button>
+                        <button onclick="switchTab('sections', 'logic')" class="tab-btn-sections tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-sections-logic">Business Logic</button>
+                        <button onclick="switchTab('sections', 'howto')" class="tab-btn-sections tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-sections-howto">How-To</button>
+                        <button onclick="switchTab('sections', 'diagram')" class="tab-btn-sections tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-sections-diagram">Relationships</button>
+                    </div>
+
+                    <!-- Tab Contents -->
+                    <div id="content-sections-purpose" class="content-sections-groups content-tab active space-y-4">
+                        <h4 class="font-bold text-white text-lg">Purpose & Objective</h4>
+                        <p class="text-slate-300 leading-relaxed text-sm">
+                            The **Sections** module handles the most granular organizational level (e.g. <i>Mobile App Team, Frontend Team under Software Development Department</i>). This structural mapping isolates workflows and enables precise employee targeting for localized notifications.
+                        </p>
+                    </div>
+
+                    <div id="content-sections-logic" class="content-sections-groups content-tab space-y-4">
+                        <h4 class="font-bold text-white text-lg">System & Validation Logic</h4>
+                        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 text-sm space-y-2">
+                            <p class="text-slate-300"><strong class="text-white">Cascading Hierarchy:</strong> Dropdown dependencies filter selections dynamically down to Section level. Selection lists filter based on: <i>Company &gt; Location &gt; Division &gt; Department &gt; Section</i>.</p>
+                            <p class="text-slate-300"><strong class="text-white">Scoping Guard:</strong> Section records inherit context variables, ensuring secure data separation for multi-tenant setups.</p>
+                        </div>
+                    </div>
+
+                    <div id="content-sections-howto" class="content-sections-groups content-tab space-y-4 text-sm">
+                        <h4 class="font-bold text-white text-lg">How to Do the Task</h4>
+                        <ol class="list-decimal list-inside space-y-2 text-slate-300">
+                            <li>Navigate to <strong class="text-white">Company Setup &gt; Sections</strong>.</li>
+                            <li>Click <strong class="text-yellow-500">Create</strong>.</li>
+                            <li>Select Company, Location, Division, and Department.</li>
+                            <li>Enter the section name (e.g. <i>React Native Devs</i>) and click Save.</li>
+                        </ol>
+                    </div>
+
+                    <div id="content-sections-diagram" class="content-sections-groups content-tab space-y-4">
+                        <h4 class="font-bold text-white text-lg text-center">Entity Relationship Mapping</h4>
+                        <div class="bg-slate-900/40 p-4 rounded-xl border border-slate-800 flex justify-center">
+                            <pre class="mermaid">
+                            graph TD
+                                Department[Department Model] -->|1 : N| Section[Section Model]
+                                Section -->|1 : N| Employee[Employee Model]
+                            </pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Module: Designations -->
+                <section id="module-designations" class="module-section hidden space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                        <div>
+                            <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-id-card-clip text-primary"></i> Designations
+                            </h2>
+                            <p class="text-sm text-slate-400">Corporate job titles and authority weights</p>
+                        </div>
+                        <span class="bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs px-2.5 py-1 rounded-full font-semibold">Hierarchy Level Weights</span>
+                    </div>
+
+                    <!-- Inner Tabs -->
+                    <div class="flex gap-2 border-b border-slate-800 pb-1">
+                        <button onclick="switchTab('designations', 'purpose')" class="tab-btn-designations tab-btn active text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-designations-purpose">Purpose</button>
+                        <button onclick="switchTab('designations', 'logic')" class="tab-btn-designations tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-designations-logic">Business Logic</button>
+                        <button onclick="switchTab('designations', 'howto')" class="tab-btn-designations tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-designations-howto">How-To</button>
+                        <button onclick="switchTab('designations', 'diagram')" class="tab-btn-designations tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-designations-diagram">Relationships</button>
+                    </div>
+
+                    <!-- Tab Contents -->
+                    <div id="content-designations-purpose" class="content-designations-groups content-tab active space-y-4">
+                        <h4 class="font-bold text-white text-lg">Purpose & Objective</h4>
+                        <p class="text-slate-300 leading-relaxed text-sm">
+                            The **Designations** module configures corporate job titles (e.g. <i>Software Engineer, Senior Manager, VP</i>). Defining designations maps employees to specific positions within the organizational hierarchy and helps coordinate approval chains.
+                        </p>
+                    </div>
+
+                    <div id="content-designations-logic" class="content-designations-groups content-tab space-y-4">
+                        <h4 class="font-bold text-white text-lg">System & Validation Logic</h4>
+                        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 text-sm space-y-2">
+                            <p class="text-slate-300"><strong class="text-white">Designation Level Weight:</strong> An integer representing hierarchy (e.g. 1 = Associate, 5 = VP). The system enforces this hierarchy weight to validate career movements:
+                                <br>
+                                <span class="font-mono text-xs block bg-slate-950 p-2 rounded mt-1 text-yellow-400">
+                                    Promotion Rule: new_designation_level &gt; current_designation_level<br>
+                                    Demotion Rule: new_designation_level &lt; current_designation_level
+                                </span>
+                            </p>
+                            <p class="text-slate-300"><strong class="text-white">Workflow Routing:</strong> The system references these hierarchy weights to dynamically route career movements (like transfers or promotions) through the appropriate approval chains.</p>
+                        </div>
+                    </div>
+
+                    <div id="content-designations-howto" class="content-designations-groups content-tab space-y-4 text-sm">
+                        <h4 class="font-bold text-white text-lg">How to Do the Task</h4>
+                        <ol class="list-decimal list-inside space-y-2 text-slate-300">
+                            <li>Navigate to <strong class="text-white">Company Setup &gt; Designations</strong>.</li>
+                            <li>Click <strong class="text-yellow-500">Create</strong>.</li>
+                            <li>Enter the designation title (e.g., <i>Principal Tech Lead</i>).</li>
+                            <li>Assign a numeric level weight (higher numbers indicate senior status).</li>
+                            <li>Set status to <strong class="text-green-400">Active</strong> and save.</li>
+                        </ol>
+                    </div>
+
+                    <div id="content-designations-diagram" class="content-designations-groups content-tab space-y-4">
+                        <h4 class="font-bold text-white text-lg text-center">Entity Relationship Mapping</h4>
+                        <div class="bg-slate-900/40 p-4 rounded-xl border border-slate-800 flex justify-center">
+                            <pre class="mermaid">
+                            graph TD
+                                Desig[Designation Model] -->|Validation Checks| Promo[Promotion Model]
+                                Desig -->|Validation Checks| Demo[Demotion Model]
+                                Desig -->|Current & Requested| Transfer[Transfer Model]
+                            </pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Module: Pay Groups -->
+                <section id="module-pay-groups" class="module-section hidden space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                        <div>
+                            <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-coins text-primary"></i> Pay Groups
+                            </h2>
+                            <p class="text-sm text-slate-400">Payroll run schedule categories and frequencies</p>
+                        </div>
+                        <span class="bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs px-2.5 py-1 rounded-full font-semibold">Payroll Configuration</span>
+                    </div>
+
+                    <!-- Inner Tabs -->
+                    <div class="flex gap-2 border-b border-slate-800 pb-1">
+                        <button onclick="switchTab('pay-groups', 'purpose')" class="tab-btn-pay-groups tab-btn active text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-pay-groups-purpose">Purpose</button>
+                        <button onclick="switchTab('pay-groups', 'logic')" class="tab-btn-pay-groups tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-pay-groups-logic">Business Logic</button>
+                        <button onclick="switchTab('pay-groups', 'howto')" class="tab-btn-pay-groups tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-pay-groups-howto">How-To</button>
+                        <button onclick="switchTab('pay-groups', 'diagram')" class="tab-btn-pay-groups tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-pay-groups-diagram">Relationships</button>
+                    </div>
+
+                    <!-- Tab Contents -->
+                    <div id="content-pay-groups-purpose" class="content-pay-groups-groups content-tab active space-y-4">
+                        <h4 class="font-bold text-white text-lg">Purpose & Objective</h4>
+                        <p class="text-slate-300 leading-relaxed text-sm">
+                            The **Pay Groups** module categorizes employees based on their payroll cycle characteristics (e.g. <i>Monthly Staff, Weekly Freelancers, Executive Pay</i>). This grouping maps staff to distinct processing schedules, default payment frequencies, and calculation rules.
+                        </p>
+                    </div>
+
+                    <div id="content-pay-groups-logic" class="content-pay-groups-groups content-tab space-y-4">
+                        <h4 class="font-bold text-white text-lg">System & Validation Logic</h4>
+                        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 text-sm space-y-2">
+                            <p class="text-slate-300"><strong class="text-white">Frequencies:</strong> Enforces frequencies (`Monthly`, `Weekly`, `Bi-Weekly`, `Semi-Monthly`).</p>
+                            <p class="text-slate-300"><strong class="text-white">Pay Cutoff Day:</strong> Maps the processing day (e.g., 25th of the month) to determine cutoff dates for overtime and attendance calculations.</p>
+                            <p class="text-slate-300"><strong class="text-white">Cascading Hierarchy:</strong> Selecting a Pay Group when defining a Pay Scale filters the available configurations.</p>
+                        </div>
+                    </div>
+
+                    <div id="content-pay-groups-howto" class="content-pay-groups-groups content-tab space-y-4 text-sm">
+                        <h4 class="font-bold text-white text-lg">How to Do the Task</h4>
+                        <ol class="list-decimal list-inside space-y-2 text-slate-300">
+                            <li>Navigate to <strong class="text-white">Company Setup &gt; Pay Groups</strong>.</li>
+                            <li>Click <strong class="text-yellow-500">Create</strong>.</li>
+                            <li>Enter the title (e.g. <i>Monthly Plant Workers</i>).</li>
+                            <li>Select the processing frequency and input the cutoff day.</li>
+                            <li>Set status to <strong class="text-green-400">Active</strong> and save.</li>
+                        </ol>
+                    </div>
+
+                    <div id="content-pay-groups-diagram" class="content-pay-groups-groups content-tab space-y-4">
+                        <h4 class="font-bold text-white text-lg text-center">Entity Relationship Mapping</h4>
+                        <div class="bg-slate-900/40 p-4 rounded-xl border border-slate-800 flex justify-center">
+                            <pre class="mermaid">
+                            graph TD
+                                Group[Pay Group Model] -->|Used in combination| Scale[Pay Scale Model]
+                                Group -->|1 : N| Employee[Employee Salary Breakdown]
+                            </pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Module: Salary Grades -->
+                <section id="module-salary-grades" class="module-section hidden space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                        <div>
+                            <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-award text-primary"></i> Salary Grades
+                            </h2>
+                            <p class="text-sm text-slate-400">Standardized compensation bands and grades</p>
+                        </div>
+                        <span class="bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs px-2.5 py-1 rounded-full font-semibold">Compensation Classification</span>
+                    </div>
+
+                    <!-- Inner Tabs -->
+                    <div class="flex gap-2 border-b border-slate-800 pb-1">
+                        <button onclick="switchTab('salary-grades', 'purpose')" class="tab-btn-salary-grades tab-btn active text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-salary-grades-purpose">Purpose</button>
+                        <button onclick="switchTab('salary-grades', 'logic')" class="tab-btn-salary-grades tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-salary-grades-logic">Business Logic</button>
+                        <button onclick="switchTab('salary-grades', 'howto')" class="tab-btn-salary-grades tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-salary-grades-howto">How-To</button>
+                        <button onclick="switchTab('salary-grades', 'diagram')" class="tab-btn-salary-grades tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-salary-grades-diagram">Relationships</button>
+                    </div>
+
+                    <!-- Tab Contents -->
+                    <div id="content-salary-grades-purpose" class="content-salary-grades-groups content-tab active space-y-4">
+                        <h4 class="font-bold text-white text-lg">Purpose & Objective</h4>
+                        <p class="text-slate-300 leading-relaxed text-sm">
+                            The **Salary Grades** module establishes standard compensation structures (e.g. <i>G1, G2, Executive Grade 1</i>). This standardization simplifies pay parity reviews, organizes employee benefits, and prevents arbitrary salary adjustments.
+                        </p>
+                    </div>
+
+                    <div id="content-salary-grades-logic" class="content-salary-grades-groups content-tab space-y-4">
+                        <h4 class="font-bold text-white text-lg">System & Validation Logic</h4>
+                        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 text-sm space-y-2">
+                            <p class="text-slate-300"><strong class="text-white">Unique Grade Code:</strong> Codes (e.g., `G1`) must be unique to prevent classification conflicts.</p>
+                            <p class="text-slate-300"><strong class="text-white">Deconstruct Cascading Deletes:</strong> The model includes a `deleting` observer event: when a Salary Grade is deleted, all child Pay Scales associated with it are automatically deleted to maintain database integrity.</p>
+                        </div>
+                    </div>
+
+                    <div id="content-salary-grades-howto" class="content-salary-grades-groups content-tab space-y-4 text-sm">
+                        <h4 class="font-bold text-white text-lg">How to Do the Task</h4>
+                        <ol class="list-decimal list-inside space-y-2 text-slate-300">
+                            <li>Navigate to <strong class="text-white">Company Setup &gt; Salary Grades</strong>.</li>
+                            <li>Click <strong class="text-yellow-500">Create</strong>.</li>
+                            <li>Input a short unique code (e.g. <i>G9</i>) and description name (e.g. <i>Associate Grade 9</i>).</li>
+                            <li>Set status to <strong class="text-green-400">Active</strong> and save.</li>
+                        </ol>
+                    </div>
+
+                    <div id="content-salary-grades-diagram" class="content-salary-grades-groups content-tab space-y-4">
+                        <h4 class="font-bold text-white text-lg text-center">Entity Relationship Mapping</h4>
+                        <div class="bg-slate-900/40 p-4 rounded-xl border border-slate-800 flex justify-center">
+                            <pre class="mermaid">
+                            graph TD
+                                Grade[Salary Grade Model] -->|1 : N| Scale[Pay Scale Model]
+                                Grade -->|Observer cascade delete| Scale
+                            </pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Module: Pay Scales -->
+                <section id="module-pay-scales" class="module-section hidden space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                        <div>
+                            <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-scale-balanced text-primary"></i> Pay Scales Setup
+                            </h2>
+                            <p class="text-sm text-slate-400">Minimum and maximum gross salary limits by grade and schedule</p>
+                        </div>
+                        <span class="bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs px-2.5 py-1 rounded-full font-semibold">Compensation Band Rule Engine</span>
+                    </div>
+
+                    <!-- Inner Tabs -->
+                    <div class="flex gap-2 border-b border-slate-800 pb-1">
+                        <button onclick="switchTab('pay-scales', 'purpose')" class="tab-btn-pay-scales tab-btn active text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-pay-scales-purpose">Purpose</button>
+                        <button onclick="switchTab('pay-scales', 'logic')" class="tab-btn-pay-scales tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-pay-scales-logic">Business Logic</button>
+                        <button onclick="switchTab('pay-scales', 'howto')" class="tab-btn-pay-scales tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-pay-scales-howto">How-To</button>
+                        <button onclick="switchTab('pay-scales', 'diagram')" class="tab-btn-pay-scales tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-pay-scales-diagram">Relationships</button>
+                    </div>
+
+                    <!-- Tab Contents -->
+                    <div id="content-pay-scales-purpose" class="content-pay-scales-groups content-tab active space-y-4">
+                        <h4 class="font-bold text-white text-lg">Purpose & Objective</h4>
+                        <p class="text-slate-300 leading-relaxed text-sm">
+                            The **Pay Scales** module establishes standard compensation limits by mapping a combination of **Salary Grade** and **Pay Group** to a defined minimum and maximum salary range. This configuration acts as a validation check when processing promotions, demotions, salary increments, or decrements.
+                        </p>
+                    </div>
+
+                    <div id="content-pay-scales-logic" class="content-pay-scales-groups content-tab space-y-4">
+                        <h4 class="font-bold text-white text-lg">System & Validation Logic</h4>
+                        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 text-sm space-y-2">
+                            <p class="text-slate-300"><strong class="text-white">Validation Threshold Rules:</strong> When a user enters adjustment values for an employee:
+                                <br>
+                                <span class="font-mono text-xs block bg-slate-950 p-2 rounded mt-1 text-yellow-400">
+                                    Let S = new_gross_salary<br>
+                                    Rule 1: If S &gt; max_salary, trigger UI warn event "Salary surpasses the pay scale maximum limit."<br>
+                                    Rule 2: If S &lt; min_salary, trigger UI warn event "Salary falls below the pay scale minimum limit."
+                                </span>
+                            </p>
+                            <p class="text-slate-300"><strong class="text-white">Relationship Checks:</strong> Intersects `grade_id` and `pay_group_id` foreign keys to establish standard base parameters.</p>
+                        </div>
+                    </div>
+
+                    <div id="content-pay-scales-howto" class="content-pay-groups-groups content-tab space-y-4 text-sm">
+                        <h4 class="font-bold text-white text-lg">How to Do the Task</h4>
+                        <ol class="list-decimal list-inside space-y-2 text-slate-300">
+                            <li>Navigate to <strong class="text-white">Company Setup &gt; Pay Scales</strong>.</li>
+                            <li>Click <strong class="text-yellow-500">Create</strong>.</li>
+                            <li>Select the appropriate Salary Grade and Pay Group.</li>
+                            <li>Enter the Minimum and Maximum salary limits.</li>
+                            <li>Optional: Enter a title (otherwise, a title is auto-generated in the format: <i>Pay Group - Grade Code</i>).</li>
+                            <li>Save the changes.</li>
+                        </ol>
+                    </div>
+
+                    <div id="content-pay-scales-diagram" class="content-pay-scales-groups content-tab space-y-4">
+                        <h4 class="font-bold text-white text-lg text-center">Entity Relationship Mapping</h4>
+                        <div class="bg-slate-900/40 p-4 rounded-xl border border-slate-800 flex justify-center">
+                            <pre class="mermaid">
+                            graph TD
+                                Grade[Salary Grade Model] -->|1 : N| Scale[Pay Scale Model]
+                                Group[Pay Group Model] -->|1 : N| Scale
+                                Scale -->|Limits Checked By| Adjustment[Career & Salary Adjustment Forms]
+                            </pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Module: Movement Types -->
+                <section id="module-movement-types" class="module-section hidden space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                        <div>
+                            <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-shuffle text-primary"></i> Movement Types
+                            </h2>
+                            <p class="text-sm text-slate-400">Classifications for employee career movements and adjustments</p>
+                        </div>
+                        <span class="bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs px-2.5 py-1 rounded-full font-semibold">Career Adjustment Configuration</span>
+                    </div>
+
+                    <!-- Inner Tabs -->
+                    <div class="flex gap-2 border-b border-slate-800 pb-1">
+                        <button onclick="switchTab('movement-types', 'purpose')" class="tab-btn-movement-types tab-btn active text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-movement-types-purpose">Purpose</button>
+                        <button onclick="switchTab('movement-types', 'logic')" class="tab-btn-movement-types tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-movement-types-logic">Business Logic</button>
+                        <button onclick="switchTab('movement-types', 'howto')" class="tab-btn-movement-types tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-movement-types-howto">How-To</button>
+                        <button onclick="switchTab('movement-types', 'diagram')" class="tab-btn-movement-types tab-btn text-slate-400 hover:text-white px-4 py-2 text-sm" id="tab-movement-types-diagram">Relationships</button>
+                    </div>
+
+                    <!-- Tab Contents -->
+                    <div id="content-movement-types-purpose" class="content-movement-types-groups content-tab active space-y-4">
+                        <h4 class="font-bold text-white text-lg">Purpose & Objective</h4>
+                        <p class="text-slate-300 leading-relaxed text-sm">
+                            The **Movement Types** module classifies employee career transitions (e.g. <i>Annual Increment, Correction, Promotion, Performance Demotion, General Transfer</i>). Defining movement types categorizes adjustments to help identify trends in organizational shifts and salary changes.
+                        </p>
+                    </div>
+
+                    <div id="content-movement-types-logic" class="content-movement-types-groups content-tab space-y-4">
+                        <h4 class="font-bold text-white text-lg">System & Validation Logic</h4>
+                        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 text-sm space-y-2">
+                            <p class="text-slate-300"><strong class="text-white">Entity Integration:</strong> Map a Movement Type to career adjustment models using `movement_type_id`. This relation is active on:
+                                <span class="font-mono text-xs block bg-slate-950 p-2 rounded mt-1 text-slate-300">
+                                    * Increment Model<br>
+                                    * Decrement Model<br>
+                                    * Promotion Model<br>
+                                    * Demotion Model<br>
+                                    * Transfer Model
+                                </span>
+                            </p>
+                            <p class="text-slate-300"><strong class="text-white">Reporting Parameter:</strong> Standardized movement classifications allow the system to categorize payroll adjustments for audit logs and historical changes.</p>
+                        </div>
+                    </div>
+
+                    <div id="content-movement-types-howto" class="content-movement-types-groups content-tab space-y-4 text-sm">
+                        <h4 class="font-bold text-white text-lg">How to Do the Task</h4>
+                        <ol class="list-decimal list-inside space-y-2 text-slate-300">
+                            <li>Navigate to <strong class="text-white">Company Setup &gt; Movement Types</strong>.</li>
+                            <li>Click <strong class="text-yellow-500">Create</strong>.</li>
+                            <li>Enter the classification name (e.g. <i>Annual Performance Increment</i>).</li>
+                            <li>Provide an optional description detailing when to use it.</li>
+                            <li>Set status to <strong class="text-green-400">Active</strong> and save.</li>
+                        </ol>
+                    </div>
+
+                    <div id="content-movement-types-diagram" class="content-movement-types-groups content-tab space-y-4">
+                        <h4 class="font-bold text-white text-lg text-center">Entity Relationship Mapping</h4>
+                        <div class="bg-slate-900/40 p-4 rounded-xl border border-slate-800 flex justify-center">
+                            <pre class="mermaid">
+                            graph TD
+                                Move[Movement Type Model] -->|Optional 1 : N| Increment[Increment Model]
+                                Move -->|Optional 1 : N| Decrement[Decrement Model]
+                                Move -->|Optional 1 : N| Promotion[Promotion Model]
+                                Move -->|Optional 1 : N| Demotion[Demotion Model]
+                                Move -->|Optional 1 : N| Transfer[Transfer Model]
+                            </pre>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- JS Scripts -->
+    <script>
+        // Track currently selected module
+        let currentModuleId = '';
+
+        function showModule(moduleId) {
+            // Hide intro
+            document.getElementById('intro-module').classList.add('hidden');
+            
+            // Hide all sections
+            document.querySelectorAll('.module-section').forEach(sec => {
+                sec.classList.add('hidden');
+            });
+            
+            // Deactivate all nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Show target section
+            const targetSection = document.getElementById(`module-${moduleId}`);
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+                currentModuleId = moduleId;
+            }
+
+            // Activate target nav link
+            const targetLink = document.getElementById(`nav-${moduleId}`);
+            if (targetLink) {
+                targetLink.classList.add('active');
+            }
+
+            // Scroll content area back to top
+            document.querySelector('main').scrollTop = 0;
+            
+            // Re-render Mermaid Diagrams if needed
+            setTimeout(() => {
+                try {
+                    mermaid.contentLoaded();
+                } catch(e) {
+                    console.log('Mermaid render delay execution');
+                }
+            }, 100);
+        }
+
+        function switchTab(moduleId, tabKey) {
+            // Deactivate all tab buttons in this module
+            document.querySelectorAll(`.tab-btn-${moduleId}`).forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Deactivate all content tabs in this module
+            document.querySelectorAll(`.content-${moduleId}-groups`).forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Handle unique naming for groups (which shares suffix names)
+            document.querySelectorAll(`.content-tab-${moduleId}`).forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Activate selected tab button
+            const selectedBtn = document.getElementById(`tab-${moduleId}-${tabKey}`);
+            if (selectedBtn) {
+                selectedBtn.classList.add('active');
+            }
+
+            // Activate selected content tab
+            const selectedContent = document.getElementById(`content-${moduleId}-${tabKey}`);
+            if (selectedContent) {
+                selectedContent.classList.add('active');
+            }
+        }
+
+        // Live Module Search filter
+        document.getElementById('moduleSearch').addEventListener('input', function() {
+            const query = this.value.toLowerCase();
+            document.querySelectorAll('#sidebarNav ul li').forEach(li => {
+                const text = li.textContent.toLowerCase();
+                if (text.includes(query)) {
+                    li.classList.remove('hidden');
+                } else {
+                    li.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
