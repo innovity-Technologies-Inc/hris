@@ -475,6 +475,9 @@
                     if (max > 0 && newGrossSalary > max) {
                         const warningMsg = `Warning: The incremented salary (${formatCurrency(newGrossSalary)}) surpasses the selected pay scale maximum limit of (${formatCurrency(max)}).`;
                         $('#pay_scale_id').after(`<div id="payscale-warning" class="alert alert-warning py-1 px-2 mt-2 mb-0 small text-danger"><i class="bi bi-exclamation-triangle"></i> ${warningMsg}</div>`);
+                    } else if (min > 0 && newGrossSalary < min) {
+                        const warningMsg = `Warning: The incremented salary (${formatCurrency(newGrossSalary)}) is below the selected pay scale minimum limit of (${formatCurrency(min)}).`;
+                        $('#pay_scale_id').after(`<div id="payscale-warning" class="alert alert-warning py-1 px-2 mt-2 mb-0 small text-danger"><i class="bi bi-exclamation-triangle"></i> ${warningMsg}</div>`);
                     }
                 }
             }
