@@ -150,59 +150,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Notify approvers when a new step request is created
         \Innovity\ApprovalEngine\Models\ApprovalStepRequest::created(function ($stepRequest) {
+            app(\App\Services\Setting\WorkflowAutoApprovalService::class)->handle($stepRequest);
+
             $approvable = $stepRequest->approvalRequest->approvable ?? null;
-            if ($approvable) {
-                // Find requesting user
-                $requestingUser = null;
-                if (method_exists($approvable, 'user')) {
-                    $requestingUser = $approvable->user;
-                } elseif (method_exists($approvable, 'getEmployee')) {
-                    $emp = $approvable->getEmployee()->withoutGlobalScopes()->first();
-                    $requestingUser = $emp ? $emp->user : null;
-                } elseif (method_exists($approvable, 'employee')) {
-                    $emp = $approvable->employee()->withoutGlobalScopes()->first();
-                    $requestingUser = $emp ? $emp->user : null;
-                } elseif (method_exists($approvable, 'creator')) {
-                    $requestingUser = $approvable->creator;
-                }
-
-                if ($requestingUser) {
-                    $requesterWeight = $requestingUser->user_type->weight();
-                    
-                    // Get step details
-                    $step = $stepRequest->workflowStep;
-                    $shouldAutoApprove = false;
-                    $reason = '';
-
-                    // Case 1: Requester is themselves resolved as an approver (Self Approval)
-                    $resolver = app(\Innovity\ApprovalEngine\Contracts\ApproverResolverInterface::class);
-                    $approverIds = $resolver->resolve((string) $step->id, $approvable);
-                    
-                    if (in_array($requestingUser->id, $approverIds)) {
-                        $shouldAutoApprove = true;
-                        $reason = 'Auto-approved: Requester is the resolved approver.';
-                    }
-                    
-                    // Case 2: Requester has strictly higher authority level weight than the required level (Lower Level Approval)
-                    if (!$shouldAutoApprove && ($step->type === 'user-type' || $step->type === 'role-user')) {
-                        if (!empty($step->required_user_type)) {
-                            $stepWeight = \App\Enums\UserType::getWeight($step->required_user_type);
-                            if ($requesterWeight < $stepWeight) {
-                                $shouldAutoApprove = true;
-                                $reason = "Auto-approved: Requester level ({$requestingUser->user_type->value}) has higher authority than required level ({$step->required_user_type}).";
-                            }
-                        }
-                    }
-
-                    if ($shouldAutoApprove) {
-                        app(\Innovity\ApprovalEngine\Services\ApprovalResolver::class)
-                            ->approve($stepRequest, $requestingUser->id, $reason);
-                        
-                        // Reload the step request so that the pending check below is bypassed
-                        $stepRequest->refresh();
-                    }
-                }
-            }
 
             if ($stepRequest->status->value === 'pending') {
                 $resolver = app(\Innovity\ApprovalEngine\Contracts\ApproverResolverInterface::class);

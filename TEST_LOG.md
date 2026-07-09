@@ -8,7 +8,8 @@
 
 **Results**:
 - `Tests\Feature\Setting\ApprovalWorkflowTest`: 5 tests passed (added auto-approval check, verified self-approval and strictly higher authority auto-approvals correctly resolve and cascade to next steps) ✅
-- **AppServiceProvider Hooks**: Implemented the hook on `ApprovalStepRequest::created` to check for auto-approval rules (self-approval and strictly higher weight) and run `approve()` recursively on steps where applicable.
+- **AppServiceProvider Hooks**: Delegated the `created` hook handling to `WorkflowAutoApprovalService` to check for auto-approval rules and run approvals where applicable.
+- **Encapsulation & Refactoring**: Created the [WorkflowAutoApprovalService](file:///P:/Project/Web/hrms/app/Services/Setting/WorkflowAutoApprovalService.php) class to encapsulate all finding, validation, and auto-approving logic, keeping the service provider thin.
 - **Full Test Suite Integrity**: All 139 tests passed successfully ✅
 
 **Status**: ✅ SUCCESS
