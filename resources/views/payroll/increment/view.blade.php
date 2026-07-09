@@ -180,6 +180,31 @@
         </div>
     </div>
 
+    {{-- Attachments Card --}}
+    @if($incrementData->attachments && $incrementData->attachments->count() > 0)
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i style="height: 16px; width: 16px; margin-right: 5px" data-feather="paperclip"></i> Attachments
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-wrap gap-2">
+                        @foreach($incrementData->attachments as $attachment)
+                            <a href="{{ asset('storage/' . $attachment->file_path) }}" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                <i style="height: 12px; width: 12px" data-feather="download"></i>
+                                {{ $attachment->file_name }}
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
     {{-- Workflow History & Approval Form --}}
     @include('approval_engine.workflow_history', ['approvable' => $incrementData])
 

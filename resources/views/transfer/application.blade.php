@@ -19,7 +19,7 @@
                     </a>
                 </div>
 
-                <form id="transferForm">
+                <form id="transferForm" enctype="multipart/form-data">
                     @csrf
                     <div class="row g-4">
                         <!-- Employee Information Section -->
@@ -124,6 +124,12 @@
                             <div class="mt-4">
                                 <label for="remarks" class="form-label fw-semibold">Reason / Remarks</label>
                                 <textarea name="remarks" id="remarks" rows="4" class="form-control bg-light" placeholder="Explain the reason for this career movement..."></textarea>
+                            </div>
+
+                            <div class="mt-4">
+                                <label for="attachments" class="form-label fw-semibold">Attachments</label>
+                                <input type="file" name="attachments[]" id="attachments" class="form-control" multiple>
+                                <small class="text-muted">You can select multiple files (max 10MB per file).</small>
                             </div>
 
                             <div class="mt-5 pt-3 d-flex justify-content-end gap-3">
@@ -428,13 +434,11 @@ $(document).ready(function() {
             .catch(err => console.error(err));
     }
 
-    // Form Submission
     $('#transferForm').on('submit', function(e) {
         e.preventDefault();
         const formData = new FormData(this);
-        const data = Object.fromEntries(formData.entries());
 
-        axios.post('{{ route('transfer.api.store') }}', data)
+        axios.post('{{ route('transfer.api.store') }}', formData)
             .then(res => {
                 if (res.data.success) {
                     Swal.fire('Success!', res.data.message, 'success')

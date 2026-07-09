@@ -295,26 +295,47 @@ class PayrollServices
         ];
     }
 
+    protected function handleAttachments($model, $folder)
+    {
+        if (request()->hasFile('attachments')) {
+            foreach (request()->file('attachments') as $file) {
+                $path = $file->store($folder, 'public');
+                $model->attachments()->create([
+                    'file_path' => $path,
+                    'file_name' => $file->getClientOriginalName(),
+                ]);
+            }
+        }
+    }
+
     public function promotionDataStore($data)
     {
-        return Promotion::create($data);
+        $model = Promotion::create($data);
+        $this->handleAttachments($model, 'promotions');
+        return $model;
     }
 
     public function promotionDataUpdate($id, $data)
     {
         $promotion = Promotion::find($id);
         $promotion->update($data);
+        $this->handleAttachments($promotion, 'promotions');
+        return $promotion;
     }
 
     public function incrementDataStore($data)
     {
-        return Increment::create($data);
+        $model = Increment::create($data);
+        $this->handleAttachments($model, 'increments');
+        return $model;
     }
 
     public function incrementDataUpdate($id, $data)
     {
         $increment = Increment::find($id);
         $increment->update($data);
+        $this->handleAttachments($increment, 'increments');
+        return $increment;
     }
 
     public function decrementRequestData($request)
@@ -403,24 +424,32 @@ class PayrollServices
 
     public function decrementDataStore($data)
     {
-        return Decrement::create($data);
+        $model = Decrement::create($data);
+        $this->handleAttachments($model, 'decrements');
+        return $model;
     }
 
     public function decrementDataUpdate($id, $data)
     {
         $decrement = Decrement::find($id);
         $decrement->update($data);
+        $this->handleAttachments($decrement, 'decrements');
+        return $decrement;
     }
 
     public function demotionDataStore($data)
     {
-        return Demotion::create($data);
+        $model = Demotion::create($data);
+        $this->handleAttachments($model, 'demotions');
+        return $model;
     }
 
     public function demotionDataUpdate($id, $data)
     {
         $demotion = Demotion::find($id);
         $demotion->update($data);
+        $this->handleAttachments($demotion, 'demotions');
+        return $demotion;
     }
 
     public function salaryCalculation($data1, $data2)

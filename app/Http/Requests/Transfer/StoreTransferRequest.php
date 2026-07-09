@@ -23,6 +23,8 @@ class StoreTransferRequest extends FormRequest
             'requested_department_id' => 'nullable|exists:departments,id',
             'requested_section_id' => 'nullable|exists:sections,id',
             'remarks' => 'nullable|string|max:500',
+            'attachments' => 'nullable|array',
+            'attachments.*' => 'file|max:10240',
         ];
 
         if (auth()->check() && auth()->user()->user_type === UserType::Employee) {

@@ -24,7 +24,8 @@
 
 
     <form id="employeeIncrementForm" method="POST"
-        action="{{ isset($incrementData) ? route('increment.update', $incrementData->id) : route('increment.store') }}">
+        action="{{ isset($incrementData) ? route('increment.update', $incrementData->id) : route('increment.store') }}"
+        enctype="multipart/form-data">
 
         @csrf
         @isset($incrementData)
@@ -250,6 +251,27 @@
                                 <small class="text-muted">Leave empty for indefinite period</small>
                             </div>
 
+                            {{-- Attachments --}}
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Attachments</label>
+                                <input type="file" name="attachments[]" id="attachments" class="form-control" multiple>
+                                <small class="text-muted">You can select multiple files (max 10MB per file).</small>
+                                
+                                @if(isset($incrementData) && $incrementData->attachments->count() > 0)
+                                    <div class="mt-2">
+                                        <small class="text-muted d-block mb-1">Current Attachments:</small>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            @foreach($incrementData->attachments as $attachment)
+                                                <span class="badge bg-light text-dark border p-2">
+                                                    <i class="bi bi-file-earmark-check text-success me-1"></i>
+                                                    {{ $attachment->file_name }}
+                                                </span>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+
                             {{-- Submit Buttons --}}
                             <div class="col-md-12">
                                 <div class="d-flex justify-content-end gap-2">
@@ -284,13 +306,15 @@
 
                 const form = $(this);
                 const actionUrl = form.attr('action');
-                const method = form.find('input[name="_method"]').val() || 'POST';
-                const formData = form.serialize();
+                const formData = new FormData(this);
 
                 axios({
-                    method: method,
+                    method: 'POST',
                     url: actionUrl,
-                    data: formData
+                    data: formData,
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
                 })
                 .then(res => {
                     if (res.data.success) {

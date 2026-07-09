@@ -141,6 +141,16 @@ class TransferServices
                     'created_by' => auth()->id(),
                 ]);
 
+                if (request()->hasFile('attachments')) {
+                    foreach (request()->file('attachments') as $file) {
+                        $path = $file->store('transfers', 'public');
+                        $transfer->attachments()->create([
+                            'file_path' => $path,
+                            'file_name' => $file->getClientOriginalName(),
+                        ]);
+                    }
+                }
+
                 return $transfer;
             });
         } catch (\Exception $e) {

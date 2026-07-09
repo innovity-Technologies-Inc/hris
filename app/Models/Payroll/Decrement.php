@@ -51,4 +51,9 @@ class Decrement extends Model
     {
         return $this->belongsTo(\App\Models\Company\MovementType::class, 'movement_type_id');
     }
+
+    public function attachments()
+    {
+        return $this->morphMany(\App\Models\Payroll\MovementAttachment::class, 'attachable');
+    }
 }

@@ -72,6 +72,20 @@
                 </div>
                 @endif
 
+                @if($transfer->attachments && $transfer->attachments->count() > 0)
+                <div class="mt-4 p-3 bg-light rounded">
+                    <label class="text-muted small d-block mb-2">Attachments</label>
+                    <div class="d-flex flex-wrap gap-2">
+                        @foreach($transfer->attachments as $attachment)
+                            <a href="{{ asset('storage/' . $attachment->file_path) }}" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                <i class="bi bi-file-earmark-arrow-down me-1"></i>
+                                {{ $attachment->file_name }}
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
+
                 <div class="mt-4 row g-3">
                     <div class="col-md-6">
                         <div class="p-2 border rounded bg-light">

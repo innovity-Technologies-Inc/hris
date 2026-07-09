@@ -132,4 +132,9 @@ class Transfer extends Model
     {
         return $this->hasMany(TransferApproval::class);
     }
+
+    public function attachments(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    {
+        return $this->morphMany(\App\Models\Payroll\MovementAttachment::class, 'attachable');
+    }
 }

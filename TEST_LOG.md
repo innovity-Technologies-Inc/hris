@@ -1,5 +1,16 @@
 # Test Log
 
+## 2026-07-09 (Multiple Attachment Uploads)
+
+**Goal**: Implement multiple attachment upload support for Career Movements (Transfer, Promotion, Demotion, Increment, Decrement) using a polymorphic `movement_attachments` table, store uploaded files under public storage directories, render downloadable links inside the details view templates, and verify via feature testing.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/MovementAttachmentTest.php`
+
+**Results**:
+- `Tests\Feature\MovementAttachmentTest`: 2 tests passed (it can store a transfer with multiple attachments, it can store an increment with multiple attachments) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-07 (Session 3)
 
 **Goal**: Implement Movement Type CRUD module under Company Setup, add Movement Type relation to Increment, Decrement, Promotion, Demotion, and Transfer modules, and verify via feature testing.
