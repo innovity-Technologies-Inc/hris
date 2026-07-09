@@ -2,46 +2,21 @@
 
 namespace App\Providers;
 
-use App\Models\Setting\ApiKey;
-use App\Models\Setting\MailSetting;
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Database\Eloquent\Relations\Relation;
-
 use Illuminate\Support\Facades\Gate;
-
 use Illuminate\Support\Facades\View;
 use Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\Route;
-use App\Services\ApproverResolver;
 use Illuminate\Support\Facades\Event;
+use App\Services\ApproverResolver;
 use Innovity\ApprovalEngine\Contracts\ApproverResolverInterface;
 use Innovity\ApprovalEngine\Events\ApprovalCompleted;
 use Innovity\ApprovalEngine\Events\ApprovalRejected;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Map of modules to their dedicated listener classes.
-     */
-    private array $workflowListeners = [
-        'promotion'                => \App\Listeners\Workflow\PromotionWorkflowListener::class,
-        'demotion'                 => \App\Listeners\Workflow\DemotionWorkflowListener::class,
-        'increment'                => \App\Listeners\Workflow\IncrementWorkflowListener::class,
-        'decrement'                => \App\Listeners\Workflow\DecrementWorkflowListener::class,
-        'leave'                    => \App\Listeners\Workflow\LeaveWorkflowListener::class,
-        'salary'                   => \App\Listeners\Workflow\PayrollWorkflowListener::class,
-        'bonus'                    => \App\Listeners\Workflow\PayrollWorkflowListener::class,
-        'profile-update'           => \App\Listeners\Workflow\ProfileUpdateWorkflowListener::class,
-        'office-information'       => \App\Listeners\Workflow\ProfileUpdateWorkflowListener::class,
-        'employee-policy'          => \App\Listeners\Workflow\ProfileUpdateWorkflowListener::class,
-        'salary-breakdown'         => \App\Listeners\Workflow\ProfileUpdateWorkflowListener::class,
-        'employee-bank-account'    => \App\Listeners\Workflow\ProfileUpdateWorkflowListener::class,
-    ];
     /**
      * Register any application services.
      */
@@ -89,66 +64,14 @@ class AppServiceProvider extends ServiceProvider
             return "<?php if(\\App\\HelperClass::isProfileFieldRequired({$expression})): echo 'required'; endif; ?>";
         });
         
-        // 1. Listen for Approval Completed Events dynamically
-        Event::listen(ApprovalCompleted::class, function (ApprovalCompleted $event) {
-            $module = $event->approvalRequest->workflow->module;
-            
-            if (isset($this->workflowListeners[$module])) {
-                $listener = app($this->workflowListeners[$module]);
-                if (method_exists($listener, 'handleCompleted')) {
-                    $listener->handleCompleted($event);
-                }
-            }
-        });
+        // 1. Load Database Configurations (Google Maps & SMTP Mail Settings)
+        app(\App\Services\Setting\SystemConfigLoaderService::class)->loadConfigs();
 
-        // 2. Listen for Approval Rejected Events dynamically
-        Event::listen(ApprovalRejected::class, function (ApprovalRejected $event) {
-            $module = $event->approvalRequest->workflow->module;
-            
-            if (isset($this->workflowListeners[$module])) {
-                $listener = app($this->workflowListeners[$module]);
-                if (method_exists($listener, 'handleRejected')) {
-                    $listener->handleRejected($event);
-                }
-            }
-        });
+        // 2. Listen for Approval completed and rejected events dynamically
+        Event::listen(ApprovalCompleted::class, [app(\App\Services\Setting\WorkflowEventDispatcherService::class), 'handleCompleted']);
+        Event::listen(ApprovalRejected::class, [app(\App\Services\Setting\WorkflowEventDispatcherService::class), 'handleRejected']);
 
-        //Google Api Key Configuration
-        // Avoid error during migrate
-        if (Schema::hasTable('api_keys')) {
-            // Cache for performance
-            $mapsKey = cache()->rememberForever('google_maps_api_key', function () {
-                return ApiKey::first()?->google_maps_api_key;
-            });
-
-            // Override config if DB value exists
-            if (!empty($mapsKey)) {
-                config()->set('services.google.maps_key', $mapsKey);
-            }
-        }
-
-        // 1. Prevent errors during migrations or if table doesn't exist yet
-        if (Schema::hasTable('mail_settings')) {
-
-            $mail = MailSetting::first();
-            if ($mail) {
-                // 2. Map Database columns to Laravel Config keys
-                $data = [
-                    'mail.mailers.smtp.host'       => $mail->mail_host,
-                    'mail.mailers.smtp.port'       => $mail->port,
-                    'mail.mailers.smtp.encryption' => $mail->encryption_type,
-                    'mail.mailers.smtp.username'   => $mail->sender_email,
-                    'mail.mailers.smtp.password'   => $mail->password,
-                    'mail.from.address'            => $mail->sender_email,
-                    'mail.from.name'               => $mail->app_name,
-                ];
-
-                // 3. Apply the changes globally for this request
-                Config::set($data);
-            }
-        }
-
-        // Notify approvers when a new step request is created
+        // 3. Notify approvers and run auto-approval when a new step request is created
         \Innovity\ApprovalEngine\Models\ApprovalStepRequest::created(function ($stepRequest) {
             app(\App\Services\Setting\WorkflowStepRequestService::class)->handleCreated($stepRequest);
         });

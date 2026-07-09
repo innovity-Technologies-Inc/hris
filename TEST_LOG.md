@@ -10,6 +10,7 @@
 - `Tests\Feature\Setting\ApprovalWorkflowTest`: 5 tests passed (added auto-approval check, verified self-approval and strictly higher authority auto-approvals correctly resolve and cascade to next steps) ✅
 - **AppServiceProvider Hooks**: Delegated the `created` hook handling entirely to `WorkflowStepRequestService` to keep the provider thin and decoupled.
 - **Encapsulation & Refactoring**: Created the [WorkflowStepRequestService](file:///P:/Project/Web/hrms/app/Services/Setting/WorkflowStepRequestService.php) class to encapsulate all finding, validation, auto-approving, and email/app notification logic.
+- **Separation of Concerns**: Extracted dynamic event dispatching to [WorkflowEventDispatcherService](file:///P:/Project/Web/hrms/app/Services/Setting/WorkflowEventDispatcherService.php) and database configuration loading to [SystemConfigLoaderService](file:///P:/Project/Web/hrms/app/Services/Setting/SystemConfigLoaderService.php), keeping `AppServiceProvider` strictly focused.
 - **Full Test Suite Integrity**: All 139 tests passed successfully ✅
 
 **Status**: ✅ SUCCESS
