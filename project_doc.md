@@ -28,6 +28,7 @@ This is a robust Human Resource Management System (HRMS) built with Laravel 12. 
 ### 5. Polymorphic Attachment System (Multiple Uploads)
 - **Centralized Storage**: Dynamic, multiple file uploads are supported across Career Movements (Transfers, Promotions, Demotions, Increments, Decrements) using a single, unified database schema.
 - **Database Design**: Implements a polymorphic `movement_attachments` table containing `attachable_type` and `attachable_id` columns, allowing any parent model to map to multiple uploaded files.
+- **Relation Morph Map Mapping**: Utilizes a Laravel `Relation::morphMap` inside [AppServiceProvider](file:///P:/Project/Web/hrms/app/Providers/AppServiceProvider.php) to store clean string types (such as `'transfer'`, `'increment'`, etc.) in the `attachable_type` column rather than absolute class namespace paths (e.g. `App\Models\Transfer\Transfer`). This ensures database schema independence and code refactoring safety.
 - **Service Layer Processing**: Upload file handling is decoupled from controllers and processed in service layers ([PayrollServices](file:///P:/Project/Web/hrms/app/Services/Payroll/PayrollServices.php) and [TransferServices](file:///P:/Project/Web/hrms/app/Services/Transfer/TransferServices.php)) using centralized file storage logic.
 - **Axios Multipart Transport**: Form submissions utilize the standard HTML5 `FormData` object with `Content-Type: multipart/form-data` and Laravel `_method` spoofing to successfully transport files over Axios AJAX calls.
 

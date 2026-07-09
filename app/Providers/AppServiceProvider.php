@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 use Illuminate\Support\Facades\Gate;
 
@@ -54,6 +55,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Relation::morphMap([
+            'transfer' => \App\Models\Transfer\Transfer::class,
+            'increment' => \App\Models\Payroll\Increment::class,
+            'decrement' => \App\Models\Payroll\Decrement::class,
+            'promotion' => \App\Models\Payroll\Promotion::class,
+            'demotion' => \App\Models\Payroll\Demotion::class,
+        ]);
+
         // Implicitly grant "Super Admin" role all permissions
         // This works in the app by using gate-related functions like auth()->user->can() and @can()
         Gate::before(function ($user, $ability) {

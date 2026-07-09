@@ -15,6 +15,7 @@ Career movements (Transfers, Promotions, Demotions, Increments, Decrements) requ
 
 ## 3. Technical Requirements
 - **Polymorphic Schema**: Implement a single `movement_attachments` database table mapping to models polymorphically (`attachable_id`, `attachable_type`).
+- **Polymorphic Morph Map**: Define custom morph mappings in [AppServiceProvider](file:///P:/Project/Web/hrms/app/Providers/AppServiceProvider.php) so that the database stores clean type labels (such as `'transfer'`, `'increment'`) in the `attachable_type` column instead of absolute class namespace paths.
 - **Axios FormData**: Upgrade AJAX/Axios handlers in views to compile and post inputs via `FormData` objects to enable multipart file transport.
 - **Service Layer Processing**: Centralize file storage and association logic inside the service layers (`PayrollServices` and `TransferServices`) rather than in controllers.
 - **Pest Verification**: Implement feature tests to verify that files upload, store, and associate correctly.

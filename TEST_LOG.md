@@ -4,10 +4,12 @@
 
 **Goal**: Implement multiple attachment upload support for Career Movements (Transfer, Promotion, Demotion, Increment, Decrement) using a polymorphic `movement_attachments` table, store uploaded files under public storage directories, render downloadable links inside the details view templates, and verify via feature testing.
 
-**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/MovementAttachmentTest.php`
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/MovementAttachmentTest.php && php artisan test`
 
 **Results**:
 - `Tests\Feature\MovementAttachmentTest`: 2 tests passed (it can store a transfer with multiple attachments, it can store an increment with multiple attachments) ✅
+- **Relation Morph Map Mapping**: Configured in [AppServiceProvider](file:///P:/Project/Web/hrms/app/Providers/AppServiceProvider.php) to store clean string types (`'transfer'`, `'increment'`, etc.) in `attachable_type` column instead of absolute class namespaces.
+- **Full Test Suite Integrity**: All 136 tests passed successfully ✅
 
 **Status**: ✅ SUCCESS
 
