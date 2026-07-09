@@ -1,14 +1,5 @@
 <div class="card-body p-0">
 
-    @if ($decrements->isNotEmpty())
-        @can('decrements.hr-approve')
-        <a type="button" class="btn btn-success btn-sm me-3 mb-3 float-end mt-3" href="{{ route('decrement.adjustment') }}">
-            <i style="height: 12px; width: 12px" data-feather="check"></i> Decrement Adjustment
-        </a>
-        <div class="clearfix"></div>
-        @endcan
-    @endif
-
     @if ($decrements->isEmpty())
         <div class="text-center py-4 text-muted">No decrement records found.</div>
     @else

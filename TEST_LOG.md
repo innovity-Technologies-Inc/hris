@@ -1,5 +1,17 @@
 # Test Log
 
+## 2026-07-09 (UI Alignment for Action Buttons)
+
+**Goal**: Align the "Create" and "Adjustment" action buttons side-by-side on the same line in index pages for Career Movements (Increment, Decrement, Promotion, Demotion).
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/Setting/ApprovalWorkflowTest.php && php artisan test`
+
+**Results**:
+- **UI Button Alignment**: Extracted the "Adjustment" buttons from the partial table views and consolidated them into the main index views alongside the "Create" buttons in a single flex container.
+- **Full Test Suite Integrity**: All 139 tests passed successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-09 (Workflow Step Auto-Approval)
 
 **Goal**: Implement automatic approval of steps in approval workflows if the requesting user is the resolved approver for that step (self-approval), or if they have strictly higher authority (weight) than the required level for the step.

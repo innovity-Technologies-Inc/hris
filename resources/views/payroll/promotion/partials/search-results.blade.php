@@ -1,13 +1,4 @@
 <div class="p-0">
-    @if ($promotions->isNotEmpty())
-        @can('promotions.hr-approve')
-        <div class="text-end mb-3">
-            <a type="button" class="btn btn-success btn-sm" href="{{ route('promotion.adjustment') }}">
-                <i style="height: 12px; width: 12px" data-feather="check"></i> Promotion Adjustment
-            </a>
-        </div>
-        @endcan
-    @endif
 
     @if ($promotions->isEmpty())
         <div class="text-center py-4 text-muted">No promotion records found.</div>

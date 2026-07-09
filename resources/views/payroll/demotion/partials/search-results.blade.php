@@ -1,13 +1,4 @@
 <div class="p-0">
-    @if ($demotions->isNotEmpty())
-        @can('demotions.hr-approve')
-        <div class="text-end mb-3">
-            <a type="button" class="btn btn-success btn-sm" href="{{ route('demotion.adjustment') }}">
-                <i style="height: 12px; width: 12px" data-feather="check"></i> Demotion Adjustment
-            </a>
-        </div>
-        @endcan
-    @endif
 
     @if ($demotions->isEmpty())
         <div class="text-center py-4 text-muted">No demotion records found.</div>

@@ -98,11 +98,19 @@
                 <div class="card-body">
                     {{-- Action Buttons --}}
                     <div class="d-flex justify-content-between mb-3">
-                        @can('decrements.create')
-                        <a type="button" class="btn btn-warning btn-sm" href="{{ route('decrement.create') }}">
-                            <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
-                        </a>
-                        @endcan
+                        <div class="d-flex gap-2">
+                            @can('decrements.create')
+                            <a type="button" class="btn btn-warning btn-sm" href="{{ route('decrement.create') }}">
+                                <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
+                            </a>
+                            @endcan
+
+                            @can('decrements.hr-approve')
+                            <a type="button" class="btn btn-success btn-sm" href="{{ route('decrement.adjustment') }}">
+                                <i style="height: 12px; width: 12px" data-feather="check"></i> Decrement Adjustment
+                            </a>
+                            @endcan
+                        </div>
                     </div>
 
                     <div id="search-result">

@@ -17,15 +17,6 @@ Each increment object should have:
 
 <div class="card-body p-0">
 
-    @if ($increments->isNotEmpty())
-        @can('increments.hr-approve')
-        <a type="button" class="btn btn-success btn-sm me-3 mb-3 float-end mt-3" href="{{ route('increment.adjustment') }}">
-            <i style="height: 12px; width: 12px" data-feather="check"></i> Increment Adjustment
-        </a>
-        <div class="clearfix"></div>
-        @endcan
-    @endif
-
     @if ($increments->isEmpty())
         <div class="text-center py-4 text-muted">No increment records found.</div>
     @else
