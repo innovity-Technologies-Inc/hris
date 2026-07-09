@@ -225,3 +225,80 @@ test('it prevents creating multiple workflows for the same module', function () 
     $response->assertStatus(422);
     $response->assertJsonValidationErrors(['module_name']);
 });
+
+test('it auto-approves steps if requester has higher authority or is the resolved approver', function () {
+    $this->actingAs($this->admin);
+
+    $workflow = Workflow::create([
+        'name' => 'Profile Update Workflow',
+        'module' => 'profile-update',
+        'type' => 'sequential',
+        'total_steps' => 3,
+        'is_active' => true
+    ]);
+
+    $step1 = WorkflowStep::create([
+        'workflow_id' => $workflow->id,
+        'name' => 'Step 1',
+        'step_order' => 1,
+        'type' => 'user-type',
+        'required_user_type' => 'section'
+    ]);
+
+    $step2 = WorkflowStep::create([
+        'workflow_id' => $workflow->id,
+        'name' => 'Step 2',
+        'step_order' => 2,
+        'type' => 'user-type',
+        'required_user_type' => 'division'
+    ]);
+
+    $step3 = WorkflowStep::create([
+        'workflow_id' => $workflow->id,
+        'name' => 'Step 3',
+        'step_order' => 3,
+        'type' => 'user-type',
+        'required_user_type' => 'company'
+    ]);
+
+    $requesterEmp = Employee::factory()->create();
+    $requesterUser = User::factory()->create([
+        'user_type' => 'division',
+        'employee_id' => $requesterEmp->id
+    ]);
+    $requesterEmp->update(['user_id' => $requesterUser->id]);
+
+    EmployeeOfficeInfo::create([
+        'employee_id' => $requesterEmp->id,
+        'current_company_id' => 1,
+        'current_division_id' => 2,
+        'current_department_id' => 3,
+        'current_section_id' => 4,
+        'current_business_unit_id' => 5,
+    ]);
+
+    $approvable = ProfileUpdateRequest::create([
+        'employee_id' => $requesterEmp->id,
+        'section' => 'personal_info',
+        'previous_data' => [],
+        'requested_data' => [],
+        'status' => 'pending'
+    ]);
+
+    $masterRequest = app(\Innovity\ApprovalEngine\Services\WorkflowGenerator::class)->generate($approvable, 'profile-update');
+
+    $stepRequests = $masterRequest->stepRequests()->orderBy('id')->get();
+
+    expect($stepRequests)->toHaveCount(3);
+    
+    $sr1 = $stepRequests->where('workflow_step_id', $step1->id)->first();
+    expect($sr1->status->value)->toBe('approved');
+    expect($sr1->comments)->toContain('Requester level (division) has equal or higher authority than required level (section)');
+
+    $sr2 = $stepRequests->where('workflow_step_id', $step2->id)->first();
+    expect($sr2->status->value)->toBe('approved');
+    expect($sr2->comments)->toContain('Requester is the resolved approver');
+
+    $sr3 = $stepRequests->where('workflow_step_id', $step3->id)->first();
+    expect($sr3->status->value)->toBe('pending');
+});
