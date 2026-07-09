@@ -1,5 +1,22 @@
 # Test Log
 
+## 2026-07-10 (Transfer Effective Dates, Bulk Adjustment, and Deletion)
+
+**Goal**: Add effective_from and effective_to dates (optional) to Transfers, integrate bulk Adjustment button (shifting employee office info updates from post-approval to adjustment), implement pending transfer Deletion, and register permission seeder.
+
+**Exact Command**: `php artisan route:clear && php artisan config:clear && vendor\bin\pest tests/Feature/Setting/TransferWorkflowTest.php && vendor\bin\pest tests/Feature/MovementAttachmentTest.php`
+
+**Results**:
+- **Migration & Columns**: Created `add_effective_dates_and_adjustment_to_transfers_table` migration, adding `effective_from`, `effective_to` (optional), and `is_adjustment` (default `0`) columns.
+- **Workflow Listener Update**: Modified `TransferWorkflowListener` to set `is_adjustment` to `1` (pending adjustment) upon workflow completion.
+- **Service Adjustment**: Updated `completeTransfer` to set `is_adjustment => 2` (adjusted) and log the `EmployeeLifecycle` record.
+- **Bulk Adjustment Route**: Added GET `/transfer/adjustment` route executing due adjustments and redirecting back.
+- **Delete Support**: Created DELETE `/transfer/{id}/delete` route allowing delete on pending transfers, and updated AJAX logs table to dynamically render confirmation modals for deletions.
+- **Permission Seeder**: Applied `PermissionSeeder` to register `transfers.delete` permission and sync roles.
+- **Pest Test coverage**: Updated `TransferWorkflowTest` and `MovementAttachmentTest` to verify all new pathways. All tests passed successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-09 (UI Redesign of Career Movement Details Page)
 
 **Goal**: Redesign the Career Movement (Transfer) details view page to align with the project design structure and colors, breaking elements into premium segmented cards (Employee Information, Placement Details, and Application Details).

@@ -71,11 +71,18 @@
             <div class="card-body">
                 {{-- Action Buttons --}}
                 <div class="d-flex justify-content-between mb-3">
-                    @can('transfers.create')
-                    <a href="{{ route('transfer.create') }}" class="btn btn-warning btn-sm">
-                        <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
-                    </a>
-                    @endcan
+                    <div class="d-flex gap-2">
+                        @can('transfers.create')
+                        <a href="{{ route('transfer.create') }}" class="btn btn-warning btn-sm">
+                            <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
+                        </a>
+                        @endcan
+                        @can('transfers.edit')
+                        <a href="{{ route('transfer.adjustment') }}" class="btn btn-success btn-sm">
+                            <i style="height: 12px; width: 12px" data-feather="check"></i> Adjustment
+                        </a>
+                        @endcan
+                    </div>
                 </div>
 
                 <div class="table-responsive">
@@ -85,6 +92,7 @@
                                 <th scope="col">#</th>
                                 <th scope="col">Employee</th>
                                 <th scope="col">Requested Placement</th>
+                                <th scope="col">Effective From</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Created At</th>
                                 <th scope="col">Action</th>
@@ -279,7 +287,7 @@ $(document).ready(function() {
 
     function renderTable(data) {
         if (data.length === 0) {
-            tableBody.html('<tr><td colspan="6" class="text-center py-5 text-muted">No transfer records found.</td></tr>');
+            tableBody.html('<tr><td colspan="7" class="text-center py-5 text-muted">No transfer records found.</td></tr>');
             return;
         }
 
@@ -291,6 +299,17 @@ $(document).ready(function() {
             const companyName = item.requested_company ? item.requested_company.name : 'Unknown Company';
             const unitName = item.requested_business_unit ? item.requested_business_unit.name : 'N/A';
             const movementTypeBadge = item.movement_type ? `<span class="badge bg-secondary ms-1">${item.movement_type.name}</span>` : '';
+            const effectiveFromDate = item.effective_from ? new Date(item.effective_from).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A';
+
+            const deleteForm = (item.can_delete && item.status === 'pending') ? `
+                <form action="{{ url('transfer') }}/${item.id}/delete" method="POST" class="d-inline confirmDeleteForm">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger btn-sm confirmDelete" title="Delete">
+                        <i style="height: 12px; width: 12px" data-feather="trash"></i>
+                    </button>
+                </form>
+            ` : '';
 
             const row = `
                 <tr>
@@ -303,12 +322,16 @@ $(document).ready(function() {
                         <div class="text-dark fw-medium">${companyName} ${movementTypeBadge}</div>
                         <small class="text-muted">${unitName}</small>
                     </td>
+                    <td><span class="small">${effectiveFromDate}</span></td>
                     <td>${statusBadge}</td>
                     <td>${new Date(item.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
                     <td>
-                        <a href="{{ url('transfer/view') }}/${item.id}" class="btn btn-info btn-sm" title="View Details">
-                            <i style="height: 12px; width: 12px" data-feather="eye"></i>
-                        </a>
+                        <div class="d-flex gap-1">
+                            <a href="{{ url('transfer/view') }}/${item.id}" class="btn btn-info btn-sm" title="View Details">
+                                <i style="height: 12px; width: 12px" data-feather="eye"></i>
+                            </a>
+                            ${deleteForm}
+                        </div>
                     </td>
                 </tr>
             `;
@@ -316,6 +339,24 @@ $(document).ready(function() {
         });
         if (typeof feather !== 'undefined') feather.replace();
     }
+
+    $(document).on('click', '.confirmDelete', function(event) {
+        event.preventDefault();
+        const form = $(this).closest("form");
+        Swal.fire({
+            title: 'Are you sure you want to delete?',
+            text: 'You won\'t be able to revert!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Confirm'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    });
 
     function getStatusBadge(status) {
         switch(status) {

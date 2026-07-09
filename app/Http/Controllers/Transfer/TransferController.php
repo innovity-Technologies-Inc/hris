@@ -45,4 +45,52 @@ class TransferController extends Controller
 
         return view('transfer.view', compact('title', 'section', 'transfer'));
     }
+
+    public function adjustment()
+    {
+        $transfers = Transfer::withoutGlobalScopes()
+            ->where('status', 'approved')
+            ->where('is_adjustment', 1)
+            ->whereDate('effective_from', '<=', \Carbon\Carbon::today())
+            ->get();
+
+        try {
+            \Illuminate\Support\Facades\DB::transaction(function () use ($transfers) {
+                $service = app(\App\Services\Transfer\TransferServices::class);
+                foreach ($transfers as $transfer) {
+                    $service->completeTransfer($transfer);
+                }
+            });
+
+            return redirect()->route('transfer.index')->with([
+                'message' => 'Adjustments processed successfully.',
+                'alert-type' => 'success'
+            ]);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Transfer Adjustment Error: ' . $e->getMessage());
+            return redirect()->route('transfer.index')->with([
+                'message' => 'Something went wrong.',
+                'alert-type' => 'error'
+            ]);
+        }
+    }
+
+    public function delete($id)
+    {
+        $transfer = Transfer::withoutGlobalScopes()->findOrFail($id);
+
+        if ($transfer->status !== 'pending') {
+            return redirect()->back()->with([
+                'message' => 'Only pending transfers can be deleted.',
+                'alert-type' => 'error'
+            ]);
+        }
+
+        $transfer->delete();
+
+        return redirect()->route('transfer.index')->with([
+            'message' => 'Transfer record deleted successfully.',
+            'alert-type' => 'success'
+        ]);
+    }
 }

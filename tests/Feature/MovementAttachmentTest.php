@@ -63,6 +63,7 @@ test('it can store a transfer with multiple attachments', function () {
     $response = $this->actingAs($admin, 'web')->postJson(route('transfer.api.store'), [
         'employee_id' => $employee->id,
         'requested_company_id' => $newCompany->id,
+        'effective_from' => '2026-08-01',
         'remarks' => 'Transfer remarks',
         'attachments' => [$file1, $file2]
     ]);

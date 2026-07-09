@@ -18,6 +18,7 @@ beforeEach(function () {
     Permission::firstOrCreate(['name' => 'transfers.create', 'guard_name' => 'web']);
     Permission::firstOrCreate(['name' => 'transfers.view', 'guard_name' => 'web']);
     Permission::firstOrCreate(['name' => 'transfers.edit', 'guard_name' => 'web']);
+    Permission::firstOrCreate(['name' => 'transfers.delete', 'guard_name' => 'web']);
     
     $this->group = Group::create(['name' => 'Test Group', 'status' => 'active']);
     $this->type = CompanyType::create(['name' => 'IT', 'short_name' => 'IT', 'status' => 'active']);
@@ -32,7 +33,7 @@ beforeEach(function () {
     ]);
 });
 
-test('it processes transfer using central approval engine sequential workflow', function () {
+test('it processes transfer using central approval engine sequential workflow and bulk adjustment', function () {
     $this->withoutExceptionHandling();
 
     // Create spatie roles
@@ -75,12 +76,14 @@ test('it processes transfer using central approval engine sequential workflow', 
         'current_company_id' => $oldCompany->id,
     ]);
 
-    // Create and store transfer application
+    // Create and store transfer application with effective dates
     $admin = User::factory()->create(['user_type' => UserType::Group]);
     $admin->givePermissionTo('transfers.create');
     $response = $this->actingAs($admin)->postJson(route('transfer.api.store'), [
         'employee_id' => $employee->id,
         'requested_company_id' => $newCompany->id,
+        'effective_from' => '2026-07-10',
+        'effective_to' => '2026-07-20',
         'remarks' => 'Transfer remarks'
     ]);
 
@@ -88,6 +91,8 @@ test('it processes transfer using central approval engine sequential workflow', 
     $transfer = Transfer::latest()->first();
 
     expect($transfer->status)->toBe('pending');
+    expect($transfer->effective_from->format('Y-m-d'))->toBe('2026-07-10');
+    expect($transfer->effective_to->format('Y-m-d'))->toBe('2026-07-20');
 
     // Verify workflow step request is created
     $stepRequest = ApprovalStepRequest::whereHas('approvalRequest', function ($q) use ($transfer) {
@@ -105,18 +110,76 @@ test('it processes transfer using central approval engine sequential workflow', 
 
     $response->assertStatus(200);
     
-    // Refresh transfer and verify it is approved
+    // Refresh transfer and verify it is approved and is_adjustment is 1
     $transfer->refresh();
     expect($transfer->status)->toBe('approved');
+    expect((int)$transfer->is_adjustment)->toBe(1);
 
-    // Complete/finalize the transfer using HR Manager
-    $response = $this->actingAs($hrUser)->postJson(route('transfer.api.complete', $transfer->id));
-    $response->assertStatus(200);
+    // Call the bulk adjustment endpoint
+    $response = $this->actingAs($hrUser)->get(route('transfer.adjustment'));
+    $response->assertRedirect(route('transfer.index'));
 
     $transfer->refresh();
     expect($transfer->status)->toBe('completed');
+    expect((int)$transfer->is_adjustment)->toBe(2);
 
     // Verify employee office info was updated
     $officeInfo = EmployeeOfficeInfo::where('employee_id', $employee->id)->first();
     expect((int)$officeInfo->current_company_id)->toBe($newCompany->id);
+});
+
+test('it can delete a pending transfer', function () {
+    $admin = User::factory()->create(['user_type' => UserType::Group]);
+    $admin->givePermissionTo('transfers.delete');
+
+    $company = Company::create(['group_id' => $this->group->id, 'type_id' => $this->type->id, 'name' => 'Old Company', 'short_name' => 'OLD', 'status' => 'active', 'address' => '123 St']);
+
+    $employee = Employee::create([
+        'full_name' => 'John Doe',
+        'applicant_id' => 'APP123',
+        'system_id' => 'SYS123',
+        'punch_card_no' => 'P123',
+        'status' => 'active'
+    ]);
+    
+    $transfer = Transfer::create([
+        'employee_id' => $employee->id,
+        'requested_company_id' => $company->id,
+        'status' => 'pending',
+        'effective_from' => '2026-07-10',
+        'created_by' => $admin->id
+    ]);
+
+    $response = $this->actingAs($admin)->delete(route('transfer.delete', $transfer->id));
+    $response->assertRedirect(route('transfer.index'));
+
+    expect(Transfer::withoutGlobalScopes()->find($transfer->id))->toBeNull();
+});
+
+test('it prevents deleting non-pending transfer', function () {
+    $admin = User::factory()->create(['user_type' => UserType::Group]);
+    $admin->givePermissionTo('transfers.delete');
+
+    $company = Company::create(['group_id' => $this->group->id, 'type_id' => $this->type->id, 'name' => 'Old Company', 'short_name' => 'OLD', 'status' => 'active', 'address' => '123 St']);
+
+    $employee = Employee::create([
+        'full_name' => 'John Doe',
+        'applicant_id' => 'APP123',
+        'system_id' => 'SYS123',
+        'punch_card_no' => 'P123',
+        'status' => 'active'
+    ]);
+    
+    $transfer = Transfer::create([
+        'employee_id' => $employee->id,
+        'requested_company_id' => $company->id,
+        'status' => 'approved',
+        'effective_from' => '2026-07-10',
+        'created_by' => $admin->id
+    ]);
+
+    $response = $this->actingAs($admin)->delete(route('transfer.delete', $transfer->id));
+    $response->assertRedirect(); // redirects back with error
+
+    expect(Transfer::withoutGlobalScopes()->find($transfer->id))->not->toBeNull();
 });

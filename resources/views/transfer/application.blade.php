@@ -126,6 +126,18 @@
                                         </select>
                                         @if($levelWeight > 5) <input type="hidden" name="requested_section_id" id="hidden_section_id"> @endif
                                     </div>
+
+                                    <!-- Effective From -->
+                                    <div class="col-md-6">
+                                        <label for="effective_from" class="form-label fw-semibold">Effective From <span class="text-danger">*</span></label>
+                                        <input type="date" name="effective_from" id="effective_from" class="form-control" required value="{{ date('Y-m-d') }}">
+                                    </div>
+
+                                    <!-- Effective To -->
+                                    <div class="col-md-6">
+                                        <label for="effective_to" class="form-label fw-semibold">Effective To <span class="text-muted">(Optional)</span></label>
+                                        <input type="date" name="effective_to" id="effective_to" class="form-control">
+                                    </div>
                                 </div>
 
                                 <div class="mt-4">

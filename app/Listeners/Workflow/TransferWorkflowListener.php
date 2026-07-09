@@ -15,6 +15,7 @@ class TransferWorkflowListener
         if ($approvable instanceof Transfer) {
             $approvable->update([
                 'status' => 'approved',
+                'is_adjustment' => 1,
             ]);
         }
     }

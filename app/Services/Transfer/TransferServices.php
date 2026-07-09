@@ -151,6 +151,8 @@ class TransferServices
                     'requested_section_id' => $data['requested_section_id'] ?? null,
                     'requested_designation_id' => $data['requested_designation_id'] ?? null,
                     'remarks' => $data['remarks'] ?? null,
+                    'effective_from' => $data['effective_from'],
+                    'effective_to' => $data['effective_to'] ?? null,
                     'created_by' => auth()->id(),
                 ]);
 
@@ -336,8 +338,16 @@ class TransferServices
 
                 $transfer->withoutGlobalScopes()->update([
                     'status' => 'completed',
+                    'is_adjustment' => 2,
                     'completed_by' => auth()->id(),
                     'completed_at' => now(),
+                ]);
+
+                \App\Models\Employee\EmployeeLifecycle::create([
+                    'employee_id' => $transfer->employee_id,
+                    'type' => 'transfer',
+                    'status_date' => $transfer->effective_from ?? now(),
+                    'description' => 'Transferred to a new department/location.'
                 ]);
 
                 // Notify Employee (System + Laravel)

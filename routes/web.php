@@ -1456,6 +1456,12 @@ Route::prefix('transfer')->name('transfer.')->middleware('auth')->group(function
         Route::middleware('permission:transfers.create')->group(function () {
             Route::get('application', 'create')->name('create');
         });
+        Route::middleware('permission:transfers.edit')->group(function () {
+            Route::get('adjustment', 'adjustment')->name('adjustment');
+        });
+        Route::middleware('permission:transfers.delete')->group(function () {
+            Route::delete('{id}/delete', 'delete')->name('delete');
+        });
     });
 
     // API Routes (Returning JSON)

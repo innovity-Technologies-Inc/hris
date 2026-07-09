@@ -22,6 +22,8 @@ class StoreTransferRequest extends FormRequest
             'requested_division_id' => 'nullable|exists:divisions,id',
             'requested_department_id' => 'nullable|exists:departments,id',
             'requested_section_id' => 'nullable|exists:sections,id',
+            'effective_from' => 'required|date',
+            'effective_to' => 'nullable|date|after_or_equal:effective_from',
             'remarks' => 'nullable|string|max:500',
             'attachments' => 'nullable|array',
             'attachments.*' => 'file|max:10240',

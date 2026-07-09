@@ -1,18 +1,13 @@
 @extends('structure.master')
 
 @section('content')
-    {{-- Back button and action buttons --}}
+    {{-- Back button --}}
     <div class="row mb-3">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center">
                 <a href="{{ route('transfer.index') }}" class="btn btn-outline-secondary btn-sm">
                     <i style="height: 12px; width: 12px" data-feather="arrow-left"></i> Back to List
                 </a>
-                @if($transfer->status === 'approved' && auth()->user()->can('transfers.edit'))
-                <button class="btn btn-success btn-sm" id="btnComplete">
-                    <i style="height: 12px; width: 12px" data-feather="check-circle"></i> Mark as Complete
-                </button>
-                @endif
             </div>
         </div>
     </div>
@@ -168,6 +163,35 @@
         </div>
     </div>
 
+    {{-- Effective Period Card --}}
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="mdi mdi-calendar-range"></i> Effective Period
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-2">
+                            <label class="text-muted small">Effective From</label>
+                            <div class="fw-semibold">
+                                {{ $transfer->effective_from ? \Carbon\Carbon::parse($transfer->effective_from)->format('d M Y') : 'N/A' }}
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="text-muted small">Effective To</label>
+                            <div class="fw-semibold">
+                                {{ $transfer->effective_to ? \Carbon\Carbon::parse($transfer->effective_to)->format('d M Y') : 'Indefinite' }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {{-- Status Card --}}
     <div class="row">
         <div class="col-12">
@@ -251,28 +275,7 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
 $(document).ready(function() {
-    const transferId = '{{ $transfer->id }}';
-
-    const btnComplete = document.getElementById('btnComplete');
-    if (btnComplete) {
-        btnComplete.addEventListener('click', function() {
-            Swal.fire({
-                title: 'Finalize Career Movement?',
-                text: "This will update the employee's office info and mark the transfer as complete.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Finalize'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    axios.post(`{{ url('transfer/api/complete') }}/${transferId}`)
-                        .then(res => {
-                            Swal.fire('Completed!', res.data.message, 'success').then(() => location.reload());
-                        })
-                        .catch(err => Swal.fire('Error', 'Failed to complete transfer.', 'error'));
-                }
-            });
-        });
-    }
+    // Left empty or for future enhancement, as complete action is now processed in bulk via adjustment route
 });
 </script>
 @endpush

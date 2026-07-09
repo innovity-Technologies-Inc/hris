@@ -100,6 +100,13 @@ class TransferAPIController extends Controller
     {
         try {
             $transfers = $this->transferServices->getTransferList($request->all());
+            
+            $canDelete = auth()->user()->can('transfers.delete');
+            $transfers->getCollection()->transform(function($transfer) use ($canDelete) {
+                $transfer->can_delete = $canDelete;
+                return $transfer;
+            });
+
             return response()->json([
                 'success' => true,
                 'data' => $transfers

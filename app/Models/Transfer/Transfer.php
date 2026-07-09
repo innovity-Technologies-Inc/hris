@@ -44,9 +44,17 @@ class Transfer extends Model
         'approval_count_required',
         'current_approval_count',
         'remarks',
+        'effective_from',
+        'effective_to',
+        'is_adjustment',
         'created_by',
         'completed_by',
         'completed_at',
+    ];
+
+    protected $casts = [
+        'effective_from' => 'date',
+        'effective_to' => 'date',
     ];
 
     public function employee(): BelongsTo
