@@ -24,16 +24,8 @@ class TransferController extends Controller
         $isEmployee = $user->user_type === \App\Enums\UserType::Employee;
         $loggedInEmployeeId = $user->employee_id;
 
-        $weights = [
-            'company' => 1,
-            'business_unit' => 2,
-            'division' => 3,
-            'department' => 4,
-            'section' => 5,
-        ];
-
         $level = $isEmployee ? ($setting->employee_transfer_level ?? 'company') : ($setting->supervisor_transfer_level ?? 'company');
-        $levelWeight = $weights[$level] ?? 1;
+        $levelWeight = \App\Enums\UserType::getWeight($level);
 
         $movementTypes = \App\Models\Company\MovementType::where('status', 'active')->get();
 
