@@ -1,5 +1,17 @@
 # Test Log
 
+## 2026-07-09 (Workflow Sequential Validation)
+
+**Goal**: Implement hierarchical authority validation in sequential approval workflows so that steps must progress from a lower authority level to a higher/equal authority level.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/Setting/ApprovalWorkflowTest.php && php artisan test`
+
+**Results**:
+- `Tests\Feature\Setting\ApprovalWorkflowTest`: 3 tests passed (re-ordered step test to valid sequence, added validation failure rejection test) ✅
+- **Full Test Suite Integrity**: All 137 tests passed successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-09 (Multiple Attachment Uploads)
 
 **Goal**: Implement multiple attachment upload support for Career Movements (Transfer, Promotion, Demotion, Increment, Decrement) using a polymorphic `movement_attachments` table, store uploaded files under public storage directories, render downloadable links inside the details view templates, and verify via feature testing.

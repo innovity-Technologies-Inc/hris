@@ -38,6 +38,13 @@ class ApprovalWorkflowController extends Controller
             'steps.*.user_id' => 'nullable|required_if:steps.*.type,specific-user|exists:users,id',
         ]);
 
+        if ($request->type === 'sequential' && is_array($request->steps)) {
+            $error = $this->validateSequentialSteps($request->steps);
+            if ($error) {
+                return response()->json(['message' => 'Validation failed: ' . $error], 422);
+            }
+        }
+
         DB::beginTransaction();
         try {
             $workflow = ApprovalWorkflow::create([
@@ -104,6 +111,13 @@ class ApprovalWorkflowController extends Controller
             'steps.*.user_id' => 'nullable|required_if:steps.*.type,specific-user|exists:users,id',
         ]);
 
+        if ($request->type === 'sequential' && is_array($request->steps)) {
+            $error = $this->validateSequentialSteps($request->steps);
+            if ($error) {
+                return response()->json(['message' => 'Validation failed: ' . $error], 422);
+            }
+        }
+
         DB::beginTransaction();
         try {
             $workflow = ApprovalWorkflow::findOrFail($id);
@@ -159,5 +173,41 @@ class ApprovalWorkflowController extends Controller
             \Illuminate\Support\Facades\Log::error('Error deleting workflow: ' . $e->getMessage());
             return response()->json(['message' => 'Something went wrong. Please try again later.'], 500);
         }
+    }
+
+    private function validateSequentialSteps(array $steps): ?string
+    {
+        $previousWeight = null;
+        $previousName = '';
+
+        foreach ($steps as $index => $step) {
+            $currentWeight = null;
+            $currentName = '';
+
+            if (($step['type'] ?? '') === 'user-type' || ($step['type'] ?? '') === 'role-user') {
+                if (!empty($step['required_user_type'])) {
+                    $currentWeight = \App\Enums\UserType::getWeight($step['required_user_type']);
+                    $currentName = $step['required_user_type'];
+                }
+            } elseif (($step['type'] ?? '') === 'specific-user') {
+                if (!empty($step['user_id'])) {
+                    $user = \App\Models\User::find($step['user_id']);
+                    if ($user) {
+                        $currentWeight = $user->user_type->weight();
+                        $currentName = $user->user_type->value;
+                    }
+                }
+            }
+
+            if ($currentWeight !== null) {
+                if ($previousWeight !== null && $previousWeight < $currentWeight) {
+                    return "Step " . ($index + 1) . " (level: {$currentName}) cannot have a lower authority level than Step " . $index . " (level: {$previousName}) in a sequential workflow.";
+                }
+                $previousWeight = $currentWeight;
+                $previousName = $currentName;
+            }
+        }
+
+        return null;
     }
 }

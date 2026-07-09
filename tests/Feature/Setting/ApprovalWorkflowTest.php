@@ -25,7 +25,7 @@ test('it can store a sequential approval workflow with dynamic steps', function 
     $this->actingAs($this->admin);
 
     $role = Role::firstOrCreate(['name' => 'HR Manager', 'guard_name' => 'web']);
-    $specificUser = User::factory()->create(['name' => 'Specific Reviewer']);
+    $specificUser = User::factory()->create(['name' => 'Specific Reviewer', 'user_type' => UserType::Company]);
 
     $response = $this->postJson(route('setting.approval_workflows.store'), [
         'module_name' => 'profile-update',
@@ -34,11 +34,11 @@ test('it can store a sequential approval workflow with dynamic steps', function 
         'steps' => [
             [
                 'type' => 'user-type',
-                'required_user_type' => 'department'
+                'required_user_type' => 'section'
             ],
             [
                 'type' => 'role-user',
-                'required_user_type' => 'section',
+                'required_user_type' => 'department',
                 'role_id' => $role->id
             ],
             [
@@ -56,16 +56,43 @@ test('it can store a sequential approval workflow with dynamic steps', function 
 
     $step1 = $workflow->steps[0];
     expect($step1->type)->toBe('user-type');
-    expect($step1->required_user_type)->toBe('department');
+    expect($step1->required_user_type)->toBe('section');
 
     $step2 = $workflow->steps[1];
     expect($step2->type)->toBe('role-user');
-    expect($step2->required_user_type)->toBe('section');
+    expect($step2->required_user_type)->toBe('department');
     expect((int)$step2->role_id)->toBe($role->id);
 
     $step3 = $workflow->steps[2];
     expect($step3->type)->toBe('specific-user');
     expect((int)$step3->user_id)->toBe($specificUser->id);
+});
+
+test('it rejects sequential workflow if step order violates authority level hierarchy', function () {
+    $this->actingAs($this->admin);
+
+    $role = Role::firstOrCreate(['name' => 'HR Manager', 'guard_name' => 'web']);
+    
+    $response = $this->postJson(route('setting.approval_workflows.store'), [
+        'module_name' => 'profile-update',
+        'type' => 'sequential',
+        'is_active' => '1',
+        'steps' => [
+            [
+                'type' => 'user-type',
+                'required_user_type' => 'department' // Weight 4
+            ],
+            [
+                'type' => 'user-type',
+                'required_user_type' => 'section' // Weight 5 (Lower authority - invalid!)
+            ]
+        ]
+    ]);
+
+    $response->assertStatus(422);
+    $response->assertJsonFragment([
+        'message' => 'Validation failed: Step 2 (level: section) cannot have a lower authority level than Step 1 (level: department) in a sequential workflow.'
+    ]);
 });
 
 test('it resolves steps using the approver resolver', function () {
