@@ -150,50 +150,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Notify approvers when a new step request is created
         \Innovity\ApprovalEngine\Models\ApprovalStepRequest::created(function ($stepRequest) {
-            app(\App\Services\Setting\WorkflowAutoApprovalService::class)->handle($stepRequest);
-
-            $approvable = $stepRequest->approvalRequest->approvable ?? null;
-
-            if ($stepRequest->status->value === 'pending') {
-                $resolver = app(\Innovity\ApprovalEngine\Contracts\ApproverResolverInterface::class);
-                
-                if ($approvable) {
-                    $approverIds = $resolver->resolve((string) $stepRequest->workflowStep->id, $approvable);
-                    if (!empty($approverIds)) {
-                        $users = \App\Models\User::whereIn('id', $approverIds)->get();
-                        foreach ($users as $user) {
-                            try {
-                                $user->notify(new \App\Notifications\Approval\ApprovalActionRequiredNotification($stepRequest));
-                            } catch (\Exception $e) {
-                                \Illuminate\Support\Facades\Log::error('Mail Notification error: ' . $e->getMessage());
-                            }
-                            
-                             try {
-                                 $moduleName = $stepRequest->approvalRequest->workflow->module ?? '';
-                                 $module = ucfirst($moduleName ?: 'Item');
-                                 
-                                 if ($approvable instanceof \App\Models\Employee\ProfileUpdateRequest) {
-                                     $url = route('profile_update_requests.show', $approvable->id, false);
-                                 } else {
-                                     $url = \Illuminate\Support\Facades\Route::has($moduleName . '.show') 
-                                             ? route($moduleName . '.show', $approvable->id, false) 
-                                             : '/' . $moduleName;
-                                 }
-
-                                 app(\App\Services\Setting\NotificationServices::class)->createNotification(
-                                     $user->user_type->value ?? $user->user_type,
-                                     $user->id,
-                                     'Approval Action Required',
-                                     "You have a new $module approval request pending your action.",
-                                     ['url' => $url, 'type' => 'approval_request']
-                                 );
-                             } catch (\Exception $e) {
-                                \Illuminate\Support\Facades\Log::error('Custom Notification error: ' . $e->getMessage());
-                            }
-                        }
-                    }
-                }
-            }
+            app(\App\Services\Setting\WorkflowStepRequestService::class)->handleCreated($stepRequest);
         });
     }
 }
