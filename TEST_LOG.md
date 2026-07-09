@@ -2,13 +2,13 @@
 
 ## 2026-07-09 (Workflow Step Auto-Approval)
 
-**Goal**: Implement automatic approval of steps in approval workflows if the requesting user is the resolved approver for that step (self-approval), or if they have equal or higher authority (weight) than the required level for the step.
+**Goal**: Implement automatic approval of steps in approval workflows if the requesting user is the resolved approver for that step (self-approval), or if they have strictly higher authority (weight) than the required level for the step.
 
 **Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/Setting/ApprovalWorkflowTest.php && php artisan test`
 
 **Results**:
-- `Tests\Feature\Setting\ApprovalWorkflowTest`: 5 tests passed (added auto-approval check, verified self-approval and lower-level authority auto-approvals correctly resolve and cascade to next steps) ✅
-- **AppServiceProvider Hooks**: Implemented the hook on `ApprovalStepRequest::created` to check for auto-approval rules and run `approve()` recursively on steps where applicable.
+- `Tests\Feature\Setting\ApprovalWorkflowTest`: 5 tests passed (added auto-approval check, verified self-approval and strictly higher authority auto-approvals correctly resolve and cascade to next steps) ✅
+- **AppServiceProvider Hooks**: Implemented the hook on `ApprovalStepRequest::created` to check for auto-approval rules (self-approval and strictly higher weight) and run `approve()` recursively on steps where applicable.
 - **Full Test Suite Integrity**: All 139 tests passed successfully ✅
 
 **Status**: ✅ SUCCESS

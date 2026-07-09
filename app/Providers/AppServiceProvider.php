@@ -183,13 +183,13 @@ class AppServiceProvider extends ServiceProvider
                         $reason = 'Auto-approved: Requester is the resolved approver.';
                     }
                     
-                    // Case 2: Requester has higher or equal authority level weight than the required level (Lower Level Approval)
+                    // Case 2: Requester has strictly higher authority level weight than the required level (Lower Level Approval)
                     if (!$shouldAutoApprove && ($step->type === 'user-type' || $step->type === 'role-user')) {
                         if (!empty($step->required_user_type)) {
                             $stepWeight = \App\Enums\UserType::getWeight($step->required_user_type);
-                            if ($requesterWeight <= $stepWeight) {
+                            if ($requesterWeight < $stepWeight) {
                                 $shouldAutoApprove = true;
-                                $reason = "Auto-approved: Requester level ({$requestingUser->user_type->value}) has equal or higher authority than required level ({$step->required_user_type}).";
+                                $reason = "Auto-approved: Requester level ({$requestingUser->user_type->value}) has higher authority than required level ({$step->required_user_type}).";
                             }
                         }
                     }
