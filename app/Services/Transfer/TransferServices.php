@@ -57,9 +57,22 @@ class TransferServices
                     }
                 });
 
-                // OR Assigned Approver
-                $q->orWhereHas('approvals', function($aq) use ($user) {
-                    $aq->where('approver_id', $user->id);
+                // OR Assigned Approver (in central approval requests)
+                $q->orWhereHas('approvalRequests.stepRequests', function($aq) use ($user) {
+                    $aq->where('status', 'pending')
+                       ->where(function($sq) use ($user) {
+                           $sq->whereHas('workflowStep', function($wq) use ($user) {
+                               $wq->where('user_id', $user->id)
+                                  ->orWhere(function($rq) use ($user) {
+                                      $rq->where('type', 'role-user')
+                                         ->whereIn('role_id', $user->roles->pluck('id'));
+                                  })
+                                  ->orWhere(function($uq) use ($user) {
+                                      $uq->where('type', 'user-type')
+                                         ->where('required_user_type', $user->user_type->value);
+                                  });
+                           });
+                       });
                 });
                 
                 // OR Creator
@@ -150,6 +163,8 @@ class TransferServices
                         ]);
                     }
                 }
+
+                $transfer->startWorkflow('career-movement');
 
                 return $transfer;
             });
@@ -300,18 +315,12 @@ class TransferServices
     {
         try {
             return DB::transaction(function () use ($transfer) {
-                // Double check status and counts bypassing all scopes
-                $approvedCount = TransferApproval::where('transfer_id', $transfer->id)
-                    ->where('status', 'approved')
-                    ->count();
-
-                if ($approvedCount < $transfer->approval_count_required) {
-                    Log::error('Attempted to complete transfer without all approvals.', [
+                if ($transfer->status !== 'approved') {
+                    Log::error('Attempted to complete transfer without approval.', [
                         'transfer_id' => $transfer->id,
-                        'required' => $transfer->approval_count_required,
-                        'current' => $approvedCount
+                        'status' => $transfer->status
                     ]);
-                    throw new \Exception('All approvals required before completion. (Found ' . $approvedCount . ' of ' . $transfer->approval_count_required . ')');
+                    throw new \Exception('Transfer request must be approved before completion.');
                 }
 
                 // Update Employee Office Info

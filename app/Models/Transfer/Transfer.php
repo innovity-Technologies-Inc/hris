@@ -18,10 +18,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 use App\Traits\Userstamps;
 use App\Traits\Auditable;
+use Innovity\ApprovalEngine\Traits\Approvable;
 
 class Transfer extends Model
 {
-    use Userstamps, Auditable;
+    use Userstamps, Auditable, Approvable;
     use HasFactory, OrganizationScoped;
 
     protected $fillable = [

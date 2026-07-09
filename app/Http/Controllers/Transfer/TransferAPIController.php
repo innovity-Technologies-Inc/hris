@@ -109,35 +109,6 @@ class TransferAPIController extends Controller
         }
     }
 
-    public function setApprovers(Request $request, $id)
-    {
-        $request->validate([
-            'approver_ids' => 'required|array',
-            'approver_ids.*' => 'exists:users,id'
-        ]);
-
-        try {
-            $transfer = Transfer::withoutGlobalScopes()->findOrFail($id);
-            $this->transferServices->setApprovers($transfer, $request->approver_ids);
-            return response()->json(['success' => true, 'message' => 'Approvers assigned and notified.']);
-        } catch (\Exception $e) {
-            Log::error('Transfer setApprovers failed: ' . $e->getMessage(), ['id' => $id, 'ids' => $request->approver_ids]);
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
-        }
-    }
-
-    public function approve(Request $request, $id)
-    {
-        try {
-            $transfer = Transfer::withoutGlobalScopes()->findOrFail($id);
-            $this->transferServices->approveTransfer($transfer, auth()->user(), $request->remarks);
-            return response()->json(['success' => true, 'message' => 'Transfer approved.']);
-        } catch (\Exception $e) {
-            Log::error('Transfer approve failed: ' . $e->getMessage(), ['id' => $id, 'user_id' => auth()->id()]);
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
-        }
-    }
-
     public function complete($id)
     {
         try {
@@ -146,19 +117,6 @@ class TransferAPIController extends Controller
             return response()->json(['success' => true, 'message' => 'Transfer completed and office info updated.']);
         } catch (\Exception $e) {
             Log::error('Transfer complete failed: ' . $e->getMessage(), ['id' => $id]);
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
-        }
-    }
-
-    public function searchAuthorities(Request $request)
-    {
-        try {
-            $authorities = $this->transferServices->searchAuthorities($request->all());
-            return response()->json([
-                'success' => true,
-                'data' => $authorities
-            ]);
-        } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }

@@ -1471,10 +1471,7 @@ Route::prefix('transfer')->name('transfer.')->middleware('auth')->group(function
         Route::post('store', 'store')->name('store')->middleware('permission:transfers.create');
         Route::get('list', 'list')->name('list')->middleware('permission:transfers.view');
         
-        Route::post('set-approvers/{id}', 'setApprovers')->name('set_approvers')->middleware('permission:transfers.approve');
-        Route::post('approve/{id}', 'approve')->name('approve')->middleware('permission:transfers.approve');
         Route::post('complete/{id}', 'complete')->name('complete')->middleware('permission:transfers.edit');
-        Route::get('search-authorities', 'searchAuthorities')->name('search_authorities');
     });
 });
 

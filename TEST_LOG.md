@@ -1,5 +1,19 @@
 # Test Log
 
+## 2026-07-09 (Transfer Central Approval Engine Migration)
+
+**Goal**: Migrate Career Movement (transfer) custom approval workflow to the central Approval Engine (following increment/promotion modules).
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/Setting/TransferWorkflowTest.php`
+
+**Results**:
+- **Model Trait Registration**: Added `Approvable` trait to the `Transfer` model to automatically spawn approval requests.
+- **Workflow Listener Hook**: Created `TransferWorkflowListener` mapped to the `'career-movement'` module in `WorkflowEventDispatcherService` to transition status parameter updates upon completion/rejection.
+- **View Integration**: Replaced custom setup approvers buttons/modals with the shared `@include('approval_engine.workflow_history')` component.
+- **Pest Test Verification**: Created `TransferWorkflowTest` to verify sequential workflows, dynamic user-type/role approval actions, status propagation, and finalize actions update employee office info. All tests passed successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-09 (UI Redesign of Travel and Career Movement Pages)
 
 **Goal**: Standardize Travel Movement (movement) and Career Movement (transfer) index and form pages to match the rest of the application's clean aesthetic (card border-0 shadow-sm rounded, simplified header layouts, and standard action buttons/Feather icons).
