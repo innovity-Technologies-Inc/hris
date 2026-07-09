@@ -18,7 +18,11 @@ class ApprovalWorkflowController extends Controller
 
     public function create()
     {
-        $modules = config('approval-engine.modules');
+        $existingModules = ApprovalWorkflow::pluck('module')->toArray();
+        $modules = array_filter(config('approval-engine.modules', []), function ($key) use ($existingModules) {
+            return !in_array($key, $existingModules);
+        }, ARRAY_FILTER_USE_KEY);
+
         $userTypes = UserType::cases();
         $roles = \Spatie\Permission\Models\Role::orderBy('name')->get();
         $users = \App\Models\User::orderBy('name')->get();
@@ -28,7 +32,7 @@ class ApprovalWorkflowController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'module_name' => 'required|string',
+            'module_name' => 'required|string|unique:approval_workflows,module',
             'type' => 'required|in:sequential,random',
             'required_approvals' => 'nullable|integer|min:1|max:' . max(1, count($request->steps ?? [])),
             'steps' => 'required|array|min:1',
@@ -36,6 +40,8 @@ class ApprovalWorkflowController extends Controller
             'steps.*.required_user_type' => 'nullable|required_if:steps.*.type,user-type,role-user|string',
             'steps.*.role_id' => 'nullable|required_if:steps.*.type,role-user|exists:roles,id',
             'steps.*.user_id' => 'nullable|required_if:steps.*.type,specific-user|exists:users,id',
+        ], [
+            'module_name.unique' => 'An approval workflow already exists for this module.',
         ]);
 
         if ($request->type === 'sequential' && is_array($request->steps)) {
@@ -91,7 +97,12 @@ class ApprovalWorkflowController extends Controller
     public function edit($id)
     {
         $workflow = ApprovalWorkflow::with('steps')->findOrFail($id);
-        $modules = config('approval-engine.modules');
+        
+        $existingModules = ApprovalWorkflow::where('id', '!=', $id)->pluck('module')->toArray();
+        $modules = array_filter(config('approval-engine.modules', []), function ($key) use ($existingModules) {
+            return !in_array($key, $existingModules);
+        }, ARRAY_FILTER_USE_KEY);
+
         $userTypes = UserType::cases();
         $roles = \Spatie\Permission\Models\Role::orderBy('name')->get();
         $users = \App\Models\User::orderBy('name')->get();
@@ -101,7 +112,7 @@ class ApprovalWorkflowController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'module_name' => 'required|string',
+            'module_name' => 'required|string|unique:approval_workflows,module,' . $id,
             'type' => 'required|in:sequential,random',
             'required_approvals' => 'nullable|integer|min:1|max:' . max(1, count($request->steps ?? [])),
             'steps' => 'required|array|min:1',
@@ -109,6 +120,8 @@ class ApprovalWorkflowController extends Controller
             'steps.*.required_user_type' => 'nullable|required_if:steps.*.type,user-type,role-user|string',
             'steps.*.role_id' => 'nullable|required_if:steps.*.type,role-user|exists:roles,id',
             'steps.*.user_id' => 'nullable|required_if:steps.*.type,specific-user|exists:users,id',
+        ], [
+            'module_name.unique' => 'An approval workflow already exists for this module.',
         ]);
 
         if ($request->type === 'sequential' && is_array($request->steps)) {

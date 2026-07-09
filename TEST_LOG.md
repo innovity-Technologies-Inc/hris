@@ -1,5 +1,18 @@
 # Test Log
 
+## 2026-07-09 (Unique Workflow Per Module)
+
+**Goal**: Prevent creating multiple workflows for the same module by adding validation rules and filtering the select dropdown to only display unconfigured modules.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/Setting/ApprovalWorkflowTest.php && php artisan test`
+
+**Results**:
+- `Tests\Feature\Setting\ApprovalWorkflowTest`: 4 tests passed (added unique constraint check, verified duplicate rejection with 422) ✅
+- **Modules Select Filter**: In `create()` and `edit()` methods, excluded already configured modules from the `$modules` select list.
+- **Full Test Suite Integrity**: All 138 tests passed successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-09 (Workflow Sequential Validation)
 
 **Goal**: Implement hierarchical authority validation in sequential approval workflows so that steps must progress from a lower authority level to a higher/equal authority level.

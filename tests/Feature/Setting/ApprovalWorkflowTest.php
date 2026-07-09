@@ -200,3 +200,28 @@ test('it resolves steps using the approver resolver', function () {
     expect($resolvedRoleUsers)->toContain($userWithRole->id);
     expect($resolvedRoleUsers)->not->toContain($userWithoutRole->id);
 });
+
+test('it prevents creating multiple workflows for the same module', function () {
+    $this->actingAs($this->admin);
+
+    Workflow::create([
+        'name' => 'Profile Update Workflow',
+        'module' => 'profile-update',
+        'type' => 'sequential',
+        'total_steps' => 1
+    ]);
+
+    $response = $this->postJson(route('setting.approval_workflows.store'), [
+        'module_name' => 'profile-update',
+        'type' => 'sequential',
+        'steps' => [
+            [
+                'type' => 'user-type',
+                'required_user_type' => 'section'
+            ]
+        ]
+    ]);
+
+    $response->assertStatus(422);
+    $response->assertJsonValidationErrors(['module_name']);
+});
