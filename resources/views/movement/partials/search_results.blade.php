@@ -59,9 +59,9 @@
             <td>
                 {{-- View Button --}}
                 @can('movement.view')
-                <button type="button" class="btn btn-info btn-sm rounded-pill px-3" title="View" data-bs-toggle="modal"
+                <button type="button" class="btn btn-info btn-sm" title="View Details" data-bs-toggle="modal"
                         data-bs-target="#viewTravelMovementModal{{ $movement->id }}">
-                    <i class="bi bi-eye me-1"></i> View
+                    <i style="height: 12px; width: 12px" data-feather="eye"></i>
                 </button>
                 @endcan
             </td>

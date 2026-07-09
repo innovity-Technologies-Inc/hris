@@ -2,87 +2,95 @@
 
 @section('content')
 <div class="row">
-    <div class="col-12">
-        <div class="card shadow-lg border-0 rounded-4 my-4">
-            <div class="card-body p-4 p-md-5">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div class="d-flex align-items-center">
-                        <div class="bg-primary bg-opacity-10 rounded-circle p-3 me-3 d-inline-flex align-items-center justify-content-center">
-                            <i class="bi bi-journal-text text-primary fs-4"></i>
+    <div class="col-lg-12">
+        <div class="card border-0 shadow-sm rounded">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Search Career Movements</h5>
+            </div>
+            <div class="card-header border-bottom p-4">
+                <div class="row align-items-start">
+                    <div class="col-md-12">
+                        <div class="border rounded shadow-sm p-3 filter-section-bg">
+                            <div class="row g-3">
+                                <!-- Employee Search -->
+                                <div class="col-md-4">
+                                    <label class="form-label text-muted small fw-semibold mb-1">Search Employee</label>
+                                    <input type="text" id="employee_search" class="form-control form-control-sm live-filter" 
+                                           placeholder="Name, ID, or System ID...">
+                                </div>
+
+                                <!-- Organizational Filters -->
+                                <div class="col-md-4">
+                                    <label class="form-label text-muted small fw-semibold mb-1">Company</label>
+                                    <select id="filter_company_id" class="form-select form-select-sm live-filter select2_list">
+                                        <option value="">All Companies</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label text-muted small fw-semibold mb-1">Branch/Unit</label>
+                                    <select id="filter_unit_id" class="form-select form-select-sm live-filter select2_list">
+                                        <option value="">All Units</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label text-muted small fw-semibold mb-1">Division</label>
+                                    <select id="filter_division_id" class="form-select form-select-sm live-filter select2_list">
+                                        <option value="">All Divisions</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label text-muted small fw-semibold mb-1">Department</label>
+                                    <select id="filter_department_id" class="form-select form-select-sm live-filter select2_list">
+                                        <option value="">All Departments</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label text-muted small fw-semibold mb-1">Section</label>
+                                    <select id="filter_section_id" class="form-select form-select-sm live-filter select2_list">
+                                        <option value="">All Sections</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 d-flex align-items-end">
+                                    <button class="btn btn-outline-danger btn-sm w-100" id="btnClearFilters" style="height: 31px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="bi bi-trash3 me-1"></i> Clear Filters
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                        <h2 class="fs-4 fw-bold text-dark mb-0">Career Movement Logs</h2>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12 mt-3">
+        <div class="card border-0 shadow-sm rounded">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Career Movement Logs</h5>
+            </div>
+            <div class="card-body">
+                {{-- Action Buttons --}}
+                <div class="d-flex justify-content-between mb-3">
                     @can('transfers.create')
-                    <a href="{{ route('transfer.create') }}" class="btn btn-dark btn-lg rounded-3 shadow px-4">
-                        <i class="bi bi-plus-circle me-2"></i>New Application
+                    <a href="{{ route('transfer.create') }}" class="btn btn-warning btn-sm">
+                        <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                     </a>
                     @endcan
                 </div>
 
-                <!-- Advanced Filters Section -->
-                <div class="card border-0 bg-light bg-opacity-50 rounded-4 mb-4">
-                    <div class="card-body p-4">
-                        <div class="row g-3">
-                            <!-- Employee Search -->
-                            <div class="col-md-4">
-                                <label class="small fw-bold text-muted mb-1">Search Employee</label>
-                                <input type="text" id="employee_search" class="form-control form-control-sm live-filter" 
-                                       placeholder="Name, ID, or System ID..." style="height: 31px;">
-                            </div>
-
-                            <!-- Organizational Filters -->
-                            <div class="col-md-4">
-                                <label class="small fw-bold text-muted mb-1">Company</label>
-                                <select id="filter_company_id" class="form-select form-select-sm live-filter select2_list">
-                                    <option value="">All Companies</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="small fw-bold text-muted mb-1">Branch/Unit</label>
-                                <select id="filter_unit_id" class="form-select form-select-sm live-filter select2_list">
-                                    <option value="">All Units</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="small fw-bold text-muted mb-1">Division</label>
-                                <select id="filter_division_id" class="form-select form-select-sm live-filter select2_list">
-                                    <option value="">All Divisions</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="small fw-bold text-muted mb-1">Department</label>
-                                <select id="filter_department_id" class="form-select form-select-sm live-filter select2_list">
-                                    <option value="">All Departments</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="small fw-bold text-muted mb-1">Section</label>
-                                <select id="filter_section_id" class="form-select form-select-sm live-filter select2_list">
-                                    <option value="">All Sections</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3 d-flex align-items-end">
-                                <button class="btn btn-outline-danger btn-sm w-100" id="btnClearFilters" style="height: 31px; border-radius: 0.25rem; display: flex; align-items: center; justify-content: center;">
-                                    <i class="bi bi-trash3 me-1"></i> Clear Filters
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle border-0">
-                        <thead class="bg-light">
+                    <table class="table table-bordered mb-0">
+                        <thead>
                             <tr>
-                                <th class="border-0 rounded-start ps-4">#</th>
-                                <th class="border-0">Employee</th>
-                                <th class="border-0">Requested Unit</th>
-                                <th class="border-0">Status</th>
-                                <th class="border-0">Created At</th>
-                                <th class="border-0 rounded-end text-end pe-4">Action</th>
+                                <th scope="col">#</th>
+                                <th scope="col">Employee</th>
+                                <th scope="col">Requested Placement</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Created At</th>
+                                <th scope="col">Action</th>
                             </tr>
                         </thead>
-                        <tbody id="transferTableBody" class="border-top-0">
+                        <tbody id="transferTableBody">
                             <tr>
                                 <td colspan="6" class="text-center py-5">
                                     <div class="spinner-border spinner-border-sm text-primary me-2"></div>
@@ -286,27 +294,20 @@ $(document).ready(function() {
 
             const row = `
                 <tr>
-                    <td class="ps-4 text-muted">${index + 1}</td>
+                    <td>${index + 1}</td>
                     <td>
-                        <div class="d-flex align-items-center">
-                            <div class="bg-light rounded-circle p-2 me-3">
-                                <i class="bi bi-person text-secondary"></i>
-                            </div>
-                            <div>
-                                <div class="fw-bold text-dark">${employeeName}</div>
-                                <small class="text-muted">${applicantId}</small>
-                            </div>
-                        </div>
+                        <div class="fw-semibold text-dark">${employeeName}</div>
+                        <small class="text-muted">${applicantId}</small>
                     </td>
                     <td>
                         <div class="text-dark fw-medium">${companyName} ${movementTypeBadge}</div>
                         <small class="text-muted">${unitName}</small>
                     </td>
                     <td>${statusBadge}</td>
-                    <td class="text-muted">${new Date(item.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
-                    <td class="text-end pe-4">
-                        <a href="{{ url('transfer/view') }}/${item.id}" class="btn btn-sm btn-light border rounded-pill px-3">
-                            <i class="bi bi-eye me-1"></i> View
+                    <td>${new Date(item.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                    <td>
+                        <a href="{{ url('transfer/view') }}/${item.id}" class="btn btn-info btn-sm" title="View Details">
+                            <i style="height: 12px; width: 12px" data-feather="eye"></i>
                         </a>
                     </td>
                 </tr>

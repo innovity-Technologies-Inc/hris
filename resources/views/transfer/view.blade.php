@@ -1,22 +1,29 @@
 @extends('structure.master')
 
 @section('content')
-<div class="row g-4">
-    <!-- Comparison Section -->
-    <div class="col-md-12">
-        <div class="card glass-card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0">Career Movement Request Details: {{ $transfer->employee->full_name }}</h5>
-                <div>
-                    @if($transfer->status === 'approved' && auth()->user()->can('transfers.edit'))
-                    <button class="btn btn-sm btn-success" id="btnComplete">
-                        <i data-feather="check-circle" class="me-1"></i> Mark as Complete
-                    </button>
-                    @endif
-                    <a href="{{ route('transfer.index') }}" class="btn btn-sm btn-light">Back to Logs</a>
-                </div>
+    {{-- Back button and action buttons --}}
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="{{ route('transfer.index') }}" class="btn btn-outline-secondary btn-sm">
+                    <i style="height: 12px; width: 12px" data-feather="arrow-left"></i> Back to List
+                </a>
+                @if($transfer->status === 'approved' && auth()->user()->can('transfers.edit'))
+                <button class="btn btn-success btn-sm" id="btnComplete">
+                    <i style="height: 12px; width: 12px" data-feather="check-circle"></i> Mark as Complete
+                </button>
+                @endif
             </div>
-            <div class="card-body">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm rounded">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Career Movement Request Details: {{ $transfer->employee->full_name }}</h5>
+                </div>
+                <div class="card-body">
                 <div class="row">
                     <!-- Current Office Info -->
                     <div class="col-md-6 border-end">
@@ -115,7 +122,7 @@
     @if(auth()->user()->user_type !== \App\Enums\UserType::Employee)
     <!-- Approval Workflow Section -->
     <div class="col-md-12">
-        <div class="card glass-card">
+        <div class="card border-0 shadow-sm rounded">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="card-title mb-0">Approval Workflow</h5>
                 @if($transfer->status === 'pending' && $transfer->approval_count_required === 0 && auth()->user()->can('transfers.approve'))

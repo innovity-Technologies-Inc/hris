@@ -6,20 +6,15 @@
     <div class="row">
         <div class="col-lg-12">
             @can('movement.view')
-            <div class="card border-0 shadow-lg rounded-4 my-4">
-                <div class="card-header border-bottom rounded-top-4 p-4">
-                    <div class="d-flex align-items-center">
-                        <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-3 d-inline-flex align-items-center justify-content-center">
-                            <i class="bi bi-search text-primary fs-5"></i>
-                        </div>
-                        <h5 class="card-title mb-0 text-dark fw-bold">Search Employee Travel Movement</h5>
-                    </div>
-                </div>
-                <div class="card-body p-4">
+            <div class="card border-0 shadow-sm rounded">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Search Employee Travel Movement</h5>
+                </div><!-- end card header -->
+                <div class="card-header border-bottom p-4">
                     <div class="row align-items-start">
                         {{-- Filter Section --}}
                         <div class="col-md-12">
-                            <div class="border-0 rounded-3 p-0">
+                            <div class="border rounded shadow-sm p-3 filter-section-bg">
                                 <form id="filterForm">
                                     {{-- First Row: Keyword Search --}}
                                     <div class="row mb-2">
@@ -45,14 +40,14 @@
                                             <label for="fromDate" class="form-label text-muted small fw-semibold mb-1">
                                                 From Date
                                             </label>
-                                            <input type="date" class="form-control" id="fromDate" name="from"
+                                            <input type="date" class="form-control form-control-sm" id="fromDate" name="from"
                                                 value="{{ request('from') }}">
                                         </div>
                                         <div class="col-md-3">
                                             <label for="toDate" class="form-label text-muted small fw-semibold mb-1">
                                                 To Date
                                             </label>
-                                            <input type="date" class="form-control" id="toDate" name="to"
+                                            <input type="date" class="form-control form-control-sm" id="toDate" name="to"
                                                 value="{{ request('to') }}">
                                         </div>
                                         @if(auth()->user()->user_type !== \App\Enums\UserType::Employee)
@@ -60,7 +55,7 @@
                                             <label for="statusFilter" class="form-label text-muted small fw-semibold mb-1">
                                                 Status
                                             </label>
-                                            <select class="form-select" id="statusFilter" name="status">
+                                            <select class="form-select form-select-sm" id="statusFilter" name="status">
                                                 <option value="">All Status</option>
                                                 <option value="pending">Pending</option>
                                                 <option value="approved">Approved</option>
@@ -71,7 +66,7 @@
                                             <label for="paymentStatusFilter" class="form-label text-muted small fw-semibold mb-1">
                                                 Payment Status
                                             </label>
-                                            <select class="form-select" id="paymentStatusFilter" name="payment_status">
+                                            <select class="form-select form-select-sm" id="paymentStatusFilter" name="payment_status">
                                                 <option value="">All Status</option>
                                                 <option value="paid">Paid</option>
                                                 <option value="unpaid">Unpaid</option>
@@ -99,36 +94,30 @@
         </div>
 
 
-        <div class="col-lg-12">
-            <div class="card border-0 shadow-lg rounded-4 mb-5">
-                <div class="card-header border-bottom rounded-top-4 p-4">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <div class="bg-info bg-opacity-10 rounded-circle p-2 me-3 d-inline-flex align-items-center justify-content-center">
-                                <i class="bi bi-truck text-info fs-5"></i>
-                            </div>
-                            <h5 class="card-title mb-0 text-dark fw-bold">Employee Travel Movement Records</h5>
-                        </div>
-                        <div>
-                            @can('movement.create')
-                            <a class="btn btn-dark btn-sm rounded-3 shadow px-3" href="{{ route('movement.create') }}">
-                                <i class="bi bi-plus-circle me-1"></i> Create
-                            </a>
-                            @endcan
-                        </div>
-                    </div>
+        <div class="col-lg-12 mt-3">
+            <div class="card border-0 shadow-sm rounded">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Employee Travel Movement Records</h5>
                 </div>
-                <div class="card-body p-4">
-                    @if ($movements->isEmpty())
-                        <div class="text-center py-5 text-muted">
-                            <i class="bi bi-inbox fs-1 d-block mb-3 opacity-25"></i>
-                            No movement records found.
-                        </div>
-                    @else
-                        <div class="table-responsive" id="search-result">
-                            @include('movement.partials.search_results')
-                        </div>
-                    @endif
+                <div class="card-body">
+                    {{-- Action Buttons --}}
+                    <div class="d-flex justify-content-between mb-3">
+                        @can('movement.create')
+                        <a class="btn btn-warning btn-sm" href="{{ route('movement.create') }}">
+                            <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
+                        </a>
+                        @endcan
+                    </div>
+
+                    <div id="search-result">
+                        @if ($movements->isEmpty())
+                            <div class="text-center py-4 text-muted">No movement records found.</div>
+                        @else
+                            <div class="table-responsive">
+                                @include('movement.partials.search_results')
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
