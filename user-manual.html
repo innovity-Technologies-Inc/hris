@@ -174,6 +174,25 @@
                 </div>
 
                 <div class="pt-4 border-t border-slate-800">
+                    <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center justify-between">
+                        <span>Employee Management</span>
+                        <span class="bg-indigo-500/10 text-indigo-400 text-[10px] px-1.5 py-0.5 rounded border border-indigo-500/20">Profiles & Portals</span>
+                    </h3>
+                    <ul class="space-y-1 text-sm font-medium">
+                        <li>
+                            <a href="#employee-dashboard" class="nav-link w-full text-left px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-900/30 transition flex items-center gap-2">
+                                <i class="fa-solid fa-gauge w-5 text-indigo-400"></i> Employee Dashboard
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#employee-profiles" class="nav-link w-full text-left px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-900/30 transition flex items-center gap-2">
+                                <i class="fa-solid fa-user-tie w-5 text-indigo-400"></i> Employee Profiles
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="pt-4 border-t border-slate-800">
                     <h3 class="text-xs font-bold text-slate-600 uppercase tracking-widest mb-3">
                         Payroll & movements
                     </h3>
@@ -526,6 +545,100 @@
                         <p><strong>How to Do the Task:</strong>
                             Go to <strong>Company Setup &gt; Movement Types</strong>, click <strong>Create</strong>, enter the classification name, write an optional description, and save.
                         </p>
+                    </div>
+                </section>
+
+                <!-- Category Section: Employee Management -->
+                <section class="glass-panel p-8 rounded-2xl shadow-xl space-y-6 scroll-mt-24" id="employee-management-intro">
+                    <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-users text-primary"></i> Employee Management & Portals
+                    </h2>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        This section covers the core employee structures, personal analytics portals, profile fields, data segmentation, and the dynamic profile update verification and propagation lifecycle.
+                    </p>
+                </section>
+
+                <!-- Module: Employee Dashboard -->
+                <section id="employee-dashboard" class="glass-panel p-8 rounded-2xl shadow-xl space-y-6 scroll-mt-24">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                        <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-gauge text-indigo-400"></i> 13. Employee Dashboard
+                        </h3>
+                        <span class="bg-indigo-500/10 text-indigo-300 text-xs px-2.5 py-0.5 rounded-full border border-indigo-500/20 font-semibold">Personal Portal</span>
+                    </div>
+
+                    <div class="space-y-4 text-sm text-slate-300">
+                        <p><strong>Purpose:</strong> Provides employees and administrators with a personalized view of their placement, career progression timeline, and critical analytics (such as serving tenure, total earnings, and rewards/bonuses).</p>
+                        
+                        <p><strong>Business Logic & Rules:</strong>
+                            - **Access Control**: Users with type `Employee` can only view their own dashboard. Admin/HR users can access any employee's dashboard using their target ID.
+                            - **Timeline Events**: Aggregates milestones from promotions, demotions, transfers, increments, decrements, joining dates, visa/document expiries, and probation endings.
+                            - **Real-Time Statistics**: Computes cumulative serving tenure dynamically from the join date, alongside earnings and bonus details parsed from historic payroll batch registries.
+                        </p>
+
+                        <p><strong>How to Do the Task:</strong>
+                            Log in as an Employee to automatically land on your dashboard. Or, as an Admin, search for an employee, click their name, and navigate to their **Dashboard View**.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Module: Employee Profiles -->
+                <section id="employee-profiles" class="glass-panel p-8 rounded-2xl shadow-xl space-y-6 scroll-mt-24">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                        <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-user-tie text-indigo-400"></i> 14. Employee Profiles
+                        </h3>
+                        <span class="bg-indigo-500/10 text-indigo-300 text-xs px-2.5 py-0.5 rounded-full border border-indigo-500/20 font-semibold">Master Profile Directory</span>
+                    </div>
+
+                    <div class="space-y-4 text-sm text-slate-300">
+                        <p><strong>Purpose:</strong> Stores and manages comprehensive information for all employees. It splits employee records into 9 distinct sections to cover personal data, office parameters, bank accounts, and plans.</p>
+                        
+                        <p><strong>Business Logic & Rules:</strong>
+                            - **9 Core Profile Sections**: Includes General Info, Office Info, Policy Tag/Plans, Education, Nominee Info, Salary Breakdown, Bank Accounts, Employment History, and Plan Assignment.
+                            - **Organizational Scoping**: Queries are strictly filtered using the `OrganizationScoped` trait. Section users can only view section employees, department users see department employees, company users see company employees, etc.
+                            - **Profile Update Requests**: Employees cannot directly edit sensitive details (like Office Info or Salary). Instead, edits generate a `ProfileUpdateRequest` which must pass through the configured Approval Workflow before changes are propagated to the live database tables.
+                        </p>
+
+                        <p><strong>How to Do the Task:</strong>
+                            Go to **Employee Setup &gt; Profiles**, search for an employee, or click **Create New** to add a new employee profile. To update, edit the respective section and submit (which may trigger an approval workflow).
+                        </p>
+
+                        <h4 class="font-bold text-white text-md pt-2">Profile Update Request & Approval Propagation Lifecycle</h4>
+                        <div class="relative group">
+                            <!-- Zoom Controls -->
+                            <div class="absolute top-2 right-2 flex gap-1 z-10 bg-slate-950/80 border border-slate-800 rounded-lg p-1 opacity-60 hover:opacity-100 transition-opacity">
+                                <button onclick="zoomDiagram('zoom-profileupdate', 1.2)" class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 rounded transition" title="Zoom In">
+                                    <i class="fa-solid fa-magnifying-glass-plus"></i>
+                                </button>
+                                <button onclick="zoomDiagram('zoom-profileupdate', 0.8)" class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 rounded transition" title="Zoom Out">
+                                    <i class="fa-solid fa-magnifying-glass-minus"></i>
+                                </button>
+                                <button onclick="resetZoom('zoom-profileupdate')" class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 rounded transition" title="Reset">
+                                    <i class="fa-solid fa-arrows-rotate"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="overflow-x-auto overflow-y-hidden border border-slate-800 rounded-xl bg-slate-900/40 p-8 flex justify-center">
+                                <div id="zoom-profileupdate" class="transition-transform duration-200 origin-center">
+                                    <pre class="mermaid">
+                                    graph TD
+                                        Submit[Employee Submits Section Edit] --> CreateReq[Create ProfileUpdateRequest in pending state]
+                                        CreateReq --> GenerateWorkflow[Generate ApprovalWorkflow Steps]
+                                        GenerateWorkflow --> ProcessStep[Step Request Created & Evaluated]
+                                        ProcessStep --> CheckAuto{Qualifies for Auto-Approval?}
+                                        CheckAuto -->|Yes| AutoApprove[Auto-Approve Step Request]
+                                        AutoApprove --> CheckNext{Are there more steps?}
+                                        CheckAuto -->|No| Notify[Notify Resolved Approvers & Wait]
+                                        Notify --> ManualApprove[Approver Manually Approves Step]
+                                        ManualApprove --> CheckNext
+                                        CheckNext -->|Yes| ProcessStep
+                                        CheckNext -->|No| CompleteReq[Set Request Status to Approved]
+                                        CompleteReq --> Propagate[Propagate changes to Employee Profile DB Tables]
+                                    </pre>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
