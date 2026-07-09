@@ -25,6 +25,12 @@ This is a robust Human Resource Management System (HRMS) built with Laravel 12. 
 - **Validation Refactoring**: Shifted validation logic out of controllers into 9 dedicated form requests (e.g., [EmployeeGeneralInfoRequest](file:///P:/Project/Web/hrms/app/Http/Requests/Employee/EmployeeGeneralInfoRequest.php), [EmployeeOfficeInfoRequest](file:///P:/Project/Web/hrms/app/Http/Requests/Employee/EmployeeOfficeInfoRequest.php), [EmployeeSalaryBreakdownRequest](file:///P:/Project/Web/hrms/app/Http/Requests/Employee/EmployeeSalaryBreakdownRequest.php)).
 - **Dynamic Rule Modification**: These requests interact with the dynamic profile field configuration system to dynamically append or adjust validation rules (converting optional fields to `required` or vice-versa) at runtime before the requests hit controllers.
 
+### 5. Polymorphic Attachment System (Multiple Uploads)
+- **Centralized Storage**: Dynamic, multiple file uploads are supported across Career Movements (Transfers, Promotions, Demotions, Increments, Decrements) using a single, unified database schema.
+- **Database Design**: Implements a polymorphic `movement_attachments` table containing `attachable_type` and `attachable_id` columns, allowing any parent model to map to multiple uploaded files.
+- **Service Layer Processing**: Upload file handling is decoupled from controllers and processed in service layers ([PayrollServices](file:///P:/Project/Web/hrms/app/Services/Payroll/PayrollServices.php) and [TransferServices](file:///P:/Project/Web/hrms/app/Services/Transfer/TransferServices.php)) using centralized file storage logic.
+- **Axios Multipart Transport**: Form submissions utilize the standard HTML5 `FormData` object with `Content-Type: multipart/form-data` and Laravel `_method` spoofing to successfully transport files over Axios AJAX calls.
+
 ---
 
 ## 📦 Completed Modules
@@ -59,6 +65,11 @@ This is a robust Human Resource Management System (HRMS) built with Laravel 12. 
   - **Admin Request Overrides**: When an Admin attempts to modify organizational fields (Office Information, Policy Tag, Salary Breakdown, Bank Account), the system automatically intercepts changes, creates a pending `ProfileUpdateRequest` of type `admin`, and prompts for workflow approval.
   - **Comparison & Audit Show View**: A detailed page that renders database records side-by-side with requested changes. Relational foreign key IDs are resolved dynamically into human-readable names, database `_id` suffixes are stripped from labels, and complex dynamic JSON arrays (such as education, training, and history grids) are parsed and displayed cleanly.
   - **Background Auto-Propagation**: Managed by the decoupled [ProfileUpdateWorkflowListener](file:///P:/Project/Web/hrms/app/Listeners/Workflow/ProfileUpdateWorkflowListener.php). When a request is approved, the listener automatically synchronizes approved attributes into the respective core models, activating the updates.
+
+### 📂 Career Movement Attachment System
+- **Polymorphic File Association**: Developed a single, polymorphic model [MovementAttachment](file:///P:/Project/Web/hrms/app/Models/Payroll/MovementAttachment.php) linked to a `movement_attachments` database table, allowing files to be bound to any career movement record (Transfer, Promotion, Demotion, Increment, Decrement).
+- **AXIOS File Upload Integration**: Upgraded create/edit forms to support multiple file uploads through standard HTML5 `FormData` objects and Axios AJAX post handling.
+- **Embedded Document Viewer**: Embedded downloadable links styled as pills/badges in the respective view details pages, enabling administrators to preview and audit documentation attached to career movement requests.
 
 ### ⚙️ Dynamic Approval Workflow Engine
 The Human Resource Management System integrates a custom package **`laravel-approval-engine`** ([laravel-approval-engine](file:///P:/Project/Web/hrms/workflow-functional-breakdown.md)) to support multi-stage approval pipelines.
