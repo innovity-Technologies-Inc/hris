@@ -116,15 +116,66 @@ class TransferAPIController extends Controller
         }
     }
 
-    public function complete($id)
+    public function adjustment()
+    {
+        $transfers = Transfer::withoutGlobalScopes()
+            ->where('status', 'approved')
+            ->where('is_adjustment', 1)
+            ->whereDate('effective_from', '<=', \Carbon\Carbon::today())
+            ->get();
+
+        if ($transfers->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No approved career movements due for adjustment today.'
+            ], 400);
+        }
+
+        try {
+            \Illuminate\Support\Facades\DB::transaction(function () use ($transfers) {
+                $service = app(\App\Services\Transfer\TransferServices::class);
+                foreach ($transfers as $transfer) {
+                    $service->completeTransfer($transfer);
+                }
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Adjustments processed successfully.'
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Transfer Adjustment Error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong while processing adjustments.'
+            ], 500);
+        }
+    }
+
+    public function delete($id)
     {
         try {
             $transfer = Transfer::withoutGlobalScopes()->findOrFail($id);
-            $this->transferServices->completeTransfer($transfer);
-            return response()->json(['success' => true, 'message' => 'Transfer completed and office info updated.']);
+
+            if ($transfer->status !== 'pending') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Only pending transfers can be deleted.'
+                ], 400);
+            }
+
+            $transfer->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Transfer record deleted successfully.'
+            ]);
         } catch (\Exception $e) {
-            Log::error('Transfer complete failed: ' . $e->getMessage(), ['id' => $id]);
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+            Log::error('Transfer Delete Error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete transfer record.'
+            ], 500);
         }
     }
 }

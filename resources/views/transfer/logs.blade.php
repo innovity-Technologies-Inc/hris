@@ -78,9 +78,9 @@
                         </a>
                         @endcan
                         @can('transfers.edit')
-                        <a href="{{ route('transfer.adjustment') }}" class="btn btn-success btn-sm">
+                        <button type="button" id="btnAdjustment" class="btn btn-success btn-sm">
                             <i style="height: 12px; width: 12px" data-feather="check"></i> Adjustment
-                        </a>
+                        </button>
                         @endcan
                     </div>
                 </div>
@@ -301,14 +301,10 @@ $(document).ready(function() {
             const movementTypeBadge = item.movement_type ? `<span class="badge bg-secondary ms-1">${item.movement_type.name}</span>` : '';
             const effectiveFromDate = item.effective_from ? new Date(item.effective_from).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A';
 
-            const deleteForm = (item.can_delete && item.status === 'pending') ? `
-                <form action="{{ url('transfer') }}/${item.id}/delete" method="POST" class="d-inline confirmDeleteForm">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger btn-sm confirmDelete" title="Delete">
-                        <i style="height: 12px; width: 12px" data-feather="trash"></i>
-                    </button>
-                </form>
+            const deleteButton = (item.can_delete && item.status === 'pending') ? `
+                <button type="button" class="btn btn-danger btn-sm btnDeleteTransfer" data-id="${item.id}" title="Delete">
+                    <i style="height: 12px; width: 12px" data-feather="trash"></i>
+                </button>
             ` : '';
 
             const row = `
@@ -330,7 +326,7 @@ $(document).ready(function() {
                             <a href="{{ url('transfer/view') }}/${item.id}" class="btn btn-info btn-sm" title="View Details">
                                 <i style="height: 12px; width: 12px" data-feather="eye"></i>
                             </a>
-                            ${deleteForm}
+                            ${deleteButton}
                         </div>
                     </td>
                 </tr>
@@ -340,20 +336,61 @@ $(document).ready(function() {
         if (typeof feather !== 'undefined') feather.replace();
     }
 
-    $(document).on('click', '.confirmDelete', function(event) {
+    $(document).on('click', '.btnDeleteTransfer', function(event) {
         event.preventDefault();
-        const form = $(this).closest("form");
+        const transferId = $(this).data('id');
         Swal.fire({
             title: 'Are you sure you want to delete?',
-            text: 'You won\'t be able to revert!',
+            text: 'You won\'t be able to revert this!',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Confirm'
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Delete'
         }).then((result) => {
             if (result.isConfirmed) {
-                form.submit();
+                Swal.fire({
+                    title: 'Deleting...',
+                    didOpen: () => { Swal.showLoading(); }
+                });
+                axios.delete(`{{ url('transfer/api/delete') }}/${transferId}`)
+                    .then(res => {
+                        Swal.fire('Deleted!', res.data.message, 'success').then(() => {
+                            fetchCareerMovements();
+                        });
+                    })
+                    .catch(err => {
+                        const msg = err.response?.data?.message || 'Failed to delete transfer.';
+                        Swal.fire('Error', msg, 'error');
+                    });
+            }
+        });
+    });
+
+    $('#btnAdjustment').on('click', function(e) {
+        e.preventDefault();
+        Swal.fire({
+            title: 'Process Career Movement Adjustments?',
+            text: "This will bulk adjust all due approved transfers to their requested placements.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Process'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Processing...',
+                    didOpen: () => { Swal.showLoading(); }
+                });
+                axios.post('{{ route('transfer.api.adjustment') }}')
+                    .then(res => {
+                        Swal.fire('Success!', res.data.message, 'success').then(() => {
+                            fetchCareerMovements();
+                        });
+                    })
+                    .catch(err => {
+                        const msg = err.response?.data?.message || 'Something went wrong.';
+                        Swal.fire('Error', msg, 'error');
+                    });
             }
         });
     });

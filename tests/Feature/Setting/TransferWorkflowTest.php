@@ -116,8 +116,8 @@ test('it processes transfer using central approval engine sequential workflow an
     expect((int)$transfer->is_adjustment)->toBe(1);
 
     // Call the bulk adjustment endpoint
-    $response = $this->actingAs($hrUser)->get(route('transfer.adjustment'));
-    $response->assertRedirect(route('transfer.index'));
+    $response = $this->actingAs($hrUser)->postJson(route('transfer.api.adjustment'));
+    $response->assertStatus(200)->assertJson(['success' => true]);
 
     $transfer->refresh();
     expect($transfer->status)->toBe('completed');
@@ -150,8 +150,8 @@ test('it can delete a pending transfer', function () {
         'created_by' => $admin->id
     ]);
 
-    $response = $this->actingAs($admin)->delete(route('transfer.delete', $transfer->id));
-    $response->assertRedirect(route('transfer.index'));
+    $response = $this->actingAs($admin)->deleteJson(route('transfer.api.delete', $transfer->id));
+    $response->assertStatus(200)->assertJson(['success' => true]);
 
     expect(Transfer::withoutGlobalScopes()->find($transfer->id))->toBeNull();
 });
@@ -178,8 +178,8 @@ test('it prevents deleting non-pending transfer', function () {
         'created_by' => $admin->id
     ]);
 
-    $response = $this->actingAs($admin)->delete(route('transfer.delete', $transfer->id));
-    $response->assertRedirect(); // redirects back with error
+    $response = $this->actingAs($admin)->deleteJson(route('transfer.api.delete', $transfer->id));
+    $response->assertStatus(400)->assertJson(['success' => false]);
 
     expect(Transfer::withoutGlobalScopes()->find($transfer->id))->not->toBeNull();
 });
