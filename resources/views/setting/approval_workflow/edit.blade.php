@@ -103,6 +103,20 @@
                                         <small class="text-muted">Define who this workflow applies to, and who bypasses it (auto-approves).</small>
                                     </div>
                                     <div class="card-body">
+                                        <!-- Guidelines Note -->
+                                        <div class="alert alert-info-subtle border-info-subtle text-info mb-4" style="font-size: 0.85rem; background-color: rgba(13, 202, 240, 0.05); border: 1px solid rgba(13, 202, 240, 0.2); border-radius: 8px; padding: 12px;">
+                                            <div class="d-flex gap-2">
+                                                <i class="mdi mdi-information-outline fs-5 align-middle"></i>
+                                                <div>
+                                                    <strong class="d-block mb-1">Configuration Guidelines:</strong>
+                                                    <ul class="mb-0 ps-3">
+                                                        <li><strong>Inclusion Rules:</strong> Define who this workflow applies to. If left empty, the workflow will apply to all requests by default. If any inclusion rules are added, only requests matching those criteria will trigger this workflow (others will be auto-approved).</li>
+                                                        <li><strong>Exclusion Rules:</strong> Define who bypasses the workflow. Requests matching any of the exclusion rules will bypass approval and be auto-approved immediately. Exclusion rules override inclusion rules.</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <!-- Inclusion Section -->
                                         <div class="border-bottom pb-4 mb-4">
                                             <div class="d-flex justify-content-between align-items-center mb-2">
