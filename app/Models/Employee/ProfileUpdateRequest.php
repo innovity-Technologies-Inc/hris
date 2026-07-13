@@ -29,6 +29,18 @@ class ProfileUpdateRequest extends Model
         return $this->belongsTo(Employee::class);
     }
 
+    public function creator()
+    {
+        return $this->hasOneThrough(
+            \App\Models\User::class,
+            Employee::class,
+            'id',
+            'employee_id',
+            'employee_id',
+            'id'
+        )->withoutGlobalScopes();
+    }
+
     /**
      * Helper to check if workflow is active and create an admin update request if so.
      */

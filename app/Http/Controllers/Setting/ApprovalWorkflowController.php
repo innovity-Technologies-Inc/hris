@@ -40,6 +40,14 @@ class ApprovalWorkflowController extends Controller
             'steps.*.required_user_type' => 'nullable|required_if:steps.*.type,user-type,role-user|string',
             'steps.*.role_id' => 'nullable|required_if:steps.*.type,role-user|exists:roles,id',
             'steps.*.user_id' => 'nullable|required_if:steps.*.type,specific-user|exists:users,id',
+            
+            // Inclusions & Exclusions validation
+            'requester_user_types' => 'nullable|array',
+            'requester_role_ids' => 'nullable|array',
+            'requester_user_ids' => 'nullable|array',
+            'exclude_user_types' => 'nullable|array',
+            'exclude_role_ids' => 'nullable|array',
+            'exclude_user_ids' => 'nullable|array',
         ], [
             'module_name.unique' => 'An approval workflow already exists for this module.',
         ]);
@@ -51,6 +59,50 @@ class ApprovalWorkflowController extends Controller
             }
         }
 
+        // Sanitize Inclusion fields
+        $requesterUserTypes = $request->scope_type !== 'all' && $request->has('requester_user_types') ? $request->requester_user_types : null;
+        $requesterRoleIds = $request->scope_type !== 'all' && $request->has('requester_role_ids') ? $request->requester_role_ids : null;
+        $requesterUserIds = $request->scope_type !== 'all' && $request->has('requester_user_ids') ? $request->requester_user_ids : null;
+
+        if ($request->scope_type === 'user_type') {
+            $requesterRoleIds = null;
+            $requesterUserIds = null;
+        } elseif ($request->scope_type === 'role') {
+            $requesterUserTypes = null;
+            $requesterUserIds = null;
+        } elseif ($request->scope_type === 'user_type_role') {
+            $requesterUserIds = null;
+        } elseif ($request->scope_type === 'specific_user') {
+            $requesterUserTypes = null;
+            $requesterRoleIds = null;
+        } else {
+            $requesterUserTypes = null;
+            $requesterRoleIds = null;
+            $requesterUserIds = null;
+        }
+
+        // Sanitize Exclusion fields
+        $excludeUserTypes = $request->exclude_scope_type !== 'none' && $request->has('exclude_user_types') ? $request->exclude_user_types : null;
+        $excludeRoleIds = $request->exclude_scope_type !== 'none' && $request->has('exclude_role_ids') ? $request->exclude_role_ids : null;
+        $excludeUserIds = $request->exclude_scope_type !== 'none' && $request->has('exclude_user_ids') ? $request->exclude_user_ids : null;
+
+        if ($request->exclude_scope_type === 'user_type') {
+            $excludeRoleIds = null;
+            $excludeUserIds = null;
+        } elseif ($request->exclude_scope_type === 'role') {
+            $excludeUserTypes = null;
+            $excludeUserIds = null;
+        } elseif ($request->exclude_scope_type === 'user_type_role') {
+            $excludeUserIds = null;
+        } elseif ($request->exclude_scope_type === 'specific_user') {
+            $excludeUserTypes = null;
+            $excludeRoleIds = null;
+        } else {
+            $excludeUserTypes = null;
+            $excludeRoleIds = null;
+            $excludeUserIds = null;
+        }
+
         DB::beginTransaction();
         try {
             $workflow = ApprovalWorkflow::create([
@@ -60,6 +112,14 @@ class ApprovalWorkflowController extends Controller
                 'total_steps' => count($request->steps),
                 'required_approvals' => $request->type === 'random' ? $request->required_approvals : null,
                 'is_active' => $request->is_active == '1',
+                
+                // Save Inclusions & Exclusions
+                'requester_user_types' => $requesterUserTypes,
+                'requester_role_ids' => $requesterRoleIds,
+                'requester_user_ids' => $requesterUserIds,
+                'exclude_user_types' => $excludeUserTypes,
+                'exclude_role_ids' => $excludeRoleIds,
+                'exclude_user_ids' => $excludeUserIds,
             ]);
 
             foreach ($request->steps as $index => $step) {
@@ -120,6 +180,14 @@ class ApprovalWorkflowController extends Controller
             'steps.*.required_user_type' => 'nullable|required_if:steps.*.type,user-type,role-user|string',
             'steps.*.role_id' => 'nullable|required_if:steps.*.type,role-user|exists:roles,id',
             'steps.*.user_id' => 'nullable|required_if:steps.*.type,specific-user|exists:users,id',
+            
+            // Inclusions & Exclusions validation
+            'requester_user_types' => 'nullable|array',
+            'requester_role_ids' => 'nullable|array',
+            'requester_user_ids' => 'nullable|array',
+            'exclude_user_types' => 'nullable|array',
+            'exclude_role_ids' => 'nullable|array',
+            'exclude_user_ids' => 'nullable|array',
         ], [
             'module_name.unique' => 'An approval workflow already exists for this module.',
         ]);
@@ -129,6 +197,50 @@ class ApprovalWorkflowController extends Controller
             if ($error) {
                 return response()->json(['message' => 'Validation failed: ' . $error], 422);
             }
+        }
+
+        // Sanitize Inclusion fields
+        $requesterUserTypes = $request->scope_type !== 'all' && $request->has('requester_user_types') ? $request->requester_user_types : null;
+        $requesterRoleIds = $request->scope_type !== 'all' && $request->has('requester_role_ids') ? $request->requester_role_ids : null;
+        $requesterUserIds = $request->scope_type !== 'all' && $request->has('requester_user_ids') ? $request->requester_user_ids : null;
+
+        if ($request->scope_type === 'user_type') {
+            $requesterRoleIds = null;
+            $requesterUserIds = null;
+        } elseif ($request->scope_type === 'role') {
+            $requesterUserTypes = null;
+            $requesterUserIds = null;
+        } elseif ($request->scope_type === 'user_type_role') {
+            $requesterUserIds = null;
+        } elseif ($request->scope_type === 'specific_user') {
+            $requesterUserTypes = null;
+            $requesterRoleIds = null;
+        } else {
+            $requesterUserTypes = null;
+            $requesterRoleIds = null;
+            $requesterUserIds = null;
+        }
+
+        // Sanitize Exclusion fields
+        $excludeUserTypes = $request->exclude_scope_type !== 'none' && $request->has('exclude_user_types') ? $request->exclude_user_types : null;
+        $excludeRoleIds = $request->exclude_scope_type !== 'none' && $request->has('exclude_role_ids') ? $request->exclude_role_ids : null;
+        $excludeUserIds = $request->exclude_scope_type !== 'none' && $request->has('exclude_user_ids') ? $request->exclude_user_ids : null;
+
+        if ($request->exclude_scope_type === 'user_type') {
+            $excludeRoleIds = null;
+            $excludeUserIds = null;
+        } elseif ($request->exclude_scope_type === 'role') {
+            $excludeUserTypes = null;
+            $excludeUserIds = null;
+        } elseif ($request->exclude_scope_type === 'user_type_role') {
+            $excludeUserIds = null;
+        } elseif ($request->exclude_scope_type === 'specific_user') {
+            $excludeUserTypes = null;
+            $excludeRoleIds = null;
+        } else {
+            $excludeUserTypes = null;
+            $excludeRoleIds = null;
+            $excludeUserIds = null;
         }
 
         DB::beginTransaction();
@@ -141,6 +253,14 @@ class ApprovalWorkflowController extends Controller
                 'total_steps' => count($request->steps),
                 'required_approvals' => $request->type === 'random' ? $request->required_approvals : null,
                 'is_active' => $request->is_active == '1',
+                
+                // Save Inclusions & Exclusions
+                'requester_user_types' => $requesterUserTypes,
+                'requester_role_ids' => $requesterRoleIds,
+                'requester_user_ids' => $requesterUserIds,
+                'exclude_user_types' => $excludeUserTypes,
+                'exclude_role_ids' => $excludeRoleIds,
+                'exclude_user_ids' => $excludeUserIds,
             ]);
 
             $workflow->steps()->delete();

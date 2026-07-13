@@ -302,3 +302,215 @@ test('it auto-approves steps if requester has higher authority or is the resolve
     $sr3 = $stepRequests->where('workflow_step_id', $step3->id)->first();
     expect($sr3->status->value)->toBe('pending');
 });
+
+test('it can store and update a workflow with inclusion and exclusion scopes', function () {
+    $editPermission = \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'approval-workflows.edit', 'guard_name' => 'web']);
+    $this->admin->givePermissionTo($editPermission);
+
+    $this->actingAs($this->admin);
+
+    $response = $this->postJson(route('setting.approval_workflows.store'), [
+        'module_name' => 'profile-update',
+        'type' => 'sequential',
+        'scope_type' => 'user_type',
+        'requester_user_types' => ['division', 'department'],
+        'exclude_scope_type' => 'role',
+        'exclude_role_ids' => [1, 2],
+        'steps' => [
+            [
+                'type' => 'user-type',
+                'required_user_type' => 'section'
+            ]
+        ]
+    ]);
+
+    $response->assertStatus(200);
+
+    $workflow = Workflow::where('module', 'profile-update')->first();
+    expect($workflow->requester_user_types)->toBe(['division', 'department']);
+    expect($workflow->exclude_role_ids)->toBe([1, 2]);
+
+    // Test Update
+    $updateResponse = $this->putJson(route('setting.approval_workflows.update', $workflow->id), [
+        'module_name' => 'profile-update',
+        'type' => 'sequential',
+        'scope_type' => 'role',
+        'requester_role_ids' => [3],
+        'exclude_scope_type' => 'specific_user',
+        'exclude_user_ids' => [5, 6],
+        'steps' => [
+            [
+                'type' => 'user-type',
+                'required_user_type' => 'section'
+            ]
+        ]
+    ]);
+
+    $updateResponse->assertStatus(200);
+
+    $workflow = $workflow->fresh();
+    expect($workflow->requester_role_ids)->toBe([3]);
+    expect($workflow->requester_user_types)->toBeNull();
+    expect($workflow->exclude_user_ids)->toBe([5, 6]);
+    expect($workflow->exclude_role_ids)->toBeNull();
+});
+
+test('it filters by requester includers and bypasses others', function () {
+    $this->actingAs($this->admin);
+
+    // 1. Create a workflow that only applies to division creators
+    $workflow = Workflow::create([
+        'name' => 'Profile Update Workflow',
+        'module' => 'profile-update',
+        'type' => 'sequential',
+        'total_steps' => 1,
+        'is_active' => true,
+        'requester_user_types' => ['division']
+    ]);
+
+    $step = WorkflowStep::create([
+        'workflow_id' => $workflow->id,
+        'name' => 'Step 1',
+        'step_order' => 1,
+        'type' => 'user-type',
+        'required_user_type' => 'company'
+    ]);
+
+    // Case A: Creator is division -> needs approval (pending status)
+    $divEmp = Employee::factory()->create();
+    $divUser = User::factory()->create([
+        'user_type' => 'division',
+        'employee_id' => $divEmp->id
+    ]);
+    $divEmp->update(['user_id' => $divUser->id]);
+
+    EmployeeOfficeInfo::create([
+        'employee_id' => $divEmp->id,
+        'current_company_id' => 1,
+        'current_division_id' => 2,
+        'current_department_id' => 3,
+        'current_section_id' => 4,
+        'current_business_unit_id' => 5,
+    ]);
+
+    $approvableDiv = ProfileUpdateRequest::create([
+        'employee_id' => $divEmp->id,
+        'section' => 'personal_info',
+        'previous_data' => [],
+        'requested_data' => [],
+        'status' => 'pending'
+    ]);
+
+    $requestDiv = app(\Innovity\ApprovalEngine\Services\WorkflowGenerator::class)->generate($approvableDiv, 'profile-update');
+    expect($requestDiv->status->value)->toBe('pending');
+    expect($approvableDiv->fresh()->status)->toBe('pending');
+
+    // Case B: Creator is department (not in includers) -> auto-approves
+    $deptEmp = Employee::factory()->create();
+    $deptUser = User::factory()->create([
+        'user_type' => 'department',
+        'employee_id' => $deptEmp->id
+    ]);
+    $deptEmp->update(['user_id' => $deptUser->id]);
+
+    EmployeeOfficeInfo::create([
+        'employee_id' => $deptEmp->id,
+        'current_company_id' => 1,
+        'current_division_id' => 2,
+        'current_department_id' => 3,
+        'current_section_id' => 4,
+        'current_business_unit_id' => 5,
+    ]);
+
+    $approvableDept = ProfileUpdateRequest::create([
+        'employee_id' => $deptEmp->id,
+        'section' => 'personal_info',
+        'previous_data' => [],
+        'requested_data' => [],
+        'status' => 'pending'
+    ]);
+
+    $requestDept = app(\Innovity\ApprovalEngine\Services\WorkflowGenerator::class)->generate($approvableDept, 'profile-update');
+    expect($requestDept->status->value)->toBe('approved');
+    expect($approvableDept->fresh()->status)->toBe('approved');
+});
+
+test('it bypasses approval if creator matches excluders', function () {
+    $this->actingAs($this->admin);
+
+    // Create a workflow with all default includers, but excluders for 'company' user type
+    $workflow = Workflow::create([
+        'name' => 'Profile Update Workflow',
+        'module' => 'profile-update',
+        'type' => 'sequential',
+        'total_steps' => 1,
+        'is_active' => true,
+        'exclude_user_types' => ['company']
+    ]);
+
+    $step = WorkflowStep::create([
+        'workflow_id' => $workflow->id,
+        'name' => 'Step 1',
+        'step_order' => 1,
+        'type' => 'user-type',
+        'required_user_type' => 'company'
+    ]);
+
+    // Case A: Creator is company (excluded) -> auto-approves
+    $compEmp = Employee::factory()->create();
+    $compUser = User::factory()->create([
+        'user_type' => 'company',
+        'employee_id' => $compEmp->id
+    ]);
+    $compEmp->update(['user_id' => $compUser->id]);
+
+    EmployeeOfficeInfo::create([
+        'employee_id' => $compEmp->id,
+        'current_company_id' => 1,
+        'current_division_id' => 2,
+        'current_department_id' => 3,
+        'current_section_id' => 4,
+        'current_business_unit_id' => 5,
+    ]);
+
+    $approvableComp = ProfileUpdateRequest::create([
+        'employee_id' => $compEmp->id,
+        'section' => 'personal_info',
+        'previous_data' => [],
+        'requested_data' => [],
+        'status' => 'pending'
+    ]);
+
+    $requestComp = app(\Innovity\ApprovalEngine\Services\WorkflowGenerator::class)->generate($approvableComp, 'profile-update');
+    expect($requestComp->status->value)->toBe('approved');
+    expect($approvableComp->fresh()->status)->toBe('approved');
+
+    // Case B: Creator is division (not excluded) -> needs approval (pending status)
+    $divEmp = Employee::factory()->create();
+    $divUser = User::factory()->create([
+        'user_type' => 'division',
+        'employee_id' => $divEmp->id
+    ]);
+    $divEmp->update(['user_id' => $divUser->id]);
+
+    EmployeeOfficeInfo::create([
+        'employee_id' => $divEmp->id,
+        'current_company_id' => 1,
+        'current_division_id' => 2,
+        'current_department_id' => 3,
+        'current_section_id' => 4,
+        'current_business_unit_id' => 5,
+    ]);
+
+    $approvableDiv = ProfileUpdateRequest::create([
+        'employee_id' => $divEmp->id,
+        'section' => 'personal_info',
+        'previous_data' => [],
+        'requested_data' => [],
+        'status' => 'pending'
+    ]);
+
+    $requestDiv = app(\Innovity\ApprovalEngine\Services\WorkflowGenerator::class)->generate($approvableDiv, 'profile-update');
+    expect($requestDiv->status->value)->toBe('pending');
+    expect($approvableDiv->fresh()->status)->toBe('pending');
+});

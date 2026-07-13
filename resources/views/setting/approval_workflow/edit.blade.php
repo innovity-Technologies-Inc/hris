@@ -73,6 +73,132 @@
                                     </div>
                                 </div>
 
+                                @php
+                                    $scopeType = 'all';
+                                    if (is_array($workflow->requester_user_ids) && !empty($workflow->requester_user_ids)) {
+                                        $scopeType = 'specific_user';
+                                    } elseif (is_array($workflow->requester_user_types) && !empty($workflow->requester_user_types) && is_array($workflow->requester_role_ids) && !empty($workflow->requester_role_ids)) {
+                                        $scopeType = 'user_type_role';
+                                    } elseif (is_array($workflow->requester_role_ids) && !empty($workflow->requester_role_ids)) {
+                                        $scopeType = 'role';
+                                    } elseif (is_array($workflow->requester_user_types) && !empty($workflow->requester_user_types)) {
+                                        $scopeType = 'user_type';
+                                    }
+
+                                    $excludeScopeType = 'none';
+                                    if (is_array($workflow->exclude_user_ids) && !empty($workflow->exclude_user_ids)) {
+                                        $excludeScopeType = 'specific_user';
+                                    } elseif (is_array($workflow->exclude_user_types) && !empty($workflow->exclude_user_types) && is_array($workflow->exclude_role_ids) && !empty($workflow->exclude_role_ids)) {
+                                        $excludeScopeType = 'user_type_role';
+                                    } elseif (is_array($workflow->exclude_role_ids) && !empty($workflow->exclude_role_ids)) {
+                                        $excludeScopeType = 'role';
+                                    } elseif (is_array($workflow->exclude_user_types) && !empty($workflow->exclude_user_types)) {
+                                        $excludeScopeType = 'user_type';
+                                    }
+                                @endphp
+
+                                <div class="card mb-4 border-dashed bg-light mt-4">
+                                    <div class="card-header bg-transparent border-0 pb-0">
+                                        <h6 class="card-title mb-0 fw-semibold text-primary">Creator/Requester Inclusion & Exclusion Scopes</h6>
+                                        <small class="text-muted">Define who this workflow applies to, and who bypasses it (auto-approves).</small>
+                                    </div>
+                                    <div class="card-body">
+                                        <!-- Inclusion Section -->
+                                        <div class="border-bottom pb-3 mb-3">
+                                            <span class="badge bg-success-subtle text-success mb-2 fw-semibold">1. Inclusion Scope (Needs Approval)</span>
+                                            <div class="row">
+                                                <div class="col-md-3 mb-3">
+                                                    <label class="form-label fw-semibold">Target Inclusion Scope</label>
+                                                    <select name="scope_type" id="scope_type" class="form-select">
+                                                        <option value="all" {{ $scopeType === 'all' ? 'selected' : '' }}>Apply to All (Default)</option>
+                                                        <option value="user_type" {{ $scopeType === 'user_type' ? 'selected' : '' }}>User Type</option>
+                                                        <option value="role" {{ $scopeType === 'role' ? 'selected' : '' }}>User Role</option>
+                                                        <option value="user_type_role" {{ $scopeType === 'user_type_role' ? 'selected' : '' }}>User Type + Role</option>
+                                                        <option value="specific_user" {{ $scopeType === 'specific_user' ? 'selected' : '' }}>Specific User</option>
+                                                    </select>
+                                                </div>
+
+                                                <!-- User Type Dropdown -->
+                                                <div class="col-md-3 mb-3 scope-field {{ in_array($scopeType, ['user_type', 'user_type_role']) ? '' : 'd-none' }}" id="scope_user_type_div">
+                                                    <label class="form-label fw-semibold">Included User Types <span class="text-muted">(Hold Ctrl to select multiple)</span></label>
+                                                    <select name="requester_user_types[]" id="requester_user_types" class="form-select" multiple>
+                                                        @foreach($userTypes as $type)
+                                                            <option value="{{ $type->value }}" {{ in_array($type->value, $workflow->requester_user_types ?? []) ? 'selected' : '' }}>{{ $type->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+
+                                                <!-- Role Dropdown -->
+                                                <div class="col-md-3 mb-3 scope-field {{ in_array($scopeType, ['role', 'user_type_role']) ? '' : 'd-none' }}" id="scope_role_div">
+                                                    <label class="form-label fw-semibold">Included User Roles <span class="text-muted">(Hold Ctrl to select multiple)</span></label>
+                                                    <select name="requester_role_ids[]" id="requester_role_ids" class="form-select" multiple>
+                                                        @foreach($roles as $role)
+                                                            <option value="{{ $role->id }}" {{ in_array($role->id, $workflow->requester_role_ids ?? []) ? 'selected' : '' }}>{{ $role->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+
+                                                <!-- Specific User Dropdown -->
+                                                <div class="col-md-3 mb-3 scope-field {{ $scopeType === 'specific_user' ? '' : 'd-none' }}" id="scope_user_div">
+                                                    <label class="form-label fw-semibold">Included Specific Users <span class="text-muted">(Hold Ctrl to select multiple)</span></label>
+                                                    <select name="requester_user_ids[]" id="requester_user_ids" class="form-select" multiple>
+                                                        @foreach($users as $user)
+                                                            <option value="{{ $user->id }}" {{ in_array($user->id, $workflow->requester_user_ids ?? []) ? 'selected' : '' }}>{{ $user->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Exclusion Section -->
+                                        <div>
+                                            <span class="badge bg-danger-subtle text-danger mb-2 fw-semibold">2. Exclusion Scope (Bypasses/Auto-Approves)</span>
+                                            <div class="row">
+                                                <div class="col-md-3 mb-3">
+                                                    <label class="form-label fw-semibold">Target Exclusion Scope</label>
+                                                    <select name="exclude_scope_type" id="exclude_scope_type" class="form-select">
+                                                        <option value="none" {{ $excludeScopeType === 'none' ? 'selected' : '' }}>None (Default)</option>
+                                                        <option value="user_type" {{ $excludeScopeType === 'user_type' ? 'selected' : '' }}>User Type</option>
+                                                        <option value="role" {{ $excludeScopeType === 'role' ? 'selected' : '' }}>User Role</option>
+                                                        <option value="user_type_role" {{ $excludeScopeType === 'user_type_role' ? 'selected' : '' }}>User Type + Role</option>
+                                                        <option value="specific_user" {{ $excludeScopeType === 'specific_user' ? 'selected' : '' }}>Specific User</option>
+                                                    </select>
+                                                </div>
+
+                                                <!-- Exclude User Type Dropdown -->
+                                                <div class="col-md-3 mb-3 exclude-scope-field {{ in_array($excludeScopeType, ['user_type', 'user_type_role']) ? '' : 'd-none' }}" id="exclude_user_type_div">
+                                                    <label class="form-label fw-semibold">Excluded User Types <span class="text-muted">(Hold Ctrl to select multiple)</span></label>
+                                                    <select name="exclude_user_types[]" id="exclude_user_types" class="form-select" multiple>
+                                                        @foreach($userTypes as $type)
+                                                            <option value="{{ $type->value }}" {{ in_array($type->value, $workflow->exclude_user_types ?? []) ? 'selected' : '' }}>{{ $type->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+
+                                                <!-- Exclude Role Dropdown -->
+                                                <div class="col-md-3 mb-3 exclude-scope-field {{ in_array($excludeScopeType, ['role', 'user_type_role']) ? '' : 'd-none' }}" id="exclude_role_div">
+                                                    <label class="form-label fw-semibold">Excluded User Roles <span class="text-muted">(Hold Ctrl to select multiple)</span></label>
+                                                    <select name="exclude_role_ids[]" id="exclude_role_ids" class="form-select" multiple>
+                                                        @foreach($roles as $role)
+                                                            <option value="{{ $role->id }}" {{ in_array($role->id, $workflow->exclude_role_ids ?? []) ? 'selected' : '' }}>{{ $role->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+
+                                                <!-- Exclude Specific User Dropdown -->
+                                                <div class="col-md-3 mb-3 exclude-scope-field {{ $excludeScopeType === 'specific_user' ? '' : 'd-none' }}" id="exclude_user_div">
+                                                    <label class="form-label fw-semibold">Excluded Specific Users <span class="text-muted">(Hold Ctrl to select multiple)</span></label>
+                                                    <select name="exclude_user_ids[]" id="exclude_user_ids" class="form-select" multiple>
+                                                        @foreach($users as $user)
+                                                            <option value="{{ $user->id }}" {{ in_array($user->id, $workflow->exclude_user_ids ?? []) ? 'selected' : '' }}>{{ $user->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <hr>
 
                                 <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
@@ -324,6 +450,16 @@
             const formData = new FormData(this);
             const data = Object.fromEntries(formData.entries());
             
+            // Inclusion multi-select arrays
+            data.requester_user_types = $('#requester_user_types').val() || [];
+            data.requester_role_ids = $('#requester_role_ids').val() || [];
+            data.requester_user_ids = $('#requester_user_ids').val() || [];
+
+            // Exclusion multi-select arrays
+            data.exclude_user_types = $('#exclude_user_types').val() || [];
+            data.exclude_role_ids = $('#exclude_role_ids').val() || [];
+            data.exclude_user_ids = $('#exclude_user_ids').val() || [];
+            
             // Handle array of steps correctly for Axios
             const steps = [];
             $('.step-row').each(function() {
@@ -364,6 +500,36 @@
                     $('#workflowForm').before(alertHtml);
                     window.scrollTo(0, 0);
                 });
+        });
+
+        // Inclusion Scope type toggle logic
+        $('#scope_type').on('change', function() {
+            $('.scope-field').addClass('d-none').find('select').val([]);
+            const val = $(this).val();
+            if (val === 'user_type') {
+                $('#scope_user_type_div').removeClass('d-none');
+            } else if (val === 'role') {
+                $('#scope_role_div').removeClass('d-none');
+            } else if (val === 'user_type_role') {
+                $('#scope_user_type_div, #scope_role_div').removeClass('d-none');
+            } else if (val === 'specific_user') {
+                $('#scope_user_div').removeClass('d-none');
+            }
+        });
+
+        // Exclusion Scope type toggle logic
+        $('#exclude_scope_type').on('change', function() {
+            $('.exclude-scope-field').addClass('d-none').find('select').val([]);
+            const val = $(this).val();
+            if (val === 'user_type') {
+                $('#exclude_user_type_div').removeClass('d-none');
+            } else if (val === 'role') {
+                $('#exclude_role_div').removeClass('d-none');
+            } else if (val === 'user_type_role') {
+                $('#exclude_user_type_div, #exclude_role_div').removeClass('d-none');
+            } else if (val === 'specific_user') {
+                $('#exclude_user_div').removeClass('d-none');
+            }
         });
 
         // Initialize
