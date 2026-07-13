@@ -37,6 +37,12 @@ The package manages workflow state using four database tables:
      * `total_steps` (integer): Total number of approvals required.
      * `required_approvals` (integer, nullable): Number of approvals required for random workflows.
      * `is_active` (boolean): Whether this blueprint is active.
+     * `requester_user_types` (JSON, nullable): Allowed user types for inclusion scope (e.g. `['division', 'department']`).
+     * `requester_role_ids` (JSON, nullable): Allowed Spatie Role IDs for inclusion scope.
+     * `requester_user_ids` (JSON, nullable): Allowed User IDs for inclusion scope.
+     * `exclude_user_types` (JSON, nullable): User types to bypass approval (auto-approve).
+     * `exclude_role_ids` (JSON, nullable): Spatie Role IDs to bypass approval (auto-approve).
+     * `exclude_user_ids` (JSON, nullable): User IDs to bypass approval (auto-approve).
 
 2. **`WorkflowStep` (`approval_workflow_steps` table)**:
    * **Role:** The individual approval levels/tiers within a workflow.
@@ -72,7 +78,7 @@ The package manages workflow state using four database tables:
 ---
 
 ### B. Core Services
-* **`WorkflowGenerator`**: Resolves the active blueprint for a module, creates the master `ApprovalRequest`, and ignites the workflow.
+* **`WorkflowGenerator`**: Resolves the active blueprint for a module based on creator properties, evaluates **Inclusion** and **Exclusion** rules (auto-approving if excluded or if creator doesn't match defined target inclusions), creates the master `ApprovalRequest`, and ignites the workflow steps.
 * **`TaskEmitter`**: Generates `ApprovalStepRequests` (tasks). In sequential mode, it emits one step at a time; in random mode, it emits all steps at once.
 * **`ApprovalResolver`**: Processes decisions, updates step records, and evaluates the master request for final approval/rejection.
 

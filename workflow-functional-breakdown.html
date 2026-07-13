@@ -201,7 +201,7 @@
                                 <div>
                                     <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Blueprint Lookup:</h4>
                                     <p class="text-xs text-slate-400 leading-relaxed">
-                                        Instantiates <code class="text-pink-300">WorkflowGenerator::generate($approvable, string $module)</code> which queries active records in the <code class="text-slate-300 font-mono">approval_workflows</code> table where <code class="text-slate-300 font-mono">module = $module</code>.
+                                        Instantiates <code class="text-pink-300">WorkflowGenerator::generate($approvable, string $module)</code> which queries active records in the <code class="text-slate-300 font-mono">approval_workflows</code> table where <code class="text-slate-300 font-mono">module = $module</code>, evaluates requester Inclusion &amp; Exclusion criteria (auto-approving/bypassing if excluded or if the creator is not within the target inclusions), and resolves the matching workflow.
                                     </p>
                                 </div>
                                 <div>
@@ -349,6 +349,12 @@
                                     <tr><td class="px-6 py-3 text-white font-mono">total_steps</td><td class="px-6 py-3 text-slate-400">Integer</td><td class="px-6 py-3 text-slate-400">Total number of steps defined.</td></tr>
                                     <tr><td class="px-6 py-3 text-white font-mono">required_approvals</td><td class="px-6 py-3 text-slate-400">Integer (Nullable)</td><td class="px-6 py-3 text-slate-400">Used for random workflows.</td></tr>
                                     <tr><td class="px-6 py-3 text-white font-mono">is_active</td><td class="px-6 py-3 text-slate-400">Boolean</td><td class="px-6 py-3 text-slate-400">Status toggle.</td></tr>
+                                    <tr><td class="px-6 py-3 text-white font-mono">requester_user_types</td><td class="px-6 py-3 text-slate-400">JSON (Nullable)</td><td class="px-6 py-3 text-slate-400">Allowed user types for inclusion scope (e.g. ['division']).</td></tr>
+                                    <tr><td class="px-6 py-3 text-white font-mono">requester_role_ids</td><td class="px-6 py-3 text-slate-400">JSON (Nullable)</td><td class="px-6 py-3 text-slate-400">Allowed Spatie Role IDs for inclusion scope.</td></tr>
+                                    <tr><td class="px-6 py-3 text-white font-mono">requester_user_ids</td><td class="px-6 py-3 text-slate-400">JSON (Nullable)</td><td class="px-6 py-3 text-slate-400">Allowed User IDs for inclusion scope.</td></tr>
+                                    <tr><td class="px-6 py-3 text-white font-mono">exclude_user_types</td><td class="px-6 py-3 text-slate-400">JSON (Nullable)</td><td class="px-6 py-3 text-slate-400">User types to bypass approval (auto-approve).</td></tr>
+                                    <tr><td class="px-6 py-3 text-white font-mono">exclude_role_ids</td><td class="px-6 py-3 text-slate-400">JSON (Nullable)</td><td class="px-6 py-3 text-slate-400">Spatie Role IDs to bypass approval (auto-approve).</td></tr>
+                                    <tr><td class="px-6 py-3 text-white font-mono">exclude_user_ids</td><td class="px-6 py-3 text-slate-400">JSON (Nullable)</td><td class="px-6 py-3 text-slate-400">User IDs to bypass approval (auto-approve).</td></tr>
                                 </tbody>
                             </table>
                         </div>
