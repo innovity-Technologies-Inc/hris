@@ -7,10 +7,9 @@
 **Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/Setting/ApprovalWorkflowTest.php && php artisan test`
 
 **Results**:
-- **Database Schema**: Successfully migrated `2026_07_12_000000_add_requester_criteria_to_approval_workflows_table` from the upgraded package.
-- **UI Form Controls**: Updated `create.blade.php` and `edit.blade.php` to include distinct Includer Scope and Excluder Scope multiple-select cards. Added Javascript handlers to serialize all selection arrays.
-- **Controller Updates**: Added array validations for both includer and excluder criteria, sanitizing input variables based on selected scopes in `ApprovalWorkflowController.php`.
-- **Feature Testing**: Appended 3 feature tests in `ApprovalWorkflowTest.php` to verify inclusion/exclusion storage and update actions, target matching bypass, and excluder auto-approval.
+- **Database Schema**: Successfully migrated `2026_07_12_000000_add_includer_criteria_to_approval_workflows_table` from the upgraded package, renaming `requester_` columns to `includer_`.
+- **UI Form Controls & Controller**: Aligned the controller validations, sanitization, and Blade view select/input fields to use `includer_` rather than `requester_`.
+- **Feature Testing**: Updated 3 feature tests in `ApprovalWorkflowTest.php` to verify inclusion/exclusion storage and update actions, target matching bypass, and excluder auto-approval.
 - **Tests**: All 144 tests passed successfully ✅
 
 **Status**: ✅ SUCCESS
