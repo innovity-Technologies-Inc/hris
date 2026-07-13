@@ -75,13 +75,13 @@
 
                                 @php
                                     $scopeType = 'all';
-                                    if (is_array($workflow->requester_user_ids) && !empty($workflow->requester_user_ids)) {
+                                    if (is_array($workflow->includer_user_ids) && !empty($workflow->includer_user_ids)) {
                                         $scopeType = 'specific_user';
-                                    } elseif (is_array($workflow->requester_user_types) && !empty($workflow->requester_user_types) && is_array($workflow->requester_role_ids) && !empty($workflow->requester_role_ids)) {
+                                    } elseif (is_array($workflow->includer_user_types) && !empty($workflow->includer_user_types) && is_array($workflow->includer_role_ids) && !empty($workflow->includer_role_ids)) {
                                         $scopeType = 'user_type_role';
-                                    } elseif (is_array($workflow->requester_role_ids) && !empty($workflow->requester_role_ids)) {
+                                    } elseif (is_array($workflow->includer_role_ids) && !empty($workflow->includer_role_ids)) {
                                         $scopeType = 'role';
-                                    } elseif (is_array($workflow->requester_user_types) && !empty($workflow->requester_user_types)) {
+                                    } elseif (is_array($workflow->includer_user_types) && !empty($workflow->includer_user_types)) {
                                         $scopeType = 'user_type';
                                     }
 
@@ -121,9 +121,9 @@
                                                 <!-- User Type Dropdown -->
                                                 <div class="col-md-3 mb-3 scope-field {{ in_array($scopeType, ['user_type', 'user_type_role']) ? '' : 'd-none' }}" id="scope_user_type_div">
                                                     <label class="form-label fw-semibold">Included User Types <span class="text-muted">(Hold Ctrl to select multiple)</span></label>
-                                                    <select name="requester_user_types[]" id="requester_user_types" class="form-select" multiple>
+                                                    <select name="includer_user_types[]" id="includer_user_types" class="form-select" multiple>
                                                         @foreach($userTypes as $type)
-                                                            <option value="{{ $type->value }}" {{ in_array($type->value, $workflow->requester_user_types ?? []) ? 'selected' : '' }}>{{ $type->name }}</option>
+                                                            <option value="{{ $type->value }}" {{ in_array($type->value, $workflow->includer_user_types ?? []) ? 'selected' : '' }}>{{ $type->name }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -131,9 +131,9 @@
                                                 <!-- Role Dropdown -->
                                                 <div class="col-md-3 mb-3 scope-field {{ in_array($scopeType, ['role', 'user_type_role']) ? '' : 'd-none' }}" id="scope_role_div">
                                                     <label class="form-label fw-semibold">Included User Roles <span class="text-muted">(Hold Ctrl to select multiple)</span></label>
-                                                    <select name="requester_role_ids[]" id="requester_role_ids" class="form-select" multiple>
+                                                    <select name="includer_role_ids[]" id="includer_role_ids" class="form-select" multiple>
                                                         @foreach($roles as $role)
-                                                            <option value="{{ $role->id }}" {{ in_array($role->id, $workflow->requester_role_ids ?? []) ? 'selected' : '' }}>{{ $role->name }}</option>
+                                                            <option value="{{ $role->id }}" {{ in_array($role->id, $workflow->includer_role_ids ?? []) ? 'selected' : '' }}>{{ $role->name }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -141,9 +141,9 @@
                                                 <!-- Specific User Dropdown -->
                                                 <div class="col-md-3 mb-3 scope-field {{ $scopeType === 'specific_user' ? '' : 'd-none' }}" id="scope_user_div">
                                                     <label class="form-label fw-semibold">Included Specific Users <span class="text-muted">(Hold Ctrl to select multiple)</span></label>
-                                                    <select name="requester_user_ids[]" id="requester_user_ids" class="form-select" multiple>
+                                                    <select name="includer_user_ids[]" id="includer_user_ids" class="form-select" multiple>
                                                         @foreach($users as $user)
-                                                            <option value="{{ $user->id }}" {{ in_array($user->id, $workflow->requester_user_ids ?? []) ? 'selected' : '' }}>{{ $user->name }}</option>
+                                                            <option value="{{ $user->id }}" {{ in_array($user->id, $workflow->includer_user_ids ?? []) ? 'selected' : '' }}>{{ $user->name }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -451,9 +451,9 @@
             const data = Object.fromEntries(formData.entries());
             
             // Inclusion multi-select arrays
-            data.requester_user_types = $('#requester_user_types').val() || [];
-            data.requester_role_ids = $('#requester_role_ids').val() || [];
-            data.requester_user_ids = $('#requester_user_ids').val() || [];
+            data.includer_user_types = $('#includer_user_types').val() || [];
+            data.includer_role_ids = $('#includer_role_ids').val() || [];
+            data.includer_user_ids = $('#includer_user_ids').val() || [];
 
             // Exclusion multi-select arrays
             data.exclude_user_types = $('#exclude_user_types').val() || [];

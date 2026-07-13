@@ -313,7 +313,7 @@ test('it can store and update a workflow with inclusion and exclusion scopes', f
         'module_name' => 'profile-update',
         'type' => 'sequential',
         'scope_type' => 'user_type',
-        'requester_user_types' => ['division', 'department'],
+        'includer_user_types' => ['division', 'department'],
         'exclude_scope_type' => 'role',
         'exclude_role_ids' => [1, 2],
         'steps' => [
@@ -327,7 +327,7 @@ test('it can store and update a workflow with inclusion and exclusion scopes', f
     $response->assertStatus(200);
 
     $workflow = Workflow::where('module', 'profile-update')->first();
-    expect($workflow->requester_user_types)->toBe(['division', 'department']);
+    expect($workflow->includer_user_types)->toBe(['division', 'department']);
     expect($workflow->exclude_role_ids)->toBe([1, 2]);
 
     // Test Update
@@ -335,7 +335,7 @@ test('it can store and update a workflow with inclusion and exclusion scopes', f
         'module_name' => 'profile-update',
         'type' => 'sequential',
         'scope_type' => 'role',
-        'requester_role_ids' => [3],
+        'includer_role_ids' => [3],
         'exclude_scope_type' => 'specific_user',
         'exclude_user_ids' => [5, 6],
         'steps' => [
@@ -349,8 +349,8 @@ test('it can store and update a workflow with inclusion and exclusion scopes', f
     $updateResponse->assertStatus(200);
 
     $workflow = $workflow->fresh();
-    expect($workflow->requester_role_ids)->toBe([3]);
-    expect($workflow->requester_user_types)->toBeNull();
+    expect($workflow->includer_role_ids)->toBe([3]);
+    expect($workflow->includer_user_types)->toBeNull();
     expect($workflow->exclude_user_ids)->toBe([5, 6]);
     expect($workflow->exclude_role_ids)->toBeNull();
 });
@@ -365,7 +365,7 @@ test('it filters by requester includers and bypasses others', function () {
         'type' => 'sequential',
         'total_steps' => 1,
         'is_active' => true,
-        'requester_user_types' => ['division']
+        'includer_user_types' => ['division']
     ]);
 
     $step = WorkflowStep::create([

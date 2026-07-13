@@ -96,7 +96,7 @@
                                                 <!-- User Type Dropdown -->
                                                 <div class="col-md-3 mb-3 scope-field d-none" id="scope_user_type_div">
                                                     <label class="form-label fw-semibold">Included User Types <span class="text-muted">(Hold Ctrl to select multiple)</span></label>
-                                                    <select name="requester_user_types[]" id="requester_user_types" class="form-select" multiple>
+                                                    <select name="includer_user_types[]" id="includer_user_types" class="form-select" multiple>
                                                         @foreach($userTypes as $type)
                                                             <option value="{{ $type->value }}">{{ $type->name }}</option>
                                                         @endforeach
@@ -106,7 +106,7 @@
                                                 <!-- Role Dropdown -->
                                                 <div class="col-md-3 mb-3 scope-field d-none" id="scope_role_div">
                                                     <label class="form-label fw-semibold">Included User Roles <span class="text-muted">(Hold Ctrl to select multiple)</span></label>
-                                                    <select name="requester_role_ids[]" id="requester_role_ids" class="form-select" multiple>
+                                                    <select name="includer_role_ids[]" id="includer_role_ids" class="form-select" multiple>
                                                         @foreach($roles as $role)
                                                             <option value="{{ $role->id }}">{{ $role->name }}</option>
                                                         @endforeach
@@ -116,7 +116,7 @@
                                                 <!-- Specific User Dropdown -->
                                                 <div class="col-md-3 mb-3 scope-field d-none" id="scope_user_div">
                                                     <label class="form-label fw-semibold">Included Specific Users <span class="text-muted">(Hold Ctrl to select multiple)</span></label>
-                                                    <select name="requester_user_ids[]" id="requester_user_ids" class="form-select" multiple>
+                                                    <select name="includer_user_ids[]" id="includer_user_ids" class="form-select" multiple>
                                                         @foreach($users as $user)
                                                             <option value="{{ $user->id }}">{{ $user->name }}</option>
                                                         @endforeach
@@ -362,9 +362,9 @@
             const data = Object.fromEntries(formData.entries());
             
             // Inclusion multi-select arrays
-            data.requester_user_types = $('#requester_user_types').val() || [];
-            data.requester_role_ids = $('#requester_role_ids').val() || [];
-            data.requester_user_ids = $('#requester_user_ids').val() || [];
+            data.includer_user_types = $('#includer_user_types').val() || [];
+            data.includer_role_ids = $('#includer_role_ids').val() || [];
+            data.includer_user_ids = $('#includer_user_ids').val() || [];
 
             // Exclusion multi-select arrays
             data.exclude_user_types = $('#exclude_user_types').val() || [];

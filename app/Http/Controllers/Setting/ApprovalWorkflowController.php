@@ -42,9 +42,9 @@ class ApprovalWorkflowController extends Controller
             'steps.*.user_id' => 'nullable|required_if:steps.*.type,specific-user|exists:users,id',
             
             // Inclusions & Exclusions validation
-            'requester_user_types' => 'nullable|array',
-            'requester_role_ids' => 'nullable|array',
-            'requester_user_ids' => 'nullable|array',
+            'includer_user_types' => 'nullable|array',
+            'includer_role_ids' => 'nullable|array',
+            'includer_user_ids' => 'nullable|array',
             'exclude_user_types' => 'nullable|array',
             'exclude_role_ids' => 'nullable|array',
             'exclude_user_ids' => 'nullable|array',
@@ -60,25 +60,25 @@ class ApprovalWorkflowController extends Controller
         }
 
         // Sanitize Inclusion fields
-        $requesterUserTypes = $request->scope_type !== 'all' && $request->has('requester_user_types') ? $request->requester_user_types : null;
-        $requesterRoleIds = $request->scope_type !== 'all' && $request->has('requester_role_ids') ? $request->requester_role_ids : null;
-        $requesterUserIds = $request->scope_type !== 'all' && $request->has('requester_user_ids') ? $request->requester_user_ids : null;
+        $includerUserTypes = $request->scope_type !== 'all' && $request->has('includer_user_types') ? $request->includer_user_types : null;
+        $includerRoleIds = $request->scope_type !== 'all' && $request->has('includer_role_ids') ? $request->includer_role_ids : null;
+        $includerUserIds = $request->scope_type !== 'all' && $request->has('includer_user_ids') ? $request->includer_user_ids : null;
 
         if ($request->scope_type === 'user_type') {
-            $requesterRoleIds = null;
-            $requesterUserIds = null;
+            $includerRoleIds = null;
+            $includerUserIds = null;
         } elseif ($request->scope_type === 'role') {
-            $requesterUserTypes = null;
-            $requesterUserIds = null;
+            $includerUserTypes = null;
+            $includerUserIds = null;
         } elseif ($request->scope_type === 'user_type_role') {
-            $requesterUserIds = null;
+            $includerUserIds = null;
         } elseif ($request->scope_type === 'specific_user') {
-            $requesterUserTypes = null;
-            $requesterRoleIds = null;
+            $includerUserTypes = null;
+            $includerRoleIds = null;
         } else {
-            $requesterUserTypes = null;
-            $requesterRoleIds = null;
-            $requesterUserIds = null;
+            $includerUserTypes = null;
+            $includerRoleIds = null;
+            $includerUserIds = null;
         }
 
         // Sanitize Exclusion fields
@@ -114,9 +114,9 @@ class ApprovalWorkflowController extends Controller
                 'is_active' => $request->is_active == '1',
                 
                 // Save Inclusions & Exclusions
-                'requester_user_types' => $requesterUserTypes,
-                'requester_role_ids' => $requesterRoleIds,
-                'requester_user_ids' => $requesterUserIds,
+                'includer_user_types' => $includerUserTypes,
+                'includer_role_ids' => $includerRoleIds,
+                'includer_user_ids' => $includerUserIds,
                 'exclude_user_types' => $excludeUserTypes,
                 'exclude_role_ids' => $excludeRoleIds,
                 'exclude_user_ids' => $excludeUserIds,
@@ -182,9 +182,9 @@ class ApprovalWorkflowController extends Controller
             'steps.*.user_id' => 'nullable|required_if:steps.*.type,specific-user|exists:users,id',
             
             // Inclusions & Exclusions validation
-            'requester_user_types' => 'nullable|array',
-            'requester_role_ids' => 'nullable|array',
-            'requester_user_ids' => 'nullable|array',
+            'includer_user_types' => 'nullable|array',
+            'includer_role_ids' => 'nullable|array',
+            'includer_user_ids' => 'nullable|array',
             'exclude_user_types' => 'nullable|array',
             'exclude_role_ids' => 'nullable|array',
             'exclude_user_ids' => 'nullable|array',
@@ -200,25 +200,25 @@ class ApprovalWorkflowController extends Controller
         }
 
         // Sanitize Inclusion fields
-        $requesterUserTypes = $request->scope_type !== 'all' && $request->has('requester_user_types') ? $request->requester_user_types : null;
-        $requesterRoleIds = $request->scope_type !== 'all' && $request->has('requester_role_ids') ? $request->requester_role_ids : null;
-        $requesterUserIds = $request->scope_type !== 'all' && $request->has('requester_user_ids') ? $request->requester_user_ids : null;
+        $includerUserTypes = $request->scope_type !== 'all' && $request->has('includer_user_types') ? $request->includer_user_types : null;
+        $includerRoleIds = $request->scope_type !== 'all' && $request->has('includer_role_ids') ? $request->includer_role_ids : null;
+        $includerUserIds = $request->scope_type !== 'all' && $request->has('includer_user_ids') ? $request->includer_user_ids : null;
 
         if ($request->scope_type === 'user_type') {
-            $requesterRoleIds = null;
-            $requesterUserIds = null;
+            $includerRoleIds = null;
+            $includerUserIds = null;
         } elseif ($request->scope_type === 'role') {
-            $requesterUserTypes = null;
-            $requesterUserIds = null;
+            $includerUserTypes = null;
+            $includerUserIds = null;
         } elseif ($request->scope_type === 'user_type_role') {
-            $requesterUserIds = null;
+            $includerUserIds = null;
         } elseif ($request->scope_type === 'specific_user') {
-            $requesterUserTypes = null;
-            $requesterRoleIds = null;
+            $includerUserTypes = null;
+            $includerRoleIds = null;
         } else {
-            $requesterUserTypes = null;
-            $requesterRoleIds = null;
-            $requesterUserIds = null;
+            $includerUserTypes = null;
+            $includerRoleIds = null;
+            $includerUserIds = null;
         }
 
         // Sanitize Exclusion fields
@@ -255,9 +255,9 @@ class ApprovalWorkflowController extends Controller
                 'is_active' => $request->is_active == '1',
                 
                 // Save Inclusions & Exclusions
-                'requester_user_types' => $requesterUserTypes,
-                'requester_role_ids' => $requesterRoleIds,
-                'requester_user_ids' => $requesterUserIds,
+                'includer_user_types' => $includerUserTypes,
+                'includer_role_ids' => $includerRoleIds,
+                'includer_user_ids' => $includerUserIds,
                 'exclude_user_types' => $excludeUserTypes,
                 'exclude_role_ids' => $excludeRoleIds,
                 'exclude_user_ids' => $excludeUserIds,
