@@ -9,6 +9,7 @@
 **Results**:
 - **Database Schema**: Successfully migrated `2026_07_12_000000_add_includer_criteria_to_approval_workflows_table` from the upgraded package, renaming `requester_` columns to `includer_`.
 - **UI Form Controls & Controller**: Aligned the controller validations, sanitization, and Blade view select/input fields to use `includer_` rather than `requester_`.
+- **UI Refactoring**: Refactored static dropdown cards in `create.blade.php` and `edit.blade.php` into dynamic, draggable-like criteria row list containers (similar to Workflow Steps list layout) supporting add, remove, type-toggles, and loaded edit values.
 - **Feature Testing**: Updated 3 feature tests in `ApprovalWorkflowTest.php` to verify inclusion/exclusion storage and update actions, target matching bypass, and excluder auto-approval.
 - **Tests**: All 144 tests passed successfully ✅
 
