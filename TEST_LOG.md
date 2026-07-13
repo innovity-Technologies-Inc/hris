@@ -1,5 +1,20 @@
 # Test Log
 
+## 2026-07-13 (Workflow Includers & Excluders Integration)
+
+**Goal**: Integrate the package's new multi-value Includer and Excluder criteria matching, update the configuration UI views and backend controller, and add comprehensive feature tests.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/Setting/ApprovalWorkflowTest.php && php artisan test`
+
+**Results**:
+- **Database Schema**: Successfully migrated `2026_07_12_000000_add_requester_criteria_to_approval_workflows_table` from the upgraded package.
+- **UI Form Controls**: Updated `create.blade.php` and `edit.blade.php` to include distinct Includer Scope and Excluder Scope multiple-select cards. Added Javascript handlers to serialize all selection arrays.
+- **Controller Updates**: Added array validations for both includer and excluder criteria, sanitizing input variables based on selected scopes in `ApprovalWorkflowController.php`.
+- **Feature Testing**: Appended 3 feature tests in `ApprovalWorkflowTest.php` to verify inclusion/exclusion storage and update actions, target matching bypass, and excluder auto-approval.
+- **Tests**: All 144 tests passed successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-12 (Workflow Auto-Approval & Integration Cleanup)
 
 **Goal**: Complete the task by verifying full test suite stability, resolving the Undefined variable `$errors` and outdated test route references in `TransferModuleTest.php`, and ensuring all 141 tests pass cleanly.
