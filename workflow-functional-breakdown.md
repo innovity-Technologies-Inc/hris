@@ -37,9 +37,9 @@ The package manages workflow state using four database tables:
      * `total_steps` (integer): Total number of approvals required.
      * `required_approvals` (integer, nullable): Number of approvals required for random workflows.
      * `is_active` (boolean): Whether this blueprint is active.
-     * `requester_user_types` (JSON, nullable): Allowed user types for inclusion scope (e.g. `['division', 'department']`).
-     * `requester_role_ids` (JSON, nullable): Allowed Spatie Role IDs for inclusion scope.
-     * `requester_user_ids` (JSON, nullable): Allowed User IDs for inclusion scope.
+     * `includer_user_types` (JSON, nullable): Allowed user types for inclusion scope (e.g. `['division', 'department']`).
+     * `includer_role_ids` (JSON, nullable): Allowed Spatie Role IDs for inclusion scope.
+     * `includer_user_ids` (JSON, nullable): Allowed User IDs for inclusion scope.
      * `exclude_user_types` (JSON, nullable): User types to bypass approval (auto-approve).
      * `exclude_role_ids` (JSON, nullable): Spatie Role IDs to bypass approval (auto-approve).
      * `exclude_user_ids` (JSON, nullable): User IDs to bypass approval (auto-approve).
