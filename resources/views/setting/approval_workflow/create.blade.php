@@ -74,19 +74,19 @@
 
                                 <div class="card mb-4 border-dashed bg-light mt-4">
                                     <div class="card-header bg-transparent border-0 pb-0">
-                                        <h6 class="card-title mb-0 fw-semibold text-primary">Creator/Requester Inclusion & Exclusion Scopes</h6>
-                                        <small class="text-muted">Define who this workflow applies to, and who bypasses it (auto-approves).</small>
+                                        <h6 class="card-title mb-0 fw-semibold text-primary">Approval Request Filters (Inclusions & Exclusions)</h6>
+                                        <small class="text-muted">Configure who this workflow applies to, and who bypasses it entirely.</small>
                                     </div>
                                     <div class="card-body">
                                         <!-- Guidelines Note -->
-                                        <div class="alert alert-info-subtle border-info-subtle text-info mb-4" style="font-size: 0.85rem; background-color: rgba(13, 202, 240, 0.05); border: 1px solid rgba(13, 202, 240, 0.2); border-radius: 8px; padding: 12px;">
+                                        <div class="alert alert-warning-subtle border-warning-subtle text-warning mb-4" style="font-size: 0.85rem; background-color: rgba(255, 193, 7, 0.05); border: 1px solid rgba(255, 193, 7, 0.15); border-radius: 8px; padding: 12px;">
                                             <div class="d-flex gap-2">
                                                 <i class="mdi mdi-information-outline fs-5 align-middle"></i>
                                                 <div>
-                                                    <strong class="d-block mb-1">Configuration Guidelines:</strong>
+                                                    <strong class="d-block mb-1">How Filtering Works:</strong>
                                                     <ul class="mb-0 ps-3">
-                                                        <li><strong>Inclusion Rules:</strong> Define who this workflow applies to. If left empty, the workflow will apply to all requests by default. If any inclusion rules are added, only requests matching those criteria will trigger this workflow (others will be auto-approved).</li>
-                                                        <li><strong>Exclusion Rules:</strong> Define who bypasses the workflow. Requests matching any of the exclusion rules will bypass approval and be auto-approved immediately. Exclusion rules override inclusion rules.</li>
+                                                        <li><strong>Who Needs Approval?</strong> If you add any User Type, Role, or Specific User here, requests created by them <strong>must need approval</strong>. All other users' requests will bypass approval and be auto-approved. If you leave this list empty, requests from <strong>all users</strong> will require approval by default.</li>
+                                                        <li><strong>Who Bypasses Approval?</strong> If you add any User Type, Role, or Specific User here, requests created by them will <strong>bypass the approval workflow entirely (auto-approve)</strong>. These filters override the approval rules above.</li>
                                                     </ul>
                                                 </div>
                                             </div>
@@ -95,7 +95,7 @@
                                         <!-- Inclusion Section -->
                                         <div class="border-bottom pb-4 mb-4">
                                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                                <span class="badge bg-success-subtle text-success fw-semibold">1. Inclusion Scope (Needs Approval - Apply to All if empty)</span>
+                                                <span class="badge bg-success-subtle text-success fw-semibold" style="font-size: 0.9rem; padding: 6px 12px;">1. Who Needs Approval? (Inclusion Filters - Default: All Users)</span>
                                                 <button type="button" class="btn btn-xs btn-outline-success" id="addIncluderBtn">
                                                     <i style="height: 12px; width: 12px" data-feather="plus"></i> Add Inclusion Rule
                                                 </button>
@@ -108,7 +108,7 @@
                                         <!-- Exclusion Section -->
                                         <div>
                                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                                <span class="badge bg-danger-subtle text-danger fw-semibold">2. Exclusion Scope (Bypasses/Auto-Approves - None if empty)</span>
+                                                <span class="badge bg-danger-subtle text-danger fw-semibold" style="font-size: 0.9rem; padding: 6px 12px;">2. Who Bypasses Approval? (Exclusion Filters - Default: None)</span>
                                                 <button type="button" class="btn btn-xs btn-outline-danger" id="addExcluderBtn">
                                                     <i style="height: 12px; width: 12px" data-feather="plus"></i> Add Exclusion Rule
                                                 </button>
