@@ -104,96 +104,302 @@
                                     </div>
                                     <div class="card-body">
                                         <!-- Inclusion Section -->
-                                        <div class="border-bottom pb-3 mb-3">
-                                            <span class="badge bg-success-subtle text-success mb-2 fw-semibold">1. Inclusion Scope (Needs Approval)</span>
-                                            <div class="row">
-                                                <div class="col-md-3 mb-3">
-                                                    <label class="form-label fw-semibold">Target Inclusion Scope</label>
-                                                    <select name="scope_type" id="scope_type" class="form-select">
-                                                        <option value="all" {{ $scopeType === 'all' ? 'selected' : '' }}>Apply to All (Default)</option>
-                                                        <option value="user_type" {{ $scopeType === 'user_type' ? 'selected' : '' }}>User Type</option>
-                                                        <option value="role" {{ $scopeType === 'role' ? 'selected' : '' }}>User Role</option>
-                                                        <option value="user_type_role" {{ $scopeType === 'user_type_role' ? 'selected' : '' }}>User Type + Role</option>
-                                                        <option value="specific_user" {{ $scopeType === 'specific_user' ? 'selected' : '' }}>Specific User</option>
-                                                    </select>
-                                                </div>
+                                        <div class="border-bottom pb-4 mb-4">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <span class="badge bg-success-subtle text-success fw-semibold">1. Inclusion Scope (Needs Approval - Apply to All if empty)</span>
+                                                <button type="button" class="btn btn-xs btn-outline-success" id="addIncluderBtn">
+                                                    <i style="height: 12px; width: 12px" data-feather="plus"></i> Add Inclusion Rule
+                                                </button>
+                                            </div>
+                                            <div id="includersContainer" class="mt-2">
+                                                <!-- Includer criteria rows will be injected here -->
+                                                @if(is_array($workflow->includer_user_types))
+                                                    @foreach($workflow->includer_user_types as $val)
+                                                        <div class="card mb-2 criteria-row includer-row bg-light border shadow-none">
+                                                            <div class="card-body p-2">
+                                                                <div class="d-flex align-items-center gap-2">
+                                                                    <div style="min-width: 150px;">
+                                                                        <select class="form-select criteria-type-select" required>
+                                                                            <option value="user-type" selected>User Type</option>
+                                                                            <option value="role">User Role</option>
+                                                                            <option value="specific-user">Specific User</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="flex-grow-1 user-type-wrapper">
+                                                                        <select class="form-select user-type-select" required>
+                                                                            @foreach($userTypes as $type)
+                                                                                <option value="{{ $type->value }}" {{ $type->value === $val ? 'selected' : '' }}>{{ $type->name }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="flex-grow-1 role-wrapper" style="display: none;">
+                                                                        <select class="form-select role-select">
+                                                                            <option value="" disabled selected>Select Role</option>
+                                                                            @foreach($roles as $role)
+                                                                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="flex-grow-1 user-wrapper" style="display: none;">
+                                                                        <select class="form-select user-select">
+                                                                            <option value="" disabled selected>Select Specific User</option>
+                                                                            @foreach($users as $user)
+                                                                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    <div>
+                                                                        <button type="button" class="btn btn-sm btn-danger remove-criteria-btn">
+                                                                            <i style="height: 14px; width: 14px" data-feather="x"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                @endif
 
-                                                <!-- User Type Dropdown -->
-                                                <div class="col-md-3 mb-3 scope-field {{ in_array($scopeType, ['user_type', 'user_type_role']) ? '' : 'd-none' }}" id="scope_user_type_div">
-                                                    <label class="form-label fw-semibold">Included User Types <span class="text-muted">(Hold Ctrl to select multiple)</span></label>
-                                                    <select name="includer_user_types[]" id="includer_user_types" class="form-select" multiple>
-                                                        @foreach($userTypes as $type)
-                                                            <option value="{{ $type->value }}" {{ in_array($type->value, $workflow->includer_user_types ?? []) ? 'selected' : '' }}>{{ $type->name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
+                                                @if(is_array($workflow->includer_role_ids))
+                                                    @foreach($workflow->includer_role_ids as $val)
+                                                        <div class="card mb-2 criteria-row includer-row bg-light border shadow-none">
+                                                            <div class="card-body p-2">
+                                                                <div class="d-flex align-items-center gap-2">
+                                                                    <div style="min-width: 150px;">
+                                                                        <select class="form-select criteria-type-select" required>
+                                                                            <option value="user-type">User Type</option>
+                                                                            <option value="role" selected>User Role</option>
+                                                                            <option value="specific-user">Specific User</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="flex-grow-1 user-type-wrapper" style="display: none;">
+                                                                        <select class="form-select user-type-select">
+                                                                            <option value="" disabled selected>Select User Type</option>
+                                                                            @foreach($userTypes as $type)
+                                                                                <option value="{{ $type->value }}">{{ $type->name }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="flex-grow-1 role-wrapper">
+                                                                        <select class="form-select role-select" required>
+                                                                            @foreach($roles as $role)
+                                                                                <option value="{{ $role->id }}" {{ $role->id == $val ? 'selected' : '' }}>{{ $role->name }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="flex-grow-1 user-wrapper" style="display: none;">
+                                                                        <select class="form-select user-select">
+                                                                            <option value="" disabled selected>Select Specific User</option>
+                                                                            @foreach($users as $user)
+                                                                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    <div>
+                                                                        <button type="button" class="btn btn-sm btn-danger remove-criteria-btn">
+                                                                            <i style="height: 14px; width: 14px" data-feather="x"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                @endif
 
-                                                <!-- Role Dropdown -->
-                                                <div class="col-md-3 mb-3 scope-field {{ in_array($scopeType, ['role', 'user_type_role']) ? '' : 'd-none' }}" id="scope_role_div">
-                                                    <label class="form-label fw-semibold">Included User Roles <span class="text-muted">(Hold Ctrl to select multiple)</span></label>
-                                                    <select name="includer_role_ids[]" id="includer_role_ids" class="form-select" multiple>
-                                                        @foreach($roles as $role)
-                                                            <option value="{{ $role->id }}" {{ in_array($role->id, $workflow->includer_role_ids ?? []) ? 'selected' : '' }}>{{ $role->name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-
-                                                <!-- Specific User Dropdown -->
-                                                <div class="col-md-3 mb-3 scope-field {{ $scopeType === 'specific_user' ? '' : 'd-none' }}" id="scope_user_div">
-                                                    <label class="form-label fw-semibold">Included Specific Users <span class="text-muted">(Hold Ctrl to select multiple)</span></label>
-                                                    <select name="includer_user_ids[]" id="includer_user_ids" class="form-select" multiple>
-                                                        @foreach($users as $user)
-                                                            <option value="{{ $user->id }}" {{ in_array($user->id, $workflow->includer_user_ids ?? []) ? 'selected' : '' }}>{{ $user->name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
+                                                @if(is_array($workflow->includer_user_ids))
+                                                    @foreach($workflow->includer_user_ids as $val)
+                                                        <div class="card mb-2 criteria-row includer-row bg-light border shadow-none">
+                                                            <div class="card-body p-2">
+                                                                <div class="d-flex align-items-center gap-2">
+                                                                    <div style="min-width: 150px;">
+                                                                        <select class="form-select criteria-type-select" required>
+                                                                            <option value="user-type">User Type</option>
+                                                                            <option value="role">User Role</option>
+                                                                            <option value="specific-user" selected>Specific User</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="flex-grow-1 user-type-wrapper" style="display: none;">
+                                                                        <select class="form-select user-type-select">
+                                                                            <option value="" disabled selected>Select User Type</option>
+                                                                            @foreach($userTypes as $type)
+                                                                                <option value="{{ $type->value }}">{{ $type->name }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="flex-grow-1 role-wrapper" style="display: none;">
+                                                                        <select class="form-select role-select">
+                                                                            <option value="" disabled selected>Select Role</option>
+                                                                            @foreach($roles as $role)
+                                                                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="flex-grow-1 user-wrapper">
+                                                                        <select class="form-select user-select" required>
+                                                                            @foreach($users as $user)
+                                                                                <option value="{{ $user->id }}" {{ $user->id == $val ? 'selected' : '' }}>{{ $user->name }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    <div>
+                                                                        <button type="button" class="btn btn-sm btn-danger remove-criteria-btn">
+                                                                            <i style="height: 14px; width: 14px" data-feather="x"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                @endif
                                             </div>
                                         </div>
 
                                         <!-- Exclusion Section -->
                                         <div>
-                                            <span class="badge bg-danger-subtle text-danger mb-2 fw-semibold">2. Exclusion Scope (Bypasses/Auto-Approves)</span>
-                                            <div class="row">
-                                                <div class="col-md-3 mb-3">
-                                                    <label class="form-label fw-semibold">Target Exclusion Scope</label>
-                                                    <select name="exclude_scope_type" id="exclude_scope_type" class="form-select">
-                                                        <option value="none" {{ $excludeScopeType === 'none' ? 'selected' : '' }}>None (Default)</option>
-                                                        <option value="user_type" {{ $excludeScopeType === 'user_type' ? 'selected' : '' }}>User Type</option>
-                                                        <option value="role" {{ $excludeScopeType === 'role' ? 'selected' : '' }}>User Role</option>
-                                                        <option value="user_type_role" {{ $excludeScopeType === 'user_type_role' ? 'selected' : '' }}>User Type + Role</option>
-                                                        <option value="specific_user" {{ $excludeScopeType === 'specific_user' ? 'selected' : '' }}>Specific User</option>
-                                                    </select>
-                                                </div>
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <span class="badge bg-danger-subtle text-danger fw-semibold">2. Exclusion Scope (Bypasses/Auto-Approves - None if empty)</span>
+                                                <button type="button" class="btn btn-xs btn-outline-danger" id="addExcluderBtn">
+                                                    <i style="height: 12px; width: 12px" data-feather="plus"></i> Add Exclusion Rule
+                                                </button>
+                                            </div>
+                                            <div id="excludersContainer" class="mt-2">
+                                                <!-- Excluder criteria rows will be injected here -->
+                                                @if(is_array($workflow->exclude_user_types))
+                                                    @foreach($workflow->exclude_user_types as $val)
+                                                        <div class="card mb-2 criteria-row excluder-row bg-light border shadow-none">
+                                                            <div class="card-body p-2">
+                                                                <div class="d-flex align-items-center gap-2">
+                                                                    <div style="min-width: 150px;">
+                                                                        <select class="form-select criteria-type-select" required>
+                                                                            <option value="user-type" selected>User Type</option>
+                                                                            <option value="role">User Role</option>
+                                                                            <option value="specific-user">Specific User</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="flex-grow-1 user-type-wrapper">
+                                                                        <select class="form-select user-type-select" required>
+                                                                            @foreach($userTypes as $type)
+                                                                                <option value="{{ $type->value }}" {{ $type->value === $val ? 'selected' : '' }}>{{ $type->name }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="flex-grow-1 role-wrapper" style="display: none;">
+                                                                        <select class="form-select role-select">
+                                                                            <option value="" disabled selected>Select Role</option>
+                                                                            @foreach($roles as $role)
+                                                                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="flex-grow-1 user-wrapper" style="display: none;">
+                                                                        <select class="form-select user-select">
+                                                                            <option value="" disabled selected>Select Specific User</option>
+                                                                            @foreach($users as $user)
+                                                                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    <div>
+                                                                        <button type="button" class="btn btn-sm btn-danger remove-criteria-btn">
+                                                                            <i style="height: 14px; width: 14px" data-feather="x"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                @endif
 
-                                                <!-- Exclude User Type Dropdown -->
-                                                <div class="col-md-3 mb-3 exclude-scope-field {{ in_array($excludeScopeType, ['user_type', 'user_type_role']) ? '' : 'd-none' }}" id="exclude_user_type_div">
-                                                    <label class="form-label fw-semibold">Excluded User Types <span class="text-muted">(Hold Ctrl to select multiple)</span></label>
-                                                    <select name="exclude_user_types[]" id="exclude_user_types" class="form-select" multiple>
-                                                        @foreach($userTypes as $type)
-                                                            <option value="{{ $type->value }}" {{ in_array($type->value, $workflow->exclude_user_types ?? []) ? 'selected' : '' }}>{{ $type->name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
+                                                @if(is_array($workflow->exclude_role_ids))
+                                                    @foreach($workflow->exclude_role_ids as $val)
+                                                        <div class="card mb-2 criteria-row excluder-row bg-light border shadow-none">
+                                                            <div class="card-body p-2">
+                                                                <div class="d-flex align-items-center gap-2">
+                                                                    <div style="min-width: 150px;">
+                                                                        <select class="form-select criteria-type-select" required>
+                                                                            <option value="user-type">User Type</option>
+                                                                            <option value="role" selected>User Role</option>
+                                                                            <option value="specific-user">Specific User</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="flex-grow-1 user-type-wrapper" style="display: none;">
+                                                                        <select class="form-select user-type-select">
+                                                                            <option value="" disabled selected>Select User Type</option>
+                                                                            @foreach($userTypes as $type)
+                                                                                <option value="{{ $type->value }}">{{ $type->name }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="flex-grow-1 role-wrapper">
+                                                                        <select class="form-select role-select" required>
+                                                                            @foreach($roles as $role)
+                                                                                <option value="{{ $role->id }}" {{ $role->id == $val ? 'selected' : '' }}>{{ $role->name }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="flex-grow-1 user-wrapper" style="display: none;">
+                                                                        <select class="form-select user-select">
+                                                                            <option value="" disabled selected>Select Specific User</option>
+                                                                            @foreach($users as $user)
+                                                                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    <div>
+                                                                        <button type="button" class="btn btn-sm btn-danger remove-criteria-btn">
+                                                                            <i style="height: 14px; width: 14px" data-feather="x"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                @endif
 
-                                                <!-- Exclude Role Dropdown -->
-                                                <div class="col-md-3 mb-3 exclude-scope-field {{ in_array($excludeScopeType, ['role', 'user_type_role']) ? '' : 'd-none' }}" id="exclude_role_div">
-                                                    <label class="form-label fw-semibold">Excluded User Roles <span class="text-muted">(Hold Ctrl to select multiple)</span></label>
-                                                    <select name="exclude_role_ids[]" id="exclude_role_ids" class="form-select" multiple>
-                                                        @foreach($roles as $role)
-                                                            <option value="{{ $role->id }}" {{ in_array($role->id, $workflow->exclude_role_ids ?? []) ? 'selected' : '' }}>{{ $role->name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-
-                                                <!-- Exclude Specific User Dropdown -->
-                                                <div class="col-md-3 mb-3 exclude-scope-field {{ $excludeScopeType === 'specific_user' ? '' : 'd-none' }}" id="exclude_user_div">
-                                                    <label class="form-label fw-semibold">Excluded Specific Users <span class="text-muted">(Hold Ctrl to select multiple)</span></label>
-                                                    <select name="exclude_user_ids[]" id="exclude_user_ids" class="form-select" multiple>
-                                                        @foreach($users as $user)
-                                                            <option value="{{ $user->id }}" {{ in_array($user->id, $workflow->exclude_user_ids ?? []) ? 'selected' : '' }}>{{ $user->name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
+                                                @if(is_array($workflow->exclude_user_ids))
+                                                    @foreach($workflow->exclude_user_ids as $val)
+                                                        <div class="card mb-2 criteria-row excluder-row bg-light border shadow-none">
+                                                            <div class="card-body p-2">
+                                                                <div class="d-flex align-items-center gap-2">
+                                                                    <div style="min-width: 150px;">
+                                                                        <select class="form-select criteria-type-select" required>
+                                                                            <option value="user-type">User Type</option>
+                                                                            <option value="role">User Role</option>
+                                                                            <option value="specific-user" selected>Specific User</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="flex-grow-1 user-type-wrapper" style="display: none;">
+                                                                        <select class="form-select user-type-select">
+                                                                            <option value="" disabled selected>Select User Type</option>
+                                                                            @foreach($userTypes as $type)
+                                                                                <option value="{{ $type->value }}">{{ $type->name }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="flex-grow-1 role-wrapper" style="display: none;">
+                                                                        <select class="form-select role-select">
+                                                                            <option value="" disabled selected>Select Role</option>
+                                                                            @foreach($roles as $role)
+                                                                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="flex-grow-1 user-wrapper">
+                                                                        <select class="form-select user-select" required>
+                                                                            @foreach($users as $user)
+                                                                                <option value="{{ $user->id }}" {{ $user->id == $val ? 'selected' : '' }}>{{ $user->name }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    <div>
+                                                                        <button type="button" class="btn btn-sm btn-danger remove-criteria-btn">
+                                                                            <i style="height: 14px; width: 14px" data-feather="x"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -290,6 +496,60 @@
             </div>
         </div>
     </div>
+
+    <!-- Template for Inclusion/Exclusion Criteria Row -->
+    <template id="criteriaTemplate">
+        <div class="card mb-2 criteria-row bg-light border shadow-none">
+            <div class="card-body p-2">
+                <div class="d-flex align-items-center gap-2">
+                    <!-- Criteria Type -->
+                    <div style="min-width: 150px;">
+                        <select class="form-select criteria-type-select" required>
+                            <option value="user-type" selected>User Type</option>
+                            <option value="role">User Role</option>
+                            <option value="specific-user">Specific User</option>
+                        </select>
+                    </div>
+                    
+                    <!-- User Type Selection -->
+                    <div class="flex-grow-1 user-type-wrapper">
+                        <select class="form-select user-type-select" required>
+                            <option value="" disabled selected>Select User Type</option>
+                            @foreach($userTypes as $type)
+                                <option value="{{ $type->value }}">{{ $type->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Spatie Role Selection -->
+                    <div class="flex-grow-1 role-wrapper" style="display: none;">
+                        <select class="form-select role-select">
+                            <option value="" disabled selected>Select Role</option>
+                            @foreach($roles as $role)
+                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Specific User Selection -->
+                    <div class="flex-grow-1 user-wrapper" style="display: none;">
+                        <select class="form-select user-select">
+                            <option value="" disabled selected>Select Specific User</option>
+                            @foreach($users as $user)
+                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div>
+                        <button type="button" class="btn btn-sm btn-danger remove-criteria-btn">
+                            <i style="height: 14px; width: 14px" data-feather="x"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
 
     <!-- Template for Step Row -->
     <template id="stepTemplate">
@@ -451,14 +711,40 @@
             const data = Object.fromEntries(formData.entries());
             
             // Inclusion multi-select arrays
-            data.includer_user_types = $('#includer_user_types').val() || [];
-            data.includer_role_ids = $('#includer_role_ids').val() || [];
-            data.includer_user_ids = $('#includer_user_ids').val() || [];
+            const includer_user_types = [];
+            const includer_role_ids = [];
+            const includer_user_ids = [];
+            $('.includer-row').each(function() {
+                const type = $(this).find('.criteria-type-select').val();
+                if (type === 'user-type') {
+                    includer_user_types.push($(this).find('.user-type-select').val());
+                } else if (type === 'role') {
+                    includer_role_ids.push($(this).find('.role-select').val());
+                } else if (type === 'specific-user') {
+                    includer_user_ids.push($(this).find('.user-select').val());
+                }
+            });
+            data.includer_user_types = includer_user_types;
+            data.includer_role_ids = includer_role_ids;
+            data.includer_user_ids = includer_user_ids;
 
             // Exclusion multi-select arrays
-            data.exclude_user_types = $('#exclude_user_types').val() || [];
-            data.exclude_role_ids = $('#exclude_role_ids').val() || [];
-            data.exclude_user_ids = $('#exclude_user_ids').val() || [];
+            const exclude_user_types = [];
+            const exclude_role_ids = [];
+            const exclude_user_ids = [];
+            $('.excluder-row').each(function() {
+                const type = $(this).find('.criteria-type-select').val();
+                if (type === 'user-type') {
+                    exclude_user_types.push($(this).find('.user-type-select').val());
+                } else if (type === 'role') {
+                    exclude_role_ids.push($(this).find('.role-select').val());
+                } else if (type === 'specific-user') {
+                    exclude_user_ids.push($(this).find('.user-select').val());
+                }
+            });
+            data.exclude_user_types = exclude_user_types;
+            data.exclude_role_ids = exclude_role_ids;
+            data.exclude_user_ids = exclude_user_ids;
             
             // Handle array of steps correctly for Axios
             const steps = [];
@@ -502,33 +788,47 @@
                 });
         });
 
-        // Inclusion Scope type toggle logic
-        $('#scope_type').on('change', function() {
-            $('.scope-field').addClass('d-none').find('select').val([]);
-            const val = $(this).val();
-            if (val === 'user_type') {
-                $('#scope_user_type_div').removeClass('d-none');
-            } else if (val === 'role') {
-                $('#scope_role_div').removeClass('d-none');
-            } else if (val === 'user_type_role') {
-                $('#scope_user_type_div, #scope_role_div').removeClass('d-none');
-            } else if (val === 'specific_user') {
-                $('#scope_user_div').removeClass('d-none');
+        // Add Criteria Rows (Includer / Excluder)
+        const criteriaTemplate = document.getElementById('criteriaTemplate');
+
+        $('#addIncluderBtn').on('click', function() {
+            const newRow = $(criteriaTemplate.content.cloneNode(true));
+            newRow.find('.criteria-row').addClass('includer-row');
+            $('#includersContainer').append(newRow);
+            if (typeof feather !== 'undefined') {
+                feather.replace();
             }
         });
 
-        // Exclusion Scope type toggle logic
-        $('#exclude_scope_type').on('change', function() {
-            $('.exclude-scope-field').addClass('d-none').find('select').val([]);
-            const val = $(this).val();
-            if (val === 'user_type') {
-                $('#exclude_user_type_div').removeClass('d-none');
-            } else if (val === 'role') {
-                $('#exclude_role_div').removeClass('d-none');
-            } else if (val === 'user_type_role') {
-                $('#exclude_user_type_div, #exclude_role_div').removeClass('d-none');
-            } else if (val === 'specific_user') {
-                $('#exclude_user_div').removeClass('d-none');
+        $('#addExcluderBtn').on('click', function() {
+            const newRow = $(criteriaTemplate.content.cloneNode(true));
+            newRow.find('.criteria-row').addClass('excluder-row');
+            $('#excludersContainer').append(newRow);
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
+        });
+
+        $(document).on('click', '.remove-criteria-btn', function() {
+            $(this).closest('.criteria-row').remove();
+        });
+
+        $(document).on('change', '.criteria-type-select', function() {
+            const row = $(this).closest('.criteria-row');
+            const type = $(this).val();
+
+            row.find('.user-type-wrapper, .role-wrapper, .user-wrapper').hide();
+            row.find('.user-type-select, .role-select, .user-select').removeAttr('required');
+
+            if (type === 'user-type') {
+                row.find('.user-type-wrapper').show();
+                row.find('.user-type-select').attr('required', true);
+            } else if (type === 'role') {
+                row.find('.role-wrapper').show();
+                row.find('.role-select').attr('required', true);
+            } else if (type === 'specific-user') {
+                row.find('.user-wrapper').show();
+                row.find('.user-select').attr('required', true);
             }
         });
 
