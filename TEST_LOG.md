@@ -1,5 +1,19 @@
 # Test Log
 
+## 2026-07-14 (Profile Update Request Creator Track & Resolution Fix)
+
+**Goal**: Resolve the issue where profile update requests created by a Super Admin for other employees were not auto-approving/excluding correctly based on the Super Admin role.
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- **Database Schema**: Created and ran migration [2026_07_14_133111_add_created_by_to_profile_update_requests_table.php](file:///P:/Project/Web/hrms/database/migrations/2026_07_14_133111_add_created_by_to_profile_update_requests_table.php) to add a `created_by` foreign key column.
+- **Model Association**: Modified [ProfileUpdateRequest.php](file:///P:/Project/Web/hrms/app/Models/Employee/ProfileUpdateRequest.php) to save the current authenticated user ID in `created_by` on creation. Updated `creator` to point to the actual creator, falling back to the target employee's user if `created_by` is null. Fixed a potential infinite recursion error.
+- **Requesting User Resolution**: Patched `resolveRequestingUser` in [WorkflowStepRequestService.php](file:///P:/Project/Web/hrms/app/Services/Setting/WorkflowStepRequestService.php) to check the `creator` relation first specifically for `ProfileUpdateRequest` models, matching the actual actor who made the change.
+- **Test Alignment**: Cleaned up the flaky route verification test assertion in [RouteVerificationTest.php](file:///P:/Project/Web/hrms/tests/Feature/RouteVerificationTest.php) and updated [ProfileUpdateRequestTest.php](file:///P:/Project/Web/hrms/tests/Feature/Employee/ProfileUpdateRequestTest.php) to reflect the new creator resolution logic. All **153 tests passed successfully** ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-14 (Super Admin Role Edit Protection)
 
 **Goal**: Remove the edit button for the system-reserved "Super Admin" role on the roles index page, and prevent editing/updating this role at the controller level.

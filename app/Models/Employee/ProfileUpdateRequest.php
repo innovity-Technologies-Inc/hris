@@ -17,6 +17,7 @@ class ProfileUpdateRequest extends Model
         'previous_data',
         'requested_data',
         'status',
+        'created_by',
     ];
 
     protected $casts = [
@@ -31,6 +32,14 @@ class ProfileUpdateRequest extends Model
 
     public function creator()
     {
+        return $this->belongsTo(\App\Models\User::class, 'created_by');
+    }
+
+    public function getCreatorAttribute()
+    {
+        if ($this->created_by) {
+            return $this->creator()->first();
+        }
         return $this->hasOneThrough(
             \App\Models\User::class,
             Employee::class,
@@ -38,7 +47,7 @@ class ProfileUpdateRequest extends Model
             'employee_id',
             'employee_id',
             'id'
-        )->withoutGlobalScopes();
+        )->withoutGlobalScopes()->first();
     }
 
     /**
@@ -75,6 +84,7 @@ class ProfileUpdateRequest extends Model
             'previous_data' => $previousData,
             'requested_data' => $requestedData,
             'status' => 'pending',
+            'created_by' => auth()->id(),
         ]);
 
         $updateRequest->startWorkflow($section);

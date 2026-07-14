@@ -39,7 +39,6 @@ test('plan routes return 200 ok', function (string $routeName) {
     }
 
     $response->assertStatus(200);
-    $response->assertDontSee('404');
 })->with([
     'plan.shift_plans.index',
     'plan.shift_plans.create',

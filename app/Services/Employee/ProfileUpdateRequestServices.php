@@ -55,6 +55,7 @@ class ProfileUpdateRequestServices
                 'requested_data' => $validated['requested_data'],
                 'previous_data' => $validated['previous_data'] ?? [],
                 'status' => 'pending',
+                'created_by' => auth()->id(),
             ]);
 
             // Start the approval workflow

@@ -261,7 +261,7 @@ test('it can submit emergency contact nominee update request and apply changes u
 
 test('it creates admin profile update request for office info update and propagates upon approval', function () {
     $admin = User::factory()->create([
-        'user_type' => UserType::Group,
+        'user_type' => UserType::Company,
     ]);
 
     $permission = \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'employee-management.edit', 'guard_name' => 'web']);
