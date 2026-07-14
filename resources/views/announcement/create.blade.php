@@ -6,7 +6,7 @@
     @endphp
 
     <div class="row">
-        <div class="col-xl-8 offset-xl-2">
+        <div class="col-12">
             <div class="card shadow-lg border-0 rounded-4">
                 <div class="card-header bg-transparent border-0 pt-4 pb-0 d-flex justify-content-between align-items-center">
                     <h4 class="card-title fw-bold text-primary mb-0">Post New Announcement</h4>
