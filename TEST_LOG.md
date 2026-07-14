@@ -1,5 +1,17 @@
 # Test Log
 
+## 2026-07-14 (Package Workspace Alignment)
+
+**Goal**: Remove temporary model hooks workaround from `AppServiceProvider.php` now that the vendor package has been updated with the permanent numeric Spatie role ID casting fix.
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- **Workaround Cleanup**: Removed all `Workflow` model casting hooks in [AppServiceProvider.php](file:///P:/Project/Web/hrms/app/Providers/AppServiceProvider.php).
+- **Package Integration**: Verified that the updated package correctly parses string-typed role IDs and evaluates Super Admin exclusions accurately. All **153 tests passed successfully** ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-14 (Spatie hasRole ID Parsing Fix)
 
 **Goal**: Resolve the issue where workflow exclusion rules checking Spatie's `hasRole()` failed when role IDs inside database JSON arrays were stored or parsed as strings (e.g. `["1"]`), causing `hasRole` to check by name instead of ID and fail.
