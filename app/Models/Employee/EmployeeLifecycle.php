@@ -2,11 +2,14 @@
 
 namespace App\Models\Employee;
 
+use App\Traits\Userstamps;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class EmployeeLifecycle extends Model
 {
+    use Userstamps;
     use HasFactory;
 
     protected $fillable = [

@@ -2,6 +2,8 @@
 
 namespace App\Models\Payroll;
 
+use App\Traits\Userstamps;
+
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Disbursement extends Model
 {
+    use Userstamps;
     protected $fillable = [
         'process_id',
         'batch_id',

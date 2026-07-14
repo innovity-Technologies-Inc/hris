@@ -2,11 +2,14 @@
 
 namespace App\Models\Payroll;
 
+use App\Traits\Userstamps;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class MovementAttachment extends Model
 {
+    use Userstamps;
     protected $table = 'movement_attachments';
 
     protected $fillable = [

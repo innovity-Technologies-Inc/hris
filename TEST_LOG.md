@@ -1,5 +1,18 @@
 # Test Log
 
+## 2026-07-14 (Global Userstamps and Models Support)
+
+**Goal**: Dynamically add `created_by` and `updated_by` columns to all database tables (except internal metadata tables), and apply the `Userstamps` trait to all model classes globally.
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- **Global Schema Migration**: Created and executed [2026_07_14_134923_add_created_by_and_updated_by_to_all_tables.php](file:///P:/Project/Web/hrms/database/migrations/2026_07_14_134923_add_created_by_and_updated_by_to_all_tables.php), dynamically adding the columns case-insensitively to all user tables.
+- **Model Trait Propagation**: Developed and ran a model updater script [add_userstamps_to_models.php](file:///C:/Users/Lenovo%20LOQ/.gemini/antigravity-cli/brain/6d00781a-5d51-4af1-a297-1991a15bb573/scratch/add_userstamps_to_models.php) to automatically import and declare `use Userstamps;` across all model classes.
+- **Verification**: Ran all feature tests, ensuring that all **153 tests passed successfully** ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-14 (Global Creator Resolve and Userstamps Consistency)
 
 **Goal**: Align requesting user resolution to always check the creator from `created_by` first (never default to target relationships like employee/user ID), and ensure all approvable models fully integrate with `created_by` and `updated_by`.
