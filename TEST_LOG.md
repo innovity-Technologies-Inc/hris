@@ -1,5 +1,17 @@
 # Test Log
 
+## 2026-07-14 (Approval Workflow Scope Type Submission Fix)
+
+**Goal**: Fix the bug where approval workflow exclusions were not saving or showing on edit reload by calculating and sending `scope_type` and `exclude_scope_type` in the Axios payload from the frontend.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/Setting/ApprovalWorkflowTest.php && php artisan test`
+
+**Results**:
+- **JS Payload Update**: Modified [create.blade.php](file:///P:/Project/Web/hrms/resources/views/setting/approval_workflow/create.blade.php) and [edit.blade.php](file:///P:/Project/Web/hrms/resources/views/setting/approval_workflow/edit.blade.php) to calculate `scope_type` and `exclude_scope_type` dynamically based on the criteria rows present in the containers and add them to the Axios submission data.
+- **Verification**: Ran full tests confirming that backend database persistence functions correctly. All **153 tests passed successfully** ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-14 (Announcement Index Redesign & AJAX Search Refactoring)
 
 **Goal**: Redesign the announcement index page to align perfectly with the "Search Employees" card and filter box pattern, replacing JSON wrappers with raw HTML view responses for optimal Blade compatibility.

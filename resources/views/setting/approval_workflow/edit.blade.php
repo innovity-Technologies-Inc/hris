@@ -826,43 +826,57 @@
             const includer_user_types = [];
             const includer_role_ids = [];
             const includer_user_ids = [];
+            let scope_type = 'all';
+
             $('.includer-row').each(function() {
                 const type = $(this).find('.criteria-type-select').val();
                 if (type === 'user-type') {
                     includer_user_types.push($(this).find('.user-type-select').val());
+                    scope_type = 'user_type';
                 } else if (type === 'role') {
                     includer_role_ids.push($(this).find('.role-select').val());
+                    scope_type = 'role';
                 } else if (type === 'user_type_role') {
                     includer_user_types.push($(this).find('.user-type-select').val());
                     includer_role_ids.push($(this).find('.role-select').val());
+                    scope_type = 'user_type_role';
                 } else if (type === 'specific-user') {
                     includer_user_ids.push($(this).find('.user-select').val());
+                    scope_type = 'specific_user';
                 }
             });
             data.includer_user_types = includer_user_types;
             data.includer_role_ids = includer_role_ids;
             data.includer_user_ids = includer_user_ids;
+            data.scope_type = scope_type;
 
             // Exclusion multi-select arrays
             const exclude_user_types = [];
             const exclude_role_ids = [];
             const exclude_user_ids = [];
+            let exclude_scope_type = 'none';
+
             $('.excluder-row').each(function() {
                 const type = $(this).find('.criteria-type-select').val();
                 if (type === 'user-type') {
                     exclude_user_types.push($(this).find('.user-type-select').val());
+                    exclude_scope_type = 'user_type';
                 } else if (type === 'role') {
                     exclude_role_ids.push($(this).find('.role-select').val());
+                    exclude_scope_type = 'role';
                 } else if (type === 'user_type_role') {
                     exclude_user_types.push($(this).find('.user-type-select').val());
                     exclude_role_ids.push($(this).find('.role-select').val());
+                    exclude_scope_type = 'user_type_role';
                 } else if (type === 'specific-user') {
                     exclude_user_ids.push($(this).find('.user-select').val());
+                    exclude_scope_type = 'specific_user';
                 }
             });
             data.exclude_user_types = exclude_user_types;
             data.exclude_role_ids = exclude_role_ids;
             data.exclude_user_ids = exclude_user_ids;
+            data.exclude_scope_type = exclude_scope_type;
             
             // Handle array of steps correctly for Axios
             const steps = [];
