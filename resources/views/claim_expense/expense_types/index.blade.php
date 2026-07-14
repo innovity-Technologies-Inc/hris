@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.edit-expense-type').forEach(btn => {
             btn.addEventListener('click', function() {
                 const id = this.getAttribute('data-id');
-                axios.get(`/claim-expense/expense-types/${id}/edit`)
+                axios.get(`/company-setup/expense-types/${id}/edit`)
                     .then(response => {
                         const data = response.data.data;
                         document.getElementById('expenseTypeId').value = data.id;
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     confirmButtonText: 'Yes, delete it!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        axios.delete(`/claim-expense/expense-types/${id}/delete`, {
+                        axios.delete(`/company-setup/expense-types/${id}/delete`, {
                             data: { _token: "{{ csrf_token() }}" }
                         }).then(response => {
                             Swal.fire('Deleted!', response.data.message, 'success');
@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         const id = document.getElementById('expenseTypeId').value;
-        const url = id ? `/claim-expense/expense-types/${id}/update` : '/claim-expense/expense-types/store';
+        const url = id ? `/company-setup/expense-types/${id}/update` : '/company-setup/expense-types/store';
         const method = id ? 'put' : 'post';
 
         const formData = {
