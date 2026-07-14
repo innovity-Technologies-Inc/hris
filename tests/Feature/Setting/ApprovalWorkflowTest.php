@@ -514,3 +514,76 @@ test('it bypasses approval if creator matches excluders', function () {
     expect($requestDiv->status->value)->toBe('pending');
     expect($approvableDiv->fresh()->status)->toBe('pending');
 });
+
+test('it can store a sequential approval workflow with a role step', function () {
+    $this->actingAs($this->admin);
+
+    $role = Role::firstOrCreate(['name' => 'General Manager', 'guard_name' => 'web']);
+
+    $response = $this->postJson(route('setting.approval_workflows.store'), [
+        'module_name' => 'leave',
+        'type' => 'sequential',
+        'is_active' => '1',
+        'steps' => [
+            [
+                'type' => 'role',
+                'role_id' => $role->id
+            ]
+        ]
+    ]);
+
+    $response->assertStatus(200);
+
+    $workflow = Workflow::where('module', 'leave')->first();
+    expect($workflow)->not->toBeNull();
+    expect($workflow->steps)->toHaveCount(1);
+
+    $step = $workflow->steps[0];
+    expect($step->type)->toBe('role');
+    expect((int)$step->role_id)->toBe($role->id);
+    expect($step->required_user_type)->toBeNull();
+});
+
+test('it resolves role step type to all users with that role', function () {
+    $resolver = app(ApproverResolver::class);
+
+    $role = Role::firstOrCreate(['name' => 'Auditor', 'guard_name' => 'web']);
+
+    $workflow = Workflow::create([
+        'name' => 'Role Test Workflow',
+        'module' => 'salary',
+        'type' => 'sequential',
+        'total_steps' => 1,
+    ]);
+
+    $step = WorkflowStep::create([
+        'workflow_id' => $workflow->id,
+        'name' => 'Step 1',
+        'step_order' => 1,
+        'type' => 'role',
+        'role_id' => $role->id
+    ]);
+
+    $userWithRole1 = User::factory()->create(['name' => 'Auditor 1']);
+    $userWithRole1->assignRole($role);
+
+    $userWithRole2 = User::factory()->create(['name' => 'Auditor 2']);
+    $userWithRole2->assignRole($role);
+
+    $userWithoutRole = User::factory()->create(['name' => 'Normal User']);
+
+    $empRequester = Employee::factory()->create();
+    $approvable = ProfileUpdateRequest::create([
+        'employee_id' => $empRequester->id,
+        'section' => 'personal_info',
+        'previous_data' => [],
+        'requested_data' => [],
+        'status' => 'pending'
+    ]);
+
+    $resolvedUsers = $resolver->resolve((string)$step->id, $approvable);
+    
+    expect($resolvedUsers)->toContain($userWithRole1->id);
+    expect($resolvedUsers)->toContain($userWithRole2->id);
+    expect($resolvedUsers)->not->toContain($userWithoutRole->id);
+});

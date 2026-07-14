@@ -31,6 +31,16 @@ class ApproverResolver implements ApproverResolverInterface
             case 'specific-user':
                 return $step && $step->user_id ? [$step->user_id] : [];
 
+            case 'role':
+                if (!$step || !$step->role_id) {
+                    return [];
+                }
+                return User::whereHas('roles', function($q) use ($step) {
+                        $q->where('id', $step->role_id);
+                    })
+                    ->pluck('id')
+                    ->toArray();
+
             case 'role-user':
                 if (!$step || !$step->role_id || !$step->required_user_type) {
                     return [];

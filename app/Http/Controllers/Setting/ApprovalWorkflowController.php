@@ -36,9 +36,9 @@ class ApprovalWorkflowController extends Controller
             'type' => 'required|in:sequential,random',
             'required_approvals' => 'nullable|integer|min:1|max:' . max(1, count($request->steps ?? [])),
             'steps' => 'required|array|min:1',
-            'steps.*.type' => 'required|in:user-type,role-user,specific-user',
+            'steps.*.type' => 'required|in:user-type,role,role-user,specific-user',
             'steps.*.required_user_type' => 'nullable|required_if:steps.*.type,user-type,role-user|string',
-            'steps.*.role_id' => 'nullable|required_if:steps.*.type,role-user|exists:roles,id',
+            'steps.*.role_id' => 'nullable|required_if:steps.*.type,role,role-user|exists:roles,id',
             'steps.*.user_id' => 'nullable|required_if:steps.*.type,specific-user|exists:users,id',
             
             // Inclusions & Exclusions validation
@@ -176,9 +176,9 @@ class ApprovalWorkflowController extends Controller
             'type' => 'required|in:sequential,random',
             'required_approvals' => 'nullable|integer|min:1|max:' . max(1, count($request->steps ?? [])),
             'steps' => 'required|array|min:1',
-            'steps.*.type' => 'required|in:user-type,role-user,specific-user',
+            'steps.*.type' => 'required|in:user-type,role,role-user,specific-user',
             'steps.*.required_user_type' => 'nullable|required_if:steps.*.type,user-type,role-user|string',
-            'steps.*.role_id' => 'nullable|required_if:steps.*.type,role-user|exists:roles,id',
+            'steps.*.role_id' => 'nullable|required_if:steps.*.type,role,role-user|exists:roles,id',
             'steps.*.user_id' => 'nullable|required_if:steps.*.type,specific-user|exists:users,id',
             
             // Inclusions & Exclusions validation

@@ -158,6 +158,7 @@
                         <select class="form-select criteria-type-select" required>
                             <option value="user-type" selected>User Type</option>
                             <option value="role">User Role</option>
+                            <option value="user_type_role">User Type + Role</option>
                             <option value="specific-user">Specific User</option>
                         </select>
                     </div>
@@ -218,6 +219,7 @@
                     <div style="min-width: 150px;">
                         <select class="form-select step-type-select" required>
                             <option value="user-type" selected>User Type</option>
+                            <option value="role">User Role</option>
                             <option value="role-user">User Type + Role</option>
                             <option value="specific-user">Specific User</option>
                         </select>
@@ -233,7 +235,7 @@
                         </select>
                     </div>
 
-                    <!-- Spatie Role Selection (for role-user) -->
+                    <!-- Spatie Role Selection (for role and role-user) -->
                     <div class="flex-grow-1 role-wrapper" style="display: none;">
                         <select class="form-select role-select">
                             <option value="" disabled selected>Select Role</option>
@@ -338,6 +340,9 @@
             if (type === 'user-type') {
                 row.find('.user-type-wrapper').show();
                 row.find('.user-type-select').attr('required', true);
+            } else if (type === 'role') {
+                row.find('.role-wrapper').show();
+                row.find('.role-select').attr('required', true);
             } else if (type === 'role-user') {
                 row.find('.user-type-wrapper, .role-wrapper').show();
                 row.find('.user-type-select, .role-select').attr('required', true);
@@ -371,6 +376,9 @@
                     includer_user_types.push($(this).find('.user-type-select').val());
                 } else if (type === 'role') {
                     includer_role_ids.push($(this).find('.role-select').val());
+                } else if (type === 'user_type_role') {
+                    includer_user_types.push($(this).find('.user-type-select').val());
+                    includer_role_ids.push($(this).find('.role-select').val());
                 } else if (type === 'specific-user') {
                     includer_user_ids.push($(this).find('.user-select').val());
                 }
@@ -389,6 +397,9 @@
                     exclude_user_types.push($(this).find('.user-type-select').val());
                 } else if (type === 'role') {
                     exclude_role_ids.push($(this).find('.role-select').val());
+                } else if (type === 'user_type_role') {
+                    exclude_user_types.push($(this).find('.user-type-select').val());
+                    exclude_role_ids.push($(this).find('.role-select').val());
                 } else if (type === 'specific-user') {
                     exclude_user_ids.push($(this).find('.user-select').val());
                 }
@@ -405,6 +416,8 @@
 
                 if (type === 'user-type') {
                     stepData.required_user_type = $(this).find('.user-type-select').val();
+                } else if (type === 'role') {
+                    stepData.role_id = $(this).find('.role-select').val();
                 } else if (type === 'role-user') {
                     stepData.required_user_type = $(this).find('.user-type-select').val();
                     stepData.role_id = $(this).find('.role-select').val();
@@ -451,19 +464,7 @@
             }
         });
 
-        $('#addExcluderBtn').on('click', function() {
-            const newRow = $(criteriaTemplate.content.cloneNode(true));
-            newRow.find('.criteria-row').addClass('excluder-row');
-            $('#excludersContainer').append(newRow);
-            if (typeof feather !== 'undefined') {
-                feather.replace();
-            }
-        });
-
-        $(document).on('click', '.remove-criteria-btn', function() {
-            $(this).closest('.criteria-row').remove();
-        });
-
+        // Toggle row inputs based on type selection for Inclusions/Exclusions
         $(document).on('change', '.criteria-type-select', function() {
             const row = $(this).closest('.criteria-row');
             const type = $(this).val();
@@ -477,10 +478,26 @@
             } else if (type === 'role') {
                 row.find('.role-wrapper').show();
                 row.find('.role-select').attr('required', true);
+            } else if (type === 'user_type_role') {
+                row.find('.user-type-wrapper, .role-wrapper').show();
+                row.find('.user-type-select, .role-select').attr('required', true);
             } else if (type === 'specific-user') {
                 row.find('.user-wrapper').show();
                 row.find('.user-select').attr('required', true);
             }
+        });
+
+        $('#addExcluderBtn').on('click', function() {
+            const newRow = $(criteriaTemplate.content.cloneNode(true));
+            newRow.find('.criteria-row').addClass('excluder-row');
+            $('#excludersContainer').append(newRow);
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
+        });
+
+        $(document).on('click', '.remove-criteria-btn', function() {
+            $(this).closest('.criteria-row').remove();
         });
 
         // Initialize

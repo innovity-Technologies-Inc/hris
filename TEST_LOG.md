@@ -1,5 +1,20 @@
 # Test Log
 
+## 2026-07-14 (Approval Workflow Dropdown Alignment & Role Step Type)
+
+**Goal**: Align Inclusion/Exclusion and Workflow Steps dropdown options to support the four standard options (User Type, Role, User Type + Role, and Specific User) in both views and implement backend support for the new `role` step type.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/Setting/ApprovalWorkflowTest.php && php artisan test`
+
+**Results**:
+- **Step Type Resolution**: Updated `ApproverResolver.php` with a `case 'role'` resolution path to select all active users having the specified Spatie Role.
+- **Controller Validation**: Modified `ApprovalWorkflowController.php` to include `role` as an allowed step type value and require `role_id` validation if step type is `role` or `role-user`.
+- **UI Realignment**: Updated both `create.blade.php` and `edit.blade.php` to define and support all four types (User Type, Role, User Type + Role, Specific User) for inclusions/exclusions and workflow steps, matching options and display toggles dynamically.
+- **Testing**: Added two new Pest feature tests in `ApprovalWorkflowTest.php` to verify creating a workflow with a `role` step type and resolving the step type to users with that role.
+- **Tests**: All 152 tests passed successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-14 (Announcement & Notice Board Module)
 
 **Goal**: Implement a complete Announcement module including title, content (Summernote WYSIWYG editor), attachment upload, 5-tier organizational target scopes (company, branch/business unit, division, department, section) loaded dynamically via DataController, a show details view, and a branded PDF download button via Spatie Browsershot. Also enforce selective user visibility filtering where target scopes match the user's placement, and null values fallback to visible for all.
