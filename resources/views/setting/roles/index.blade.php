@@ -36,9 +36,11 @@
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group">
+                                        @if($role->name !== 'Super Admin')
                                         <a href="{{ route('setting.roles.edit', $role->id) }}" class="btn btn-info btn-sm" title="Edit Permissions">
                                             <i style="height: 12px; width: 12px" data-feather="edit-2"></i>
                                         </a>
+                                        @endif
                                         @if($role->name !== 'Super Admin')
                                         <form action="{{ route('setting.roles.destroy', $role->id) }}" method="POST" class="d-inline confirmDelete">
                                             @csrf

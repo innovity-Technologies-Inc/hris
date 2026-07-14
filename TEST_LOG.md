@@ -1,5 +1,18 @@
 # Test Log
 
+## 2026-07-14 (Super Admin Role Edit Protection)
+
+**Goal**: Remove the edit button for the system-reserved "Super Admin" role on the roles index page, and prevent editing/updating this role at the controller level.
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- **View Check**: Modified [index.blade.php](file:///P:/Project/Web/hrms/resources/views/setting/roles/index.blade.php) to wrap the edit link in an `@if($role->name !== 'Super Admin')` block.
+- **Controller Enforcement**: Added security assertions in `edit()` and `update()` methods of [RoleController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/Setting/RoleController.php) to abort with a 403 response if the "Super Admin" role is accessed directly via URL parameters.
+- **Verification**: Ran full tests confirming that backend role configurations function correctly. All **153 tests passed successfully** ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-14 (Approval Workflow Scope Type Submission Fix)
 
 **Goal**: Fix the bug where approval workflow exclusions were not saving or showing on edit reload by calculating and sending `scope_type` and `exclude_scope_type` in the Axios payload from the frontend.

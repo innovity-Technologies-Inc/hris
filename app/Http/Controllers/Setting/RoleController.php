@@ -61,10 +61,14 @@ class RoleController extends Controller
 
     public function edit($id)
     {
+        $role = \Spatie\Permission\Models\Role::with('permissions')->findOrFail($id);
+        if ($role->name === 'Super Admin') {
+            abort(403, 'System reserved Super Admin role cannot be modified.');
+        }
+
         $title = 'Edit Role';
         $section = 'Settings';
         $sub_section = 'Roles / Edit';
-        $role = \Spatie\Permission\Models\Role::with('permissions')->findOrFail($id);
         $menus = $this->roleServices->getMenus();
         $allPermissions = $this->roleServices->getAllPermissions();
         $rolePermissions = $role->permissions->pluck('name')->toArray();
@@ -74,6 +78,11 @@ class RoleController extends Controller
 
     public function update(Request $request, $id)
     {
+        $role = \Spatie\Permission\Models\Role::findOrFail($id);
+        if ($role->name === 'Super Admin') {
+            abort(403, 'System reserved Super Admin role cannot be modified.');
+        }
+
         $request->validate([
             'name' => 'required|unique:roles,name,' . $id,
             'permissions' => 'nullable|array',
