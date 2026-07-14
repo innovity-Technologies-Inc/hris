@@ -87,7 +87,6 @@ test('it can manage expense types', function () {
 
     // Store
     $response = $this->postJson(route('expense_types.store'), [
-        'company_id' => $this->company->id,
         'name' => 'Travel Fuel',
         'description' => 'Gasoline and diesel claims',
         'status' => 'active',
@@ -96,7 +95,6 @@ test('it can manage expense types', function () {
     $response->assertStatus(200);
     $this->assertDatabaseHas('expense_types', [
         'name' => 'Travel Fuel',
-        'company_id' => $this->company->id,
     ]);
 
     $expenseType = ExpenseType::first();
@@ -107,7 +105,6 @@ test('it can manage expense types', function () {
 
     // Update
     $response = $this->putJson(route('expense_types.update', $expenseType->id), [
-        'company_id' => $this->company->id,
         'name' => 'Travel Gas',
         'description' => 'Updated desc',
         'status' => 'active',
@@ -130,7 +127,6 @@ test('it triggers approval workflow on expense application store', function () {
     $this->actingAs($this->admin);
 
     $expenseType = ExpenseType::create([
-        'company_id' => $this->company->id,
         'name' => 'Office Refreshments',
         'status' => 'active',
     ]);

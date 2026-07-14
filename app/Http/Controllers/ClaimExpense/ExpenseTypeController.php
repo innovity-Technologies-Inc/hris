@@ -18,15 +18,14 @@ class ExpenseTypeController extends Controller
         $sub_section = 'Expense Types';
 
         if ($request->ajax()) {
-            $query = ExpenseType::with('company');
-            $expenseTypes = $flexsearch->apply($query, [], $request->get('keyword'), ['name', 'description', 'company.name'])
+            $query = ExpenseType::query();
+            $expenseTypes = $flexsearch->apply($query, [], $request->get('keyword'), ['name', 'description'])
                 ->orderBy('id', 'desc')
                 ->paginate(20);
             return view('claim_expense.expense_types.search_results', compact('expenseTypes'))->render();
         }
 
-        $companies = Company::all();
-        return view('claim_expense.expense_types.index', compact('title', 'section', 'sub_section', 'companies'));
+        return view('claim_expense.expense_types.index', compact('title', 'section', 'sub_section'));
     }
 
     public function store(ExpenseTypeRequest $request)

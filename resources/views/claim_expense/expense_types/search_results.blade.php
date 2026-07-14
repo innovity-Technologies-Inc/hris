@@ -2,7 +2,6 @@
     <thead>
         <tr>
             <th>#</th>
-            <th>Company</th>
             <th>Name</th>
             <th>Description</th>
             <th>Status</th>
@@ -13,7 +12,6 @@
         @forelse($expenseTypes as $expenseType)
             <tr>
                 <td>{{ $loop->iteration + ($expenseTypes->currentPage() - 1) * $expenseTypes->perPage() }}</td>
-                <td>{{ $expenseType->company->name ?? 'Global' }}</td>
                 <td>{{ $expenseType->name }}</td>
                 <td>{{ Str::limit($expenseType->description, 50) }}</td>
                 <td>
@@ -38,7 +36,7 @@
             </tr>
         @empty
             <tr>
-                <td colspan="6" class="text-center text-muted py-4">No expense types found.</td>
+                <td colspan="5" class="text-center text-muted py-4">No expense types found.</td>
             </tr>
         @endforelse
     </tbody>

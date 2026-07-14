@@ -49,15 +49,6 @@
                     <input type="hidden" id="expenseTypeId" name="id">
                     <div class="modal-body p-4">
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Company <span class="text-danger">*</span></label>
-                            <select class="form-select" name="company_id" id="company_id" required>
-                                <option value="">Select Company</option>
-                                @foreach($companies as $company)
-                                    <option value="{{ $company->id }}">{{ $company->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="mb-3">
                             <label class="form-label fw-semibold">Name <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="name" id="name" placeholder="e.g. Travel Expense, Entertainment, Office Supply" required>
                         </div>
@@ -129,7 +120,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     .then(response => {
                         const data = response.data.data;
                         document.getElementById('expenseTypeId').value = data.id;
-                        document.getElementById('company_id').value = data.company_id;
                         document.getElementById('name').value = data.name;
                         document.getElementById('description').value = data.description || '';
                         document.getElementById('status').value = data.status;
@@ -187,7 +177,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const method = id ? 'put' : 'post';
 
         const formData = {
-            company_id: document.getElementById('company_id').value,
             name: document.getElementById('name').value,
             description: document.getElementById('description').value,
             status: document.getElementById('status').value,

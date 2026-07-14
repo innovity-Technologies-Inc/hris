@@ -1,5 +1,21 @@
 # Test Log
 
+## 2026-07-14 (Expense Types Global Master Data Refactor)
+
+**Goal**: Remove company constraints from Expense Types, making them a globally shared master data category.
+
+**Exact Command**: `php artisan config:clear && php artisan test tests/Feature/ClaimExpenseTest.php`
+
+**Results**:
+- Removed `company_id` validation from `ExpenseTypeRequest.php`.
+- Removed `company_id` input select block and logic from the modal form in `index.blade.php`.
+- Removed `company_id` table columns from `search_results.blade.php`.
+- Removed `OrganizationScoped` trait from `ExpenseType.php` to bypass company-based scoping.
+- Refactored `ClaimExpenseTest.php` to manage and assert expense types globally.
+- Verified both tests passed successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-14 (Claim Expense Module and Workflow Engine Integration)
 
 **Goal**: Implement the new "Claim Expense" module, including Company Info master data "Expense Types", Expense Applications, logs/history, and integration with the central sequential/parallel approval workflow engine.
