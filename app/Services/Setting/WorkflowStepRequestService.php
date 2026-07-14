@@ -151,7 +151,7 @@ class WorkflowStepRequestService
      */
     protected function resolveRequestingUser($approvable): ?User
     {
-        if ($approvable instanceof \App\Models\Employee\ProfileUpdateRequest) {
+        if (method_exists($approvable, 'creator')) {
             $creator = $approvable->creator;
             if ($creator) {
                 return $creator;
@@ -171,10 +171,6 @@ class WorkflowStepRequestService
             $emp = $approvable->employee()->withoutGlobalScopes()->first();
             return $emp ? $emp->user : null;
         } 
-        
-        if (method_exists($approvable, 'creator')) {
-            return $approvable->creator;
-        }
 
         return null;
     }

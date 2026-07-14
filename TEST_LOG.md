@@ -1,5 +1,19 @@
 # Test Log
 
+## 2026-07-14 (Global Creator Resolve and Userstamps Consistency)
+
+**Goal**: Align requesting user resolution to always check the creator from `created_by` first (never default to target relationships like employee/user ID), and ensure all approvable models fully integrate with `created_by` and `updated_by`.
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- **Database Schema**: Created and ran migration [2026_07_14_134333_add_updated_by_to_profile_update_requests_table.php](file:///P:/Project/Web/hrms/database/migrations/2026_07_14_134333_add_updated_by_to_profile_update_requests_table.php) to add the `updated_by` column on `profile_update_requests`.
+- **Model Trait Integration**: Configured [ProfileUpdateRequest.php](file:///P:/Project/Web/hrms/app/Models/Employee/ProfileUpdateRequest.php) to use the global `Userstamps` trait. Removed duplicate relationship definitions.
+- **Requester Resolve**: Modified `resolveRequestingUser` in [WorkflowStepRequestService.php](file:///P:/Project/Web/hrms/app/Services/Setting/WorkflowStepRequestService.php) to check the `creator` relationship first for ALL models.
+- **Test Alignment**: Updated test scenarios in [TransferWorkflowTest.php](file:///P:/Project/Web/hrms/tests/Feature/Setting/TransferWorkflowTest.php) and [ApprovalWorkflowTest.php](file:///P:/Project/Web/hrms/tests/Feature/Setting/ApprovalWorkflowTest.php) to specify exact creator IDs, preventing test-only bypass actions. All **153 tests passed successfully** ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-14 (Profile Update Request Creator Track & Resolution Fix)
 
 **Goal**: Resolve the issue where profile update requests created by a Super Admin for other employees were not auto-approving/excluding correctly based on the Super Admin role.

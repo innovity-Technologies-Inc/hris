@@ -4,11 +4,13 @@ namespace App\Models\Employee;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\OrganizationScoped;
+use App\Traits\Userstamps;
 
 class ProfileUpdateRequest extends Model
 {
     use \Innovity\ApprovalEngine\Traits\Approvable;
     use OrganizationScoped;
+    use Userstamps;
 
     protected $fillable = [
         'employee_id',
@@ -18,6 +20,7 @@ class ProfileUpdateRequest extends Model
         'requested_data',
         'status',
         'created_by',
+        'updated_by',
     ];
 
     protected $casts = [
@@ -28,11 +31,6 @@ class ProfileUpdateRequest extends Model
     public function employee()
     {
         return $this->belongsTo(Employee::class);
-    }
-
-    public function creator()
-    {
-        return $this->belongsTo(\App\Models\User::class, 'created_by');
     }
 
     public function getCreatorAttribute()

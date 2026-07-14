@@ -77,7 +77,7 @@ test('it processes transfer using central approval engine sequential workflow an
     ]);
 
     // Create and store transfer application with effective dates
-    $admin = User::factory()->create(['user_type' => UserType::Group]);
+    $admin = User::factory()->create(['user_type' => UserType::Company]);
     $admin->givePermissionTo('transfers.create');
     $response = $this->actingAs($admin)->postJson(route('transfer.api.store'), [
         'employee_id' => $employee->id,

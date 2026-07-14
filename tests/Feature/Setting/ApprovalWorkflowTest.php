@@ -282,7 +282,8 @@ test('it auto-approves steps if requester has higher authority or is the resolve
         'section' => 'personal_info',
         'previous_data' => [],
         'requested_data' => [],
-        'status' => 'pending'
+        'status' => 'pending',
+        'created_by' => $requesterUser->id,
     ]);
 
     $masterRequest = app(\Innovity\ApprovalEngine\Services\WorkflowGenerator::class)->generate($approvable, 'profile-update');
@@ -398,7 +399,8 @@ test('it filters by requester includers and bypasses others', function () {
         'section' => 'personal_info',
         'previous_data' => [],
         'requested_data' => [],
-        'status' => 'pending'
+        'status' => 'pending',
+        'created_by' => $divUser->id,
     ]);
 
     $requestDiv = app(\Innovity\ApprovalEngine\Services\WorkflowGenerator::class)->generate($approvableDiv, 'profile-update');
@@ -427,7 +429,8 @@ test('it filters by requester includers and bypasses others', function () {
         'section' => 'personal_info',
         'previous_data' => [],
         'requested_data' => [],
-        'status' => 'pending'
+        'status' => 'pending',
+        'created_by' => $deptUser->id,
     ]);
 
     $requestDept = app(\Innovity\ApprovalEngine\Services\WorkflowGenerator::class)->generate($approvableDept, 'profile-update');
@@ -478,7 +481,8 @@ test('it bypasses approval if creator matches excluders', function () {
         'section' => 'personal_info',
         'previous_data' => [],
         'requested_data' => [],
-        'status' => 'pending'
+        'status' => 'pending',
+        'created_by' => $compUser->id,
     ]);
 
     $requestComp = app(\Innovity\ApprovalEngine\Services\WorkflowGenerator::class)->generate($approvableComp, 'profile-update');
@@ -507,7 +511,8 @@ test('it bypasses approval if creator matches excluders', function () {
         'section' => 'personal_info',
         'previous_data' => [],
         'requested_data' => [],
-        'status' => 'pending'
+        'status' => 'pending',
+        'created_by' => $divUser->id,
     ]);
 
     $requestDiv = app(\Innovity\ApprovalEngine\Services\WorkflowGenerator::class)->generate($approvableDiv, 'profile-update');
