@@ -160,6 +160,9 @@
             <button class="tab-btn px-6 py-3 rounded-xl text-slate-300 hover:text-white hover:bg-white/5" data-target="tab-events">
                 <i class="fa-solid fa-bell-concierge mr-2"></i> Workflow Events
             </button>
+            <button class="tab-btn px-6 py-3 rounded-xl text-slate-300 hover:text-white hover:bg-white/5" data-target="tab-auto-approvals">
+                <i class="fa-solid fa-user-check mr-2"></i> Auto-Approvals
+            </button>
         </div>
 
         <!-- Main Content Area -->
@@ -684,6 +687,87 @@
                         </p>
                     </div>
 
+                </div>
+            </div>
+
+            <!-- TAB 6: Requesting User & Auto-Approvals -->
+            <div id="tab-auto-approvals" class="tab-content">
+                <div class="space-y-8">
+                    <!-- Intro -->
+                    <div class="glass-card rounded-2xl p-8">
+                        <h2 class="text-3xl font-bold text-white mb-4 flex items-center">
+                            <i class="fa-solid fa-user-check text-primary mr-3"></i> Requesting User & Auto-Approvals
+                        </h2>
+                        <p class="text-slate-300 leading-relaxed mb-4">
+                            The approval pipeline utilizes two distinct layers of authorization and auto-approval to streamline requests: 
+                            <strong>Package-level Workflow Bypassing</strong> and <strong>Host-level Step-level Auto-Approvals</strong>.
+                        </p>
+                    </div>
+
+                    <!-- Requester Resolution -->
+                    <div class="glass-card rounded-2xl p-8">
+                        <h3 class="text-2xl font-bold text-white mb-4 flex items-center">
+                            <i class="fa-solid fa-address-card text-secondary mr-3"></i> 1. How the Requesting User is Resolved
+                        </h3>
+                        <p class="text-slate-300 leading-relaxed mb-4">
+                            When evaluating exclusion criteria, inclusion criteria, or step authority weights, the system resolves who initiated the request via the model's <code>creator</code> relationship.
+                        </p>
+                        <div class="bg-dark/50 rounded-xl p-6 border border-glassBorder mb-4">
+                            <h4 class="text-white font-semibold mb-2">Vendor Package Resolution Pattern</h4>
+                            <pre class="text-xs text-slate-300 font-mono overflow-x-auto">
+// vendor/innovity/laravel-approval-engine/src/Services/WorkflowGenerator.php
+$creator = $approvable->creator 
+    ?? (method_exists($approvable, 'creator') ? $approvable->creator()->first() : null);</pre>
+                        </div>
+                        <p class="text-slate-300 leading-relaxed mb-4">
+                            In your host application, all approvable models globally implement the <code>Userstamps</code> trait. This automatically sets up the <code>creator()</code> relationship using the <code>created_by</code> column on the target table:
+                        </p>
+                        <div class="bg-dark/50 rounded-xl p-6 border border-glassBorder">
+                            <h4 class="text-white font-semibold mb-2">Host Application Userstamps Trait</h4>
+                            <pre class="text-xs text-slate-300 font-mono overflow-x-auto">
+// app/Traits/Userstamps.php
+public function creator()
+{
+    return $this->belongsTo(\App\Models\User::class, 'created_by');
+}</pre>
+                        </div>
+                    </div>
+
+                    <!-- Auto-Approval Mechanism -->
+                    <div class="glass-card rounded-2xl p-8">
+                        <h3 class="text-2xl font-bold text-white mb-4 flex items-center">
+                            <i class="fa-solid fa-bolt text-amber-500 mr-3"></i> 2. Auto-Approval Mechanism
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Package Level -->
+                            <div class="bg-dark/30 rounded-xl p-6 border border-glassBorder flex flex-col justify-between">
+                                <div>
+                                    <span class="px-3 py-1 text-xs font-semibold rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 mb-3 inline-block">Package Level</span>
+                                    <h4 class="text-white font-bold text-lg mb-2">Workflow Bypass</h4>
+                                    <p class="text-slate-400 text-sm mb-4">
+                                        If the creator matches the workflow configuration's active exclusions (based on user ID, Spatie role, or organization user type), the entire workflow is skipped.
+                                    </p>
+                                </div>
+                                <div class="text-xs text-slate-500 font-mono border-t border-glassBorder pt-4 mt-2">
+                                    Resolved inside: <code>WorkflowGenerator::generate()</code>
+                                </div>
+                            </div>
+
+                            <!-- Host Level -->
+                            <div class="bg-dark/30 rounded-xl p-6 border border-glassBorder flex flex-col justify-between">
+                                <div>
+                                    <span class="px-3 py-1 text-xs font-semibold rounded-full bg-pink-500/10 text-pink-300 border border-pink-500/20 mb-3 inline-block">Host App Level</span>
+                                    <h4 class="text-white font-bold text-lg mb-2">Step-level Auto-Approval</h4>
+                                    <p class="text-slate-400 text-sm mb-4">
+                                        If workflow steps are generated, individual steps are auto-approved if the requester is the resolved step approver (self-approval) or holds a strictly higher authority level weight than the step requires.
+                                    </p>
+                                </div>
+                                <div class="text-xs text-slate-500 font-mono border-t border-glassBorder pt-4 mt-2">
+                                    Resolved inside: <code>WorkflowStepRequestService::handleAutoApproval()</code>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 

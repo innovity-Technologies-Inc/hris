@@ -345,3 +345,44 @@ sequenceDiagram
     AAC-->>View: Returns JSON success response
     View-->>Approver: Displays SweetAlert success message & reloads
 ```
+
+---
+
+## 🔍 5. Requesting User & Auto-Approvals
+
+### A. How the Package Resolves the Requesting User
+The vendor package determines who the requesting user is by resolving the **`creator`** property on the approvable model.
+
+Inside the package's `WorkflowGenerator.php` (line 17), it resolves the creator object as follows:
+```php
+$creator = $approvable->creator 
+    ?? (method_exists($approvable, 'creator') ? $approvable->creator()->first() : null);
+```
+
+#### Userstamps Integration
+Because all models in the host application are configured to use the `Userstamps` trait, the `creator` relationship is resolved from the `created_by` column:
+```php
+public function creator()
+{
+    return $this->belongsTo(\App\Models\User::class, 'created_by');
+}
+```
+During workflow evaluations, the engine uses this resolved `$creator` model to check user types, roles, and ID-based criteria.
+
+---
+
+### B. Auto-Approval Mechanism
+Auto-approvals are split into two categories:
+
+#### 1. Workflow Bypass (Package Level)
+* **Description**: If the user who created the request (e.g., a Super Admin) is explicitly bypassed from workflow rules.
+* **Handled by**: **The vendor package** (`innovity/laravel-approval-engine`).
+* **Implementation**: Inside `WorkflowGenerator::generate()`, the package checks the workflow's configured exclusions (`exclude_role_ids`, `exclude_user_types`, `exclude_user_ids`). If matched, it sets the `ApprovalRequest` status to `approved` instantly without generating any step requests.
+
+#### 2. Authority & Self-Approver Auto-Approval (Host App Level)
+* **Description**: If step requests are generated, but the requester has a higher authority level or is their own step's approver.
+* **Handled by**: **The host application** (`App\Services\Setting\WorkflowStepRequestService.php`).
+* **Implementation**: Intercepted dynamically via Eloquent's model creation event.
+  * **Self-Approval**: Checks if the creator's ID matches the resolved approvers for the step. If so, it approves the step automatically.
+  * **Authority-Based**: Compares the weight of the creator's `user_type` against the step's `required_user_type`. If the creator has a higher authority level (strictly lower weight value, e.g. `Group` (0) < `Company` (1)), it auto-approves the step.
+

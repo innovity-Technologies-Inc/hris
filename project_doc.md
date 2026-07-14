@@ -98,6 +98,10 @@ The Human Resource Management System integrates a custom package **`laravel-appr
   - **[PromotionWorkflowListener](file:///P:/Project/Web/hrms/app/Listeners/Workflow/PromotionWorkflowListener.php)** & **[DemotionWorkflowListener](file:///P:/Project/Web/hrms/app/Listeners/Workflow/DemotionWorkflowListener.php)**: Applies salary/designation mutations.
   - **[IncrementWorkflowListener](file:///P:/Project/Web/hrms/app/Listeners/Workflow/IncrementWorkflowListener.php)** & **[DecrementWorkflowListener](file:///P:/Project/Web/hrms/app/Listeners/Workflow/DecrementWorkflowListener.php)**: Modifies gross salaries and updates breakdown structures.
 - **Reviewer UI Integration**: Actions are fully API-driven via Axios, backed by SweetAlert2 confirmation dialogs to prevent premature submissions, refreshing page states instantly.
+- **Requesting User Resolution**: The package dynamically queries the `$approvable->creator` property to find the requesting user. In the host application, this matches the `creator()` relationship defined by the global `Userstamps` trait (backed by the `created_by` column).
+- **Auto-Approval Handling**: 
+  - **Workflow Bypass (Package-Level)**: Managed by the vendor package when a request is created by a user matching configured workflow exclusions (`exclude_role_ids`, `exclude_user_types`, `exclude_user_ids`).
+  - **Step-Level Auto-Approval (Host-Level)**: Managed inside [WorkflowStepRequestService.php](file:///P:/Project/Web/hrms/app/Services/Setting/WorkflowStepRequestService.php). Auto-approves a step if the requester is resolved as the step's approver (self-approval) or holds a strictly higher authority level weight than required by the step (e.g. `Group` level user bypassing a `Company` level step).
 
 ### 🔔 Hierarchical Notification System
 A custom real-time notification engine with intelligent visibility rules based on the organizational chart.
