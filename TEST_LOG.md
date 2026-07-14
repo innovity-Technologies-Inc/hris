@@ -1,5 +1,19 @@
 # Test Log
 
+## 2026-07-14 (PDF Header, Loader, and Table Column Adjustments)
+
+**Goal**: Configure the PDF header to show the group name if no company is selected, render targeted scope columns conditionally in the PDF meta section, remove the `"Target "` prefix from the index table columns, and fix the infinite loading screen bug on PDF downloads.
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- **PDF Layout Update**: Modified [AnnouncementServices.php](file:///P:/Project/Web/hrms/app/Services/Announcement/AnnouncementServices.php) and [pdf.blade.php](file:///P:/Project/Web/hrms/resources/views/announcement/pdf.blade.php) to conditionally load the Group name if `company_id` is null, and only display selected target elements (Branch, Department, Division, Section) without the static "Target Scope" text.
+- **Table Headers**: Updated [table.blade.php](file:///P:/Project/Web/hrms/resources/views/announcement/partials/table.blade.php) to display `"Company"`, `"Branch"`, `"Division"`, `"Department"`, and `"Section"` headers without the `"Target "` prefix.
+- **Loader Interceptor**: Fixed the infinite loading screen issue by updating [master.blade.php](file:///P:/Project/Web/hrms/resources/views/structure/master.blade.php) to bypass the `beforeunload` overlay screen for download/export links.
+- **Verification**: Verified that all **153 tests passed successfully** ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-14 (Composer Lock Update)
 
 **Goal**: Update `composer.lock` to track the updated `innovity/laravel-approval-engine` package version incorporating the permanent integer casting fix.

@@ -25,8 +25,16 @@
         <tr>
             <td>
                 <h1 class="company-name">{{ $companyInfo->name }}</h1>
-                <p class="company-details">{{ $companyInfo->address }}</p>
-                <p class="company-details">Phone: {{ $companyInfo->phone }} | Email: {{ $companyInfo->email }}</p>
+                @if($companyInfo->address)
+                    <p class="company-details">{{ $companyInfo->address }}</p>
+                @endif
+                @if($companyInfo->phone || $companyInfo->email)
+                    <p class="company-details">
+                        @if($companyInfo->phone) Phone: {{ $companyInfo->phone }} @endif
+                        @if($companyInfo->phone && $companyInfo->email) | @endif
+                        @if($companyInfo->email) Email: {{ $companyInfo->email }} @endif
+                    </p>
+                @endif
             </td>
             <td style="text-align: right; vertical-align: middle;">
                 <h2 style="margin: 0; color: #974063; font-size: 14px; font-weight: bold; letter-spacing: 1px;">OFFICIAL ANNOUNCEMENT</h2>
@@ -36,34 +44,41 @@
 
     <div class="announcement-title">{{ $announcement->title }}</div>
 
-    @php
-        $generalSettings = \App\HelperClass::getGeneralSetting();
-        $scopes = [];
-        $scopes[] = 'Company: ' . ($announcement->company->name ?? 'All (Global)');
-        if ($generalSettings->branch_status == 1) {
-            $scopes[] = 'Branch: ' . ($announcement->branch->name ?? 'All (Global)');
-        }
-        if ($generalSettings->division_status == 1) {
-            $scopes[] = 'Division: ' . ($announcement->division->name ?? 'All (Global)');
-        }
-        if ($generalSettings->department_status == 1) {
-            $scopes[] = 'Department: ' . ($announcement->department->department_name ?? 'All (Global)');
-        }
-        if ($generalSettings->section_status == 1) {
-            $scopes[] = 'Section: ' . ($announcement->section->name ?? 'All (Global)');
-        }
-    @endphp
     <table class="meta-table">
         <tr>
             <td class="label">Date Posted</td>
             <td class="value">{{ $announcement->created_at->format('F d, Y h:i A') }}</td>
         </tr>
-        <tr>
-            <td class="label">Target Scope</td>
-            <td class="value">
-                {{ implode(' | ', $scopes) }}
-            </td>
-        </tr>
+        @if($announcement->company)
+            <tr>
+                <td class="label">Company</td>
+                <td class="value">{{ $announcement->company->name }}</td>
+            </tr>
+        @endif
+        @if($announcement->branch)
+            <tr>
+                <td class="label">Branch</td>
+                <td class="value">{{ $announcement->branch->name }}</td>
+            </tr>
+        @endif
+        @if($announcement->division)
+            <tr>
+                <td class="label">Division</td>
+                <td class="value">{{ $announcement->division->name }}</td>
+            </tr>
+        @endif
+        @if($announcement->department)
+            <tr>
+                <td class="label">Department</td>
+                <td class="value">{{ $announcement->department->department_name }}</td>
+            </tr>
+        @endif
+        @if($announcement->section)
+            <tr>
+                <td class="label">Section</td>
+                <td class="value">{{ $announcement->section->name }}</td>
+            </tr>
+        @endif
     </table>
 
     <div class="content-section">

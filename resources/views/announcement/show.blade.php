@@ -14,7 +14,7 @@
                         </small>
                     </div>
                     <div class="d-flex gap-2">
-                        <a href="{{ route('announcements.pdf', $announcement->id) }}" class="btn btn-success btn-sm d-flex align-items-center gap-1">
+                        <a href="{{ route('announcements.pdf', $announcement->id) }}" class="btn btn-success btn-sm no-loader d-flex align-items-center gap-1">
                             <i style="height: 12px; width: 12px;" data-feather="download"></i> PDF Download
                         </a>
                         <a href="{{ route('announcements.index') }}" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1">

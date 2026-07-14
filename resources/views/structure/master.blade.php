@@ -527,9 +527,31 @@
         hideLoader();
     });
 
+    let ignoreBeforeUnload = false;
+
+    // Detect click events on download/PDF/export links to bypass beforeunload loader trigger
+    document.addEventListener('click', (e) => {
+        const link = e.target.closest('a');
+        if (link) {
+            const href = link.getAttribute('href');
+            const hasDownloadAttr = link.hasAttribute('download');
+            const hasNoLoaderClass = link.classList.contains('no-loader');
+            const isDownloadRoute = href && (href.includes('/pdf') || href.includes('download') || href.includes('/export'));
+            
+            if (hasDownloadAttr || hasNoLoaderClass || isDownloadRoute) {
+                ignoreBeforeUnload = true;
+                setTimeout(() => {
+                    ignoreBeforeUnload = false;
+                }, 150);
+            }
+        }
+    });
+
     // 3. Show on Unload (Links/Redirects)
     window.addEventListener('beforeunload', () => {
-        showLoader();
+        if (!ignoreBeforeUnload) {
+            showLoader();
+        }
     });
 
     // 4. THE FALLBACK: In case the user cancels the navigation

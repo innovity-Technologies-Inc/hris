@@ -15,18 +15,18 @@
             <tr>
                 <th>#</th>
                 <th>Title</th>
-                <th>Target Company</th>
+                <th>Company</th>
                 @if($generalSettings->branch_status == 1)
-                    <th>Target Branch</th>
+                    <th>Branch</th>
                 @endif
                 @if($generalSettings->division_status == 1)
-                    <th>Target Division</th>
+                    <th>Division</th>
                 @endif
                 @if($generalSettings->department_status == 1)
-                    <th>Target Department</th>
+                    <th>Department</th>
                 @endif
                 @if($generalSettings->section_status == 1)
-                    <th>Target Section</th>
+                    <th>Section</th>
                 @endif
                 <th>Posted Date</th>
                 <th class="text-end">Actions</th>
@@ -60,7 +60,7 @@
                             <a href="{{ route('announcements.show', $announcement->id) }}" class="btn btn-info btn-sm" title="View Details">
                                 <i style="height: 12px; width: 12px" data-feather="eye"></i>
                             </a>
-                            <a href="{{ route('announcements.pdf', $announcement->id) }}" class="btn btn-success btn-sm" title="Download PDF">
+                            <a href="{{ route('announcements.pdf', $announcement->id) }}" class="btn btn-success btn-sm no-loader" title="Download PDF">
                                 <i style="height: 12px; width: 12px" data-feather="download"></i>
                             </a>
                             @can('announcements.edit')

@@ -92,14 +92,29 @@ class AnnouncementServices
     public function generatePdf(Announcement $announcement)
     {
         $generalSettings = GeneralSetting::first();
-        $company = $announcement->company ?? $generalSettings;
+
+        if ($announcement->company_id && $announcement->company) {
+            $company = $announcement->company;
+            $companyName = $company->name;
+            $address = $company->address;
+            $email = $company->email;
+            $phone = method_exists($company, 'telephone') ? $company->telephone : ($company->phone ?? '');
+            $logo = $company->logo;
+        } else {
+            $group = \App\Models\Company\Group::first();
+            $companyName = $group?->name ?? $generalSettings?->name ?? 'HRIS Group';
+            $address = '';
+            $email = '';
+            $phone = '';
+            $logo = $generalSettings?->logo_light;
+        }
 
         $companyInfo = (object) [
-            'name' => $company?->name ?? $generalSettings?->company_name ?? 'HRMS System',
-            'logo' => $company?->logo ?? $generalSettings?->logo_light ?? null,
-            'address' => $company?->address ?? ($generalSettings?->address ?? ''),
-            'email' => $company?->email ?? ($generalSettings?->email ?? ''),
-            'phone' => method_exists($company, 'telephone') ? ($company->telephone ?? $generalSettings?->contact_phone) : ($generalSettings?->contact_phone ?? ''),
+            'name' => $companyName,
+            'logo' => $logo,
+            'address' => $address,
+            'email' => $email,
+            'phone' => $phone,
         ];
 
         $html = View::make('announcement.pdf', compact('announcement', 'companyInfo'))->render();
