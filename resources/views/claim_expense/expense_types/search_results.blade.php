@@ -21,6 +21,9 @@
                 </td>
                 <td class="text-end">
                     <div class="d-flex justify-content-end gap-1">
+                        <button type="button" class="btn btn-info btn-sm view-expense-type" data-id="{{ $expenseType->id }}" title="View">
+                            <i style="height: 12px; width: 12px" data-feather="eye"></i>
+                        </button>
                         @can('expense-types.edit')
                         <button type="button" class="btn btn-primary btn-sm edit-expense-type" data-id="{{ $expenseType->id }}" title="Edit">
                             <i style="height: 12px; width: 12px" data-feather="edit"></i>

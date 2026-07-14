@@ -72,6 +72,37 @@
             </div>
         </div>
     </div>
+
+    <!-- View Modal -->
+    <div class="modal fade" id="viewExpenseTypeModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header text-white border-0" style="background-color: #974063;">
+                    <h5 class="modal-title">Expense Type Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-muted">Name</label>
+                        <div class="form-control-plaintext fw-semibold fs-5 text-dark" id="viewName"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-muted">Description</label>
+                        <div class="form-control-plaintext text-dark" id="viewDescription"></div>
+                    </div>
+                    <div class="mb-0">
+                        <label class="form-label fw-semibold text-muted">Status</label>
+                        <div>
+                            <span class="badge rounded-pill px-3 py-1 fs-6" id="viewStatus"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 p-4 pt-0">
+                    <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('scripts')
@@ -81,6 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('expenseTypeContainer');
     const searchInput = document.getElementById('searchKeyword');
     const modal = new bootstrap.Modal(document.getElementById('expenseTypeModal'));
+    const viewModal = new bootstrap.Modal(document.getElementById('viewExpenseTypeModal'));
     const form = document.getElementById('expenseTypeForm');
 
     // Initial Load
@@ -126,6 +158,29 @@ document.addEventListener('DOMContentLoaded', function() {
                         
                         document.getElementById('expenseTypeModalLabel').innerText = 'Edit Expense Type';
                         modal.show();
+                    });
+            });
+        });
+
+        // View Button
+        document.querySelectorAll('.view-expense-type').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                axios.get(`/company-setup/expense-types/${id}/edit`)
+                    .then(response => {
+                        const data = response.data.data;
+                        document.getElementById('viewName').innerText = data.name;
+                        document.getElementById('viewDescription').innerText = data.description || 'N/A';
+                        
+                        const statusBadge = document.getElementById('viewStatus');
+                        statusBadge.innerText = data.status.toUpperCase();
+                        if (data.status === 'active') {
+                            statusBadge.className = 'badge rounded-pill bg-success-subtle text-success px-3 py-1 fs-6';
+                        } else {
+                            statusBadge.className = 'badge rounded-pill bg-danger-subtle text-danger px-3 py-1 fs-6';
+                        }
+                        
+                        viewModal.show();
                     });
             });
         });
