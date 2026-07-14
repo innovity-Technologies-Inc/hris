@@ -1476,6 +1476,20 @@ Route::prefix('transfer')->name('transfer.')->middleware('auth')->group(function
     });
 });
 
+// Announcement Routes
+Route::middleware('auth')->group(function () {
+    Route::controller(\App\Http\Controllers\Announcement\AnnouncementController::class)->group(function () {
+        Route::get('announcements', 'index')->name('announcements.index')->middleware('permission:announcements.view');
+        Route::get('announcements/create', 'create')->name('announcements.create')->middleware('permission:announcements.create');
+        Route::post('announcements', 'store')->name('announcements.store')->middleware('permission:announcements.create');
+        Route::get('announcements/{id}', 'show')->name('announcements.show')->middleware('permission:announcements.view');
+        Route::get('announcements/{id}/edit', 'edit')->name('announcements.edit')->middleware('permission:announcements.edit');
+        Route::put('announcements/{id}', 'update')->name('announcements.update')->middleware('permission:announcements.edit');
+        Route::delete('announcements/{id}', 'destroy')->name('announcements.destroy')->middleware('permission:announcements.delete');
+        Route::get('announcements/{id}/pdf', 'downloadPdf')->name('announcements.pdf')->middleware('permission:announcements.view');
+    });
+});
+
 require __DIR__.'/auth.php';
 
 

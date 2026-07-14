@@ -1,5 +1,23 @@
 # Test Log
 
+## 2026-07-14 (Announcement & Notice Board Module)
+
+**Goal**: Implement a complete Announcement module including title, content (Summernote WYSIWYG editor), attachment upload, organizational target scopes (company, branch, department), a show details view, and a branded PDF download button via Spatie Browsershot.
+
+**Exact Command**: `php artisan route:clear && php artisan config:clear && vendor\bin\pest tests/Feature/Announcement/AnnouncementTest.php && php artisan test`
+
+**Results**:
+- **Database Schema**: Created `announcements` table with columns for `title`, `content`, `attachment_path`, target scopes (`company_id`, `branch_id`, `department_id`), userstamps, and timestamps.
+- **Model**: Developed `Announcement` model incorporating `OrganizationScoped`, `Userstamps`, and `Auditable` traits.
+- **Request Validation**: Implemented `AnnouncementRequest` validating form inputs and attachments up to 10MB.
+- **Service & PDF Export**: Added `AnnouncementServices` to process files and compile blade-rendered notice HTML into downloadable PDFs via Spatie Browsershot.
+- **UI Views**: Built responsive views `index.blade.php` (table and FlexSearch filters), `create.blade.php` and `edit.blade.php` (using Summernote WYSIWYG editor), `show.blade.php` (details page displaying scopes and attachments), and `pdf.blade.php` (branded PDF document style matching company parameters).
+- **Routes**: Registered announcement resources and PDF download routes under `routes/web.php`.
+- **Feature Testing**: Developed `AnnouncementTest.php` covering index listing, store, update, destroy, and PDF generation responses.
+- **Tests**: All 149 tests passed successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-13 (Workflow Includers & Excluders Integration)
 
 **Goal**: Integrate the package's new multi-value Includer and Excluder criteria matching, update the configuration UI views and backend controller, and add comprehensive feature tests.
