@@ -12,12 +12,42 @@ use Exception;
 
 class AnnouncementServices
 {
-    /**
-     * Get all announcements matching criteria
-     */
     public function getAnnouncements($filters = [], $keyword = null, $flexsearch = null)
     {
         $query = Announcement::with(['company', 'branch', 'division', 'department', 'section']);
+
+        // Scope to visible announcements for the logged-in user
+        if (auth()->check()) {
+            $user = auth()->user();
+            if ($user->user_type !== \App\Enums\UserType::Group) {
+                $employee = $user->employee()->with('officeInfo')->first();
+                $office = $employee ? $employee->officeInfo : null;
+
+                $userCompanyId = $office?->current_company_id;
+                $userBranchId = $office?->current_business_unit_id;
+                $userDivisionId = $office?->current_division_id;
+                $userDepartmentId = $office?->current_department_id;
+                $userSectionId = $office?->current_section_id;
+
+                $query->where(function($q) use ($userCompanyId, $userBranchId, $userDivisionId, $userDepartmentId, $userSectionId) {
+                    $q->where(function($sub) use ($userCompanyId) {
+                        $sub->whereNull('company_id')->orWhere('company_id', $userCompanyId);
+                    })
+                    ->where(function($sub) use ($userBranchId) {
+                        $sub->whereNull('branch_id')->orWhere('branch_id', $userBranchId);
+                    })
+                    ->where(function($sub) use ($userDivisionId) {
+                        $sub->whereNull('division_id')->orWhere('division_id', $userDivisionId);
+                    })
+                    ->where(function($sub) use ($userDepartmentId) {
+                        $sub->whereNull('department_id')->orWhere('department_id', $userDepartmentId);
+                    })
+                    ->where(function($sub) use ($userSectionId) {
+                        $sub->whereNull('section_id')->orWhere('section_id', $userSectionId);
+                    });
+                });
+            }
+        }
 
         // Apply FlexSearch if provided, otherwise standard pagination
         if ($flexsearch) {

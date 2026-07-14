@@ -188,3 +188,55 @@ it('can trigger PDF generation route', function () {
 
     expect($response->status())->toBeIn([200, 500]);
 });
+
+test('announcements are filtered by user scope targets', function () {
+    $this->withoutMiddleware();
+
+    $employeeUser = User::factory()->create([
+        'user_type' => 'employee',
+    ]);
+
+    $employee = \App\Models\Employee\Employee::factory()->create();
+    $employeeUser->update(['employee_id' => $employee->id]);
+
+    \App\Models\Employee\EmployeeOfficeInfo::factory()->create([
+        'employee_id' => $employee->id,
+        'current_company_id' => $this->company->id,
+        'current_business_unit_id' => $this->branch->id,
+    ]);
+
+    $otherCompany = Company::create([
+        'name' => 'Other Company',
+        'short_name' => 'OC',
+        'type_id' => 1,
+        'group_id' => 1,
+        'email' => 'other@company.com',
+        'address' => 'Other Address',
+        'status' => 'active'
+    ]);
+
+    $visibleAnn = Announcement::create([
+        'title' => 'Targeted Announcement',
+        'content' => 'Content',
+        'company_id' => $this->company->id,
+        'branch_id' => $this->branch->id
+    ]);
+
+    $globalAnn = Announcement::create([
+        'title' => 'Global Notice',
+        'content' => 'Content'
+    ]);
+
+    $hiddenAnn = Announcement::create([
+        'title' => 'Other Company Announcement',
+        'content' => 'Content',
+        'company_id' => $otherCompany->id
+    ]);
+
+    $response = $this->actingAs($employeeUser)->get(route('announcements.index'));
+
+    $response->assertStatus(200);
+    $response->assertSee('Targeted Announcement');
+    $response->assertSee('Global Notice');
+    $response->assertDontSee('Other Company Announcement');
+});

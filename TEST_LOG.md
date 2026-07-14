@@ -2,19 +2,19 @@
 
 ## 2026-07-14 (Announcement & Notice Board Module)
 
-**Goal**: Implement a complete Announcement module including title, content (Summernote WYSIWYG editor), attachment upload, 5-tier organizational target scopes (company, branch/business unit, division, department, section) loaded dynamically via DataController, a show details view, and a branded PDF download button via Spatie Browsershot.
+**Goal**: Implement a complete Announcement module including title, content (Summernote WYSIWYG editor), attachment upload, 5-tier organizational target scopes (company, branch/business unit, division, department, section) loaded dynamically via DataController, a show details view, and a branded PDF download button via Spatie Browsershot. Also enforce selective user visibility filtering where target scopes match the user's placement, and null values fallback to visible for all.
 
 **Exact Command**: `php artisan route:clear && php artisan config:clear && vendor\bin\pest tests/Feature/Announcement/AnnouncementTest.php && php artisan test`
 
 **Results**:
 - **Database Schema**: Created/Updated `announcements` table with columns for `title`, `content`, `attachment_path`, target scopes (`company_id`, `branch_id`, `division_id`, `department_id`, `section_id`), userstamps, and timestamps.
-- **Model**: Developed `Announcement` model incorporating `OrganizationScoped`, `Userstamps`, and `Auditable` traits with relations for all 5 organizational tiers.
+- **Model**: Developed `Announcement` model incorporating `Userstamps` and `Auditable` traits with relations for all 5 organizational tiers (custom scoped to bypass strict global scopes).
 - **Request Validation**: Implemented `AnnouncementRequest` validating form inputs, scopes, and attachments up to 10MB.
-- **Service & PDF Export**: Added `AnnouncementServices` to process files and compile blade-rendered notice HTML into downloadable PDFs via Spatie Browsershot.
+- **Service & PDF Export**: Added `AnnouncementServices` to process files and compile blade-rendered notice HTML into downloadable PDFs via Spatie Browsershot. Added target audience visibility filtering logic where nullable targets resolve to visible for all.
 - **UI Views**: Built responsive views `index.blade.php` (table and FlexSearch filters), `create.blade.php` and `edit.blade.php` (using Summernote WYSIWYG editor and cascading selectors loaded dynamically via DataController and filtered by general settings status), `show.blade.php` (details page displaying active scope badges and attachments), and `pdf.blade.php` (branded PDF document style matching company parameters).
 - **Routes**: Registered announcement resources and PDF download routes under `routes/web.php`.
-- **Feature Testing**: Developed `AnnouncementTest.php` covering index listing, store, update, destroy, and PDF generation responses with all 5 scopes.
-- **Tests**: All 149 tests passed successfully ✅
+- **Feature Testing**: Developed `AnnouncementTest.php` covering index listing, store, update, destroy, PDF generation responses, and user scope targeting logic (asserting visible company, branch, and global notices, and hiding mismatched company notices).
+- **Tests**: All 150 tests passed successfully ✅
 
 **Status**: ✅ SUCCESS
 
