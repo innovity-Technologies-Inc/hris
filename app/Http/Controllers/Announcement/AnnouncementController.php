@@ -51,11 +51,7 @@ class AnnouncementController extends Controller
         $announcements = $this->announcementService->getAnnouncements($filters, $keyword, $flexsearch);
 
         if ($request->ajax()) {
-            $html = view('announcement.partials.table', compact('announcements'))->render();
-            return response()->json([
-                'success' => true,
-                'html' => $html
-            ]);
+            return view('announcement.partials.table', compact('announcements'));
         }
 
         $companies = Company::orderBy('name')->get();

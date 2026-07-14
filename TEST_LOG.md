@@ -1,5 +1,19 @@
 # Test Log
 
+## 2026-07-14 (Announcement Index Redesign & AJAX Search Refactoring)
+
+**Goal**: Redesign the announcement index page to align perfectly with the "Search Employees" card and filter box pattern, replacing JSON wrappers with raw HTML view responses for optimal Blade compatibility.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/Announcement/AnnouncementTest.php && php artisan test`
+
+**Results**:
+- **Design Realignment**: Rewrote [index.blade.php](file:///P:/Project/Web/hrms/resources/views/announcement/index.blade.php) using the `.card.border-0.shadow-sm.rounded` structure, wrapping cascading selectors inside a `.border.rounded.shadow-sm.p-3.filter-section-bg` panel. Added magnifying glass search input decorator and aligned the list card section.
+- **Controller Alignment**: Refactored the AJAX handler in [AnnouncementController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/Announcement/AnnouncementController.php) to return the rendered table view directly.
+- **AJAX Search Scripting**: Updated jquery-ajax handler to inject raw HTML response directly, re-instantiate feather icons and Swal delete events cleanly, and serialise form criteria payload on the fly.
+- **Verification**: Updated [AnnouncementTest.php](file:///P:/Project/Web/hrms/tests/Feature/Announcement/AnnouncementTest.php) to assert direct view output on AJAX query. All **153 tests passed successfully** ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-14 (Announcement Live Search & Dynamic Selectors)
 
 **Goal**: Update the announcement index page to implement dynamic cascading selectors and AJAX-powered live search that hides/shows selectors based on general settings status and performs keyword and dropdown filtering instantly without page reloads.

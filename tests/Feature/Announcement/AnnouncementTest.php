@@ -255,7 +255,6 @@ test('it returns rendered HTML via AJAX for live search', function () {
     ]);
 
     $response->assertStatus(200);
-    $response->assertJsonStructure(['success', 'html']);
-    expect($response->json('html'))->toContain('Searchable Notice Title');
+    $response->assertSee('Searchable Notice Title');
 });
 

@@ -6,76 +6,123 @@
     @endphp
 
     <div class="row">
-        <div class="col-xl-12">
-            <!-- Filter Card -->
-            <div class="card mb-4 border-dashed bg-light">
+        {{-- Search Card --}}
+        <div class="col-lg-12">
+            <div class="card border-0 shadow-sm rounded">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Search Announcements</h5>
+                </div>
                 <div class="card-body">
-                    <form id="searchForm" class="row g-3 align-items-center">
-                        <div class="col-md-2">
-                            <label class="form-label fw-semibold">Search Keywords</label>
-                            <input type="text" name="keyword" id="keyword" class="form-control form-control-sm" placeholder="Title or content..." value="{{ request('keyword') }}">
-                        </div>
-                        <div class="col-md-2">
-                            <label class="form-label fw-semibold">Company</label>
-                            <select name="company_id" id="company_id" class="form-select form-select-sm">
-                                <option value="">Global (All Companies)</option>
-                                @foreach($companies as $company)
-                                    <option value="{{ $company->id }}" {{ request('company_id') == $company->id ? 'selected' : '' }}>{{ $company->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        @if($generalSettings->branch_status == 1)
-                            <div class="col-md-2">
-                                <label class="form-label fw-semibold">Branch</label>
-                                <select name="branch_id" id="branch_id" class="form-select form-select-sm">
-                                    <option value="">Global (All Branches)</option>
-                                </select>
+                    <div class="border rounded shadow-sm p-3 filter-section-bg">
+                        <form id="filterForm">
+                            {{-- Keyword Search --}}
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <label for="keywordSearch" class="form-label text-muted small fw-semibold mb-1">
+                                        Keyword Search
+                                    </label>
+                                    <div class="input-group input-group-md">
+                                        <input type="text" class="form-control border-end-0" id="keywordSearch"
+                                            name="keyword"
+                                            placeholder="Search announcements by title or content"
+                                            value="{{ request('keyword') }}">
+                                        <span class="input-group-text border-start-0 input-group-bg">
+                                            <i class="mdi mdi-magnify text-muted"></i>
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
-                        @endif
-                        @if($generalSettings->division_status == 1)
-                            <div class="col-md-2">
-                                <label class="form-label fw-semibold">Division</label>
-                                <select name="division_id" id="division_id" class="form-select form-select-sm">
-                                    <option value="">Global (All Divisions)</option>
-                                </select>
+
+                            {{-- Cascading Organizational Selectors --}}
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label for="company_id" class="form-label text-muted small fw-semibold mb-1">
+                                        Company
+                                    </label>
+                                    <select name="company_id" id="company_id" class="form-select form-select-sm">
+                                        <option value="">Global (All Companies)</option>
+                                        @foreach($companies as $company)
+                                            <option value="{{ $company->id }}" {{ request('company_id') == $company->id ? 'selected' : '' }}>
+                                                {{ $company->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                @if($generalSettings->branch_status == 1)
+                                    <div class="col-md-4" id="branch_wrapper">
+                                        <label for="branch_id" class="form-label text-muted small fw-semibold mb-1">
+                                            Branch
+                                        </label>
+                                        <select name="branch_id" id="branch_id" class="form-select form-select-sm">
+                                            <option value="">Global (All Branches)</option>
+                                        </select>
+                                    </div>
+                                @endif
+
+                                @if($generalSettings->division_status == 1)
+                                    <div class="col-md-4" id="division_wrapper">
+                                        <label for="division_id" class="form-label text-muted small fw-semibold mb-1">
+                                            Division
+                                        </label>
+                                        <select name="division_id" id="division_id" class="form-select form-select-sm">
+                                            <option value="">Global (All Divisions)</option>
+                                        </select>
+                                    </div>
+                                @endif
+
+                                @if($generalSettings->department_status == 1)
+                                    <div class="col-md-4 mt-2" id="department_wrapper">
+                                        <label for="department_id" class="form-label text-muted small fw-semibold mb-1">
+                                            Department
+                                        </label>
+                                        <select name="department_id" id="department_id" class="form-select form-select-sm">
+                                            <option value="">Global (All Departments)</option>
+                                        </select>
+                                    </div>
+                                @endif
+
+                                @if($generalSettings->section_status == 1)
+                                    <div class="col-md-4 mt-2" id="section_wrapper">
+                                        <label for="section_id" class="form-label text-muted small fw-semibold mb-1">
+                                            Section
+                                        </label>
+                                        <select name="section_id" id="section_id" class="form-select form-select-sm">
+                                            <option value="">Global (All Sections)</option>
+                                        </select>
+                                    </div>
+                                @endif
                             </div>
-                        @endif
-                        @if($generalSettings->department_status == 1)
-                            <div class="col-md-2">
-                                <label class="form-label fw-semibold">Department</label>
-                                <select name="department_id" id="department_id" class="form-select form-select-sm">
-                                    <option value="">Global (All Departments)</option>
-                                </select>
+
+                            {{-- Reset Button --}}
+                            <div class="row">
+                                <div class="col-12 text-end">
+                                    <button type="button" id="resetFilters" class="btn btn-outline-secondary btn-sm">
+                                        <i class="mdi mdi-refresh"></i> Reset
+                                    </button>
+                                </div>
                             </div>
-                        @endif
-                        @if($generalSettings->section_status == 1)
-                            <div class="col-md-2">
-                                <label class="form-label fw-semibold">Section</label>
-                                <select name="section_id" id="section_id" class="form-select form-select-sm">
-                                    <option value="">Global (All Sections)</option>
-                                </select>
-                            </div>
-                        @endif
-                        <div class="col-md-2 pt-4">
-                            <button type="button" id="resetBtn" class="btn btn-secondary btn-sm w-100">Reset Filters</button>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Table Card -->
-            <div class="card">
+        {{-- Table Card --}}
+        <div class="col-lg-12 mt-3">
+            <div class="card border-0 shadow-sm rounded">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0 fw-semibold text-primary">Announcements & Notices</h5>
+                    <h5 class="card-title mb-0">Announcements List</h5>
                     @can('announcements.create')
                         <a class="btn btn-warning btn-sm" href="{{ route('announcements.create') }}">
                             <i style="height: 12px; width: 12px" data-feather="plus"></i> Post Announcement
                         </a>
                     @endcan
                 </div>
-
-                <div class="card-body" id="tableContainer">
-                    @include('announcement.partials.table')
+                <div class="card-body">
+                    <div id="search-result">
+                        @include('announcement.partials.table')
+                    </div>
                 </div>
             </div>
         </div>
@@ -142,7 +189,7 @@
             silenceChangeEvents = true;
             loadHierarchy($(this).val()).then(() => {
                 silenceChangeEvents = false;
-                performSearch();
+                fetchAnnouncements();
             });
         });
 
@@ -151,7 +198,7 @@
             silenceChangeEvents = true;
             loadHierarchy($('#company_id').val(), $(this).val()).then(() => {
                 silenceChangeEvents = false;
-                performSearch();
+                fetchAnnouncements();
             });
         });
 
@@ -168,7 +215,7 @@
                     return ajaxLoad(`/get-sections/${companyId}/${branchId}/${divisionId}/${deptId}`, $('#section_id'), 'Global (All Sections)');
                 }).then(() => {
                     silenceChangeEvents = false;
-                    performSearch();
+                    fetchAnnouncements();
                 });
         });
 
@@ -183,12 +230,12 @@
             ajaxLoad(`/get-sections/${companyId}/${branchId}/${divisionId}/${deptId}`, $('#section_id'), 'Global (All Sections)')
                 .then(() => {
                     silenceChangeEvents = false;
-                    performSearch();
+                    fetchAnnouncements();
                 });
         });
 
         $('#section_id').on('change', function() {
-            performSearch();
+            fetchAnnouncements();
         });
 
         // Initialize values on load if requested
@@ -208,58 +255,55 @@
         // --- Live Search ---
         let debounceTimer;
 
-        function performSearch(page = 1) {
-            const data = {
-                page: page,
-                keyword: $('#keyword').val(),
-                company_id: $('#company_id').val(),
-                branch_id: $('#branch_id').val() || '',
-                division_id: $('#division_id').val() || '',
-                department_id: $('#department_id').val() || '',
-                section_id: $('#section_id').val() || ''
-            };
+        function fetchAnnouncements(url = '{{ route('announcements.index') }}') {
+            const queryString = $('#filterForm').serialize();
 
-            axios.get('{{ route('announcements.index') }}', { params: data })
-                .then(response => {
-                    $('#tableContainer').html(response.data.html);
+            $.ajax({
+                url: url,
+                method: "GET",
+                data: queryString,
+                beforeSend: function() {
+                    $('#search-result').html('<div class="text-center py-4 text-muted">Loading...</div>');
+                },
+                success: function(response) {
+                    $('#search-result').html(response);
                     if (typeof feather !== 'undefined') {
                         feather.replace();
                     }
                     attachDeleteHandlers();
-                })
-                .catch(error => {
-                    console.error('Search error:', error);
-                });
+                },
+                error: function(xhr) {
+                    console.error('AJAX Error:', xhr.responseText);
+                }
+            });
         }
 
         function debouncedSearch() {
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(() => {
-                performSearch();
+                fetchAnnouncements();
             }, 300);
         }
 
-        $('#keyword').on('input', debouncedSearch);
+        $('#keywordSearch').on('input', debouncedSearch);
 
         // Reset Filters Button
-        $('#resetBtn').on('click', function() {
-            $('#keyword').val('');
+        $('#resetFilters').on('click', function() {
+            $('#keywordSearch').val('');
             $('#company_id').val('');
             silenceChangeEvents = true;
             loadHierarchy('').then(() => {
                 silenceChangeEvents = false;
-                performSearch();
+                fetchAnnouncements();
             });
         });
 
         // Intercept Pagination Clicks for AJAX Search
-        $(document).on('click', '#paginationContainer a', function(e) {
+        $(document).on('click', '#search-result .pagination a', function(e) {
             e.preventDefault();
             const url = $(this).attr('href');
             if (url) {
-                const urlParams = new URLSearchParams(url.split('?')[1]);
-                const page = urlParams.get('page') || 1;
-                performSearch(page);
+                fetchAnnouncements(url);
             }
         });
 
@@ -267,7 +311,8 @@
         function attachDeleteHandlers() {
             const deleteBtns = document.querySelectorAll('.delete-btn');
             deleteBtns.forEach(btn => {
-                btn.addEventListener('click', function(event) {
+                // Clear any existing handler
+                $(btn).off('click').on('click', function(event) {
                     event.preventDefault();
                     const url = this.getAttribute('data-url');
                     
@@ -292,7 +337,7 @@
                                     text: response.data.message || 'Announcement has been deleted.',
                                     icon: 'success'
                                 }).then(() => {
-                                    performSearch();
+                                    fetchAnnouncements();
                                 });
                             })
                             .catch(error => {
