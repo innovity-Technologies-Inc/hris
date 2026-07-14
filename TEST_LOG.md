@@ -1,5 +1,17 @@
 # Test Log
 
+## 2026-07-14 (Spatie hasRole ID Parsing Fix)
+
+**Goal**: Resolve the issue where workflow exclusion rules checking Spatie's `hasRole()` failed when role IDs inside database JSON arrays were stored or parsed as strings (e.g. `["1"]`), causing `hasRole` to check by name instead of ID and fail.
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- **AppServiceProvider Filter**: Added model bootstrap hooks for `Workflow::retrieved` and `Workflow::saving` inside [AppServiceProvider.php](file:///P:/Project/Web/hrms/app/Providers/AppServiceProvider.php) to automatically map and cast all numeric string IDs inside `exclude_role_ids`, `includer_role_ids`, `exclude_user_ids`, and `includer_user_ids` arrays to integers.
+- **Verification**: Simulating request generation for a Super Admin creator now correctly matches the Spatie role ID exclusion, resulting in a state of `approved` instantly. All **153 tests passed successfully** ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-14 (Global Userstamps and Models Support)
 
 **Goal**: Dynamically add `created_by` and `updated_by` columns to all database tables (except internal metadata tables), and apply the `Userstamps` trait to all model classes globally.

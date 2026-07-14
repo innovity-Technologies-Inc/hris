@@ -75,5 +75,36 @@ class AppServiceProvider extends ServiceProvider
         \Innovity\ApprovalEngine\Models\ApprovalStepRequest::created(function ($stepRequest) {
             app(\App\Services\Setting\WorkflowStepRequestService::class)->handleCreated($stepRequest);
         });
+
+        // 4. Automatically sanitize/cast Workflow role and user IDs to integers (enables Spatie hasRole check to work properly with IDs)
+        \Innovity\ApprovalEngine\Models\Workflow::retrieved(function ($workflow) {
+            if (is_array($workflow->exclude_role_ids)) {
+                $workflow->exclude_role_ids = array_map('intval', $workflow->exclude_role_ids);
+            }
+            if (is_array($workflow->includer_role_ids)) {
+                $workflow->includer_role_ids = array_map('intval', $workflow->includer_role_ids);
+            }
+            if (is_array($workflow->exclude_user_ids)) {
+                $workflow->exclude_user_ids = array_map('intval', $workflow->exclude_user_ids);
+            }
+            if (is_array($workflow->includer_user_ids)) {
+                $workflow->includer_user_ids = array_map('intval', $workflow->includer_user_ids);
+            }
+        });
+
+        \Innovity\ApprovalEngine\Models\Workflow::saving(function ($workflow) {
+            if (is_array($workflow->exclude_role_ids)) {
+                $workflow->exclude_role_ids = array_map('intval', $workflow->exclude_role_ids);
+            }
+            if (is_array($workflow->includer_role_ids)) {
+                $workflow->includer_role_ids = array_map('intval', $workflow->includer_role_ids);
+            }
+            if (is_array($workflow->exclude_user_ids)) {
+                $workflow->exclude_user_ids = array_map('intval', $workflow->exclude_user_ids);
+            }
+            if (is_array($workflow->includer_user_ids)) {
+                $workflow->includer_user_ids = array_map('intval', $workflow->includer_user_ids);
+            }
+        });
     }
 }
