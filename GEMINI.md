@@ -50,7 +50,10 @@ This project is a comprehensive Human Resource Management System (HRMS) built wi
 - **Error Handling**: Use try-catch blocks in services and log errors when necessary.
 - **Model Scoping & Workflows**: 
     - Every model that maps to employee records or has branch/company/section context limitations MUST use the `App\Traits\OrganizationScoped` trait to ensure query safety.
+    - **Nullable Target Scopes**: If a model requires nullable targeting (where null values represent global items visible to all companies/branches), define `public $allowNullableOrgScope = true;` on the model using the `OrganizationScoped` trait.
     - Every model requiring approval workflows MUST implement the `\Innovity\ApprovalEngine\Traits\Approvable` trait.
+    - **Includers & Excluders**: The central approval workflow engine supports multi-value criteria matching. Includers define which roles, user types, or specific users require approval (creating pending requests), and Excluders define which roles, user types, or users bypass approval.
+    - **Announcements**: Notice boards and broadcasts are managed in the Announcement module, with target audiences loaded dynamically via 5-tier cascading dropdowns (Company, Branch, Division, Department, Section) and downloadable as styled PDFs.
 
 ## 📦 Key Packages
 - `daiyanmozumder/laravel-flexsearch`: Core filtering engine.

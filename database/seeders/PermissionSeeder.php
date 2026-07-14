@@ -37,6 +37,13 @@ class PermissionSeeder extends Seeder
                 'actions' => ['view'],
             ],
             [
+                'name' => 'Announcements',
+                'icon' => 'megaphone',
+                'slug' => 'announcements',
+                'route' => 'announcements.index',
+                'actions' => ['view', 'create', 'edit', 'delete']
+            ],
+            [
                 'name' => 'Employee Management',
                 'icon' => 'users',
                 'actions' => ['view', 'create', 'edit', 'delete', 'profile-review', 'import', 'nid-verification', 'analytics']

@@ -48,6 +48,15 @@
                 </li>
                 @endif
 
+                @if(auth()->user()->can('announcements.view'))
+                <li>
+                    <a href="{{ route('announcements.index') }}" class="@if (Route::is('announcements.*')) menuitem-active @endif">
+                        <i data-feather="volume-2"></i>
+                        <span> Announcements </span>
+                    </a>
+                </li>
+                @endif
+
                 <!-- Employees Menu -->
                 @php
                     $isEmployeeType = auth()->user()->user_type === \App\Enums\UserType::Employee;
