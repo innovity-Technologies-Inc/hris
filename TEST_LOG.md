@@ -1,5 +1,18 @@
 # Test Log
 
+## 2026-07-14 (Announcement Index Organization Cleanup)
+
+**Goal**: Remove Branch, Division, Department, and Section elements from both the search filters and the table columns on the Announcement Index page, keeping only the Company filter and column.
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- **View Updates**: Modified [index.blade.php](file:///P:/Project/Web/hrms/resources/views/announcement/index.blade.php) and [table.blade.php](file:///P:/Project/Web/hrms/resources/views/announcement/partials/table.blade.php) to remove selectors and columns for Branch, Division, Department, and Section. Adjusted colspan to 5.
+- **Javascript Cleanup**: Simplified index scripts to only listen to change events on the Company selector, removing all cascading loaders.
+- **Verification**: Verified that all **153 tests passed successfully** ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-14 (PDF Header, Loader, and Table Column Adjustments)
 
 **Goal**: Configure the PDF header to show the group name if no company is selected, render targeted scope columns conditionally in the PDF meta section, remove the `"Target "` prefix from the index table columns, and fix the infinite loading screen bug on PDF downloads.

@@ -33,9 +33,9 @@
                                 </div>
                             </div>
 
-                            {{-- Cascading Organizational Selectors --}}
+                            {{-- Company Selector --}}
                             <div class="row mb-3">
-                                <div class="col-md-4">
+                                <div class="col-12">
                                     <label for="company_id" class="form-label text-muted small fw-semibold mb-1">
                                         Company
                                     </label>
@@ -48,50 +48,6 @@
                                         @endforeach
                                     </select>
                                 </div>
-
-                                @if($generalSettings->branch_status == 1)
-                                    <div class="col-md-4" id="branch_wrapper">
-                                        <label for="branch_id" class="form-label text-muted small fw-semibold mb-1">
-                                            Branch
-                                        </label>
-                                        <select name="branch_id" id="branch_id" class="form-select form-select-sm">
-                                            <option value="">Global (All Branches)</option>
-                                        </select>
-                                    </div>
-                                @endif
-
-                                @if($generalSettings->division_status == 1)
-                                    <div class="col-md-4" id="division_wrapper">
-                                        <label for="division_id" class="form-label text-muted small fw-semibold mb-1">
-                                            Division
-                                        </label>
-                                        <select name="division_id" id="division_id" class="form-select form-select-sm">
-                                            <option value="">Global (All Divisions)</option>
-                                        </select>
-                                    </div>
-                                @endif
-
-                                @if($generalSettings->department_status == 1)
-                                    <div class="col-md-4 mt-2" id="department_wrapper">
-                                        <label for="department_id" class="form-label text-muted small fw-semibold mb-1">
-                                            Department
-                                        </label>
-                                        <select name="department_id" id="department_id" class="form-select form-select-sm">
-                                            <option value="">Global (All Departments)</option>
-                                        </select>
-                                    </div>
-                                @endif
-
-                                @if($generalSettings->section_status == 1)
-                                    <div class="col-md-4 mt-2" id="section_wrapper">
-                                        <label for="section_id" class="form-label text-muted small fw-semibold mb-1">
-                                            Section
-                                        </label>
-                                        <select name="section_id" id="section_id" class="form-select form-select-sm">
-                                            <option value="">Global (All Sections)</option>
-                                        </select>
-                                    </div>
-                                @endif
                             </div>
 
                             {{-- Reset Button --}}
@@ -132,125 +88,10 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // --- Unified Hierarchy Loader ---
-        let silenceChangeEvents = false;
-
-        function ajaxLoad(url, $select, placeholder, selectedValue = null) {
-            if (!$select.length) return Promise.resolve();
-            return $.get(url).then(function (data) {
-                $select.html(`<option value="">${placeholder}</option>`);
-                $.each(data, function (_, item) {
-                    $select.append(
-                        `<option value="${item.id}">${item.name ?? item.department_name ?? item.full_name}</option>`
-                    );
-                });
-                if (selectedValue && selectedValue !== 'null' && selectedValue !== '') {
-                    $select.val(selectedValue);
-                } else {
-                    $select.val('');
-                }
-            }).catch(function () {
-                $select.html('<option value="">Error loading data</option>');
-            });
-        }
-
-        function loadHierarchy(companyId, branchId = null, divisionId = null, departmentId = null, sectionId = null) {
-            if (!companyId) {
-                if ($('#branch_id').length) $('#branch_id').html('<option value="">Global (All Branches)</option>');
-                if ($('#division_id').length) $('#division_id').html('<option value="">Global (All Divisions)</option>');
-                if ($('#department_id').length) $('#department_id').html('<option value="">Global (All Departments)</option>');
-                if ($('#section_id').length) $('#section_id').html('<option value="">Global (All Sections)</option>');
-                return Promise.resolve();
-            }
-
-            let branchPromise = Promise.resolve();
-            if ($('#branch_id').length) {
-                branchPromise = ajaxLoad(`/get-units/${companyId}`, $('#branch_id'), 'Global (All Branches)', branchId);
-            }
-
-            return branchPromise.then(() => {
-                const currentBranchId = $('#branch_id').val() || 'null';
-                return ajaxLoad(`/get-divisions/${companyId}/${currentBranchId}`, $('#division_id'), 'Global (All Divisions)', divisionId);
-            }).then(() => {
-                const currentBranchId = $('#branch_id').val() || 'null';
-                const currentDivisionId = $('#division_id').val() || 'null';
-                return ajaxLoad(`/get-departments/${companyId}/${currentBranchId}/${currentDivisionId}`, $('#department_id'), 'Global (All Departments)', departmentId);
-            }).then(() => {
-                const currentBranchId = $('#branch_id').val() || 'null';
-                const currentDivisionId = $('#division_id').val() || 'null';
-                const currentDeptId = $('#department_id').val() || 'null';
-                return ajaxLoad(`/get-sections/${companyId}/${currentBranchId}/${currentDivisionId}/${currentDeptId}`, $('#section_id'), 'Global (All Sections)', sectionId);
-            });
-        }
-
-        // Change Events for Cascading Selector
+        // Change Event for Company Selector
         $('#company_id').on('change', function () {
-            if (silenceChangeEvents) return;
-            silenceChangeEvents = true;
-            loadHierarchy($(this).val()).then(() => {
-                silenceChangeEvents = false;
-                fetchAnnouncements();
-            });
-        });
-
-        $('#branch_id').on('change', function () {
-            if (silenceChangeEvents) return;
-            silenceChangeEvents = true;
-            loadHierarchy($('#company_id').val(), $(this).val()).then(() => {
-                silenceChangeEvents = false;
-                fetchAnnouncements();
-            });
-        });
-
-        $('#division_id').on('change', function () {
-            if (silenceChangeEvents) return;
-            const companyId = $('#company_id').val();
-            const branchId = $('#branch_id').val() || 'null';
-            const divisionId = $(this).val() || 'null';
-
-            silenceChangeEvents = true;
-            ajaxLoad(`/get-departments/${companyId}/${branchId}/${divisionId}`, $('#department_id'), 'Global (All Departments)')
-                .then(() => {
-                    const deptId = $('#department_id').val() || 'null';
-                    return ajaxLoad(`/get-sections/${companyId}/${branchId}/${divisionId}/${deptId}`, $('#section_id'), 'Global (All Sections)');
-                }).then(() => {
-                    silenceChangeEvents = false;
-                    fetchAnnouncements();
-                });
-        });
-
-        $('#department_id').on('change', function () {
-            if (silenceChangeEvents) return;
-            const companyId = $('#company_id').val();
-            const branchId = $('#branch_id').val() || 'null';
-            const divisionId = $('#division_id').val() || 'null';
-            const deptId = $(this).val() || 'null';
-
-            silenceChangeEvents = true;
-            ajaxLoad(`/get-sections/${companyId}/${branchId}/${divisionId}/${deptId}`, $('#section_id'), 'Global (All Sections)')
-                .then(() => {
-                    silenceChangeEvents = false;
-                    fetchAnnouncements();
-                });
-        });
-
-        $('#section_id').on('change', function() {
             fetchAnnouncements();
         });
-
-        // Initialize values on load if requested
-        const initialCompanyId = "{{ request('company_id') }}";
-        const initialBranchId = "{{ request('branch_id') }}";
-        const initialDivisionId = "{{ request('division_id') }}";
-        const initialDepartmentId = "{{ request('department_id') }}";
-        const initialSectionId = "{{ request('section_id') }}";
-
-        if (initialCompanyId) {
-            silenceChangeEvents = true;
-            loadHierarchy(initialCompanyId, initialBranchId, initialDivisionId, initialDepartmentId, initialSectionId).then(() => {
-                silenceChangeEvents = false;
-            });
-        }
 
         // --- Live Search ---
         let debounceTimer;
@@ -291,11 +132,7 @@
         $('#resetFilters').on('click', function() {
             $('#keywordSearch').val('');
             $('#company_id').val('');
-            silenceChangeEvents = true;
-            loadHierarchy('').then(() => {
-                silenceChangeEvents = false;
-                fetchAnnouncements();
-            });
+            fetchAnnouncements();
         });
 
         // Intercept Pagination Clicks for AJAX Search

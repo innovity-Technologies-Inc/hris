@@ -16,18 +16,6 @@
                 <th>#</th>
                 <th>Title</th>
                 <th>Company</th>
-                @if($generalSettings->branch_status == 1)
-                    <th>Branch</th>
-                @endif
-                @if($generalSettings->division_status == 1)
-                    <th>Division</th>
-                @endif
-                @if($generalSettings->department_status == 1)
-                    <th>Department</th>
-                @endif
-                @if($generalSettings->section_status == 1)
-                    <th>Section</th>
-                @endif
                 <th>Posted Date</th>
                 <th class="text-end">Actions</th>
             </tr>
@@ -42,18 +30,6 @@
                         </a>
                     </td>
                     <td>{{ $announcement->company->name ?? 'Global (All)' }}</td>
-                    @if($generalSettings->branch_status == 1)
-                        <td>{{ $announcement->branch->name ?? 'Global (All)' }}</td>
-                    @endif
-                    @if($generalSettings->division_status == 1)
-                        <td>{{ $announcement->division->name ?? 'Global (All)' }}</td>
-                    @endif
-                    @if($generalSettings->department_status == 1)
-                        <td>{{ $announcement->department->department_name ?? 'Global (All)' }}</td>
-                    @endif
-                    @if($generalSettings->section_status == 1)
-                        <td>{{ $announcement->section->name ?? 'Global (All)' }}</td>
-                    @endif
                     <td>{{ $announcement->created_at->format('M d, Y') }}</td>
                     <td class="text-end">
                         <div class="d-flex justify-content-end gap-1">
@@ -78,7 +54,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="{{ 4 + ($generalSettings->branch_status == 1 ? 1 : 0) + ($generalSettings->division_status == 1 ? 1 : 0) + ($generalSettings->department_status == 1 ? 1 : 0) + ($generalSettings->section_status == 1 ? 1 : 0) }}" class="text-center text-muted py-4">
+                    <td colspan="5" class="text-center text-muted py-4">
                         No announcements or notices found.
                     </td>
                 </tr>
