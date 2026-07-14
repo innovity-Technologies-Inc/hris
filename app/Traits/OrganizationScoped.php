@@ -110,9 +110,28 @@ trait OrganizationScoped
                     ],
                 ];
 
-                if (isset($levelMapping[$user->user_type->value])) {
+                $model = $builder->getModel();
+                $isNullableOrgScope = property_exists($model, 'allowNullableOrgScope') && $model->allowNullableOrgScope;
+
+                if ($isNullableOrgScope) {
+                    $scopeValues = [
+                        'company_id' => $office->current_company_id,
+                        'branch_id' => $office->current_business_unit_id,
+                        'location_id' => $office->current_business_unit_id,
+                        'division_id' => $office->current_division_id,
+                        'department_id' => $office->current_department_id,
+                        'section_id' => $office->current_section_id,
+                    ];
+
+                    foreach ($scopeValues as $col => $val) {
+                        if ($hasColumn($col)) {
+                            $builder->where(function($q) use ($col, $val) {
+                                $q->whereNull($col)->orWhere($col, $val);
+                            });
+                        }
+                    }
+                } elseif (isset($levelMapping[$user->user_type->value])) {
                     $map = $levelMapping[$user->user_type->value];
-                    $model = $builder->getModel();
                     
                     if ($table === 'employees') {
                         $builder->whereHas('officeInfo', function($q) use ($map) {

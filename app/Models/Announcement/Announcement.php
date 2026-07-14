@@ -8,12 +8,16 @@ use App\Models\Company\Division;
 use App\Models\Company\Department;
 use App\Models\Company\Section;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\OrganizationScoped;
 use App\Traits\Userstamps;
 use App\Traits\Auditable;
 
 class Announcement extends Model
 {
     use Userstamps, Auditable;
+    use OrganizationScoped;
+
+    public $allowNullableOrgScope = true;
 
     protected $table = 'announcements';
 
