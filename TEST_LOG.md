@@ -1,5 +1,21 @@
 # Test Log
 
+## 2026-07-14 (Announcement Live Search & Dynamic Selectors)
+
+**Goal**: Update the announcement index page to implement dynamic cascading selectors and AJAX-powered live search that hides/shows selectors based on general settings status and performs keyword and dropdown filtering instantly without page reloads.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/Announcement/AnnouncementTest.php && php artisan test`
+
+**Results**:
+- **Partial Table Layout**: Extracted table and pagination controls into [table.blade.php](file:///P:/Project/Web/hrms/resources/views/announcement/partials/table.blade.php).
+- **Index Controller Update**: Modified [AnnouncementController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/Announcement/AnnouncementController.php) index method to return the rendered table partial HTML when responding to AJAX requests.
+- **Dynamic View Elements**: Overwrote [index.blade.php](file:///P:/Project/Web/hrms/resources/views/announcement/index.blade.php) to include the dynamic cascading selectors (matching general settings status visibility checks) and to hook live search inputs (keywords and selector changes) up to Axios.
+- **Interactions Polish**: Wired up client-side pagination click interception and delete confirmation prompts to refresh results dynamically via AJAX.
+- **Feature Testing**: Added a test case `it returns rendered HTML via AJAX for live search` inside [AnnouncementTest.php](file:///P:/Project/Web/hrms/tests/Feature/Announcement/AnnouncementTest.php).
+- **Tests**: All 153 tests passed successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-14 (Approval Workflow Dropdown Alignment & Role Step Type)
 
 **Goal**: Align Inclusion/Exclusion and Workflow Steps dropdown options to support the four standard options (User Type, Role, User Type + Role, and Specific User) in both views and implement backend support for the new `role` step type.

@@ -51,10 +51,10 @@ class AnnouncementController extends Controller
         $announcements = $this->announcementService->getAnnouncements($filters, $keyword, $flexsearch);
 
         if ($request->ajax()) {
+            $html = view('announcement.partials.table', compact('announcements'))->render();
             return response()->json([
                 'success' => true,
-                'data' => $announcements->items(),
-                'total' => $announcements->total()
+                'html' => $html
             ]);
         }
 

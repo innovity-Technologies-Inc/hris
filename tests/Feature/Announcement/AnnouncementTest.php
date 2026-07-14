@@ -240,3 +240,22 @@ test('announcements are filtered by user scope targets', function () {
     $response->assertSee('Global Notice');
     $response->assertDontSee('Other Company Announcement');
 });
+
+test('it returns rendered HTML via AJAX for live search', function () {
+    $this->withoutMiddleware();
+    $this->actingAs($this->admin);
+
+    $ann = Announcement::create([
+        'title' => 'Searchable Notice Title',
+        'content' => 'Content Description'
+    ]);
+
+    $response = $this->getJson(route('announcements.index', ['keyword' => 'Searchable']), [
+        'X-Requested-With' => 'XMLHttpRequest'
+    ]);
+
+    $response->assertStatus(200);
+    $response->assertJsonStructure(['success', 'html']);
+    expect($response->json('html'))->toContain('Searchable Notice Title');
+});
+
