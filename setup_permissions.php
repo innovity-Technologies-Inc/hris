@@ -12,7 +12,14 @@ $permissions = [
     'approval-workflows.view',
     'approval-workflows.create',
     'approval-workflows.edit',
-    'approval-workflows.delete'
+    'approval-workflows.delete',
+    'expense-types.view',
+    'expense-types.create',
+    'expense-types.edit',
+    'expense-types.delete',
+    'claim-expenses.view',
+    'claim-expenses.create',
+    'claim-expenses.delete',
 ];
 
 foreach ($permissions as $permission) {
