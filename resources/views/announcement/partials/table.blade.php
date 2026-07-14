@@ -57,20 +57,20 @@
                     <td>{{ $announcement->created_at->format('M d, Y') }}</td>
                     <td class="text-end">
                         <div class="d-flex justify-content-end gap-1">
-                            <a href="{{ route('announcements.show', $announcement->id) }}" class="btn btn-sm btn-outline-info" title="View Details">
-                                <i style="height: 14px; width: 14px" data-feather="eye"></i>
+                            <a href="{{ route('announcements.show', $announcement->id) }}" class="btn btn-info btn-sm" title="View Details">
+                                <i style="height: 12px; width: 12px" data-feather="eye"></i>
                             </a>
-                            <a href="{{ route('announcements.pdf', $announcement->id) }}" class="btn btn-sm btn-outline-danger" title="Download PDF">
-                                <i style="height: 14px; width: 14px" data-feather="download"></i>
+                            <a href="{{ route('announcements.pdf', $announcement->id) }}" class="btn btn-success btn-sm" title="Download PDF">
+                                <i style="height: 12px; width: 12px" data-feather="download"></i>
                             </a>
                             @can('announcements.edit')
-                                <a href="{{ route('announcements.edit', $announcement->id) }}" class="btn btn-sm btn-outline-secondary" title="Edit">
-                                    <i style="height: 14px; width: 14px" data-feather="edit"></i>
+                                <a href="{{ route('announcements.edit', $announcement->id) }}" class="btn btn-primary btn-sm" title="Edit">
+                                    <i style="height: 12px; width: 12px" data-feather="edit"></i>
                                 </a>
                             @endcan
                             @can('announcements.delete')
-                                <button type="button" class="btn btn-sm btn-outline-danger delete-btn" data-url="{{ route('announcements.destroy', $announcement->id) }}" title="Delete">
-                                    <i style="height: 14px; width: 14px" data-feather="trash-2"></i>
+                                <button type="button" class="btn btn-danger btn-sm delete-btn" data-url="{{ route('announcements.destroy', $announcement->id) }}" title="Delete">
+                                    <i style="height: 12px; width: 12px" data-feather="trash-2"></i>
                                 </button>
                             @endcan
                         </div>
