@@ -72,6 +72,13 @@ This is a robust Human Resource Management System (HRMS) built with Laravel 12. 
 - **AXIOS File Upload Integration**: Upgraded create/edit forms to support multiple file uploads through standard HTML5 `FormData` objects and Axios AJAX post handling.
 - **Embedded Document Viewer**: Embedded downloadable links styled as pills/badges in the respective view details pages, enabling administrators to preview and audit documentation attached to career movement requests.
 
+### 📢 Announcement & Notice Board Module
+- **5-Tier Cascading Targeting**: Notice boards and broadcasts are targeted to audiences dynamically via 5-tier cascading dropdowns (Company, Branch, Division, Department, Section) filtered dynamically by General Settings status configurations.
+- **AJAX Async Forms**: Creating and editing notices utilize Axios multipart transport with dynamic hierarchy loaders.
+- **Summernote WYSIWYG Editor**: Notice contents support rich text editing using the Summernote editor.
+- **Branded PDF Generator**: Notices can be downloaded directly as custom, styled PDF files compiled via Spatie Browsershot.
+- **Selective Scoped Visibility**: Announcement visibility is automatically filtered at the database level by the `OrganizationScoped` trait to match the user's active placement (while allowing nullable targets to remain visible to all).
+
 ### ⚙️ Dynamic Approval Workflow Engine
 The Human Resource Management System integrates a custom package **`laravel-approval-engine`** ([laravel-approval-engine](file:///P:/Project/Web/hrms/workflow-functional-breakdown.md)) to support multi-stage approval pipelines.
 
@@ -80,6 +87,9 @@ The Human Resource Management System integrates a custom package **`laravel-appr
   - **`user-type`**: Resolves to all users matching an organization-scoped `UserType` enum (e.g. Department, Company) belonging to the same hierarchy as the requester.
   - **`role-user`**: Restricts the step to users of a specific organizational unit who also hold a specific Spatie Role (e.g. Department Head).
   - **`specific-user`**: Explicitly assigns approval authorization to a single User ID.
+- **Includers & Excluders (Bypass Criteria)**: The engine supports multi-value criteria matching for workflow inclusion and exclusion.
+  - **Includers**: Define which roles, user types, or specific users require approval (generating pending approval tasks when they submit requests).
+  - **Excluders**: Define which roles, user types, or users bypass approval (instantly auto-approving their requests).
 - **Approver Resolution**: The engine delegates user queries to the custom [ApproverResolver](file:///P:/Project/Web/hrms/app/Services/ApproverResolver.php) service. It ignores global organization scopes to ensure that managers can fetch and approve subordinate records.
 - **Decoupled Workflow Event Listeners**: Business logic side-effects are decoupled from step processing. Decoupled listeners are registered dynamically in [AppServiceProvider](file:///P:/Project/Web/hrms/app/Providers/AppServiceProvider.php):
   - **[LeaveWorkflowListener](file:///P:/Project/Web/hrms/app/Listeners/Workflow/LeaveWorkflowListener.php)**: Approves/rejects leaves and updates balances.
@@ -286,6 +296,12 @@ The system implements a rigorous **Row-Level Security (RLS)** strategy to ensure
 
 #### The `OrganizationScoped` Trait
 The core of the isolation engine is the `App\Traits\OrganizationScoped` trait ([OrganizationScoped](file:///P:/Project/Web/hrms/app/Traits/OrganizationScoped.php)). When added to any Eloquent model, it automatically intercepts all database queries (`SELECT`, `UPDATE`, `DELETE`) to inject security filters based on the authenticated user's context.
+
+- **Nullable Target Scopes Option**: By default, the trait applies strict equals matches (`=`), preventing records scoped to other entities from leaking. If a model requires global or nullable scopes (where `NULL` in target fields represents items visible to all companies, branches, etc., such as notices or announcements), it can define:
+  ```php
+  public $allowNullableOrgScope = true;
+  ```
+  When this property is enabled, the trait automatically allows `NULL` values to fall back as visible to all, while still restricting non-null values to matching scopes.
 
 #### User Access Levels (`user_type`)
 Data visibility is determined by the `user_type` field in the `users` table, which casts to the [UserType](file:///P:/Project/Web/hrms/app/Enums/UserType.php) enum:
