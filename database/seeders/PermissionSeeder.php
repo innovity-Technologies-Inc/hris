@@ -81,6 +81,16 @@ class PermissionSeeder extends Seeder
             ],
 
             [
+                'name' => 'Claim Expense',
+                'icon' => 'dollar-sign',
+                'slug' => 'claim-expenses',
+                'submenus' => [
+                    ['name' => 'Application', 'slug' => 'claim-expenses', 'route' => 'claim_expenses.create', 'actions' => ['create']],
+                    ['name' => 'Logs', 'slug' => 'claim-expenses', 'route' => 'claim_expenses.index', 'actions' => ['view', 'edit', 'delete']],
+                ]
+            ],
+
+            [
                 'name' => 'Payroll',
                 'icon' => 'money-bill-wave',
                 'submenus' => [
@@ -134,6 +144,7 @@ class PermissionSeeder extends Seeder
                     ['name' => 'Holidays', 'route' => 'holidays.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
                     ['name' => 'Gazette Locations', 'route' => 'gazette_locations.index', 'actions' => ['view', 'create', 'edit', 'delete', 'import']],
                     ['name' => 'Job Creations', 'route' => 'job_creations.index','actions' => ['view', 'create', 'edit', 'delete', 'import']],
+                    ['name' => 'Expense Types', 'slug' => 'expense-types', 'route' => 'expense_types.index', 'actions' => ['view', 'create', 'edit', 'delete']],
                 ]
             ],
             [

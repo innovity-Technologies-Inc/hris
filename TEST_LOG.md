@@ -1,5 +1,21 @@
 # Test Log
 
+## 2026-07-14 (Claim Expense Module and Workflow Engine Integration)
+
+**Goal**: Implement the new "Claim Expense" module, including Company Info master data "Expense Types", Expense Applications, logs/history, and integration with the central sequential/parallel approval workflow engine.
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- **Database Tables**: Migrated `expense_types` and `expense_applications` (with Spatie Approvable status and approval count fields) to support multi-company scoped configurations.
+- **Permission Seeding**: Registered permissions (`expense-types.*`, `claim-expenses.*`) and created menu items dynamically.
+- **Workflow Listeners**: Registered `ClaimExpenseWorkflowListener` in `WorkflowEventDispatcherService` to transition status to approved/rejected when approvals conclude.
+- **Blade Views**: Designed clean, full-width, responsive form and logs views for Expense Types and Expense Applications under [claim_expense](file:///P:/Project/Web/hrms/resources/views/claim_expense/).
+- **Feather Icon Sidebar Integration**: Added collapsible menu groups for both sections.
+- **Verification**: Verified that all **155 tests passed successfully** ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-14 (Announcement Index Organization Cleanup)
 
 **Goal**: Remove Branch, Division, Department, and Section elements from both the search filters and the table columns on the Announcement Index page, keeping only the Company filter and column.

@@ -296,6 +296,41 @@
                 </li>
                 @endif
 
+                <!-- Claim Expense Menu -->
+                @php
+                    $canClaimExpenseApplication = auth()->user()->can('claim-expenses.create');
+                    $canClaimExpenseLogs = auth()->user()->can('claim-expenses.view');
+                    $showClaimExpenseMenu = $canClaimExpenseApplication || $canClaimExpenseLogs;
+                    $claimExpenseOpen = Route::is('claim_expenses.*');
+                @endphp
+                @if($showClaimExpenseMenu)
+                <li>
+                    <a href="#claimExpense" data-bs-toggle="collapse"
+                        aria-expanded="{{ $claimExpenseOpen ? 'true' : 'false' }}"
+                        class="@if ($claimExpenseOpen) menuitem-active @endif">
+                        <i data-feather="dollar-sign"></i>
+                        <span> Claim Expense </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse @if ($claimExpenseOpen) show @endif" id="claimExpense">
+                        <ul class="nav-second-level">
+                            @if($canClaimExpenseApplication)
+                            <li>
+                                <a class='tp-link @if (Route::is('claim_expenses.create')) menuitem-active @endif'
+                                    href='{{ route('claim_expenses.create') }}'>Application</a>
+                            </li>
+                            @endif
+                            @if($canClaimExpenseLogs)
+                            <li>
+                                <a class='tp-link @if (Route::is('claim_expenses.index')) menuitem-active @endif'
+                                    href='{{ route('claim_expenses.index') }}'>Logs</a>
+                            </li>
+                            @endif
+                        </ul>
+                    </div>
+                </li>
+                @endif
+
                 <!-- Payroll Menu -->
                 @php
                     $canPromotions = auth()->user()->can('promotions.view');
@@ -535,8 +570,9 @@
                     $canHolidays = auth()->user()->can('holidays.view');
                     $canJobCreations = auth()->user()->can('job-creations.view');
                     $canBulkUploadCompany = auth()->user()->can('employee-management.import');
+                    $canExpenseTypes = auth()->user()->can('expense-types.view');
 
-                    $showCompanyMenu = $canGroups || $canCompanyTypes || $canCompanies || $canCompanyBranches || $canDivisions || $canDepartments || $canSections || $canDesignations || $canPayGroups || $canPayScales || $canMovementTypes || $canSalaryGrades || $canBanks || $canBankBranches || $canBankAccounts || $canHolidays || $canJobCreations || $canBulkUploadCompany;
+                    $showCompanyMenu = $canGroups || $canCompanyTypes || $canCompanies || $canCompanyBranches || $canDivisions || $canDepartments || $canSections || $canDesignations || $canPayGroups || $canPayScales || $canMovementTypes || $canSalaryGrades || $canBanks || $canBankBranches || $canBankAccounts || $canHolidays || $canJobCreations || $canBulkUploadCompany || $canExpenseTypes;
 
 
                     $companyOpen =
@@ -551,7 +587,8 @@
                         Route::is('branches.*') ||
                         Route::is('salary_grades.*') ||
                         Route::is('gazette_locations.*') ||
-                        Route::is('company.bulk_upload');
+                        Route::is('company.bulk_upload') ||
+                        Route::is('expense_types.*');
                 @endphp
                 @if($showCompanyMenu)
                 <li>
@@ -625,6 +662,13 @@
                             <li>
                                 <a class='tp-link @if (Route::is('salary_grades.*')) menuitem-active @endif'
                                     href='{{ route('salary_grades.index') }}'>Salary Grades</a>
+                            </li>
+                            @endif
+
+                            @if($canExpenseTypes)
+                            <li>
+                                <a class='tp-link @if (Route::is('expense_types.*')) menuitem-active @endif'
+                                    href='{{ route('expense_types.index') }}'>Expense Types</a>
                             </li>
                             @endif
 

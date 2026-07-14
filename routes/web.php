@@ -166,6 +166,22 @@ Route::prefix('company-setup')->middleware('auth')->group(function () {
         });
     });
 
+    Route::controller(\App\Http\Controllers\ClaimExpense\ExpenseTypeController::class)->group(function () {
+        Route::middleware('permission:expense-types.view')->group(function () {
+            Route::get('expense-types', 'index')->name('expense_types.index');
+        });
+        Route::middleware('permission:expense-types.create')->group(function () {
+            Route::post('expense-types/store', 'store')->name('expense_types.store');
+        });
+        Route::middleware('permission:expense-types.edit')->group(function () {
+            Route::get('expense-types/{id}/edit', 'edit')->name('expense_types.edit');
+            Route::put('expense-types/{id}/update', 'update')->name('expense_types.update');
+        });
+        Route::middleware('permission:expense-types.delete')->group(function () {
+            Route::delete('expense-types/{id}/delete', 'destroy')->name('expense_types.delete');
+        });
+    });
+
     Route::controller(SalaryGradesController::class)->group(function () {
         Route::middleware('permission:salary-grades.view')->group(function () {
             Route::get('salary_grades', 'index')->name('salary_grades.index');
@@ -1487,6 +1503,23 @@ Route::middleware('auth')->group(function () {
         Route::put('announcements/{id}', 'update')->name('announcements.update')->middleware('permission:announcements.edit');
         Route::delete('announcements/{id}', 'destroy')->name('announcements.destroy')->middleware('permission:announcements.delete');
         Route::get('announcements/{id}/pdf', 'downloadPdf')->name('announcements.pdf')->middleware('permission:announcements.view');
+    });
+});
+
+// Claim Expense Routes
+Route::prefix('claim-expense')->middleware('auth')->group(function () {
+    Route::controller(\App\Http\Controllers\ClaimExpense\ExpenseApplicationController::class)->group(function () {
+        Route::middleware('permission:claim-expenses.view')->group(function () {
+            Route::get('logs', 'index')->name('claim_expenses.index');
+            Route::get('applications/{id}', 'show')->name('claim_expenses.show');
+        });
+        Route::middleware('permission:claim-expenses.create')->group(function () {
+            Route::get('application', 'create')->name('claim_expenses.create');
+            Route::post('store', 'store')->name('claim_expenses.store');
+        });
+        Route::middleware('permission:claim-expenses.delete')->group(function () {
+            Route::delete('applications/{id}', 'destroy')->name('claim_expenses.delete');
+        });
     });
 });
 
