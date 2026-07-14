@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-xl-8 offset-xl-2">
+        <div class="col-12">
             <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
                 <!-- Header Banner / Color Bar -->
                 <div class="bg-primary bg-opacity-10 p-4 border-bottom border-primary border-opacity-10 d-flex justify-content-between align-items-center">
@@ -14,11 +14,11 @@
                         </small>
                     </div>
                     <div class="d-flex gap-2">
-                        <a href="{{ route('announcements.pdf', $announcement->id) }}" class="btn btn-danger btn-sm d-flex align-items-center gap-1">
-                            <i style="height: 14px; width: 14px;" data-feather="download"></i> PDF Download
+                        <a href="{{ route('announcements.pdf', $announcement->id) }}" class="btn btn-success btn-sm d-flex align-items-center gap-1">
+                            <i style="height: 12px; width: 12px;" data-feather="download"></i> PDF Download
                         </a>
-                        <a href="{{ route('announcements.index') }}" class="btn btn-outline-secondary btn-sm">
-                            Back
+                        <a href="{{ route('announcements.index') }}" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1">
+                            <i style="height: 12px; width: 12px;" data-feather="arrow-left"></i> Back to List
                         </a>
                     </div>
                 </div>
@@ -80,8 +80,8 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <a href="{{ Storage::url($announcement->attachment_path) }}" target="_blank" class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1">
-                                        <i style="height: 14px; width: 14px;" data-feather="external-link"></i> View File
+                                    <a href="{{ Storage::url($announcement->attachment_path) }}" target="_blank" class="btn btn-primary btn-sm d-flex align-items-center gap-1">
+                                        <i style="height: 12px; width: 12px;" data-feather="external-link"></i> View File
                                     </a>
                                 </div>
                             </div>
