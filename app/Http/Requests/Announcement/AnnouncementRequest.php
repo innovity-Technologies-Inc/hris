@@ -19,7 +19,9 @@ class AnnouncementRequest extends FormRequest
             'attachment' => 'nullable|file|mimes:pdf,jpeg,png,jpg,doc,docx,xls,xlsx|max:10240',
             'company_id' => 'nullable|exists:companies,id',
             'branch_id' => 'nullable|exists:company_locations,id',
+            'division_id' => 'nullable|exists:divisions,id',
             'department_id' => 'nullable|exists:departments,id',
+            'section_id' => 'nullable|exists:sections,id',
         ];
     }
 
@@ -33,7 +35,9 @@ class AnnouncementRequest extends FormRequest
             'attachment.max' => 'The attachment size may not be greater than 10MB.',
             'company_id.exists' => 'The selected company is invalid.',
             'branch_id.exists' => 'The selected branch/location is invalid.',
+            'division_id.exists' => 'The selected division is invalid.',
             'department_id.exists' => 'The selected department is invalid.',
+            'section_id.exists' => 'The selected section is invalid.',
         ];
     }
 }

@@ -20,7 +20,9 @@ return new class extends Migration
             // Scopes / Related Targets
             $table->unsignedBigInteger('company_id')->nullable();
             $table->unsignedBigInteger('branch_id')->nullable();
+            $table->unsignedBigInteger('division_id')->nullable();
             $table->unsignedBigInteger('department_id')->nullable();
+            $table->unsignedBigInteger('section_id')->nullable();
             
             // Userstamps
             $table->unsignedBigInteger('created_by')->nullable();
@@ -31,7 +33,9 @@ return new class extends Migration
             // Foreign keys
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('set null');
             $table->foreign('branch_id')->references('id')->on('company_locations')->onDelete('set null');
+            $table->foreign('division_id')->references('id')->on('divisions')->onDelete('set null');
             $table->foreign('department_id')->references('id')->on('departments')->onDelete('set null');
+            $table->foreign('section_id')->references('id')->on('sections')->onDelete('set null');
         });
     }
 

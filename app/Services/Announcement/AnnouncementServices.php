@@ -17,7 +17,7 @@ class AnnouncementServices
      */
     public function getAnnouncements($filters = [], $keyword = null, $flexsearch = null)
     {
-        $query = Announcement::with(['company', 'branch', 'department']);
+        $query = Announcement::with(['company', 'branch', 'division', 'department', 'section']);
 
         // Apply FlexSearch if provided, otherwise standard pagination
         if ($flexsearch) {

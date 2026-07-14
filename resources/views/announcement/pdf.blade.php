@@ -36,6 +36,23 @@
 
     <div class="announcement-title">{{ $announcement->title }}</div>
 
+    @php
+        $generalSettings = \App\HelperClass::getGeneralSetting();
+        $scopes = [];
+        $scopes[] = 'Company: ' . ($announcement->company->name ?? 'All (Global)');
+        if ($generalSettings->branch_status == 1) {
+            $scopes[] = 'Branch: ' . ($announcement->branch->name ?? 'All (Global)');
+        }
+        if ($generalSettings->division_status == 1) {
+            $scopes[] = 'Division: ' . ($announcement->division->name ?? 'All (Global)');
+        }
+        if ($generalSettings->department_status == 1) {
+            $scopes[] = 'Department: ' . ($announcement->department->department_name ?? 'All (Global)');
+        }
+        if ($generalSettings->section_status == 1) {
+            $scopes[] = 'Section: ' . ($announcement->section->name ?? 'All (Global)');
+        }
+    @endphp
     <table class="meta-table">
         <tr>
             <td class="label">Date Posted</td>
@@ -44,9 +61,7 @@
         <tr>
             <td class="label">Target Scope</td>
             <td class="value">
-                Company: {{ $announcement->company->name ?? 'All (Global)' }} |
-                Branch: {{ $announcement->branch->name ?? 'All (Global)' }} |
-                Department: {{ $announcement->department->department_name ?? 'All (Global)' }}
+                {{ implode(' | ', $scopes) }}
             </td>
         </tr>
     </table>

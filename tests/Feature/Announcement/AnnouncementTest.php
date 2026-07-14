@@ -4,7 +4,10 @@ use App\Models\User;
 use App\Models\Announcement\Announcement;
 use App\Models\Company\Company;
 use App\Models\Company\CompanyLocation;
+use App\Models\Company\Division;
 use App\Models\Company\Department;
+use App\Models\Company\Section;
+use App\Models\Setting\GeneralSetting;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -14,6 +17,15 @@ uses(RefreshDatabase::class);
 beforeEach(function () {
     $this->admin = User::factory()->create([
         'user_type' => 'group', // Super admin type
+    ]);
+
+    GeneralSetting::create([
+        'name' => 'HRMS Test',
+        'currency' => '৳',
+        'branch_status' => 1,
+        'division_status' => 1,
+        'department_status' => 1,
+        'section_status' => 1,
     ]);
 
     $this->company = Company::create([
@@ -33,10 +45,28 @@ beforeEach(function () {
         'company_id' => $this->company->id
     ]);
 
+    $this->division = Division::create([
+        'name' => 'Test Division',
+        'short_name' => 'TDiv',
+        'status' => 'active',
+        'company_id' => $this->company->id,
+        'location_id' => $this->branch->id
+    ]);
+
     $this->department = Department::create([
         'department_name' => 'Test Department',
         'short_name' => 'TD',
         'status' => 'active',
+        'company_id' => $this->company->id
+    ]);
+
+    $this->section = Section::create([
+        'name' => 'Test Section',
+        'short_name' => 'TSec',
+        'status' => 'active',
+        'department_id' => $this->department->id,
+        'division_id' => $this->division->id,
+        'location_id' => $this->branch->id,
         'company_id' => $this->company->id
     ]);
 });
@@ -69,7 +99,9 @@ it('can store a new announcement with attachment', function () {
         'content' => '<p>This is test content.</p>',
         'company_id' => $this->company->id,
         'branch_id' => $this->branch->id,
+        'division_id' => $this->division->id,
         'department_id' => $this->department->id,
+        'section_id' => $this->section->id,
         'attachment' => $file
     ];
 
@@ -84,6 +116,8 @@ it('can store a new announcement with attachment', function () {
     $announcement = Announcement::first();
     expect($announcement->title)->toBe('New Announcement Post');
     expect($announcement->attachment_path)->not->toBeNull();
+    expect($announcement->division_id)->toBe($this->division->id);
+    expect($announcement->section_id)->toBe($this->section->id);
     Storage::disk('public')->assertExists($announcement->attachment_path);
 });
 
@@ -103,6 +137,8 @@ it('can update an announcement and replace attachment', function () {
     $data = [
         'title' => 'Updated Title',
         'content' => '<p>Updated Content</p>',
+        'division_id' => $this->division->id,
+        'section_id' => $this->section->id,
         'attachment' => $newFile
     ];
 
@@ -117,6 +153,8 @@ it('can update an announcement and replace attachment', function () {
     $announcement->refresh();
     expect($announcement->title)->toBe('Updated Title');
     expect($announcement->content)->toBe('<p>Updated Content</p>');
+    expect($announcement->division_id)->toBe($this->division->id);
+    expect($announcement->section_id)->toBe($this->section->id);
     Storage::disk('public')->assertExists($announcement->attachment_path);
 });
 
@@ -148,6 +186,5 @@ it('can trigger PDF generation route', function () {
 
     $response = $this->get(route('announcements.pdf', $announcement->id));
 
-    // Might be 500 if Browsershot is not installed on test host, but verifies model/view logic compiles correctly
     expect($response->status())->toBeIn([200, 500]);
 });

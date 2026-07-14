@@ -1,6 +1,10 @@
 @extends('structure.master')
 
 @section('content')
+    @php
+        $generalSettings = \App\HelperClass::getGeneralSetting();
+    @endphp
+
     <div class="row">
         <div class="col-xl-8 offset-xl-2">
             <div class="card shadow-lg border-0 rounded-4">
@@ -29,7 +33,8 @@
 
                         <!-- Scopes / Related Fields -->
                         <div class="row mb-3">
-                            <div class="col-md-4">
+                            <!-- Company (Always Visible) -->
+                            <div class="col-md-4 mb-3">
                                 <label for="company_id" class="form-label fw-semibold">Target Company</label>
                                 <select name="company_id" id="company_id" class="form-select">
                                     <option value="">Global (All Companies)</option>
@@ -38,24 +43,58 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-4">
-                                <label for="branch_id" class="form-label fw-semibold">Target Branch</label>
-                                <select name="branch_id" id="branch_id" class="form-select">
-                                    <option value="">Global (All Branches)</option>
-                                    @foreach($branches as $branch)
-                                        <option value="{{ $branch->id }}" {{ $announcement->branch_id == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="department_id" class="form-label fw-semibold">Target Department</label>
-                                <select name="department_id" id="department_id" class="form-select">
-                                    <option value="">Global (All Departments)</option>
-                                    @foreach($departments as $dept)
-                                        <option value="{{ $dept->id }}" {{ $announcement->department_id == $dept->id ? 'selected' : '' }}>{{ $dept->department_name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+
+                            <!-- Branch/Business Unit -->
+                            @if($generalSettings->branch_status == 1)
+                                <div class="col-md-4 mb-3">
+                                    <label for="branch_id" class="form-label fw-semibold">Target Branch</label>
+                                    <select name="branch_id" id="branch_id" class="form-select">
+                                        <option value="">Global (All Branches)</option>
+                                        @foreach($branches as $branch)
+                                            <option value="{{ $branch->id }}" {{ $announcement->branch_id == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endif
+
+                            <!-- Division -->
+                            @if($generalSettings->division_status == 1)
+                                <div class="col-md-4 mb-3">
+                                    <label for="division_id" class="form-label fw-semibold">Target Division</label>
+                                    <select name="division_id" id="division_id" class="form-select">
+                                        <option value="">Global (All Divisions)</option>
+                                        @foreach($divisions as $division)
+                                            <option value="{{ $division->id }}" {{ $announcement->division_id == $division->id ? 'selected' : '' }}>{{ $division->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endif
+
+                            <!-- Department -->
+                            @if($generalSettings->department_status == 1)
+                                <div class="col-md-4 mb-3">
+                                    <label for="department_id" class="form-label fw-semibold">Target Department</label>
+                                    <select name="department_id" id="department_id" class="form-select">
+                                        <option value="">Global (All Departments)</option>
+                                        @foreach($departments as $dept)
+                                            <option value="{{ $dept->id }}" {{ $announcement->department_id == $dept->id ? 'selected' : '' }}>{{ $dept->department_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endif
+
+                            <!-- Section -->
+                            @if($generalSettings->section_status == 1)
+                                <div class="col-md-4 mb-3">
+                                    <label for="section_id" class="form-label fw-semibold">Target Section</label>
+                                    <select name="section_id" id="section_id" class="form-select">
+                                        <option value="">Global (All Sections)</option>
+                                        @foreach($sections as $section)
+                                            <option value="{{ $section->id }}" {{ $announcement->section_id == $section->id ? 'selected' : '' }}>{{ $section->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endif
                         </div>
 
                         <!-- Current Attachment -->
@@ -103,11 +142,108 @@
             ]
         });
 
-        // Form Submit
+        // --- Unified Hierarchy Loader ---
+        let silenceChangeEvents = false;
+
+        function ajaxLoad(url, $select, placeholder, selectedValue = null) {
+            if (!$select.length) return Promise.resolve();
+            return $.get(url).then(function (data) {
+                $select.html(`<option value="">${placeholder}</option>`);
+                $.each(data, function (_, item) {
+                    $select.append(
+                        `<option value="${item.id}">${item.name ?? item.department_name ?? item.full_name}</option>`
+                    );
+                });
+                if (selectedValue && selectedValue !== 'null' && selectedValue !== '') {
+                    $select.val(selectedValue);
+                } else {
+                    $select.val('');
+                }
+            }).catch(function () {
+                $select.html('<option value="">Error loading data</option>');
+            });
+        }
+
+        function loadHierarchy(companyId, branchId = null, divisionId = null, departmentId = null, sectionId = null) {
+            if (!companyId) {
+                $('#branch_id').html('<option value="">Global (All Branches)</option>');
+                $('#division_id').html('<option value="">Global (All Divisions)</option>');
+                $('#department_id').html('<option value="">Global (All Departments)</option>');
+                $('#section_id').html('<option value="">Global (All Sections)</option>');
+                return Promise.resolve();
+            }
+
+            let branchPromise = Promise.resolve();
+            if ($('#branch_id').length) {
+                branchPromise = ajaxLoad(`/get-units/${companyId}`, $('#branch_id'), 'Global (All Branches)', branchId);
+            }
+
+            return branchPromise.then(() => {
+                const currentBranchId = $('#branch_id').val() || 'null';
+                return ajaxLoad(`/get-divisions/${companyId}/${currentBranchId}`, $('#division_id'), 'Global (All Divisions)', divisionId);
+            }).then(() => {
+                const currentBranchId = $('#branch_id').val() || 'null';
+                const currentDivisionId = $('#division_id').val() || 'null';
+                return ajaxLoad(`/get-departments/${companyId}/${currentBranchId}/${currentDivisionId}`, $('#department_id'), 'Global (All Departments)', departmentId);
+            }).then(() => {
+                const currentBranchId = $('#branch_id').val() || 'null';
+                const currentDivisionId = $('#division_id').val() || 'null';
+                const currentDeptId = $('#department_id').val() || 'null';
+                return ajaxLoad(`/get-sections/${companyId}/${currentBranchId}/${currentDivisionId}/${currentDeptId}`, $('#section_id'), 'Global (All Sections)', sectionId);
+            });
+        }
+
+        // Change Events
+        $('#company_id').on('change', function () {
+            if (silenceChangeEvents) return;
+            silenceChangeEvents = true;
+            loadHierarchy($(this).val()).then(() => {
+                silenceChangeEvents = false;
+            });
+        });
+
+        $('#branch_id').on('change', function () {
+            if (silenceChangeEvents) return;
+            silenceChangeEvents = true;
+            loadHierarchy($('#company_id').val(), $(this).val()).then(() => {
+                silenceChangeEvents = false;
+            });
+        });
+
+        $('#division_id').on('change', function () {
+            if (silenceChangeEvents) return;
+            const companyId = $('#company_id').val();
+            const branchId = $('#branch_id').val() || 'null';
+            const divisionId = $(this).val() || 'null';
+
+            silenceChangeEvents = true;
+            ajaxLoad(`/get-departments/${companyId}/${branchId}/${divisionId}`, $('#department_id'), 'Global (All Departments)')
+                .then(() => {
+                    const deptId = $('#department_id').val() || 'null';
+                    return ajaxLoad(`/get-sections/${companyId}/${branchId}/${divisionId}/${deptId}`, $('#section_id'), 'Global (All Sections)');
+                }).then(() => {
+                    silenceChangeEvents = false;
+                });
+        });
+
+        $('#department_id').on('change', function () {
+            if (silenceChangeEvents) return;
+            const companyId = $('#company_id').val();
+            const branchId = $('#branch_id').val() || 'null';
+            const divisionId = $('#division_id').val() || 'null';
+            const deptId = $(this).val() || 'null';
+
+            silenceChangeEvents = true;
+            ajaxLoad(`/get-sections/${companyId}/${branchId}/${divisionId}/${deptId}`, $('#section_id'), 'Global (All Sections)')
+                .then(() => {
+                    silenceChangeEvents = false;
+                });
+        });
+
+        // Form Submit via Axios
         document.getElementById('announcementForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Validate Summernote content
             if ($('#content_editor').summernote('isEmpty')) {
                 Swal.fire({
                     icon: 'error',
@@ -124,7 +260,6 @@
             $('.alert-danger').remove();
 
             const formData = new FormData(this);
-            // Append _method parameter because PHP doesn't support raw PUT file uploads
             formData.append('_method', 'PUT');
 
             axios.post('{{ route('announcements.update', $announcement->id) }}', formData, {

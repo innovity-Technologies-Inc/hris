@@ -1,17 +1,21 @@
 @extends('structure.master')
 
 @section('content')
+    @php
+        $generalSettings = \App\HelperClass::getGeneralSetting();
+    @endphp
+
     <div class="row">
         <div class="col-xl-12">
             <!-- Filter Card -->
             <div class="card mb-4 border-dashed bg-light">
                 <div class="card-body">
                     <form method="GET" action="{{ route('announcements.index') }}" class="row g-3 align-items-center">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label class="form-label fw-semibold">Search Keywords</label>
                             <input type="text" name="keyword" class="form-control form-control-sm" placeholder="Title or content..." value="{{ request('keyword') }}">
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label class="form-label fw-semibold">Company</label>
                             <select name="company_id" class="form-select form-select-sm">
                                 <option value="">All Companies</option>
@@ -20,24 +24,50 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-2">
-                            <label class="form-label fw-semibold">Branch</label>
-                            <select name="branch_id" class="form-select form-select-sm">
-                                <option value="">All Branches</option>
-                                @foreach($branches as $branch)
-                                    <option value="{{ $branch->id }}" {{ request('branch_id') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <label class="form-label fw-semibold">Department</label>
-                            <select name="department_id" class="form-select form-select-sm">
-                                <option value="">All Departments</option>
-                                @foreach($departments as $dept)
-                                    <option value="{{ $dept->id }}" {{ request('department_id') == $dept->id ? 'selected' : '' }}>{{ $dept->department_name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                        @if($generalSettings->branch_status == 1)
+                            <div class="col-md-2">
+                                <label class="form-label fw-semibold">Branch</label>
+                                <select name="branch_id" class="form-select form-select-sm">
+                                    <option value="">All Branches</option>
+                                    @foreach($branches as $branch)
+                                        <option value="{{ $branch->id }}" {{ request('branch_id') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
+                        @if($generalSettings->division_status == 1)
+                            <div class="col-md-2">
+                                <label class="form-label fw-semibold">Division</label>
+                                <select name="division_id" class="form-select form-select-sm">
+                                    <option value="">All Divisions</option>
+                                    @foreach($divisions as $division)
+                                        <option value="{{ $division->id }}" {{ request('division_id') == $division->id ? 'selected' : '' }}>{{ $division->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
+                        @if($generalSettings->department_status == 1)
+                            <div class="col-md-2">
+                                <label class="form-label fw-semibold">Department</label>
+                                <select name="department_id" class="form-select form-select-sm">
+                                    <option value="">All Departments</option>
+                                    @foreach($departments as $dept)
+                                        <option value="{{ $dept->id }}" {{ request('department_id') == $dept->id ? 'selected' : '' }}>{{ $dept->department_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
+                        @if($generalSettings->section_status == 1)
+                            <div class="col-md-2">
+                                <label class="form-label fw-semibold">Section</label>
+                                <select name="section_id" class="form-select form-select-sm">
+                                    <option value="">All Sections</option>
+                                    @foreach($sections as $sec)
+                                        <option value="{{ $sec->id }}" {{ request('section_id') == $sec->id ? 'selected' : '' }}>{{ $sec->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
                         <div class="col-md-2 d-flex align-items-end gap-2 pt-4">
                             <button type="submit" class="btn btn-primary btn-sm flex-grow-1">Search</button>
                             <a href="{{ route('announcements.index') }}" class="btn btn-secondary btn-sm flex-grow-1">Reset</a>
@@ -72,8 +102,18 @@
                                     <th>#</th>
                                     <th>Title</th>
                                     <th>Target Company</th>
-                                    <th>Target Branch</th>
-                                    <th>Target Department</th>
+                                    @if($generalSettings->branch_status == 1)
+                                        <th>Target Branch</th>
+                                    @endif
+                                    @if($generalSettings->division_status == 1)
+                                        <th>Target Division</th>
+                                    @endif
+                                    @if($generalSettings->department_status == 1)
+                                        <th>Target Department</th>
+                                    @endif
+                                    @if($generalSettings->section_status == 1)
+                                        <th>Target Section</th>
+                                    @endif
                                     <th>Posted Date</th>
                                     <th class="text-end">Actions</th>
                                 </tr>
@@ -88,8 +128,18 @@
                                             </a>
                                         </td>
                                         <td>{{ $announcement->company->name ?? 'Global (All)' }}</td>
-                                        <td>{{ $announcement->branch->name ?? 'Global (All)' }}</td>
-                                        <td>{{ $announcement->department->department_name ?? 'Global (All)' }}</td>
+                                        @if($generalSettings->branch_status == 1)
+                                            <td>{{ $announcement->branch->name ?? 'Global (All)' }}</td>
+                                        @endif
+                                        @if($generalSettings->division_status == 1)
+                                            <td>{{ $announcement->division->name ?? 'Global (All)' }}</td>
+                                        @endif
+                                        @if($generalSettings->department_status == 1)
+                                            <td>{{ $announcement->department->department_name ?? 'Global (All)' }}</td>
+                                        @endif
+                                        @if($generalSettings->section_status == 1)
+                                            <td>{{ $announcement->section->name ?? 'Global (All)' }}</td>
+                                        @endif
                                         <td>{{ $announcement->created_at->format('M d, Y') }}</td>
                                         <td class="text-end">
                                             <div class="d-flex justify-content-end gap-1">
@@ -114,7 +164,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" class="text-center text-muted py-4">
+                                        <td colspan="{{ 4 + ($generalSettings->branch_status == 1 ? 1 : 0) + ($generalSettings->division_status == 1 ? 1 : 0) + ($generalSettings->department_status == 1 ? 1 : 0) + ($generalSettings->section_status == 1 ? 1 : 0) }}" class="text-center text-muted py-4">
                                             No announcements or notices found.
                                         </td>
                                     </tr>

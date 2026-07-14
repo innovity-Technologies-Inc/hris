@@ -7,7 +7,9 @@ use App\Http\Requests\Announcement\AnnouncementRequest;
 use App\Models\Announcement\Announcement;
 use App\Models\Company\Company;
 use App\Models\Company\CompanyLocation;
+use App\Models\Company\Division;
 use App\Models\Company\Department;
+use App\Models\Company\Section;
 use App\Services\Announcement\AnnouncementServices;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
@@ -36,8 +38,14 @@ class AnnouncementController extends Controller
         if ($request->filled('branch_id')) {
             $filters['branch_id'] = $request->input('branch_id');
         }
+        if ($request->filled('division_id')) {
+            $filters['division_id'] = $request->input('division_id');
+        }
         if ($request->filled('department_id')) {
             $filters['department_id'] = $request->input('department_id');
+        }
+        if ($request->filled('section_id')) {
+            $filters['section_id'] = $request->input('section_id');
         }
 
         $announcements = $this->announcementService->getAnnouncements($filters, $keyword, $flexsearch);
@@ -52,9 +60,11 @@ class AnnouncementController extends Controller
 
         $companies = Company::orderBy('name')->get();
         $branches = CompanyLocation::orderBy('name')->get();
+        $divisions = Division::orderBy('name')->get();
         $departments = Department::orderBy('department_name')->get();
+        $sections = Section::orderBy('name')->get();
 
-        return view('announcement.index', compact('announcements', 'companies', 'branches', 'departments'));
+        return view('announcement.index', compact('announcements', 'companies', 'branches', 'divisions', 'departments', 'sections'));
     }
 
     /**
@@ -63,10 +73,8 @@ class AnnouncementController extends Controller
     public function create()
     {
         $companies = Company::orderBy('name')->get();
-        $branches = CompanyLocation::orderBy('name')->get();
-        $departments = Department::orderBy('department_name')->get();
 
-        return view('announcement.create', compact('companies', 'branches', 'departments'));
+        return view('announcement.create', compact('companies'));
     }
 
     /**
@@ -101,7 +109,7 @@ class AnnouncementController extends Controller
      */
     public function show($id)
     {
-        $announcement = Announcement::with(['company', 'branch', 'department'])->findOrFail($id);
+        $announcement = Announcement::with(['company', 'branch', 'division', 'department', 'section'])->findOrFail($id);
         return view('announcement.show', compact('announcement'));
     }
 
@@ -112,10 +120,22 @@ class AnnouncementController extends Controller
     {
         $announcement = Announcement::findOrFail($id);
         $companies = Company::orderBy('name')->get();
-        $branches = CompanyLocation::orderBy('name')->get();
-        $departments = Department::orderBy('department_name')->get();
+        
+        $branches = $announcement->company_id ? CompanyLocation::where('company_id', $announcement->company_id)->orderBy('name')->get() : collect();
+        $divisions = $announcement->company_id ? Division::where('company_id', $announcement->company_id)->where(function($q) use ($announcement) {
+            if ($announcement->branch_id) $q->where('location_id', $announcement->branch_id)->orWhereNull('location_id');
+        })->orderBy('name')->get() : collect();
+        $departments = $announcement->company_id ? Department::where('company_id', $announcement->company_id)->where(function($q) use ($announcement) {
+            if ($announcement->branch_id) $q->where('location_id', $announcement->branch_id)->orWhereNull('location_id');
+            if ($announcement->division_id) $q->where('division_id', $announcement->division_id)->orWhereNull('division_id');
+        })->orderBy('department_name')->get() : collect();
+        $sections = $announcement->company_id ? Section::where('company_id', $announcement->company_id)->where(function($q) use ($announcement) {
+            if ($announcement->branch_id) $q->where('location_id', $announcement->branch_id)->orWhereNull('location_id');
+            if ($announcement->division_id) $q->where('division_id', $announcement->division_id)->orWhereNull('division_id');
+            if ($announcement->department_id) $q->where('department_id', $announcement->department_id)->orWhereNull('department_id');
+        })->orderBy('name')->get() : collect();
 
-        return view('announcement.edit', compact('announcement', 'companies', 'branches', 'departments'));
+        return view('announcement.edit', compact('announcement', 'companies', 'branches', 'divisions', 'departments', 'sections'));
     }
 
     /**

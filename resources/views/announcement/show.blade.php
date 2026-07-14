@@ -25,6 +25,9 @@
 
                 <!-- Main Body -->
                 <div class="card-body p-4 p-md-5">
+                    @php
+                        $generalSettings = \App\HelperClass::getGeneralSetting();
+                    @endphp
                     <!-- Scope/Audience metadata pill tags -->
                     <div class="d-flex flex-wrap gap-2 mb-4 bg-light p-3 rounded-3 border">
                         <div class="d-flex align-items-center text-muted me-3">
@@ -34,12 +37,26 @@
                             <span class="badge bg-secondary-subtle text-secondary py-1 px-2">
                                 Company: {{ $announcement->company->name ?? 'All (Global)' }}
                             </span>
-                            <span class="badge bg-secondary-subtle text-secondary py-1 px-2">
-                                Branch: {{ $announcement->branch->name ?? 'All (Global)' }}
-                            </span>
-                            <span class="badge bg-secondary-subtle text-secondary py-1 px-2">
-                                Department: {{ $announcement->department->department_name ?? 'All (Global)' }}
-                            </span>
+                            @if($generalSettings->branch_status == 1)
+                                <span class="badge bg-secondary-subtle text-secondary py-1 px-2">
+                                    Branch: {{ $announcement->branch->name ?? 'All (Global)' }}
+                                </span>
+                            @endif
+                            @if($generalSettings->division_status == 1)
+                                <span class="badge bg-secondary-subtle text-secondary py-1 px-2">
+                                    Division: {{ $announcement->division->name ?? 'All (Global)' }}
+                                </span>
+                            @endif
+                            @if($generalSettings->department_status == 1)
+                                <span class="badge bg-secondary-subtle text-secondary py-1 px-2">
+                                    Department: {{ $announcement->department->department_name ?? 'All (Global)' }}
+                                </span>
+                            @endif
+                            @if($generalSettings->section_status == 1)
+                                <span class="badge bg-secondary-subtle text-secondary py-1 px-2">
+                                    Section: {{ $announcement->section->name ?? 'All (Global)' }}
+                                </span>
+                            @endif
                         </div>
                     </div>
 
