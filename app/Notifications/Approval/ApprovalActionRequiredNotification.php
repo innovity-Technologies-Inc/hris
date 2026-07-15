@@ -41,8 +41,12 @@ class ApprovalActionRequiredNotification extends Notification
         if ($approvable instanceof \App\Models\Employee\ProfileUpdateRequest) {
             $url = route('profile_update_requests.show', $approvable->id);
         } else {
-            $url = \Illuminate\Support\Facades\Route::has($moduleName . '.show') && $approvable
-                    ? route($moduleName . '.show', $approvable->id) 
+            $normalizedRoute = str_replace('-', '_', $moduleName);
+            if ($normalizedRoute === 'claim_expense') {
+                $normalizedRoute = 'claim_expenses';
+            }
+            $url = \Illuminate\Support\Facades\Route::has($normalizedRoute . '.show') && $approvable
+                    ? route($normalizedRoute . '.show', $approvable->id) 
                     : url('/' . $moduleName);
         }
 
@@ -68,8 +72,12 @@ class ApprovalActionRequiredNotification extends Notification
         if ($approvable instanceof \App\Models\Employee\ProfileUpdateRequest) {
             $url = route('profile_update_requests.show', $approvable->id, false);
         } else {
-            $url = \Illuminate\Support\Facades\Route::has($moduleName . '.show') && $approvable
-                    ? route($moduleName . '.show', $approvable->id, false) 
+            $normalizedRoute = str_replace('-', '_', $moduleName);
+            if ($normalizedRoute === 'claim_expense') {
+                $normalizedRoute = 'claim_expenses';
+            }
+            $url = \Illuminate\Support\Facades\Route::has($normalizedRoute . '.show') && $approvable
+                    ? route($normalizedRoute . '.show', $approvable->id, false) 
                     : '/' . $moduleName;
         }
         

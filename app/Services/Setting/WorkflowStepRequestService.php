@@ -127,8 +127,12 @@ class WorkflowStepRequestService
                 if ($approvable instanceof ProfileUpdateRequest) {
                     $url = route('profile_update_requests.show', $approvable->id, false);
                 } else {
-                    $url = Route::has($moduleName . '.show') 
-                            ? route($moduleName . '.show', $approvable->id, false) 
+                    $normalizedRoute = str_replace('-', '_', $moduleName);
+                    if ($normalizedRoute === 'claim_expense') {
+                        $normalizedRoute = 'claim_expenses';
+                    }
+                    $url = Route::has($normalizedRoute . '.show') 
+                            ? route($normalizedRoute . '.show', $approvable->id, false) 
                             : '/' . $moduleName;
                 }
 

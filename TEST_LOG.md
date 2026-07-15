@@ -1,5 +1,19 @@
 # Test Log
 
+## 2026-07-15 (Claim Expense Notification Route Name Normalization)
+
+**Goal**: Fix 404 error when clicking on claim-expense workflow notifications by normalizing route names.
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- Added dash-to-underscore normalization logic and handled the `claim-expense` to `claim_expenses` pluralization mapping when resolving route names.
+- Updated [WorkflowStepRequestService.php](file:///P:/Project/Web/hrms/app/Services/Setting/WorkflowStepRequestService.php) for in-app custom notifications.
+- Updated [ApprovalActionRequiredNotification.php](file:///P:/Project/Web/hrms/app/Notifications/Approval/ApprovalActionRequiredNotification.php) for mail and JSON channel arrays.
+- Verified all tests pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-15 (Claim Expense Service Approved Deletion Support)
 
 **Goal**: Permit deletion of approved expense claims within the ExpenseApplicationService class.
