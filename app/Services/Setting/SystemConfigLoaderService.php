@@ -2,7 +2,7 @@
 
 namespace App\Services\Setting;
 
-use App\Models\Setting\ApiKey;
+use App\Models\Setting\GoogleMapApi;
 use App\Models\Setting\MailSetting;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
@@ -29,7 +29,7 @@ class SystemConfigLoaderService
     {
         if (Schema::hasTable('api_keys')) {
             $mapsKey = cache()->rememberForever('google_maps_api_key', function () {
-                return ApiKey::first()?->google_maps_api_key;
+                return GoogleMapApi::first()?->google_maps_api_key;
             });
 
             if (!empty($mapsKey)) {

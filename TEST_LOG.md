@@ -1,5 +1,22 @@
 # Test Log
 
+## 2026-07-15 (Google Map API Setting Module Refactoring)
+
+**Goal**: Rename settings API Keys module to Google Map API (model, controller, routes, views) and make it Axios-based.
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- Created [GoogleMapApi.php](file:///P:/Project/Web/hrms/app/Models/Setting/GoogleMapApi.php) remapped to `api_keys` table.
+- Created [GoogleMapApiController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/Setting/GoogleMapApiController.php) returning Axios JSON responses.
+- Updated route definitions in [web.php](file:///P:/Project/Web/hrms/routes/web.php) replacing `api-keys` endpoints with `google-map-api` endpoints.
+- Updated [SystemConfigLoaderService.php](file:///P:/Project/Web/hrms/app/Services/Setting/SystemConfigLoaderService.php) to use `GoogleMapApi`.
+- Created [google_map_api.blade.php](file:///P:/Project/Web/hrms/resources/views/setting/google_map_api.blade.php) view utilizing Axios for settings saving.
+- Removed deprecated `ApiKey.php`, `ApiKeyController.php`, and `api_keys.blade.php`.
+- Created [GoogleMapApiTest.php](file:///P:/Project/Web/hrms/tests/Feature/Setting/GoogleMapApiTest.php) and verified all 157 tests pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-15 (Claim Expense Notification Route Name Normalization)
 
 **Goal**: Fix 404 error when clicking on claim-expense workflow notifications by normalizing route names.

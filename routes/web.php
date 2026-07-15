@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Plan\AllowancePlanController;
-use App\Http\Controllers\Setting\ApiKeyController;
+use App\Http\Controllers\Setting\GoogleMapApiController;
 use App\Http\Controllers\Attendance\AttendancesController;
 use App\Http\Controllers\Company\BankAccountsController;
 use App\Http\Controllers\Company\BanksController;
@@ -973,12 +973,12 @@ Route::prefix('settings')->middleware('auth')->group(function () {
        });
     });
 
-    Route::controller(ApiKeyController::class)->group(function (){
+    Route::controller(GoogleMapApiController::class)->group(function (){
        Route::middleware('permission:api-keys.view')->group(function () {
-           Route::get('api-keys', 'index')->name('setting.api_keys');
+           Route::get('google-map-api', 'index')->name('setting.google_map_api');
        });
        Route::middleware('permission:api-keys.create')->group(function () {
-           Route::post('api-keys/save', 'save')->name('setting.api_keys.save');
+           Route::post('google-map-api/save', 'save')->name('setting.google_map_api.save');
        });
     });
 

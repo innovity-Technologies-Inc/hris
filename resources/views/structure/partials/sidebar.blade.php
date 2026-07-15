@@ -903,11 +903,11 @@
                             </li>
                             @endif
                             @if($canAPIKeys)
-                            <li>
-                                <a class='tp-link @if (Route::is('setting.api_keys')) menuitem-active @endif'
-                                    href='{{ route('setting.api_keys') }}'>API Keys</a>
-                            </li>
-                            @endif
+                             <li>
+                                 <a class='tp-link @if (Route::is('setting.google_map_api')) menuitem-active @endif'
+                                     href='{{ route('setting.google_map_api') }}'>Google Map API</a>
+                             </li>
+                             @endif
                             @if($canSMTP)
                             <li>
                                 <a class='tp-link @if (Route::is('setting.mail_settings.*')) menuitem-active @endif'

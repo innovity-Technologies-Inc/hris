@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Crypt;
 use App\Traits\Userstamps;
 use App\Traits\Auditable;
 
-class ApiKey extends Model
+class GoogleMapApi extends Model
 {
     use Userstamps, Auditable;
     protected $table = 'api_keys';
@@ -41,4 +41,3 @@ class ApiKey extends Model
         $this->attributes['google_maps_api_key'] = !empty($value) ? Crypt::encrypt($value) : null;
     }
 }
-
