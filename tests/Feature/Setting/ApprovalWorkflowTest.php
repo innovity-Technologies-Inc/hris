@@ -294,7 +294,7 @@ test('it auto-approves steps if requester has higher authority or is the resolve
     
     $sr1 = $stepRequests->where('workflow_step_id', $step1->id)->first();
     expect($sr1->status->value)->toBe('approved');
-    expect($sr1->comments)->toContain('Requester level (division) has higher authority than required level (section)');
+    expect($sr1->comments)->toContain('Target user level (division) has higher authority than required level (section)');
 
     $sr2 = $stepRequests->where('workflow_step_id', $step2->id)->first();
     expect($sr2->status->value)->toBe('approved');

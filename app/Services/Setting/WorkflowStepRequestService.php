@@ -49,7 +49,9 @@ class WorkflowStepRequestService
             return;
         }
 
-        $requesterWeight = $requestingUser->user_type->weight();
+        // Find target user
+        $targetUser = $this->resolveTargetUser($approvable);
+        $targetWeight = $targetUser ? $targetUser->user_type->weight() : 99;
         
         // Get step details
         $step = $stepRequest->workflowStep;
@@ -65,13 +67,13 @@ class WorkflowStepRequestService
             $reason = 'Auto-approved: Requester is the resolved approver.';
         }
         
-        // Case 2: Requester has strictly higher authority level weight than the required level (Lower Level Approval)
+        // Case 2: Target user has strictly higher authority level weight than the required level (Lower Level Approval)
         if (!$shouldAutoApprove && ($step->type === 'user-type' || $step->type === 'role-user')) {
-            if (!empty($step->required_user_type)) {
+            if ($targetUser && !empty($step->required_user_type)) {
                 $stepWeight = UserType::getWeight($step->required_user_type);
-                if ($requesterWeight < $stepWeight) {
+                if ($targetWeight < $stepWeight) {
                     $shouldAutoApprove = true;
-                    $reason = "Auto-approved: Requester level ({$requestingUser->user_type->value}) has higher authority than required level ({$step->required_user_type}).";
+                    $reason = "Auto-approved: Target user level ({$targetUser->user_type->value}) has higher authority than required level ({$step->required_user_type}).";
                 }
             }
         }
@@ -171,6 +173,42 @@ class WorkflowStepRequestService
             $emp = $approvable->employee()->withoutGlobalScopes()->first();
             return $emp ? $emp->user : null;
         } 
+
+        return null;
+    }
+
+    /**
+     * Resolve the target user of the approvable model.
+     *
+     * @param mixed $approvable
+     * @return User|null
+     */
+    protected function resolveTargetUser($approvable): ?User
+    {
+        if (method_exists($approvable, 'user')) {
+            $user = $approvable->user;
+            if ($user) {
+                return $user;
+            }
+        }
+
+        if (method_exists($approvable, 'employee')) {
+            $emp = $approvable->employee()->withoutGlobalScopes()->first();
+            if ($emp && $emp->user) {
+                return $emp->user;
+            }
+        }
+
+        if (method_exists($approvable, 'getEmployee')) {
+            $emp = $approvable->getEmployee()->withoutGlobalScopes()->first();
+            if ($emp && $emp->user) {
+                return $emp->user;
+            }
+        }
+
+        if (method_exists($approvable, 'creator')) {
+            return $approvable->creator;
+        }
 
         return null;
     }

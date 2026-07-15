@@ -1,5 +1,19 @@
 # Test Log
 
+## 2026-07-15 (Workflow Auto-Approval Target User Logic)
+
+**Goal**: Refactor workflow auto-approval weight comparison to check against the target user (employee for whom the request is created) instead of the creator (user who submitted the form).
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- Added `resolveTargetUser($approvable)` method to `WorkflowStepRequestService.php`.
+- Updated `handleAutoApproval` logic to load target user and check their authority level weight.
+- Fixed `ApprovalWorkflowTest.php` to match the expected auto-approval reason for division-level target employee requests.
+- Verified all 155 tests pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-15 (Employee Select2 Dropdown and Max Height Limit)
 
 **Goal**: Convert the Employee select dropdown in the Expense Claim screen to Select2 and set a global fixed height with scrolling for the options dropdown list.
