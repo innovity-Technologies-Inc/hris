@@ -117,6 +117,22 @@ class ExpenseApplicationController extends Controller
     {
         try {
             $application = ExpenseApplication::withoutGlobalScopes()->findOrFail($id);
+            $user = auth()->user();
+
+            if ($application->status !== 'pending') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Only pending applications can be deleted.'
+                ], 403);
+            }
+
+            if (!$user->can('claim-expenses.delete') && $application->created_by !== $user->id) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You are not authorized to delete this application.'
+                ], 403);
+            }
+
             $this->expenseService->deleteApplication($application);
 
             return response()->json([

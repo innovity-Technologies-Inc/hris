@@ -1,5 +1,19 @@
 # Test Log
 
+## 2026-07-15 (Claim Expense Owner Deletion Logic)
+
+**Goal**: Enable claim expense deletion for the owner (creator of the record) or the user holding Spatie claim-expenses.delete permission when the application is pending.
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- Modified [search_results.blade.php](file:///P:/Project/Web/hrms/resources/views/claim_expense/expense_applications/search_results.blade.php) to display the delete/cancel button if the status is pending and the user is either the creator or holds the Spatie permission.
+- Updated `destroy` method in [ExpenseApplicationController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/ClaimExpense/ExpenseApplicationController.php) to authorize deletions based on pending status and ownership/permission check.
+- Removed route-level permission middleware from delete applications route in [web.php](file:///P:/Project/Web/hrms/routes/web.php).
+- Verified all tests pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-15 (Workflow Auto-Approval Target User Logic)
 
 **Goal**: Refactor workflow auto-approval weight comparison to check against the target user (employee for whom the request is created) instead of the creator (user who submitted the form).

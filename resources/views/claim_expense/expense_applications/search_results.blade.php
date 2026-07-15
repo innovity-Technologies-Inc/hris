@@ -40,11 +40,11 @@
                             <i style="height: 12px; width: 12px" data-feather="eye"></i>
                         </a>
                         @if($app->status === 'pending')
-                            @can('claim-expenses.delete')
+                            @if(auth()->user()->can('claim-expenses.delete') || auth()->user()->id === $app->created_by)
                             <button type="button" class="btn btn-danger btn-sm delete-application" data-id="{{ $app->id }}" title="Cancel / Delete">
                                 <i style="height: 12px; width: 12px" data-feather="trash-2"></i>
                             </button>
-                            @endcan
+                            @endif
                         @endif
                     </div>
                 </td>

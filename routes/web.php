@@ -1517,9 +1517,7 @@ Route::prefix('claim-expense')->middleware('auth')->group(function () {
             Route::get('application', 'create')->name('claim_expenses.create');
             Route::post('store', 'store')->name('claim_expenses.store');
         });
-        Route::middleware('permission:claim-expenses.delete')->group(function () {
-            Route::delete('applications/{id}', 'destroy')->name('claim_expenses.delete');
-        });
+        Route::delete('applications/{id}', 'destroy')->name('claim_expenses.delete');
     });
 });
 
