@@ -249,6 +249,31 @@ class ApprovalWorkflowSeeder extends Seeder
                         'user_id' => null,
                     ],
                 ]
+            ],
+            [
+                'name' => 'Claim-expense Workflow',
+                'module' => 'claim-expense',
+                'type' => 'sequential',
+                'required_approvals' => null,
+                'is_active' => true,
+                'steps' => [
+                    [
+                        'name' => 'Step 1 - Company (HR Manager)',
+                        'step_order' => 1,
+                        'type' => 'role-user',
+                        'required_user_type' => 'company',
+                        'role_id' => $hrManagerId,
+                        'user_id' => null,
+                    ],
+                    [
+                        'name' => 'Step 2 - Company (Manager)',
+                        'step_order' => 2,
+                        'type' => 'role-user',
+                        'required_user_type' => 'company',
+                        'role_id' => $managerId,
+                        'user_id' => null,
+                    ],
+                ]
             ]
         ];
 
