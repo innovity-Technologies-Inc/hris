@@ -1,5 +1,18 @@
 # Test Log
 
+## 2026-07-15 (Claim Expense Approved Deletion Support)
+
+**Goal**: Extend Claim Expense deletion to allow deletion of claims that are either in pending or approved status.
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- Updated status check in [search_results.blade.php](file:///P:/Project/Web/hrms/resources/views/claim_expense/expense_applications/search_results.blade.php) to display the delete/cancel button for pending and approved status.
+- Updated `destroy` method check in [ExpenseApplicationController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/ClaimExpense/ExpenseApplicationController.php) to allow deletion for both pending and approved status.
+- Verified all tests pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-15 (Claim Expense Owner Deletion Logic)
 
 **Goal**: Enable claim expense deletion for the owner (creator of the record) or the user holding Spatie claim-expenses.delete permission when the application is pending.

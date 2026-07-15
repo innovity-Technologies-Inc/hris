@@ -39,7 +39,7 @@
                         <a href="{{ route('claim_expenses.show', $app->id) }}" class="btn btn-info btn-sm" title="View Details">
                             <i style="height: 12px; width: 12px" data-feather="eye"></i>
                         </a>
-                        @if($app->status === 'pending')
+                        @if(in_array($app->status, ['pending', 'approved']))
                             @if(auth()->user()->can('claim-expenses.delete') || auth()->user()->id === $app->created_by)
                             <button type="button" class="btn btn-danger btn-sm delete-application" data-id="{{ $app->id }}" title="Cancel / Delete">
                                 <i style="height: 12px; width: 12px" data-feather="trash-2"></i>

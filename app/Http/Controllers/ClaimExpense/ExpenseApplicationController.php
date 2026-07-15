@@ -119,10 +119,10 @@ class ExpenseApplicationController extends Controller
             $application = ExpenseApplication::withoutGlobalScopes()->findOrFail($id);
             $user = auth()->user();
 
-            if ($application->status !== 'pending') {
+            if (!in_array($application->status, ['pending', 'approved'])) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Only pending applications can be deleted.'
+                    'message' => 'Only pending or approved applications can be deleted.'
                 ], 403);
             }
 
