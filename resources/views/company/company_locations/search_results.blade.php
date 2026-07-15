@@ -30,21 +30,15 @@
                         @endcan
 
                         @can('company-branches.edit')
-                        <a href="{{ route('company_locations.edit', $location->id) }}" class="btn btn-primary btn-sm">
+                        <button type="button" class="btn btn-primary btn-sm edit-location" data-id="{{ $location->id }}">
                             <i style="height: 12px; width: 12px" data-feather="edit"></i>
-                        </a>
+                        </button>
                         @endcan
 
                         @can('company-branches.delete')
-                        <form action="{{ route('company_locations.destroy', $location->id) }}" method="POST"
-                            style="display: inline-block">
-                            @csrf
-                            @method('DELETE')
-
-                            <button class="btn btn-sm btn-danger confirmDelete">
-                                <i style="height: 12px; width: 12px" data-feather="trash"></i>
-                            </button>
-                        </form>
+                        <button type="button" class="btn btn-sm btn-danger delete-location" data-id="{{ $location->id }}">
+                            <i style="height: 12px; width: 12px" data-feather="trash"></i>
+                        </button>
                         @endcan
                     </td>
                 </tr>

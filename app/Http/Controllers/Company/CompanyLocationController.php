@@ -25,7 +25,8 @@ class CompanyLocationController extends Controller
         if ($request->ajax()) {
             return view('company.company_locations.search_results', compact('locations'))->render();
         }
-        return view('company.company_locations.index', compact('title', 'section', 'sub_section', 'locations'));
+        $companies = Company::all();
+        return view('company.company_locations.index', compact('title', 'section', 'sub_section', 'locations', 'companies'));
     }
 
 
@@ -39,48 +40,45 @@ class CompanyLocationController extends Controller
     {
         $validatedData = $request->validate(
             [
-                'company_id' => 'required',
+                'company_id' => 'required|exists:companies,id',
                 'name' => 'required|string|max:255',
                 'location_address' => 'required|string|max:255',
                 'state' => 'nullable|string|max:255',
                 'division' => 'nullable|string|max:255',
                 'city' => 'nullable|string|max:255',
                 'country' => 'nullable|string|max:255',
-                'status' => 'required',
+                'status' => 'required|in:active,inactive',
             ],
             [
                 'company_id.required' => 'Please select a company.',
-                'name.required' => 'Please enter a unit name.',
+                'name.required' => 'Please enter a branch name.',
                 'location_address.required' => 'Please enter a location address.',
-                'state.required' => 'Please enter a state.',
-                'division.required' => 'Please enter a division.',
-                'city.required' => 'Please enter a city.',
-                'country.required' => 'Please enter a country.',
                 'status.required' => 'Please select a status.',
             ]
         );
 
-
         CompanyLocation::create($validatedData);
 
-        return redirect()->route('company_locations.index')
-            ->with([
-                'message' => 'Company Location Saved Successfully',
-                'alert-type' => 'success'
-            ]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Company Location Saved Successfully'
+        ]);
     }
 
     public function edit($id)
     {
         $company_location = CompanyLocation::findOrFail($id);
-        $companies = Company::all();
+        
+        if (request()->wantsJson() || request()->ajax()) {
+            return response()->json($company_location);
+        }
 
+        $companies = Company::all();
         return view('company.company_locations.form', compact('company_location', 'companies'));
     }
 
     public function update(Request $request, $id)
     {
-
         $request->validate(
             [
                 'company_id' => 'required|exists:companies,id',
@@ -103,11 +101,10 @@ class CompanyLocationController extends Controller
         $company_location = CompanyLocation::findOrFail($id);
         $company_location->update($request->all());
 
-        return redirect()->route('company_locations.index')
-            ->with([
-                'message' => 'Company Location updated Successfully',
-                'alert-type' => 'success'
-            ]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Company Location updated Successfully'
+        ]);
     }
 
     public function destroy($id)
@@ -115,8 +112,12 @@ class CompanyLocationController extends Controller
         $company_location = CompanyLocation::findOrFail($id);
         $company_location->delete();
 
-        return redirect()->route('company_locations.index')
-            ->with('success', 'Company location deleted successfully.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Company location deleted successfully.'
+        ]);
     }
+
+
 }
 
