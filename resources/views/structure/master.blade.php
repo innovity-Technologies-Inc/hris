@@ -95,6 +95,11 @@
         .select2-container--bootstrap-5 .select2-selection--single .select2-selection__arrow {
             height: 36px !important;
         }
+        /* Limit Select2 dropdown options height and enable scrollbar */
+        .select2-results__options {
+            max-height: 250px !important;
+            overflow-y: auto !important;
+        }
     </style>
 
     @stack('styles')

@@ -1,5 +1,18 @@
 # Test Log
 
+## 2026-07-15 (Employee Select2 Dropdown and Max Height Limit)
+
+**Goal**: Convert the Employee select dropdown in the Expense Claim screen to Select2 and set a global fixed height with scrolling for the options dropdown list.
+
+**Exact Command**: `php artisan config:clear && php artisan test tests/Feature/ClaimExpenseTest.php`
+
+**Results**:
+- Added `.select2_list` class to the Employee selector in [create.blade.php](file:///P:/Project/Web/hrms/resources/views/claim_expense/expense_applications/create.blade.php).
+- Added a global css rule targeting `.select2-results__options` in [master.blade.php](file:///P:/Project/Web/hrms/resources/views/structure/master.blade.php) setting `max-height: 250px` and `overflow-y: auto`.
+- Verified all tests pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-14 (Expense Types Global Master Data Refactor)
 
 **Goal**: Remove company constraints from Expense Types, making them a globally shared master data category.

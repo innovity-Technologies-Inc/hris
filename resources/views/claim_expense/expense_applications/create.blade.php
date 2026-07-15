@@ -24,7 +24,7 @@
                                         @endforeach
                                     </select>
                                 @else
-                                    <select class="form-select" name="employee_id" id="employee_id" required>
+                                    <select class="form-select select2_list" name="employee_id" id="employee_id" required>
                                         <option value="">Select Employee</option>
                                         @foreach($employees as $emp)
                                             <option value="{{ $emp->id }}">{{ $emp->full_name }} ({{ $emp->applicant_id }})</option>
