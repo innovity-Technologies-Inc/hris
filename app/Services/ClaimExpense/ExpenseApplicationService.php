@@ -37,8 +37,8 @@ class ExpenseApplicationService
 
     public function deleteApplication(ExpenseApplication $application): void
     {
-        if ($application->status !== 'pending') {
-            throw new \Exception('Only pending applications can be deleted.');
+        if (!in_array($application->status, ['pending', 'approved'])) {
+            throw new \Exception('Only pending or approved applications can be deleted.');
         }
 
         if ($application->receipt_path) {

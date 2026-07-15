@@ -1,5 +1,17 @@
 # Test Log
 
+## 2026-07-15 (Claim Expense Service Approved Deletion Support)
+
+**Goal**: Permit deletion of approved expense claims within the ExpenseApplicationService class.
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- Modified `deleteApplication` method inside [ExpenseApplicationService.php](file:///P:/Project/Web/hrms/app/Services/ClaimExpense/ExpenseApplicationService.php) to allow deletion of claims that are in pending or approved status.
+- Verified all tests pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-15 (Claim Expense Approved Deletion Support)
 
 **Goal**: Extend Claim Expense deletion to allow deletion of claims that are either in pending or approved status.
