@@ -21,14 +21,6 @@
             margin: -20px -20px 20px -20px;
         }
 
-        .section-header.success {
-            background: #11998e;
-        }
-
-        .section-header.warning {
-            background: #f093fb;
-        }
-
         .form-label {
             font-weight: 600;
             color: #495057;
