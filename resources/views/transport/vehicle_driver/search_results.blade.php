@@ -74,14 +74,10 @@
                             <i style="height: 12px; width: 12px" data-feather="eye"></i>
                         </a>
 
-                        <form action="{{ route('transport.vehicle_drivers.destroy', $item->id) }}" method="POST"
-                            style="display: inline-block">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger confirmDelete" title="Delete">
-                                <i style="height: 12px; width: 12px" data-feather="trash"></i>
-                            </button>
-                        </form>
+                        <button type="button" class="btn btn-sm btn-danger" title="Delete"
+                            onclick="deleteAssignment({{ $item->id }})">
+                            <i style="height: 12px; width: 12px" data-feather="trash"></i>
+                        </button>
                     </div>
                 </td>
             </tr>

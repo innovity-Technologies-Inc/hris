@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Transport;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Transport\StoreVehicleDriverRequest;
+use App\Http\Requests\Transport\UpdateVehicleDriverRequest;
 use App\Models\Transport\Vehicle;
 use App\Models\Transport\VehicleDriver;
 use App\Models\Employee\Employee;
@@ -95,20 +97,8 @@ class VehicleDriverController extends Controller
     /**
      * Store a newly created vehicle driver assignment.
      */
-    public function store(Request $request)
+    public function store(StoreVehicleDriverRequest $request)
     {
-        $request->validate([
-            'vehicle_id' => 'required|exists:vehicles,id',
-            'driver_id' => 'required|exists:employees,id',
-            'start_date' => 'required|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
-        ], [
-            'vehicle_id.required' => 'Please select a vehicle.',
-            'driver_id.required' => 'Please select a driver.',
-            'start_date.required' => 'Start date is required.',
-            'end_date.after_or_equal' => 'End date must be after or equal to start date.',
-        ]);
-
         try {
             Log::info('Assigning Driver to Vehicle');
 
@@ -120,20 +110,21 @@ class VehicleDriverController extends Controller
                 'status' => 'active', // Always set to active by default
             ]);
 
+            Log::info('Driver Assigned Successfully');
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Driver Assigned Successfully',
+                'redirect' => route('transport.vehicle_drivers.index')
+            ], 201);
+
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->back()->withInput()->with([
-                'message' => 'Something Went Wrong',
-                'alert-type' => 'error'
-            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Something Went Wrong: ' . $e->getMessage()
+            ], 500);
         }
-
-        Log::info('Driver Assigned Successfully');
-
-        return redirect()->route('transport.vehicle_drivers.index')->with([
-            'message' => 'Driver Assigned Successfully',
-            'alert-type' => 'success'
-        ]);
     }
 
     /**
@@ -168,21 +159,12 @@ class VehicleDriverController extends Controller
     /**
      * Update the specified assignment.
      */
-    public function update(Request $request, $id)
+    public function update(UpdateVehicleDriverRequest $request, $id)
     {
-        $vehicleDriver = VehicleDriver::findOrFail($id);
-
-        $request->validate([
-            'vehicle_id' => 'required|exists:vehicles,id',
-            'driver_id' => 'required|exists:employees,id',
-            'start_date' => 'required|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
-            'status' => 'required|in:active,inactive',
-        ]);
-
         try {
             Log::info('Updating Vehicle Driver Assignment');
 
+            $vehicleDriver = VehicleDriver::findOrFail($id);
             $vehicleDriver->update($request->only([
                 'vehicle_id',
                 'driver_id',
@@ -191,20 +173,21 @@ class VehicleDriverController extends Controller
                 'status',
             ]));
 
+            Log::info('Vehicle Driver Assignment Updated Successfully');
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Assignment Updated Successfully',
+                'redirect' => route('transport.vehicle_drivers.index')
+            ], 200);
+
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->back()->withInput()->with([
-                'message' => 'Something Went Wrong',
-                'alert-type' => 'error'
-            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Something Went Wrong: ' . $e->getMessage()
+            ], 500);
         }
-
-        Log::info('Vehicle Driver Assignment Updated Successfully');
-
-        return redirect()->route('transport.vehicle_drivers.index')->with([
-            'message' => 'Assignment Updated Successfully',
-            'alert-type' => 'success'
-        ]);
     }
 
     /**
@@ -218,20 +201,20 @@ class VehicleDriverController extends Controller
             $vehicleDriver = VehicleDriver::findOrFail($id);
             $vehicleDriver->update(['status' => 'inactive']);
 
+            Log::info('Vehicle Driver Assignment Deactivated Successfully');
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Assignment Deactivated Successfully'
+            ], 200);
+
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->back()->with([
-                'message' => 'Something Went Wrong',
-                'alert-type' => 'error'
-            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Something Went Wrong'
+            ], 500);
         }
-
-        Log::info('Vehicle Driver Assignment Deactivated Successfully');
-
-        return redirect()->route('transport.vehicle_drivers.index')->with([
-            'message' => 'Assignment Deactivated Successfully',
-            'alert-type' => 'success'
-        ]);
     }
 
     /**
