@@ -1,5 +1,20 @@
 # Test Log
 
+## 2026-07-16 (Attendance Clock Country Badge & World Clock Facility)
+
+**Goal**: Show the country/timezone name next to the current time and add a world clock facility to the attendance clock page.
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- Modified [clock_in_out.blade.php](file:///P:/Project/Web/hrms/resources/views/attendance/clock_in_out.blade.php):
+  - Appended a dynamic local country badge selector `#localCountry` next to the main header current time display.
+  - Added world clock cards layout displaying New York (US), London (UK), Dubai (UAE), and Tokyo (JP) times under a new `.world-clock-container` panel.
+  - Implemented timezone-specific formatters and country lookup mapping inside the javascript `updateTime()` loop to update the main country name and all world clocks live every second.
+- Verified all 158 tests pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-16 (Attendance Clock Section & Page Layout Redesign)
 
 **Goal**: Redesign the clock section and remove any flat white background classes on the attendance clock-in page to implement a premium glassmorphic and gradient aesthetic.

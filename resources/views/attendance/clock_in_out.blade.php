@@ -173,6 +173,34 @@
         .clock-out-btn:active {
             transform: translateY(-1px) !important;
         }
+
+        /* World Clock Styles */
+        .world-clock-container {
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+        }
+        [data-bs-theme=dark] .world-clock-container {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .world-clock-card {
+            background: rgba(255, 255, 255, 0.4) !important;
+            border: 1px solid rgba(0, 0, 0, 0.06) !important;
+            backdrop-filter: blur(5px) !important;
+            -webkit-backdrop-filter: blur(5px) !important;
+            transition: all 0.2s ease !important;
+        }
+        .world-clock-card:hover {
+            transform: translateY(-2px) !important;
+            background: rgba(255, 255, 255, 0.7) !important;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03) !important;
+        }
+        [data-bs-theme=dark] .world-clock-card {
+            background: rgba(15, 23, 42, 0.4) !important;
+            border: 1px solid rgba(255, 255, 255, 0.05) !important;
+        }
+        [data-bs-theme=dark] .world-clock-card:hover {
+            background: rgba(15, 23, 42, 0.6) !important;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2) !important;
+        }
     </style>
 @endpush
 
@@ -270,7 +298,10 @@
 
                                         <!-- Current Time -->
                                         <div class="time-display">
-                                            <div class="time-label"><i class="bi bi-clock me-1"></i> Current Time</div>
+                                            <div class="time-label d-flex align-items-center justify-content-center gap-1">
+                                                <i class="bi bi-clock me-1"></i> Current Time
+                                                <span id="localCountry" class="badge bg-primary bg-gradient ms-1" style="font-size: 0.7rem;">--</span>
+                                            </div>
                                             <div id="currentTime" class="current-time">--:--:--</div>
                                             <div id="currentDate" class="current-date">-- -- --</div>
                                         </div>
@@ -305,6 +336,41 @@
                                             </button>
                                         </div>
 
+                                        <!-- World Clock Facility -->
+                                        <div class="world-clock-container mt-4 w-100">
+                                            <div class="world-clock-header d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
+                                                <span class="fw-semibold text-dark-emphasis small">
+                                                    <i class="bi bi-globe2 text-primary me-2"></i>World Clocks
+                                                </span>
+                                                <span class="badge bg-light text-dark small font-monospace" style="font-size: 0.75rem;">GMT / UTC</span>
+                                            </div>
+                                            <div class="row g-2">
+                                                <div class="col-6">
+                                                    <div class="world-clock-card p-2 rounded border text-center">
+                                                        <small class="text-muted d-block fw-semibold" style="font-size: 0.75rem;">New York (US)</small>
+                                                        <span id="clock-ny" class="fw-bold text-dark font-monospace small">--:--:--</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="world-clock-card p-2 rounded border text-center">
+                                                        <small class="text-muted d-block fw-semibold" style="font-size: 0.75rem;">London (UK)</small>
+                                                        <span id="clock-london" class="fw-bold text-dark font-monospace small">--:--:--</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="world-clock-card p-2 rounded border text-center">
+                                                        <small class="text-muted d-block fw-semibold" style="font-size: 0.75rem;">Dubai (UAE)</small>
+                                                        <span id="clock-dubai" class="fw-bold text-dark font-monospace small">--:--:--</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="world-clock-card p-2 rounded border text-center">
+                                                        <small class="text-muted d-block fw-semibold" style="font-size: 0.75rem;">Tokyo (JP)</small>
+                                                        <span id="clock-tokyo" class="fw-bold text-dark font-monospace small">--:--:--</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -343,6 +409,36 @@
                 return String(hours).padStart(2, '0') + ':' + minutes + ':' + seconds + ' ' + ampm;
             }
 
+            function detectLocalCountry() {
+                const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                const tzCountryMap = {
+                    'Asia/Dhaka': 'Bangladesh',
+                    'Asia/Kolkata': 'India',
+                    'Asia/Karachi': 'Pakistan',
+                    'Asia/Dubai': 'UAE',
+                    'Asia/Riyadh': 'Saudi Arabia',
+                    'Asia/Tokyo': 'Japan',
+                    'Asia/Singapore': 'Singapore',
+                    'Europe/London': 'United Kingdom',
+                    'Europe/Paris': 'France',
+                    'America/New_York': 'USA (EST)',
+                    'America/Los_Angeles': 'USA (PST)',
+                    'Australia/Sydney': 'Australia'
+                };
+                return tzCountryMap[tz] || tz.split('/')[1] || tz;
+            }
+
+            function formatTzTime(timezone) {
+                const options = {
+                    timeZone: timezone,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: true
+                };
+                return new Date().toLocaleTimeString('en-US', options);
+            }
+
             function updateTime() {
                 const now = new Date();
                 let hours = now.getHours();
@@ -357,7 +453,16 @@
                     month: 'long',
                     day: 'numeric'
                 }));
+
+                // Update world clocks
+                $('#clock-ny').text(formatTzTime('America/New_York'));
+                $('#clock-london').text(formatTzTime('Europe/London'));
+                $('#clock-dubai').text(formatTzTime('Asia/Dubai'));
+                $('#clock-tokyo').text(formatTzTime('Asia/Tokyo'));
             }
+
+            // Set local country badge
+            $('#localCountry').text(detectLocalCountry());
 
             updateTime();
             setInterval(updateTime, 1000);
