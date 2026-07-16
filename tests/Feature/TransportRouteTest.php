@@ -14,11 +14,25 @@ beforeEach(function () {
     $permissions = [
         'vehicles.view',
         'vehicles.create',
+        'vehicles.edit',
+        'vehicles.delete',
         'assign-driver.view',
         'assign-driver.create',
+        'assign-driver.edit',
+        'assign-driver.delete',
+        'vehicle-requisition.view',
+        'vehicle-requisition.create',
+        'vehicle-requisition.edit',
+        'vehicle-allocation.view',
+        'vehicle-allocation.create',
+        'vehicle-allocation.edit',
+        'employee-transport.view',
+        'employee-transport.create',
+        'employee-transport.edit',
+        'employee-transport.delete',
     ];
     foreach ($permissions as $permission) {
-        Permission::create(['name' => $permission]);
+        Permission::findOrCreate($permission, 'web');
     }
     $role->syncPermissions($permissions);
     $this->user->assignRole($role);
@@ -26,6 +40,7 @@ beforeEach(function () {
     // Setup for Vehicle Driver create
     \App\Models\Company\Designation::create([
         'company_designation' => 'Driver',
+        'short_name' => 'DRV',
         'designation_level' => 1,
         'status' => 'Active',
     ]);
@@ -241,6 +256,7 @@ test('vehicle requisition store and reject behavior', function () {
     // Create department
     $dept = \App\Models\Company\Department::create([
         'department_name' => 'IT Dept',
+        'short_name' => 'IT',
         'status' => 'Active'
     ]);
 
@@ -331,14 +347,6 @@ test('vehicle allocation store and release behavior', function () {
 });
 
 test('employee transport CRUD, reject, and cancel behavior', function () {
-    $permissions = [
-        'employee-transport.create',
-        'employee-transport.view',
-        'employee-transport.edit',
-        'employee-transport.delete',
-    ];
-    $this->user->givePermissionTo($permissions);
-
     // Setup organization scope structures
     $group = \App\Models\Company\Group::create(['name' => 'Group A', 'short_name' => 'GA', 'status' => 'active']);
     $type = \App\Models\Company\CompanyType::create(['name' => 'Type A', 'short_name' => 'TA', 'status' => 'active']);
