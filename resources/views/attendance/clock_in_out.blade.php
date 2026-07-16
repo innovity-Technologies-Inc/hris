@@ -66,6 +66,24 @@
             overflow: hidden !important;
         }
 
+        #mainClockTzSelect {
+            text-align: center !important;
+            text-align-last: center !important;
+            font-size: 1rem !important;
+            color: #818cf8 !important;
+            font-weight: 700 !important;
+            appearance: none !important;
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            background-image: none !important;
+            padding: 0.25rem 0.5rem !important;
+            cursor: pointer !important;
+        }
+
+        #mainClockTzSelect option {
+            text-align: center !important;
+        }
+
         .time-display::before {
             content: '';
             position: absolute;

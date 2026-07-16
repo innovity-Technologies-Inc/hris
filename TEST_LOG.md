@@ -1,5 +1,19 @@
 # Test Log
 
+## 2026-07-16 (Attendance Clock Selector Center Alignment)
+
+**Goal**: Horizontally center align the region timezone select dropdown and the main digital clock text display.
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- Added custom styles for `#mainClockTzSelect` in the view's `@push('styles')` block:
+  - Applied `text-align: center` and `text-align-last: center` to center option label text.
+  - Set `appearance: none` and removed `background-image` select arrows to eliminate right-side alignment padding offset.
+- Verified all 158 tests pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-16 (Attendance Integrated Timezone Clock selection)
 
 **Goal**: Integrate the region timezone clock selection directly inside the main Clock card (defaulting to Bangladesh).
