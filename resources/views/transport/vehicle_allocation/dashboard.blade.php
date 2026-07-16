@@ -461,9 +461,51 @@
         function releaseVehicle(allocationId) {
             const form = document.getElementById('releaseForm');
             form.action = `{{ route('transport.vehicle_allocations.release', ':id') }}`.replace(':id', allocationId);
-            const modal = new bootstrap.Modal(document.getElementById('releaseModal'));
+            const modalEl = document.getElementById('releaseModal');
+            let modal = bootstrap.Modal.getInstance(modalEl);
+            if (!modal) {
+                modal = new bootstrap.Modal(modalEl);
+            }
             modal.show();
         }
+
+        // Axios Submit Handling
+        $('#releaseForm').on('submit', function(e) {
+            e.preventDefault();
+            const form = this;
+            const submitBtn = $(form).find('[type="submit"]');
+            submitBtn.prop('disabled', true);
+
+            const formData = new FormData(form);
+
+            axios.post(form.action, formData)
+                .then(response => {
+                    if (response.data.success) {
+                        const modalEl = document.getElementById('releaseModal');
+                        const modal = bootstrap.Modal.getInstance(modalEl);
+                        if (modal) modal.hide();
+                        form.reset();
+                        submitBtn.prop('disabled', false);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Released!',
+                            text: response.data.message,
+                            timer: 1500,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    }
+                })
+                .catch(error => {
+                    submitBtn.prop('disabled', false);
+                    Swal.fire(
+                        'Error!',
+                        error.response?.data?.message || 'Something went wrong.',
+                        'error'
+                    );
+                });
+        });
 
         // Update Ending Soon Timers
         function updateEndingSoonTimers() {

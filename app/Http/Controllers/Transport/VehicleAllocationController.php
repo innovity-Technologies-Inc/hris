@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Transport;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Transport\StoreVehicleAllocationRequest;
 use App\Models\Transport\AllocationRoute;
 use App\Models\Transport\EmployeeTransport;
 use App\Models\Transport\Vehicle;
@@ -357,33 +358,14 @@ class VehicleAllocationController extends Controller
     /**
      * Store the allocation.
      */
-    public function store(Request $request)
+    public function store(StoreVehicleAllocationRequest $request)
     {
-        $validated = $request->validate([
-            'allocation_type' => 'required|string',
-            'vehicle_ids' => 'required|array|min:1',
-            'vehicle_ids.*' => 'exists:vehicles,id',
-            'name' => 'nullable|string|max:255',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
-            'reference_type' => 'nullable|string',
-            'reference_id' => 'nullable|integer',
-            'route_start' => 'nullable|string|max:255',
-            'route_end' => 'nullable|string|max:255',
-            'distance_km' => 'nullable|numeric|min:0',
-            'estimated_duration_minutes' => 'nullable|integer|min:0',
-            'departure_time' => 'nullable|date_format:H:i',
-            'arrival_time' => 'nullable|date_format:H:i',
-            'route_description' => 'nullable|string',
-            'special_instructions' => 'nullable|string',
-            'remarks' => 'nullable|string|max:1000',
-        ]);
-
         try {
             DB::beginTransaction();
 
             Log::info('Creating Vehicle Allocation');
 
+            $validated = $request->validated();
             $vehicleIds = $validated['vehicle_ids'];
             $createdAllocations = [];
 
@@ -417,7 +399,6 @@ class VehicleAllocationController extends Controller
                     'status' => 'Active',
                     'approval_remarks' => $validated['remarks'] ?? null,
                     'approved_at' => now(),
-                    // 'approved_by' => auth()->id(), // Uncomment when auth is implemented
                 ]);
 
                 // Update vehicle allocation status, type, and purpose
@@ -453,14 +434,12 @@ class VehicleAllocationController extends Controller
                     $reference->update([
                         'status' => 'Approved',
                         'approved_at' => now(),
-                        // 'approved_by' => auth()->id(), // Uncomment when auth is implemented
                     ]);
                 } elseif ($reference instanceof VehicleRequisition) {
                     $reference->update([
                         'approval_status' => 'Approved',
                         'approved_at' => now(),
                         'assigned_vehicle_id' => $vehicleIds[0], // Assign first vehicle
-                        // 'approved_by' => auth()->id(), // Uncomment when auth is implemented
                     ]);
                 }
             }
@@ -472,18 +451,19 @@ class VehicleAllocationController extends Controller
 
             Log::info('Vehicle Allocation Created Successfully');
 
-            return redirect()->route('transport.vehicle_allocations.dashboard')->with([
+            return response()->json([
+                'success' => true,
                 'message' => 'Vehicle(s) Allocated Successfully',
-                'alert-type' => 'success'
-            ]);
+                'redirect' => route('transport.vehicle_allocations.dashboard')
+            ], 201);
 
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Allocation Error: ' . $e->getMessage());
-            return redirect()->back()->withInput()->with([
-                'message' => 'Something Went Wrong: ' . $e->getMessage(),
-                'alert-type' => 'error'
-            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Something Went Wrong: ' . $e->getMessage()
+            ], 500);
         }
     }
 
@@ -525,18 +505,18 @@ class VehicleAllocationController extends Controller
 
             // Check if allocation is already released/inactive
             if ($allocation->status === 'Inactive' || $allocation->status === 'Completed') {
-                return redirect()->back()->with([
-                    'message' => 'Vehicle allocation is already released',
-                    'alert-type' => 'info'
-                ]);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Vehicle allocation is already released'
+                ], 400);
             }
 
             // Check if allocation is active
             if ($allocation->status !== 'Active') {
-                return redirect()->back()->with([
-                    'message' => 'Only active vehicles can be released',
-                    'alert-type' => 'warning'
-                ]);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Only active vehicles can be released'
+                ], 400);
             }
 
             // Update allocation with remarks
@@ -553,18 +533,18 @@ class VehicleAllocationController extends Controller
 
             Log::info('Vehicle Released Successfully');
 
-            return redirect()->route('transport.vehicle_allocations.dashboard')->with([
+            return response()->json([
+                'success' => true,
                 'message' => 'Vehicle Released Successfully',
-                'alert-type' => 'success'
-            ]);
+                'redirect' => route('transport.vehicle_allocations.dashboard')
+            ], 200);
 
         } catch (\Exception $e) {
             Log::error('Release Error: ' . $e->getMessage());
-            Log::error('Stack trace: ' . $e->getTraceAsString());
-            return redirect()->back()->with([
-                'message' => 'Something Went Wrong: ' . $e->getMessage(),
-                'alert-type' => 'error'
-            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Something Went Wrong: ' . $e->getMessage()
+            ], 500);
         }
     }
 
@@ -591,17 +571,18 @@ class VehicleAllocationController extends Controller
 
             Log::info('Vehicle Allocation Extended Successfully');
 
-            return redirect()->back()->with([
+            return response()->json([
+                'success' => true,
                 'message' => 'Allocation Extended Successfully',
-                'alert-type' => 'success'
-            ]);
+                'redirect' => route('transport.vehicle_allocations.dashboard')
+            ], 200);
 
         } catch (\Exception $e) {
             Log::error('Extension Error: ' . $e->getMessage());
-            return redirect()->back()->with([
-                'message' => 'Something Went Wrong',
-                'alert-type' => 'error'
-            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Something Went Wrong'
+            ], 500);
         }
     }
 
