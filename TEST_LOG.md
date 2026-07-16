@@ -1,5 +1,17 @@
 # Test Log
 
+## 2026-07-16 (Attendance Employee Input Selection Fallback Fix)
+
+**Goal**: Resolve the logged-in employee ID via both `users.employee_id` and `employees.user_id` relations to ensure correct display selection.
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- Refactored [AttendancesController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/Attendance/AttendancesController.php) and [clock_in_out.blade.php](file:///P:/Project/Web/hrms/resources/views/attendance/clock_in_out.blade.php) PHP block to resolve employee ID by querying `Employee::where('user_id', auth()->id())` as a fallback when `auth()->user()->employee_id` is empty.
+- Verified all 158 tests pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-16 (Attendance Logged-In Employee Auto-Selection)
 
 **Goal**: Automatically select the logged-in user's employee record in the Clock In / Out form.

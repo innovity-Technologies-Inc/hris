@@ -25,7 +25,10 @@
                                         <h5 class="mb-4 text-dark fw-semibold">Employee Information</h5>
 
                                         @php
-                                            $loggedInEmployeeId = auth()->user()->employee_id;
+                                            $loggedInEmployeeId = $loggedInEmployeeId ?? auth()->user()->employee_id;
+                                            if (!$loggedInEmployeeId) {
+                                                $loggedInEmployeeId = \App\Models\Employee\Employee::where('user_id', auth()->id())->first()?->id;
+                                            }
                                         @endphp
                                         <!-- Employee -->
                                         <div class="mb-4">
