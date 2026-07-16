@@ -1,5 +1,24 @@
 # Test Log
 
+## 2026-07-17 (Custom Error Pages Design and Integration)
+
+**Goal**: Design beautiful custom HTTP error pages (401, 403, 404, 419, 500) matching the login page layout, including a home/return button that dynamically redirects to the dashboard (if authenticated) or the login page.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/TransportRouteTest.php`
+
+**Results**:
+- Modified [GuestLayout.php](file:///P:/Project/Web/hrms/app/View/Components/GuestLayout.php) and [guest.blade.php](file:///P:/Project/Web/hrms/resources/views/layouts/guest.blade.php) to support dynamic page titles and subtitles inside the portal layout.
+- Created custom error pages under [resources/views/errors/](file:///P:/Project/Web/hrms/resources/views/errors/):
+  - [401.blade.php](file:///P:/Project/Web/hrms/resources/views/errors/401.blade.php) (Unauthorized)
+  - [403.blade.php](file:///P:/Project/Web/hrms/resources/views/errors/403.blade.php) (Forbidden)
+  - [404.blade.php](file:///P:/Project/Web/hrms/resources/views/errors/404.blade.php) (Not Found)
+  - [419.blade.php](file:///P:/Project/Web/hrms/resources/views/errors/419.blade.php) (Session/Page Expired)
+  - [500.blade.php](file:///P:/Project/Web/hrms/resources/views/errors/500.blade.php) (Internal Server Error)
+- Implemented home redirection logic dynamically checking auth status (`auth()->check() ? url('/') : route('login')`).
+- Verified all transport tests continue to pass successfully after layout modifications ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-17 (Transport Module API-First Refactoring and Feature Testing)
 
 **Goal**: Convert the entire Transport module (Route Maps, Vehicles, Drivers, Requisitions, Allocations, and Employee Transports) to be API-first and Axios-based, using thin controllers with services and dedicated Form Request validation classes, and add feature tests validating all business logic.
