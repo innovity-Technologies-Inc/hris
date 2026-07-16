@@ -35,6 +35,8 @@
         }
         
         .via-point-badge {
+            background-color: #974063 !important;
+            color: #ffffff !important;
             font-size: 0.9rem;
             border-radius: 20px;
         }
@@ -139,9 +141,9 @@
                                     <div id="via_points_list" class="d-flex flex-wrap gap-2 mt-2">
                                         @if(isset($routeMap) && is_array($routeMap->via_points))
                                             @foreach($routeMap->via_points as $point)
-                                                <span class="badge bg-warning text-dark d-flex align-items-center gap-1 p-2 via-point-badge" data-value="{{ $point }}">
+                                                <span class="badge d-flex align-items-center gap-1 p-2 via-point-badge" data-value="{{ $point }}">
                                                     {{ $point }}
-                                                    <i class="mdi mdi-close text-danger remove-via-point" style="cursor: pointer;"></i>
+                                                    <i class="mdi mdi-close text-white remove-via-point" style="cursor: pointer; font-size: 12px;"></i>
                                                 </span>
                                             @endforeach
                                         @endif
@@ -224,9 +226,9 @@
 
                 // Append badge
                 $('#via_points_list').append(`
-                    <span class="badge bg-warning text-dark d-flex align-items-center gap-1 p-2 via-point-badge" data-value="${value}">
+                    <span class="badge d-flex align-items-center gap-1 p-2 via-point-badge" data-value="${value}">
                         ${value}
-                        <i class="mdi mdi-close text-danger remove-via-point" style="cursor: pointer;"></i>
+                        <i class="mdi mdi-close text-white remove-via-point" style="cursor: pointer; font-size: 12px;"></i>
                     </span>
                 `);
 
