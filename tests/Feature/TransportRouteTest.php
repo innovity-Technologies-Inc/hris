@@ -308,7 +308,7 @@ test('vehicle allocation store and release behavior', function () {
     ]);
 
     $allocationData = [
-        'allocation_type' => 'trip',
+        'allocation_type' => 'trip_based',
         'vehicle_ids' => [$vehicle->id],
         'name' => 'Trip to Client',
         'start_date' => now()->format('Y-m-d'),
