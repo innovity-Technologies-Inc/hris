@@ -25,6 +25,8 @@ class CompanyLocation extends Model
         'city',
         'country',
         'status',
+        'latitude',
+        'longitude',
     ];
 
     public function getCompany()
@@ -52,4 +54,3 @@ class CompanyLocation extends Model
         return $this->hasMany(OrganizationStructure::class, 'branch_unit_id');
     }
 }
-

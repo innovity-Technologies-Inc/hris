@@ -1,5 +1,25 @@
 # Test Log
 
+## 2026-07-16 (Company Location Coordinates & Select2 Modal Fix)
+
+**Goal**: Store company branch coordinates (latitude/longitude) resolved from Google Places Autocomplete, and fix the Select2 company dropdown not focusing/updating correctly inside the modal.
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- Created database migration to add decimal `latitude` and `longitude` fields to the `company_locations` table and executed `php artisan migrate`.
+- Updated [CompanyLocation.php](file:///P:/Project/Web/hrms/app/Models/Company/CompanyLocation.php) to include coordinates in `$fillable`.
+- Modified [CompanyLocationController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/Company/CompanyLocationController.php) to validate coordinates during store and update.
+- Updated [index.blade.php](file:///P:/Project/Web/hrms/resources/views/company/company_locations/index.blade.php):
+  - Added Latitude and Longitude read-only display fields to the form modal.
+  - Initialized Select2 with `dropdownParent` config targeting the modal, resolving the search box focus issue.
+  - Triggered jQuery `change` events on dropdown select elements inside Axios-based create and edit functions.
+  - Updated autocomplete event listener to capture and populate `latitude` and `longitude` fields.
+- Updated [CompanyLocationTest.php](file:///P:/Project/Web/hrms/tests/Feature/Company/CompanyLocationTest.php) to verify coordinates validation and persistence.
+- Verified all 157 tests pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-16 (Google Map API Setting Redundant Password Toggle Fix)
 
 **Goal**: Resolve conflict where password eye toggle button did not show the key due to conflicting local and global event handlers.

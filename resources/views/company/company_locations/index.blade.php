@@ -69,6 +69,16 @@
                             </div>
 
                             <div class="col-lg-6 mb-3">
+                                <label for="latitude" class="form-label fw-semibold">Latitude</label>
+                                <input type="text" id="latitude" class="form-control" name="latitude" placeholder="Latitude" readonly>
+                            </div>
+
+                            <div class="col-lg-6 mb-3">
+                                <label for="longitude" class="form-label fw-semibold">Longitude</label>
+                                <input type="text" id="longitude" class="form-control" name="longitude" placeholder="Longitude" readonly>
+                            </div>
+
+                            <div class="col-lg-6 mb-3">
                                 <label for="state" class="form-label fw-semibold">State</label>
                                 <input type="text" id="state" class="form-control" name="state" placeholder="Enter State" maxlength="255">
                             </div>
@@ -115,7 +125,11 @@ let autocomplete;
 
 function initAutocomplete() {
     const input = document.getElementById('location_address');
-    if (!input) return;
+    if (!input) {
+        document.addEventListener('DOMContentLoaded', initAutocomplete);
+        return;
+    }
+    if (typeof google === 'undefined' || !google.maps || !google.maps.places) return;
     
     autocomplete = new google.maps.places.Autocomplete(input, {
         componentRestrictions: { country: 'bd' },
@@ -133,6 +147,8 @@ function initAutocomplete() {
         let state = '';
         let division = '';
         let country = '';
+        let lat = place.geometry.location.lat();
+        let lng = place.geometry.location.lng();
 
         if (place.address_components) {
             place.address_components.forEach(component => {
@@ -151,6 +167,8 @@ function initAutocomplete() {
         }
 
         document.getElementById('location_address').value = streetAddress;
+        document.getElementById('latitude').value = lat;
+        document.getElementById('longitude').value = lng;
         if (city) document.getElementById('city').value = city;
         if (state) document.getElementById('state').value = state;
         if (division) document.getElementById('division').value = division;
@@ -164,6 +182,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalEl = document.getElementById('companyLocationModal');
     const modal = new bootstrap.Modal(modalEl);
     const form = document.getElementById('companyLocationForm');
+
+    // Re-initialize select2 with dropdownParent to fix search input focus in bootstrap modal
+    $('#modal_company_id').select2({
+        width: '100%',
+        theme: 'bootstrap-5',
+        dropdownParent: $('#companyLocationModal'),
+        placeholder: "Choose Company",
+        allowClear: true
+    });
 
     // Load locations via Axios (handles pagination clicks as well)
     function fetchLocations(url = "{{ route('company_locations.index') }}") {
@@ -205,7 +232,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (btnCreate) {
         btnCreate.addEventListener('click', () => {
             form.reset();
+            $('#modal_company_id').val('').trigger('change');
             document.getElementById('locationId').value = '';
+            document.getElementById('latitude').value = '';
+            document.getElementById('longitude').value = '';
             document.getElementById('companyLocationModalLabel').innerText = 'Add Company Branch';
             modal.show();
         });
@@ -220,9 +250,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     .then(response => {
                         const data = response.data;
                         document.getElementById('locationId').value = data.id;
-                        document.getElementById('modal_company_id').value = data.company_id;
+                        $('#modal_company_id').val(data.company_id).trigger('change');
                         document.getElementById('modal_name').value = data.name;
                         document.getElementById('location_address').value = data.location_address;
+                        document.getElementById('latitude').value = data.latitude || '';
+                        document.getElementById('longitude').value = data.longitude || '';
                         document.getElementById('state').value = data.state || '';
                         document.getElementById('division').value = data.division || '';
                         document.getElementById('city').value = data.city || '';
@@ -276,6 +308,8 @@ document.addEventListener('DOMContentLoaded', function() {
             company_id: document.getElementById('modal_company_id').value,
             name: document.getElementById('modal_name').value,
             location_address: document.getElementById('location_address').value,
+            latitude: document.getElementById('latitude').value,
+            longitude: document.getElementById('longitude').value,
             state: document.getElementById('state').value,
             division: document.getElementById('division').value,
             city: document.getElementById('city').value,

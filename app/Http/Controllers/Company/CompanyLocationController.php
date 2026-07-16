@@ -48,6 +48,8 @@ class CompanyLocationController extends Controller
                 'city' => 'nullable|string|max:255',
                 'country' => 'nullable|string|max:255',
                 'status' => 'required|in:active,inactive',
+                'latitude' => 'nullable|numeric',
+                'longitude' => 'nullable|numeric',
             ],
             [
                 'company_id.required' => 'Please select a company.',
@@ -79,7 +81,7 @@ class CompanyLocationController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate(
+        $validatedData = $request->validate(
             [
                 'company_id' => 'required|exists:companies,id',
                 'name' => 'required|string|max:255',
@@ -89,6 +91,8 @@ class CompanyLocationController extends Controller
                 'city' => 'nullable|string|max:255',
                 'country' => 'nullable|string|max:255',
                 'status' => 'required|string',
+                'latitude' => 'nullable|numeric',
+                'longitude' => 'nullable|numeric',
             ],
             [
                 'company_id.required' => 'Please select a company.',
@@ -99,7 +103,7 @@ class CompanyLocationController extends Controller
         );
 
         $company_location = CompanyLocation::findOrFail($id);
-        $company_location->update($request->all());
+        $company_location->update($validatedData);
 
         return response()->json([
             'success' => true,

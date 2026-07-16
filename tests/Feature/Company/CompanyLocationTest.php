@@ -66,7 +66,9 @@ it('can manage company locations via axios', function () {
         'state' => 'Dhaka Division',
         'division' => 'Dhaka Division',
         'country' => 'Bangladesh',
-        'status' => 'active'
+        'status' => 'active',
+        'latitude' => 23.8103,
+        'longitude' => 90.4125,
     ]);
 
     $storeResponse->assertStatus(200);
@@ -78,6 +80,8 @@ it('can manage company locations via axios', function () {
     $location = CompanyLocation::where('name', 'Dhaka Branch')->first();
     expect($location)->not->toBeNull();
     expect($location->location_address)->toBe('Dhaka, Bangladesh');
+    expect(floatval($location->latitude))->toBe(23.8103);
+    expect(floatval($location->longitude))->toBe(90.4125);
 
     // 3. Axios Edit (JSON response)
     $editResponse = $this->getJson(route('company_locations.edit', $location->id));
@@ -93,7 +97,9 @@ it('can manage company locations via axios', function () {
         'state' => 'Dhaka Division',
         'division' => 'Dhaka Division',
         'country' => 'Bangladesh',
-        'status' => 'active'
+        'status' => 'active',
+        'latitude' => 23.8041,
+        'longitude' => 90.3525,
     ]);
 
     $updateResponse->assertStatus(200);
@@ -105,6 +111,8 @@ it('can manage company locations via axios', function () {
     $location->refresh();
     expect($location->name)->toBe('Dhaka Main Branch');
     expect($location->location_address)->toBe('Mirpur, Dhaka, Bangladesh');
+    expect(floatval($location->latitude))->toBe(23.8041);
+    expect(floatval($location->longitude))->toBe(90.3525);
 
     // 5. Axios Destroy
     $deleteResponse = $this->deleteJson(route('company_locations.destroy', $location->id));
