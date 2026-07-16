@@ -2,36 +2,70 @@
 
 @section('content')
     <style>
-        /* Timeline styles for Route Map modal */
-        .route-timeline {
+        /* Horizontal timeline styles for Route Map modal */
+        .horizontal-route-container {
+            min-height: 120px;
+        }
+        .route-line {
+            position: absolute;
+            left: 12.5%;
+            right: 12.5%;
+            top: 29px;
+            height: 4px;
+            background: var(--bs-border-color, #e9ecef);
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+        .route-step {
+            text-align: center;
             position: relative;
         }
-        .route-timeline::before {
-            content: '';
-            position: absolute;
-            left: 5px;
-            top: 10px;
-            bottom: 10px;
-            width: 2px;
-            background: #e0e0e0;
-        }
-        .timeline-item {
-            position: relative;
-            padding-left: 25px;
-        }
-        .timeline-dot {
-            position: absolute;
-            left: 0;
-            top: 4px;
-            width: 12px;
-            height: 12px;
+        .step-icon {
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            border: 2px solid white;
-            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px auto;
+            border: 3px solid var(--bs-modal-bg, #fff);
+            box-shadow: 0 0 0 2px var(--bs-border-color, #e9ecef);
+            font-size: 14px;
+            color: white;
+            font-weight: bold;
+            z-index: 3;
+            position: relative;
+            transition: all 0.3s ease;
         }
-        .timeline-dot.bg-success { background-color: #2ecc71 !important; }
-        .timeline-dot.bg-warning { background-color: #f1c40f !important; }
-        .timeline-dot.bg-danger { background-color: #e74c3c !important; }
+        .step-icon.bg-success {
+            box-shadow: 0 0 0 2px #2ecc71;
+            background-color: #2ecc71 !important;
+        }
+        .step-icon.bg-warning {
+            box-shadow: 0 0 0 2px #f1c40f;
+            background-color: #f1c40f !important;
+            color: #333;
+        }
+        .step-icon.bg-danger {
+            box-shadow: 0 0 0 2px #e74c3c;
+            background-color: #e74c3c !important;
+        }
+        .step-label {
+            font-size: 0.72rem;
+            color: #888;
+            text-transform: uppercase;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 2px;
+        }
+        .step-name {
+            font-size: 0.82rem;
+            color: var(--bs-body-color, #212529);
+            font-weight: 700;
+            display: block;
+            padding: 0 5px;
+            word-break: break-word;
+        }
     </style>
 
     <div class="row">
@@ -71,7 +105,7 @@
 
     <!-- Route Map Details Modal -->
     <div class="modal fade" id="routeMapModal" tabindex="-1" aria-labelledby="routeMapModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content border-0 shadow-lg rounded-4">
                 <div class="modal-header bg-primary text-white py-3">
                     <h5 class="modal-title text-white" id="routeMapModalLabel">
@@ -83,31 +117,20 @@
                     <!-- Route Name -->
                     <div class="mb-4">
                         <h6 class="text-muted mb-1 text-uppercase fw-semibold tracking-wider" style="font-size: 0.75rem;">Route Name</h6>
-                        <h5 class="fw-bold text-dark mb-0" id="modalRouteName"></h5>
+                        <h5 class="fw-bold text-body mb-0" id="modalRouteName"></h5>
                     </div>
 
-                    <!-- Stepper Timeline -->
+                    <!-- Horizontal Stepper Timeline -->
                     <div class="mb-4">
-                        <h6 class="text-muted mb-3 text-uppercase fw-semibold tracking-wider" style="font-size: 0.75rem;">Route Path & Stopovers</h6>
+                        <h6 class="text-muted mb-4 text-uppercase fw-semibold tracking-wider" style="font-size: 0.75rem;">Route Map</h6>
                         
-                        <div class="route-timeline position-relative ps-2">
-                            <!-- Start Point -->
-                            <div class="timeline-item pb-3">
-                                <span class="timeline-dot bg-success"></span>
-                                <span class="text-muted small d-block">Start Point</span>
-                                <strong class="text-dark" id="modalStartPoint"></strong>
-                            </div>
-
-                            <!-- Via Points Container -->
-                            <div id="modalViaPointsContainer">
-                                <!-- Dynamically added via JS -->
-                            </div>
-
-                            <!-- End Point -->
-                            <div class="timeline-item">
-                                <span class="timeline-dot bg-danger"></span>
-                                <span class="text-muted small d-block">Destination</span>
-                                <strong class="text-dark" id="modalEndPoint"></strong>
+                        <div class="horizontal-route-container position-relative py-3">
+                            <!-- Connecting Line -->
+                            <div class="route-line"></div>
+                            
+                            <!-- Steps Container -->
+                            <div class="d-flex justify-content-between align-items-start position-relative" id="modalHorizontalSteps" style="z-index: 2;">
+                                <!-- Populated via JS -->
                             </div>
                         </div>
                     </div>
@@ -166,8 +189,6 @@
             // Global modal view function
             window.showRouteMapModal = function(routeMap) {
                 $('#modalRouteName').text(routeMap.route_name);
-                $('#modalStartPoint').text(routeMap.start_point);
-                $('#modalEndPoint').text(routeMap.end_point);
                 
                 if (routeMap.route_details) {
                     $('#modalRouteDetails').text(routeMap.route_details);
@@ -176,21 +197,99 @@
                     $('#modalDetailsWrapper').hide();
                 }
 
-                // Populate via points
-                const viaContainer = $('#modalViaPointsContainer');
-                viaContainer.empty();
+                // Build horizontal steps
+                const stepsContainer = $('#modalHorizontalSteps');
+                stepsContainer.empty();
 
-                if (Array.isArray(routeMap.via_points) && routeMap.via_points.length > 0) {
-                    routeMap.via_points.forEach(function(point) {
-                        viaContainer.append(`
-                            <div class="timeline-item pb-3">
-                                <span class="timeline-dot bg-warning"></span>
-                                <span class="text-muted small d-block">Stopover</span>
-                                <strong class="text-dark">${point}</strong>
-                            </div>
-                        `);
+                const steps = [];
+
+                // 1. Start Point
+                steps.push({
+                    label: 'Start',
+                    name: routeMap.start_point,
+                    class: 'bg-success',
+                    icon: '<i class="mdi mdi-play" style="font-size: 12px; margin-left: 2px;"></i>'
+                });
+
+                // 2. Via Points
+                const vias = Array.isArray(routeMap.via_points) ? routeMap.via_points : [];
+                if (vias.length === 1) {
+                    steps.push({
+                        label: 'Stopover',
+                        name: vias[0],
+                        class: 'bg-warning',
+                        icon: '1'
+                    });
+                } else if (vias.length === 2) {
+                    steps.push({
+                        label: 'Stopover 1',
+                        name: vias[0],
+                        class: 'bg-warning',
+                        icon: '1'
+                    });
+                    steps.push({
+                        label: 'Stopover 2',
+                        name: vias[1],
+                        class: 'bg-warning',
+                        icon: '2'
+                    });
+                } else if (vias.length > 2) {
+                    steps.push({
+                        label: 'Stopover 1',
+                        name: vias[0],
+                        class: 'bg-warning',
+                        icon: '1'
+                    });
+                    
+                    // Show remaining stopovers summary
+                    const remaining = vias.slice(1);
+                    const tooltipText = remaining.join(', ');
+                    steps.push({
+                        label: `Stopovers (+${remaining.length})`,
+                        name: `<span class="text-primary cursor-pointer" title="${tooltipText}" data-bs-toggle="tooltip" data-bs-placement="top">${remaining[0]} & others</span>`,
+                        class: 'bg-warning',
+                        icon: '+'
                     });
                 }
+
+                // 3. End Point
+                steps.push({
+                    label: 'Destination',
+                    name: routeMap.end_point,
+                    class: 'bg-danger',
+                    icon: '<i class="mdi mdi-flag-variant" style="font-size: 12px;"></i>'
+                });
+
+                // Adjust connecting route line width and offsets based on step counts
+                const stepCount = steps.length;
+                const routeLine = $('.route-line');
+                if (stepCount === 2) {
+                    routeLine.css({ left: '25%', right: '25%', top: '29px' });
+                } else if (stepCount === 3) {
+                    routeLine.css({ left: '16.6%', right: '16.6%', top: '29px' });
+                } else {
+                    routeLine.css({ left: '12.5%', right: '12.5%', top: '29px' });
+                }
+
+                // Render each step horizontally
+                steps.forEach(function(step) {
+                    const widthPercent = 100 / stepCount;
+                    stepsContainer.append(`
+                        <div class="route-step" style="width: ${widthPercent}%;">
+                            <div class="step-icon ${step.class}">
+                                ${step.icon}
+                            </div>
+                            <span class="step-label">${step.label}</span>
+                            <span class="step-name">${step.name}</span>
+                        </div>
+                    `);
+                });
+
+                // Initialize Bootstrap Tooltips if any
+                const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl);
+                });
 
                 const myModal = new bootstrap.Modal(document.getElementById('routeMapModal'));
                 myModal.show();
