@@ -49,7 +49,7 @@
             @endforeach
         </tbody>
     </table>
-    <div class="mt-3 d-flex justify-content-end">
+    <div class="mt-3 d-flex justify-content-start">
         {{ $locations->links() }}
     </div>
 @endif
