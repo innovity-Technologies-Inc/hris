@@ -1,6 +1,11 @@
 @extends('structure.master')
 
 @section('content')
+    <style>
+        .pac-container {
+            z-index: 1100 !important;
+        }
+    </style>
     {{-- List of Company Locations --}}
     <div class="row">
         <div class="col-xl-12">
@@ -50,7 +55,7 @@
                         <div class="row">
                             <div class="col-lg-12 mb-3">
                                 <label for="modal_company_id" class="form-label fw-semibold">Company <span class="text-danger">*</span></label>
-                                <select class="form-select select2_list" name="company_id" id="modal_company_id" required>
+                                <select class="form-select" name="company_id" id="modal_company_id" required>
                                     <option value="">Choose Company</option>
                                     @foreach ($companies as $item)
                                         <option value="{{ $item->id }}">{{ $item->name }}</option>

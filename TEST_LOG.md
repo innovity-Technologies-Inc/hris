@@ -1,5 +1,18 @@
 # Test Log
 
+## 2026-07-16 (Company Location Google Maps Autocomplete & Select2 Fix)
+
+**Goal**: Resolve overlay Z-Index and Select2 double initialization conflicts in company branches modal view.
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- Added a `<style>` block setting `.pac-container { z-index: 1100 !important; }` in [index.blade.php](file:///P:/Project/Web/hrms/resources/views/company/company_locations/index.blade.php) to ensure Google Autocomplete dropdown displays in front of the Bootstrap modal.
+- Removed the global `.select2_list` class from the company dropdown in [index.blade.php](file:///P:/Project/Web/hrms/resources/views/company/company_locations/index.blade.php) to prevent duplicate initializations and enable modal parent focus binding.
+- Verified all 157 tests pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-16 (Company Location Coordinates & Select2 Modal Fix)
 
 **Goal**: Store company branch coordinates (latitude/longitude) resolved from Google Places Autocomplete, and fix the Select2 company dropdown not focusing/updating correctly inside the modal.
