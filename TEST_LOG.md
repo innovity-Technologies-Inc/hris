@@ -1,5 +1,18 @@
 # Test Log
 
+## 2026-07-16 (Attendance Clock Selector Color Reversion)
+
+**Goal**: Revert the color of the region timezone select dropdown inside the main clock card to its previous color (white/default).
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- Modified [clock_in_out.blade.php](file:///P:/Project/Web/hrms/resources/views/attendance/clock_in_out.blade.php):
+  - Removed `color: #818cf8 !important` style from `#mainClockTzSelect` definition to revert back to using the default white text color.
+- Verified all 158 tests pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-16 (Attendance Clock Selector Center Alignment)
 
 **Goal**: Horizontally center align the region timezone select dropdown and the main digital clock text display.

@@ -70,7 +70,6 @@
             text-align: center !important;
             text-align-last: center !important;
             font-size: 1rem !important;
-            color: #818cf8 !important;
             font-weight: 700 !important;
             appearance: none !important;
             -webkit-appearance: none !important;
