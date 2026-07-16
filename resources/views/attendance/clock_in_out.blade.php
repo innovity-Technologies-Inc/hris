@@ -3,10 +3,183 @@
 @section('content')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
+@push('styles')
+    <style>
+        /* Glassmorphism theme override */
+        .attendance-card {
+            border-radius: 16px !important;
+            border: none !important;
+            background: rgba(255, 255, 255, 0.4) !important;
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px) !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04) !important;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        [data-bs-theme=dark] .attendance-card {
+            background: rgba(15, 23, 42, 0.3) !important;
+            border: 1px solid rgba(255, 255, 255, 0.05) !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, var(--bs-primary, #4f46e5), #312e81) !important;
+            color: white !important;
+            padding: 2rem !important;
+            border-radius: 16px 16px 0 0 !important;
+            border-bottom: none !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+        }
+
+        .form-section, .clock-section {
+            background: rgba(255, 255, 255, 0.6) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            border-radius: 16px !important;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05) !important;
+            padding: 2.5rem !important;
+            height: 100% !important;
+            transition: all 0.3s ease !important;
+        }
+
+        [data-bs-theme=dark] .form-section, 
+        [data-bs-theme=dark] .clock-section {
+            background: rgba(30, 41, 59, 0.5) !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2) !important;
+        }
+
+        /* Clock redesign */
+        .time-display {
+            background: linear-gradient(135deg, #1e293b, #0f172a) !important;
+            border: none !important;
+            border-radius: 16px !important;
+            padding: 2rem !important;
+            color: #ffffff !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3) !important;
+            margin-bottom: 2rem !important;
+            width: 100% !important;
+            max-width: 360px !important;
+            position: relative !important;
+            overflow: hidden !important;
+        }
+
+        .time-display::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .time-label {
+            color: #818cf8 !important;
+            font-size: 0.85rem !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.15em !important;
+            font-weight: 700 !important;
+        }
+
+        .current-time {
+            font-size: 3rem !important;
+            font-weight: 800 !important;
+            color: #ffffff !important;
+            text-shadow: 0 0 15px rgba(99, 102, 241, 0.6) !important;
+            font-family: 'Outfit', 'Inter', -apple-system, sans-serif !important;
+            margin: 0.75rem 0 !important;
+            letter-spacing: 1px !important;
+        }
+
+        .current-date {
+            font-size: 0.95rem !important;
+            color: #94a3b8 !important;
+            font-weight: 500 !important;
+        }
+
+        /* Clock-in info display styling */
+        .clock-in-time-display {
+            background: rgba(16, 185, 129, 0.1) !important;
+            border: 1px solid rgba(16, 185, 129, 0.3) !important;
+            border-radius: 12px !important;
+            padding: 1rem 1.5rem !important;
+            color: #10b981 !important;
+            width: 100% !important;
+            max-width: 300px !important;
+            margin-bottom: 2rem !important;
+            box-shadow: none !important;
+        }
+
+        .clock-in-time-display .time-label {
+            color: #10b981 !important;
+        }
+
+        .clocked-time {
+            font-size: 1.5rem !important;
+            font-weight: 700 !important;
+            color: #047857 !important;
+            font-family: 'Outfit', 'Inter', sans-serif !important;
+            margin-top: 0.25rem !important;
+        }
+
+        [data-bs-theme=dark] .clocked-time {
+            color: #34d399 !important;
+        }
+
+        /* Interactive Clock Button */
+        .clock-button {
+            width: 100% !important;
+            max-width: 280px !important;
+            padding: 1.1rem 2rem !important;
+            border-radius: 12px !important;
+            font-size: 1.1rem !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.05em !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+            border: none !important;
+        }
+
+        .clock-in-btn {
+            background: linear-gradient(135deg, #10b981, #059669) !important;
+            color: #ffffff !important;
+        }
+
+        .clock-in-btn:hover {
+            background: linear-gradient(135deg, #059669, #047857) !important;
+            transform: translateY(-3px) scale(1.02) !important;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4) !important;
+        }
+
+        .clock-in-btn:active {
+            transform: translateY(-1px) !important;
+        }
+
+        .clock-out-btn {
+            background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+            color: #ffffff !important;
+        }
+
+        .clock-out-btn:hover {
+            background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+            transform: translateY(-3px) scale(1.02) !important;
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4) !important;
+        }
+
+        .clock-out-btn:active {
+            transform: translateY(-1px) !important;
+        }
+    </style>
+@endpush
+
     <div class="container-fluid p-4">
         <div class="row justify-content-center">
             <div class="col-12 attendance-container">
-                <div class="card shadow-sm border-0">
+                <div class="card attendance-card shadow-sm border-0">
 
                     <!-- Header -->
                     <div class="page-header">
