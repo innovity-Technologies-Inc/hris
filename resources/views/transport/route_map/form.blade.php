@@ -60,7 +60,7 @@
                 <div class="card-body p-4">
                     <form
                         action="{{ isset($routeMap) ? route('transport.route_maps.update', $routeMap->id) : route('transport.route_maps.store') }}"
-                        method="post">
+                        method="post" id="routeMapForm">
                         @csrf
                         @if (isset($routeMap))
                             @method('PUT')
@@ -84,9 +84,7 @@
                                         placeholder="e.g., Route A - Banani to Motijheel"
                                         value="{{ isset($routeMap) ? $routeMap->route_name : old('route_name') }}"
                                         required>
-                                    @error('route_name')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                    <div class="invalid-feedback">@error('route_name') {{ $message }} @enderror</div>
                                 </div>
 
                                 <div class="col-md-6">
@@ -98,9 +96,7 @@
                                         placeholder="e.g., Banani Kakoli"
                                         value="{{ isset($routeMap) ? $routeMap->start_point : old('start_point') }}"
                                         required>
-                                    @error('start_point')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                    <div class="invalid-feedback">@error('start_point') {{ $message }} @enderror</div>
                                 </div>
 
                                 <div class="col-md-6">
@@ -112,9 +108,7 @@
                                         placeholder="e.g., Motijheel C/A"
                                         value="{{ isset($routeMap) ? $routeMap->end_point : old('end_point') }}"
                                         required>
-                                    @error('end_point')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                    <div class="invalid-feedback">@error('end_point') {{ $message }} @enderror</div>
                                 </div>
                             </div>
                         </div>
@@ -155,9 +149,7 @@
                                             @endforeach
                                         @endif
                                     </div>
-                                    @error('via_points')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
+                                    <small class="text-danger error-feedback" id="error-via_points">@error('via_points') {{ $message }} @enderror</small>
                                 </div>
 
                                 <div class="col-md-12">
@@ -166,9 +158,7 @@
                                     </label>
                                     <textarea name="route_details" id="route_details" class="form-control @error('route_details') is-invalid @enderror"
                                         rows="3" placeholder="Provide additional route description or directions">{{ isset($routeMap) ? $routeMap->route_details : old('route_details') }}</textarea>
-                                    @error('route_details')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                    <div class="invalid-feedback">@error('route_details') {{ $message }} @enderror</div>
                                 </div>
 
                                 <div class="col-md-6">
@@ -180,9 +170,7 @@
                                         <option value="Active" {{ (isset($routeMap) && $routeMap->status == 'Active') || old('status') == 'Active' ? 'selected' : '' }}>Active</option>
                                         <option value="Inactive" {{ (isset($routeMap) && $routeMap->status == 'Inactive') || old('status') == 'Inactive' ? 'selected' : '' }}>Inactive</option>
                                     </select>
-                                    @error('status')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                    <div class="invalid-feedback">@error('status') {{ $message }} @enderror</div>
                                 </div>
                             </div>
                         </div>
@@ -259,6 +247,54 @@
                 $(`#via_points_hidden_inputs input[value="${value}"]`).remove();
                 // Remove badge
                 badge.remove();
+            });
+
+            // Axios Submit Handling
+            $('#routeMapForm').on('submit', function(e) {
+                e.preventDefault();
+                const form = this;
+                const submitBtn = $(form).find('[type="submit"]');
+                submitBtn.prop('disabled', true);
+
+                // Clear previous validation errors
+                $(form).find('.is-invalid').removeClass('is-invalid');
+                $(form).find('.invalid-feedback').text('');
+                $('#error-via_points').text('');
+
+                const formData = new FormData(form);
+
+                axios.post(form.action, formData)
+                    .then(response => {
+                        if (response.data.success) {
+                            window.location.href = response.data.redirect;
+                        }
+                    })
+                    .catch(error => {
+                        submitBtn.prop('disabled', false);
+                        if (error.response && error.response.status === 422) {
+                            const errors = error.response.data.errors;
+                            Object.keys(errors).forEach(key => {
+                                // Handle array keys like via_points.0
+                                let fieldKey = key;
+                                if (key.includes('.')) {
+                                    fieldKey = key.split('.')[0] + '[]';
+                                }
+                                
+                                if (key.startsWith('via_points')) {
+                                    $('#error-via_points').text(errors[key][0]);
+                                    return;
+                                }
+
+                                const input = $(form).find(`[name="${fieldKey}"]`);
+                                if (input.length) {
+                                    input.addClass('is-invalid');
+                                    input.siblings('.invalid-feedback').text(errors[key][0]);
+                                }
+                            });
+                        } else {
+                            alert(error.response?.data?.message || 'Something went wrong.');
+                        }
+                    });
             });
         });
     </script>

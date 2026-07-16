@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Transport;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Transport\StoreRouteMapRequest;
+use App\Http\Requests\Transport\UpdateRouteMapRequest;
 use App\Models\Transport\RouteMap;
 use App\HelperClass;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
@@ -46,31 +48,22 @@ class RouteMapController extends Controller
         ));
     }
 
-    public function store(Request $request)
+    public function store(StoreRouteMapRequest $request)
     {
-        $request->validate([
-            'route_name' => 'required|string|max:255',
-            'start_point' => 'required|string|max:255',
-            'end_point' => 'required|string|max:255',
-            'via_points' => 'nullable|array',
-            'via_points.*' => 'nullable|string|max:255',
-            'route_details' => 'nullable|string|max:1000',
-            'status' => 'required|in:Active,Inactive',
-        ]);
-
         try {
-            RouteMap::create($request->all());
+            RouteMap::create($request->validated());
 
-            return redirect()->route('transport.route_maps.index')->with([
+            return response()->json([
+                'success' => true,
                 'message' => 'Route Map Created Successfully',
-                'alert-type' => 'success'
-            ]);
+                'redirect' => route('transport.route_maps.index')
+            ], 201);
         } catch (\Exception $e) {
             Log::error('Route Map Create Error: ' . $e->getMessage());
-            return redirect()->back()->withInput()->with([
-                'message' => 'Something Went Wrong',
-                'alert-type' => 'error'
-            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Something Went Wrong'
+            ], 500);
         }
     }
 
@@ -92,32 +85,23 @@ class RouteMapController extends Controller
         ));
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateRouteMapRequest $request, $id)
     {
-        $request->validate([
-            'route_name' => 'required|string|max:255',
-            'start_point' => 'required|string|max:255',
-            'end_point' => 'required|string|max:255',
-            'via_points' => 'nullable|array',
-            'via_points.*' => 'nullable|string|max:255',
-            'route_details' => 'nullable|string|max:1000',
-            'status' => 'required|in:Active,Inactive',
-        ]);
-
         try {
             $routeMap = RouteMap::findOrFail($id);
-            $routeMap->update($request->all());
+            $routeMap->update($request->validated());
 
-            return redirect()->route('transport.route_maps.index')->with([
+            return response()->json([
+                'success' => true,
                 'message' => 'Route Map Updated Successfully',
-                'alert-type' => 'success'
-            ]);
+                'redirect' => route('transport.route_maps.index')
+            ], 200);
         } catch (\Exception $e) {
             Log::error('Route Map Update Error: ' . $e->getMessage());
-            return redirect()->back()->withInput()->with([
-                'message' => 'Something Went Wrong',
-                'alert-type' => 'error'
-            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Something Went Wrong'
+            ], 500);
         }
     }
 
