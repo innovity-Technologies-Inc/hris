@@ -201,8 +201,7 @@
     </div>
 @endsection
 
-@section('scripts')
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+@push('scripts')
     <script>
         $(document).ready(function() {
             function addViaPoint() {
@@ -261,4 +260,4 @@
             });
         });
     </script>
-@endsection
+@endpush
