@@ -296,71 +296,54 @@
                                 <div class="col-lg-6">
                                     <div class="clock-section">
 
-                                        <!-- Current Time -->
-                                        <div class="time-display">
-                                            <div class="time-label d-flex align-items-center justify-content-center gap-1">
-                                                <i class="bi bi-clock me-1"></i> Current Time
-                                                <span id="localCountry" class="badge bg-primary bg-gradient ms-1" style="font-size: 0.7rem;">--</span>
-                                            </div>
-                                            <div id="currentTime" class="current-time">--:--:--</div>
-                                            <div id="currentDate" class="current-date">-- -- --</div>
-                                        </div>
-
-                                        <!-- Clock In Time Display -->
-                                        <div id="clockInTimeDisplay" class="clock-in-time-display"
-                                             style="display:none;">
-                                            <div class="time-label"><i class="bi bi-check-circle me-1"></i> Clocked In
-                                                At
-                                            </div>
-                                            <div id="clockedInTime" class="clocked-time">--:--:--</div>
-                                        </div>
-
-                                        <!-- Buttons -->
-                                        <div id="clockInContainer" style="display:none;">
-                                            <button type="button" id="clockInBtn" class="clock-button clock-in-btn">
-                                                <span class="button-icon"><i
-                                                        class="bi bi-box-arrow-in-right"></i></span>
-                                                <span class="button-text">Clock In</span>
-                                            </button>
-                                        </div>
-
-                                        <div id="locationWarningNote" class="alert alert-danger mt-3" style="display:none; font-size: 0.9rem;">
-                                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                                            <span id="locationWarningText">You are out of the office area.</span>
-                                        </div>
-
-                                        <div id="clockOutContainer" style="display:none;">
-                                            <button type="button" id="clockOutBtn" class="clock-button clock-out-btn">
-                                                <span class="button-icon"><i class="bi bi-box-arrow-left"></i></span>
-                                                <span class="button-text">Clock Out</span>
-                                            </button>
-                                        </div>
-
-                                         <!-- World Clock Facility -->
-                                         <div class="world-clock-container mt-4 w-100">
-                                             <div class="world-clock-header d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
-                                                 <span class="fw-semibold text-dark-emphasis small">
-                                                     <i class="bi bi-globe2 text-primary me-2"></i>World Clock
-                                                 </span>
-                                             </div>
-                                             <div class="mb-3">
-                                                 <label class="form-label small text-muted">Select Region</label>
-                                                 <select id="worldRegionSelect" class="form-select form-select-sm">
-                                                     <option value="Europe/London">London (United Kingdom)</option>
-                                                     <option value="America/New_York">New York (United States)</option>
-                                                     <option value="Asia/Dubai">Dubai (United Arab Emirates)</option>
-                                                     <option value="Asia/Tokyo">Tokyo (Japan)</option>
-                                                     <option value="Asia/Dhaka">Dhaka (Bangladesh)</option>
-                                                     <option value="Asia/Kolkata">Kolkata (India)</option>
-                                                     <option value="Asia/Singapore">Singapore</option>
-                                                     <option value="Australia/Sydney">Sydney (Australia)</option>
-                                                     <option value="Asia/Riyadh">Riyadh (Saudi Arabia)</option>
+                                         <!-- Current Time -->
+                                         <div class="time-display d-flex flex-column align-items-center">
+                                             <div class="time-label mb-2"><i class="bi bi-clock me-1"></i> Current Time</div>
+                                             <div class="w-100 px-3 mb-2">
+                                                 <select id="mainClockTzSelect" class="form-select form-select-sm text-center border-0 bg-transparent text-white fw-semibold" style="cursor: pointer; outline: none; box-shadow: none;">
+                                                     <option value="Asia/Dhaka" selected class="bg-dark text-white">Bangladesh (Dhaka)</option>
+                                                     <option value="Europe/London" class="bg-dark text-white">United Kingdom (London)</option>
+                                                     <option value="America/New_York" class="bg-dark text-white">United States (New York)</option>
+                                                     <option value="Asia/Dubai" class="bg-dark text-white">United Arab Emirates (Dubai)</option>
+                                                     <option value="Asia/Tokyo" class="bg-dark text-white">Japan (Tokyo)</option>
+                                                     <option value="Asia/Kolkata" class="bg-dark text-white">India (Kolkata)</option>
+                                                     <option value="Asia/Singapore" class="bg-dark text-white">Singapore</option>
+                                                     <option value="Australia/Sydney" class="bg-dark text-white">Australia (Sydney)</option>
+                                                     <option value="Asia/Riyadh" class="bg-dark text-white">Saudi Arabia (Riyadh)</option>
                                                  </select>
                                              </div>
-                                             <div class="world-clock-display p-3 rounded text-center" style="background: linear-gradient(135deg, #1e293b, #0f172a); color: #fff; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); border-radius: 12px !important;">
-                                                 <small id="worldRegionLabel" class="text-uppercase tracking-wider fw-bold" style="font-size: 0.75rem; letter-spacing: 0.05em; color: #818cf8;">LONDON (UNITED KINGDOM)</small>
-                                                 <div id="worldClockTime" class="h3 fw-bold mb-0 mt-1 font-monospace" style="letter-spacing: 1px; color: #fff; text-shadow: 0 0 10px rgba(99, 102, 241, 0.4);">--:--:--</div>
+                                             <div id="currentTime" class="current-time">--:--:--</div>
+                                             <div id="currentDate" class="current-date">-- -- --</div>
+                                         </div>
+
+                                         <!-- Clock In Time Display -->
+                                         <div id="clockInTimeDisplay" class="clock-in-time-display"
+                                              style="display:none;">
+                                             <div class="time-label"><i class="bi bi-check-circle me-1"></i> Clocked In
+                                                 At
                                              </div>
+                                             <div id="clockedInTime" class="clocked-time">--:--:--</div>
+                                         </div>
+
+                                         <!-- Buttons -->
+                                         <div id="clockInContainer" style="display:none;">
+                                             <button type="button" id="clockInBtn" class="clock-button clock-in-btn">
+                                                 <span class="button-icon"><i
+                                                         class="bi bi-box-arrow-in-right"></i></span>
+                                                 <span class="button-text">Clock In</span>
+                                             </button>
+                                         </div>
+
+                                         <div id="locationWarningNote" class="alert alert-danger mt-3" style="display:none; font-size: 0.9rem;">
+                                             <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                             <span id="locationWarningText">You are out of the office area.</span>
+                                         </div>
+
+                                         <div id="clockOutContainer" style="display:none;">
+                                             <button type="button" id="clockOutBtn" class="clock-button clock-out-btn">
+                                                 <span class="button-icon"><i class="bi bi-box-arrow-left"></i></span>
+                                                 <span class="button-text">Clock Out</span>
+                                             </button>
                                          </div>
                                     </div>
                                 </div>
@@ -430,40 +413,27 @@
                 return new Date().toLocaleTimeString('en-US', options);
             }
 
-            function updateWorldClock() {
-                const selectedTz = $('#worldRegionSelect').val();
-                if (selectedTz) {
-                    $('#worldClockTime').text(formatTzTime(selectedTz));
-                    const labelText = $('#worldRegionSelect option:selected').text().toUpperCase();
-                    $('#worldRegionLabel').text(labelText);
-                }
-            }
-
-            function updateTime() {
+            function formatTzDate(timezone) {
                 const now = new Date();
-                let hours = now.getHours();
-                const minutes = String(now.getMinutes()).padStart(2, '0');
-                const seconds = String(now.getSeconds()).padStart(2, '0');
-                const ampm = hours >= 12 ? 'PM' : 'AM';
-                hours = hours % 12 || 12;
-                $('#currentTime').text(String(hours).padStart(2, '0') + ':' + minutes + ':' + seconds + ' ' + ampm);
-                $('#currentDate').text(now.toLocaleDateString('en-US', {
+                const options = {
+                    timeZone: timezone,
                     weekday: 'long',
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric'
-                }));
-
-                // Update dynamic world clock
-                updateWorldClock();
+                };
+                return now.toLocaleDateString('en-US', options);
             }
 
-            // Set local country badge
-            $('#localCountry').text(detectLocalCountry());
+            function updateTime() {
+                const selectedTz = $('#mainClockTzSelect').val() || 'Asia/Dhaka';
+                $('#currentTime').text(formatTzTime(selectedTz));
+                $('#currentDate').text(formatTzDate(selectedTz));
+            }
 
             // Bind change listener
-            $('#worldRegionSelect').on('change', function() {
-                updateWorldClock();
+            $('#mainClockTzSelect').on('change', function() {
+                updateTime();
             });
 
             updateTime();

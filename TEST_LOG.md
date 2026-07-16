@@ -1,5 +1,21 @@
 # Test Log
 
+## 2026-07-16 (Attendance Integrated Timezone Clock selection)
+
+**Goal**: Integrate the region timezone clock selection directly inside the main Clock card (defaulting to Bangladesh).
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- Modified [clock_in_out.blade.php](file:///P:/Project/Web/hrms/resources/views/attendance/clock_in_out.blade.php):
+  - Removed the separate world clock widget section layout.
+  - Inserted the timezone selection dropdown (`#mainClockTzSelect`) directly inside the main `.time-display` card widget.
+  - Set the default selected option to Bangladesh (Dhaka / `Asia/Dhaka`).
+  - Rewrote the clock JavaScript updates to dynamically compute both `#currentTime` and `#currentDate` based on the dropdown timezone value, updating live every second.
+- Verified all 158 tests pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-16 (Attendance Select Region World Clock Option)
 
 **Goal**: Replace static world clocks with a select region dropdown option and dynamic world clock display.
