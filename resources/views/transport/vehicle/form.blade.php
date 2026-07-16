@@ -226,7 +226,7 @@
 
                         {{-- License & Documents --}}
                         <div class="form-card mb-4">
-                            <div class="section-header success">
+                            <div class="section-header">
                                 <h6 class="mb-0">
                                     <i data-feather="file-text" style="width: 18px; height: 18px;"></i>
                                     License & Documents
@@ -284,7 +284,7 @@
 
                         {{-- Purchase Information --}}
                         <div class="form-card mb-4">
-                            <div class="section-header warning">
+                            <div class="section-header">
                                 <h6 class="mb-0">
                                     <i data-feather="shopping-cart" style="width: 18px; height: 18px;"></i>
                                     Purchase Information

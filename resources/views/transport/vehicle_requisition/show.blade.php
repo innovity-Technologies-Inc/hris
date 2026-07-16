@@ -19,18 +19,6 @@
             padding: 15px 20px;
         }
 
-        .section-header.success {
-            background: #11998e;
-        }
-
-        .section-header.warning {
-            background: #f093fb;
-        }
-
-        .section-header.info {
-            background: #4facfe;
-        }
-
         .detail-row {
             padding: 12px 20px;
             border-bottom: 1px solid #f0f0f0;
@@ -158,7 +146,7 @@
 
                             {{-- Trip Details --}}
                             <div class="detail-card mb-4">
-                                <div class="section-header success">
+                                <div class="section-header">
                                     <h6 class="mb-0">
                                         <i data-feather="navigation" style="width: 18px; height: 18px;"></i>
                                         Trip Details
@@ -195,7 +183,7 @@
 
                             {{-- Schedule --}}
                             <div class="detail-card mb-4">
-                                <div class="section-header warning">
+                                <div class="section-header">
                                     <h6 class="mb-0">
                                         <i data-feather="calendar" style="width: 18px; height: 18px;"></i>
                                         Schedule
@@ -241,7 +229,7 @@
                         <div class="col-lg-6">
                             {{-- Locations --}}
                             <div class="detail-card mb-4">
-                                <div class="section-header info">
+                                <div class="section-header">
                                     <h6 class="mb-0">
                                         <i data-feather="map-pin" style="width: 18px; height: 18px;"></i>
                                         Locations

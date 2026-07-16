@@ -21,18 +21,6 @@
             margin: -20px -20px 20px -20px;
         }
 
-        .section-header.success {
-            background: #11998e;
-        }
-
-        .section-header.warning {
-            background: #f093fb;
-        }
-
-        .section-header.info {
-            background: #4facfe;
-        }
-
         .form-label {
             font-weight: 600;
             color: #495057;
@@ -115,7 +103,7 @@
 
                         {{-- Trip Details Section --}}
                         <div class="form-card mb-4">
-                            <div class="section-header success">
+                            <div class="section-header">
                                 <h6 class="mb-0">
                                     <i data-feather="navigation" style="width: 18px; height: 18px;"></i>
                                     Trip Details
@@ -188,7 +176,7 @@
 
                         {{-- Schedule Section --}}
                         <div class="form-card mb-4">
-                            <div class="section-header warning">
+                            <div class="section-header">
                                 <h6 class="mb-0">
                                     <i data-feather="calendar" style="width: 18px; height: 18px;"></i>
                                     Schedule
@@ -223,7 +211,7 @@
 
                         {{-- Locations Section --}}
                         <div class="form-card mb-4">
-                            <div class="section-header info">
+                            <div class="section-header">
                                 <h6 class="mb-0">
                                     <i data-feather="map-pin" style="width: 18px; height: 18px;"></i>
                                     Locations
