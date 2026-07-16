@@ -304,45 +304,23 @@
                                 <i class="fas fa-route me-2"></i>Route Information
                             </h6>
                             <div class="row">
-                                <!-- Pickup Location -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="pickup_location" class="form-label fw-semibold">
-                                        <i class="fas fa-map-marker-alt text-primary me-1"></i>
-                                        Pickup Location
-                                    </label>
-                                    <input type="text" name="pickup_location" id="pickup_location"
-                                        class="form-control" placeholder="Enter pickup location"
-                                        value="{{ old('pickup_location', $employeeTransport->pickup_location ?? '') }}">
-                                    @error('pickup_location')
-                                        <small class="text-danger"><i
-                                                class="fas fa-exclamation-circle me-1"></i>{{ $message }}</small>
-                                    @enderror
-                                </div>
-
-                                <!-- Drop Location -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="drop_location" class="form-label fw-semibold">
-                                        <i class="fas fa-map-marker-alt text-primary me-1"></i>
-                                        Drop Location
-                                    </label>
-                                    <input type="text" name="drop_location" id="drop_location" class="form-control"
-                                        placeholder="Enter drop location"
-                                        value="{{ old('drop_location', $employeeTransport->drop_location ?? '') }}">
-                                    @error('drop_location')
-                                        <small class="text-danger"><i
-                                                class="fas fa-exclamation-circle me-1"></i>{{ $message }}</small>
-                                    @enderror
-                                </div>
-
-                                <!-- Route Details -->
+                                <!-- Route Map Selection -->
                                 <div class="col-md-12 mb-3">
-                                    <label for="route_details" class="form-label fw-semibold">
-                                        <i class="fas fa-road text-primary me-1"></i>
-                                        Route Details
+                                    <label for="route_map_id" class="form-label fw-semibold">
+                                        <i class="fas fa-map text-primary me-1"></i>
+                                        Route Map <span class="text-danger">*</span>
                                     </label>
-                                    <textarea name="route_details" id="route_details" class="form-control" rows="2"
-                                        placeholder="Describe the route with stops/waypoints">{{ old('route_details', $employeeTransport->route_details ?? '') }}</textarea>
-                                    @error('route_details')
+                                    <select class="form-select @error('route_map_id') is-invalid @enderror"
+                                        name="route_map_id" id="route_map_id" required>
+                                        <option value="">Select Predefined Route Map</option>
+                                        @foreach ($routeMaps as $route)
+                                            <option value="{{ $route->id }}"
+                                                {{ (isset($employeeTransport) && $employeeTransport->route_map_id == $route->id) || old('route_map_id') == $route->id ? 'selected' : '' }}>
+                                                {{ $route->route_name }} ({{ $route->start_point }} to {{ $route->end_point }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('route_map_id')
                                         <small class="text-danger"><i
                                                 class="fas fa-exclamation-circle me-1"></i>{{ $message }}</small>
                                     @enderror

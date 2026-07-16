@@ -820,6 +820,10 @@
                                 <a class='tp-link @if (Route::is('transport.employee_transports.*')) menuitem-active @endif'
                                     href='{{ route('transport.employee_transports.index') }}'>Employee Transport</a>
                             </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('transport.route_maps.*')) menuitem-active @endif'
+                                    href='{{ route('transport.route_maps.index') }}'>Route Maps</a>
+                            </li>
                             @endif
                             <!-- Vehicle Allocation Submenu -->
                             @if($canVehicleAllocation)

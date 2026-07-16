@@ -146,37 +146,55 @@
                     <!-- Route Information -->
                     <div class="mb-4">
                         <h6 class="text-primary border-bottom pb-2 mb-3">
-                            <i class="fas fa-route me-2"></i>Route Information
+                            <i class="fas fa-route me-2"></i>Route Map Details
                         </h6>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="d-flex align-items-start mb-3">
-                                    <div class="bg-success text-white rounded-circle p-2 me-3">
-                                        <i class="fas fa-map-marker-alt"></i>
+                        @if ($employeeTransport->routeMap)
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <small class="text-muted d-block">Route Name</small>
+                                    <strong>{{ $employeeTransport->routeMap->route_name }}</strong>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <small class="text-muted d-block">Status</small>
+                                    <span class="badge {{ $employeeTransport->routeMap->status_badge_class }}">{{ $employeeTransport->routeMap->status }}</span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex align-items-start">
+                                        <div class="bg-success text-white rounded-circle p-2 me-3">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                        </div>
+                                        <div>
+                                            <small class="text-muted d-block">Start Point</small>
+                                            <strong>{{ $employeeTransport->routeMap->start_point }}</strong>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <small class="text-muted d-block">Pickup Location</small>
-                                        <strong>{{ $employeeTransport->pickup_location ?? 'Not specified' }}</strong>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex align-items-start">
+                                        <div class="bg-danger text-white rounded-circle p-2 me-3">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                        </div>
+                                        <div>
+                                            <small class="text-muted d-block">End Point</small>
+                                            <strong>{{ $employeeTransport->routeMap->end_point }}</strong>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="d-flex align-items-start mb-3">
-                                    <div class="bg-danger text-white rounded-circle p-2 me-3">
-                                        <i class="fas fa-map-marker-alt"></i>
-                                    </div>
-                                    <div>
-                                        <small class="text-muted d-block">Drop Location</small>
-                                        <strong>{{ $employeeTransport->drop_location ?? 'Not specified' }}</strong>
-                                    </div>
+                            @if ($employeeTransport->routeMap->via_points)
+                                <div class="bg-light p-3 rounded mt-2">
+                                    <small class="text-muted d-block mb-1">Via Points / Stopovers</small>
+                                    {{ $employeeTransport->routeMap->via_points }}
                                 </div>
-                            </div>
-                        </div>
-                        @if ($employeeTransport->route_details)
-                            <div class="bg-light p-3 rounded mt-2">
-                                <small class="text-muted d-block mb-1">Route Details</small>
-                                {{ $employeeTransport->route_details }}
-                            </div>
+                            @endif
+                            @if ($employeeTransport->routeMap->route_details)
+                                <div class="bg-light p-3 rounded mt-2">
+                                    <small class="text-muted d-block mb-1">Route Details / Directions</small>
+                                    {{ $employeeTransport->routeMap->route_details }}
+                                </div>
+                            @endif
+                        @else
+                            <div class="text-muted">No Route Map associated.</div>
                         @endif
                     </div>
 

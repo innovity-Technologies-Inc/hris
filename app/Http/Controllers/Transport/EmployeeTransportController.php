@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Transport;
 use App\Http\Controllers\Controller;
 use App\Models\Company\Company;
 use App\Models\Transport\EmployeeTransport;
+use App\Models\Transport\RouteMap;
 use App\Services\Transport\TransportService;
 use App\HelperClass;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
@@ -113,6 +114,7 @@ class EmployeeTransportController extends Controller
         $transportTypes = ['Daily Commute', 'Shuttle Service', 'Special Transport', 'Field Work'];
         $types = ['company' => 'Company', 'branch' => 'Branch', 'division' => 'Division', 'department' => 'Department', 'section' => 'Section'];
         $generalSettings = HelperClass::getGeneralSetting();
+        $routeMaps = RouteMap::where('status', 'Active')->orderBy('route_name')->get();
 
         return view('transport.employee_transport.form', compact(
             'title',
@@ -122,7 +124,8 @@ class EmployeeTransportController extends Controller
             'companies',
             'transportTypes',
             'types',
-            'generalSettings'
+            'generalSettings',
+            'routeMaps'
         ));
     }
 
@@ -141,13 +144,11 @@ class EmployeeTransportController extends Controller
             'service_name' => 'required|string|max:255',
             'transport_type' => 'required|in:Daily Commute,Shuttle Service,Special Transport,Field Work',
             'purpose' => 'required|string|max:1000',
+            'route_map_id' => 'required|exists:route_maps,id',
             'start_date' => 'required|date|after_or_equal:today',
             'end_date' => 'required|date|after_or_equal:start_date',
             'pickup_time' => 'nullable|date_format:H:i',
             'drop_time' => 'nullable|date_format:H:i',
-            'pickup_location' => 'nullable|string|max:255',
-            'drop_location' => 'nullable|string|max:255',
-            'route_details' => 'nullable|string|max:1000',
             'estimated_passengers' => 'nullable|integer|min:1',
             'special_requirements' => 'nullable|string|max:500',
             'remarks' => 'nullable|string|max:500',
@@ -157,14 +158,13 @@ class EmployeeTransportController extends Controller
             'service_name.required' => 'Service name is required.',
             'transport_type.required' => 'Please select a transport type.',
             'purpose.required' => 'Purpose is required.',
+            'route_map_id.required' => 'Please select a Route Map.',
             'start_date.required' => 'Start date is required.',
-            'end_date.after_or_equal' => 'End date must be on or after the start date.',
+            'end_date.required' => 'End date is required.',
         ]);
 
         try {
             Log::info('Creating Employee Transport Service');
-
-            $validated['status'] = 'Pending';
 
             EmployeeTransport::create($validated);
 
@@ -195,6 +195,7 @@ class EmployeeTransportController extends Controller
         $sub_section = 'Details';
 
         $employeeTransport = $this->transportService->getEmployeeTransportDetails($id);
+        $employeeTransport->load('routeMap');
 
         return view('transport.employee_transport.show', compact(
             'title',
@@ -229,6 +230,7 @@ class EmployeeTransportController extends Controller
         $transportTypes = ['Daily Commute', 'Shuttle Service', 'Special Transport', 'Field Work'];
         $types = ['company' => 'Company', 'branch' => 'Branch', 'division' => 'Division', 'department' => 'Department', 'section' => 'Section'];
         $generalSettings = HelperClass::getGeneralSetting();
+        $routeMaps = RouteMap::where('status', 'Active')->orderBy('route_name')->get();
 
         return view('transport.employee_transport.form', compact(
             'title',
@@ -239,12 +241,13 @@ class EmployeeTransportController extends Controller
             'companies',
             'transportTypes',
             'types',
-            'generalSettings'
+            'generalSettings',
+            'routeMaps'
         ));
     }
 
     /**
-     * Update the specified employee transport service.
+     * Update the specified employee transport service in storage.
      */
     public function update(Request $request, $id)
     {
@@ -268,13 +271,11 @@ class EmployeeTransportController extends Controller
             'service_name' => 'required|string|max:255',
             'transport_type' => 'required|in:Daily Commute,Shuttle Service,Special Transport,Field Work',
             'purpose' => 'required|string|max:1000',
+            'route_map_id' => 'required|exists:route_maps,id',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'pickup_time' => 'nullable|date_format:H:i',
             'drop_time' => 'nullable|date_format:H:i',
-            'pickup_location' => 'nullable|string|max:255',
-            'drop_location' => 'nullable|string|max:255',
-            'route_details' => 'nullable|string|max:1000',
             'estimated_passengers' => 'nullable|integer|min:1',
             'special_requirements' => 'nullable|string|max:500',
             'remarks' => 'nullable|string|max:500',
@@ -302,45 +303,6 @@ class EmployeeTransportController extends Controller
     }
 
     /**
-     * Process approval of the employee transport service.
-     * NOTE: Approval is now handled through Vehicle Allocation.
-     * When a vehicle is allocated to this transport service, it will be automatically approved.
-     */
-    // public function approve(Request $request, $id)
-    // {
-    //     $request->validate([
-    //         'approval_remarks' => 'nullable|string|max:1000',
-    //     ]);
-
-    //     try {
-    //         Log::info('Approving Employee Transport Service');
-
-    //         $employeeTransport = EmployeeTransport::findOrFail($id);
-
-    //         $employeeTransport->update([
-    //             'status' => 'Approved',
-    //             'approval_remarks' => $request->approval_remarks,
-    //             'approved_at' => now(),
-    //             // 'approved_by' => auth()->id(), // Uncomment when auth is implemented
-    //         ]);
-
-    //         Log::info('Employee Transport Service Approved');
-
-    //         return redirect()->route('transport.employee_transports.index')->with([
-    //             'message' => 'Service Approved Successfully',
-    //             'alert-type' => 'success'
-    //         ]);
-
-    //     } catch (\Exception $e) {
-    //         Log::error('Approval Error: ' . $e->getMessage());
-    //         return redirect()->back()->with([
-    //             'message' => 'Something Went Wrong',
-    //             'alert-type' => 'error'
-    //         ]);
-    //     }
-    // }
-
-    /**
      * Process rejection of the employee transport service.
      */
     public function reject(Request $request, $id)
@@ -360,7 +322,6 @@ class EmployeeTransportController extends Controller
                 'status' => 'Rejected',
                 'approval_remarks' => $request->approval_remarks,
                 'approved_at' => now(),
-                // 'approved_by' => auth()->id(), // Uncomment when auth is implemented
             ]);
 
             Log::info('Employee Transport Service Rejected');
@@ -441,4 +402,3 @@ class EmployeeTransportController extends Controller
         }
     }
 }
-

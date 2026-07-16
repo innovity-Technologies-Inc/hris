@@ -34,6 +34,7 @@ class EmployeeTransport extends Model
         'service_name',
         'transport_type',
         'purpose',
+        'route_map_id',
         'start_date',
         'end_date',
         'pickup_time',
@@ -97,6 +98,14 @@ class EmployeeTransport extends Model
     }
 
     /**
+     * Get the route map associated with this transport service.
+     */
+    public function routeMap(): BelongsTo
+    {
+        return $this->belongsTo(RouteMap::class, 'route_map_id', 'id');
+    }
+
+    /**
      * Get the vehicle allocations for this transport service.
      */
     public function getAllocations(): HasMany
@@ -119,4 +128,3 @@ class EmployeeTransport extends Model
         };
     }
 }
-

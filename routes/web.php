@@ -1420,6 +1420,25 @@ Route::prefix('transport')->name('transport.')->middleware('auth')->group(functi
         });
     });
 
+    // Route Map Routes
+    Route::controller(\App\Http\Controllers\Transport\RouteMapController::class)->group(function () {
+        Route::middleware('permission:employee-transport.create')->group(function () {
+            Route::get('route-maps/create', 'create')->name('route_maps.create');
+            Route::post('route-maps', 'store')->name('route_maps.store');
+        });
+        Route::middleware('permission:employee-transport.view')->group(function () {
+            Route::get('route-maps', 'index')->name('route_maps.index');
+            Route::get('route-maps/{id}', 'show')->name('route_maps.show');
+        });
+        Route::middleware('permission:employee-transport.edit')->group(function () {
+            Route::get('route-maps/{id}/edit', 'edit')->name('route_maps.edit');
+            Route::put('route-maps/{id}', 'update')->name('route_maps.update');
+        });
+        Route::middleware('permission:employee-transport.delete')->group(function () {
+            Route::delete('route-maps/{id}', 'destroy')->name('route_maps.destroy');
+        });
+    });
+
     // Vehicle Allocation Routes
     Route::controller(\App\Http\Controllers\Transport\VehicleAllocationController::class)->group(function () {
         Route::middleware('permission:vehicle-allocation.create')->group(function () {

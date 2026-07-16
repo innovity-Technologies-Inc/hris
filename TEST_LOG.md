@@ -1,5 +1,28 @@
 # Test Log
 
+## 2026-07-16 (Transport Route Map Module)
+
+**Goal**: Implement Route Map Module for Employee Transport and replace manual text fields with route selection dropdown (without `company_id` on route maps).
+
+**Exact Command**: `php artisan config:clear && php artisan test --filter=TransportRouteTest`
+
+**Results**:
+- Created migrations:
+  - `create_route_maps_table` containing route map fields (`route_name`, `start_point`, `end_point`, `via_points`, `route_details`, and `status`).
+  - `add_route_map_id_to_employee_transports` adding foreign key reference `route_map_id` to employee transports.
+- Created `RouteMap` Eloquent model with `Auditable` and `Userstamps` traits.
+- Created `RouteMapController` for CRUD route map operations.
+- Registered resource routes in `routes/web.php` and added sidebar link in `sidebar.blade.php`.
+- Created views:
+  - `route_map/index.blade.php` with FlexSearch and dynamic AJAX table results.
+  - `route_map/search_results.blade.php` rendering route maps listings (without Company column).
+  - `route_map/form.blade.php` to handle create and edit (without Company select dropdown).
+- Updated `EmployeeTransport` model, controller, form view, and show details view to support the `routeMap` relation and select dropdown.
+- Created Pest feature test verifying all Route Map CRUD and association behavior.
+- Verified all tests pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-16 (Attendance Records Sorted by Latest First)
 
 **Goal**: Order the attendance records index and print index queries by `in_time` in descending order (latest first).
