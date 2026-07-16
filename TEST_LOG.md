@@ -1,5 +1,19 @@
 # Test Log
 
+## 2026-07-16 (Attendance Select Region World Clock Option)
+
+**Goal**: Replace static world clocks with a select region dropdown option and dynamic world clock display.
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- Refactored [clock_in_out.blade.php](file:///P:/Project/Web/hrms/resources/views/attendance/clock_in_out.blade.php):
+  - Replaced static timezone clock widgets with a select dropdown option element (`#worldRegionSelect`) and a single digital live clock display console (`#worldClockTime`).
+  - Implemented dynamic updates inside `updateWorldClock()` to read the select value, format timezone times, update labels, and bind change event listeners.
+- Verified all 158 tests pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-16 (Attendance Clock Country Badge & World Clock Facility)
 
 **Goal**: Show the country/timezone name next to the current time and add a world clock facility to the attendance clock page.

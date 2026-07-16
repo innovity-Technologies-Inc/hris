@@ -336,41 +336,32 @@
                                             </button>
                                         </div>
 
-                                        <!-- World Clock Facility -->
-                                        <div class="world-clock-container mt-4 w-100">
-                                            <div class="world-clock-header d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
-                                                <span class="fw-semibold text-dark-emphasis small">
-                                                    <i class="bi bi-globe2 text-primary me-2"></i>World Clocks
-                                                </span>
-                                                <span class="badge bg-light text-dark small font-monospace" style="font-size: 0.75rem;">GMT / UTC</span>
-                                            </div>
-                                            <div class="row g-2">
-                                                <div class="col-6">
-                                                    <div class="world-clock-card p-2 rounded border text-center">
-                                                        <small class="text-muted d-block fw-semibold" style="font-size: 0.75rem;">New York (US)</small>
-                                                        <span id="clock-ny" class="fw-bold text-dark font-monospace small">--:--:--</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="world-clock-card p-2 rounded border text-center">
-                                                        <small class="text-muted d-block fw-semibold" style="font-size: 0.75rem;">London (UK)</small>
-                                                        <span id="clock-london" class="fw-bold text-dark font-monospace small">--:--:--</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="world-clock-card p-2 rounded border text-center">
-                                                        <small class="text-muted d-block fw-semibold" style="font-size: 0.75rem;">Dubai (UAE)</small>
-                                                        <span id="clock-dubai" class="fw-bold text-dark font-monospace small">--:--:--</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="world-clock-card p-2 rounded border text-center">
-                                                        <small class="text-muted d-block fw-semibold" style="font-size: 0.75rem;">Tokyo (JP)</small>
-                                                        <span id="clock-tokyo" class="fw-bold text-dark font-monospace small">--:--:--</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                         <!-- World Clock Facility -->
+                                         <div class="world-clock-container mt-4 w-100">
+                                             <div class="world-clock-header d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
+                                                 <span class="fw-semibold text-dark-emphasis small">
+                                                     <i class="bi bi-globe2 text-primary me-2"></i>World Clock
+                                                 </span>
+                                             </div>
+                                             <div class="mb-3">
+                                                 <label class="form-label small text-muted">Select Region</label>
+                                                 <select id="worldRegionSelect" class="form-select form-select-sm">
+                                                     <option value="Europe/London">London (United Kingdom)</option>
+                                                     <option value="America/New_York">New York (United States)</option>
+                                                     <option value="Asia/Dubai">Dubai (United Arab Emirates)</option>
+                                                     <option value="Asia/Tokyo">Tokyo (Japan)</option>
+                                                     <option value="Asia/Dhaka">Dhaka (Bangladesh)</option>
+                                                     <option value="Asia/Kolkata">Kolkata (India)</option>
+                                                     <option value="Asia/Singapore">Singapore</option>
+                                                     <option value="Australia/Sydney">Sydney (Australia)</option>
+                                                     <option value="Asia/Riyadh">Riyadh (Saudi Arabia)</option>
+                                                 </select>
+                                             </div>
+                                             <div class="world-clock-display p-3 rounded text-center" style="background: linear-gradient(135deg, #1e293b, #0f172a); color: #fff; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); border-radius: 12px !important;">
+                                                 <small id="worldRegionLabel" class="text-uppercase tracking-wider fw-bold" style="font-size: 0.75rem; letter-spacing: 0.05em; color: #818cf8;">LONDON (UNITED KINGDOM)</small>
+                                                 <div id="worldClockTime" class="h3 fw-bold mb-0 mt-1 font-monospace" style="letter-spacing: 1px; color: #fff; text-shadow: 0 0 10px rgba(99, 102, 241, 0.4);">--:--:--</div>
+                                             </div>
+                                         </div>
                                     </div>
                                 </div>
                             </div>
@@ -439,6 +430,15 @@
                 return new Date().toLocaleTimeString('en-US', options);
             }
 
+            function updateWorldClock() {
+                const selectedTz = $('#worldRegionSelect').val();
+                if (selectedTz) {
+                    $('#worldClockTime').text(formatTzTime(selectedTz));
+                    const labelText = $('#worldRegionSelect option:selected').text().toUpperCase();
+                    $('#worldRegionLabel').text(labelText);
+                }
+            }
+
             function updateTime() {
                 const now = new Date();
                 let hours = now.getHours();
@@ -454,15 +454,17 @@
                     day: 'numeric'
                 }));
 
-                // Update world clocks
-                $('#clock-ny').text(formatTzTime('America/New_York'));
-                $('#clock-london').text(formatTzTime('Europe/London'));
-                $('#clock-dubai').text(formatTzTime('Asia/Dubai'));
-                $('#clock-tokyo').text(formatTzTime('Asia/Tokyo'));
+                // Update dynamic world clock
+                updateWorldClock();
             }
 
             // Set local country badge
             $('#localCountry').text(detectLocalCountry());
+
+            // Bind change listener
+            $('#worldRegionSelect').on('change', function() {
+                updateWorldClock();
+            });
 
             updateTime();
             setInterval(updateTime, 1000);
