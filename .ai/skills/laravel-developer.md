@@ -23,7 +23,14 @@ Follow the **Request -> Service -> API Controller** pattern strictly:
     - Naming: `{Module}Services.php`.
     - Injection: Inject into controllers.
 4. **Import (if needed)**: Use `App\Imports\{Module}` for bulk data handling.
-5. **API Controller**: Located in `App\Http\Controllers\{Module}`. Keep it thin; its only job is to call service methods and return **standardized JSON responses**.
+5. **API Controller**: Located in `App\Http\Controllers\{Module}`. Keep it thin; its only job is to call service methods and return **standardized JSON responses** conforming to the project standard structure:
+    - **Success JSON Structure**:
+        - Create: Returns HTTP status 201 with `{"success": true, "message": "Resource Created Successfully", "data": $record}`.
+        - Update/Action: Returns HTTP status 200 with `{"success": true, "message": "Resource Updated Successfully", "data": $record}`.
+        - Delete/Release/Deactivate: Returns HTTP status 200 with `{"success": true, "message": "Resource Deleted/Released/Deactivated Successfully"}`.
+    - **Error JSON Structure**:
+        - Validation (422): Conforms to default Laravel validation response (`{"message": "...", "errors": {...}}`).
+        - Exceptions/Failures (400/403/500): Returns `{"success": false, "message": "Error description"}`.
 6. **Route**: Register routes in `routes/web.php`.
 7. **View**: 
     - Structure: Implement Bootstrap 5 / Glassmorphism UI in `resources/views/{module}`.

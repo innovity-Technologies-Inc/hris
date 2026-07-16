@@ -10,7 +10,14 @@ This project is a comprehensive Human Resource Management System (HRMS) built wi
 ## 🏗️ Architectural Overview
 - **Framework**: Laravel 12.
 - **Pattern**: Strict Request -> Service -> API Controller structure.
-- **API-First Development**: All new features must implement API endpoints in controllers that return **JSON responses**. 
+- **API-First Development**: All new features must implement API endpoints in controllers that return **JSON responses** conforming to a standardized structure.
+  - **Standard Success JSON Structure**:
+    - Creation (201 Created): `{"success": true, "message": "Resource created successfully.", "data": {...}}`
+    - Update/Action (200 OK): `{"success": true, "message": "Resource updated successfully.", "data": {...}}`
+    - Deletion/Release/Deactivation (200 OK): `{"success": true, "message": "Resource deleted/released/deactivated successfully."}`
+  - **Standard Error JSON Structure**:
+    - Validation Fails (422 Unprocessable Entity): Conforms to default Laravel validation error structure: `{"message": "The given data was invalid.", "errors": {"field": ["Error message"]}}`
+    - Action Error (400 Bad Request, 403 Forbidden, 500 Internal Server Error, etc.): `{"success": false, "message": "Error message details here."}`
 - **Frontend Interaction**: 
     - Use **Blade templates** for the UI structure.
     - Use **Axios** and **Vanilla JavaScript** for all data fetching and asynchronous interactions with the API controllers.
