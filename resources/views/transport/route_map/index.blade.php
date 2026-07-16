@@ -1,121 +1,74 @@
 @extends('structure.master')
-@section('content')
-    {{-- Search Section --}}
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="card border-0 shadow-sm rounded">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">
-                        <i data-feather="map" class="me-2"></i>Search Route Maps
-                    </h5>
-                </div>
-                <div class="card-header border-bottom p-4">
-                    <div class="row align-items-start">
-                        <div class="col-md-12">
-                            <div class="border rounded shadow-sm p-3 filter-section-bg">
-                                <form id="filterForm">
-                                    <div class="row mb-2">
-                                        {{-- Keyword Search --}}
-                                        <div class="col-md-8">
-                                            <label for="keywordSearch" class="form-label text-muted small fw-semibold mb-1">
-                                                Keyword Search
-                                            </label>
-                                            <div class="input-group input-group-md">
-                                                <input type="text" class="form-control border-end-0" id="keywordSearch"
-                                                    name="keyword" placeholder="Search by route name, start point, end point..."
-                                                    aria-label="Keyword Search" value="{{ request('keyword') }}">
-                                                <span class="input-group-text border-start-0 input-group-bg">
-                                                    <i class="mdi mdi-magnify text-muted"></i>
-                                                </span>
-                                            </div>
-                                        </div>
 
-                                        {{-- Reset Button --}}
-                                        <div class="col-md-4 d-flex align-items-end">
-                                            <button type="button" id="resetFilters"
-                                                class="btn btn-outline-secondary btn-sm w-100">
-                                                <i class="mdi mdi-refresh"></i> Reset
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
+@section('content')
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-header">
+                    @if(auth()->user()->can('employee-transport.create'))
+                        <a type="button" class="btn btn-warning btn-sm" href="{{ route('transport.route_maps.create') }}">
+                            <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
+                        </a>
+                    @endif
+                </div><!-- end card header -->
+
+                {{-- Search Filter Form --}}
+                <form id="filterForm">
+                    <div class="row mb-1 mt-2 mx-4">
+                        <div class="col-12">
+                            <div class="input-group input-group-md">
+                                <input type="text" class="form-control border-end-0" id="keywordSearch" name="keyword"
+                                    placeholder="Search route maps by keyword" aria-label="Keyword Search" value="{{ request('keyword') }}">
+                                <span class="input-group-text border-start-0 input-group-bg">
+                                    <i class="mdi mdi-magnify text-muted"></i>
+                                </span>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
+                </form>
 
-        {{-- List Section --}}
-        <div class="col-lg-12 mt-3">
-            <div class="card border-0 shadow-sm rounded">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0">Route Maps</h5>
-                    @if(auth()->user()->can('employee-transport.create'))
-                        <a href="{{ route('transport.route_maps.create') }}" class="btn btn-primary btn-sm">
-                            <i class="mdi mdi-plus me-1"></i> Add Route Map
-                        </a>
-                    @endif
-                </div>
                 <div class="card-body">
-                    <div id="results-container">
+                    <div class="table-responsive" id="search-result">
                         @include('transport.route_map.search_results')
                     </div>
                 </div>
-            </div>
+            </div><!-- end card -->
         </div>
-    </div>
-@endsection
+    </div><!-- end row -->
 
-@section('scripts')
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
         $(document).ready(function() {
-            // Live Search Handler
-            let searchTimeout;
-            $('#keywordSearch').on('input', function() {
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(function() {
-                    fetchData();
-                }, 500);
-            });
-
-            // Reset Filter Handler
-            $('#resetFilters').click(function() {
-                $('#filterForm')[0].reset();
-                fetchData();
-            });
-
-            // Fetch Data AJAX
             function fetchData(url = "{{ route('transport.route_maps.index') }}") {
-                const keyword = $('#keywordSearch').val();
-
+                const queryString = $('#filterForm').serialize();
                 $.ajax({
                     url: url,
-                    type: "GET",
-                    data: {
-                        keyword: keyword
-                    },
+                    method: "GET",
+                    data: queryString,
                     beforeSend: function() {
-                        $('#results-container').html(`
-                            <div class="text-center py-5">
-                                <div class="spinner-border text-primary" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
-                            </div>
-                        `);
+                        $('#search-result').html(
+                            '<div class="text-center py-4 text-muted">Loading Data...</div>');
                     },
                     success: function(response) {
-                        $('#results-container').html(response);
-                        feather.replace();
+                        $('#search-result').html(response);
+                        if (typeof feather !== 'undefined') {
+                            feather.replace();
+                        }
+                        const newUrl = '?' + queryString;
+                        window.history.pushState(null, '', newUrl || location.pathname);
                     },
                     error: function(xhr) {
-                        Swal.fire('Error', 'Unable to fetch route maps.', 'error');
+                        console.error('AJAX Error:', xhr.responseText);
                     }
                 });
             }
 
-            // Pagination Link Click Event
-            $(document).on('click', '.pagination a', function(e) {
+            $('#filterForm').on('input change', function(e) {
+                e.preventDefault();
+                fetchData();
+            });
+
+            $(document).on('click', '#search-result .pagination a', function(e) {
                 e.preventDefault();
                 const url = $(this).attr('href');
                 fetchData(url);

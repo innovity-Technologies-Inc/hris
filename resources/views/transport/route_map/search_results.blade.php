@@ -38,12 +38,12 @@
                         <div class="btn-group btn-group-sm">
                             @if(auth()->user()->can('employee-transport.edit'))
                                 <a href="{{ route('transport.route_maps.edit', $routeMap->id) }}"
-                                    class="btn btn-outline-primary btn-sm" title="Edit">
+                                    class="btn btn-primary btn-sm" title="Edit">
                                     <i data-feather="edit" style="width: 14px; height: 14px;"></i>
                                 </a>
                             @endif
                             @if(auth()->user()->can('employee-transport.delete'))
-                                <button type="button" class="btn btn-outline-danger btn-sm" title="Delete"
+                                <button type="button" class="btn btn-danger btn-sm" title="Delete"
                                     onclick="deleteRouteMap({{ $routeMap->id }})">
                                     <i data-feather="trash" style="width: 14px; height: 14px;"></i>
                                 </button>

@@ -47,15 +47,15 @@
                 <td class="text-center">
                     <div class="btn-group btn-group-sm">
                         <a href="{{ route('transport.employee_transports.show', $transport->id) }}"
-                            class="btn btn-outline-info btn-sm" title="View">
+                            class="btn btn-info btn-sm" title="View">
                             <i data-feather="eye" style="width: 14px; height: 14px;"></i>
                         </a>
                         @if ($transport->status === 'Pending')
                             <a href="{{ route('transport.employee_transports.edit', $transport->id) }}"
-                                class="btn btn-outline-primary btn-sm" title="Edit">
+                                class="btn btn-primary btn-sm" title="Edit">
                                 <i data-feather="edit" style="width: 14px; height: 14px;"></i>
                             </a>
-                            <button type="button" class="btn btn-outline-danger btn-sm" title="Reject"
+                            <button type="button" class="btn btn-danger btn-sm" title="Reject"
                                 onclick="rejectService({{ $transport->id }})">
                                 <i data-feather="x" style="width: 14px; height: 14px;"></i>
                             </button>
