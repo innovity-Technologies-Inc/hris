@@ -1,5 +1,90 @@
 @extends('structure.master')
 @section('content')
+    <style>
+        /* Serpentine timeline styles for Route Map preview */
+        .route-line {
+            position: absolute;
+            top: 16px;
+            height: 4px;
+            background: var(--bs-border-color, #e9ecef);
+            z-index: 1;
+        }
+        .route-connector-right {
+            position: absolute;
+            right: 5%;
+            width: 7.5%;
+            top: 16px;
+            height: calc(100% + 48px);
+            border: 4px solid var(--bs-border-color, #e9ecef);
+            border-left: 0;
+            border-radius: 0 16px 16px 0;
+            z-index: 1;
+        }
+        .route-connector-left {
+            position: absolute;
+            left: 5%;
+            width: 7.5%;
+            top: 16px;
+            height: calc(100% + 48px);
+            border: 4px solid var(--bs-border-color, #e9ecef);
+            border-right: 0;
+            border-radius: 16px 0 0 16px;
+            z-index: 1;
+        }
+        .route-step {
+            text-align: center;
+            position: relative;
+        }
+        .step-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px auto;
+            border: 3px solid var(--bs-modal-bg, #fff);
+            box-shadow: 0 0 0 2px var(--bs-border-color, #e9ecef);
+            font-size: 14px;
+            color: white;
+            font-weight: bold;
+            z-index: 3;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .step-icon.bg-success {
+            box-shadow: 0 0 0 2px #2ecc71;
+            background-color: #2ecc71 !important;
+        }
+        .step-icon.bg-warning {
+            box-shadow: 0 0 0 2px #f1c40f;
+            background-color: #f1c40f !important;
+            color: #333;
+        }
+        .step-icon.bg-danger {
+            box-shadow: 0 0 0 2px #e74c3c;
+            background-color: #e74c3c !important;
+        }
+        .step-label {
+            font-size: 0.72rem;
+            color: #888;
+            text-transform: uppercase;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 2px;
+        }
+        .step-name {
+            font-size: 0.82rem;
+            color: var(--bs-body-color, #212529);
+            font-weight: 700;
+            display: block;
+            padding: 0 5px;
+            word-break: break-word;
+        }
+        #route_preview_wrapper .bg-light {
+            background-color: var(--bs-tertiary-bg, #f8f9fa) !important;
+        }
+    </style>
     <div class="row">
         <div class="col-12">
             <div class="card shadow-sm border-0">
@@ -325,6 +410,18 @@
                                                 class="fas fa-exclamation-circle me-1"></i>{{ $message }}</small>
                                     @enderror
                                 </div>
+
+                                <!-- Route Map Preview -->
+                                <div class="col-md-12 mb-3 d-none" id="route_preview_wrapper">
+                                    <label class="form-label fw-semibold">
+                                        <i class="fas fa-eye text-primary me-1"></i>Route Preview
+                                    </label>
+                                    <div class="border rounded p-4 bg-light position-relative">
+                                        <div class="position-relative" id="route_preview_steps" style="z-index: 2;">
+                                            <!-- Populated via JS -->
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -600,6 +697,124 @@
                     @endif
                 }, 300);
             @endif
+
+            // Route Map Preview Logic
+            const routeMaps = @json($routeMaps);
+
+            function updateRoutePreview() {
+                const routeId = $('#route_map_id').val();
+                const previewWrapper = $('#route_preview_wrapper');
+                const stepsContainer = $('#route_preview_steps');
+                
+                stepsContainer.empty();
+
+                if (!routeId) {
+                    previewWrapper.addClass('d-none');
+                    return;
+                }
+
+                const routeMap = routeMaps.find(r => r.id == routeId);
+                if (!routeMap) {
+                    previewWrapper.addClass('d-none');
+                    return;
+                }
+
+                previewWrapper.removeClass('d-none');
+
+                const steps = [];
+
+                // 1. Start Point
+                steps.push({
+                    label: 'Start',
+                    name: routeMap.start_point,
+                    class: 'bg-success',
+                    icon: '<i class="mdi mdi-play" style="font-size: 12px; margin-left: 2px;"></i>'
+                });
+
+                // 2. Via Points
+                const vias = Array.isArray(routeMap.via_points) ? routeMap.via_points : [];
+                vias.forEach(function(point, index) {
+                    steps.push({
+                        label: `Stopover ${index + 1}`,
+                        name: point,
+                        class: 'bg-warning',
+                        icon: (index + 1).toString()
+                    });
+                });
+
+                // 3. End Point
+                steps.push({
+                    label: 'Destination',
+                    name: routeMap.end_point,
+                    class: 'bg-danger',
+                    icon: '<i class="mdi mdi-flag-variant" style="font-size: 12px;"></i>'
+                });
+
+                // Break steps into rows of 4
+                const chunks = [];
+                for (let i = 0; i < steps.length; i += 4) {
+                    chunks.push(steps.slice(i, i + 4));
+                }
+
+                chunks.forEach(function(chunk, rowIndex) {
+                    const isLastRow = (rowIndex === chunks.length - 1);
+                    const isOddRow = (rowIndex % 2 === 1);
+                    const m = chunk.length;
+
+                    // Determine horizontal line style
+                    let lineStyle = '';
+                    if (!isLastRow) {
+                        lineStyle = 'left: 12.5%; right: 12.5%;';
+                    } else {
+                        if (m > 1) {
+                            if (!isOddRow) {
+                                lineStyle = `left: 12.5%; width: ${(m - 1) * 25}%;`;
+                            } else {
+                                lineStyle = `right: 12.5%; width: ${(m - 1) * 25}%;`;
+                            }
+                        } else {
+                            lineStyle = 'display: none;';
+                        }
+                    }
+
+                    // Build row container
+                    let rowHtml = `
+                        <div class="route-row position-relative d-flex align-items-start justify-content-start ${isOddRow ? 'flex-row-reverse' : ''}" style="margin-bottom: 48px;">
+                            <!-- Horizontal Connector Line -->
+                            <div class="route-line" style="${lineStyle}"></div>
+                    `;
+
+                    // Add U-turn connector if not the last row
+                    if (!isLastRow) {
+                        if (!isOddRow) {
+                            rowHtml += `<div class="route-connector-right"></div>`;
+                        } else {
+                            rowHtml += `<div class="route-connector-left"></div>`;
+                        }
+                    }
+
+                    // Render each step in this row (width 25%)
+                    chunk.forEach(function(step) {
+                        rowHtml += `
+                            <div class="route-step" style="width: 25%; z-index: 2;">
+                                <div class="step-icon ${step.class}">
+                                    ${step.icon}
+                                </div>
+                                <span class="step-label">${step.label}</span>
+                                <span class="step-name">${step.name}</span>
+                            </div>
+                        `;
+                    });
+
+                    rowHtml += `</div>`;
+                    stepsContainer.append(rowHtml);
+                });
+            }
+
+            $('#route_map_id').on('change', updateRoutePreview);
+
+            // Trigger on load
+            updateRoutePreview();
         });
     </script>
 @endpush
