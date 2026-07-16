@@ -13,7 +13,7 @@ class GoogleMapApi extends Model
 {
     use Userstamps, Auditable;
     protected $table = 'api_keys';
-    protected $fillable = ['google_maps_api_key'];
+    protected $fillable = ['google_maps_api_key', 'google_maps_radius'];
 
     /**
      * Accessor: Decrypt the key when retrieved.

@@ -35,6 +35,14 @@ class SystemConfigLoaderService
             if (!empty($mapsKey)) {
                 Config::set('services.google.maps_key', $mapsKey);
             }
+
+            $mapsRadius = cache()->rememberForever('google_maps_radius', function () {
+                return GoogleMapApi::first()?->google_maps_radius;
+            });
+
+            if (!empty($mapsRadius)) {
+                Config::set('services.google.maps_radius', $mapsRadius);
+            }
         }
     }
 

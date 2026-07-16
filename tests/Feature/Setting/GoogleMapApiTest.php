@@ -34,13 +34,14 @@ it('can manage google maps api key settings via axios', function () {
 
     // 2. Axios Save
     $saveResponse = $this->postJson(route('setting.google_map_api.save'), [
-        'google_maps_api_key' => 'AIzaSyExampleKey12345'
+        'google_maps_api_key' => 'AIzaSyExampleKey12345',
+        'google_maps_radius' => 500,
     ]);
 
     $saveResponse->assertStatus(200);
     $saveResponse->assertJson([
         'success' => true,
-        'message' => 'Google Maps API Key Saved Successfully'
+        'message' => 'Google Maps Settings Saved Successfully'
     ]);
 
     // Assert it was saved to DB and is encrypted
@@ -49,6 +50,7 @@ it('can manage google maps api key settings via axios', function () {
     
     // Accesor decrypts automatically
     expect($apiKey->google_maps_api_key)->toBe('AIzaSyExampleKey12345');
+    expect($apiKey->google_maps_radius)->toBe(500);
     
     // Direct attribute is encrypted
     $rawVal = DB::table('api_keys')->first()->google_maps_api_key;
@@ -56,10 +58,12 @@ it('can manage google maps api key settings via axios', function () {
 
     // 3. Update existing
     $updateResponse = $this->postJson(route('setting.google_map_api.save'), [
-        'google_maps_api_key' => 'AIzaSyUpdatedKey98765'
+        'google_maps_api_key' => 'AIzaSyUpdatedKey98765',
+        'google_maps_radius' => 1000,
     ]);
 
     $updateResponse->assertStatus(200);
     $apiKey->refresh();
     expect($apiKey->google_maps_api_key)->toBe('AIzaSyUpdatedKey98765');
+    expect($apiKey->google_maps_radius)->toBe(1000);
 });

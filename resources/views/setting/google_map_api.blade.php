@@ -58,6 +58,30 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Google Maps Covering Area (Radius) -->
+                        <div class="card border shadow-sm mb-4">
+                            <div class="card-body p-4">
+                                <label for="googleMapsRadius" class="form-label fw-semibold text-dark mb-3 d-flex align-items-center">
+                                    <i class="bi bi-bullseye text-primary me-2 fs-5"></i>
+                                    <span>Covering Area (Radius in Meters)</span>
+                                    <span class="badge bg-danger ms-2">Required</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="bi bi-broadcast-pin text-primary fs-5"></i>
+                                    </span>
+                                    <input type="number" class="form-control form-control-lg border-start-0" id="googleMapsRadius"
+                                        name="google_maps_radius" placeholder="e.g. 500"
+                                        value="{{ isset($apiKey) ? $apiKey->google_maps_radius : old('google_maps_radius') }}"
+                                        min="1" required>
+                                </div>
+                                <div class="form-text mt-2">
+                                    <i class="bi bi-lightbulb text-warning me-1"></i>
+                                    This radius defines the coverage area in meters around company locations
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Action Buttons -->
@@ -87,12 +111,21 @@
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('googleMapApiForm');
     const apiKeyInput = document.getElementById('googleMapsApiKey');
-
-
+    const radiusInput = document.getElementById('googleMapsRadius');
 
     // Input validation styling
     apiKeyInput.addEventListener('blur', function() {
         if (this.value.trim() === '') {
+            this.classList.add('border-danger');
+            this.classList.remove('border-success');
+        } else {
+            this.classList.add('border-success');
+            this.classList.remove('border-danger');
+        }
+    });
+
+    radiusInput.addEventListener('blur', function() {
+        if (this.value.trim() === '' || parseInt(this.value.trim()) < 1) {
             this.classList.add('border-danger');
             this.classList.remove('border-success');
         } else {
@@ -113,12 +146,21 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
+        const radiusVal = radiusInput.value.trim();
+        if (radiusVal === '' || parseInt(radiusVal) < 1) {
+            radiusInput.classList.add('border-danger');
+            radiusInput.focus();
+            toastr.error('Please enter a valid Covering Radius');
+            return;
+        }
+
         const btnSave = document.getElementById('btnSaveApiKey');
         btnSave.disabled = true;
         btnSave.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Saving...';
 
         axios.post(form.action, {
-            google_maps_api_key: keyVal
+            google_maps_api_key: keyVal,
+            google_maps_radius: radiusVal
         })
         .then(response => {
             btnSave.disabled = false;
@@ -127,8 +169,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 toastr.success(response.data.message);
                 apiKeyInput.classList.remove('border-danger');
                 apiKeyInput.classList.add('border-success');
+                radiusInput.classList.remove('border-danger');
+                radiusInput.classList.add('border-success');
             } else {
-                toastr.error(response.data.message || 'Failed to save Google Maps API Key.');
+                toastr.error(response.data.message || 'Failed to save settings.');
             }
         })
         .catch(error => {

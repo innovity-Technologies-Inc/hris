@@ -1,5 +1,21 @@
 # Test Log
 
+## 2026-07-16 (Google Map Covering Radius Setting Addition)
+
+**Goal**: Add covering area radius configuration field to Google Map settings and load it into configuration during boot.
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- Generated migration [2026_07_16_110555_add_google_maps_radius_to_api_keys_table.php](file:///P:/Project/Web/hrms/database/migrations/2026_07_16_110555_add_google_maps_radius_to_api_keys_table.php) adding `google_maps_radius` integer column to `api_keys` table and ran `php artisan migrate`.
+- Updated [GoogleMapApi.php](file:///P:/Project/Web/hrms/app/Models/Setting/GoogleMapApi.php) fillable attributes.
+- Refactored [GoogleMapApiController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/Setting/GoogleMapApiController.php) to validate, save and clear cache of the new radius value.
+- Modified [SystemConfigLoaderService.php](file:///P:/Project/Web/hrms/app/Services/Setting/SystemConfigLoaderService.php) to cache and load `services.google.maps_radius` configuration at boot.
+- Updated [google_map_api.blade.php](file:///P:/Project/Web/hrms/resources/views/setting/google_map_api.blade.php) UI form and Axios submit scripts to include covering radius.
+- Updated [GoogleMapApiTest.php](file:///P:/Project/Web/hrms/tests/Feature/Setting/GoogleMapApiTest.php) and verified all 157 tests pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-16 (Company Location Search Results Pagination Alignment Fix)
 
 **Goal**: Align pagination links to the left side of the company locations search results.
