@@ -1,5 +1,19 @@
 # Test Log
 
+## 2026-07-16 (Attendance Records Sorted by Latest First)
+
+**Goal**: Order the attendance records index and print index queries by `in_time` in descending order (latest first).
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- Modified [AttendancesController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/Attendance/AttendancesController.php):
+  - Updated the Eloquent query in the `index` method to include `orderBy('in_time', 'desc')`.
+  - Updated the Eloquent query in the `printIndex` method to include `orderBy('in_time', 'desc')`.
+- Verified all 158 tests pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-16 (Attendance Dark Mode Dropdown Color & Default Header Reversion)
 
 **Goal**: Lock the region selector text color to white across both modes, and revert to default header backgrounds in dark mode.

@@ -21,7 +21,7 @@ class AttendancesController extends Controller
     }
     public function index(FlexSearch $flexsearch, Request $request)
     {
-        $query = Attendance::with('getEmployee');
+        $query = Attendance::with('getEmployee')->orderBy('in_time', 'desc');
 
         $searchableColumns = ['getEmployee.full_name'];
         $keyword = $request->input('keyword');
@@ -182,7 +182,7 @@ class AttendancesController extends Controller
     }
 
     public function printIndex(Request $request){
-        $query = Attendance::with('getEmployee');
+        $query = Attendance::with('getEmployee')->orderBy('in_time', 'desc');
         $attendanceRecords = $query->get();
         return view('attendance.print_index', compact('attendanceRecords'));
     }
