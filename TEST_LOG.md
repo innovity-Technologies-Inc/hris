@@ -1251,6 +1251,21 @@ Status: ✅ SUCCESS
 
 **Status**: ✅ SUCCESS
 
+## 2026-07-16 (Route Map UI Show All Via Points)
+
+**Goal**: Render all stopover via points individually on the horizontal route stepper instead of collapsing them, and calculate connecting line offsets dynamically.
+
+**Exact Command**: `php artisan config:clear && vendor/bin/pest tests/Feature/TransportRouteTest.php`
+
+**Results**:
+- `vehicle create route is accessible`: ✅ PASSED
+- `vehicle show route is accessible`: ✅ PASSED
+- `vehicle driver create route is accessible`: ✅ PASSED
+- `route map routes are accessible`: ✅ PASSED
+
+**Status**: ✅ SUCCESS
+
+
 
 
 

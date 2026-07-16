@@ -213,44 +213,14 @@
 
                 // 2. Via Points
                 const vias = Array.isArray(routeMap.via_points) ? routeMap.via_points : [];
-                if (vias.length === 1) {
+                vias.forEach(function(point, index) {
                     steps.push({
-                        label: 'Stopover',
-                        name: vias[0],
+                        label: `Stopover ${index + 1}`,
+                        name: point,
                         class: 'bg-warning',
-                        icon: '1'
+                        icon: (index + 1).toString()
                     });
-                } else if (vias.length === 2) {
-                    steps.push({
-                        label: 'Stopover 1',
-                        name: vias[0],
-                        class: 'bg-warning',
-                        icon: '1'
-                    });
-                    steps.push({
-                        label: 'Stopover 2',
-                        name: vias[1],
-                        class: 'bg-warning',
-                        icon: '2'
-                    });
-                } else if (vias.length > 2) {
-                    steps.push({
-                        label: 'Stopover 1',
-                        name: vias[0],
-                        class: 'bg-warning',
-                        icon: '1'
-                    });
-                    
-                    // Show remaining stopovers summary
-                    const remaining = vias.slice(1);
-                    const tooltipText = remaining.join(', ');
-                    steps.push({
-                        label: `Stopovers (+${remaining.length})`,
-                        name: `<span class="text-primary cursor-pointer" title="${tooltipText}" data-bs-toggle="tooltip" data-bs-placement="top">${remaining[0]} & others</span>`,
-                        class: 'bg-warning',
-                        icon: '+'
-                    });
-                }
+                });
 
                 // 3. End Point
                 steps.push({
@@ -260,16 +230,11 @@
                     icon: '<i class="mdi mdi-flag-variant" style="font-size: 12px;"></i>'
                 });
 
-                // Adjust connecting route line width and offsets based on step counts
+                // Adjust connecting route line width and offsets based on step counts dynamically
                 const stepCount = steps.length;
                 const routeLine = $('.route-line');
-                if (stepCount === 2) {
-                    routeLine.css({ left: '25%', right: '25%', top: '29px' });
-                } else if (stepCount === 3) {
-                    routeLine.css({ left: '16.6%', right: '16.6%', top: '29px' });
-                } else {
-                    routeLine.css({ left: '12.5%', right: '12.5%', top: '29px' });
-                }
+                const offsetPercent = 50 / stepCount;
+                routeLine.css({ left: offsetPercent + '%', right: offsetPercent + '%', top: '29px' });
 
                 // Render each step horizontally
                 steps.forEach(function(step) {
