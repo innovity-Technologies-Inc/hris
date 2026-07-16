@@ -1,5 +1,17 @@
 # Test Log
 
+## 2026-07-16 (Vehicle Allocation Route Bugfix)
+
+**Goal**: Fix the undefined method call to `VehicleAllocationController::dashboard.index()` by mapping the `vehicle-allocations` route directly to the controller's `dashboard()` method.
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- Replaced the action method `'dashboard.index'` with `'dashboard'` for the `vehicle-allocations` GET route in [web.php](file:///P:/Project/Web/hrms/routes/web.php).
+- Verified all 159 tests pass successfully after clearing route cache ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-16 (Transport Module Layout & Style Alignment)
 
 **Goal**: Align all index pages, create buttons, and action buttons of the Transport module to match other system modules' (e.g. Departments) standard design.

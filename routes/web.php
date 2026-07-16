@@ -1450,7 +1450,7 @@ Route::prefix('transport')->name('transport.')->middleware('auth')->group(functi
             Route::post('vehicle-allocations', 'store')->name('vehicle_allocations.store');
         });
         Route::middleware('permission:vehicle-allocation.view')->group(function () {
-            Route::get('vehicle-allocations', 'dashboard.index')->name('vehicle_allocations.dashboard');
+            Route::get('vehicle-allocations', 'dashboard')->name('vehicle_allocations.dashboard');
             Route::get('vehicle-allocations/history', 'history')->name('vehicle_allocations.history');
             Route::get('api/application-details', 'getApplicationDetails')->name('vehicle_allocations.application_details');
             Route::get('vehicle-allocations/{id}', 'show')->name('vehicle_allocations.show');
