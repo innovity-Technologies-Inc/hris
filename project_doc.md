@@ -72,6 +72,16 @@ This is a robust Human Resource Management System (HRMS) built with Laravel 12. 
 - **AXIOS File Upload Integration**: Upgraded create/edit forms to support multiple file uploads through standard HTML5 `FormData` objects and Axios AJAX post handling.
 - **Embedded Document Viewer**: Embedded downloadable links styled as pills/badges in the respective view details pages, enabling administrators to preview and audit documentation attached to career movement requests.
 
+### 🔄 Employee Transfer (Career Movement) Module
+Manages the complete lifecycle of transferring employees between different organizational units (companies, business units, divisions, departments, sections, and designations).
+
+- **Data Model**: The [Transfer](file:///P:/Project/Web/hrms/app/Models/Transfer/Transfer.php) model snapshots the employee's original placements and tracks the requested target organization structures.
+- **Workflow State Transitions**:
+  - **Initiation**: The [TransferServices@storeTransfer](file:///P:/Project/Web/hrms/app/Services/Transfer/TransferServices.php#L131) records the request, uploads any polymorphic attachments, and triggers the `career-movement` approval engine workflow.
+  - **Approval Handling**: The [TransferWorkflowListener](file:///P:/Project/Web/hrms/app/Listeners/Workflow/TransferWorkflowListener.php) listens for completed/rejected events. Upon completion, the transfer status is marked as `'approved'` and `is_adjustment` is set to `1` (pending adjustment).
+  - **Completion & Propagation**: When the effective date is reached, the adjustment process ([TransferAPIController@adjustment](file:///P:/Project/Web/hrms/app/Http/Controllers/Transfer/TransferAPIController.php#L119)) updates the core `EmployeeOfficeInfo` record, registers an `EmployeeLifecycle` entry, and updates status to `'completed'` (`is_adjustment = 2`).
+- **Security Scopes**: Handled by custom manual scoping inside [TransferServices@getTransferList](file:///P:/Project/Web/hrms/app/Services/Transfer/TransferServices.php#L34), dynamically restricting records based on user types (Group, Company, Section, etc.) and active step authorization states.
+
 ### 📢 Announcement & Notice Board Module
 - **5-Tier Cascading Targeting**: Notice boards and broadcasts are targeted to audiences dynamically via 5-tier cascading dropdowns (Company, Branch, Division, Department, Section) filtered dynamically by General Settings status configurations.
 - **AJAX Async Forms**: Creating and editing notices utilize Axios multipart transport with dynamic hierarchy loaders.
