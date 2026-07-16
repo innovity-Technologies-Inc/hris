@@ -10,7 +10,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ $generalSettings->name ?? config('app.name', 'HRMS') }} - Login</title>
+        <title>{{ $generalSettings->name ?? config('app.name', 'HRMS') }} - {{ $title ?? 'Portal' }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -347,8 +347,8 @@
                             <i class="fas fa-fingerprint fa-2x" style="color: var(--primary-color)"></i>
                         @endif
                     </div>
-                    <h1 class="auth-title">{{ $generalSettings->name ?? 'HRMS' }}</h1>
-                    <p class="text-muted fw-semibold">Sign in to continue to your dashboard</p>
+                    <h1 class="auth-title">{{ $title ?? ($generalSettings->name ?? 'HRMS') }}</h1>
+                    <p class="text-muted fw-semibold">{{ $subtitle ?? 'Sign in to continue to your dashboard' }}</p>
                 </div>
 
                 {{ $slot }}
