@@ -323,11 +323,19 @@ class DataController extends Controller
             ->whereDate('in_time', $today)
             ->first();
 
+        $officeInfo = \App\Models\Employee\EmployeeOfficeInfo::where('employee_id', $employee_id)
+            ->with('getCurrentBusinessUnit')
+            ->first();
+        $branch = $officeInfo?->getCurrentBusinessUnit;
+        $radius = config('services.google.maps_radius');
+
         if (!$record) {
             return response()->json([
                 'status' => 'clock_in',
                 'time' => $today,
-                'record' => $record
+                'record' => $record,
+                'branch' => $branch,
+                'covering_radius' => $radius
             ]);
         }
 
@@ -335,14 +343,18 @@ class DataController extends Controller
             return response()->json([
                 'status' => 'clock_out',
                 'time' => $today,
-                'record' => $record
+                'record' => $record,
+                'branch' => $branch,
+                'covering_radius' => $radius
             ]);
         }
 
         return response()->json([
             'status' => 'completed',
             'time' => $today,
-            'record' => $record
+            'record' => $record,
+            'branch' => $branch,
+            'covering_radius' => $radius
         ]);
     }
 

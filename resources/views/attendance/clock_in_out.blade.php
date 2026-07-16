@@ -90,6 +90,11 @@
                                             </button>
                                         </div>
 
+                                        <div id="locationWarningNote" class="alert alert-danger mt-3" style="display:none; font-size: 0.9rem;">
+                                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                            <span id="locationWarningText">You are out of the office area.</span>
+                                        </div>
+
                                         <div id="clockOutContainer" style="display:none;">
                                             <button type="button" id="clockOutBtn" class="clock-button clock-out-btn">
                                                 <span class="button-icon"><i class="bi bi-box-arrow-left"></i></span>
@@ -176,22 +181,113 @@
                 });
             }
 
+            let currentBranch = null;
+            let coveringRadius = null;
+            let currentStatus = null;
+
+            function getDistance(lat1, lon1, lat2, lon2) {
+                const R = 6371e3; // Earth radius in meters
+                const phi1 = lat1 * Math.PI/180;
+                const phi2 = lat2 * Math.PI/180;
+                const deltaPhi = (lat2-lat1) * Math.PI/180;
+                const deltaLambda = (lon2-lon1) * Math.PI/180;
+
+                const a = Math.sin(deltaPhi/2) * Math.sin(deltaPhi/2) +
+                          Math.cos(phi1) * Math.cos(phi2) *
+                          Math.sin(deltaLambda/2) * Math.sin(deltaLambda/2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+                return R * c; // in meters
+            }
+
+            function checkLocationRestrictions() {
+                $('#locationWarningNote').hide();
+                $('#clockInContainer').hide();
+
+                if (currentStatus !== 'clock_in') {
+                    return;
+                }
+
+                const workstation = $('#workstationSelect').val();
+                if (!workstation) {
+                    return;
+                }
+
+                if (workstation !== 'On-Site') {
+                    $('#clockInContainer').show();
+                    return;
+                }
+
+                if (!navigator.geolocation) {
+                    $('#locationWarningText').text('Geolocation is not supported by your browser.');
+                    $('#locationWarningNote').fadeIn();
+                    return;
+                }
+
+                $('#locationWarningText').html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Verifying your location...');
+                $('#locationWarningNote').show();
+
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const userLat = position.coords.latitude;
+                        const userLng = position.coords.longitude;
+
+                        if (!currentBranch || !currentBranch.latitude || !currentBranch.longitude) {
+                            $('#locationWarningText').text('Office location coordinates are not configured. Please contact administration.');
+                            return;
+                        }
+
+                        const branchLat = parseFloat(currentBranch.latitude);
+                        const branchLng = parseFloat(currentBranch.longitude);
+                        const radius = parseFloat(coveringRadius || 100);
+
+                        const distance = getDistance(userLat, userLng, branchLat, branchLng);
+
+                        if (distance <= radius) {
+                            $('#locationWarningNote').hide();
+                            $('#clockInContainer').fadeIn();
+                        } else {
+                            $('#locationWarningText').text('You are out of the office area.');
+                            $('#locationWarningNote').fadeIn();
+                        }
+                    },
+                    function(error) {
+                        let errMsg = 'Unable to retrieve your location. Please check permissions.';
+                        if (error.code === error.PERMISSION_DENIED) {
+                            errMsg = 'Location access denied. Please allow location access to clock in On-Site.';
+                        }
+                        $('#locationWarningText').text(errMsg);
+                        $('#locationWarningNote').fadeIn();
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
+                );
+            }
+
             // --- Load Attendance Status ---
             function loadAttendanceStatus(employeeId){
                 if(!employeeId) return;
                 $('#clockInContainer,#clockOutContainer').hide();
                 $('#attendanceMessage').hide();
+                $('#locationWarningNote').hide();
                 $('#clockInTimeDisplay').hide();
                 $('#workstationDiv').show();
+                $('#workstationSelect').val(''); // Reset workstation selection
                 $('#attendanceIdInput').val(''); // clear old id
 
                 $.ajax({
                     url:"{{ url('get-attendance-details') }}/"+employeeId,
                     type:"GET",
                     success:function(res){
+                        currentStatus = res.status;
+                        currentBranch = res.branch;
+                        coveringRadius = res.covering_radius;
+
                         if(res.status==='clock_in'){
-                            $('#clockInContainer').fadeIn();
-                            // No need to set attendanceId for Clock In
+                            checkLocationRestrictions();
                         }
                         if(res.status==='clock_out'){
                             $('#clockOutContainer').fadeIn();
@@ -281,6 +377,11 @@
                 });
             });
 
+
+            // --- On Workstation Change ---
+            $('#workstationSelect').on('change', function () {
+                checkLocationRestrictions();
+            });
 
             // --- On Employee Change ---
             $('#employeeSelect').on('change', function () {

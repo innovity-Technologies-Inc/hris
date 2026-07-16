@@ -1,5 +1,22 @@
 # Test Log
 
+## 2026-07-16 (Attendance Geofencing Clock-In)
+
+**Goal**: Implement geofencing verification for On-Site workstation clock-in based on employee branch coordinates and allowed radius.
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- Modified [DataController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/DataController.php) to load and return the employee's current branch coordinates (`latitude` and `longitude`) and system `covering_radius` config inside the attendance details response payload.
+- Updated [clock_in_out.blade.php](file:///P:/Project/Web/hrms/resources/views/attendance/clock_in_out.blade.php):
+  - Added warning alert container for display of location state messages.
+  - Implemented client-side geolocation validation using browser Geolocation API and Haversine formula calculation.
+  - Bound change listener to `#workstationSelect` to trigger geofence check whenever "On-Site" is selected.
+  - Toggled clock in button container visibility and displayed out of area warning notes when validation fails.
+- Created [AttendanceGeofencingTest.php](file:///P:/Project/Web/hrms/tests/Feature/Attendance/AttendanceGeofencingTest.php) to verify payload coordinates and radius structure and verified all 158 tests pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-16 (Google Map Covering Radius Setting Addition)
 
 **Goal**: Add covering area radius configuration field to Google Map settings and load it into configuration during boot.
