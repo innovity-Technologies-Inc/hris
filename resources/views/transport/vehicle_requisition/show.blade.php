@@ -50,6 +50,16 @@
             padding: 15px 20px;
             border-bottom: 1px solid var(--bs-border-color);
         }
+
+        /* Dark Mode Overrides */
+        [data-bs-theme=dark] .detail-card {
+            border-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        [data-bs-theme=dark] .detail-row {
+            border-bottom-color: rgba(255, 255, 255, 0.05);
+        }
     </style>
 
     <div class="row">

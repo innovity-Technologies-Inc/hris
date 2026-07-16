@@ -47,6 +47,25 @@
             border-radius: 8px;
             margin-top: 30px;
         }
+
+        /* Dark Mode Overrides */
+        [data-bs-theme=dark] .form-card {
+            border-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        [data-bs-theme=dark] .form-label {
+            color: var(--bs-body-color);
+        }
+
+        [data-bs-theme=dark] .file-preview {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--bs-body-color);
+        }
+
+        [data-bs-theme=dark] .submit-section {
+            background: rgba(255, 255, 255, 0.03);
+        }
     </style>
 
     <div class="row">
