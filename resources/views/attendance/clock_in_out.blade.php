@@ -24,7 +24,7 @@
         }
 
         .page-header {
-            background: linear-gradient(135deg, var(--bs-primary, #4f46e5), #312e81) !important;
+            background: linear-gradient(135deg, var(--primary-color, #974063), #6b2543) !important;
             color: white !important;
             padding: 2rem !important;
             border-radius: 16px 16px 0 0 !important;
@@ -90,12 +90,12 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(151, 64, 99, 0.25) 0%, transparent 70%);
             pointer-events: none;
         }
 
         .time-label {
-            color: #818cf8 !important;
+            color: #f4b5d0 !important;
             font-size: 0.85rem !important;
             text-transform: uppercase !important;
             letter-spacing: 0.15em !important;
@@ -106,7 +106,7 @@
             font-size: 3rem !important;
             font-weight: 800 !important;
             color: #ffffff !important;
-            text-shadow: 0 0 15px rgba(99, 102, 241, 0.6) !important;
+            text-shadow: 0 0 15px rgba(151, 64, 99, 0.6) !important;
             font-family: 'Outfit', 'Inter', -apple-system, sans-serif !important;
             margin: 0.75rem 0 !important;
             letter-spacing: 1px !important;
