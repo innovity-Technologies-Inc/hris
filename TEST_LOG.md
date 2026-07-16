@@ -1,5 +1,21 @@
 # Test Log
 
+## 2026-07-17 (Transport Module API-First Refactoring and Feature Testing)
+
+**Goal**: Convert the entire Transport module (Route Maps, Vehicles, Drivers, Requisitions, Allocations, and Employee Transports) to be API-first and Axios-based, using thin controllers with services and dedicated Form Request validation classes, and add feature tests validating all business logic.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/TransportRouteTest.php`
+
+**Results**:
+- Created 12 Form Request validation classes inside [app/Http/Requests/Transport/](file:///P:/Project/Web/hrms/app/Http/Requests/Transport/).
+- Refactored all 6 Transport module controllers to handle thin logic, delegate to services, validate requests using Form Request classes, and return clean JSON API responses.
+- Re-architected all form views to submit asynchronous payloads via Axios, with dynamic server-side validation error handling.
+- Converted delete/release/reject actions inside index views to use Axios with SweetAlert confirmations.
+- Added comprehensive feature tests in [tests/Feature/TransportRouteTest.php](file:///P:/Project/Web/hrms/tests/Feature/TransportRouteTest.php) covering all 6 submodules (Vehicle CRUD, Assignment CRUD, Requisition CRUD/Rejection, Allocation CRUD/Release, and Employee Transport CRUD/Rejection).
+- Verified that all 9 tests and 47 assertions pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-16 (Route Map Interactive Stepper Modal)
 
 **Goal**: Add a "View Route" button to the Route Maps table that displays a beautiful timeline stepper modal showing start point, stopovers (via points), destination, and details.
