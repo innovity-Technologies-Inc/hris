@@ -123,7 +123,8 @@ test('route map routes are accessible', function () {
         'via_points' => ['Stop 1', 'Stop 2'],
         'status' => 'Active',
     ]);
-    $response->assertRedirect(route('transport.route_maps.index'));
+    $response->assertStatus(201);
+    $response->assertJson(['success' => true]);
     $this->assertDatabaseHas('route_maps', ['route_name' => 'Stored Route']);
 
     // Test Edit Page
@@ -138,7 +139,8 @@ test('route map routes are accessible', function () {
         'via_points' => ['Stop A', 'Stop B'],
         'status' => 'Active',
     ]);
-    $response->assertRedirect(route('transport.route_maps.index'));
+    $response->assertStatus(200);
+    $response->assertJson(['success' => true]);
     $this->assertDatabaseHas('route_maps', ['id' => $routeMap->id, 'route_name' => 'Updated Route']);
 
     // Test Delete
