@@ -36,7 +36,7 @@
                         </span>
                     </td>
                     <td class="text-center">
-                        <div class="btn-group btn-group-sm">
+                        <div class="d-flex justify-content-center gap-1">
                             @if(auth()->user()->can('employee-transport.edit'))
                                 <a href="{{ route('transport.route_maps.edit', $routeMap->id) }}"
                                     class="btn btn-primary btn-sm" title="Edit">

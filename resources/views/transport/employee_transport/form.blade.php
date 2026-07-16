@@ -127,7 +127,7 @@
                                         <i class="fas fa-tag text-primary me-1"></i>
                                         Type <span class="text-danger">*</span>
                                     </label>
-                                    <select name="type" id="type" class="form-select select2_list" required>
+                                    <select name="type" id="type" class="form-select select2_list @error('type') is-invalid @enderror" required>
                                         <option value="">-- Select Type --</option>
                                         @foreach ($types as $key => $label)
                                             <option value="{{ $key }}"
@@ -156,7 +156,7 @@
                                         <i class="fas fa-building text-primary me-1"></i>
                                         Company <span class="text-danger">*</span>
                                     </label>
-                                    <select name="company_id" id="company_id" class="form-select select2_list" required>
+                                    <select name="company_id" id="company_id" class="form-select select2_list @error('company_id') is-invalid @enderror" required>
                                         <option value="">-- Select Company --</option>
                                         @foreach ($companies as $company)
                                             <option value="{{ $company->id }}"
@@ -178,7 +178,7 @@
                                             <i class="fas fa-map-marker-alt text-primary me-1"></i>
                                             Branch
                                         </label>
-                                        <select name="branch_id" id="branch_id" class="form-select select2_list">
+                                        <select name="branch_id" id="branch_id" class="form-select select2_list @error('branch_id') is-invalid @enderror">
                                             <option value="">Select Branch</option>
                                         </select>
                                         @error('branch_id')
@@ -195,7 +195,7 @@
                                             <i class="fas fa-project-diagram text-warning me-1"></i>
                                             Division
                                         </label>
-                                        <select name="division_id" id="division_id" class="form-select select2_list">
+                                        <select name="division_id" id="division_id" class="form-select select2_list @error('division_id') is-invalid @enderror">
                                             <option value="">Select Division</option>
                                         </select>
                                         @error('division_id')
@@ -214,7 +214,7 @@
                                             <i class="fas fa-sitemap text-info me-1"></i>
                                             Department
                                         </label>
-                                        <select name="department_id" id="department_id" class="form-select select2_list">
+                                        <select name="department_id" id="department_id" class="form-select select2_list @error('department_id') is-invalid @enderror">
                                             <option value="">Select Department</option>
                                         </select>
                                         @error('department_id')
@@ -231,7 +231,7 @@
                                             <i class="fas fa-network-wired text-secondary me-1"></i>
                                             Section
                                         </label>
-                                        <select name="section_id" id="section_id" class="form-select select2_list">
+                                        <select name="section_id" id="section_id" class="form-select select2_list @error('section_id') is-invalid @enderror">
                                             <option value="">Select Section</option>
                                         </select>
                                         @error('section_id')
@@ -255,7 +255,7 @@
                                         <i class="fas fa-tag text-primary me-1"></i>
                                         Service Name <span class="text-danger">*</span>
                                     </label>
-                                    <input type="text" name="service_name" id="service_name" class="form-control"
+                                    <input type="text" name="service_name" id="service_name" class="form-control @error('service_name') is-invalid @enderror"
                                         placeholder="e.g., Morning Shuttle, Evening Drop"
                                         value="{{ old('service_name', $employeeTransport->service_name ?? '') }}"
                                         required>
@@ -271,7 +271,7 @@
                                         <i class="fas fa-list text-primary me-1"></i>
                                         Transport Type <span class="text-danger">*</span>
                                     </label>
-                                    <select name="transport_type" id="transport_type" class="form-select" required>
+                                    <select name="transport_type" id="transport_type" class="form-select @error('transport_type') is-invalid @enderror" required>
                                         <option value="">-- Select Transport Type --</option>
                                         @foreach ($transportTypes as $tType)
                                             <option value="{{ $tType }}"
@@ -293,7 +293,7 @@
                                         Estimated Passengers
                                     </label>
                                     <input type="number" name="estimated_passengers" id="estimated_passengers"
-                                        class="form-control" placeholder="Number of passengers" min="1"
+                                        class="form-control @error('estimated_passengers') is-invalid @enderror" placeholder="Number of passengers" min="1"
                                         value="{{ old('estimated_passengers', $employeeTransport->estimated_passengers ?? '') }}">
                                     @error('estimated_passengers')
                                         <small class="text-danger"><i
@@ -307,7 +307,7 @@
                                         <i class="fas fa-clipboard text-primary me-1"></i>
                                         Purpose <span class="text-danger">*</span>
                                     </label>
-                                    <textarea name="purpose" id="purpose" class="form-control" rows="3"
+                                    <textarea name="purpose" id="purpose" class="form-control @error('purpose') is-invalid @enderror" rows="3"
                                         placeholder="Describe the purpose of this transport service" required>{{ old('purpose', $employeeTransport->purpose ?? '') }}</textarea>
                                     @error('purpose')
                                         <small class="text-danger"><i
@@ -329,7 +329,7 @@
                                         <i class="fas fa-calendar text-primary me-1"></i>
                                         Start Date <span class="text-danger">*</span>
                                     </label>
-                                    <input type="date" name="start_date" id="start_date" class="form-control"
+                                    <input type="date" name="start_date" id="start_date" class="form-control @error('start_date') is-invalid @enderror"
                                         value="{{ old('start_date', isset($employeeTransport) ? $employeeTransport->start_date->format('Y-m-d') : '') }}"
                                         required>
                                     @error('start_date')
@@ -342,11 +342,10 @@
                                 <div class="col-md-3 mb-3">
                                     <label for="end_date" class="form-label fw-semibold">
                                         <i class="fas fa-calendar text-primary me-1"></i>
-                                        End Date <span class="text-danger">*</span>
+                                        End Date
                                     </label>
-                                    <input type="date" name="end_date" id="end_date" class="form-control"
-                                        value="{{ old('end_date', isset($employeeTransport) ? $employeeTransport->end_date->format('Y-m-d') : '') }}"
-                                        required>
+                                    <input type="date" name="end_date" id="end_date" class="form-control @error('end_date') is-invalid @enderror"
+                                        value="{{ old('end_date', isset($employeeTransport) && $employeeTransport->end_date ? $employeeTransport->end_date->format('Y-m-d') : '') }}">
                                     @error('end_date')
                                         <small class="text-danger"><i
                                                 class="fas fa-exclamation-circle me-1"></i>{{ $message }}</small>
@@ -359,7 +358,7 @@
                                         <i class="fas fa-clock text-primary me-1"></i>
                                         Pickup Time
                                     </label>
-                                    <input type="time" name="pickup_time" id="pickup_time" class="form-control"
+                                    <input type="time" name="pickup_time" id="pickup_time" class="form-control @error('pickup_time') is-invalid @enderror"
                                         value="{{ old('pickup_time', $employeeTransport->pickup_time ?? '') }}">
                                     @error('pickup_time')
                                         <small class="text-danger"><i
@@ -373,7 +372,7 @@
                                         <i class="fas fa-clock text-primary me-1"></i>
                                         Drop Time
                                     </label>
-                                    <input type="time" name="drop_time" id="drop_time" class="form-control"
+                                    <input type="time" name="drop_time" id="drop_time" class="form-control @error('drop_time') is-invalid @enderror"
                                         value="{{ old('drop_time', $employeeTransport->drop_time ?? '') }}">
                                     @error('drop_time')
                                         <small class="text-danger"><i
@@ -437,7 +436,7 @@
                                         <i class="fas fa-exclamation-triangle text-primary me-1"></i>
                                         Special Requirements
                                     </label>
-                                    <textarea name="special_requirements" id="special_requirements" class="form-control" rows="3"
+                                    <textarea name="special_requirements" id="special_requirements" class="form-control @error('special_requirements') is-invalid @enderror" rows="3"
                                         placeholder="Any special requirements...">{{ old('special_requirements', $employeeTransport->special_requirements ?? '') }}</textarea>
                                     @error('special_requirements')
                                         <small class="text-danger"><i
@@ -451,7 +450,7 @@
                                         <i class="fas fa-comment text-secondary me-1"></i>
                                         Remarks
                                     </label>
-                                    <textarea name="remarks" id="remarks" class="form-control" rows="3" placeholder="Additional remarks...">{{ old('remarks', $employeeTransport->remarks ?? '') }}</textarea>
+                                    <textarea name="remarks" id="remarks" class="form-control @error('remarks') is-invalid @enderror" rows="3" placeholder="Additional remarks...">{{ old('remarks', $employeeTransport->remarks ?? '') }}</textarea>
                                     @error('remarks')
                                         <small class="text-danger"><i
                                                 class="fas fa-exclamation-circle me-1"></i>{{ $message }}</small>

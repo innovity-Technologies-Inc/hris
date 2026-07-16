@@ -68,19 +68,21 @@
                     {{ $item->end_date ? \Carbon\Carbon::parse($item->end_date)->format('d M, Y') : '-' }}
                 </td>
                 <td class="text-center">
-                    <a type="button" class="btn btn-info btn-sm"
-                        href="{{ route('transport.vehicle_drivers.show', $item->id) }}" title="View">
-                        <i style="height: 12px; width: 12px" data-feather="eye"></i>
-                    </a>
+                    <div class="d-flex justify-content-center gap-1">
+                        <a type="button" class="btn btn-info btn-sm"
+                            href="{{ route('transport.vehicle_drivers.show', $item->id) }}" title="View">
+                            <i style="height: 12px; width: 12px" data-feather="eye"></i>
+                        </a>
 
-                    <form action="{{ route('transport.vehicle_drivers.destroy', $item->id) }}" method="POST"
-                        style="display: inline-block">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-danger confirmDelete" title="Delete">
-                            <i style="height: 12px; width: 12px" data-feather="trash"></i>
-                        </button>
-                    </form>
+                        <form action="{{ route('transport.vehicle_drivers.destroy', $item->id) }}" method="POST"
+                            style="display: inline-block">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger confirmDelete" title="Delete">
+                                <i style="height: 12px; width: 12px" data-feather="trash"></i>
+                            </button>
+                        </form>
+                    </div>
                 </td>
             </tr>
         @empty

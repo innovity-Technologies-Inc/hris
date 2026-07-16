@@ -45,7 +45,7 @@
                     </span>
                 </td>
                 <td class="text-center">
-                    <div class="btn-group btn-group-sm">
+                    <div class="d-flex justify-content-center gap-1">
                         <a href="{{ route('transport.employee_transports.show', $transport->id) }}"
                             class="btn btn-info btn-sm" title="View">
                             <i data-feather="eye" style="width: 14px; height: 14px;"></i>

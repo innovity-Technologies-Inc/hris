@@ -146,7 +146,7 @@ class EmployeeTransportController extends Controller
             'purpose' => 'required|string|max:1000',
             'route_map_id' => 'required|exists:route_maps,id',
             'start_date' => 'required|date|after_or_equal:today',
-            'end_date' => 'required|date|after_or_equal:start_date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
             'pickup_time' => 'nullable|date_format:H:i',
             'drop_time' => 'nullable|date_format:H:i',
             'estimated_passengers' => 'nullable|integer|min:1',
@@ -160,7 +160,6 @@ class EmployeeTransportController extends Controller
             'purpose.required' => 'Purpose is required.',
             'route_map_id.required' => 'Please select a Route Map.',
             'start_date.required' => 'Start date is required.',
-            'end_date.required' => 'End date is required.',
         ]);
 
         try {
@@ -273,7 +272,7 @@ class EmployeeTransportController extends Controller
             'purpose' => 'required|string|max:1000',
             'route_map_id' => 'required|exists:route_maps,id',
             'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
             'pickup_time' => 'nullable|date_format:H:i',
             'drop_time' => 'nullable|date_format:H:i',
             'estimated_passengers' => 'nullable|integer|min:1',

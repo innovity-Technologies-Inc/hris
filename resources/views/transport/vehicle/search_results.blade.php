@@ -43,29 +43,31 @@
                     @endif
                 </td>
                 <td class="text-center">
-                    <a href="{{ route('transport.vehicles.show', $item->id) }}" class="btn btn-info btn-sm"
-                        title="View">
-                        <i style="height: 12px; width: 12px" data-feather="eye"></i>
-                    </a>
+                    <div class="d-flex justify-content-center gap-1">
+                        <a href="{{ route('transport.vehicles.show', $item->id) }}" class="btn btn-info btn-sm"
+                            title="View">
+                            <i style="height: 12px; width: 12px" data-feather="eye"></i>
+                        </a>
 
-                    <a href="{{ route('transport.vehicles.history', $item->id) }}" class="btn btn-success btn-sm"
-                        title="See History">
-                        <i style="height: 12px; width: 12px" data-feather="clock"></i>
-                    </a>
+                        <a href="{{ route('transport.vehicles.history', $item->id) }}" class="btn btn-success btn-sm"
+                            title="See History">
+                            <i style="height: 12px; width: 12px" data-feather="clock"></i>
+                        </a>
 
-                    <a type="button" class="btn btn-primary btn-sm"
-                        href="{{ route('transport.vehicles.edit', $item->id) }}" title="Edit">
-                        <i style="height: 12px; width: 12px" data-feather="edit"></i>
-                    </a>
+                        <a type="button" class="btn btn-primary btn-sm"
+                            href="{{ route('transport.vehicles.edit', $item->id) }}" title="Edit">
+                            <i style="height: 12px; width: 12px" data-feather="edit"></i>
+                        </a>
 
-                    <form action="{{ route('transport.vehicles.destroy', $item->id) }}" method="POST"
-                        style="display: inline-block">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-danger confirmDelete" title="Delete">
-                            <i style="height: 12px; width: 12px" data-feather="trash"></i>
-                        </button>
-                    </form>
+                        <form action="{{ route('transport.vehicles.destroy', $item->id) }}" method="POST"
+                            style="display: inline-block">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger confirmDelete" title="Delete">
+                                <i style="height: 12px; width: 12px" data-feather="trash"></i>
+                            </button>
+                        </form>
+                    </div>
                 </td>
             </tr>
         @empty

@@ -1293,6 +1293,21 @@ Status: ✅ SUCCESS
 
 **Status**: ✅ SUCCESS
 
+## 2026-07-17 (Transport Action Buttons Alignment & Nullable End Date)
+
+**Goal**: Align action buttons layout style in all transport submodules to `d-flex justify-content-center gap-1`, make `end_date` nullable in database schema and validator, and add validation feedback styling across all form controls.
+
+**Exact Command**: `php artisan config:clear && vendor/bin/pest tests/Feature/TransportRouteTest.php`
+
+**Results**:
+- `vehicle create route is accessible`: ✅ PASSED
+- `vehicle show route is accessible`: ✅ PASSED
+- `vehicle driver create route is accessible`: ✅ PASSED
+- `route map routes are accessible`: ✅ PASSED
+
+**Status**: ✅ SUCCESS
+
+
 
 
 

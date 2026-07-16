@@ -72,19 +72,21 @@
                     @endif
                 </td>
                 <td class="text-center">
-                    {{-- View Button --}}
-                    <a href="{{ route('transport.vehicle_requisitions.show', $item->id) }}" class="btn btn-info btn-sm"
-                        title="View Details">
-                        <i style="height: 12px; width: 12px" data-feather="eye"></i>
-                    </a>
+                    <div class="d-flex justify-content-center gap-1">
+                        {{-- View Button --}}
+                        <a href="{{ route('transport.vehicle_requisitions.show', $item->id) }}" class="btn btn-info btn-sm"
+                            title="View Details">
+                            <i style="height: 12px; width: 12px" data-feather="eye"></i>
+                        </a>
 
-                    @if ($item->approval_status === 'Pending')
-                        {{-- Reject Button --}}
-                        <button type="button" class="btn btn-danger btn-sm rejectBtn" data-id="{{ $item->id }}"
-                            title="Reject">
-                            <i style="height: 12px; width: 12px" data-feather="x-circle"></i>
-                        </button>
-                    @endif
+                        @if ($item->approval_status === 'Pending')
+                            {{-- Reject Button --}}
+                            <button type="button" class="btn btn-danger btn-sm rejectBtn" data-id="{{ $item->id }}"
+                                title="Reject">
+                                <i style="height: 12px; width: 12px" data-feather="x-circle"></i>
+                            </button>
+                        @endif
+                    </div>
                 </td>
             </tr>
         @empty
