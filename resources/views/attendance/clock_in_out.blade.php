@@ -267,6 +267,10 @@
                 );
             }
 
+            function getSelectedEmployeeId() {
+                return $('#employeeSelect').val() || $('#hidden_employee_id').val();
+            }
+
             // --- Load Attendance Status ---
             function loadAttendanceStatus(employeeId){
                 if(!employeeId) return;
@@ -309,7 +313,8 @@
 
             $('#clockInBtn').on('click', function(e){
                 e.preventDefault();
-                if(!$('#employeeSelect').val() || !$('#workstationSelect').val()){
+                const empId = getSelectedEmployeeId();
+                if(!empId || !$('#workstationSelect').val()){
                     Swal.fire('Error','Please select employee and workstation.','error');
                     return;
                 }
@@ -323,14 +328,14 @@
                     type: "POST",
                     data: {
                         _token: "{{ csrf_token() }}",
-                        employee_id: $('#employeeSelect').val(),
+                        employee_id: empId,
                         workstation: $('#workstationSelect').val(),
                         in_time: clockIn
                     },
                     success: function(res){
                         Swal.fire({ icon:'success', title: res.message, timer:1500, showConfirmButton:false });
                         $('#attendanceIdInput').val(res.attendance_id); // save attendance_id for clock out
-                        loadAttendanceStatus($('#employeeSelect').val());
+                        loadAttendanceStatus(getSelectedEmployeeId());
                     },
                     error: function(xhr){
                         let msg = 'Something went wrong';
@@ -343,7 +348,8 @@
 
             $('#clockOutBtn').on('click', function(e){
                 e.preventDefault();
-                if(!$('#employeeSelect').val()){
+                const empId = getSelectedEmployeeId();
+                if(!empId){
                     Swal.fire('Error','Please select employee.','error');
                     return;
                 }
@@ -361,13 +367,13 @@
                     type: "POST",
                     data: {
                         _token: "{{ csrf_token() }}",
-                        employee_id: $('#employeeSelect').val(),
+                        employee_id: empId,
                         attendance_id: attendanceId,
                         out_time: getCurrentDateTime()
                     },
                     success: function(res){
                         Swal.fire({ icon:'success', title: res.message, timer:1500, showConfirmButton:false });
-                        loadAttendanceStatus($('#employeeSelect').val());
+                        loadAttendanceStatus(getSelectedEmployeeId());
                     },
                     error: function(xhr){
                         let msg = 'Something went wrong';
@@ -389,7 +395,7 @@
             });
 
             // --- Initial Load ---
-            if ($('#employeeSelect').val()) loadAttendanceStatus($('#employeeSelect').val());
+            if (getSelectedEmployeeId()) loadAttendanceStatus(getSelectedEmployeeId());
 
         });
     </script>

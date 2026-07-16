@@ -69,7 +69,16 @@ class AttendancesController extends Controller
         $title = 'Employee Attendance';
         $section = 'Employee Attendance';
         $sub_section = 'Register';
-        $employees = Employee::has('shift')->get();
+        
+        $loggedInEmployeeId = auth()->user()->employee_id;
+        if ($loggedInEmployeeId) {
+            $employees = Employee::where('id', $loggedInEmployeeId)
+                ->orWhereHas('shift')
+                ->get();
+        } else {
+            $employees = Employee::has('shift')->get();
+        }
+
         return view('attendance.clock_in_out', compact('title', 'section', 'sub_section', 'employees'));
     }
 

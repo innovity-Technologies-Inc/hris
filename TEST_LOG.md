@@ -1,5 +1,20 @@
 # Test Log
 
+## 2026-07-16 (Attendance Logged-In Employee Auto-Selection)
+
+**Goal**: Automatically select the logged-in user's employee record in the Clock In / Out form.
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- Updated [AttendancesController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/Attendance/AttendancesController.php) to ensure the logged-in user's employee record is always loaded in the view dropdown collection, even if they do not have a shift assigned.
+- Updated [clock_in_out.blade.php](file:///P:/Project/Web/hrms/resources/views/attendance/clock_in_out.blade.php):
+  - Defined a helper function `getSelectedEmployeeId()` to safely read the employee ID from either the select element or the fallback hidden input.
+  - Replaced all raw calls to `$('#employeeSelect').val()` with `getSelectedEmployeeId()`, guaranteeing correct ID evaluation even when the dropdown is disabled.
+- Verified all 158 tests pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-16 (Attendance Geofencing Clock-In)
 
 **Goal**: Implement geofencing verification for On-Site workstation clock-in based on employee branch coordinates and allowed radius.
