@@ -181,10 +181,14 @@
                                     </div>
                                 </div>
                             </div>
-                            @if ($employeeTransport->routeMap->via_points)
+                            @if ($employeeTransport->routeMap->via_points && is_array($employeeTransport->routeMap->via_points) && count($employeeTransport->routeMap->via_points) > 0)
                                 <div class="bg-light p-3 rounded mt-2">
                                     <small class="text-muted d-block mb-1">Via Points / Stopovers</small>
-                                    {{ $employeeTransport->routeMap->via_points }}
+                                    <div class="d-flex flex-wrap gap-1 mt-1">
+                                        @foreach($employeeTransport->routeMap->via_points as $point)
+                                            <span class="badge bg-warning text-dark p-2" style="font-size: 0.85rem;">{{ $point }}</span>
+                                        @endforeach
+                                    </div>
                                 </div>
                             @endif
                             @if ($employeeTransport->routeMap->route_details)

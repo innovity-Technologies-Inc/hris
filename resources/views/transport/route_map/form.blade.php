@@ -33,6 +33,11 @@
             border-radius: 8px;
             margin-top: 30px;
         }
+        
+        .via-point-badge {
+            font-size: 0.9rem;
+            border-radius: 20px;
+        }
     </style>
 
     <div class="row">
@@ -122,13 +127,34 @@
                             </div>
                             <div class="row g-3">
                                 <div class="col-md-12">
-                                    <label for="via_points" class="form-label">
+                                    <label class="form-label">
                                         Via Points / Stopovers (Optional)
                                     </label>
-                                    <textarea name="via_points" id="via_points" class="form-control @error('via_points') is-invalid @enderror"
-                                        rows="3" placeholder="List stopovers, e.g., Mohakhali, Farmgate, Shahbagh">{{ isset($routeMap) ? $routeMap->via_points : old('via_points') }}</textarea>
+                                    <div class="input-group mb-2">
+                                        <input type="text" id="via_point_input" class="form-control" placeholder="Add via point, e.g., Mohakhali">
+                                        <button class="btn btn-warning" type="button" id="add_via_point_btn">
+                                            <i class="mdi mdi-plus"></i> Add
+                                        </button>
+                                    </div>
+                                    <div id="via_points_list" class="d-flex flex-wrap gap-2 mt-2">
+                                        @if(isset($routeMap) && is_array($routeMap->via_points))
+                                            @foreach($routeMap->via_points as $point)
+                                                <span class="badge bg-warning text-dark d-flex align-items-center gap-1 p-2 via-point-badge" data-value="{{ $point }}">
+                                                    {{ $point }}
+                                                    <i class="mdi mdi-close text-danger remove-via-point" style="cursor: pointer;"></i>
+                                                </span>
+                                            @endforeach
+                                        @endif
+                                    </div>
+                                    <div id="via_points_hidden_inputs">
+                                        @if(isset($routeMap) && is_array($routeMap->via_points))
+                                            @foreach($routeMap->via_points as $point)
+                                                <input type="hidden" name="via_points[]" value="{{ $point }}">
+                                            @endforeach
+                                        @endif
+                                    </div>
                                     @error('via_points')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
 
@@ -173,4 +199,66 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            function addViaPoint() {
+                const input = $('#via_point_input');
+                const value = input.val().trim();
+                if (!value) return;
+
+                // Check if already exists to prevent duplicates
+                let exists = false;
+                $('#via_points_list .via-point-badge').each(function() {
+                    if ($(this).attr('data-value').toLowerCase() === value.toLowerCase()) {
+                        exists = true;
+                    }
+                });
+
+                if (exists) {
+                    input.val('');
+                    return;
+                }
+
+                // Append badge
+                $('#via_points_list').append(`
+                    <span class="badge bg-warning text-dark d-flex align-items-center gap-1 p-2 via-point-badge" data-value="${value}">
+                        ${value}
+                        <i class="mdi mdi-close text-danger remove-via-point" style="cursor: pointer;"></i>
+                    </span>
+                `);
+
+                // Append hidden input
+                $('#via_points_hidden_inputs').append(`
+                    <input type="hidden" name="via_points[]" value="${value}">
+                `);
+
+                input.val('');
+            }
+
+            $('#add_via_point_btn').on('click', function() {
+                addViaPoint();
+            });
+
+            $('#via_point_input').on('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addViaPoint();
+                }
+            });
+
+            $(document).on('click', '.remove-via-point', function() {
+                const badge = $(this).closest('.via-point-badge');
+                const value = badge.attr('data-value');
+                
+                // Remove hidden input
+                $(`#via_points_hidden_inputs input[value="${value}"]`).remove();
+                // Remove badge
+                badge.remove();
+            });
+        });
+    </script>
 @endsection

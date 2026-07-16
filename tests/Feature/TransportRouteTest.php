@@ -120,6 +120,7 @@ test('route map routes are accessible', function () {
         'route_name' => 'Stored Route',
         'start_point' => 'Stored Start',
         'end_point' => 'Stored End',
+        'via_points' => ['Stop 1', 'Stop 2'],
         'status' => 'Active',
     ]);
     $response->assertRedirect(route('transport.route_maps.index'));
@@ -134,6 +135,7 @@ test('route map routes are accessible', function () {
         'route_name' => 'Updated Route',
         'start_point' => 'Start',
         'end_point' => 'End',
+        'via_points' => ['Stop A', 'Stop B'],
         'status' => 'Active',
     ]);
     $response->assertRedirect(route('transport.route_maps.index'));

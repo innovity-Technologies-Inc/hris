@@ -22,6 +22,10 @@ class RouteMap extends Model
         'status',
     ];
 
+    protected $casts = [
+        'via_points' => 'array',
+    ];
+
     /**
      * Get employee transports associated with this route map.
      */

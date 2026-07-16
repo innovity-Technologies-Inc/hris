@@ -52,7 +52,8 @@ class RouteMapController extends Controller
             'route_name' => 'required|string|max:255',
             'start_point' => 'required|string|max:255',
             'end_point' => 'required|string|max:255',
-            'via_points' => 'nullable|string|max:1000',
+            'via_points' => 'nullable|array',
+            'via_points.*' => 'nullable|string|max:255',
             'route_details' => 'nullable|string|max:1000',
             'status' => 'required|in:Active,Inactive',
         ]);
@@ -97,7 +98,8 @@ class RouteMapController extends Controller
             'route_name' => 'required|string|max:255',
             'start_point' => 'required|string|max:255',
             'end_point' => 'required|string|max:255',
-            'via_points' => 'nullable|string|max:1000',
+            'via_points' => 'nullable|array',
+            'via_points.*' => 'nullable|string|max:255',
             'route_details' => 'nullable|string|max:1000',
             'status' => 'required|in:Active,Inactive',
         ]);

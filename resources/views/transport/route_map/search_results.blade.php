@@ -25,9 +25,13 @@
                         {{ $routeMap->end_point }}
                     </td>
                     <td>
-                        <span title="{{ $routeMap->via_points }}">
-                            {{ \Illuminate\Support\Str::limit($routeMap->via_points, 40) }}
-                        </span>
+                        @if(is_array($routeMap->via_points) && count($routeMap->via_points) > 0)
+                            <span title="{{ implode(', ', $routeMap->via_points) }}">
+                                {{ \Illuminate\Support\Str::limit(implode(', ', $routeMap->via_points), 40) }}
+                            </span>
+                        @else
+                            <span class="text-muted">None</span>
+                        @endif
                     </td>
                     <td>
                         <span class="badge {{ $routeMap->status_badge_class }}">

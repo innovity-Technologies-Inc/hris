@@ -1,5 +1,22 @@
 # Test Log
 
+## 2026-07-16 (Route Map JSON Dynamic Via Points Input)
+
+**Goal**: Implement an interactive, dynamic "Via Points" tag/badge input component on the Route Map form (saving as a JSON array in the database).
+
+**Exact Command**: `php artisan config:clear && php artisan test --filter=TransportRouteTest`
+
+**Results**:
+- Added `'via_points' => 'array'` to `$casts` array in [RouteMap.php](file:///P:/Project/Web/hrms/app/Models/Transport/RouteMap.php).
+- Updated validation rules in [RouteMapController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/Transport/RouteMapController.php) to accept `via_points` as an array of strings.
+- Replaced the simple `via_points` textarea in [form.blade.php](file:///P:/Project/Web/hrms/resources/views/transport/route_map/form.blade.php) with an interactive input group with a Plus button, allowing users to add/remove via points one by one.
+- Populated existing array items as badges and hidden input fields upon edit.
+- Formatted JSON arrays as comma-separated values in [search_results.blade.php](file:///P:/Project/Web/hrms/resources/views/transport/route_map/search_results.blade.php) and as individual badges in [show.blade.php](file:///P:/Project/Web/hrms/resources/views/transport/employee_transport/show.blade.php).
+- Updated Pest feature test to include `via_points` array payloads.
+- Verified all transport tests pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-16 (Vehicle Allocation Route Bugfix)
 
 **Goal**: Fix the undefined method call to `VehicleAllocationController::dashboard.index()` by mapping the `vehicle-allocations` route directly to the controller's `dashboard()` method.
