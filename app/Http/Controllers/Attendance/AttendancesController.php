@@ -75,6 +75,11 @@ class AttendancesController extends Controller
             $loggedInEmployeeId = Employee::where('user_id', auth()->id())->first()?->id;
         }
 
+        $loggedInEmployee = null;
+        if ($loggedInEmployeeId) {
+            $loggedInEmployee = Employee::with('officeInfo.getCurrentBusinessUnit')->find($loggedInEmployeeId);
+        }
+
         if ($loggedInEmployeeId) {
             $employees = Employee::where('id', $loggedInEmployeeId)
                 ->orWhereHas('shift')
@@ -83,7 +88,7 @@ class AttendancesController extends Controller
             $employees = Employee::has('shift')->get();
         }
 
-        return view('attendance.clock_in_out', compact('title', 'section', 'sub_section', 'employees', 'loggedInEmployeeId'));
+        return view('attendance.clock_in_out', compact('title', 'section', 'sub_section', 'employees', 'loggedInEmployeeId', 'loggedInEmployee'));
     }
 
 

@@ -1,5 +1,20 @@
 # Test Log
 
+## 2026-07-16 (Attendance Employee Info Panel Display)
+
+**Goal**: Replace the employee select box with a styled, read-only panel showing Name, Employee ID, and Branch Location on the Clock In/Out page.
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- Eager loaded the assigned business unit relationship on the logged-in employee model inside [AttendancesController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/Attendance/AttendancesController.php).
+- Modified [clock_in_out.blade.php](file:///P:/Project/Web/hrms/resources/views/attendance/clock_in_out.blade.php):
+  - Replaced the select input box with a card component displaying Employee Name, Employee ID, and Branch Location.
+  - Retained hidden input fields (`#employeeSelect` and `#hidden_employee_id`) containing the employee ID value to preserve compatibility with existing Axios/AJAX triggers.
+- Verified all 158 tests pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-16 (Attendance Employee Input Selection Fallback Fix)
 
 **Goal**: Resolve the logged-in employee ID via both `users.employee_id` and `employees.user_id` relations to ensure correct display selection.

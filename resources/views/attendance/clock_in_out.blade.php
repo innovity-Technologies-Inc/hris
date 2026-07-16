@@ -24,28 +24,55 @@
                                     <div class="form-section">
                                         <h5 class="mb-4 text-dark fw-semibold">Employee Information</h5>
 
-                                        @php
-                                            $loggedInEmployeeId = $loggedInEmployeeId ?? auth()->user()->employee_id;
-                                            if (!$loggedInEmployeeId) {
-                                                $loggedInEmployeeId = \App\Models\Employee\Employee::where('user_id', auth()->id())->first()?->id;
-                                            }
-                                        @endphp
-                                        <!-- Employee -->
-                                        <div class="mb-4">
-                                            <label class="form-label">Employee Name</label>
-                                            <select id="employeeSelect" name="employee_id" class="form-select" @if($loggedInEmployeeId) disabled @endif>
-                                                <option value="">Select Employee</option>
-                                                @foreach ($employees as $employee)
-                                                    <option value="{{ $employee->id }}" 
-                                                        {{ (old('employee_id', $loggedInEmployeeId) == $employee->id) ? 'selected' : '' }}>
-                                                        {{ $employee->full_name }} ({{ $employee->applicant_id }})
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            @if($loggedInEmployeeId)
-                                                <input type="hidden" name="employee_id" id="hidden_employee_id" value="{{ $loggedInEmployeeId }}">
-                                            @endif
-                                        </div>
+                                         @php
+                                             $loggedInEmployeeId = $loggedInEmployeeId ?? auth()->user()->employee_id;
+                                             if (!$loggedInEmployeeId) {
+                                                 $loggedInEmployeeId = \App\Models\Employee\Employee::where('user_id', auth()->id())->first()?->id;
+                                             }
+                                             $loggedInEmployee = $loggedInEmployee ?? ($loggedInEmployeeId ? \App\Models\Employee\Employee::with('officeInfo.getCurrentBusinessUnit')->find($loggedInEmployeeId) : null);
+                                         @endphp
+                                         
+                                         <!-- Employee -->
+                                         @if($loggedInEmployee)
+                                             <!-- Employee Info Panel -->
+                                             <div class="card border border-light-subtle shadow-sm bg-light-subtle p-3 mb-4 rounded-3">
+                                                 <div class="d-flex align-items-center mb-3">
+                                                     <div class="avatar-sm bg-primary bg-gradient text-white rounded-circle d-flex align-items-center justify-content-center me-3 fs-5" style="width: 45px; height: 45px;">
+                                                         <i class="bi bi-person-fill"></i>
+                                                     </div>
+                                                     <div>
+                                                         <h6 class="mb-0 fw-semibold text-dark">{{ $loggedInEmployee->full_name }}</h6>
+                                                         <small class="text-muted">ID: {{ $loggedInEmployee->applicant_id }}</small>
+                                                     </div>
+                                                 </div>
+                                                 <div class="border-top pt-2">
+                                                     <div class="row g-2">
+                                                         <div class="col-12">
+                                                             <small class="text-muted d-block fs-7">Branch Location</small>
+                                                             <span class="fw-medium text-dark small">
+                                                                 <i class="bi bi-geo-alt-fill text-danger me-1"></i>
+                                                                 {{ $loggedInEmployee->officeInfo?->getCurrentBusinessUnit?->name ?? 'N/A' }}
+                                                             </span>
+                                                         </div>
+                                                     </div>
+                                                 </div>
+                                                 <input type="hidden" id="employeeSelect" name="employee_id" value="{{ $loggedInEmployee->id }}">
+                                                 <input type="hidden" id="hidden_employee_id" value="{{ $loggedInEmployee->id }}">
+                                             </div>
+                                         @else
+                                             <!-- Fallback select dropdown -->
+                                             <div class="mb-4">
+                                                 <label class="form-label">Employee Name</label>
+                                                 <select id="employeeSelect" name="employee_id" class="form-select">
+                                                     <option value="">Select Employee</option>
+                                                     @foreach ($employees as $employee)
+                                                         <option value="{{ $employee->id }}">
+                                                             {{ $employee->full_name }} ({{ $employee->applicant_id }})
+                                                         </option>
+                                                     @endforeach
+                                                 </select>
+                                             </div>
+                                         @endif
 
                                         <!-- Workstation -->
                                         <div class="mb-4" id="workstationDiv">
