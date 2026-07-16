@@ -121,7 +121,16 @@ Dedicated sub-system to define various HR policies:
 - **Miscellaneous**: Meal Plans and TA (Travel Allowance) Plans.
 
 ### ⏱️ Attendance & Leaves
-- **Attendance**: Clock-in/out records, bulk imports, and detailed reporting.
+- **Attendance**:
+  - **Clocking**: Live clock-in/out records, dynamic local timezone selection defaulting to Bangladesh time, bulk imports, and detailed reporting.
+  - **On-Site Geofencing Verification**:
+    To register On-Site attendance, the application verifies the employee's physical presence within the permitted branch location boundaries using client-side and backend geofencing:
+    - *Branch Coordinate Resolution*: The API ([DataController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/DataController.php)) serves the assigned company branch's GPS coordinates (`latitude`, `longitude`) and the global covering radius limit (`services.google.maps_radius` in meters).
+    - *Browser Geolocation API*: The frontend uses `navigator.geolocation.getCurrentPosition` to query the employee's real-time device coordinates.
+    - *Haversine Distance Matching*: The client-side calculates the distance using the **Haversine Formula**:
+      $$d = 2R \arcsin\left(\sqrt{\sin^2\left(\frac{\Delta \phi}{2}\right) + \cos(\phi_1)\cos(\phi_2)\sin^2\left(\frac{\Delta \lambda}{2}\right)}\right)$$
+      where $R$ is the Earth's radius (6,371,000 meters).
+    - *Access Gate*: If the measured distance is less than or equal to the configured covering radius limit, the "Clock In" action is unlocked. Otherwise, a warning alert message blocks the operation.
 - **Leaves**: Leave application, approval workflows via LeaveWorkflowListener, and balance tracking.
 
 ### 💰 In-Depth Payroll & Benefits Module
