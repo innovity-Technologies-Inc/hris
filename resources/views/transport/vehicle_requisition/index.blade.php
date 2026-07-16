@@ -79,6 +79,82 @@
                 const url = $(this).attr('href');
                 fetchData(url);
             });
+
+            // Handle reject modal show
+            $(document).on('click', '.rejectBtn', function() {
+                const requisitionId = $(this).data('id');
+                const rejectUrl = "{{ url('transport/vehicle-requisitions') }}/" + requisitionId + "/reject";
+                $('#rejectForm').attr('action', rejectUrl);
+                $('#rejectModal').modal('show');
+            });
+
+            // Handle reject form submit via Axios
+            $('#rejectForm').on('submit', function(e) {
+                e.preventDefault();
+                const form = this;
+                const submitBtn = $(form).find('[type="submit"]');
+                submitBtn.prop('disabled', true);
+
+                const formData = new FormData(form);
+
+                axios.post(form.action, formData)
+                    .then(response => {
+                        if (response.data.success) {
+                            $('#rejectModal').modal('hide');
+                            form.reset();
+                            submitBtn.prop('disabled', false);
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Rejected!',
+                                text: response.data.message,
+                                timer: 1500,
+                                showConfirmButton: false
+                            }).then(() => {
+                                fetchData();
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        submitBtn.prop('disabled', false);
+                        Swal.fire(
+                            'Error!',
+                            error.response?.data?.message || 'Something went wrong.',
+                            'error'
+                        );
+                    });
+            });
         });
     </script>
+
+    {{-- Reject Modal --}}
+    <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="rejectModalLabel">
+                        <i data-feather="x-circle" class="me-2"></i>Reject Requisition
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <form id="rejectForm" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <p class="text-muted mb-3">Are you sure you want to reject this vehicle requisition?</p>
+                        <div class="mb-3">
+                            <label for="rejection_reason" class="form-label">Rejection Reason (Optional)</label>
+                            <textarea class="form-control" id="rejection_reason" name="rejection_reason" rows="3"
+                                placeholder="Enter reason for rejection..."></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger">
+                            Reject
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection

@@ -63,7 +63,7 @@
                 </div>
 
                 <div class="card-body p-4">
-                    <form action="{{ route('transport.vehicle_requisitions.store') }}" method="post">
+                    <form action="{{ route('transport.vehicle_requisitions.store') }}" method="post" id="requisitionForm">
                         @csrf
 
                         {{-- Basic Details Section --}}
@@ -382,6 +382,57 @@
                 if ($(this).is(':checked')) {
                     $('#driver_required').prop('checked', false);
                 }
+            });
+
+            // Axios Submit Handling
+            $('#requisitionForm').on('submit', function(e) {
+                e.preventDefault();
+                const form = this;
+                const submitBtn = $(form).find('[type="submit"]');
+                submitBtn.prop('disabled', true);
+
+                // Clear previous validation errors
+                $(form).find('.is-invalid').removeClass('is-invalid');
+                $(form).find('.invalid-feedback').text('');
+
+                const formData = new FormData(form);
+
+                axios.post(form.action, formData)
+                    .then(response => {
+                        if (response.data.success) {
+                            window.location.href = response.data.redirect;
+                        }
+                    })
+                    .catch(error => {
+                        submitBtn.prop('disabled', false);
+                        if (error.response && error.response.status === 422) {
+                            const errors = error.response.data.errors;
+                            Object.keys(errors).forEach(key => {
+                                const input = $(form).find(`[name="${key}"]`);
+                                if (input.length) {
+                                    input.addClass('is-invalid');
+                                    
+                                    let container = input;
+                                    if (input.parent().hasClass('input-group')) {
+                                        container = input.parent();
+                                    }
+                                    
+                                    let feedback = container.siblings('.invalid-feedback');
+                                    if (!feedback.length && container.parent().find('.invalid-feedback').length) {
+                                        feedback = container.parent().find('.invalid-feedback');
+                                    }
+                                    if (!feedback.length) {
+                                        feedback = $('<div class="invalid-feedback"></div>');
+                                        container.after(feedback);
+                                    }
+                                    feedback.text(errors[key][0]);
+                                    feedback.show();
+                                }
+                            });
+                        } else {
+                            alert(error.response?.data?.message || 'Something went wrong.');
+                        }
+                    });
             });
         });
     </script>

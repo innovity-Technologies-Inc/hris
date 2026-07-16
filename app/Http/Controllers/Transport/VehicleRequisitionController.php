@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Transport;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Transport\StoreVehicleRequisitionRequest;
 use App\Models\Transport\Vehicle;
 use App\Models\Transport\VehicleRequisition;
 use App\Models\Transport\VehicleDriver;
@@ -76,55 +77,33 @@ class VehicleRequisitionController extends Controller
     /**
      * Store a newly created vehicle requisition.
      */
-    public function store(Request $request)
+    public function store(StoreVehicleRequisitionRequest $request)
     {
-        $request->validate([
-            'employee_id' => 'nullable|exists:employees,id',
-            'department' => 'nullable|exists:departments,id',
-            'trip_type' => 'required|in:Official,Personal,Visitor',
-            'trip_mode' => 'required|in:One-way,Round-trip,Multi-stop',
-            'purpose_of_travel' => 'required|string|max:1000',
-            'start_date_time' => 'required|date',
-            'end_date_time' => 'required|date|after_or_equal:start_date_time',
-            'pickup_location' => 'required|string|max:255',
-            'destination' => 'required|string|max:255',
-            'route' => 'nullable|string|max:255',
-            'no_of_passengers' => 'required|integer|min:1|max:100',
-            'vehicle_type_required' => 'required|in:Car,Bus,Micro',
-            'driver_required' => 'nullable|boolean',
-            'self_drive' => 'nullable|boolean',
-            'special_requirement' => 'nullable|string|max:500',
-            'preferred_vehicle' => 'nullable|string|max:255',
-        ], [
-            'purpose_of_travel.required' => 'Purpose of travel is mandatory.',
-            'start_date_time.required' => 'Start date and time is required.',
-            'end_date_time.after_or_equal' => 'End date must be after or equal to start date.',
-        ]);
-
         try {
             Log::info('Creating Vehicle Requisition');
 
-            $data = $request->all();
+            $data = $request->validated();
             $data['driver_required'] = $request->has('driver_required') ? 1 : 0;
             $data['self_drive'] = $request->has('self_drive') ? 1 : 0;
             $data['approval_status'] = 'Pending';
 
             VehicleRequisition::create($data);
 
+            Log::info('Vehicle Requisition Created Successfully');
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Vehicle Requisition Submitted Successfully',
+                'redirect' => route('transport.vehicle_requisitions.index')
+            ], 201);
+
         } catch (\Exception $e) {
             Log::error('Vehicle Requisition Error: ' . $e->getMessage());
-            return redirect()->back()->withInput()->with([
-                'message' => 'Something Went Wrong',
-                'alert-type' => 'error'
-            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Something Went Wrong: ' . $e->getMessage()
+            ], 500);
         }
-
-        Log::info('Vehicle Requisition Created Successfully');
-
-        return redirect()->route('transport.vehicle_requisitions.index')->with([
-            'message' => 'Vehicle Requisition Submitted Successfully',
-            'alert-type' => 'success'
-        ]);
     }
 
     /**
@@ -174,20 +153,21 @@ class VehicleRequisitionController extends Controller
                 'approval_remarks' => $request->rejection_reason ?? 'Rejected by admin',
             ]);
 
+            Log::info('Vehicle Requisition Rejected');
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Vehicle Requisition Rejected',
+                'redirect' => route('transport.vehicle_requisitions.index')
+            ], 200);
+
         } catch (\Exception $e) {
             Log::error('Vehicle Requisition Rejection Error: ' . $e->getMessage());
-            return redirect()->back()->with([
-                'message' => 'Something Went Wrong',
-                'alert-type' => 'error'
-            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Something Went Wrong'
+            ], 500);
         }
-
-        Log::info('Vehicle Requisition Rejected');
-
-        return redirect()->route('transport.vehicle_requisitions.index')->with([
-            'message' => 'Vehicle Requisition Rejected',
-            'alert-type' => 'success'
-        ]);
     }
 
     /**
