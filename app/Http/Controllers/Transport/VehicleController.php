@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Transport;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Transport\StoreVehicleRequest;
+use App\Http\Requests\Transport\UpdateVehicleRequest;
 use App\Models\Transport\Vehicle;
 use App\HelperClass;
 use App\Services\Transport\TransportService;
@@ -64,33 +66,8 @@ class VehicleController extends Controller
         return view('transport.vehicle.view', compact('title', 'section', 'sub_section', 'vehicle'));
     }
 
-    public function store(Request $request)
+    public function store(StoreVehicleRequest $request)
     {
-        $request->validate([
-            'vehicle_category' => 'required|in:Car,Bus,Micro Bus,Truck,Bike,Van,Airplane,Ship',
-            'model_number' => 'required|string|max:255',
-            'manufacture_year' => 'required|digits:4|integer|min:1900|max:' . (date('Y') + 1),
-            'body_type' => 'nullable|string|max:255',
-            'fuel_type' => 'required|in:Petrol,Diesel,CNG,Electric',
-            'engine_capacity' => 'nullable|string|max:50',
-            'seating_capacity' => 'nullable|integer|min:1|max:500',
-            'color' => 'nullable|string|max:100',
-            'mileage' => 'nullable|numeric|min:0',
-            'license_number' => 'nullable|string|max:100',
-            'license_document' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'vehicle_image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:5120',
-            'purchase_type' => 'required|in:Purchase,Lease,Rent',
-            'purchase_date' => 'nullable|date',
-            'purchase_price' => 'nullable|numeric|min:0',
-            'purchase_document' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'ownership_type' => 'required|in:Company-owned,Third-party',
-            'third_party_name' => 'nullable|required_if:ownership_type,Third-party|string|max:255',
-            'is_allocated' => 'nullable|boolean',
-            'allocation_purpose' => 'nullable|string|max:255',
-            'allocation_type' => 'nullable|in:trip,transport',
-            'status' => 'required|in:Active,Inactive',
-        ]);
-
         try {
             Log::info('Adding Vehicle');
 
@@ -112,20 +89,21 @@ class VehicleController extends Controller
 
             Vehicle::create($data);
 
+            Log::info('Vehicle Added Successfully');
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Vehicle Added Successfully',
+                'redirect' => route('transport.vehicles.index')
+            ], 201);
+
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->back()->with([
-                'message' => 'Something Went Wrong',
-                'alert-type' => 'error'
-            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Something Went Wrong: ' . $e->getMessage()
+            ], 500);
         }
-
-        Log::info('Vehicle Added Successfully');
-
-        return redirect()->route('transport.vehicles.index')->with([
-            'message' => 'Vehicle Added Successfully',
-            'alert-type' => 'success'
-        ]);
     }
 
     public function edit($id)
@@ -146,33 +124,8 @@ class VehicleController extends Controller
         ));
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateVehicleRequest $request, $id)
     {
-        $request->validate([
-            'vehicle_category' => 'required|in:Car,Bus,Micro Bus,Truck,Bike,Van,Airplane,Ship',
-            'model_number' => 'required|string|max:255',
-            'manufacture_year' => 'required|digits:4|integer|min:1900|max:' . (date('Y') + 1),
-            'body_type' => 'nullable|string|max:255',
-            'fuel_type' => 'required|in:Petrol,Diesel,CNG,Electric',
-            'engine_capacity' => 'nullable|string|max:50',
-            'seating_capacity' => 'nullable|integer|min:1|max:500',
-            'color' => 'nullable|string|max:100',
-            'mileage' => 'nullable|numeric|min:0',
-            'license_number' => 'nullable|string|max:100',
-            'license_document' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'vehicle_image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:5120',
-            'purchase_type' => 'required|in:Purchase,Lease,Rent',
-            'purchase_date' => 'nullable|date',
-            'purchase_price' => 'nullable|numeric|min:0',
-            'purchase_document' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'ownership_type' => 'required|in:Company-owned,Third-party',
-            'third_party_name' => 'nullable|required_if:ownership_type,Third-party|string|max:255',
-            'is_allocated' => 'nullable|boolean',
-            'allocation_purpose' => 'nullable|string|max:255',
-            'allocation_type' => 'nullable|in:trip,transport',
-            'status' => 'required|in:Active,Inactive',
-        ]);
-
         try {
             Log::info('Updating Vehicle');
 
@@ -207,20 +160,21 @@ class VehicleController extends Controller
 
             $vehicle->update($data);
 
+            Log::info('Vehicle Updated Successfully');
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Vehicle Updated Successfully',
+                'redirect' => route('transport.vehicles.index')
+            ], 200);
+
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->back()->with([
-                'message' => 'Something Went Wrong',
-                'alert-type' => 'error'
-            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Something Went Wrong: ' . $e->getMessage()
+            ], 500);
         }
-
-        Log::info('Vehicle Updated Successfully');
-
-        return redirect()->route('transport.vehicles.index')->with([
-            'message' => 'Vehicle Updated Successfully',
-            'alert-type' => 'success'
-        ]);
     }
 
     public function destroy($id)
@@ -243,20 +197,20 @@ class VehicleController extends Controller
 
             $vehicle->delete();
 
+            Log::info('Vehicle Deleted Successfully');
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Vehicle Deleted Successfully'
+            ], 200);
+
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->back()->with([
-                'message' => 'Something Went Wrong',
-                'alert-type' => 'error'
-            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Something Went Wrong'
+            ], 500);
         }
-
-        Log::info('Vehicle Deleted Successfully');
-
-        return redirect()->route('transport.vehicles.index')->with([
-            'message' => 'Vehicle Deleted Successfully',
-            'alert-type' => 'success'
-        ]);
     }
 
     /**
