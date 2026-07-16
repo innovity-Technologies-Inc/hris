@@ -32,6 +32,11 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
         }
 
+        [data-bs-theme=dark] .page-header {
+            background: #1f2937 !important;
+            border-bottom: 3px solid #374151 !important;
+        }
+
         .form-section, .clock-section {
             background: rgba(255, 255, 255, 0.6) !important;
             backdrop-filter: blur(12px) !important;
@@ -70,6 +75,7 @@
             text-align: center !important;
             text-align-last: center !important;
             font-size: 1rem !important;
+            color: #ffffff !important;
             font-weight: 700 !important;
             appearance: none !important;
             -webkit-appearance: none !important;
@@ -81,6 +87,8 @@
 
         #mainClockTzSelect option {
             text-align: center !important;
+            color: #ffffff !important;
+            background-color: #1e293b !important;
         }
 
         .time-display::before {

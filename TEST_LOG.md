@@ -1,5 +1,19 @@
 # Test Log
 
+## 2026-07-16 (Attendance Dark Mode Dropdown Color & Default Header Reversion)
+
+**Goal**: Lock the region selector text color to white across both modes, and revert to default header backgrounds in dark mode.
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- Modified [clock_in_out.blade.php](file:///P:/Project/Web/hrms/resources/views/attendance/clock_in_out.blade.php):
+  - Added a dark mode media selector `[data-bs-theme=dark] .page-header` that reverts the background to `#1f2937` and adds a bottom border matching other pages in dark mode.
+  - Locked the select element `#mainClockTzSelect` text color to `#ffffff !important` and set option backgrounds to `#1e293b` to maintain perfect readability in both light and dark modes.
+- Verified all 158 tests pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-16 (Attendance Header Solid Red Color Theme Alignment)
 
 **Goal**: Make the attendance header background a solid primary brand red color, and revert the clock highlights and glows to their previous blue/indigo theme.
