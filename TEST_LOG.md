@@ -1,5 +1,17 @@
 # Test Log
 
+## 2026-07-16 (Google Map API Setting Redundant Password Toggle Fix)
+
+**Goal**: Resolve conflict where password eye toggle button did not show the key due to conflicting local and global event handlers.
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- Removed the local password toggle click listener inside [google_map_api.blade.php](file:///P:/Project/Web/hrms/resources/views/setting/google_map_api.blade.php) to allow the master layout's global toggle listener to function without interference.
+- Verified all 157 tests pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-15 (Google Map API Setting Module Refactoring)
 
 **Goal**: Rename settings API Keys module to Google Map API (model, controller, routes, views) and make it Axios-based.

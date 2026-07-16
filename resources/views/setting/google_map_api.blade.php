@@ -88,21 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('googleMapApiForm');
     const apiKeyInput = document.getElementById('googleMapsApiKey');
 
-    // Password visibility toggle
-    const toggleBtn = document.querySelector('.password-toggle');
-    if (toggleBtn) {
-        toggleBtn.addEventListener('click', function() {
-            if (apiKeyInput.type === 'password') {
-                apiKeyInput.type = 'text';
-                this.classList.remove('fa-eye');
-                this.classList.add('fa-eye-slash');
-            } else {
-                apiKeyInput.type = 'password';
-                this.classList.remove('fa-eye-slash');
-                this.classList.add('fa-eye');
-            }
-        });
-    }
+
 
     // Input validation styling
     apiKeyInput.addEventListener('blur', function() {
