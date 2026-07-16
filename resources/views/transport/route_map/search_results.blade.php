@@ -25,13 +25,10 @@
                         {{ $routeMap->end_point }}
                     </td>
                     <td>
-                        @if(is_array($routeMap->via_points) && count($routeMap->via_points) > 0)
-                            <span title="{{ implode(', ', $routeMap->via_points) }}">
-                                {{ \Illuminate\Support\Str::limit(implode(', ', $routeMap->via_points), 40) }}
-                            </span>
-                        @else
-                            <span class="text-muted">None</span>
-                        @endif
+                        <button type="button" class="btn btn-sm btn-outline-primary px-2 py-1 rounded-pill" style="font-size: 0.75rem;"
+                            onclick="showRouteMapModal({{ json_encode($routeMap) }})">
+                            <i class="mdi mdi-map-marker-outline"></i> View Route ({{ is_array($routeMap->via_points) ? count($routeMap->via_points) : 0 }})
+                        </button>
                     </td>
                     <td>
                         <span class="badge {{ $routeMap->status_badge_class }}">

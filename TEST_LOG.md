@@ -1,5 +1,18 @@
 # Test Log
 
+## 2026-07-16 (Route Map Interactive Stepper Modal)
+
+**Goal**: Add a "View Route" button to the Route Maps table that displays a beautiful timeline stepper modal showing start point, stopovers (via points), destination, and details.
+
+**Exact Command**: `php artisan config:clear && php artisan test --filter=TransportRouteTest`
+
+**Results**:
+- Replaced plain text display in the "Via Points" column of [search_results.blade.php](file:///P:/Project/Web/hrms/resources/views/transport/route_map/search_results.blade.php) with an interactive "View Route (Count)" button.
+- Added custom CSS styles, Bootstrap modal markup, and Javascript listener `showRouteMapModal` in [index.blade.php](file:///P:/Project/Web/hrms/resources/views/transport/route_map/index.blade.php) to build a beautiful vertical timeline flow.
+- Verified all transport tests pass successfully after cache clearing ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-16 (Route Map JSON Dynamic Via Points Input)
 
 **Goal**: Implement an interactive, dynamic "Via Points" tag/badge input component on the Route Map form (saving as a JSON array in the database).
