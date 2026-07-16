@@ -1265,6 +1265,21 @@ Status: ✅ SUCCESS
 
 **Status**: ✅ SUCCESS
 
+## 2026-07-17 (Route Map Serpentine / Zig-Zag Layout)
+
+**Goal**: Render route map steps in a serpentine layout (4 per row) with dynamic horizontal and vertical connectors and zig-zag flow (flex-row-reverse for odd rows).
+
+**Exact Command**: `php artisan config:clear && vendor/bin/pest tests/Feature/TransportRouteTest.php`
+
+**Results**:
+- `vehicle create route is accessible`: ✅ PASSED
+- `vehicle show route is accessible`: ✅ PASSED
+- `vehicle driver create route is accessible`: ✅ PASSED
+- `route map routes are accessible`: ✅ PASSED
+
+**Status**: ✅ SUCCESS
+
+
 
 
 

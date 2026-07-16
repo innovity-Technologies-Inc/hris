@@ -2,19 +2,35 @@
 
 @section('content')
     <style>
-        /* Horizontal timeline styles for Route Map modal */
-        .horizontal-route-container {
-            min-height: 120px;
-        }
+        /* Serpentine timeline styles for Route Map modal */
         .route-line {
             position: absolute;
-            left: 12.5%;
-            right: 12.5%;
-            top: 29px;
+            top: 16px;
             height: 4px;
             background: var(--bs-border-color, #e9ecef);
             z-index: 1;
-            transition: all 0.3s ease;
+        }
+        .route-connector-right {
+            position: absolute;
+            right: 5%;
+            width: 7.5%;
+            top: 16px;
+            height: calc(100% + 48px);
+            border: 4px solid var(--bs-border-color, #e9ecef);
+            border-left: 0;
+            border-radius: 0 16px 16px 0;
+            z-index: 1;
+        }
+        .route-connector-left {
+            position: absolute;
+            left: 5%;
+            width: 7.5%;
+            top: 16px;
+            height: calc(100% + 48px);
+            border: 4px solid var(--bs-border-color, #e9ecef);
+            border-right: 0;
+            border-radius: 16px 0 0 16px;
+            z-index: 1;
         }
         .route-step {
             text-align: center;
@@ -125,11 +141,8 @@
                         <h6 class="text-muted mb-4 text-uppercase fw-semibold tracking-wider" style="font-size: 0.75rem;">Route Map</h6>
                         
                         <div class="horizontal-route-container position-relative py-3">
-                            <!-- Connecting Line -->
-                            <div class="route-line"></div>
-                            
                             <!-- Steps Container -->
-                            <div class="d-flex justify-content-between align-items-start position-relative" id="modalHorizontalSteps" style="z-index: 2;">
+                            <div class="position-relative" id="modalHorizontalSteps" style="z-index: 2;">
                                 <!-- Populated via JS -->
                             </div>
                         </div>
@@ -197,7 +210,7 @@
                     $('#modalDetailsWrapper').hide();
                 }
 
-                // Build horizontal steps
+                // Build horizontal steps using a serpentine layout (4 per row)
                 const stepsContainer = $('#modalHorizontalSteps');
                 stepsContainer.empty();
 
@@ -230,24 +243,64 @@
                     icon: '<i class="mdi mdi-flag-variant" style="font-size: 12px;"></i>'
                 });
 
-                // Adjust connecting route line width and offsets based on step counts dynamically
-                const stepCount = steps.length;
-                const routeLine = $('.route-line');
-                const offsetPercent = 50 / stepCount;
-                routeLine.css({ left: offsetPercent + '%', right: offsetPercent + '%', top: '29px' });
+                // Break steps into rows of 4
+                const chunks = [];
+                for (let i = 0; i < steps.length; i += 4) {
+                    chunks.push(steps.slice(i, i + 4));
+                }
 
-                // Render each step horizontally
-                steps.forEach(function(step) {
-                    const widthPercent = 100 / stepCount;
-                    stepsContainer.append(`
-                        <div class="route-step" style="width: ${widthPercent}%;">
-                            <div class="step-icon ${step.class}">
-                                ${step.icon}
+                chunks.forEach(function(chunk, rowIndex) {
+                    const isLastRow = (rowIndex === chunks.length - 1);
+                    const isOddRow = (rowIndex % 2 === 1);
+                    const m = chunk.length;
+
+                    // Determine horizontal line style
+                    let lineStyle = '';
+                    if (!isLastRow) {
+                        lineStyle = 'left: 12.5%; right: 12.5%;';
+                    } else {
+                        if (m > 1) {
+                            if (!isOddRow) {
+                                lineStyle = `left: 12.5%; width: ${(m - 1) * 25}%;`;
+                            } else {
+                                lineStyle = `right: 12.5%; width: ${(m - 1) * 25}%;`;
+                            }
+                        } else {
+                            lineStyle = 'display: none;';
+                        }
+                    }
+
+                    // Build row container
+                    let rowHtml = `
+                        <div class="route-row position-relative d-flex align-items-start justify-content-start ${isOddRow ? 'flex-row-reverse' : ''}" style="margin-bottom: 48px;">
+                            <!-- Horizontal Connector Line -->
+                            <div class="route-line" style="${lineStyle}"></div>
+                    `;
+
+                    // Add U-turn connector if not the last row
+                    if (!isLastRow) {
+                        if (!isOddRow) {
+                            rowHtml += `<div class="route-connector-right"></div>`;
+                        } else {
+                            rowHtml += `<div class="route-connector-left"></div>`;
+                        }
+                    }
+
+                    // Render each step in this row (width 25%)
+                    chunk.forEach(function(step) {
+                        rowHtml += `
+                            <div class="route-step" style="width: 25%; z-index: 2;">
+                                <div class="step-icon ${step.class}">
+                                    ${step.icon}
+                                </div>
+                                <span class="step-label">${step.label}</span>
+                                <span class="step-name">${step.name}</span>
                             </div>
-                            <span class="step-label">${step.label}</span>
-                            <span class="step-name">${step.name}</span>
-                        </div>
-                    `);
+                        `;
+                    });
+
+                    rowHtml += `</div>`;
+                    stepsContainer.append(rowHtml);
                 });
 
                 // Initialize Bootstrap Tooltips if any
