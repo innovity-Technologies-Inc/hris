@@ -814,7 +814,53 @@
 
             // Trigger on load
             updateRoutePreview();
+
+            // Axios Submit Handling
+            $('#transportForm').on('submit', function(e) {
+                e.preventDefault();
+                const form = this;
+                const submitBtn = $(form).find('[type="submit"]');
+                submitBtn.prop('disabled', true);
+
+                // Clear previous validation errors
+                $(form).find('.is-invalid').removeClass('is-invalid');
+                $(form).find('.text-danger').remove();
+
+                const formData = new FormData(form);
+
+                axios.post(form.action, formData)
+                    .then(response => {
+                        if (response.data.success) {
+                            window.location.href = response.data.redirect;
+                        }
+                    })
+                    .catch(error => {
+                        submitBtn.prop('disabled', false);
+                        if (error.response && error.response.status === 422) {
+                            const errors = error.response.data.errors;
+                            Object.keys(errors).forEach(key => {
+                                const input = $(form).find(`[name="${key}"]`);
+                                if (input.length) {
+                                    input.addClass('is-invalid');
+                                    
+                                    let container = input;
+                                    if (input.parent().hasClass('input-group')) {
+                                        container = input.parent();
+                                    }
+                                    
+                                    let feedback = container.siblings('.text-danger');
+                                    if (!feedback.length) {
+                                        feedback = $('<small class="text-danger mt-1 d-block"></small>');
+                                        container.after(feedback);
+                                    }
+                                    feedback.html('<i class="fas fa-exclamation-circle me-1"></i>' + errors[key][0]);
+                                }
+                            });
+                        } else {
+                            alert(error.response?.data?.message || 'Something went wrong.');
+                        }
+                    });
+            });
         });
     </script>
 @endpush
-

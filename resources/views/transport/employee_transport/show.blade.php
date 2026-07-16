@@ -347,15 +347,9 @@
                     @if ($employeeTransport->status == 'Pending')
                         <div class="border-top pt-4 mt-4">
                             <div class="d-flex justify-content-end gap-2">
-                                <form action="{{ route('transport.employee_transports.reject', $employeeTransport->id) }}"
-                                    method="POST" class="d-inline"
-                                    onsubmit="return confirm('Are you sure you want to reject this transport service?')">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button type="submit" class="btn btn-danger px-4">
-                                        <i class="fas fa-times me-1"></i>Reject
-                                    </button>
-                                </form>
+                                <button type="button" class="btn btn-danger px-4" id="rejectBtn">
+                                    <i class="fas fa-times me-1"></i>Reject
+                                </button>
                                 <form
                                     action="{{ route('transport.employee_transports.approve', $employeeTransport->id) }}"
                                     method="POST" class="d-inline"
@@ -374,4 +368,55 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        $('#rejectBtn').on('click', function(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Reject Service Request',
+                input: 'textarea',
+                inputLabel: 'Rejection Remarks',
+                inputPlaceholder: 'Type your remarks here...',
+                inputAttributes: {
+                    'aria-label': 'Type your remarks here'
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Submit Rejection',
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                preConfirm: (remarks) => {
+                    if (!remarks) {
+                        Swal.showValidationMessage('Rejection remarks are required');
+                    }
+                    return remarks;
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios.post("{{ route('transport.employee_transports.reject', $employeeTransport->id) }}", {
+                        _token: '{{ csrf_token() }}',
+                        _method: 'PATCH',
+                        approval_remarks: result.value
+                    })
+                    .then(response => {
+                        if (response.data.success) {
+                            Swal.fire('Rejected!', response.data.message, 'success').then(() => {
+                                window.location.href = response.data.redirect;
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire(
+                            'Error!',
+                            error.response?.data?.message || 'Something went wrong.',
+                            'error'
+                        );
+                    });
+                }
+            });
+        });
+    });
+</script>
+@endpush
 

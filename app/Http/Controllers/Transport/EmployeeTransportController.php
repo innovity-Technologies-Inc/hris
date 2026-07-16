@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Transport;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Transport\StoreEmployeeTransportRequest;
+use App\Http\Requests\Transport\UpdateEmployeeTransportRequest;
 use App\Models\Company\Company;
 use App\Models\Transport\EmployeeTransport;
 use App\Models\Transport\RouteMap;
@@ -132,54 +134,27 @@ class EmployeeTransportController extends Controller
     /**
      * Store a newly created employee transport service.
      */
-    public function store(Request $request)
+    public function store(StoreEmployeeTransportRequest $request)
     {
-        $validated = $request->validate([
-            'type' => 'required|in:company,branch,division,department,section',
-            'company_id' => 'required|exists:companies,id',
-            'branch_id' => 'nullable|exists:company_locations,id|required_if:type,branch',
-            'division_id' => 'nullable|exists:divisions,id|required_if:type,division',
-            'department_id' => 'nullable|exists:departments,id|required_if:type,department',
-            'section_id' => 'nullable|exists:sections,id|required_if:type,section',
-            'service_name' => 'required|string|max:255',
-            'transport_type' => 'required|in:Daily Commute,Shuttle Service,Special Transport,Field Work',
-            'purpose' => 'required|string|max:1000',
-            'route_map_id' => 'required|exists:route_maps,id',
-            'start_date' => 'required|date|after_or_equal:today',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
-            'pickup_time' => 'nullable|date_format:H:i',
-            'drop_time' => 'nullable|date_format:H:i',
-            'estimated_passengers' => 'nullable|integer|min:1',
-            'special_requirements' => 'nullable|string|max:500',
-            'remarks' => 'nullable|string|max:500',
-        ], [
-            'type.required' => 'Please select a type.',
-            'company_id.required' => 'Please select a company.',
-            'service_name.required' => 'Service name is required.',
-            'transport_type.required' => 'Please select a transport type.',
-            'purpose.required' => 'Purpose is required.',
-            'route_map_id.required' => 'Please select a Route Map.',
-            'start_date.required' => 'Start date is required.',
-        ]);
-
         try {
             Log::info('Creating Employee Transport Service');
 
-            EmployeeTransport::create($validated);
+            $employeeTransport = EmployeeTransport::create($request->validated());
 
             Log::info('Employee Transport Service Created Successfully');
 
-            return redirect()->route('transport.employee_transports.index')->with([
+            return response()->json([
+                'success' => true,
                 'message' => 'Employee Transport Service Created Successfully',
-                'alert-type' => 'success'
-            ]);
+                'redirect' => route('transport.employee_transports.index')
+            ], 201);
 
         } catch (\Exception $e) {
             Log::error('Employee Transport Error: ' . $e->getMessage());
-            return redirect()->back()->withInput()->with([
-                'message' => 'Something Went Wrong',
-                'alert-type' => 'error'
-            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Something Went Wrong: ' . $e->getMessage()
+            ], 500);
         }
     }
 
@@ -248,56 +223,37 @@ class EmployeeTransportController extends Controller
     /**
      * Update the specified employee transport service in storage.
      */
-    public function update(Request $request, $id)
+    public function update(UpdateEmployeeTransportRequest $request, $id)
     {
-        $employeeTransport = EmployeeTransport::findOrFail($id);
-
-        // Only allow updating if status is Pending
-        if ($employeeTransport->status !== 'Pending') {
-            return redirect()->route('transport.employee_transports.index')->with([
-                'message' => 'Cannot update a service that is not pending',
-                'alert-type' => 'warning'
-            ]);
-        }
-
-        $validated = $request->validate([
-            'type' => 'required|in:company,branch,division,department,section',
-            'company_id' => 'required|exists:companies,id',
-            'branch_id' => 'nullable|exists:company_locations,id|required_if:type,branch',
-            'division_id' => 'nullable|exists:divisions,id|required_if:type,division',
-            'department_id' => 'nullable|exists:departments,id|required_if:type,department',
-            'section_id' => 'nullable|exists:sections,id|required_if:type,section',
-            'service_name' => 'required|string|max:255',
-            'transport_type' => 'required|in:Daily Commute,Shuttle Service,Special Transport,Field Work',
-            'purpose' => 'required|string|max:1000',
-            'route_map_id' => 'required|exists:route_maps,id',
-            'start_date' => 'required|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
-            'pickup_time' => 'nullable|date_format:H:i',
-            'drop_time' => 'nullable|date_format:H:i',
-            'estimated_passengers' => 'nullable|integer|min:1',
-            'special_requirements' => 'nullable|string|max:500',
-            'remarks' => 'nullable|string|max:500',
-        ]);
-
         try {
             Log::info('Updating Employee Transport Service');
 
-            $employeeTransport->update($validated);
+            $employeeTransport = EmployeeTransport::findOrFail($id);
+
+            // Only allow updating if status is Pending
+            if ($employeeTransport->status !== 'Pending') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Cannot update a service that is not pending'
+                ], 400);
+            }
+
+            $employeeTransport->update($request->validated());
 
             Log::info('Employee Transport Service Updated Successfully');
 
-            return redirect()->route('transport.employee_transports.index')->with([
+            return response()->json([
+                'success' => true,
                 'message' => 'Employee Transport Service Updated Successfully',
-                'alert-type' => 'success'
-            ]);
+                'redirect' => route('transport.employee_transports.index')
+            ], 200);
 
         } catch (\Exception $e) {
             Log::error('Employee Transport Update Error: ' . $e->getMessage());
-            return redirect()->back()->withInput()->with([
-                'message' => 'Something Went Wrong',
-                'alert-type' => 'error'
-            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Something Went Wrong: ' . $e->getMessage()
+            ], 500);
         }
     }
 
@@ -325,17 +281,18 @@ class EmployeeTransportController extends Controller
 
             Log::info('Employee Transport Service Rejected');
 
-            return redirect()->route('transport.employee_transports.index')->with([
-                'message' => 'Service Rejected',
-                'alert-type' => 'info'
-            ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Service Rejected Successfully',
+                'redirect' => route('transport.employee_transports.index')
+            ], 200);
 
         } catch (\Exception $e) {
             Log::error('Rejection Error: ' . $e->getMessage());
-            return redirect()->back()->with([
-                'message' => 'Something Went Wrong',
-                'alert-type' => 'error'
-            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Something Went Wrong'
+            ], 500);
         }
     }
 
@@ -350,27 +307,28 @@ class EmployeeTransportController extends Controller
             $employeeTransport = EmployeeTransport::findOrFail($id);
 
             if ($employeeTransport->status !== 'Pending') {
-                return redirect()->back()->with([
-                    'message' => 'Only pending services can be cancelled',
-                    'alert-type' => 'warning'
-                ]);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Only pending services can be cancelled'
+                ], 400);
             }
 
             $employeeTransport->update(['status' => 'Cancelled']);
 
             Log::info('Employee Transport Service Cancelled');
 
-            return redirect()->route('transport.employee_transports.index')->with([
-                'message' => 'Service Cancelled',
-                'alert-type' => 'info'
-            ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Service Cancelled Successfully',
+                'redirect' => route('transport.employee_transports.index')
+            ], 200);
 
         } catch (\Exception $e) {
             Log::error('Cancellation Error: ' . $e->getMessage());
-            return redirect()->back()->with([
-                'message' => 'Something Went Wrong',
-                'alert-type' => 'error'
-            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Something Went Wrong'
+            ], 500);
         }
     }
 
@@ -387,17 +345,17 @@ class EmployeeTransportController extends Controller
 
             Log::info('Employee Transport Service Deleted');
 
-            return redirect()->route('transport.employee_transports.index')->with([
-                'message' => 'Service Deleted Successfully',
-                'alert-type' => 'success'
-            ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Service Deleted Successfully'
+            ], 200);
 
         } catch (\Exception $e) {
             Log::error('Deletion Error: ' . $e->getMessage());
-            return redirect()->back()->with([
-                'message' => 'Something Went Wrong',
-                'alert-type' => 'error'
-            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Something Went Wrong'
+            ], 500);
         }
     }
 }

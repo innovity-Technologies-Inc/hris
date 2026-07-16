@@ -112,30 +112,26 @@
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        const form = document.createElement('form');
-                        form.method = 'POST';
-                        form.action = `/transport/employee-transports/${id}/reject`;
-                        
-                        const csrfInput = document.createElement('input');
-                        csrfInput.type = 'hidden';
-                        csrfInput.name = '_token';
-                        csrfInput.value = '{{ csrf_token() }}';
-                        form.appendChild(csrfInput);
-
-                        const methodInput = document.createElement('input');
-                        methodInput.type = 'hidden';
-                        methodInput.name = '_method';
-                        methodInput.value = 'PATCH';
-                        form.appendChild(methodInput);
-
-                        const remarksInput = document.createElement('input');
-                        remarksInput.type = 'hidden';
-                        remarksInput.name = 'approval_remarks';
-                        remarksInput.value = result.value;
-                        form.appendChild(remarksInput);
-
-                        document.body.appendChild(form);
-                        form.submit();
+                        axios.post(`/transport/employee-transports/${id}/reject`, {
+                            _token: '{{ csrf_token() }}',
+                            _method: 'PATCH',
+                            approval_remarks: result.value
+                        })
+                        .then(response => {
+                            if (response.data.success) {
+                                Swal.fire('Rejected!', response.data.message, 'success');
+                                fetchData();
+                            } else {
+                                Swal.fire('Failed!', response.data.message, 'error');
+                            }
+                        })
+                        .catch(error => {
+                            Swal.fire(
+                                'Error!',
+                                error.response?.data?.message || 'Something went wrong.',
+                                'error'
+                            );
+                        });
                     }
                 });
             };
