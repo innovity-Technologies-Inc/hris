@@ -9,6 +9,8 @@ use App\Imports\Leave\LeavesImport;
 use App\Models\Employee\Employee;
 use App\Models\Employee\EmployeeEligiblePlan;
 use App\Models\Employee\EmployeeLeavePlan;
+use App\Models\Employee\EmployeeOfficeInfo;
+use App\Models\Company\Holiday;
 use App\Models\Leave\Leave;
 use App\Models\Leave\LeaveCount;
 use App\Models\Plan\LeavePlan;
@@ -51,9 +53,9 @@ class LeavesController extends Controller
         $isEmployee = auth()->user()->user_type === UserType::Employee;
         
         if ($isEmployee) {
-            $employees = Employee::where('id', auth()->user()->employee_id)->get();
+            $employees = Employee::where('id', auth()->user()->employee_id)->whereHas('assignedLeavePlans')->get();
         } else {
-            $employees = Employee::where('status', 'active')->orderBy('full_name')->get();
+            $employees = Employee::where('status', 'active')->whereHas('assignedLeavePlans')->orderBy('full_name')->get();
         }
         
         return view('leave.create', compact('employees', 'title', 'section', 'sub_section', 'isEmployee'));
@@ -78,7 +80,8 @@ class LeavesController extends Controller
             'to' => 'required|date',
             'status' => $isEmployee ? 'nullable' : 'required',
             'reason' => 'required',
-            'leave_count' => 'required|integer|min:1'
+            'leave_count' => 'required|numeric|min:0.5',
+            'day_type' => 'nullable|in:full_day,half_day'
         ]);
 
         $validator->after(function ($validator) use ($employee_id, $plan_id, $request) {
@@ -240,6 +243,87 @@ class LeavesController extends Controller
         $leaveHistory = Leave::where('employee_id', $id)->orderBy('id', 'desc')->get();
         return view('employee.profile', compact('title', 'section', 'sub_section', 'employee', 'leaveDetails', 'leaveHistory', 'section_url'));
 
+    }
+
+    public function calculateEndDate(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'employee_id' => 'required',
+            'plan_id' => 'required',
+            'start_date' => 'required|date',
+            'leave_count' => 'required|numeric|min:0.5',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()->first()], 422);
+        }
+
+        $employeeId = $request->input('employee_id');
+        $planId = $request->input('plan_id');
+        $startDateStr = $request->input('start_date');
+        $leaveCount = (float) $request->input('leave_count');
+
+        $plan = LeavePlan::find($planId);
+        if (!$plan) {
+            return response()->json(['error' => 'Leave plan not found'], 404);
+        }
+
+        $startDate = Carbon::parse($startDateStr);
+        
+        if ($plan->off_day_include === 'yes') {
+            $daysToAdd = ceil($leaveCount) - 1;
+            $endDate = $startDate->copy()->addDays($daysToAdd);
+            return response()->json([
+                'success' => true,
+                'end_date' => $endDate->format('Y-m-d')
+            ]);
+        }
+
+        // Get employee weekends
+        $officeInfo = EmployeeOfficeInfo::where('employee_id', $employeeId)->first();
+        $weekends = $officeInfo ? ($officeInfo->weekends ?? []) : ['Friday', 'Saturday'];
+
+        // Get holidays
+        $holidaysList = Holiday::all();
+        $holidayDates = collect();
+        foreach ($holidaysList as $holiday) {
+            $period = \Carbon\CarbonPeriod::create(
+                Carbon::parse($holiday->start_date),
+                Carbon::parse($holiday->end_date)
+            );
+            foreach ($period as $date) {
+                $holidayDates->push($date->format('Y-m-d'));
+            }
+        }
+        $holidayDates = $holidayDates->unique();
+
+        $validDaysNeeded = ceil($leaveCount);
+        $validDaysCount = 0;
+        $currentDate = $startDate->copy();
+        
+        // Loop safety limit of 365 iterations
+        for ($i = 0; $i < 365; $i++) {
+            $currentDayOfWeek = $currentDate->format('l');
+            $currentDateStr = $currentDate->format('Y-m-d');
+
+            $isWeekend = in_array($currentDayOfWeek, $weekends);
+            $isHoliday = $holidayDates->contains($currentDateStr);
+
+            if (!$isWeekend && !$isHoliday) {
+                $validDaysCount++;
+            }
+
+            if ($validDaysCount >= $validDaysNeeded) {
+                break;
+            }
+
+            $currentDate->addDay();
+        }
+
+        return response()->json([
+            'success' => true,
+            'end_date' => $currentDate->format('Y-m-d')
+        ]);
     }
 }
 

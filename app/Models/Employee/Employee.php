@@ -169,6 +169,11 @@ class Employee extends Model
         return $this->hasMany(\App\Models\Leave\LeaveCount::class, 'employee_id', 'id');
     }
 
+    public function assignedLeavePlans()
+    {
+        return $this->hasMany(\App\Models\Employee\EmployeeLeavePlan::class, 'employee_id', 'id')->where('status', 'active');
+    }
+
     public function lifecycles()
     {
         return $this->hasMany(EmployeeLifecycle::class, 'employee_id', 'id');

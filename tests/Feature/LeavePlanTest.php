@@ -292,3 +292,114 @@ test('employee leave info calculates and validates taken leaves by running year'
         ]);
     $validationResponsePass->assertStatus(302); // Redirect back with success message
 });
+
+test('calculate end date respects off_day_include yes by counting all calendar days', function () {
+    Permission::findOrCreate('leaves.create', 'web');
+    $this->user->roles()->first()->givePermissionTo('leaves.create');
+
+    $plan = LeavePlan::create([
+        'name' => 'Annual Leave',
+        'short_name' => 'AL',
+        'applicable_gender' => 'Both',
+        'leave_type' => 'Casual Leave',
+        'leave_limit' => 20,
+        'max_no_of_days' => 10,
+        'off_day_include' => 'yes',  // Include off days
+        'allow_fractional_leave' => 'active',
+        'active_ind' => 'active',
+    ]);
+
+    $employee = Employee::factory()->create();
+
+    $response = $this->actingAs($this->user)
+        ->postJson(route('leave.calculate-end-date'), [
+            'employee_id' => $employee->id,
+            'plan_id' => $plan->id,
+            'start_date' => '2026-07-01',
+            'leave_count' => 5,
+        ]);
+
+    $response->assertStatus(200)
+        ->assertJsonPath('success', true)
+        ->assertJsonPath('end_date', '2026-07-05'); // off_day_include=yes → purely calendar days
+});
+
+test('calculate end date skips weekends and holidays when off_day_include is no', function () {
+    Permission::findOrCreate('leaves.create', 'web');
+    $this->user->roles()->first()->givePermissionTo('leaves.create');
+
+    $plan = LeavePlan::create([
+        'name' => 'Sick Leave',
+        'short_name' => 'SL',
+        'applicable_gender' => 'Both',
+        'leave_type' => 'Sick Leave',
+        'leave_limit' => 10,
+        'max_no_of_days' => 10,
+        'off_day_include' => 'no',
+        'allow_fractional_leave' => 'inactive',
+        'active_ind' => 'active',
+    ]);
+
+    $employee = Employee::factory()->create();
+
+    // 2026-07-06 is Monday, 5 working days forward should land on 2026-07-10 (Friday)
+    $response = $this->actingAs($this->user)
+        ->postJson(route('leave.calculate-end-date'), [
+            'employee_id' => $employee->id,
+            'plan_id' => $plan->id,
+            'start_date' => '2026-07-06',  // Monday
+            'leave_count' => 5,
+        ]);
+
+    $response->assertStatus(200)->assertJsonPath('success', true);
+    $endDate = $response->json('end_date');
+    // Default weekends in this system are Friday & Saturday.
+    // End date must NOT be a Friday or Saturday.
+    $day = \Carbon\Carbon::parse($endDate)->format('l');
+    expect(in_array($day, ['Friday', 'Saturday']))->toBeFalse();
+});
+
+test('half day leave submission stores 0.5 leave_count', function () {
+    $this->user->update(['user_type' => 'group']);
+    Permission::findOrCreate('leaves.create', 'web');
+    $this->user->roles()->first()->givePermissionTo('leaves.create');
+
+    $plan = LeavePlan::create([
+        'name' => 'Casual Leave',
+        'short_name' => 'CL',
+        'applicable_gender' => 'Both',
+        'leave_type' => 'Casual Leave',
+        'leave_limit' => 10,
+        'max_no_of_days' => 10,
+        'off_day_include' => 'no',
+        'allow_fractional_leave' => 'active',
+        'active_ind' => 'active',
+    ]);
+
+    $employee = Employee::factory()->create();
+    EmployeeLeavePlan::create([
+        'employee_id' => $employee->id,
+        'plan_id' => $plan->id,
+        'status' => 'active',
+    ]);
+
+    $response = $this->actingAs($this->user)
+        ->post(route('leave.store'), [
+            'employee_id' => $employee->id,
+            'plan_id' => $plan->id,
+            'from' => now()->format('Y-m-d'),
+            'to' => now()->format('Y-m-d'),
+            'leave_count' => 0.5,
+            'day_type' => 'half_day',
+            'status' => 'pending',
+            'reason' => 'Half day leave test',
+        ]);
+
+    $response->assertStatus(302);
+    $this->assertDatabaseHas('leaves', [
+        'employee_id' => $employee->id,
+        'plan_id' => $plan->id,
+        'leave_count' => 0.5,
+        'day_type' => 'half_day',
+    ]);
+});

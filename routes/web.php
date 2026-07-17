@@ -1041,6 +1041,7 @@ Route::prefix('leaves')->middleware('auth')->group(function () {
             Route::get('create', 'create')->name('leave.create');
             Route::post('store', 'store')->name('leave.store');
             Route::post('import', 'import')->name('leave.import');
+            Route::post('calculate-end-date', 'calculateEndDate')->name('leave.calculate-end-date');
         });
         Route::middleware('permission:leaves.delete')->group(function () {
             Route::delete('{id}/delete', 'destroy')->name('leave.destroy');
