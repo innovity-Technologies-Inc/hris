@@ -1,5 +1,21 @@
 # Test Log
 
+## 2026-07-17 (Leave Plan off_day_include Enum yes/no Database Conversion)
+
+**Goal**: Convert the `off_day_include` column in `leave_plans` table from an integer to an enum of `'yes'` and `'no'`, update form validation rules and options, render values cleanly on view pages, and adjust test assertions to match.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/LeavePlanTest.php`
+
+**Results**:
+- Created a migration [2026_07_17_062737_change_off_day_include_to_enum_in_leave_plans_table.php](file:///P:/Project/Web/hrms/database/migrations/2026_07_17_062737_change_off_day_include_to_enum_in_leave_plans_table.php) converting structural types and mapping data values (`0` to `'no'`, `1` to `'yes'`).
+- Changed validation rules inside [StoreLeavePlanRequest.php](file:///P:/Project/Web/hrms/app/Http/Requests/Plan/StoreLeavePlanRequest.php), [UpdateLeavePlanRequest.php](file:///P:/Project/Web/hrms/app/Http/Requests/Plan/UpdateLeavePlanRequest.php), and [PlanService.php](file:///P:/Project/Web/hrms/app/Services/Plan/PlanService.php) to require `in:yes,no`.
+- Updated Excel import mapping inside [LeavePlansImport.php](file:///P:/Project/Web/hrms/app/Imports/Plan/LeavePlansImport.php) to convert input data to `'yes'`/`'no'`.
+- Configured selection options in [form.blade.php](file:///P:/Project/Web/hrms/resources/views/plan/leave_plans/form.blade.php) and display representations in [view.blade.php](file:///P:/Project/Web/hrms/resources/views/plan/leave_plans/view.blade.php), [leave_plan.blade.php](file:///P:/Project/Web/hrms/resources/views/employee/partials/profile_view/partials/leave_plan.blade.php), and [individual.blade.php](file:///P:/Project/Web/hrms/resources/views/leave/individual.blade.php).
+- Updated Pest tests in [tests/Feature/LeavePlanTest.php](file:///P:/Project/Web/hrms/tests/Feature/LeavePlanTest.php).
+- Verified that all 4 tests and 18 assertions pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-17 (Leave Plan Thin Controller Refactoring & API-First Conversion)
 
 **Goal**: Refactor `LeavePlanController` to follow a clean Request-Service-Controller pattern, move all validation to dedicated Form Requests, return standardized JSON API responses, convert create/edit forms to submit via Axios, add Axios delete with SweetAlert2 confirmation, and write Pest feature tests.
