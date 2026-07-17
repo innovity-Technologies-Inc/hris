@@ -201,19 +201,7 @@
                                     placeholder="Enter reason for leave application..." required>{{ old('reason') }}</textarea>
                             </div>
 
-                            {{-- Status (admin only) --}}
-                            @if(!$isEmployee)
-                            <div class="col-md-12">
-                                <label for="status" class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
-                                <select id="status" name="status" class="form-select form-select-lg" required>
-                                    <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>Pending</option>
-                                    <option value="approved" {{ old('status') == 'approved' ? 'selected' : '' }}>Approved</option>
-                                    <option value="rejected" {{ old('status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
-                                </select>
-                            </div>
-                            @else
-                                <input type="hidden" name="status" value="pending">
-                            @endif
+                            <input type="hidden" name="status" value="pending">
                         </div>
                     </div>
                 </div>
