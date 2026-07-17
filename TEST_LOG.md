@@ -1,5 +1,18 @@
 # Test Log
 
+## 2026-07-17 (Employee Leave Plans Gender-Based Filtering)
+
+**Goal**: Filter the available leave plans list displayed and assigned within the employee's profile plans section. If the target employee has a gender specified (e.g. `'Male'` or `'Female'`), show only leave plans having `applicable_gender` matching `'Both'` or matching that specific employee's gender.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/LeavePlanTest.php`
+
+**Results**:
+- Modified [EmployeePlansController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/Employee/EmployeePlansController.php) inside the `plansView()` action to filter `LeavePlan` queries based on `$employee->gender`.
+- Added a new feature test case `employee plans view filters leave plans based on employee gender` inside [LeavePlanTest.php](file:///P:/Project/Web/hrms/tests/Feature/LeavePlanTest.php) verifying that gender scopes filter plans correctly.
+- Verified that all 5 tests and 28 assertions pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-17 (Leave Plan off_day_include Enum yes/no Database Conversion)
 
 **Goal**: Convert the `off_day_include` column in `leave_plans` table from an integer to an enum of `'yes'` and `'no'`, update form validation rules and options, render values cleanly on view pages, and adjust test assertions to match.
