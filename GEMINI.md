@@ -80,3 +80,25 @@ Refer to [.ai/guidelines/testing-guidelines.md](.ai/guidelines/testing-guideline
     - Detailed results (passed/failed counts).
     - Status (✅ SUCCESS or ❌ FAILED).
 - **Validation**: A task is only considered complete once its behavior is verified by a passing test and documented in `TEST_LOG.md`.
+
+## 📋 Leave Module Refactoring & Recent Tasks
+
+The Leave Module has been updated with API-first architectures, strict type validation, responsive calendar components, and year-scoped balance computations:
+
+### 1. Architectural & Validation Updates
+* **API-First Refactoring**: Converted `LeavePlanController` to inherit thin-controller architectures, delegating validations to [StoreLeavePlanRequest.php](file:///P:/Project/Web/hrms/app/Http/Requests/Plan/StoreLeavePlanRequest.php) and [UpdateLeavePlanRequest.php](file:///P:/Project/Web/hrms/app/Http/Requests/Plan/UpdateLeavePlanRequest.php) and returning standardized success/error JSON response payloads.
+* **Axios Form Interceptors**: Updated Leave Plan create/edit forms to submit dynamically via Axios. Handled validation constraint exceptions (status `422`) inline on client interfaces, showing error feedback dynamically.
+* **Axios & SweetAlert Delete**: Integrated a dynamic JQuery delegated handler to run confirmations via SweetAlert2 and dispatch delete requests via Axios, refreshing grids on completion.
+
+### 2. Schema, Scoping, and Filtering Updates
+* **Removal of `day_type`**: Deprecated and removed the `day_type` attribute across migrations, fillable model arrays, validations, imports, and blade templates.
+* **`off_day_include` enum**: Converted the column type from integer (`0`/`1`) to `enum('yes', 'no')` via database migrations, updating imports, validators, view panels, and dropdown selections accordingly.
+* **Running Calendar Year Scoping**: Configured leave taken calculations to scope dynamically to the running calendar year, validating and subtracting usage against the current year limit, and querying the database in `DataController` and `LeavesController`.
+* **Gender-Based Filtering**: Integrated gender scopes in `plansView` of `EmployeePlansController` to ensure employees only view active leave plans assigned to `'Both'` or matching their specific gender.
+
+### 3. Interactive Leave Calendar
+* Added a **Leave Calendar** tab inside the employee profile leave info section. 
+* Implemented interactive filter dropdowns for Month and Year.
+* Built a dynamic calendar days grid using Vanilla Javascript.
+* Displays approved, pending, and rejected leave request periods directly on calendar cells with interactive tooltips and status-color themes, compatible with dark mode.
+
