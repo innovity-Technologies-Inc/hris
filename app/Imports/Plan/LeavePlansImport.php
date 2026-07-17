@@ -35,7 +35,7 @@ class LeavePlansImport implements ToCollection
                 'apply_limit'             => $this->toInt($row[8] ?? 0),
                 'allow_fractional_leave'  => strtolower($row[9] ?? 'inactive'),
 
-                'off_day_include'         => $this->toInt($row[10] ?? 0),
+                'off_day_include'         => (isset($row[10]) && (strtolower($row[10]) == 'yes' || $row[10] == '1')) ? 'yes' : 'no',
 
                 'active_ind'              => strtolower($row[11] ?? 'active'),
             ]);

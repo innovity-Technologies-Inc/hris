@@ -178,8 +178,8 @@
                                     <div class="col-md-6 mb-3">
                                         <label for="off_day_include" class="form-label fw-semibold">Include Off Days in Leave Count</label>
                                         <select class="form-select" id="off_day_include" name="off_day_include">
-                                            <option value="1" {{ (isset($plan) && $plan->off_day_include == 1) || old('off_day_include') == '1' ? 'selected' : '' }}>Yes</option>
-                                            <option value="0" {{ (isset($plan) && $plan->off_day_include == 0) || old('off_day_include') == '0' || !isset($plan) ? 'selected' : '' }}>No</option>
+                                            <option value="yes" {{ (isset($plan) && $plan->off_day_include == 'yes') || old('off_day_include') == 'yes' ? 'selected' : '' }}>Yes</option>
+                                            <option value="no" {{ (isset($plan) && $plan->off_day_include == 'no') || old('off_day_include') == 'no' || !isset($plan) ? 'selected' : '' }}>No</option>
                                         </select>
                                         @error('off_day_include')
                                         <span class="text-danger">{{ $message }}</span>

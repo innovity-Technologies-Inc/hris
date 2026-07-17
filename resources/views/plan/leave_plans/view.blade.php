@@ -124,7 +124,7 @@
                             </div>
                             <div>
                                 <p class="text-muted small mb-1">Off Days Treatment</p>
-                                <h6 class="fw-semibold mb-0">{{ $plan->off_day_include }}</h6>
+                                <h6 class="fw-semibold mb-0">{{ ucfirst($plan->off_day_include) }}</h6>
                             </div>
                         </div>
                     </div>

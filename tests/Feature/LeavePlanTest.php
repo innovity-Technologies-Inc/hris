@@ -68,7 +68,7 @@ test('leave plan CRUD operations and database assertion', function () {
             'display_serial' => 1,
             'apply_limit' => 3,
             'allow_fractional_leave' => 'active',
-            'off_day_include' => '1',
+            'off_day_include' => 'yes',
             'active_ind' => 'active',
         ]);
 
@@ -78,7 +78,7 @@ test('leave plan CRUD operations and database assertion', function () {
     $this->assertDatabaseHas('leave_plans', [
         'name' => 'Annual Leave',
         'short_name' => 'AL',
-        'off_day_include' => 1,
+        'off_day_include' => 'yes',
     ]);
 
     $plan = LeavePlan::where('name', 'Annual Leave')->first();
@@ -100,7 +100,7 @@ test('leave plan CRUD operations and database assertion', function () {
             'display_serial' => 2,
             'apply_limit' => 2,
             'allow_fractional_leave' => 'inactive',
-            'off_day_include' => '0',
+            'off_day_include' => 'no',
             'active_ind' => 'inactive',
         ]);
 
@@ -110,7 +110,7 @@ test('leave plan CRUD operations and database assertion', function () {
     $this->assertDatabaseHas('leave_plans', [
         'id' => $plan->id,
         'name' => 'Updated Annual Leave',
-        'off_day_include' => 0,
+        'off_day_include' => 'no',
         'active_ind' => 'inactive',
     ]);
 

@@ -61,7 +61,7 @@
                 display_serial: 1,
                 apply_limit: 2,
                 allow_fractional_leave: 'active',
-                off_day_include: 0,
+                off_day_include: 'no',
                 active_ind: 'active'
             },
             {
@@ -75,7 +75,7 @@
                 display_serial: 2,
                 apply_limit: 1,
                 allow_fractional_leave: 'inactive',
-                off_day_include: 1,
+                off_day_include: 'yes',
                 active_ind: 'active'
             },
             {
@@ -89,7 +89,7 @@
                 display_serial: 3,
                 apply_limit: 3,
                 allow_fractional_leave: 'active',
-                off_day_include: 0,
+                off_day_include: 'no',
                 active_ind: 'active'
             },
             {
@@ -103,7 +103,7 @@
                 display_serial: 4,
                 apply_limit: 5,
                 allow_fractional_leave: 'inactive',
-                off_day_include: 0,
+                off_day_include: 'no',
                 active_ind: 'active'
             },
             {
@@ -117,7 +117,7 @@
                 display_serial: 5,
                 apply_limit: 1,
                 allow_fractional_leave: 'inactive',
-                off_day_include: 1,
+                off_day_include: 'yes',
                 active_ind: 'active'
             }
         ];
@@ -239,7 +239,7 @@
                 <div class="col-md-6">
                     <div class="detail-field">
                         <label>Include Off Days</label>
-                        <div class="detail-value">${plan.off_day_include ? 'Yes' : 'No'}</div>
+                        <div class="detail-value">${plan.off_day_include === 'yes' ? 'Yes' : 'No'}</div>
                     </div>
                 </div>
             </div>

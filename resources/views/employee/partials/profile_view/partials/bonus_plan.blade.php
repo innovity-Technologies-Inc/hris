@@ -304,7 +304,7 @@
                     detailsContent.find("#leavePlanMaxDays").text(plan.max_no_of_days);
                     detailsContent.find("#leavePlanApplyLimit").text(plan.apply_limit);
                     detailsContent.find("#leavePlanFractional").text(plan.allow_fractional_leave ? "Yes" : "No");
-                    detailsContent.find("#leavePlanIncludeOffDays").text(plan.off_day_include ? "Yes" : "No");
+                    detailsContent.find("#leavePlanIncludeOffDays").text(plan.off_day_include === 'yes' ? "Yes" : "No");
                     detailsContent.find("#leavePlanStatusBadge").html(plan.active_ind ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-danger">Inactive</span>');
                 },
                 error: function() {

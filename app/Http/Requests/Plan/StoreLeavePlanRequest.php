@@ -23,7 +23,7 @@ class StoreLeavePlanRequest extends FormRequest
             'display_serial' => 'nullable|integer|min:0',
             'apply_limit' => 'nullable|integer|min:0',
             'allow_fractional_leave' => 'required|in:active,inactive',
-            'off_day_include' => 'required|in:0,1',
+            'off_day_include' => 'required|in:yes,no',
             'active_ind' => 'required|in:active,inactive',
         ];
     }
