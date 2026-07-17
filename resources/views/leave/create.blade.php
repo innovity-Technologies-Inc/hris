@@ -144,6 +144,16 @@
                     </div>
 
                     <div class="border rounded-3 p-4">
+
+                        {{-- Off-Day Policy Notice (shown dynamically when a plan is selected) --}}
+                        <div id="off-day-notice" class="alert mb-4 d-flex align-items-start gap-2" style="display:none !important;">
+                            <i class="bi fs-5 mt-1" id="off-day-notice-icon"></i>
+                            <div>
+                                <strong id="off-day-notice-title"></strong>
+                                <div class="small mt-1" id="off-day-notice-text"></div>
+                            </div>
+                        </div>
+
                         <div class="row g-4">
 
                             {{-- Day Type (half/full) - only shows when plan allows fractional --}}
@@ -297,6 +307,7 @@ $(function () {
 
         // Show / hide half-day toggle
         applyFractionalLeaveUI();
+        updateOffDayNotice();
 
         // Show balance card
         $('#leave-plan-card-container').show();
@@ -339,6 +350,42 @@ $(function () {
         $('#day-type-col').hide();
         $('#fractional-leave-notice').hide();
         $('#day_type').val('full_day');
+        // Also hide off-day notice
+        $('#off-day-notice').hide();
+    }
+
+    // ── Off-Day Policy Notice ──────────────────────────────────────────────────
+    function updateOffDayNotice() {
+        const $notice = $('#off-day-notice');
+        const includesOffDays = (currentPlanMeta.off_day_include === 'yes');
+
+        if (includesOffDays) {
+            $notice
+                .removeClass('alert-info alert-warning')
+                .addClass('alert-warning')
+                .css('display', 'flex');
+            $('#off-day-notice-icon')
+                .removeClass('bi-calendar-x bi-calendar-check')
+                .addClass('bi-calendar-check');
+            $('#off-day-notice-title').text('Off Days Are Included');
+            $('#off-day-notice-text').text(
+                'This leave plan counts weekends and public holidays as leave days. ' +
+                'The end date is calculated on a pure calendar-day basis — no days are skipped.'
+            );
+        } else {
+            $notice
+                .removeClass('alert-warning alert-info')
+                .addClass('alert-info')
+                .css('display', 'flex');
+            $('#off-day-notice-icon')
+                .removeClass('bi-calendar-check bi-calendar-x')
+                .addClass('bi-calendar-x');
+            $('#off-day-notice-title').text('Off Days Are Excluded');
+            $('#off-day-notice-text').text(
+                'This leave plan excludes your configured weekends and public holidays from the leave count. ' +
+                'The end date is automatically extended to skip non-working days.'
+            );
+        }
     }
 
     // When day type changes → fix leave_count to 0.5 for half day
