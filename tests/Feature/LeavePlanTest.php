@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use App\Models\Plan\LeavePlan;
+use App\Models\Employee\Employee;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -124,4 +125,73 @@ test('leave plan CRUD operations and database assertion', function () {
     $this->assertDatabaseMissing('leave_plans', [
         'id' => $plan->id,
     ]);
+});
+
+test('employee plans view filters leave plans based on employee gender', function () {
+    // Set user_type to group so that organization scope does not filter out test employees
+    $this->user->update(['user_type' => 'group']);
+
+    // Create permission for employee-management.view
+    Permission::findOrCreate('employee-management.view', 'web');
+    $this->user->roles()->first()->givePermissionTo('employee-management.view');
+
+    // 1. Create a Male employee
+    $maleEmployee = Employee::factory()->create([
+        'gender' => 'Male',
+    ]);
+
+    // 2. Create a Female employee
+    $femaleEmployee = Employee::factory()->create([
+        'gender' => 'Female',
+    ]);
+
+    // 3. Create leave plans for Male, Female, and Both
+    $bothPlan = LeavePlan::create([
+        'name' => 'Both Plan',
+        'short_name' => 'BP',
+        'applicable_gender' => 'Both',
+        'leave_type' => 'Casual Leave',
+        'off_day_include' => 'no',
+        'active_ind' => 'active',
+    ]);
+
+    $malePlan = LeavePlan::create([
+        'name' => 'Male Plan',
+        'short_name' => 'MP',
+        'applicable_gender' => 'Male',
+        'leave_type' => 'Casual Leave',
+        'off_day_include' => 'no',
+        'active_ind' => 'active',
+    ]);
+
+    $femalePlan = LeavePlan::create([
+        'name' => 'Female Plan',
+        'short_name' => 'FP',
+        'applicable_gender' => 'Female',
+        'leave_type' => 'Casual Leave',
+        'off_day_include' => 'no',
+        'active_ind' => 'active',
+    ]);
+
+    // 4. Act as Admin, view Male employee's eligible plans
+    $responseMale = $this->actingAs($this->user)
+        ->get(route('employee.profile.plans', ['id' => $maleEmployee->id, 'type' => 'leave-plans']));
+
+    $responseMale->assertStatus(200);
+    $responseMale->assertViewHas('leavePlans');
+    $malePlansCollection = $responseMale->viewData('leavePlans');
+    expect($malePlansCollection->pluck('id'))->toContain($bothPlan->id);
+    expect($malePlansCollection->pluck('id'))->toContain($malePlan->id);
+    expect($malePlansCollection->pluck('id'))->not->toContain($femalePlan->id);
+
+    // 5. Act as Admin, view Female employee's eligible plans
+    $responseFemale = $this->actingAs($this->user)
+        ->get(route('employee.profile.plans', ['id' => $femaleEmployee->id, 'type' => 'leave-plans']));
+
+    $responseFemale->assertStatus(200);
+    $responseFemale->assertViewHas('leavePlans');
+    $femalePlansCollection = $responseFemale->viewData('leavePlans');
+    expect($femalePlansCollection->pluck('id'))->toContain($bothPlan->id);
+    expect($femalePlansCollection->pluck('id'))->toContain($femalePlan->id);
+    expect($femalePlansCollection->pluck('id'))->not->toContain($malePlan->id);
 });

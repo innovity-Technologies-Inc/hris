@@ -145,7 +145,15 @@ class EmployeePlansController extends Controller
                 'employee', 'bonusPlans', 'type', 'activeBonusPlans'));
 
         }elseif ($type === 'leave-plans'){
-            $leavePlans = LeavePlan::where('active_ind', 'active')->get();
+            $gender = $employee->gender;
+            $leavePlansQuery = LeavePlan::where('active_ind', 'active');
+            if ($gender) {
+                $leavePlansQuery->where(function ($query) use ($gender) {
+                    $query->where('applicable_gender', 'Both')
+                          ->orWhere('applicable_gender', $gender);
+                });
+            }
+            $leavePlans = $leavePlansQuery->get();
             $activeLeavePlans = EmployeeLeavePlan::where('employee_id', $id)->get();
 
             if ($request->ajax()) {
