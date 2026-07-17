@@ -241,7 +241,7 @@
                                             @endfor
                                         </select>
                                         <select id="calendarYearSelect" class="form-select form-select-sm" style="width: 100px;">
-                                            @for ($y = now()->year - 3; $y <= now()->year + 2; $y++)
+                                            @for ($y = 2023; $y <= now()->year; $y++)
                                                 <option value="{{ $y }}" {{ $y == now()->year ? 'selected' : '' }}>
                                                     {{ $y }}
                                                 </option>
