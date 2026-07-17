@@ -17,7 +17,6 @@ class LeavePlan extends Model
         'name',
         'short_name',
         'applicable_gender',
-        'day_type',
         'leave_type',
         'leave_limit',
         'max_no_of_days',

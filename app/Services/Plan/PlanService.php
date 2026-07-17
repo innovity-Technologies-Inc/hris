@@ -203,7 +203,6 @@ class PlanService
             'name' => 'required|string|max:255',
             'short_name' => 'nullable|string|max:100',
             'applicable_gender' => 'required|in:Both,Male,Female',
-            'day_type' => 'required|in:Calculative,Fixed',
             'leave_type' => 'required',
             'leave_limit' => 'nullable|integer|min:0',
             'max_no_of_days' => 'nullable|integer|min:0',
@@ -222,9 +221,6 @@ class PlanService
 
             'applicable_gender.required' => 'Please select applicable gender.',
             'applicable_gender.in' => 'The selected gender is invalid.',
-
-            'day_type.required' => 'Please select day type.',
-            'day_type.in' => 'The selected day type is invalid.',
 
             'leave_type.required' => 'Please select leave type.',
             'leave_type.in' => 'The selected leave type is invalid.',

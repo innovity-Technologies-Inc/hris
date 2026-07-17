@@ -55,7 +55,6 @@
                 name: 'Annual Leave',
                 short_name: 'AL',
                 applicable_gender: 'Both',
-                day_type: 'Calculative',
                 leave_type: 'Paid',
                 leave_limit: 20,
                 max_no_of_days: 30,
@@ -70,7 +69,6 @@
                 name: 'Maternity Leave',
                 short_name: 'ML',
                 applicable_gender: 'Female',
-                day_type: 'Fixed',
                 leave_type: 'Paid',
                 leave_limit: 120,
                 max_no_of_days: 120,
@@ -85,7 +83,6 @@
                 name: 'Sick Leave',
                 short_name: 'SL',
                 applicable_gender: 'Both',
-                day_type: 'Calculative',
                 leave_type: 'Paid',
                 leave_limit: 15,
                 max_no_of_days: 20,
@@ -100,7 +97,6 @@
                 name: 'Casual Leave',
                 short_name: 'CL',
                 applicable_gender: 'Both',
-                day_type: 'Fixed',
                 leave_type: 'Paid',
                 leave_limit: 10,
                 max_no_of_days: 10,
@@ -115,7 +111,6 @@
                 name: 'Paternity Leave',
                 short_name: 'PL',
                 applicable_gender: 'Male',
-                day_type: 'Fixed',
                 leave_type: 'Paid',
                 leave_limit: 15,
                 max_no_of_days: 15,
@@ -179,25 +174,19 @@
                 <i class="bi bi-info-square me-2"></i>Basic Information
             </h6>
             <div class="row g-2">
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="detail-field">
                         <label>Leave Type</label>
                         <div class="detail-value">${plan.leave_type}</div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="detail-field">
                         <label>Applicable Gender</label>
                         <div class="detail-value">${plan.applicable_gender}</div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="detail-field">
-                        <label>Day Type</label>
-                        <div class="detail-value">${plan.day_type}</div>
-                    </div>
-                </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="detail-field">
                         <label>Display Serial</label>
                         <div class="detail-value">${plan.display_serial}</div>

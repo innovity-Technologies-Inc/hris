@@ -299,7 +299,6 @@
                     detailsContent.find("#leavePlanShortName").text(plan.short_name);
                     detailsContent.find("#leavePlanLeaveType").text(plan.leave_type);
                     detailsContent.find("#leavePlanApplicableGender").text(plan.applicable_gender);
-                    detailsContent.find("#leavePlanDayType").text(plan.day_type);
                     detailsContent.find("#leavePlanDisplaySerial").text(plan.display_serial);
                     detailsContent.find("#leavePlanLeaveLimit").text(plan.leave_limit);
                     detailsContent.find("#leavePlanMaxDays").text(plan.max_no_of_days);

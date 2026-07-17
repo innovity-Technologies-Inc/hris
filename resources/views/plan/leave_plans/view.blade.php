@@ -67,7 +67,7 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-4 mb-4">
+                    <div class="col-md-6 mb-4">
                         <div class="d-flex align-items-center gap-3">
                             <div class="bg-light p-3 rounded"
                                 style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
@@ -80,20 +80,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4 mb-4">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="bg-light p-3 rounded"
-                                style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
-                                <i style="height: 24px; width: 24px;" class="text-primary" data-feather="calendar"></i>
-                            </div>
-                            <div>
-                                <p class="text-muted small mb-1">Day Type</p>
-                                <h6 class="fw-semibold mb-0">{{ str_replace('_', ' ', ucfirst($plan->day_type)) }}</h6>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4 mb-4">
+                    <div class="col-md-6 mb-4">
                         <div class="d-flex align-items-center gap-3">
                             <div class="bg-light p-3 rounded"
                                 style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">

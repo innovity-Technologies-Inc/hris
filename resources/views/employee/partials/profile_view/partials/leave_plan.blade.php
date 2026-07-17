@@ -130,10 +130,9 @@
                             <div class="mb-3 p-3 bg-light rounded border">
                                 <h6 class="fw-bold mb-3"><i class="bi bi-info-square me-2 text-primary"></i>Basic Information</h6>
                                 <div class="row g-2">
-                                    <div class="col-md-3"><label class="small text-secondary">Leave Type</label><div id="leavePlanLeaveType" class="fw-semibold"></div></div>
-                                    <div class="col-md-3"><label class="small text-secondary">Gender</label><div id="leavePlanApplicableGender" class="fw-semibold"></div></div>
-                                    <div class="col-md-3"><label class="small text-secondary">Day Type</label><div id="leavePlanDayType" class="fw-semibold"></div></div>
-                                    <div class="col-md-3"><label class="small text-secondary">Display Serial</label><div id="leavePlanDisplaySerial" class="fw-semibold"></div></div>
+                                    <div class="col-md-4"><label class="small text-secondary">Leave Type</label><div id="leavePlanLeaveType" class="fw-semibold"></div></div>
+                                    <div class="col-md-4"><label class="small text-secondary">Gender</label><div id="leavePlanApplicableGender" class="fw-semibold"></div></div>
+                                    <div class="col-md-4"><label class="small text-secondary">Display Serial</label><div id="leavePlanDisplaySerial" class="fw-semibold"></div></div>
                                 </div>
                             </div>
 
@@ -252,7 +251,6 @@
                     detailsContent.find("#leavePlanShortName").text(plan.short_name);
                     detailsContent.find("#leavePlanLeaveType").text(plan.leave_type);
                     detailsContent.find("#leavePlanApplicableGender").text(plan.applicable_gender);
-                    detailsContent.find("#leavePlanDayType").text(plan.day_type);
                     detailsContent.find("#leavePlanDisplaySerial").text(plan.display_serial);
                     detailsContent.find("#leavePlanLeaveLimit").text(plan.leave_limit);
                     detailsContent.find("#leavePlanMaxDays").text(plan.max_no_of_days);

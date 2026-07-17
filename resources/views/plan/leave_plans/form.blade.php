@@ -62,7 +62,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-4 mb-3">
+                                    <div class="col-md-6 mb-3">
                                         <label for="applicable_gender" class="form-label fw-semibold">Applicable Gender <span class="text-danger">*</span></label>
                                         <select class="form-select" id="applicable_gender" name="applicable_gender" required>
                                             <option value="">Select Gender</option>
@@ -74,18 +74,7 @@
                                         <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
-                                    <div class="col-md-4 mb-3">
-                                        <label for="day_type" class="form-label fw-semibold">Day Type <span class="text-danger">*</span></label>
-                                        <select class="form-select" id="day_type" name="day_type" required>
-                                            <option value="">Select Day Type</option>
-                                            <option value="Calculative" {{ (isset($plan) && $plan->day_type == 'Calculative') || old('day_type') == 'Calculative' ? 'selected' : '' }}>Calculative</option>
-                                            <option value="Fixed" {{ (isset($plan) && $plan->day_type == 'Fixed') || old('day_type') == 'Fixed' ? 'selected' : '' }}>Fixed</option>
-                                        </select>
-                                        @error('day_type')
-                                        <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                    <div class="col-md-4 mb-3">
+                                    <div class="col-md-6 mb-3">
                                         <!--
                                             Leave Type Field with Interactive Autocomplete
                                             - Displays suggestions dropdown as user types
@@ -188,8 +177,10 @@
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="off_day_include" class="form-label fw-semibold">Include Off Days in Leave Count</label>
-                                        <input type="number" class="form-control" id="off_day_include" name="off_day_include" placeholder="E.g., 0, 1" value="{{ isset($plan) ? $plan->off_day_include : old('off_day_include') }}" min="0">
-                                        <small class="text-muted">Set to 0 for no, 1 for yes, or other number for specific logic.</small>
+                                        <select class="form-select" id="off_day_include" name="off_day_include">
+                                            <option value="1" {{ (isset($plan) && $plan->off_day_include == 1) || old('off_day_include') == '1' ? 'selected' : '' }}>Yes</option>
+                                            <option value="0" {{ (isset($plan) && $plan->off_day_include == 0) || old('off_day_include') == '0' || !isset($plan) ? 'selected' : '' }}>No</option>
+                                        </select>
                                         @error('off_day_include')
                                         <span class="text-danger">{{ $message }}</span>
                                         @enderror

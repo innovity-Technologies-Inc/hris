@@ -26,7 +26,6 @@ class LeavePlansImport implements ToCollection
                 'short_name'              => $row[1],
 
                 'applicable_gender'       => $row[2] ?? 'Both',
-                'day_type'                => $row[3] ?? 'Calculative',
                 'leave_type'              => $row[4] ?? 'Casual Leave',
 
                 'leave_limit'             => $this->toInt($row[5] ?? 0),
