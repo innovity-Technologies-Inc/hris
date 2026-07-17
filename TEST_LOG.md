@@ -1,5 +1,22 @@
 # Test Log
 
+## 2026-07-17 (Employee Profile Leave Info Running Year Calculation)
+
+**Goal**: Scope the leave taken and remaining balance calculations shown on the employee profile leave info page, validated during applications, and requested via APIs to the running calendar year.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/LeavePlanTest.php`
+
+**Results**:
+- Updated `showLeaveInfo()` in [LeavesController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/Leave/LeavesController.php) to calculate the integer sum of approved leaves taken by the employee in the current calendar year.
+- Updated validation rules in the `store()` method of [LeavesController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/Leave/LeavesController.php) to validate leave requests against the current calendar year's limit.
+- Updated `getLeaveDetails()` in [DataController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/DataController.php) to dynamically retrieve current year leaves via AJAX.
+- Updated `LeavesImport.php` check to calculate balance limits using the year of the leave request's start date (`from` date).
+- Updated [leave_info.blade.php](file:///P:/Project/Web/hrms/resources/views/employee/partials/profile_view/leave_info.blade.php) view to display `$leave->taken_current_year`.
+- Added feature test case `employee leave info calculates and validates taken leaves by running year` inside [LeavePlanTest.php](file:///P:/Project/Web/hrms/tests/Feature/LeavePlanTest.php) verifying correct calculation scopes and limit validations.
+- Verified that all 6 tests and 35 assertions pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-17 (Employee Leave Plans Gender-Based Filtering)
 
 **Goal**: Filter the available leave plans list displayed and assigned within the employee's profile plans section. If the target employee has a gender specified (e.g. `'Male'` or `'Female'`), show only leave plans having `applicable_gender` matching `'Both'` or matching that specific employee's gender.
