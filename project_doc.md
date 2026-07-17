@@ -141,7 +141,13 @@ Dedicated sub-system to define various HR policies:
       $$d = 2R \arcsin\left(\sqrt{\sin^2\left(\frac{\Delta \phi}{2}\right) + \cos(\phi_1)\cos(\phi_2)\sin^2\left(\frac{\Delta \lambda}{2}\right)}\right)$$
       where $R$ is the Earth's radius (6,371,000 meters).
     - *Access Gate*: If the measured distance is less than or equal to the configured covering radius limit, the "Clock In" action is unlocked. Otherwise, a warning alert message blocks the operation.
-- **Leaves**: Leave application, approval workflows via LeaveWorkflowListener, and balance tracking.
+- **Leaves**:
+  - **API-First Architecture**: Refactored `LeavePlanController` to inherit thin-controller architectures, delegating validations to [StoreLeavePlanRequest.php](file:///P:/Project/Web/hrms/app/Http/Requests/Plan/StoreLeavePlanRequest.php) and [UpdateLeavePlanRequest.php](file:///P:/Project/Web/hrms/app/Http/Requests/Plan/UpdateLeavePlanRequest.php) and returning standardized success/error JSON response payloads.
+  - **Form Actions & Axios Interceptors**: Create/edit forms submit dynamically via Axios. Handles server validation exceptions (status `422`) inline on client interfaces, showing error feedback dynamically. Grid listings use a dynamic JQuery delegated handler to run confirmations via SweetAlert2 and dispatch delete requests via Axios.
+  - **Column Refactor & Enum Updates**: Deprecated and removed the `day_type` attribute. Converted the `off_day_include` column type from integer (`0`/`1`) to `enum('yes', 'no')` via database migrations, updating validators and select options.
+  - **Running Calendar Year Scoping**: Configured leave taken calculations to scope dynamically to the running calendar year, validating and subtracting usage against the current year limit, and querying the database in `DataController` and `LeavesController`.
+  - **Gender-Based Filtering**: Integrated gender scopes in `plansView` of `EmployeePlansController` to ensure employees only view active leave plans assigned to `'Both'` or matching their specific gender.
+  - **Interactive Leave Calendar**: Added a **Leave Calendar** tab inside the employee profile leave info section. Displays approved, pending, and rejected leave request periods directly on calendar cells with interactive tooltips and status-color themes, compatible with dark mode.
 
 ### 💰 In-Depth Payroll & Benefits Module
 
