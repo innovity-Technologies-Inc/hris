@@ -1,5 +1,21 @@
 # Test Log
 
+## 2026-07-17 (Leave Plan Thin Controller Refactoring & API-First Conversion)
+
+**Goal**: Refactor `LeavePlanController` to follow a clean Request-Service-Controller pattern, move all validation to dedicated Form Requests, return standardized JSON API responses, convert create/edit forms to submit via Axios, add Axios delete with SweetAlert2 confirmation, and write Pest feature tests.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/LeavePlanTest.php`
+
+**Results**:
+- Created [StoreLeavePlanRequest.php](file:///P:/Project/Web/hrms/app/Http/Requests/Plan/StoreLeavePlanRequest.php) and [UpdateLeavePlanRequest.php](file:///P:/Project/Web/hrms/app/Http/Requests/Plan/UpdateLeavePlanRequest.php) carrying all Leave Plan fields and error messages.
+- Refactored [LeavePlanController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/Plan/LeavePlanController.php) to accept requests and return standardized JSON API responses.
+- Converted create/edit submission in [form.blade.php](file:///P:/Project/Web/hrms/resources/views/plan/leave_plans/form.blade.php) to submit via Axios and dynamically render validation feedback inline.
+- Integrated Axios delete confirmation in [index.blade.php](file:///P:/Project/Web/hrms/resources/views/plan/leave_plans/index.blade.php) using SweetAlert2 dialogs and table reloading.
+- Added comprehensive feature tests in [tests/Feature/LeavePlanTest.php](file:///P:/Project/Web/hrms/tests/Feature/LeavePlanTest.php) verifying routing, validation feedback, database state changes, and CRUD.
+- Verified that all 4 tests and 18 assertions pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-17 (Approval Workflow Thin Controller Refactoring)
 
 **Goal**: Refactor `ApprovalWorkflowController` to follow a clean Request-Service-Controller pattern, move all validation to dedicated Form Requests, extract all business logic to `ApprovalWorkflowServices`, and write Pest feature tests.
