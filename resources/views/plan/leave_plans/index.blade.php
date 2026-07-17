@@ -87,6 +87,46 @@
                 const url = $(this).attr('href');
                 fetchData(url);
             });
+
+            // Handle Delete with SweetAlert2 & Axios
+            $(document).on('click', '.confirmDelete', function(e) {
+                e.preventDefault();
+                const button = $(this);
+                const form = button.closest('form');
+                const url = form.attr('action');
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        axios.delete(url)
+                            .then(response => {
+                                if (response.data.success) {
+                                    Swal.fire(
+                                        'Deleted!',
+                                        response.data.message,
+                                        'success'
+                                    ).then(() => {
+                                        fetchData(); // Reload the results table
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                Swal.fire(
+                                    'Error!',
+                                    error.response?.data?.message || 'Something went wrong. Please try again later.',
+                                    'error'
+                                );
+                            });
+                    }
+                });
+            });
         });
     </script>
 @endsection

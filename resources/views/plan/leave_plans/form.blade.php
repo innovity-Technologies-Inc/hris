@@ -20,7 +20,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ isset($plan) ? route('plan.leave_plans.update', $plan->id) : route('plan.leave_plans.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ isset($plan) ? route('plan.leave_plans.update', $plan->id) : route('plan.leave_plans.store') }}" method="POST" id="leavePlanForm">
                         @csrf
                         @if (isset($plan))
                             @method('PUT')
@@ -333,6 +333,68 @@
             if (e.target.value.trim() === '') {
                 showSuggestions(leaveTypeSuggestions);
             }
+        });
+
+        // ==========================================
+        // 8. Event: Axios Form Submission
+        // ==========================================
+        const form = document.getElementById('leavePlanForm');
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const submitBtn = form.querySelector('[type="submit"]');
+            submitBtn.disabled = true;
+
+            // Clear previous errors
+            form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+            form.querySelectorAll('.invalid-feedback').forEach(el => el.remove());
+
+            const formData = new FormData(form);
+
+            // Handle PUT request spoofing via Axios correctly
+            const isUpdate = "{{ isset($plan) ? 'true' : 'false' }}" === 'true';
+            const url = form.getAttribute('action');
+
+            axios({
+                method: 'post',
+                url: url,
+                data: formData
+            })
+            .then(response => {
+                if (response.data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: response.data.message,
+                        timer: 1500,
+                        showConfirmButton: false
+                    }).then(() => {
+                        window.location.href = response.data.redirect;
+                    });
+                }
+            })
+            .catch(error => {
+                submitBtn.disabled = false;
+                if (error.response && error.response.status === 422) {
+                    const errors = error.response.data.errors;
+                    Object.keys(errors).forEach(key => {
+                        const input = form.querySelector(`[name="${key}"]`);
+                        if (input) {
+                            input.classList.add('is-invalid');
+                            const feedback = document.createElement('div');
+                            feedback.className = 'invalid-feedback';
+                            feedback.innerText = errors[key][0];
+                            input.after(feedback);
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: error.response?.data?.message || 'Something went wrong. Please try again later.'
+                    });
+                }
+            });
         });
     </script>
 @endsection
