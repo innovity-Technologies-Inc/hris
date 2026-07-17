@@ -2,7 +2,9 @@
 
 use App\Models\User;
 use App\Models\Plan\LeavePlan;
+use App\Models\Leave\Leave;
 use App\Models\Employee\Employee;
+use App\Models\Employee\EmployeeLeavePlan;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -194,4 +196,99 @@ test('employee plans view filters leave plans based on employee gender', functio
     expect($femalePlansCollection->pluck('id'))->toContain($bothPlan->id);
     expect($femalePlansCollection->pluck('id'))->toContain($femalePlan->id);
     expect($femalePlansCollection->pluck('id'))->not->toContain($malePlan->id);
+});
+
+test('employee leave info calculates and validates taken leaves by running year', function () {
+    // Set user_type to group so that organization scope does not filter out test elements
+    $this->user->update(['user_type' => 'group']);
+
+    // Grant permission
+    Permission::findOrCreate('leaves.view', 'web');
+    Permission::findOrCreate('leaves.create', 'web');
+    $this->user->roles()->first()->givePermissionTo(['leaves.view', 'leaves.create']);
+
+    // 1. Create a Leave Plan (limit = 15)
+    $plan = LeavePlan::create([
+        'name' => 'Annual Leave',
+        'short_name' => 'AL',
+        'applicable_gender' => 'Both',
+        'leave_type' => 'Casual Leave',
+        'leave_limit' => 15,
+        'max_no_of_days' => 15,
+        'off_day_include' => 'no',
+        'active_ind' => 'active',
+    ]);
+
+    // 2. Create an Employee
+    $employee = Employee::factory()->create();
+
+    // 3. Assign Leave Plan
+    EmployeeLeavePlan::create([
+        'employee_id' => $employee->id,
+        'plan_id' => $plan->id,
+        'status' => 'active',
+    ]);
+
+    // 4. Create approved leave in previous year (10 days)
+    Leave::create([
+        'employee_id' => $employee->id,
+        'plan_id' => $plan->id,
+        'from' => now()->subYear()->format('Y-m-d'),
+        'to' => now()->subYear()->addDays(9)->format('Y-m-d'),
+        'leave_count' => 10,
+        'status' => 'approved',
+        'reason' => 'Previous Year Leave',
+    ]);
+
+    // 5. Create approved leave in current year (5 days)
+    Leave::create([
+        'employee_id' => $employee->id,
+        'plan_id' => $plan->id,
+        'from' => now()->format('Y-m-d'),
+        'to' => now()->addDays(4)->format('Y-m-d'),
+        'leave_count' => 5,
+        'status' => 'approved',
+        'reason' => 'Current Year Leave',
+    ]);
+
+    // 6. Access showLeaveInfo profile tab
+    $response = $this->actingAs($this->user)
+        ->get(route('employee.profile.leave_info', $employee->id));
+
+    $response->assertStatus(200);
+    $response->assertViewHas('leaveDetails');
+    $leaveDetails = $response->viewData('leaveDetails');
+    
+    // The taken count for current year should be exactly 5, and remaining should be 10
+    $assignedPlan = $leaveDetails->where('plan_id', $plan->id)->first();
+    expect($assignedPlan->taken_current_year)->toBe(5);
+
+    // 7. Test validation when submitting another leave request
+    // Since limit = 15 and taken this year = 5, remaining is 10.
+    // Submitting 11 days should fail.
+    $validationResponseFail = $this->actingAs($this->user)
+        ->postJson(route('leave.store'), [
+            'employee_id' => $employee->id,
+            'plan_id' => $plan->id,
+            'from' => now()->format('Y-m-d'),
+            'to' => now()->addDays(10)->format('Y-m-d'),
+            'leave_count' => 11,
+            'status' => 'pending',
+            'reason' => 'Trying to request too many days',
+        ]);
+    $validationResponseFail->assertStatus(422);
+    $validationResponseFail->assertJsonValidationErrors(['leave_count']);
+
+    // Submitting 10 days should pass
+    $validationResponsePass = $this->actingAs($this->user)
+        ->postJson(route('leave.store'), [
+            'employee_id' => $employee->id,
+            'plan_id' => $plan->id,
+            'from' => now()->format('Y-m-d'),
+            'to' => now()->addDays(9)->format('Y-m-d'),
+            'leave_count' => 10,
+            'status' => 'pending',
+            'reason' => 'Requesting exactly remaining days',
+        ]);
+    $validationResponsePass->assertStatus(302); // Redirect back with success message
 });

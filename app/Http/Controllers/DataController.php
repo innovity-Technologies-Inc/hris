@@ -156,14 +156,20 @@ class DataController extends Controller
     }
 
     public function getLeaveDetails($employee_id, $plan_id){
-        $plan_name = LeavePlan::where('id', $plan_id)->first()->name;
-        $limit = LeavePlan::where('id', $plan_id)->first()->leave_limit;
-        $leave_count_data = LeaveCount::where('employee_id', $employee_id)->where('plan_id', $plan_id)->first();
-        if ($leave_count_data){
-            $taken = $leave_count_data->leave_taken;
-        }else{
-            $taken = 0;
+        $plan = LeavePlan::find($plan_id);
+        if (!$plan) {
+            return response()->json(['error' => 'Leave Plan not found'], 404);
         }
+        $plan_name = $plan->name;
+        $limit = $plan->leave_limit;
+
+        $currentYear = now()->year;
+        $taken = (int) \App\Models\Leave\Leave::where('employee_id', $employee_id)
+            ->where('plan_id', $plan_id)
+            ->where('status', 'approved')
+            ->whereYear('from', $currentYear)
+            ->sum('leave_count');
+
         return response()->json([
             'name' => $plan_name,
             'limit' => $limit,

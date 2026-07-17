@@ -82,27 +82,31 @@ class LeavesController extends Controller
         ]);
 
         $validator->after(function ($validator) use ($employee_id, $plan_id, $request) {
+            $plan = LeavePlan::find($plan_id);
+            if (!$plan) {
+                return;
+            }
 
-            $leave = LeaveCount::where('employee_id', $employee_id)
-                ->where('plan_id', $plan_id)
-                ->first();
-
-            $max_days = LeavePlan::where('id', $plan_id)->first()->max_no_of_days;
+            $max_days = $plan->max_no_of_days;
 
             if ($max_days < $request->input('leave_count')){
                 $validator->errors()->add('leave_count', 'You cannot request more than '.$max_days.' days per leave');
             }
 
-            if ($leave) {
-                $remaining_leaves = $leave->getPlan->leave_limit - $leave->leave_taken;
-                $plan_name = $leave->getPlan->name;
+            $currentYear = now()->year;
+            $takenThisYear = Leave::where('employee_id', $employee_id)
+                ->where('plan_id', $plan_id)
+                ->where('status', 'approved')
+                ->whereYear('from', $currentYear)
+                ->sum('leave_count');
 
-                if ($request->leave_count > $remaining_leaves) {
-                    $validator->errors()->add(
-                        'leave_count',
-                        "You only have {$remaining_leaves} leave(s) remaining for {$plan_name} plan."
-                    );
-                }
+            $remaining_leaves = $plan->leave_limit - $takenThisYear;
+
+            if ($request->leave_count > $remaining_leaves) {
+                $validator->errors()->add(
+                    'leave_count',
+                    "You only have {$remaining_leaves} leave(s) remaining for {$plan->name} plan."
+                );
             }
         });
 
@@ -222,7 +226,17 @@ class LeavesController extends Controller
             abort(403, 'Unauthorized access to other profiles.');
         }
 
-        $leaveDetails = EmployeeLeavePlan::with( 'leaveCount')->where('employee_id', $id)->get();
+        $leaveDetails = EmployeeLeavePlan::with('leaveCount')->where('employee_id', $id)->get();
+        
+        $currentYear = now()->year;
+        foreach ($leaveDetails as $detail) {
+            $detail->taken_current_year = (int) Leave::where('employee_id', $id)
+                ->where('plan_id', $detail->plan_id)
+                ->where('status', 'approved')
+                ->whereYear('from', $currentYear)
+                ->sum('leave_count');
+        }
+
         $leaveHistory = Leave::where('employee_id', $id)->orderBy('id', 'desc')->get();
         return view('employee.profile', compact('title', 'section', 'sub_section', 'employee', 'leaveDetails', 'leaveHistory', 'section_url'));
 

@@ -47,11 +47,7 @@
                                                 <span class="stat-label">Limit</span>
                                             </div>
                                             @php
-                                                if(!empty($leave->leaveCount->leave_taken)) {
-                                                    $taken = $leave->leaveCount->leave_taken;
-                                                }else{
-                                                    $taken = 0;
-                                                }
+                                                $taken = $leave->taken_current_year ?? 0;
                                             @endphp
                                             <div class="stat-item">
                                                 <span class="stat-value text-danger">{{ $taken }}</span>

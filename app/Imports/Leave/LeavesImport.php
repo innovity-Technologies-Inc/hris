@@ -136,11 +136,13 @@ class LeavesImport implements ToCollection
         }
 
         // Check leave balance
-        $leaveCountData = LeaveCount::where('employee_id', $employee->id)
+        $currentYear = Carbon::parse($fromDate)->year;
+        $leaveTaken = Leave::where('employee_id', $employee->id)
             ->where('plan_id', $leavePlan->id)
-            ->first();
+            ->where('status', 'approved')
+            ->whereYear('from', $currentYear)
+            ->sum('leave_count');
 
-        $leaveTaken = $leaveCountData ? $leaveCountData->leave_taken : 0;
         $remainingLeaves = $leavePlan->leave_limit - $leaveTaken;
 
         if ($leaveCount > $remainingLeaves) {
