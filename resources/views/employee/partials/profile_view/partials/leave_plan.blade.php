@@ -32,7 +32,7 @@
                             @if(auth()->user()->user_type !== \App\Enums\UserType::Employee)
                                 @can('employee-management.edit')
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="leaveSelectAll" onchange="handleSelectAll('leave.individual', this.checked)">
+                                    <input class="form-check-input" type="checkbox" id="leaveSelectAll" onchange="handleSelectAll('leave', this.checked)">
                                     <label class="form-check-label" for="leaveSelectAll">Select all</label>
                                 </div>
                                 @endcan
@@ -52,7 +52,7 @@
                                            name="plan_ids[]"
                                            value="{{ $item->id }}"
                                            id="leave-plan-{{ $item->id }}"
-                                           onchange="updateSelectAllState('leave.individual')"
+                                           onchange="updateSelectAllState('leave')"
                                            @if(isset($activeLeavePlans) && $activeLeavePlans->contains('plan_id', $item->id)) checked @endif
                                            @if(auth()->user()->user_type === \App\Enums\UserType::Employee || auth()->user()->cannot('employee-management.edit')) disabled @endif>
                                     <label for="leave-plan-{{ $item->id }}" class="form-check-label flex-grow-1">{{ $item->name }}</label>
@@ -287,7 +287,7 @@
     (function() {
         if (typeof updateSelectAllState !== 'undefined') {
             updateSelectAllState('bonus');
-            updateSelectAllState('leave.individual');
+            updateSelectAllState('leave');
         }
     })();
 </script>

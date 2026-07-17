@@ -335,7 +335,7 @@
     (function() {
         if (typeof updateSelectAllState !== 'undefined') {
             updateSelectAllState('bonus');
-            updateSelectAllState('leave.individual');
+            updateSelectAllState('leave');
         }
     })();
 </script>
