@@ -81,11 +81,23 @@ class PermissionSeeder extends Seeder
             ],
 
             [
-                'name' => 'Resignations',
+                'name' => 'Offboarding',
                 'icon' => 'door-open',
-                'slug' => 'resignations',
-                'route' => 'resignation.index',
-                'actions' => ['view', 'create', 'edit', 'delete', 'approve']
+                'slug' => 'offboardings',
+                'submenus' => [
+                    [
+                        'name' => 'Resignation',
+                        'slug' => 'offboarding-resignation',
+                        'route' => 'offboarding.resignation.index',
+                        'actions' => ['view', 'create', 'edit', 'delete', 'approve']
+                    ],
+                    [
+                        'name' => 'Termination',
+                        'slug' => 'offboarding-termination',
+                        'route' => 'offboarding.termination.index',
+                        'actions' => ['view', 'create', 'edit', 'delete', 'approve']
+                    ],
+                ]
             ],
 
             [

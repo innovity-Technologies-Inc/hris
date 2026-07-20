@@ -166,23 +166,32 @@ Route::prefix('company-setup')->middleware('auth')->group(function () {
         });
     });
 
-    Route::controller(\App\Http\Controllers\Resignation\ResignationController::class)->group(function () {
-        Route::get('resignation/get-employees-by-hierarchy', 'getEmployeesByHierarchy')->name('resignation.get_employees_by_hierarchy');
+    Route::controller(\App\Http\Controllers\Offboarding\OffboardingController::class)->group(function () {
+        Route::get('offboarding/get-employees-by-hierarchy', 'getEmployeesByHierarchy')->name('offboarding.get_employees_by_hierarchy');
+        Route::get('my-offboarding', 'myOffboarding')->name('offboarding.my_offboarding');
+
+        // Resignation Routes
         Route::middleware('permission:resignations.view')->group(function () {
-            Route::get('resignation', 'index')->name('resignation.index');
-            Route::get('resignation/{id}/show', 'show')->name('resignation.show');
+            Route::get('offboarding/resignation', 'resignationIndex')->name('offboarding.resignation.index');
         });
         Route::middleware('permission:resignations.create')->group(function () {
-            Route::get('resignation/create', 'create')->name('resignation.create');
-            Route::post('resignation', 'store')->name('resignation.store');
+            Route::get('offboarding/resignation/create', 'create')->name('offboarding.resignation.create');
         });
-        Route::middleware('permission:resignations.edit')->group(function () {
-            Route::get('resignation/{id}/edit', 'edit')->name('resignation.edit');
-            Route::put('resignation/{id}', 'update')->name('resignation.update');
+
+        // Termination Routes
+        Route::middleware('permission:terminations.view')->group(function () {
+            Route::get('offboarding/termination', 'terminationIndex')->name('offboarding.termination.index');
         });
-        Route::middleware('permission:resignations.delete')->group(function () {
-            Route::delete('resignation/{id}', 'destroy')->name('resignation.destroy');
+        Route::middleware('permission:terminations.create')->group(function () {
+            Route::get('offboarding/termination/create', 'create')->name('offboarding.termination.create');
         });
+
+        // Common CRUD Actions
+        Route::post('offboarding', 'store')->name('offboarding.store');
+        Route::get('offboarding/{id}', 'show')->name('offboarding.show');
+        Route::get('offboarding/{id}/edit', 'edit')->name('offboarding.edit');
+        Route::put('offboarding/{id}', 'update')->name('offboarding.update');
+        Route::delete('offboarding/{id}', 'destroy')->name('offboarding.destroy');
     });
 
     Route::controller(\App\Http\Controllers\ClaimExpense\ExpenseTypeController::class)->group(function () {

@@ -43,6 +43,8 @@ return [
         'travel-movement' => 'Travel Movement',
         'claim-expense' => 'Claim Expense',
         'resign' => 'Resignation',
+        'offboarding-resignation' => 'Offboarding Resignation',
+        'offboarding-termination' => 'Offboarding Termination',
     ],
 
 ];

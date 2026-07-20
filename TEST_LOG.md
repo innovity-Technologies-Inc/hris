@@ -1,5 +1,22 @@
 # Test Log
 
+## 2026-07-20 (Offboarding Module - Resignation, Termination & Portal Restriction)
+
+**Goal**: Restructure offboarding into a unified module with Resignation and Termination submenus, locked offboarding type select in shared form, automatic employee status updates (`'resigned'`, `'terminated'`), and EnsureNotOffboarded portal access middleware restriction.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/OffboardingTest.php`
+
+**Results**:
+- Registered `'offboarding-resignation'` and `'offboarding-termination'` in `config/approval-engine.php`.
+- Seeded parent menu **Offboarding** with **Resignation** and **Termination** submenus in `PermissionSeeder.php`.
+- Created migration `2026_07_20_000008_create_offboardings_table.php` and model `App\Models\Offboarding\Offboarding.php`.
+- Implemented `StoreOffboardingRequest`, `UpdateOffboardingRequest`, `OffboardingServices`, and `OffboardingController`.
+- Created shared views (`index`, `form`, `show`, `search_results`) and portal restriction view `my_offboarding.blade.php`.
+- Implemented `EnsureNotOffboarded` middleware restricting resigned/terminated employees to `/my-offboarding`.
+- Feature tests `tests/Feature/OffboardingTest.php` passed 2/2 tests (11 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-20 (Resign Module & Approval Workflow Implementation)
 
 **Goal**: Implement the new Resign module with 5-tier organizational hierarchy cascade, approval workflow integration, thin request-service-controller pattern, generic ApiResponse trait, and permission seeder.
