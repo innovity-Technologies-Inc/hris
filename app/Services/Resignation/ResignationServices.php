@@ -125,7 +125,7 @@ class ResignationServices
      */
     public function getResignationById(int $id): Resignation
     {
-        return Resignation::with([
+        return Resignation::withoutGlobalScopes()->with([
             'employee.officeInfo.company',
             'employee.officeInfo.designation',
             'creator',
