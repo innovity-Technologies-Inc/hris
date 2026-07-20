@@ -181,7 +181,7 @@ class DataController extends Controller
     {
         $compOff = \App\Models\Employee\EmployeeCompOff::where('employee_id', $employee_id)->first();
         if ($compOff) {
-            return response()->json([
+            return $this->successResponse('Employee comp-off details retrieved.', [
                 'has_comp_off' => true,
                 'comp_off_days' => (float) $compOff->comp_off_days,
                 'used_days' => (float) $compOff->used_days,
@@ -189,7 +189,7 @@ class DataController extends Controller
             ]);
         }
 
-        return response()->json([
+        return $this->successResponse('No comp-off balance found.', [
             'has_comp_off' => false,
             'comp_off_days' => 0,
             'used_days' => 0,

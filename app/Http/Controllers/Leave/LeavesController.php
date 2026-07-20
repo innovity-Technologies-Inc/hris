@@ -131,10 +131,13 @@ class LeavesController extends Controller
 
             return response()->json([
                 'success' => true,
-                'end_date' => $endDate
+                'end_date' => $endDate,
+                'data' => [
+                    'end_date' => $endDate
+                ]
             ]);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 422);
+            return $this->errorResponse($e->getMessage(), 422);
         }
     }
 }

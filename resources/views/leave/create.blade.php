@@ -286,7 +286,8 @@ $(function () {
             return;
         }
 
-        $.get('/get-comp-off-details/' + employeeId, function (data) {
+        $.get('/get-comp-off-details/' + employeeId, function (response) {
+            const data = response.data || response;
             compOffData = data;
             if (data.has_comp_off && data.balance_days > 0) {
                 $('#category_compensatory').prop('disabled', false);
