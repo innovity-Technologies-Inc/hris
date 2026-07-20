@@ -71,11 +71,13 @@ class LeavesController extends Controller
 
         $employee_id = $request->input('employee_id');
         $plan_id = $request->input('plan_id');
+        $category_type = $request->input('leave_category_type', 'standard');
 
-        Log::info('Requesting leave for '.$employee_id);
+        Log::info('Requesting leave for '.$employee_id.' Category: '.$category_type);
         $validator = Validator::make($request->all(), [
             'employee_id' => 'required',
-            'plan_id' => 'required',
+            'leave_category_type' => 'required|in:standard,compensatory',
+            'plan_id' => 'required_if:leave_category_type,standard|nullable',
             'from' => 'required|date',
             'to' => 'required|date',
             'status' => $isEmployee ? 'nullable' : 'required',
@@ -84,7 +86,21 @@ class LeavesController extends Controller
             'day_type' => 'nullable|in:full_day,half_day'
         ]);
 
-        $validator->after(function ($validator) use ($employee_id, $plan_id, $request) {
+        $validator->after(function ($validator) use ($employee_id, $plan_id, $category_type, $request) {
+            if ($category_type === 'compensatory') {
+                $compOff = \App\Models\Employee\EmployeeCompOff::where('employee_id', $employee_id)->first();
+                $available = $compOff ? (float) $compOff->balance_days : 0;
+                $requested = (float) $request->input('leave_count');
+
+                if ($requested > $available) {
+                    $validator->errors()->add(
+                        'leave_count',
+                        "You do not have enough Compensatory Leave balance. Available: {$available} days, Requested: {$requested} days."
+                    );
+                }
+                return;
+            }
+
             $plan = LeavePlan::find($plan_id);
             if (!$plan) {
                 return;
@@ -116,24 +132,49 @@ class LeavesController extends Controller
         $validator->validate();
 
         try {
-            DB::transaction(function () use ($request, $employee_id, $plan_id) {
+            DB::transaction(function () use ($request, $employee_id, $plan_id, $category_type) {
                 Log::info('Saving leave request for '.$employee_id);
-                $newLeave = Leave::create($request->all());
-                if ($request->status == 'approved'){
-                    $leave = LeaveCount::where('employee_id', $employee_id)
-                        ->where('plan_id', $plan_id)
-                        ->first();
+                $leavePayload = $request->all();
+                if ($category_type === 'compensatory') {
+                    $leavePayload['plan_id'] = null;
+                }
+                $newLeave = Leave::create($leavePayload);
 
-                    if ($leave) {
-                        Log::info('Updating leave count for '.$employee_id);
-                        $leave->increment('leave_taken', $request->leave_count);
-                    }else{
-                        Log::info('Creating leave count for '.$employee_id);
-                        LeaveCount::create([
-                            'employee_id' => $employee_id,
-                            'plan_id' => $plan_id,
-                            'leave_taken' => $request->leave_count
-                        ]);
+                if ($request->status == 'approved'){
+                    if ($category_type === 'compensatory') {
+                        $compOff = \App\Models\Employee\EmployeeCompOff::where('employee_id', $employee_id)->first();
+                        if ($compOff) {
+                            $prevBal = $compOff->balance_days;
+                            $compOff->used_days += $request->leave_count;
+                            $compOff->balance_days = $compOff->comp_off_days - $compOff->used_days;
+                            $compOff->save();
+
+                            \App\Models\Employee\EmployeeCompOffHistory::create([
+                                'employee_id' => $employee_id,
+                                'leave_id' => $newLeave->id,
+                                'type' => 'used',
+                                'days' => $request->leave_count,
+                                'previous_balance' => $prevBal,
+                                'new_balance' => $compOff->balance_days,
+                                'remarks' => 'Deducted comp-off leave for request #' . $newLeave->id,
+                            ]);
+                        }
+                    } else {
+                        $leave = LeaveCount::where('employee_id', $employee_id)
+                            ->where('plan_id', $plan_id)
+                            ->first();
+
+                        if ($leave) {
+                            Log::info('Updating leave count for '.$employee_id);
+                            $leave->increment('leave_taken', $request->leave_count);
+                        }else{
+                            Log::info('Creating leave count for '.$employee_id);
+                            LeaveCount::create([
+                                'employee_id' => $employee_id,
+                                'plan_id' => $plan_id,
+                                'leave_taken' => $request->leave_count
+                            ]);
+                        }
                     }
                 } else {
                     $newLeave->startWorkflow('leave');
@@ -247,9 +288,11 @@ class LeavesController extends Controller
 
     public function calculateEndDate(Request $request)
     {
+        $categoryType = $request->input('leave_category_type', 'standard');
         $validator = Validator::make($request->all(), [
             'employee_id' => 'required',
-            'plan_id' => 'required',
+            'leave_category_type' => 'nullable|in:standard,compensatory',
+            'plan_id' => 'required_if:leave_category_type,standard|nullable',
             'start_date' => 'required|date',
             'leave_count' => 'required|numeric|min:0.5',
         ]);
@@ -263,14 +306,19 @@ class LeavesController extends Controller
         $startDateStr = $request->input('start_date');
         $leaveCount = (float) $request->input('leave_count');
 
-        $plan = LeavePlan::find($planId);
-        if (!$plan) {
-            return response()->json(['error' => 'Leave plan not found'], 404);
+        if ($categoryType === 'compensatory') {
+            $offDayInclude = 'no';
+        } else {
+            $plan = LeavePlan::find($planId);
+            if (!$plan) {
+                return response()->json(['error' => 'Leave plan not found'], 404);
+            }
+            $offDayInclude = $plan->off_day_include;
         }
 
         $startDate = Carbon::parse($startDateStr);
         
-        if ($plan->off_day_include === 'yes') {
+        if ($offDayInclude === 'yes') {
             $daysToAdd = ceil($leaveCount) - 1;
             $endDate = $startDate->copy()->addDays($daysToAdd);
             return response()->json([

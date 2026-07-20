@@ -17,7 +17,7 @@ class Leave extends Model
     use OrganizationScoped;
     use Approvable;
     protected $table = 'leaves';
-    protected $fillable = ['plan_id', 'employee_id', 'leave_count', 'day_type', 'reason', 'from', 'to', 'status'];
+    protected $fillable = ['plan_id', 'employee_id', 'leave_category_type', 'leave_count', 'day_type', 'reason', 'from', 'to', 'status'];
 
     public function getEmployee()
     {

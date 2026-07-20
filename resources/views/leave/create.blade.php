@@ -28,6 +28,25 @@
             <form id="leaveApplicationForm" method="POST" action="{{ route('leave.store') }}">
                 @csrf
 
+                {{-- Leave Type / Category Selection --}}
+                <div class="mb-4">
+                    <label class="form-label fw-bold text-dark fs-6 mb-2">Leave Category Type <span class="text-danger">*</span></label>
+                    <div class="d-flex flex-wrap gap-3 p-3 bg-light rounded-3 border">
+                        <div class="form-check form-check-inline me-4">
+                            <input class="form-check-input" type="radio" name="leave_category_type" id="category_standard" value="standard" checked>
+                            <label class="form-check-label fw-semibold" for="category_standard">
+                                <i class="bi bi-journal-bookmark text-primary me-1"></i> Standard Leave Plan
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline me-0">
+                            <input class="form-check-input" type="radio" name="leave_category_type" id="category_compensatory" value="compensatory" disabled>
+                            <label class="form-check-label fw-semibold" for="category_compensatory" id="label_category_compensatory">
+                                <i class="bi bi-clock-history text-warning me-1"></i> Compensatory Leave <span id="comp_off_badge_status" class="badge bg-secondary ms-1">Select Employee First</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
                 {{-- Employee Selection Section --}}
                 <div class="mb-5">
                     <div class="d-flex align-items-center mb-4">
@@ -67,7 +86,7 @@
                         </div>
 
                         {{-- Leave Plan --}}
-                        <div class="col-md-6">
+                        <div class="col-md-6" id="plan_id_col">
                             <div class="card border shadow-sm h-100">
                                 <div class="card-body p-4">
                                     <label for="plan_id" class="form-label fw-semibold text-dark mb-3 d-flex align-items-center">
@@ -128,6 +147,36 @@
                                 <div id="fractional-leave-notice" class="alert alert-info d-flex align-items-center mt-3 mb-0 py-2" style="display:none !important;">
                                     <i class="bi bi-info-circle me-2"></i>
                                     <span>This plan supports <strong>half-day</strong> leave applications.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Comp-Off Balance Card --}}
+                    <div class="mt-4" id="comp-off-card-container" style="display:none;">
+                        <div class="border rounded-3 p-4 bg-light-subtle">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-clock-history text-warning me-2"></i>Compensatory Leave Balance</h5>
+                                <span class="badge bg-warning text-dark rounded-pill px-3">Comp-Off</span>
+                            </div>
+                            <div class="row g-3 text-center">
+                                <div class="col-4">
+                                    <div>
+                                        <span class="d-block text-muted small mb-1">Earned Days</span>
+                                        <span class="h4 mb-0 fw-bold text-primary" id="card-comp-earned">0</span>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div>
+                                        <span class="d-block text-muted small mb-1">Used Days</span>
+                                        <span class="h4 mb-0 fw-bold text-danger" id="card-comp-used">0</span>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div>
+                                        <span class="d-block text-muted small mb-1">Remaining Balance</span>
+                                        <span class="h4 mb-0 fw-bold text-success" id="card-comp-balance">0</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -227,6 +276,70 @@ $(function () {
     // State: store selected plan's off_day_include & allow_fractional_leave
     let currentPlanMeta = { off_day_include: 'no', allow_fractional_leave: 'inactive' };
     let endDateCalculationTimer = null;
+    let compOffData = { has_comp_off: false, balance_days: 0, comp_off_days: 0, used_days: 0 };
+
+    // ── 0. Fetch Comp-Off Details for selected employee ────────────────────────
+    function fetchCompOffDetails(employeeId) {
+        if (!employeeId) {
+            $('#category_compensatory').prop('disabled', true);
+            $('#comp_off_badge_status').text('Select Employee First').removeClass('bg-success bg-danger').addClass('bg-secondary');
+            return;
+        }
+
+        $.get('/get-comp-off-details/' + employeeId, function (data) {
+            compOffData = data;
+            if (data.has_comp_off && data.balance_days > 0) {
+                $('#category_compensatory').prop('disabled', false);
+                $('#comp_off_badge_status')
+                    .text(`Available: ${data.balance_days} Day(s)`)
+                    .removeClass('bg-secondary bg-danger')
+                    .addClass('bg-success');
+                $('#card-comp-earned').text(data.comp_off_days);
+                $('#card-comp-used').text(data.used_days);
+                $('#card-comp-balance').text(data.balance_days);
+            } else {
+                $('#category_compensatory').prop('disabled', true);
+                $('#comp_off_badge_status')
+                    .text(data.has_comp_off ? '0 Balance' : 'No Comp-Off Balance')
+                    .removeClass('bg-secondary bg-success')
+                    .addClass('bg-danger');
+                $('#card-comp-earned').text(0);
+                $('#card-comp-used').text(0);
+                $('#card-comp-balance').text(0);
+
+                if ($('input[name="leave_category_type"]:checked').val() === 'compensatory') {
+                    $('#category_standard').prop('checked', true).trigger('change');
+                }
+            }
+        }).fail(function() {
+            $('#category_compensatory').prop('disabled', true);
+            $('#comp_off_badge_status').text('Error checking balance').removeClass('bg-success bg-secondary').addClass('bg-danger');
+        });
+    }
+
+    // ── Category Switch Listener ──────────────────────────────────────────────
+    $('input[name="leave_category_type"]').on('change', function () {
+        const category = $(this).val();
+        if (category === 'compensatory') {
+            $('#plan_id_col').hide();
+            $('#plan_id').prop('required', false);
+            $('#leave-plan-card-container').hide();
+            $('#comp-off-card-container').show();
+
+            currentPlanMeta.off_day_include = 'no';
+            updateOffDayNotice();
+            scheduleEndDateCalc();
+        } else {
+            $('#plan_id_col').show();
+            $('#plan_id').prop('required', true);
+            $('#comp-off-card-container').hide();
+            if ($('#plan_id').val()) {
+                $('#leave-plan-card-container').show();
+            }
+            updateOffDayNotice();
+            scheduleEndDateCalc();
+        }
+    });
 
     // ── 1. Load Plans for selected employee ──────────────────────────────────
     function loadPlans(employeeId, selectedPlan = null) {
@@ -265,7 +378,9 @@ $(function () {
     }
 
     $('#employee_id').on('change', function () {
-        loadPlans($(this).val());
+        const empId = $(this).val();
+        loadPlans(empId);
+        fetchCompOffDetails(empId);
         $('#leave-plan-card-container').hide();
         resetDayType();
     });
@@ -275,6 +390,7 @@ $(function () {
     let initialPlanId = "{{ old('plan_id') }}";
     if (initialEmployeeId) {
         loadPlans(initialEmployeeId, initialPlanId);
+        fetchCompOffDetails(initialEmployeeId);
     }
 
     // ── 2. Load Plan Balance Card + update UI when plan is selected ──────────
@@ -297,26 +413,27 @@ $(function () {
         applyFractionalLeaveUI();
         updateOffDayNotice();
 
-        // Show balance card
-        $('#leave-plan-card-container').show();
-        $('#leave-plan-skeleton').show();
-        $('.leave-card-content').hide();
+        // Show balance card if standard category selected
+        if ($('input[name="leave_category_type"]:checked').val() === 'standard') {
+            $('#leave-plan-card-container').show();
+            $('#leave-plan-skeleton').show();
+            $('.leave-card-content').hide();
 
-        $.ajax({
-            url: '/get-leave-details/' + employeeId + '/' + planId,
-            type: 'GET',
-            success: function (data) {
-                $('#leave-plan-skeleton').hide();
-                $('.leave-card-content').show();
-                $('#card-plan-name').text(data.name ?? '-');
-                $('#card-plan-limit').text(data.limit ?? 0);
-                $('#card-plan-taken').text(data.taken ?? 0);
-                let remaining = (data.limit ?? 0) - (data.taken ?? 0);
-                $('#card-plan-remaining').text(remaining >= 0 ? remaining : 0);
-            }
-        });
+            $.ajax({
+                url: '/get-leave-details/' + employeeId + '/' + planId,
+                type: 'GET',
+                success: function (data) {
+                    $('#leave-plan-skeleton').hide();
+                    $('.leave-card-content').show();
+                    $('#card-plan-name').text(data.name ?? '-');
+                    $('#card-plan-limit').text(data.limit ?? 0);
+                    $('#card-plan-taken').text(data.taken ?? 0);
+                    let remaining = (data.limit ?? 0) - (data.taken ?? 0);
+                    $('#card-plan-remaining').text(remaining >= 0 ? remaining : 0);
+                }
+            });
+        }
 
-        // Re-trigger end date calculation if from date is already set
         scheduleEndDateCalc();
     });
 
@@ -338,14 +455,14 @@ $(function () {
         $('#day-type-col').hide();
         $('#fractional-leave-notice').hide();
         $('#day_type').val('full_day');
-        // Also hide off-day notice
         $('#off-day-notice').hide();
     }
 
     // ── Off-Day Policy Notice ──────────────────────────────────────────────────
     function updateOffDayNotice() {
         const $notice = $('#off-day-notice');
-        const includesOffDays = (currentPlanMeta.off_day_include === 'yes');
+        const category = $('input[name="leave_category_type"]:checked').val();
+        const includesOffDays = (category === 'standard' && currentPlanMeta.off_day_include === 'yes');
 
         if (includesOffDays) {
             $notice
@@ -370,7 +487,7 @@ $(function () {
                 .addClass('bi-calendar-x');
             $('#off-day-notice-title').text('Off Days Are Excluded');
             $('#off-day-notice-text').text(
-                'This leave plan excludes your configured weekends and public holidays from the leave count. ' +
+                'This leave application excludes your configured weekends and public holidays from the leave count. ' +
                 'The end date is automatically extended to skip non-working days.'
             );
         }
@@ -395,16 +512,19 @@ $(function () {
     }
 
     function calculateEndDate() {
-        const employeeId = $('#employee_id').val();
-        const planId     = $('#plan_id').val();
-        const fromDate   = $('#from').val();
-        const leaveCount = parseFloat($('#leave_count').val());
+        const categoryType = $('input[name="leave_category_type"]:checked').val() || 'standard';
+        const employeeId   = $('#employee_id').val();
+        const planId       = $('#plan_id').val();
+        const fromDate     = $('#from').val();
+        const leaveCount   = parseFloat($('#leave_count').val());
 
-        if (!employeeId || !planId || !fromDate || !leaveCount || leaveCount < 0.5) {
+        if (categoryType === 'standard' && (!employeeId || !planId || !fromDate || !leaveCount || leaveCount < 0.5)) {
+            return;
+        }
+        if (categoryType === 'compensatory' && (!employeeId || !fromDate || !leaveCount || leaveCount < 0.5)) {
             return;
         }
 
-        // Show spinner
         $('#to-calculating').show();
 
         $.ajax({
@@ -413,6 +533,7 @@ $(function () {
             data: {
                 _token: '{{ csrf_token() }}',
                 employee_id: employeeId,
+                leave_category_type: categoryType,
                 plan_id: planId,
                 start_date: fromDate,
                 leave_count: leaveCount

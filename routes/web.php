@@ -1301,6 +1301,7 @@ Route::controller(DataController::class)->middleware('auth')->group(function () 
     //leave-details
     Route::get('get-leave-plans/{employee_id}', 'getLeavePlan');
     Route::get('get-leave-details/{employee_id}/{plan_id}', 'getLeaveDetails');
+    Route::get('get-comp-off-details/{employee_id}', 'getCompOffDetails');
 
     //attendance-details
     Route::get('get-attendance-details/{employee_id}', 'getAttendanceDetails');

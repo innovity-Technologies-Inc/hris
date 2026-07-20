@@ -17,7 +17,7 @@
         <tr>
             <th scope="row">{{ $sl++ }}</th>
             <td>{{ $application->getEmployee->full_name }}</td>
-            <td>{{ $application->getPlan->name }}</td>
+            <td>{{ $application->leave_category_type === 'compensatory' ? 'Compensatory Leave' : ($application->getPlan?->name ?? '-') }}</td>
             <td>{{ $application->leave_count }}</td>
             <td>{{ $application->from }}</td>
             <td>{{ $application->to }}</td>

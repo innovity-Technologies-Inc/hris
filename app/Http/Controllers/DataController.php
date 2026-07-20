@@ -177,6 +177,26 @@ class DataController extends Controller
         ]);
     }
 
+    public function getCompOffDetails($employee_id)
+    {
+        $compOff = \App\Models\Employee\EmployeeCompOff::where('employee_id', $employee_id)->first();
+        if ($compOff) {
+            return response()->json([
+                'has_comp_off' => true,
+                'comp_off_days' => (float) $compOff->comp_off_days,
+                'used_days' => (float) $compOff->used_days,
+                'balance_days' => (float) $compOff->balance_days,
+            ]);
+        }
+
+        return response()->json([
+            'has_comp_off' => false,
+            'comp_off_days' => 0,
+            'used_days' => 0,
+            'balance_days' => 0,
+        ]);
+    }
+
     public function getMealPlanByType($type)
     {
         $meal_plans = MealPlan::where('type', $type)->get();

@@ -54,7 +54,7 @@
                 <div class="col-md-6">
                     <div class="border-start border-success border-3 ps-3">
                         <small class="text-muted d-block">Leave Plan</small>
-                        <strong class="text-dark">{{ $leaveData->getPlan->name ?? 'N/A' }}</strong>
+                        <strong class="text-dark">{{ $leaveData->leave_category_type === 'compensatory' ? 'Compensatory Leave' : ($leaveData->getPlan->name ?? 'N/A') }}</strong>
                     </div>
                 </div>
                 <div class="col-md-6">
