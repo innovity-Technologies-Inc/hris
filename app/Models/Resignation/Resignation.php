@@ -15,6 +15,8 @@ class Resignation extends Model
 {
     use HasFactory, SoftDeletes, OrganizationScoped, Approvable;
 
+    public bool $allowNullableOrgScope = true;
+
     protected $table = 'resignations';
 
     protected $fillable = [
