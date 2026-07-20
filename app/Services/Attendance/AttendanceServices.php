@@ -102,8 +102,9 @@ class AttendanceServices
                 $to = $offDayPlan->to ? Carbon::parse($offDayPlan->to)->copy()->endOfDay() : null;
 
                 if ($clock_in->gte($from) && (!$to || $clock_in->lte($to))) {
-                    $dataShiftType = "Off-Day";
-                    $shift = $offDayPlan->getPlan->shift_id;
+                    $planModel = $offDayPlan->getPlan;
+                    $dataShiftType = ($planModel && $planModel->type === 'comp-off') ? "comp-off-offday" : "paid-offday";
+                    $shift = $planModel ? $planModel->shift_id : null;
                     $offday_id = $offDayPlan->plan_id; // Store the actual plan ID
 
                     return [
@@ -328,8 +329,8 @@ class AttendanceServices
 
     public function getWorkType($clock_in, $clock_out, $shift_details, $overtime, $in_status, $out_status, $shift_type = 'Regular')
     {
-        if ($shift_type === 'Off-Day') {
-            return 'Off-Day';
+        if (in_array($shift_type, ['Off-Day', 'paid-offday', 'comp-off-offday', 'Paid-Off-Day', 'Comp-Off-Off-Day'])) {
+            return $shift_type;
         }
         
         $working_time = $this->getWorkingTime($clock_in, $clock_out);
@@ -341,6 +342,28 @@ class AttendanceServices
             return 'Full-Day';
         } else {
             return 'In: ' . $in_status . ' & Out: ' . $out_status;
+        }
+    }
+
+    public function incrementCompOffBalance($employeeId, $earnedDate)
+    {
+        $compOff = \App\Models\Employee\EmployeeCompOff::where('employee_id', $employeeId)->first();
+        $dateStr = Carbon::parse($earnedDate)->format('Y-m-d');
+
+        if ($compOff) {
+            $compOff->comp_off_days += 1;
+            $compOff->balance_days = $compOff->comp_off_days - $compOff->used_days;
+            $compOff->last_earned_date = $dateStr;
+            $compOff->save();
+        } else {
+            \App\Models\Employee\EmployeeCompOff::create([
+                'employee_id' => $employeeId,
+                'comp_off_days' => 1.00,
+                'used_days' => 0.00,
+                'balance_days' => 1.00,
+                'last_earned_date' => $dateStr,
+                'status' => 'active',
+            ]);
         }
     }
 
@@ -437,6 +460,10 @@ class AttendanceServices
         $this->checkLeaveDay($item['employee_id'], Carbon::parse($item['clock_in']), $index);
         $data = $this->calculateAttendanceData($item['employee_id'], $item['clock_in'], $item['clock_out'], $item['workstation']);
         Attendance::create($data);
+
+        if (isset($data['shift_type']) && $data['shift_type'] === 'comp-off-offday') {
+            $this->incrementCompOffBalance($item['employee_id'], $item['clock_in']);
+        }
     }
 
     public function attendanceUpdate($id, $item)

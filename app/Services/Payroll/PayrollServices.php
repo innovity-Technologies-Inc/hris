@@ -917,7 +917,7 @@ class PayrollServices
         foreach ($groupedAttendances as $offdayId => $records) {
             if (!$offdayId) continue;
             $plan = \App\Models\Plan\OffDayPlan::find($offdayId);
-            if (!$plan) continue;
+            if (!$plan || $plan->type === 'comp-off') continue;
 
             $offDayWorkDayCount = $records->count();
             if ($plan->getShift) {
@@ -1042,7 +1042,7 @@ class PayrollServices
                 $earlyExitCount = $employeeAttendance->where('out_status', 'Early-Exit')->count();
 
                 $overTimeSalary = $this->overTimeSalary($employee->id, $employeeSalary, $employeeAttendance->where('overtime', '>', 0), $totalMonthlyHours, $workingHoursPerDay, $frequency, $workingDaysPerCycle);
-                $offDayWorkSalary = $this->offDayWorkSalary($employee->id, $employeeSalary, $employeeAttendance->where('shift_type', 'Off-Day'), $totalMonthlyHours, $workingHoursPerDay, $frequency, $workingDaysPerCycle);
+                $offDayWorkSalary = $this->offDayWorkSalary($employee->id, $employeeSalary, $employeeAttendance->whereIn('shift_type', ['paid-offday', 'Paid-Off-Day', 'Off-Day']), $totalMonthlyHours, $workingHoursPerDay, $frequency, $workingDaysPerCycle);
                 $deductionData = $this->deductionAmount($lateCount, $excessiveLateCount, $earlyExitCount, $absentData['absent_count'], $employeeSalary, $workingDaysPerCycle, $frequency, $workingHoursPerDay);
                 
                 $penalties = \App\Models\Payroll\EmployeePenalty::where('employee_id', $employee->id)->where('status', 'approved')->whereBetween('occurrence_date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])->get();
@@ -1075,7 +1075,7 @@ class PayrollServices
                     'early_exit_count' => $earlyExitCount,
                     'overtime_count' => $employeeAttendance->sum('overtime'),
                     'overtime_amount' => $overTimeSalary,
-                    'offday_work_count' => $employeeAttendance->where('shift_type', 'Off-Day')->count(),
+                    'offday_work_count' => $employeeAttendance->whereIn('shift_type', ['paid-offday', 'Paid-Off-Day', 'Off-Day'])->count(),
                     'offday_work_salary' => $offDayWorkSalary,
                     'deduction_amount' => $deductionData['total'],
                     'late_deduction_amount' => $deductionData['late_deduction_amount'],
