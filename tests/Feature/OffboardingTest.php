@@ -117,3 +117,87 @@ test('offboarded employee is restricted to my-offboarding portal page', function
         ->get(route('dashboard.index'))
         ->assertRedirect(route('offboarding.my_offboarding'));
 });
+
+test('offboarding search filters filter records correctly', function () {
+    $user = User::factory()->create(['user_type' => \App\Enums\UserType::Group]);
+    $user->givePermissionTo(['resignations.view', 'terminations.view']);
+
+    $company = Company::factory()->create(['name' => 'Filter Test Company']);
+    $branch = CompanyLocation::create(['company_id' => $company->id, 'name' => 'Filter Test Branch', 'location_address' => '123 Main St']);
+
+    $employee1 = Employee::factory()->create(['full_name' => 'Alpha Tester', 'applicant_id' => 'EMP-001', 'system_id' => 'SYS-001']);
+    $employee2 = Employee::factory()->create(['full_name' => 'Beta Tester', 'applicant_id' => 'EMP-002', 'system_id' => 'SYS-002']);
+
+    // Associate employees to company and branch
+    $employee1->officeInfo()->create([
+        'current_company_id' => $company->id,
+        'current_business_unit_id' => $branch->id,
+    ]);
+    $employee2->officeInfo()->create([
+        'current_company_id' => $company->id,
+        'current_business_unit_id' => $branch->id,
+    ]);
+
+    // Create offboarding records
+    $off1 = Offboarding::create([
+        'employee_id' => $employee1->id,
+        'offboarding_type' => 'resignation',
+        'resignation_date' => '2026-07-10',
+        'notice_period_days' => 30,
+        'last_working_day' => '2026-08-10',
+        'reason' => 'Test reason 1',
+        'status' => 'pending'
+    ]);
+
+    $off2 = Offboarding::create([
+        'employee_id' => $employee2->id,
+        'offboarding_type' => 'resignation',
+        'resignation_date' => '2026-07-20',
+        'notice_period_days' => 30,
+        'last_working_day' => '2026-08-20',
+        'reason' => 'Test reason 2',
+        'status' => 'approved'
+    ]);
+
+    // 1. Filter by employee_name
+    $response = $this->actingAs($user)
+        ->get(route('offboarding.resignation.index', ['employee_name' => 'Alpha']))
+        ->assertStatus(200);
+    $response->assertSee('Alpha Tester');
+    $response->assertDontSee('Beta Tester');
+
+    // 2. Filter by employee_id (applicant_id)
+    $response = $this->actingAs($user)
+        ->get(route('offboarding.resignation.index', ['employee_id' => 'EMP-002']))
+        ->assertStatus(200);
+    $response->assertSee('Beta Tester');
+    $response->assertDontSee('Alpha Tester');
+
+    // 3. Filter by system_id
+    $response = $this->actingAs($user)
+        ->get(route('offboarding.resignation.index', ['system_id' => 'SYS-001']))
+        ->assertStatus(200);
+    $response->assertSee('Alpha Tester');
+    $response->assertDontSee('Beta Tester');
+
+    // 4. Filter by status
+    $response = $this->actingAs($user)
+        ->get(route('offboarding.resignation.index', ['status' => 'approved']))
+        ->assertStatus(200);
+    $response->assertSee('Beta Tester');
+    $response->assertDontSee('Alpha Tester');
+
+    // 5. Filter by date range (from / to)
+    $response = $this->actingAs($user)
+        ->get(route('offboarding.resignation.index', ['from' => '2026-07-15', 'to' => '2026-07-25']))
+        ->assertStatus(200);
+    $response->assertSee('Beta Tester');
+    $response->assertDontSee('Alpha Tester');
+
+    // 6. Filter by company_id and branch_id
+    $response = $this->actingAs($user)
+        ->get(route('offboarding.resignation.index', ['company_id' => $company->id, 'branch_id' => $branch->id]))
+        ->assertStatus(200);
+    $response->assertSee('Alpha Tester');
+    $response->assertSee('Beta Tester');
+});

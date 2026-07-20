@@ -1,5 +1,21 @@
 # Test Log
 
+## 2026-07-21 (Offboarding Index Page Search & Organization Filters)
+
+**Goal**: Implement advanced search and organization filters (Company, Branch, Division, Department, Section) with cascading AJAX autoload matching general settings visibility, employee name, employee ID, system ID, and date range query parameters on offboarding index views.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/OffboardingTest.php --no-coverage`
+
+**Results**:
+- Added filter query logic in `OffboardingServices::getOffboardingsPaginated` to filter records by `employee_name` (full_name), `employee_id` (applicant_id), `system_id`, date range (`from`/`to`), status, and cascading organization hierarchies.
+- Updated index controller methods in `OffboardingController.php` to fetch and pass `$companies` and `$generalSettings` to the view.
+- Re-architected search container layout in `offboarding/index.blade.php` to fit employee name, ID, system ID, date range, status, and company/branch/division/department/section selectors.
+- Added Select2 styling, cascading AJAX options autoloading listeners, and query parameter auto-population.
+- Added `offboarding search filters filter records correctly` feature test in `OffboardingTest.php` to verify search behavior.
+- Feature tests passed 3/3 tests (35 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-21 (Offboarding Module - Bug Fixes: Employee Status ENUM & Sidebar Menu)
 
 **Goal**: Fix two post-implementation issues: (1) `employees.status` ENUM column missing `'resigned'` and `'terminated'` values causing 500 errors on offboarding creation and test inserts. (2) Commit missing offboarding sidebar menu block and updated PermissionSeeder slugs (`resignations`, `terminations`) with `user-x` icon.

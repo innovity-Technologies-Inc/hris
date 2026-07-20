@@ -22,10 +22,65 @@ class OffboardingServices
     {
         $query = Offboarding::withoutGlobalScopes()
             ->with(['employee.officeInfo', 'creator'])
-            ->where('offboarding_type', $type)
-            ->latest();
+            ->where('offboarding_type', $type);
 
-        $searchableColumns = ['employee.full_name', 'reason', 'status', 'remarks'];
+        // Apply employee details filters
+        if ($request->filled('employee_name')) {
+            $query->whereHas('employee', function ($q) use ($request) {
+                $q->where('full_name', 'like', '%' . $request->input('employee_name') . '%');
+            });
+        }
+
+        if ($request->filled('employee_id')) {
+            $query->whereHas('employee', function ($q) use ($request) {
+                $q->where('applicant_id', 'like', '%' . $request->input('employee_id') . '%');
+            });
+        }
+
+        if ($request->filled('system_id')) {
+            $query->whereHas('employee', function ($q) use ($request) {
+                $q->where('system_id', 'like', '%' . $request->input('system_id') . '%');
+            });
+        }
+
+        // Apply date range filters on resignation_date
+        if ($request->filled('from')) {
+            $query->where('resignation_date', '>=', $request->input('from'));
+        }
+
+        if ($request->filled('to')) {
+            $query->where('resignation_date', '<=', $request->input('to'));
+        }
+
+        // Apply status filter
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+        // Apply organizational hierarchy filters
+        if ($request->filled('company_id') || $request->filled('branch_id') || $request->filled('division_id') || $request->filled('department_id') || $request->filled('section_id')) {
+            $query->whereHas('employee.officeInfo', function ($q) use ($request) {
+                if ($request->filled('company_id')) {
+                    $q->where('current_company_id', $request->input('company_id'));
+                }
+                if ($request->filled('branch_id')) {
+                    $q->where('current_business_unit_id', $request->input('branch_id'));
+                }
+                if ($request->filled('division_id')) {
+                    $q->where('current_division_id', $request->input('division_id'));
+                }
+                if ($request->filled('department_id')) {
+                    $q->where('current_department_id', $request->input('department_id'));
+                }
+                if ($request->filled('section_id')) {
+                    $q->where('current_section_id', $request->input('section_id'));
+                }
+            });
+        }
+
+        $query->latest();
+
+        $searchableColumns = ['reason', 'status', 'remarks'];
 
         return $flexsearch->apply($query, [], $request->get('keyword'), $searchableColumns)
             ->paginate(15);

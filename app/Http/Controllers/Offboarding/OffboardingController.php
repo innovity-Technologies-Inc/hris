@@ -31,12 +31,14 @@ class OffboardingController extends Controller
         $type = 'resignation';
 
         $offboardings = $this->offboardingService->getOffboardingsPaginated($flexsearch, $request, 'resignation');
+        $companies = \App\Models\Company\Company::orderBy('name')->get();
+        $generalSettings = \App\HelperClass::getGeneralSetting();
 
         if ($request->ajax()) {
             return view('offboarding.search_results', compact('offboardings', 'type'))->render();
         }
 
-        return view('offboarding.index', compact('title', 'section', 'sub_section', 'type', 'offboardings'));
+        return view('offboarding.index', compact('title', 'section', 'sub_section', 'type', 'offboardings', 'companies', 'generalSettings'));
     }
 
     /**
@@ -50,12 +52,14 @@ class OffboardingController extends Controller
         $type = 'termination';
 
         $offboardings = $this->offboardingService->getOffboardingsPaginated($flexsearch, $request, 'termination');
+        $companies = \App\Models\Company\Company::orderBy('name')->get();
+        $generalSettings = \App\HelperClass::getGeneralSetting();
 
         if ($request->ajax()) {
             return view('offboarding.search_results', compact('offboardings', 'type'))->render();
         }
 
-        return view('offboarding.index', compact('title', 'section', 'sub_section', 'type', 'offboardings'));
+        return view('offboarding.index', compact('title', 'section', 'sub_section', 'type', 'offboardings', 'companies', 'generalSettings'));
     }
 
     /**
