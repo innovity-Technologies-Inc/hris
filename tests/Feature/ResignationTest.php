@@ -51,7 +51,7 @@ test('resignation CRUD operations and hierarchy cascade work correctly', functio
         'status' => 'pending',
     ]);
 
-    $resignation = Resignation::where('employee_id', $employee->id)->first();
+    $resignation = Resignation::withoutGlobalScopes()->where('employee_id', $employee->id)->first();
     expect($resignation)->not->toBeNull();
 
     // 3. Test View Index & Details
