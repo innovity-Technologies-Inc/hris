@@ -329,7 +329,7 @@ class AttendanceServices
 
     public function getWorkType($clock_in, $clock_out, $shift_details, $overtime, $in_status, $out_status, $shift_type = 'Regular')
     {
-        if (in_array($shift_type, ['Off-Day', 'paid-off', 'comp-off', 'paid-offday', 'comp-off-offday', 'Paid-Off-Day', 'Comp-Off-Off-Day'])) {
+        if (in_array($shift_type, ['paid-off', 'comp-off'])) {
             return $shift_type;
         }
         
