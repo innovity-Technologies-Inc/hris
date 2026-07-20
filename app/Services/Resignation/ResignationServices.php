@@ -100,7 +100,7 @@ class ResignationServices
     public function updateResignation(int $id, array $data, $user): Resignation
     {
         return DB::transaction(function () use ($id, $data, $user) {
-            $resignation = Resignation::findOrFail($id);
+            $resignation = Resignation::withoutGlobalScopes()->findOrFail($id);
             $data['updated_by'] = $user->id;
 
             $resignation->update($data);
@@ -115,7 +115,7 @@ class ResignationServices
     public function deleteResignation(int $id, $user): bool
     {
         return DB::transaction(function () use ($id) {
-            $resignation = Resignation::findOrFail($id);
+            $resignation = Resignation::withoutGlobalScopes()->findOrFail($id);
             return $resignation->delete();
         });
     }
