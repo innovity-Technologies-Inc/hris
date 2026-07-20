@@ -48,10 +48,10 @@
                             <div class="d-flex gap-3 pt-2">
                                 <div class="form-check">
                                     <input class="form-check-input @error('type') is-invalid @enderror" type="radio"
-                                        name="type" id="type_paid" value="Paid"
-                                        {{ !isset($plan) || (isset($plan) && $plan->type == 'Paid') || old('type') == 'Paid' ? 'checked' : '' }}>
+                                        name="type" id="type_paid" value="paid-off"
+                                        {{ !isset($plan) || (isset($plan) && $plan->type == 'paid-off') || old('type') == 'paid-off' ? 'checked' : '' }}>
                                     <label class="form-check-label fw-semibold" for="type_paid">
-                                        <span class="badge bg-success me-1">Paid</span> Paid
+                                        <span class="badge bg-success me-1">Paid-Off</span> Paid-Off
                                     </label>
                                 </div>
                                 <div class="form-check">

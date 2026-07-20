@@ -103,7 +103,7 @@ class AttendanceServices
 
                 if ($clock_in->gte($from) && (!$to || $clock_in->lte($to))) {
                     $planModel = $offDayPlan->getPlan;
-                    $dataShiftType = ($planModel && $planModel->type === 'comp-off') ? "comp-off-offday" : "paid-offday";
+                    $dataShiftType = ($planModel && $planModel->type === 'comp-off') ? "comp-off" : "paid-off";
                     $shift = $planModel ? $planModel->shift_id : null;
                     $offday_id = $offDayPlan->plan_id; // Store the actual plan ID
 
@@ -329,7 +329,7 @@ class AttendanceServices
 
     public function getWorkType($clock_in, $clock_out, $shift_details, $overtime, $in_status, $out_status, $shift_type = 'Regular')
     {
-        if (in_array($shift_type, ['Off-Day', 'paid-offday', 'comp-off-offday', 'Paid-Off-Day', 'Comp-Off-Off-Day'])) {
+        if (in_array($shift_type, ['Off-Day', 'paid-off', 'comp-off', 'paid-offday', 'comp-off-offday', 'Paid-Off-Day', 'Comp-Off-Off-Day'])) {
             return $shift_type;
         }
         
@@ -461,7 +461,7 @@ class AttendanceServices
         $data = $this->calculateAttendanceData($item['employee_id'], $item['clock_in'], $item['clock_out'], $item['workstation']);
         Attendance::create($data);
 
-        if (isset($data['shift_type']) && $data['shift_type'] === 'comp-off-offday') {
+        if (isset($data['shift_type']) && $data['shift_type'] === 'comp-off') {
             $this->incrementCompOffBalance($item['employee_id'], $item['clock_in']);
         }
     }

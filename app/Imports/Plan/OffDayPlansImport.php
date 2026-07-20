@@ -34,7 +34,7 @@ class OffDayPlansImport implements ToCollection
             OffDayPlan::create([
                 'name'                   => $row[0],
                 'short_name'             => $row[1] ?? null,
-                'type'                   => (isset($row[8]) && strtolower($row[8]) === 'comp-off') ? 'comp-off' : 'Paid',
+                'type'                   => (isset($row[8]) && strtolower($row[8]) === 'comp-off') ? 'comp-off' : 'paid-off',
                 'shift_id'               => $shiftId,
 
                 // Configuration fields (refactored to match OT Plan)

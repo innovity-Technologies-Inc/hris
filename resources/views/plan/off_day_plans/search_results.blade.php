@@ -31,7 +31,7 @@
                         @if ($item->type === 'comp-off')
                             <span class="badge text-bg-info">Comp-off</span>
                         @else
-                            <span class="badge text-bg-success">Paid</span>
+                            <span class="badge text-bg-success">Paid-Off</span>
                         @endif
                     </td>
                     <td>

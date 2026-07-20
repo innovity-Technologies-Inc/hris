@@ -64,7 +64,7 @@
                             @if ($plan->type === 'comp-off')
                                 <span class="badge bg-info text-dark fs-6">Comp-off</span>
                             @else
-                                <span class="badge bg-success fs-6">Paid</span>
+                                <span class="badge bg-success fs-6">Paid-Off</span>
                             @endif
                         </p>
                     </div>

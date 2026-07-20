@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('off_day_plans', function (Blueprint $table) {
-            $table->enum('type', ['Paid', 'comp-off'])->default('Paid')->after('short_name');
+            $table->enum('type', ['paid-off', 'comp-off'])->default('paid-off')->after('short_name');
         });
     }
 
