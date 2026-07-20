@@ -19,7 +19,7 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label for="name" class="form-label fw-semibold">
                                 Name <span class="text-danger">*</span>
                             </label>
@@ -30,7 +30,7 @@
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label for="short_name" class="form-label fw-semibold">
                                 Short Name <span class="text-danger">*</span>
                             </label>
@@ -39,6 +39,32 @@
                                 value="{{ isset($plan) ? $plan->short_name : old('short_name') }}" required>
                             @error('short_name')
                                 <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label fw-semibold">
+                                Plan Type <span class="text-danger">*</span>
+                            </label>
+                            <div class="d-flex gap-3 pt-2">
+                                <div class="form-check">
+                                    <input class="form-check-input @error('type') is-invalid @enderror" type="radio"
+                                        name="type" id="type_paid" value="Paid"
+                                        {{ !isset($plan) || (isset($plan) && $plan->type == 'Paid') || old('type') == 'Paid' ? 'checked' : '' }}>
+                                    <label class="form-check-label fw-semibold" for="type_paid">
+                                        <span class="badge bg-success me-1">Paid</span> Paid
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input @error('type') is-invalid @enderror" type="radio"
+                                        name="type" id="type_compoff" value="comp-off"
+                                        {{ (isset($plan) && $plan->type == 'comp-off') || old('type') == 'comp-off' ? 'checked' : '' }}>
+                                    <label class="form-check-label fw-semibold" for="type_compoff">
+                                        <span class="badge bg-info text-dark me-1">Comp-off</span> Comp-off
+                                    </label>
+                                </div>
+                            </div>
+                            @error('type')
+                                <small class="text-danger d-block">{{ $message }}</small>
                             @enderror
                         </div>
                     </div>
@@ -90,7 +116,7 @@
             </div>
 
             {{-- Remuneration Configuration --}}
-            <div class="card border mb-4">
+            <div class="card border mb-4" id="remuneration_card">
                 <div class="card-header bg-light">
                     <h5 class="mb-0 fw-semibold">
                         <i class="mdi mdi-cash-multiple text-success me-2"></i> Remuneration Configuration
@@ -98,7 +124,11 @@
                     <small class="text-danger"><i class="mdi mdi-information-outline me-1"></i>Note: All remuneration
                         calculations are based on hours</small>
                 </div>
-                <div class="card-body">
+                <div class="card-body" id="remuneration_card_body">
+                    <div id="compoff_disabled_notice" class="alert alert-warning d-none mb-3">
+                        <i class="mdi mdi-alert-circle-outline me-2 fs-5"></i>
+                        <strong>Remuneration Configuration Disabled:</strong> For <strong>Compensatory Off (Comp-off)</strong> plans, remuneration configuration is disabled.
+                    </div>
                     <!-- Main Configuration Type Selection -->
                     <div class="row mb-3">
                         <div class="col-md-12">
@@ -331,6 +361,7 @@
         document.querySelector('form').addEventListener('reset', function() {
             setTimeout(function() {
                 document.getElementById('status').checked = true;
+                document.getElementById('type_paid').checked = true;
                 document.getElementById('offday_config_custom').checked = true;
                 document.getElementById('rate_type_multiplier').checked = true;
                 document.getElementById('shift_id').value = '';
@@ -339,8 +370,26 @@
             }, 0);
         });
 
-        // Toggle between salary-based and custom offday rate configuration
+        // Toggle between salary-based, custom offday rate configuration, and comp-off disabled state
         function toggleOffdayConfigSections() {
+            const isCompOff = document.getElementById('type_compoff').checked;
+            const remunerationBody = document.getElementById('remuneration_card_body');
+            const compoffNotice = document.getElementById('compoff_disabled_notice');
+
+            if (isCompOff) {
+                compoffNotice.classList.remove('d-none');
+                remunerationBody.style.opacity = '0.5';
+                remunerationBody.style.pointerEvents = 'none';
+                remunerationBody.querySelectorAll('input').forEach(input => {
+                    input.disabled = true;
+                });
+                return;
+            }
+
+            compoffNotice.classList.add('d-none');
+            remunerationBody.style.opacity = '1';
+            remunerationBody.style.pointerEvents = 'auto';
+
             const salaryBased = document.getElementById('offday_config_salary').checked;
             const salarySection = document.getElementById('salary_based_section');
             const customSection = document.getElementById('custom_rate_section');
@@ -393,6 +442,10 @@
             // Initialize on page load
             toggleOffdayConfigSections();
             toggleMultiplierField();
+
+            // Listen for plan type changes
+            document.getElementById('type_paid').addEventListener('change', toggleOffdayConfigSections);
+            document.getElementById('type_compoff').addEventListener('change', toggleOffdayConfigSections);
 
             // Listen for configuration type changes
             document.getElementById('offday_config_salary').addEventListener('change', toggleOffdayConfigSections);

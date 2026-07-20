@@ -93,7 +93,9 @@
                                             <span class="text-success fw-semibold">
                                                 @php
                                                     $offPlan = $plan->getPlan;
-                                                    if ($offPlan->offday_config_type === 'Salary Based') {
+                                                    if ($offPlan->type === 'comp-off') {
+                                                        echo 'Comp-off';
+                                                    } elseif ($offPlan->offday_config_type === 'Salary Based') {
                                                         if ($offPlan->salary_rate_type === 'Basic Rate') {
                                                             echo 'Basic Rate';
                                                         } else {
@@ -208,7 +210,9 @@
                                             <span class="text-success">
                                                 @php
                                                     $offPlan = $plan->getPlan;
-                                                    if ($offPlan->offday_config_type === 'Salary Based') {
+                                                    if ($offPlan->type === 'comp-off') {
+                                                        echo 'Comp-off';
+                                                    } elseif ($offPlan->offday_config_type === 'Salary Based') {
                                                         if ($offPlan->salary_rate_type === 'Basic Rate') {
                                                             echo 'Basic Rate';
                                                         } else {

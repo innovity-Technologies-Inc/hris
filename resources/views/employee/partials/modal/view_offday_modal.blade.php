@@ -52,7 +52,9 @@
                             <td class="fw-bold text-success">
                                 @php
                                     $offPlan = $plan->getPlan;
-                                    if ($offPlan->offday_config_type === 'Salary Based') {
+                                    if ($offPlan->type === 'comp-off') {
+                                        echo 'Comp-off';
+                                    } elseif ($offPlan->offday_config_type === 'Salary Based') {
                                         echo $offPlan->salary_rate_type === 'Basic Rate'
                                             ? 'Basic Rate'
                                             : number_format($offPlan->offday_multiplier, 2) . 'x';

@@ -15,6 +15,7 @@ class OffDayPlan extends Model
     protected $fillable = [
         'name',
         'short_name',
+        'type',
         'shift_id', // Reference to shift for timing configuration
 
         // Configuration fields (refactored to match OT Plan pattern)

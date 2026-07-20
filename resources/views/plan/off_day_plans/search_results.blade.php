@@ -5,6 +5,7 @@
                 <th scope="col">#</th>
                 <th scope="col">Plan Name</th>
                 <th scope="col">Short Name</th>
+                <th scope="col">Plan Type</th>
                 <th scope="col">Config Type</th>
                 <th scope="col">Rate</th>
                 <th scope="col">Status</th>
@@ -27,14 +28,25 @@
                         @endif
                     </td>
                     <td>
-                        @if (isset($item->offday_config_type) && $item->offday_config_type == 'Salary Based')
+                        @if ($item->type === 'comp-off')
+                            <span class="badge text-bg-info">Comp-off</span>
+                        @else
+                            <span class="badge text-bg-success">Paid</span>
+                        @endif
+                    </td>
+                    <td>
+                        @if ($item->type === 'comp-off')
+                            <span class="text-muted">N/A</span>
+                        @elseif (isset($item->offday_config_type) && $item->offday_config_type == 'Salary Based')
                             <span class="badge text-bg-primary">Salary Based</span>
                         @else
                             <span class="badge text-bg-success">Custom</span>
                         @endif
                     </td>
                     <td>
-                        @if (isset($item->offday_config_type) && $item->offday_config_type == 'Salary Based')
+                        @if ($item->type === 'comp-off')
+                            <span class="badge text-bg-info">Comp-off</span>
+                        @elseif (isset($item->offday_config_type) && $item->offday_config_type == 'Salary Based')
                             @if ($item->salary_rate_type == 'Multiplier' && $item->offday_multiplier)
                                 <span class="badge text-bg-secondary">{{ number_format($item->offday_multiplier, 2) }}x
                                     Base Rate</span>

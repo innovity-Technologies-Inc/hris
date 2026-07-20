@@ -280,12 +280,13 @@ class PlanService
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'short_name' => 'nullable|string|max:255',
+            'type' => 'required|in:Paid,comp-off',
 
             // Shift reference - timing is derived from the selected shift
             'shift_id' => 'required|exists:shift_plans,id',
 
             // Configuration fields (refactored to match OT Plan)
-            'offday_config_type' => 'required|in:Salary Based,Custom',
+            'offday_config_type' => 'required_if:type,Paid|nullable|in:Salary Based,Custom',
             'salary_rate_type' => 'required_if:offday_config_type,Salary Based|nullable|in:Basic Rate,Multiplier',
             'offday_multiplier' => 'nullable|numeric|min:0',
             'custom_offday_rate' => 'nullable|numeric|min:0',
@@ -293,13 +294,15 @@ class PlanService
             'status' => 'required|in:active,inactive'
         ], [
             'name.required' => 'Name is required.',
+            'type.required' => 'Please select a plan type.',
+            'type.in' => 'The selected plan type is invalid.',
 
             // Shift validation messages
             'shift_id.required' => 'Please select a shift.',
             'shift_id.exists' => 'The selected shift does not exist.',
 
             // Configuration validation messages
-            'offday_config_type.required' => 'Please select a configuration type.',
+            'offday_config_type.required_if' => 'Please select a configuration type when plan type is Paid.',
             'offday_config_type.in' => 'The selected configuration type is invalid.',
 
             'salary_rate_type.required_if' => 'Please select a rate type when using salary-based configuration.',

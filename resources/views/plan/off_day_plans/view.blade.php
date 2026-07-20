@@ -44,11 +44,11 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-3 mb-3">
                         <label class="text-muted small">Plan Name</label>
                         <p class="fw-semibold mb-0">{{ $plan->name }}</p>
                     </div>
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-3 mb-3">
                         <label class="text-muted small">Short Name</label>
                         <p class="fw-semibold mb-0">
                             @if (isset($plan->short_name) && $plan->short_name)
@@ -58,10 +58,22 @@
                             @endif
                         </p>
                     </div>
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-3 mb-3">
+                        <label class="text-muted small">Plan Type</label>
+                        <p class="fw-semibold mb-0">
+                            @if ($plan->type === 'comp-off')
+                                <span class="badge bg-info text-dark fs-6">Comp-off</span>
+                            @else
+                                <span class="badge bg-success fs-6">Paid</span>
+                            @endif
+                        </p>
+                    </div>
+                    <div class="col-md-3 mb-3">
                         <label class="text-muted small">Configuration Type</label>
                         <p class="fw-semibold mb-0">
-                            @if (isset($plan->offday_config_type))
+                            @if ($plan->type === 'comp-off')
+                                <span class="badge bg-secondary fs-6">N/A</span>
+                            @elseif (isset($plan->offday_config_type))
                                 <span class="badge bg-info fs-6">{{ $plan->offday_config_type }}</span>
                             @else
                                 <span class="badge bg-secondary fs-6">Custom</span>
@@ -203,7 +215,12 @@
                         <i class="mdi mdi-currency-usd me-1"></i>Off-Day Compensation Details
                     </h6>
 
-                    @if (isset($plan->offday_config_type) && $plan->offday_config_type === 'Salary Based')
+                    @if ($plan->type === 'comp-off')
+                        <div class="alert alert-info mb-0">
+                            <i class="mdi mdi-information-outline me-2"></i>
+                            <strong>Compensatory Off Plan:</strong> Remuneration configuration is disabled for <strong>Comp-off</strong> plans.
+                        </div>
+                    @elseif (isset($plan->offday_config_type) && $plan->offday_config_type === 'Salary Based')
                         {{-- Salary Based Configuration --}}
                         <div class="alert alert-info mb-3">
                             <i class="mdi mdi-calculator me-2"></i>
