@@ -1,5 +1,21 @@
 # Test Log
 
+## 2026-07-21 (Offboarding Module - Bug Fixes: Employee Status ENUM & Sidebar Menu)
+
+**Goal**: Fix two post-implementation issues: (1) `employees.status` ENUM column missing `'resigned'` and `'terminated'` values causing 500 errors on offboarding creation and test inserts. (2) Commit missing offboarding sidebar menu block and updated PermissionSeeder slugs (`resignations`, `terminations`) with `user-x` icon.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/OffboardingTest.php --no-coverage`
+
+**Results**:
+- Created migration `2026_07_21_005648_add_resigned_terminated_status_to_employees_table.php` expanding `employees.status` ENUM to include `'resigned'` and `'terminated'`.
+- Ran migration on both production (`hrms`) and test (`hrms_test`) databases.
+- Added Offboarding sidebar menu block to `resources/views/structure/partials/sidebar.blade.php`.
+- Updated `PermissionSeeder.php`: slugs to `resignations`/`terminations`, icon to `user-x`.
+- Fixed test to use `route('dashboard.index')` instead of hardcoded `/dashboard` (which returns 404).
+- Feature tests `tests/Feature/OffboardingTest.php` passed 2/2 tests (17 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-20 (Offboarding Module - Resignation, Termination & Portal Restriction)
 
 **Goal**: Restructure offboarding into a unified module with Resignation and Termination submenus, locked offboarding type select in shared form, automatic employee status updates (`'resigned'`, `'terminated'`), and EnsureNotOffboarded portal access middleware restriction.

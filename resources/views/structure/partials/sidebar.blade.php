@@ -296,6 +296,41 @@
                 </li>
                 @endif
 
+                <!-- Offboarding Menu -->
+                @php
+                    $canResignations = auth()->user()->can('resignations.view') || auth()->user()->can('offboarding-resignation.view');
+                    $canTerminations = auth()->user()->can('terminations.view') || auth()->user()->can('offboarding-termination.view');
+                    $showOffboardingMenu = $canResignations || $canTerminations;
+                    $offboardingOpen = Route::is('offboarding.*');
+                @endphp
+                @if($showOffboardingMenu)
+                <li>
+                    <a href="#sidebarOffboarding" data-bs-toggle="collapse"
+                        aria-expanded="{{ $offboardingOpen ? 'true' : 'false' }}"
+                        class="@if ($offboardingOpen) menuitem-active @endif">
+                        <i data-feather="user-x"></i>
+                        <span> Offboarding </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse @if ($offboardingOpen) show @endif" id="sidebarOffboarding">
+                        <ul class="nav-second-level">
+                            @if($canResignations)
+                            <li>
+                                <a class='tp-link @if (Route::is('offboarding.resignation.*')) menuitem-active @endif'
+                                    href='{{ route('offboarding.resignation.index') }}'>Resignation</a>
+                            </li>
+                            @endif
+                            @if($canTerminations)
+                            <li>
+                                <a class='tp-link @if (Route::is('offboarding.termination.*')) menuitem-active @endif'
+                                    href='{{ route('offboarding.termination.index') }}'>Termination</a>
+                            </li>
+                            @endif
+                        </ul>
+                    </div>
+                </li>
+                @endif
+
                 <!-- Claim Expense Menu -->
                 @php
                     $canClaimExpenseApplication = auth()->user()->can('claim-expenses.create');

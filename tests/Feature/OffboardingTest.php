@@ -114,6 +114,6 @@ test('offboarded employee is restricted to my-offboarding portal page', function
 
     // Offboarded employee trying to access another route -> Redirected to my-offboarding
     $this->actingAs($offboardedUser)
-        ->get('/dashboard')
+        ->get(route('dashboard.index'))
         ->assertRedirect(route('offboarding.my_offboarding'));
 });
