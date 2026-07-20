@@ -61,18 +61,13 @@ class LeavePlanController extends Controller
     {
         try {
             $plan = $this->planServices->planSave($request->validated(), LeavePlan::class);
-            return response()->json([
-                'success' => true,
-                'message' => 'Leave Plan created successfully.',
+            return $this->createdResponse('Leave Plan created successfully.', [
                 'redirect' => route('plan.leave_plans.index'),
-                'data' => $plan
-            ], 201);
+                'plan' => $plan
+            ]);
         } catch (Exception $e) {
             Log::error('Error saving Leave Plan: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Something went wrong. Please try again later.'
-            ], 500);
+            return $this->errorResponse('Something went wrong. Please try again later.', 500);
         }
     }
 
@@ -109,18 +104,13 @@ class LeavePlanController extends Controller
     {
         try {
             $plan = $this->planServices->planSave($request->validated(), LeavePlan::class, $id);
-            return response()->json([
-                'success' => true,
-                'message' => 'Leave Plan updated successfully.',
+            return $this->successResponse('Leave Plan updated successfully.', [
                 'redirect' => route('plan.leave_plans.index'),
-                'data' => $plan
-            ], 200);
+                'plan' => $plan
+            ]);
         } catch (Exception $e) {
             Log::error('Error updating Leave Plan: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Something went wrong. Please try again later.'
-            ], 500);
+            return $this->errorResponse('Something went wrong. Please try again later.', 500);
         }
     }
 
@@ -131,16 +121,10 @@ class LeavePlanController extends Controller
     {
         try {
             $this->planServices->planDelete(LeavePlan::class, $id);
-            return response()->json([
-                'success' => true,
-                'message' => 'Leave Plan deleted successfully.'
-            ], 200);
+            return $this->deletedResponse('Leave Plan deleted successfully.');
         } catch (Exception $e) {
             Log::error('Error deleting Leave Plan: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Something went wrong. Please try again later.'
-            ], 500);
+            return $this->errorResponse('Something went wrong. Please try again later.', 500);
         }
     }
 

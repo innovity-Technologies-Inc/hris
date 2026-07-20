@@ -88,16 +88,9 @@ class ExpenseApplicationController extends Controller
                 $request->file('receipt')
             );
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Expense application submitted successfully.',
-                'data' => $application
-            ]);
+            return $this->createdResponse('Expense application submitted successfully.', $application);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to submit application: ' . $e->getMessage()
-            ], 500);
+            return $this->errorResponse('Failed to submit application: ' . $e->getMessage(), 500);
         }
     }
 
@@ -120,30 +113,18 @@ class ExpenseApplicationController extends Controller
             $user = auth()->user();
 
             if (!in_array($application->status, ['pending', 'approved'])) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Only pending or approved applications can be deleted.'
-                ], 403);
+                return $this->errorResponse('Only pending or approved applications can be deleted.', 403);
             }
 
             if (!$user->can('claim-expenses.delete') && $application->created_by !== $user->id) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'You are not authorized to delete this application.'
-                ], 403);
+                return $this->errorResponse('You are not authorized to delete this application.', 403);
             }
 
             $this->expenseService->deleteApplication($application);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Expense application deleted successfully.'
-            ]);
+            return $this->deletedResponse('Expense application deleted successfully.');
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to delete application: ' . $e->getMessage()
-            ], 500);
+            return $this->errorResponse('Failed to delete application: ' . $e->getMessage(), 500);
         }
     }
 }

@@ -13,7 +13,12 @@ class ApiResponse
     {
         $response = ['success' => true, 'message' => $message];
 
-        if ($data !== null) {
+        if (is_array($data)) {
+            $response = array_merge($response, $data);
+            if (!isset($response['data'])) {
+                $response['data'] = $data;
+            }
+        } elseif ($data !== null) {
             $response['data'] = $data;
         }
 
@@ -27,7 +32,12 @@ class ApiResponse
     {
         $response = ['success' => true, 'message' => $message];
 
-        if ($data !== null) {
+        if (is_array($data)) {
+            $response = array_merge($response, $data);
+            if (!isset($response['data'])) {
+                $response['data'] = $data;
+            }
+        } elseif ($data !== null) {
             $response['data'] = $data;
         }
 

@@ -51,19 +51,15 @@ class RouteMapController extends Controller
     public function store(StoreRouteMapRequest $request)
     {
         try {
-            RouteMap::create($request->validated());
+            $routeMap = RouteMap::create($request->validated());
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Route Map Created Successfully',
-                'redirect' => route('transport.route_maps.index')
-            ], 201);
+            return $this->createdResponse('Route Map Created Successfully', [
+                'redirect' => route('transport.route_maps.index'),
+                'route_map' => $routeMap
+            ]);
         } catch (\Exception $e) {
             Log::error('Route Map Create Error: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Something Went Wrong'
-            ], 500);
+            return $this->errorResponse('Something Went Wrong', 500);
         }
     }
 
@@ -91,17 +87,13 @@ class RouteMapController extends Controller
             $routeMap = RouteMap::findOrFail($id);
             $routeMap->update($request->validated());
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Route Map Updated Successfully',
-                'redirect' => route('transport.route_maps.index')
-            ], 200);
+            return $this->successResponse('Route Map Updated Successfully', [
+                'redirect' => route('transport.route_maps.index'),
+                'route_map' => $routeMap
+            ]);
         } catch (\Exception $e) {
             Log::error('Route Map Update Error: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Something Went Wrong'
-            ], 500);
+            return $this->errorResponse('Something Went Wrong', 500);
         }
     }
 
@@ -112,24 +104,15 @@ class RouteMapController extends Controller
 
             // Check if route map is associated with any transports
             if ($routeMap->employeeTransports()->exists()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Cannot delete Route Map because it is associated with active Employee Transports.'
-                ], 400);
+                return $this->errorResponse('Cannot delete Route Map because it is associated with active Employee Transports.', 400);
             }
 
             $routeMap->delete();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Route Map Deleted Successfully'
-            ]);
+            return $this->deletedResponse('Route Map Deleted Successfully');
         } catch (\Exception $e) {
             Log::error('Route Map Delete Error: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Something Went Wrong'
-            ], 500);
+            return $this->errorResponse('Something Went Wrong', 500);
         }
     }
 }

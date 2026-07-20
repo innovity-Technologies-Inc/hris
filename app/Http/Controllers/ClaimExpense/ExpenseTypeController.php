@@ -32,26 +32,16 @@ class ExpenseTypeController extends Controller
     {
         try {
             $expenseType = ExpenseType::create($request->validated());
-            return response()->json([
-                'success' => true,
-                'message' => 'Expense Type saved successfully.',
-                'data' => $expenseType
-            ]);
+            return $this->createdResponse('Expense Type saved successfully.', $expenseType);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to save Expense Type: ' . $e->getMessage()
-            ], 500);
+            return $this->errorResponse('Failed to save Expense Type: ' . $e->getMessage(), 500);
         }
     }
 
     public function edit($id)
     {
         $expenseType = ExpenseType::findOrFail($id);
-        return response()->json([
-            'success' => true,
-            'data' => $expenseType
-        ]);
+        return $this->successResponse('Expense Type fetched successfully.', $expenseType);
     }
 
     public function update(ExpenseTypeRequest $request, $id)
@@ -59,16 +49,9 @@ class ExpenseTypeController extends Controller
         try {
             $expenseType = ExpenseType::findOrFail($id);
             $expenseType->update($request->validated());
-            return response()->json([
-                'success' => true,
-                'message' => 'Expense Type updated successfully.',
-                'data' => $expenseType
-            ]);
+            return $this->successResponse('Expense Type updated successfully.', $expenseType);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to update Expense Type: ' . $e->getMessage()
-            ], 500);
+            return $this->errorResponse('Failed to update Expense Type: ' . $e->getMessage(), 500);
         }
     }
 
@@ -77,15 +60,9 @@ class ExpenseTypeController extends Controller
         try {
             $expenseType = ExpenseType::findOrFail($id);
             $expenseType->delete();
-            return response()->json([
-                'success' => true,
-                'message' => 'Expense Type deleted successfully.'
-            ]);
+            return $this->deletedResponse('Expense Type deleted successfully.');
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to delete Expense Type: ' . $e->getMessage()
-            ], 500);
+            return $this->errorResponse('Failed to delete Expense Type: ' . $e->getMessage(), 500);
         }
     }
 }

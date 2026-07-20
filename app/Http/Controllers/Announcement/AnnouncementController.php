@@ -87,16 +87,12 @@ class AnnouncementController extends Controller
 
             $announcement = $this->announcementService->storeAnnouncement($data, $file);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Announcement created successfully.',
-                'redirect' => route('announcements.index')
+            return $this->createdResponse('Announcement created successfully.', [
+                'redirect' => route('announcements.index'),
+                'announcement' => $announcement
             ]);
         } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to create announcement: ' . $e->getMessage()
-            ], 500);
+            return $this->errorResponse('Failed to create announcement: ' . $e->getMessage(), 500);
         }
     }
 
@@ -148,16 +144,11 @@ class AnnouncementController extends Controller
 
             $this->announcementService->updateAnnouncement($announcement, $data, $file);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Announcement updated successfully.',
+            return $this->successResponse('Announcement updated successfully.', [
                 'redirect' => route('announcements.index')
             ]);
         } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to update announcement: ' . $e->getMessage()
-            ], 500);
+            return $this->errorResponse('Failed to update announcement: ' . $e->getMessage(), 500);
         }
     }
 
@@ -170,15 +161,9 @@ class AnnouncementController extends Controller
             $announcement = Announcement::findOrFail($id);
             $this->announcementService->deleteAnnouncement($announcement);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Announcement deleted successfully.'
-            ]);
+            return $this->deletedResponse('Announcement deleted successfully.');
         } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to delete announcement: ' . $e->getMessage()
-            ], 500);
+            return $this->errorResponse('Failed to delete announcement: ' . $e->getMessage(), 500);
         }
     }
 
