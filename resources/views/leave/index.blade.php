@@ -177,6 +177,48 @@
                 const url = $(this).attr('href');
                 fetchData(url);
             });
+
+            // Handle delete via Axios & SweetAlert2
+            $(document).on('click', '.confirmDelete', function(e) {
+                e.preventDefault();
+                const btn = $(this);
+                const form = btn.closest('form');
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        axios.delete(form.attr('action'))
+                            .then(response => {
+                                const res = response.data;
+                                if (res.success) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Deleted!',
+                                        text: res.message,
+                                        timer: 1500,
+                                        showConfirmButton: false
+                                    }).then(() => {
+                                        fetchData();
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: error.response?.data?.message || 'Failed to delete leave request.'
+                                });
+                            });
+                    }
+                });
+            });
         });
     </script>
 @endsection

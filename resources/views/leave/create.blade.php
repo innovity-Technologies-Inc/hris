@@ -555,12 +555,68 @@ $(function () {
         scheduleEndDateCalc();
     });
 
-    // ── 5. Form submit guard: ensure to-date is populated ────────────────────
+    // ── 5. Form submit via Axios ─────────────────────────────────────────────
     $('#leaveApplicationForm').on('submit', function (e) {
+        e.preventDefault();
+        const form = this;
+        const submitBtn = form.querySelector('button[type="submit"]');
+
         if (!$('#to').val()) {
-            e.preventDefault();
-            alert('Please wait — the end date is being calculated. Try again in a moment.');
+            Swal.fire({
+                icon: 'warning',
+                title: 'Please wait',
+                text: 'The end date is being calculated. Try again in a moment.'
+            });
+            return;
         }
+
+        $('.invalid-feedback').remove();
+        $('.is-invalid').removeClass('is-invalid');
+        if (submitBtn) submitBtn.disabled = true;
+
+        const formData = new FormData(form);
+
+        axios.post(form.action, formData)
+            .then(response => {
+                const res = response.data;
+                if (res.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: res.message,
+                        timer: 1500,
+                        showConfirmButton: false
+                    }).then(() => {
+                        window.location.href = res.redirect || "{{ route('leave.index') }}";
+                    });
+                }
+            })
+            .catch(error => {
+                if (submitBtn) submitBtn.disabled = false;
+                if (error.response && error.response.status === 422) {
+                    const errors = error.response.data.errors;
+                    if (errors) {
+                        Object.keys(errors).forEach(key => {
+                            const input = form.querySelector(`[name="${key}"]`);
+                            if (input) {
+                                input.classList.add('is-invalid');
+                                const feedback = document.createElement('div');
+                                feedback.className = 'invalid-feedback d-block';
+                                feedback.innerText = errors[key][0];
+                                input.after(feedback);
+                            }
+                        });
+                    }
+                    const msg = error.response.data.message || 'Validation error. Please check your inputs.';
+                    Swal.fire({ icon: 'error', title: 'Validation Error', text: msg });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: error.response?.data?.message || 'Something went wrong. Please try again later.'
+                    });
+                }
+            });
     });
 });
 </script>
