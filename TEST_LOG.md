@@ -1,5 +1,20 @@
 # Test Log
 
+## 2026-07-20 (Leave Module Architecture Refactoring & Business Logic Parity Verification)
+
+**Goal**: Refactor `LeavesController` into a thin controller adhering strictly to the Request -> Service -> Controller architecture pattern while maintaining 100% feature and business logic parity.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/LeavePlanTest.php`
+
+**Results**:
+- Created [StoreLeaveRequest.php](file:///P:/Project/Web/hrms/app/Http/Requests/Leave/StoreLeaveRequest.php), [CalculateEndDateRequest.php](file:///P:/Project/Web/hrms/app/Http/Requests/Leave/CalculateEndDateRequest.php), and [ImportLeavesRequest.php](file:///P:/Project/Web/hrms/app/Http/Requests/Leave/ImportLeavesRequest.php).
+- Created [LeaveServices.php](file:///P:/Project/Web/hrms/app/Services/Leave/LeaveServices.php) containing all leave management business logic, transactions, flexsearch pagination, end date calculation, and count adjustments.
+- Refactored [LeavesController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/Leave/LeavesController.php) into a thin controller delegating logic to `LeaveServices`.
+- Verified line-by-line parity across all 8 controller methods.
+- Executed Pest tests and verified all tests pass successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-17 (Employee Profile Leave Info Running Year Calculation)
 
 **Goal**: Scope the leave taken and remaining balance calculations shown on the employee profile leave info page, validated during applications, and requested via APIs to the running calendar year.
