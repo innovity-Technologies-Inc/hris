@@ -38,11 +38,11 @@
                                 <table class="table table-borderless table-sm mb-0">
                                     <tr>
                                         <th class="text-muted" style="width: 40%;">Full Name:</th>
-                                        <td class="fw-semibold text-dark">{{ $resignation->employee->full_name }}</td>
+                                        <td class="fw-semibold text-dark">{{ $resignation->employee?->full_name ?? 'N/A' }}</td>
                                     </tr>
                                     <tr>
                                         <th class="text-muted">Applicant ID:</th>
-                                        <td>{{ $resignation->employee->applicant_id ?? '-' }}</td>
+                                        <td>{{ $resignation->employee?->applicant_id ?? '-' }}</td>
                                     </tr>
                                     <tr>
                                         <th class="text-muted">Company:</th>

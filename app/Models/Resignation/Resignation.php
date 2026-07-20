@@ -39,12 +39,12 @@ class Resignation extends Model
 
     public function employee(): BelongsTo
     {
-        return $this->belongsTo(Employee::class, 'employee_id');
+        return $this->belongsTo(Employee::class, 'employee_id')->withoutGlobalScopes();
     }
 
     public function getEmployee(): BelongsTo
     {
-        return $this->belongsTo(Employee::class, 'employee_id');
+        return $this->belongsTo(Employee::class, 'employee_id')->withoutGlobalScopes();
     }
 
     public function creator(): BelongsTo
