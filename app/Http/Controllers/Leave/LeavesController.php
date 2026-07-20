@@ -144,20 +144,9 @@ class LeavesController extends Controller
                     if ($category_type === 'compensatory') {
                         $compOff = \App\Models\Employee\EmployeeCompOff::where('employee_id', $employee_id)->first();
                         if ($compOff) {
-                            $prevBal = $compOff->balance_days;
                             $compOff->used_days += $request->leave_count;
                             $compOff->balance_days = $compOff->comp_off_days - $compOff->used_days;
                             $compOff->save();
-
-                            \App\Models\Employee\EmployeeCompOffHistory::create([
-                                'employee_id' => $employee_id,
-                                'leave_id' => $newLeave->id,
-                                'type' => 'used',
-                                'days' => $request->leave_count,
-                                'previous_balance' => $prevBal,
-                                'new_balance' => $compOff->balance_days,
-                                'remarks' => 'Deducted comp-off leave for request #' . $newLeave->id,
-                            ]);
                         }
                     } else {
                         $leave = LeaveCount::where('employee_id', $employee_id)

@@ -351,37 +351,18 @@ class AttendanceServices
         $dateStr = Carbon::parse($earnedDate)->format('Y-m-d');
 
         if ($compOff) {
-            $prevBalance = $compOff->balance_days;
             $compOff->comp_off_days += 1;
             $compOff->balance_days = $compOff->comp_off_days - $compOff->used_days;
             $compOff->last_earned_date = $dateStr;
             $compOff->save();
-
-            \App\Models\Employee\EmployeeCompOffHistory::create([
-                'employee_id' => $employeeId,
-                'type' => 'earned',
-                'days' => 1.00,
-                'previous_balance' => $prevBalance,
-                'new_balance' => $compOff->balance_days,
-                'remarks' => 'Earned comp-off for working on off-day on ' . $dateStr,
-            ]);
         } else {
-            $compOff = \App\Models\Employee\EmployeeCompOff::create([
+            \App\Models\Employee\EmployeeCompOff::create([
                 'employee_id' => $employeeId,
                 'comp_off_days' => 1.00,
                 'used_days' => 0.00,
                 'balance_days' => 1.00,
                 'last_earned_date' => $dateStr,
                 'status' => 'active',
-            ]);
-
-            \App\Models\Employee\EmployeeCompOffHistory::create([
-                'employee_id' => $employeeId,
-                'type' => 'earned',
-                'days' => 1.00,
-                'previous_balance' => 0.00,
-                'new_balance' => 1.00,
-                'remarks' => 'Earned comp-off for working on off-day on ' . $dateStr,
             ]);
         }
     }
