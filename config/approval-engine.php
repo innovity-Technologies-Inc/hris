@@ -42,7 +42,7 @@ return [
         'salary-breakdown' => 'Salary Breakdown',
         'travel-movement' => 'Travel Movement',
         'claim-expense' => 'Claim Expense',
-
+        'resign' => 'Resignation',
     ],
 
 ];

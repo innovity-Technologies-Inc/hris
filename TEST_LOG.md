@@ -1,5 +1,21 @@
 # Test Log
 
+## 2026-07-20 (Resign Module & Approval Workflow Implementation)
+
+**Goal**: Implement the new Resign module with 5-tier organizational hierarchy cascade, approval workflow integration, thin request-service-controller pattern, generic ApiResponse trait, and permission seeder.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/ResignationTest.php`
+
+**Results**:
+- Registered `'resign' => 'Resignation'` in `config/approval-engine.php`.
+- Seeded `Resignations` menu and permissions (`resignations.view`, `create`, `edit`, `delete`, `approve`) via `PermissionSeeder.php`.
+- Created database migration `2026_07_20_000007_create_resignations_table.php` and model `App\Models\Resignation\Resignation.php` with `OrganizationScoped` and `Approvable` traits.
+- Implemented `StoreResignationRequest`, `UpdateResignationRequest`, `ResignationServices`, and `ResignationController` returning `ApiResponse` trait responses.
+- Implemented Blade views (`index`, `create`, `edit`, `show`, `search_results`) with 5-tier cascading dropdowns, date auto-calculations, Axios form submissions, and SweetAlert2 confirm delete.
+- Feature test `tests/Feature/ResignationTest.php` passed 1/1 tests (7 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-20 (Leave Module Architecture Refactoring & Business Logic Parity Verification)
 
 **Goal**: Refactor `LeavesController` into a thin controller adhering strictly to the Request -> Service -> Controller architecture pattern while maintaining 100% feature and business logic parity.

@@ -81,12 +81,20 @@ class PermissionSeeder extends Seeder
             ],
 
             [
+                'name' => 'Resignations',
+                'icon' => 'door-open',
+                'slug' => 'resignations',
+                'route' => 'resignation.index',
+                'actions' => ['view', 'create', 'edit', 'delete', 'approve']
+            ],
+
+            [
                 'name' => 'Claim Expense',
                 'icon' => 'dollar-sign',
                 'slug' => 'claim-expenses',
                 'submenus' => [
-                    ['name' => 'Application', 'slug' => 'claim-expenses', 'route' => 'claim_expenses.create', 'actions' => ['create']],
-                    ['name' => 'Logs', 'slug' => 'claim-expenses', 'route' => 'claim_expenses.index', 'actions' => ['view', 'edit', 'delete']],
+                    ['name' => 'Application', 'slug' => 'claim-expense-application', 'route' => 'claim_expenses.create', 'actions' => ['create']],
+                    ['name' => 'Logs', 'slug' => 'claim-expense-logs', 'route' => 'claim_expenses.index', 'actions' => ['view', 'edit', 'delete']],
                 ]
             ],
 

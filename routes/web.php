@@ -166,6 +166,25 @@ Route::prefix('company-setup')->middleware('auth')->group(function () {
         });
     });
 
+    Route::controller(\App\Http\Controllers\Resignation\ResignationController::class)->group(function () {
+        Route::get('resignation/get-employees-by-hierarchy', 'getEmployeesByHierarchy')->name('resignation.get_employees_by_hierarchy');
+        Route::middleware('permission:resignations.view')->group(function () {
+            Route::get('resignation', 'index')->name('resignation.index');
+            Route::get('resignation/{id}/show', 'show')->name('resignation.show');
+        });
+        Route::middleware('permission:resignations.create')->group(function () {
+            Route::get('resignation/create', 'create')->name('resignation.create');
+            Route::post('resignation', 'store')->name('resignation.store');
+        });
+        Route::middleware('permission:resignations.edit')->group(function () {
+            Route::get('resignation/{id}/edit', 'edit')->name('resignation.edit');
+            Route::put('resignation/{id}', 'update')->name('resignation.update');
+        });
+        Route::middleware('permission:resignations.delete')->group(function () {
+            Route::delete('resignation/{id}', 'destroy')->name('resignation.destroy');
+        });
+    });
+
     Route::controller(\App\Http\Controllers\ClaimExpense\ExpenseTypeController::class)->group(function () {
         Route::middleware('permission:expense-types.view')->group(function () {
             Route::get('expense-types', 'index')->name('expense_types.index');
