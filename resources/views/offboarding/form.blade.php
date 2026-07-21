@@ -90,8 +90,8 @@
                             <label for="section_id" class="form-label fw-semibold">Section</label>
                             <select class="form-select select2_list hierarchy-select" id="section_id" name="section_id">
                                 <option value="">-- All Sections --</option>
-                                @foreach($sections as $section)
-                                    <option value="{{ $section->id }}" {{ (request('section_id') == $section->id || request('id') == $section->id) ? 'selected' : '' }}>{{ $section->name }}</option>
+                                @foreach($sections as $sec)
+                                    <option value="{{ $sec->id }}" {{ (request('section_id') == $sec->id || request('id') == $sec->id) ? 'selected' : '' }}>{{ $sec->name }}</option>
                                 @endforeach
                             </select>
                         </div>
