@@ -296,39 +296,81 @@
                 </li>
                 @endif
 
-                <!-- Offboarding Menu -->
+                <!-- Offboarding Menu Title -->
                 @php
-                    $canResignations = auth()->user()->can('resignations.view') || auth()->user()->can('offboarding-resignation.view');
-                    $canTerminations = auth()->user()->can('terminations.view') || auth()->user()->can('offboarding-termination.view');
-                    $showOffboardingMenu = $canResignations || $canTerminations;
-                    $offboardingOpen = Route::is('offboarding.*');
+                    $canResignationsView = auth()->user()->can('resignations.view') || auth()->user()->can('offboarding-resignation.view');
+                    $canResignationsCreate = auth()->user()->can('resignations.create');
+                    $canTerminationsView = auth()->user()->can('terminations.view') || auth()->user()->can('offboarding-termination.view');
+                    $canTerminationsCreate = auth()->user()->can('terminations.create');
+                    $showOffboardingTitle = $canResignationsView || $canResignationsCreate || $canTerminationsView || $canTerminationsCreate;
                 @endphp
-                @if($showOffboardingMenu)
+
+                @if($showOffboardingTitle)
+                <li class="menu-title">Offboarding</li>
+
+                {{-- Resignation Menu --}}
+                @if($canResignationsView || $canResignationsCreate)
+                @php
+                    $resignationOpen = Route::is('offboarding.resignation.*');
+                @endphp
                 <li>
-                    <a href="#sidebarOffboarding" data-bs-toggle="collapse"
-                        aria-expanded="{{ $offboardingOpen ? 'true' : 'false' }}"
-                        class="@if ($offboardingOpen) menuitem-active @endif">
-                        <i data-feather="user-x"></i>
-                        <span> Offboarding </span>
+                    <a href="#sidebarResignation" data-bs-toggle="collapse"
+                        aria-expanded="{{ $resignationOpen ? 'true' : 'false' }}"
+                        class="@if ($resignationOpen) menuitem-active @endif">
+                        <i data-feather="file-text"></i>
+                        <span> Resignation </span>
                         <span class="menu-arrow"></span>
                     </a>
-                    <div class="collapse @if ($offboardingOpen) show @endif" id="sidebarOffboarding">
+                    <div class="collapse @if ($resignationOpen) show @endif" id="sidebarResignation">
                         <ul class="nav-second-level">
-                            @if($canResignations)
+                            @if($canResignationsCreate)
                             <li>
-                                <a class='tp-link @if (Route::is('offboarding.resignation.*')) menuitem-active @endif'
-                                    href='{{ route('offboarding.resignation.index') }}'>Resignation</a>
+                                <a class='tp-link @if (Route::is('offboarding.resignation.create')) menuitem-active @endif'
+                                    href='{{ route('offboarding.resignation.create', ['type' => 'resignation']) }}'>Request</a>
                             </li>
                             @endif
-                            @if($canTerminations)
+                            @if($canResignationsView)
                             <li>
-                                <a class='tp-link @if (Route::is('offboarding.termination.*')) menuitem-active @endif'
-                                    href='{{ route('offboarding.termination.index') }}'>Termination</a>
+                                <a class='tp-link @if (Route::is('offboarding.resignation.index')) menuitem-active @endif'
+                                    href='{{ route('offboarding.resignation.index') }}'>Logs</a>
                             </li>
                             @endif
                         </ul>
                     </div>
                 </li>
+                @endif
+
+                {{-- Termination Menu --}}
+                @if($canTerminationsView || $canTerminationsCreate)
+                @php
+                    $terminationOpen = Route::is('offboarding.termination.*');
+                @endphp
+                <li>
+                    <a href="#sidebarTermination" data-bs-toggle="collapse"
+                        aria-expanded="{{ $terminationOpen ? 'true' : 'false' }}"
+                        class="@if ($terminationOpen) menuitem-active @endif">
+                        <i data-feather="user-minus"></i>
+                        <span> Termination </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse @if ($terminationOpen) show @endif" id="sidebarTermination">
+                        <ul class="nav-second-level">
+                            @if($canTerminationsCreate)
+                            <li>
+                                <a class='tp-link @if (Route::is('offboarding.termination.create')) menuitem-active @endif'
+                                    href='{{ route('offboarding.termination.create', ['type' => 'termination']) }}'>Request</a>
+                            </li>
+                            @endif
+                            @if($canTerminationsView)
+                            <li>
+                                <a class='tp-link @if (Route::is('offboarding.termination.index')) menuitem-active @endif'
+                                    href='{{ route('offboarding.termination.index') }}'>Logs</a>
+                            </li>
+                            @endif
+                        </ul>
+                    </div>
+                </li>
+                @endif
                 @endif
 
                 <!-- Claim Expense Menu -->
