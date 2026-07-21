@@ -201,3 +201,43 @@ test('offboarding search filters filter records correctly', function () {
     $response->assertSee('Alpha Tester');
     $response->assertSee('Beta Tester');
 });
+
+test('offboarding create view preloads hierarchy from section id query parameter', function () {
+    $user = User::factory()->create(['user_type' => \App\Enums\UserType::Group]);
+    $user->givePermissionTo(['resignations.create']);
+
+    \App\Models\Setting\GeneralSetting::updateOrCreate(['id' => 1], [
+        'name' => 'HRMS Test',
+        'currency' => '৳',
+        'branch_status' => 1,
+        'division_status' => 1,
+        'department_status' => 1,
+        'section_status' => 1
+    ]);
+
+    $company = Company::factory()->create(['name' => 'Hierarchy Preload Company']);
+    $branch = CompanyLocation::create(['company_id' => $company->id, 'name' => 'Hierarchy Preload Branch', 'location_address' => '456 St']);
+    
+    $division = \App\Models\Company\Division::create(['company_id' => $company->id, 'name' => 'Preload Division', 'short_name' => 'PLD']);
+    $department = \App\Models\Company\Department::create(['company_id' => $company->id, 'department_name' => 'Preload Department', 'short_name' => 'PLD']);
+    $section = \App\Models\Company\Section::create([
+        'company_id' => $company->id,
+        'location_id' => $branch->id,
+        'division_id' => $division->id,
+        'department_id' => $department->id,
+        'name' => 'Preload Section',
+        'short_name' => 'PLS',
+        'status' => 'active'
+    ]);
+
+    $response = $this->actingAs($user)
+        ->get(route('offboarding.resignation.create', ['id' => $section->id]))
+        ->assertStatus(200);
+
+    // Assert that the preselected options are visible in the form
+    $response->assertSee('value="' . $company->id . '" selected', false);
+    $response->assertSee('value="' . $branch->id . '" selected', false);
+    $response->assertSee('value="' . $division->id . '" selected', false);
+    $response->assertSee('value="' . $department->id . '" selected', false);
+    $response->assertSee('value="' . $section->id . '" selected', false);
+});

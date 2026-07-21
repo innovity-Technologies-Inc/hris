@@ -78,6 +78,22 @@ class OffboardingController extends Controller
         $sub_section = "Create {$typeName}";
         $section_url = route("offboarding.{$type}.index");
 
+        // If a section id is provided (e.g. from section index page action), try to preload hierarchy from the Section
+        $sectionId = $request->get('section_id') ?? $request->get('id');
+        if ($sectionId) {
+            $sectionRecord = \App\Models\Company\Section::find($sectionId);
+            if ($sectionRecord) {
+                $request->merge([
+                    'company_id' => $request->get('company_id') ?? $sectionRecord->company_id,
+                    'location_id' => $request->get('location_id') ?? $sectionRecord->location_id,
+                    'branch_id' => $request->get('branch_id') ?? $sectionRecord->location_id,
+                    'division_id' => $request->get('division_id') ?? $sectionRecord->division_id,
+                    'department_id' => $request->get('department_id') ?? $sectionRecord->department_id,
+                    'section_id' => $sectionId,
+                ]);
+            }
+        }
+
         $masterData = $this->offboardingService->getFormMasterData();
 
         return view('offboarding.form', array_merge($masterData, compact('title', 'section', 'sub_section', 'section_url', 'type')));

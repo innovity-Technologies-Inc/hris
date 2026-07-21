@@ -40,7 +40,7 @@
                             <select class="form-select select2_list hierarchy-select" id="company_id" name="company_id">
                                 <option value="">-- All Companies --</option>
                                 @foreach($companies as $company)
-                                    <option value="{{ $company->id }}">{{ $company->name }}</option>
+                                    <option value="{{ $company->id }}" {{ (request('company_id') == $company->id) ? 'selected' : '' }}>{{ $company->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -52,7 +52,7 @@
                             <select class="form-select select2_list hierarchy-select" id="branch_id" name="branch_id">
                                 <option value="">-- All Branches --</option>
                                 @foreach($branches as $branch)
-                                    <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                    <option value="{{ $branch->id }}" {{ (request('branch_id') == $branch->id || request('location_id') == $branch->id) ? 'selected' : '' }}>{{ $branch->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -65,7 +65,7 @@
                             <select class="form-select select2_list hierarchy-select" id="division_id" name="division_id">
                                 <option value="">-- All Divisions --</option>
                                 @foreach($divisions as $division)
-                                    <option value="{{ $division->id }}">{{ $division->name }}</option>
+                                    <option value="{{ $division->id }}" {{ (request('division_id') == $division->id) ? 'selected' : '' }}>{{ $division->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -78,7 +78,7 @@
                             <select class="form-select select2_list hierarchy-select" id="department_id" name="department_id">
                                 <option value="">-- All Departments --</option>
                                 @foreach($departments as $department)
-                                    <option value="{{ $department->id }}">{{ $department->department_name }}</option>
+                                    <option value="{{ $department->id }}" {{ (request('department_id') == $department->id) ? 'selected' : '' }}>{{ $department->department_name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -91,7 +91,7 @@
                             <select class="form-select select2_list hierarchy-select" id="section_id" name="section_id">
                                 <option value="">-- All Sections --</option>
                                 @foreach($sections as $section)
-                                    <option value="{{ $section->id }}">{{ $section->name }}</option>
+                                    <option value="{{ $section->id }}" {{ (request('section_id') == $section->id || request('id') == $section->id) ? 'selected' : '' }}>{{ $section->name }}</option>
                                 @endforeach
                             </select>
                         </div>

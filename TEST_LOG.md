@@ -2,7 +2,7 @@
 
 ## 2026-07-21 (Offboarding Index Page Search & Organization Filters)
 
-**Goal**: Implement advanced search and organization filters (Company, Branch, Division, Department, Section) with cascading AJAX autoload matching general settings visibility, employee name, employee ID, system ID, and date range query parameters on offboarding index views.
+**Goal**: Implement advanced search and organization filters (Company, Branch, Division, Department, Section) with cascading AJAX autoload matching general settings visibility, employee name, employee ID, system ID, and date range query parameters on offboarding index views. Also pre-load/pre-select the organizational hierarchy dropdowns from section ID query parameters when creating a new offboarding request.
 
 **Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/OffboardingTest.php --no-coverage`
 
@@ -12,8 +12,9 @@
 - Re-architected search container layout in `offboarding/index.blade.php` to fit employee name, ID, system ID, date range, status, and company/branch/division/department/section selectors.
 - Added Select2 styling, cascading AJAX options autoloading listeners, and query parameter auto-population.
 - Refactored index and form layouts to follow the standard system styling (single card layout, warning-colored Create buttons with feather icons, solid action buttons using data-feather, simple unified form cards).
-- Added `offboarding search filters filter records correctly` feature test in `OffboardingTest.php` to verify search behavior.
-- Feature tests passed 3/3 tests (35 assertions) ✅
+- Implemented automatic resolution of section hierarchy parameters (`section_id` or `id`) in `OffboardingController@create` and pre-selected the matching Company, Branch, Division, Department, and Section dropdowns in the UI.
+- Added `offboarding search filters filter records correctly` and `offboarding create view preloads hierarchy from section id query parameter` feature tests in `OffboardingTest.php`.
+- Feature tests passed 4/4 tests (41 assertions) ✅
 
 **Status**: ✅ SUCCESS
 
