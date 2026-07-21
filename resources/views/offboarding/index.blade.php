@@ -11,21 +11,8 @@
                 <div class="card-body">
                     <div class="border rounded shadow-sm p-3 filter-section-bg">
                         <form id="filterForm">
-                            {{-- First Row: Company & Employee Info --}}
+                            {{-- First Row: Employee Info & Company --}}
                             <div class="row g-3 mb-3">
-                                <div class="col-md-3">
-                                    <label for="company_id" class="form-label text-muted small fw-semibold mb-1">
-                                        Company
-                                    </label>
-                                    <select name="company_id" id="company_id" class="form-select select2">
-                                        <option value="">-- All Companies --</option>
-                                        @foreach($companies as $company)
-                                            <option value="{{ $company->id }}" {{ request('company_id') == $company->id ? 'selected' : '' }}>
-                                                {{ $company->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
                                 <div class="col-md-3">
                                     <label for="employeeName" class="form-label text-muted small fw-semibold mb-1">
                                         Employee Name
@@ -46,6 +33,19 @@
                                     </label>
                                     <input type="text" class="form-control" id="systemId" name="system_id"
                                         placeholder="Search by System ID" value="{{ request('system_id') }}">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="company_id" class="form-label text-muted small fw-semibold mb-1">
+                                        Company
+                                    </label>
+                                    <select name="company_id" id="company_id" class="form-select select2">
+                                        <option value="">-- All Companies --</option>
+                                        @foreach($companies as $company)
+                                            <option value="{{ $company->id }}" {{ request('company_id') == $company->id ? 'selected' : '' }}>
+                                                {{ $company->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
 
@@ -125,7 +125,7 @@
                                     </select>
                                 </div>
                                 <div class="col-md-3 text-end">
-                                    <button type="button" id="resetFilters" class="btn btn-outline-secondary btn-sm w-100">
+                                    <button type="button" id="resetFilters" class="btn btn-outline-secondary w-100">
                                         <i class="mdi mdi-refresh"></i> Reset Filters
                                     </button>
                                 </div>
