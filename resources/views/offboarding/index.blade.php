@@ -144,7 +144,7 @@
                 </div>
                 <div class="card-body">
                     {{-- Action Buttons --}}
-                    <div class="d-flex justify-content-between mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
                         @php
                             $createPermission = $type === 'termination' ? 'terminations.create' : 'resignations.create';
                         @endphp
@@ -152,6 +152,22 @@
                         <a class="btn btn-warning btn-sm" href="{{ route('offboarding.' . $type . '.create', ['type' => $type]) }}">
                             <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                         </a>
+                        @else
+                        <div></div>
+                        @endcan
+
+                        @php
+                            $exportPermission = $type === 'termination' ? 'terminations.export' : 'resignations.export';
+                        @endphp
+                        @can($exportPermission)
+                        <div class="btn-group">
+                            <button type="button" id="exportExcelBtn" class="btn btn-outline-success btn-sm me-2">
+                                <i style="height: 12px; width: 12px" data-feather="file-text"></i> Export Excel
+                            </button>
+                            <button type="button" id="exportPdfBtn" class="btn btn-outline-danger btn-sm">
+                                <i style="height: 12px; width: 12px" data-feather="file"></i> Export PDF
+                            </button>
+                        </div>
                         @endcan
                     </div>
                     <div class="table-responsive" id="search-result">
@@ -318,6 +334,21 @@
                 e.preventDefault();
                 const url = $(this).attr('href');
                 fetchData(url);
+            });
+
+            // Export handlers
+            $(document).on('click', '#exportExcelBtn', function(e) {
+                e.preventDefault();
+                let queryString = $('#filterForm').serialize();
+                let baseUrl = "{{ route('offboarding.' . $type . '.export.excel') }}";
+                window.location.href = baseUrl + '?' + queryString;
+            });
+
+            $(document).on('click', '#exportPdfBtn', function(e) {
+                e.preventDefault();
+                let queryString = $('#filterForm').serialize();
+                let baseUrl = "{{ route('offboarding.' . $type . '.export.pdf') }}";
+                window.location.href = baseUrl + '?' + queryString;
             });
 
             // Axios delete confirmation

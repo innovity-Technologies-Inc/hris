@@ -177,6 +177,10 @@ Route::prefix('company-setup')->middleware('auth')->group(function () {
         Route::middleware('permission:resignations.create')->group(function () {
             Route::get('offboarding/resignation/create', 'create')->name('offboarding.resignation.create');
         });
+        Route::middleware('permission:resignations.export')->group(function () {
+            Route::get('offboarding/resignation/export/excel', 'exportResignationExcel')->name('offboarding.resignation.export.excel');
+            Route::get('offboarding/resignation/export/pdf', 'exportResignationPdf')->name('offboarding.resignation.export.pdf');
+        });
 
         // Termination Routes
         Route::middleware('permission:terminations.view')->group(function () {
@@ -184,6 +188,10 @@ Route::prefix('company-setup')->middleware('auth')->group(function () {
         });
         Route::middleware('permission:terminations.create')->group(function () {
             Route::get('offboarding/termination/create', 'create')->name('offboarding.termination.create');
+        });
+        Route::middleware('permission:terminations.export')->group(function () {
+            Route::get('offboarding/termination/export/excel', 'exportTerminationExcel')->name('offboarding.termination.export.excel');
+            Route::get('offboarding/termination/export/pdf', 'exportTerminationPdf')->name('offboarding.termination.export.pdf');
         });
 
         // Common CRUD Actions

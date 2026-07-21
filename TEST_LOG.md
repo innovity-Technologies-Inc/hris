@@ -902,6 +902,20 @@
 
 **Status**: ✅ SUCCESS
 
+## 2026-07-21 (Resignation and Termination Excel and PDF Exporting)
+
+**Goal**: Implement non-paginated Excel and PDF exporting in Resignation and Termination modules, respecting filters. Add a custom header to the PDF (Group name if user type is group, otherwise Company name). Register Spatie `resignations.export` and `terminations.export` permissions.
+
+**Exact Command**: `php artisan route:clear && php artisan config:clear && vendor\bin\pest tests/Feature/OffboardingTest.php --no-coverage`
+
+**Results**:
+- **Permissions**: Seeded `resignations.export` and `terminations.export` actions in `PermissionSeeder.php` and ran provisioning.
+- **Excel Export**: Implemented `OffboardingExport` using Maatwebsite Excel, downloading all filtered data without pagination.
+- **PDF Export**: Configured Spatie Browsershot template showing custom company/group headers matching the logged-in user type.
+- **Pest Tests**: Added new test cases verifying export routes, correct header values, and authorization permissions. All 6 tests passed successfully ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-12 (Workflow Auto-Approval & Integration Cleanup)
 
 **Goal**: Complete the task by verifying full test suite stability, resolving the Undefined variable `$errors` and outdated test route references in `TransferModuleTest.php`, and ensuring all 141 tests pass cleanly.

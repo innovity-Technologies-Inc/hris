@@ -89,13 +89,13 @@ class PermissionSeeder extends Seeder
                         'name' => 'Resignation',
                         'slug' => 'resignations',
                         'route' => 'offboarding.resignation.index',
-                        'actions' => ['view', 'create', 'edit', 'delete', 'approve']
+                        'actions' => ['view', 'create', 'edit', 'delete', 'approve', 'export']
                     ],
                     [
                         'name' => 'Termination',
                         'slug' => 'terminations',
                         'route' => 'offboarding.termination.index',
-                        'actions' => ['view', 'create', 'edit', 'delete', 'approve']
+                        'actions' => ['view', 'create', 'edit', 'delete', 'approve', 'export']
                     ],
                 ]
             ],

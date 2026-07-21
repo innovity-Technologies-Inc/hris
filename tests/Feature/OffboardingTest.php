@@ -12,11 +12,13 @@ beforeEach(function () {
     Permission::firstOrCreate(['name' => 'resignations.create', 'guard_name' => 'web']);
     Permission::firstOrCreate(['name' => 'resignations.edit', 'guard_name' => 'web']);
     Permission::firstOrCreate(['name' => 'resignations.delete', 'guard_name' => 'web']);
+    Permission::firstOrCreate(['name' => 'resignations.export', 'guard_name' => 'web']);
 
     Permission::firstOrCreate(['name' => 'terminations.view', 'guard_name' => 'web']);
     Permission::firstOrCreate(['name' => 'terminations.create', 'guard_name' => 'web']);
     Permission::firstOrCreate(['name' => 'terminations.edit', 'guard_name' => 'web']);
     Permission::firstOrCreate(['name' => 'terminations.delete', 'guard_name' => 'web']);
+    Permission::firstOrCreate(['name' => 'terminations.export', 'guard_name' => 'web']);
 });
 
 test('offboarding resignation and termination workflows work correctly', function () {
@@ -240,4 +242,47 @@ test('offboarding create view preloads hierarchy from section id query parameter
     $response->assertSee('value="' . $division->id . '" selected', false);
     $response->assertSee('value="' . $department->id . '" selected', false);
     $response->assertSee('value="' . $section->id . '" selected', false);
+});
+
+test('offboarding exports resignation and termination records correctly', function () {
+    $user = User::factory()->create();
+    $user->givePermissionTo([
+        'resignations.view', 'resignations.export',
+        'terminations.view', 'terminations.export'
+    ]);
+
+    // Test Excel Export
+    $this->actingAs($user)
+        ->get(route('offboarding.resignation.export.excel'))
+        ->assertStatus(200)
+        ->assertHeader('content-disposition', 'attachment; filename=resignations.xlsx');
+
+    $this->actingAs($user)
+        ->get(route('offboarding.termination.export.excel'))
+        ->assertStatus(200)
+        ->assertHeader('content-disposition', 'attachment; filename=terminations.xlsx');
+
+    // Test PDF Export
+    $this->actingAs($user)
+        ->get(route('offboarding.resignation.export.pdf'))
+        ->assertStatus(200)
+        ->assertHeader('content-type', 'application/pdf');
+
+    $this->actingAs($user)
+        ->get(route('offboarding.termination.export.pdf'))
+        ->assertStatus(200)
+        ->assertHeader('content-type', 'application/pdf');
+});
+
+test('offboarding exports are restricted by permissions', function () {
+    $user = User::factory()->create();
+    // User does NOT have export permissions
+
+    $this->actingAs($user)
+        ->get(route('offboarding.resignation.export.excel'))
+        ->assertStatus(403);
+
+    $this->actingAs($user)
+        ->get(route('offboarding.resignation.export.pdf'))
+        ->assertStatus(403);
 });

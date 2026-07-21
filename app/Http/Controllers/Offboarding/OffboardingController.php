@@ -211,4 +211,58 @@ class OffboardingController extends Controller
 
         return $this->successResponse('Employees loaded successfully.', $employees);
     }
+
+    /**
+     * Export resignations to Excel.
+     */
+    public function exportResignationExcel(FlexSearch $flexsearch, Request $request)
+    {
+        $offboardings = $this->offboardingService->getOffboardingsAll($flexsearch, $request, 'resignation');
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\Offboarding\OffboardingExport($offboardings, 'resignation'), 'resignations.xlsx');
+    }
+
+    /**
+     * Export terminations to Excel.
+     */
+    public function exportTerminationExcel(FlexSearch $flexsearch, Request $request)
+    {
+        $offboardings = $this->offboardingService->getOffboardingsAll($flexsearch, $request, 'termination');
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\Offboarding\OffboardingExport($offboardings, 'termination'), 'terminations.xlsx');
+    }
+
+    /**
+     * Export resignations to PDF.
+     */
+    public function exportResignationPdf(FlexSearch $flexsearch, Request $request)
+    {
+        try {
+            $offboardings = $this->offboardingService->getOffboardingsAll($flexsearch, $request, 'resignation');
+            $pdfContent = $this->offboardingService->generateOffboardingPdf($offboardings, 'resignation');
+            return response($pdfContent, 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="resignations.pdf"',
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Resignation PDF generation failed: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to generate PDF: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Export terminations to PDF.
+     */
+    public function exportTerminationPdf(FlexSearch $flexsearch, Request $request)
+    {
+        try {
+            $offboardings = $this->offboardingService->getOffboardingsAll($flexsearch, $request, 'termination');
+            $pdfContent = $this->offboardingService->generateOffboardingPdf($offboardings, 'termination');
+            return response($pdfContent, 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="terminations.pdf"',
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Termination PDF generation failed: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to generate PDF: ' . $e->getMessage());
+        }
+    }
 }
