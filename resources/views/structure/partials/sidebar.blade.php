@@ -812,7 +812,7 @@
                             @if($canGroups)
                             <li>
                                 <a class='tp-link @if (Route::is('groups.*')) menuitem-active @endif'
-                                    href='{{ route('groups.index') }}'>Company Group</a>
+                                    href='{{ route('groups.index') }}'>Groups</a>
                             </li>
                             @endif
                             @if($canCompanyTypes)
@@ -830,7 +830,7 @@
                             @if($canCompanyBranches)
                             <li>
                                 <a class='tp-link @if (Route::is('company_locations.*')) menuitem-active @endif'
-                                    href='{{ route('company_locations.index') }}'>Company Branches</a>
+                                    href='{{ route('company_locations.index') }}'>Branches</a>
                             </li>
                             @endif
                             @if($canDivisions)
