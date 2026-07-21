@@ -41,6 +41,13 @@ class UserAndRoleSeeder extends Seeder
             }
         }
 
+        // 5. Ensure System Administrator always has Super Admin role
+        $superAdminRole = \Spatie\Permission\Models\Role::where('name', 'Super Admin')->first();
+        $adminUser = \App\Models\User::where('email', 'admin@example.com')->first();
+        if ($adminUser && $superAdminRole) {
+            $adminUser->assignRole($superAdminRole);
+        }
+
         $this->command->info('Provisioned users and assigned roles from exported database json dumps.');
     }
 }

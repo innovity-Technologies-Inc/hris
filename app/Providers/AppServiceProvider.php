@@ -38,13 +38,10 @@ class AppServiceProvider extends ServiceProvider
             'demotion' => \App\Models\Payroll\Demotion::class,
         ]);
 
-        // Implicitly grant "Super Admin" role or default admin user all permissions
+        // Implicitly grant "Super Admin" role all permissions
         // This works in the app by using gate-related functions like auth()->user->can() and @can()
         Gate::before(function ($user, $ability) {
-            if ($user->hasRole('Super Admin') || $user->email === 'admin@example.com') {
-                return true;
-            }
-            return null;
+            return $user->hasRole('Super Admin') ? true : null;
         });
 
         // Provide roles to the Edit Login Info modal
