@@ -38,10 +38,10 @@ class AppServiceProvider extends ServiceProvider
             'demotion' => \App\Models\Payroll\Demotion::class,
         ]);
 
-        // Implicitly grant "Super Admin" role or Group user types all permissions
+        // Implicitly grant "Super Admin" role or default admin user all permissions
         // This works in the app by using gate-related functions like auth()->user->can() and @can()
         Gate::before(function ($user, $ability) {
-            if ($user->hasRole('Super Admin') || $user->user_type === \App\Enums\UserType::Group || $user->email === 'admin@example.com') {
+            if ($user->hasRole('Super Admin') || $user->email === 'admin@example.com') {
                 return true;
             }
             return null;
