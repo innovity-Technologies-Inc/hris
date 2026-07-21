@@ -273,6 +273,7 @@ test('employee leave info calculates and validates taken leaves by running year'
             'from' => now()->format('Y-m-d'),
             'to' => now()->addDays(10)->format('Y-m-d'),
             'leave_count' => 11,
+            'leave_category_type' => 'standard',
             'status' => 'pending',
             'reason' => 'Trying to request too many days',
         ]);
@@ -287,10 +288,11 @@ test('employee leave info calculates and validates taken leaves by running year'
             'from' => now()->format('Y-m-d'),
             'to' => now()->addDays(9)->format('Y-m-d'),
             'leave_count' => 10,
+            'leave_category_type' => 'standard',
             'status' => 'pending',
             'reason' => 'Requesting exactly remaining days',
         ]);
-    $validationResponsePass->assertStatus(302); // Redirect back with success message
+    $validationResponsePass->assertStatus(201); // Converted API response status is 201
 });
 
 test('calculate end date respects off_day_include yes by counting all calendar days', function () {
@@ -390,6 +392,7 @@ test('half day leave submission stores 0.5 leave_count', function () {
             'from' => now()->format('Y-m-d'),
             'to' => now()->format('Y-m-d'),
             'leave_count' => 0.5,
+            'leave_category_type' => 'standard',
             'day_type' => 'half_day',
             'status' => 'pending',
             'reason' => 'Half day leave test',
@@ -402,4 +405,40 @@ test('half day leave submission stores 0.5 leave_count', function () {
         'leave_count' => 0.5,
         'day_type' => 'half_day',
     ]);
+});
+
+test('employee profile leave info shows compensatory leave balance and history', function () {
+    $employee = Employee::factory()->create();
+    $this->user->update(['employee_id' => $employee->id]);
+    Permission::findOrCreate('leaves.view', 'web');
+    $this->user->givePermissionTo('leaves.view');
+    
+    // Create comp off balance for this employee
+    $compOff = \App\Models\Employee\EmployeeCompOff::create([
+        'employee_id' => $employee->id,
+        'comp_off_days' => 5,
+        'used_days' => 1,
+        'balance_days' => 4,
+        'status' => 'active'
+    ]);
+
+    // Create a compensatory leave application in history
+    $leave = Leave::create([
+        'employee_id' => $employee->id,
+        'leave_category_type' => 'compensatory',
+        'from' => '2026-07-10',
+        'to' => '2026-07-10',
+        'leave_count' => 1,
+        'status' => 'approved',
+        'reason' => 'Compensatory Leave taken',
+    ]);
+
+    $response = $this->actingAs($this->user)
+        ->get(route('employee.profile.leave_info', $employee->id));
+
+    $response->assertStatus(200);
+    $response->assertViewHas('compOff');
+    expect((float) $response->viewData('compOff')->balance_days)->toBe(4.0);
+
+    $response->assertSee('Compensatory Leave');
 });

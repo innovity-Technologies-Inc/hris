@@ -187,12 +187,14 @@ class LeaveServices
                 ->sum('leave_count');
         }
 
-        $leaveHistory = Leave::where('employee_id', $employeeId)->orderBy('id', 'desc')->get();
+        $leaveHistory = Leave::with('getPlan')->where('employee_id', $employeeId)->orderBy('id', 'desc')->get();
+        $compOff = \App\Models\Employee\EmployeeCompOff::where('employee_id', $employeeId)->first();
 
         return [
             'employee' => $employee,
             'leaveDetails' => $leaveDetails,
             'leaveHistory' => $leaveHistory,
+            'compOff' => $compOff,
         ];
     }
 

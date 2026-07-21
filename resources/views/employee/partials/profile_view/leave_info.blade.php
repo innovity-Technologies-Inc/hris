@@ -107,6 +107,40 @@
                     <div class="tab-pane fade show active" id="leave-details" role="tabpanel"
                         aria-labelledby="details-tab">
                         <div class="row g-4">
+                            @if(isset($compOff))
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="leave-card">
+                                        <div class="leave-card-header">
+                                            <h5 class="mb-0">Compensatory Leave</h5>
+                                            <span class="badge bg-warning text-dark">
+                                                Compensatory
+                                            </span>
+                                        </div>
+
+                                        <div class="mb-2">
+                                            <span class="badge bg-success">
+                                                Active
+                                            </span>
+                                        </div>
+
+                                        <div class="leave-stats">
+                                            <div class="stat-item">
+                                                <span class="stat-value text-primary">{{ $compOff->comp_off_days ?? 0 }}</span>
+                                                <span class="stat-label">Earned</span>
+                                            </div>
+                                            <div class="stat-item">
+                                                <span class="stat-value text-danger">{{ $compOff->used_days ?? 0 }}</span>
+                                                <span class="stat-label">Taken</span>
+                                            </div>
+                                            <div class="stat-item">
+                                                <span class="stat-value text-success">{{ $compOff->balance_days ?? 0 }}</span>
+                                                <span class="stat-label">Remaining</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
                             @forelse($leaveDetails as $leave)
                                 <div class="col-md-6 col-lg-4">
                                     <div class="leave-card">
@@ -144,12 +178,14 @@
                                     </div>
                                 </div>
                             @empty
-                                <div class="col-12">
-                                    <div class="alert alert-info">
-                                        <i data-feather="info" class="me-2"></i>
-                                        No leave details found.
+                                @if(!isset($compOff))
+                                    <div class="col-12">
+                                        <div class="alert alert-info">
+                                            <i data-feather="info" class="me-2"></i>
+                                            No leave details found.
+                                        </div>
                                     </div>
-                                </div>
+                                @endif
                             @endforelse
                         </div>
                     </div>
@@ -176,12 +212,11 @@
                                         <tr>
                                             <td>{{ $sl++ }}</td>
                                             <td>
-                                                <strong>{{ $item->getPlan->name ?? 'N/A' }}</strong>
+                                                <strong>{{ $item->leave_category_type === 'compensatory' ? 'Compensatory Leave' : ($item->getPlan->name ?? 'N/A') }}</strong>
                                             </td>
                                             <td>
-                                                <span
-                                                    class="badge bg-success">
-                                                    {{ $item->getPlan->leave_type ?? 'N/A' }}
+                                                <span class="badge {{ $item->leave_category_type === 'compensatory' ? 'bg-warning text-dark' : 'bg-success' }}">
+                                                    {{ $item->leave_category_type === 'compensatory' ? 'Compensatory' : ($item->getPlan->leave_type ?? 'N/A') }}
                                                 </span>
                                             </td>
                                             <td>{{ !empty($item->from) ? \Carbon\Carbon::parse($item->from)->format('jS F, Y') : 'N/A' }}</td>
@@ -396,7 +431,7 @@
                         badge.classList.add('leave-pending');
                     }
                     
-                    const planName = leave.get_plan ? leave.get_plan.name : 'Leave';
+                    const planName = leave.leave_category_type === 'compensatory' ? 'Compensatory Leave' : (leave.get_plan ? leave.get_plan.name : 'Leave');
                     badge.innerText = `${planName}`;
                     badge.title = `${planName}\nStatus: ${leave.status}\nDuration: ${leave.from} to ${leave.to}\nDays: ${leave.leave_count}`;
                     
