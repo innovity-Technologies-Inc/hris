@@ -1,5 +1,5 @@
-<table class="table table-hover align-middle mb-0">
-    <thead class="table-light">
+<table class="table table-bordered align-middle mb-0">
+    <thead>
         <tr>
             <th scope="col">#</th>
             <th scope="col">Employee Name</th>
@@ -48,23 +48,23 @@
                     @endphp
 
                     @can($permissionPrefix . '.view')
-                        <a href="{{ route('offboarding.show', $offboarding->id) }}" class="btn btn-outline-info btn-sm rounded-circle p-1" title="View Details">
-                            <i class="mdi mdi-eye fs-6"></i>
+                        <a href="{{ route('offboarding.show', $offboarding->id) }}" class="btn btn-info btn-sm" title="View Details">
+                            <i style="height: 12px; width: 12px" data-feather="eye"></i>
                         </a>
                     @endcan
 
                     @can($permissionPrefix . '.edit')
-                        <a href="{{ route('offboarding.edit', $offboarding->id) }}" class="btn btn-outline-warning btn-sm rounded-circle p-1 ms-1" title="Edit">
-                            <i class="mdi mdi-pencil fs-6"></i>
+                        <a href="{{ route('offboarding.edit', $offboarding->id) }}" class="btn btn-primary btn-sm ms-1" title="Edit">
+                            <i style="height: 12px; width: 12px" data-feather="edit"></i>
                         </a>
                     @endcan
 
                     @can($permissionPrefix . '.delete')
-                        <form action="{{ route('offboarding.destroy', $offboarding->id) }}" method="POST" class="d-inline confirmDeleteForm">
+                        <form action="{{ route('offboarding.destroy', $offboarding->id) }}" method="POST" class="d-inline confirmDeleteForm" style="display: inline-block">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-outline-danger btn-sm rounded-circle p-1 ms-1 confirmDelete" title="Delete">
-                                <i class="mdi mdi-trash-can fs-6"></i>
+                            <button type="submit" class="btn btn-danger btn-sm ms-1 confirmDelete" title="Delete">
+                                <i style="height: 12px; width: 12px" data-feather="trash"></i>
                             </button>
                         </form>
                     @endcan
