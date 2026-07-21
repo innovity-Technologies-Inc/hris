@@ -11,6 +11,8 @@ use App\Services\Employee\EmployeeServices;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use App\Exports\Employee\EmployeeSearchExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EmployeeSearchController extends Controller
 {
@@ -256,7 +258,7 @@ class EmployeeSearchController extends Controller
     }
 
     /**
-     * Export search results (future implementation)
+     * Export search results to Excel
      *
      * @param Request $request
      * @param FlexSearch $flexsearch
@@ -269,25 +271,81 @@ class EmployeeSearchController extends Controller
             abort(403, 'Unauthorized access to employee export.');
         }
 
-        // Build same query as index method
-        $query = Employee::query();
-        $searchableColumns = ['applicant_id', 'full_name', 'system_id'];
+        // Build query with necessary relationships
+        $query = Employee::with([
+            'officeInfo.getCurrentCompany',
+            'officeInfo.getCurrentBusinessUnit',
+            'officeInfo.getCurrentDivision',
+            'officeInfo.getCurrentDepartment',
+            'officeInfo.getCurrentSection'
+        ]);
+
+        // Handle country filter separately (JSON field)
+        if ($request->filled('country')) {
+            $query->where('permanent_address->country', $request->input('country'));
+        }
+
+        // Handle organizational filters via EmployeeOfficeInfo relationship
+        if ($request->filled('company')) {
+            $query->whereHas('officeInfo', function($q) use ($request) {
+                $q->where('current_company_id', $request->input('company'));
+            });
+        }
+
+        if ($request->filled('business_unit')) {
+            $query->whereHas('officeInfo', function($q) use ($request) {
+                $q->where('current_business_unit_id', $request->input('business_unit'));
+            });
+        }
+
+        if ($request->filled('division')) {
+            $query->whereHas('officeInfo', function($q) use ($request) {
+                $q->where('current_division_id', $request->input('division'));
+            });
+        }
+
+        if ($request->filled('department')) {
+            $query->whereHas('officeInfo', function($q) use ($request) {
+                $q->where('current_department_id', $request->input('department'));
+            });
+        }
+
+        if ($request->filled('section')) {
+            $query->whereHas('officeInfo', function($q) use ($request) {
+                $q->where('current_section_id', $request->input('section'));
+            });
+        }
+
+        // Handle employee type filter via EmployeeOfficeInfo relationship
+        if ($request->filled('emp_type')) {
+            $query->whereHas('officeInfo', function($q) use ($request) {
+                $q->where('emp_type', $request->input('emp_type'));
+            });
+        }
+
+        // Define searchable columns for FlexSearch fuzzy matching
+        $searchableColumns = [
+            'applicant_id',
+            'full_name',
+            'system_id',
+            'personal_mobile',
+            'work_email',
+            'personal_email'
+        ];
+
+        // Get keyword search term
         $keyword = $request->input('keyword');
+
+        // Build filters array from request
         $filters = $this->buildFilters($request);
 
-        // Get all matching employees (no pagination)
+        // Apply FlexSearch with filters and keyword search (no pagination)
         $employees = $flexsearch
             ->apply($query, $filters, $keyword, $searchableColumns)
             ->orderBy('id', 'desc')
             ->get();
 
-        // Export logic would go here (Excel, PDF, etc.)
-        // For now, return JSON
-        return response()->json([
-            'success' => true,
-            'total' => $employees->count(),
-            'message' => 'Export functionality to be implemented'
-        ]);
+        return Excel::download(new EmployeeSearchExport($employees), 'employee_search_export.xlsx');
     }
 }
 

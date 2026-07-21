@@ -339,6 +339,9 @@
                     </h5>
                     <div>
                         <span class="badge bg-success me-2" id="totalEmployeesFound">0 Employees Found</span>
+                        <button type="button" class="btn btn-success btn-sm me-2" id="btnExportExcel">
+                            <i class="bi bi-file-earmark-excel me-1"></i> Export Excel
+                        </button>
                         <button type="button" class="btn btn-primary btn-sm me-2" onclick="viewDetailedResults()">
                             <i class="mdi mdi-table-eye"></i> View Details
                         </button>
@@ -1055,6 +1058,13 @@
                 if ($(this).val().length > 2 || $(this).val().length === 0) {
                     filterEmployees();
                 }
+            });
+
+            // Export search results to Excel
+            $('#btnExportExcel, #btnExportExcelModal').on('click', function(e) {
+                e.preventDefault();
+                const query = $('#employeeSearchForm').serialize();
+                window.location.href = "{{ route('employee.employee.export') }}?" + query;
             });
 
             // Make functions globally accessible
