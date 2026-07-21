@@ -156,7 +156,10 @@
                         Route::is('movement_types.*') ||
                         Route::is('banks.*') ||
                         Route::is('branches.*') ||
+                        Route::is('bank_accounts.*') ||
                         Route::is('salary_grades.*') ||
+                        Route::is('holidays.*') ||
+                        Route::is('job_creations.*') ||
                         Route::is('gazette_locations.*') ||
                         Route::is('company.bulk_upload') ||
                         Route::is('expense_types.*');
@@ -172,7 +175,9 @@
                     $canDBBackup = auth()->user()->can('db-backup.download');
                     $canRoleManagement = auth()->user()->can('role-management.view');
                     $canApprovalWorkflows = auth()->user()->can('approval-workflows.view');
-                    $showSettingsMenu = $canGeneralSettings || $canIDCardDesign || $canAPIKeys || $canSMTP || $canDBBackup || $canRoleManagement || $canApprovalWorkflows;
+                    $canAuditLogs = auth()->user()->can('audit-logs.view');
+                    $showSettingsMenu = $canGeneralSettings || $canIDCardDesign || $canAPIKeys || $canSMTP || $canDBBackup || $canRoleManagement || $canApprovalWorkflows || $canAuditLogs;
+                    $settingsOpen = Route::is('setting.*') || Route::is('audit_logs.*') || Route::is('db_backup');
 
                     $showAdministrationTitle = $showCompanyMenu || $showStructureMenu || $showSettingsMenu;
                 @endphp
@@ -813,103 +818,109 @@
                             @if($canCompanyTypes)
                             <li>
                                 <a class='tp-link @if (Route::is('company_types.*')) menuitem-active @endif'
-                                    href='{{ route('company_types.index') }}'>Company Type</a>
+                                    href='{{ route('company_types.index') }}'>Company Types</a>
                             </li>
                             @endif
                             @if($canCompanies)
                             <li>
                                 <a class='tp-link @if (Route::is('companies.*')) menuitem-active @endif'
-                                    href='{{ route('companies.index') }}'>Company</a>
+                                    href='{{ route('companies.index') }}'>Companies</a>
                             </li>
                             @endif
                             @if($canCompanyBranches)
                             <li>
                                 <a class='tp-link @if (Route::is('company_locations.*')) menuitem-active @endif'
-                                    href='{{ route('company_locations.index') }}'>Branch / Location</a>
+                                    href='{{ route('company_locations.index') }}'>Company Branches</a>
                             </li>
                             @endif
                             @if($canDivisions)
                             <li>
                                 <a class='tp-link @if (Route::is('divisions.*')) menuitem-active @endif'
-                                    href='{{ route('divisions.index') }}'>Division</a>
+                                    href='{{ route('divisions.index') }}'>Divisions</a>
                             </li>
                             @endif
                             @if($canDepartments)
                             <li>
                                 <a class='tp-link @if (Route::is('departments.*')) menuitem-active @endif'
-                                    href='{{ route('departments.index') }}'>Department</a>
+                                    href='{{ route('departments.index') }}'>Departments</a>
                             </li>
                             @endif
                             @if($canSections)
                             <li>
                                 <a class='tp-link @if (Route::is('sections.*')) menuitem-active @endif'
-                                    href='{{ route('sections.index') }}'>Section</a>
+                                    href='{{ route('sections.index') }}'>Sections</a>
                             </li>
                             @endif
                             @if($canDesignations)
                             <li>
                                 <a class='tp-link @if (Route::is('designations.*')) menuitem-active @endif'
-                                    href='{{ route('designations.index') }}'>Designation</a>
+                                    href='{{ route('designations.index') }}'>Designations</a>
                             </li>
                             @endif
                             @if($canPayGroups)
                             <li>
                                 <a class='tp-link @if (Route::is('pay_groups.*')) menuitem-active @endif'
-                                    href='{{ route('pay_groups.index') }}'>Pay Group</a>
-                            </li>
-                            @endif
-                            @if($canPayScales)
-                            <li>
-                                <a class='tp-link @if (Route::is('pay_scales.*')) menuitem-active @endif'
-                                    href='{{ route('pay_scales.index') }}'>Pay Scale</a>
-                            </li>
-                            @endif
-                            @if($canMovementTypes)
-                            <li>
-                                <a class='tp-link @if (Route::is('movement_types.*')) menuitem-active @endif'
-                                    href='{{ route('movement_types.index') }}'>Movement Type</a>
+                                    href='{{ route('pay_groups.index') }}'>Pay Groups</a>
                             </li>
                             @endif
                             @if($canSalaryGrades)
                             <li>
                                 <a class='tp-link @if (Route::is('salary_grades.*')) menuitem-active @endif'
-                                    href='{{ route('salary_grades.index') }}'>Salary Grade</a>
+                                    href='{{ route('salary_grades.index') }}'>Salary Grades</a>
+                            </li>
+                            @endif
+                            @if($canExpenseTypes)
+                            <li>
+                                <a class='tp-link @if (Route::is('expense_types.*')) menuitem-active @endif'
+                                    href='{{ route('expense_types.index') }}'>Expense Types</a>
+                            </li>
+                            @endif
+                            @if($canPayScales)
+                            <li>
+                                <a class='tp-link @if (Route::is('pay_scales.*')) menuitem-active @endif'
+                                    href='{{ route('pay_scales.index') }}'>Pay Scales</a>
+                            </li>
+                            @endif
+                            @if($canMovementTypes)
+                            <li>
+                                <a class='tp-link @if (Route::is('movement_types.*')) menuitem-active @endif'
+                                    href='{{ route('movement_types.index') }}'>Movement Types</a>
                             </li>
                             @endif
                             @if($canBanks)
                             <li>
-                                <a class='tp-link @if (Route::is('banks.*') && !request()->is('*/branches*') && !request()->is('*/accounts*')) menuitem-active @endif'
-                                    href='{{ route('banks.index') }}'>Bank Info</a>
+                                <a class='tp-link @if (Route::is('banks.*')) menuitem-active @endif'
+                                    href='{{ route('banks.index') }}'>Banks</a>
                             </li>
                             @endif
                             @if($canBankBranches)
                             <li>
                                 <a class='tp-link @if (Route::is('branches.*')) menuitem-active @endif'
-                                    href='{{ route('branches.index') }}'>Bank Branch</a>
+                                    href='{{ route('branches.index') }}'>Bank Branches</a>
                             </li>
                             @endif
                             @if($canBankAccounts)
                             <li>
-                                <a class='tp-link @if (Route::is('accounts.*')) menuitem-active @endif'
-                                    href='{{ route('accounts.index') }}'>Bank Account</a>
+                                <a class='tp-link @if (Route::is('bank_accounts.*')) menuitem-active @endif'
+                                    href='{{ route('bank_accounts.index') }}'>Bank Accounts</a>
+                            </li>
+                            @endif
+                            @if($canHolidays)
+                            <li>
+                                <a class='tp-link @if (Route::is('holidays.*')) menuitem-active @endif'
+                                    href='{{ route('holidays.index') }}'>Holidays</a>
                             </li>
                             @endif
                             @if($canJobCreations)
                             <li>
                                 <a class='tp-link @if (Route::is('job_creations.*')) menuitem-active @endif'
-                                    href='{{ route('job_creations.index') }}'>Designation Setup</a>
+                                    href='{{ route('job_creations.index') }}'>Job Creations</a>
                             </li>
                             @endif
                             @if($canBulkUploadCompany)
                             <li>
                                 <a class='tp-link @if (Route::is('company.bulk_upload')) menuitem-active @endif'
                                     href='{{ route('company.bulk_upload') }}'>Bulk Upload</a>
-                            </li>
-                            @endif
-                            @if($canExpenseTypes)
-                            <li>
-                                <a class='tp-link @if (Route::is('expense_types.*')) menuitem-active @endif'
-                                    href='{{ route('expense_types.index') }}'>Expense Type</a>
                             </li>
                             @endif
                         </ul>
@@ -951,24 +962,40 @@
                 @if($showSettingsMenu)
                 <li>
                     <a href="#settings" data-bs-toggle="collapse"
-                        aria-expanded="{{ Route::is('setting.*') ? 'true' : 'false' }}"
-                        class="@if (Route::is('setting.*')) menuitem-active @endif">
+                        aria-expanded="{{ $settingsOpen ? 'true' : 'false' }}"
+                        class="@if ($settingsOpen) menuitem-active @endif">
                         <i data-feather="settings"></i>
                         <span> Settings </span>
                         <span class="menu-arrow"></span>
                     </a>
-                    <div class="collapse @if (Route::is('setting.*')) show @endif" id="settings">
+                    <div class="collapse @if ($settingsOpen) show @endif" id="settings">
                         <ul class="nav-second-level">
                             @if($canGeneralSettings)
                             <li>
-                                <a class='tp-link @if (Route::is('setting.general-settings.*')) menuitem-active @endif'
-                                    href='{{ route('setting.general-settings.index') }}'>General Settings</a>
+                                <a class='tp-link @if (Route::is('setting.general_settings.*')) menuitem-active @endif'
+                                    href='{{ route('setting.general_settings') }}'>General</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('setting.profile_field_config*')) menuitem-active @endif'
+                                    href='{{ route('setting.profile_field_config') }}'>Profile Fields</a>
+                            </li>
+                            @endif
+                            @if(auth()->user()->can('general-settings.view'))
+                            <li>
+                                <a class='tp-link @if (Route::is('setting.notification_settings.*')) menuitem-active @endif'
+                                   href='{{ route('setting.notification_settings.index') }}'>Notification Alerts</a>
+                            </li>
+                            @endif
+                            @if($canAuditLogs)
+                            <li>
+                                <a class='tp-link @if (Route::is('audit_logs.*')) menuitem-active @endif'
+                                   href='{{ route('audit_logs.index') }}'>Audit Logs</a>
                             </li>
                             @endif
                             @if($canRoleManagement)
                             <li>
-                                <a class='tp-link @if (Route::is('setting.role-management.*')) menuitem-active @endif'
-                                    href='{{ route('setting.role-management.index') }}'>Role Management</a>
+                                <a class='tp-link @if (Route::is('setting.roles.*')) menuitem-active @endif'
+                                   href='{{ route('setting.roles.index') }}'>Role Management</a>
                             </li>
                             @endif
                             @if($canApprovalWorkflows)
@@ -986,7 +1013,7 @@
                             @if($canIDCardDesign)
                             <li>
                                 <a class='tp-link @if (Route::is('setting.id_design.*')) menuitem-active @endif'
-                                     href='{{ route('setting.id_design.index') }}'>ID Card Design</a>
+                                    href='{{ route('setting.id_design.index') }}'>ID Card Design</a>
                             </li>
                             @endif
                             @if($canAPIKeys)
@@ -1004,7 +1031,7 @@
                             @if($canDBBackup)
                             <li>
                                 <a class='tp-link @if (Route::is('db_backup')) menuitem-active @endif'
-                                   href='{{ route('db_backup') }}'>Database Backup</a>
+                                   href='{{ route('db_backup') }}'>DB Backup</a>
                             </li>
                             @endif
                         </ul>
