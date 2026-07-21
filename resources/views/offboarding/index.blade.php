@@ -11,20 +11,20 @@
                 <div class="card-body">
                     <div class="border rounded shadow-sm p-3 filter-section-bg">
                         <form id="filterForm">
-                            {{-- First Row: Keyword & Employee Info --}}
+                            {{-- First Row: Company & Employee Info --}}
                             <div class="row g-3 mb-3">
                                 <div class="col-md-3">
-                                    <label for="keywordSearch" class="form-label text-muted small fw-semibold mb-1">
-                                        Keyword Search
+                                    <label for="company_id" class="form-label text-muted small fw-semibold mb-1">
+                                        Company
                                     </label>
-                                    <div class="input-group input-group-md">
-                                        <input type="text" class="form-control border-end-0" id="keywordSearch"
-                                            name="keyword" placeholder="Search by reason, remarks..."
-                                            value="{{ request('keyword') }}">
-                                        <span class="input-group-text border-start-0 input-group-bg">
-                                            <i class="mdi mdi-magnify text-muted"></i>
-                                        </span>
-                                    </div>
+                                    <select name="company_id" id="company_id" class="form-select select2">
+                                        <option value="">-- All Companies --</option>
+                                        @foreach($companies as $company)
+                                            <option value="{{ $company->id }}" {{ request('company_id') == $company->id ? 'selected' : '' }}>
+                                                {{ $company->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="col-md-3">
                                     <label for="employeeName" class="form-label text-muted small fw-semibold mb-1">
@@ -51,22 +51,8 @@
 
                             {{-- Second Row: Org Hierarchy --}}
                             <div class="row g-3 mb-3">
-                                <div class="col-md-4">
-                                    <label for="company_id" class="form-label text-muted small fw-semibold mb-1">
-                                        Company
-                                    </label>
-                                    <select name="company_id" id="company_id" class="form-select select2">
-                                        <option value="">-- All Companies --</option>
-                                        @foreach($companies as $company)
-                                            <option value="{{ $company->id }}" {{ request('company_id') == $company->id ? 'selected' : '' }}>
-                                                {{ $company->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
                                 @if(isset($generalSettings->branch_status) && $generalSettings->branch_status == 1)
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label for="branch_id" class="form-label text-muted small fw-semibold mb-1">
                                         Branch / Location
                                     </label>
@@ -77,7 +63,7 @@
                                 @endif
 
                                 @if(isset($generalSettings->division_status) && $generalSettings->division_status == 1)
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label for="division_id" class="form-label text-muted small fw-semibold mb-1">
                                         Division
                                     </label>
@@ -86,12 +72,9 @@
                                     </select>
                                 </div>
                                 @endif
-                            </div>
 
-                            {{-- Third Row: Dept, Section, Status --}}
-                            <div class="row g-3 mb-3">
                                 @if(isset($generalSettings->department_status) && $generalSettings->department_status == 1)
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label for="department_id" class="form-label text-muted small fw-semibold mb-1">
                                         Department
                                     </label>
@@ -102,7 +85,7 @@
                                 @endif
 
                                 @if(isset($generalSettings->section_status) && $generalSettings->section_status == 1)
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label for="section_id" class="form-label text-muted small fw-semibold mb-1">
                                         Section
                                     </label>
@@ -111,8 +94,25 @@
                                     </select>
                                 </div>
                                 @endif
+                            </div>
 
-                                <div class="col-md-4">
+                            {{-- Third Row: Date Range & Status & Reset --}}
+                            <div class="row g-3 align-items-end">
+                                <div class="col-md-3">
+                                    <label for="fromDate" class="form-label text-muted small fw-semibold mb-1">
+                                        From Date (Notice Date)
+                                    </label>
+                                    <input type="date" class="form-control" id="fromDate" name="from"
+                                        value="{{ request('from') }}">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="toDate" class="form-label text-muted small fw-semibold mb-1">
+                                        To Date (Notice Date)
+                                    </label>
+                                    <input type="date" class="form-control" id="toDate" name="to"
+                                        value="{{ request('to') }}">
+                                </div>
+                                <div class="col-md-3">
                                     <label for="statusFilter" class="form-label text-muted small fw-semibold mb-1">
                                         Status
                                     </label>
@@ -124,26 +124,8 @@
                                         <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                                     </select>
                                 </div>
-                            </div>
-
-                            {{-- Fourth Row: Date Range & Action --}}
-                            <div class="row g-3 align-items-end">
-                                <div class="col-md-4">
-                                    <label for="fromDate" class="form-label text-muted small fw-semibold mb-1">
-                                        From Date (Notice Date)
-                                    </label>
-                                    <input type="date" class="form-control" id="fromDate" name="from"
-                                        value="{{ request('from') }}">
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="toDate" class="form-label text-muted small fw-semibold mb-1">
-                                        To Date (Notice Date)
-                                    </label>
-                                    <input type="date" class="form-control" id="toDate" name="to"
-                                        value="{{ request('to') }}">
-                                </div>
-                                <div class="col-md-4 text-end">
-                                    <button type="button" id="resetFilters" class="btn btn-outline-secondary btn-sm">
+                                <div class="col-md-3 text-end">
+                                    <button type="button" id="resetFilters" class="btn btn-outline-secondary btn-sm w-100">
                                         <i class="mdi mdi-refresh"></i> Reset Filters
                                     </button>
                                 </div>
