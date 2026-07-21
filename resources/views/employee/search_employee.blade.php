@@ -339,7 +339,7 @@
                     </h5>
                     <div>
                         <span class="badge bg-success me-2" id="totalEmployeesFound">0 Employees Found</span>
-                        <button type="button" class="btn btn-success btn-sm me-2" id="btnExportExcel">
+                        <button type="button" class="btn btn-success btn-sm me-2 no-loader" id="btnExportExcel">
                             <i class="bi bi-file-earmark-excel me-1"></i> Export Excel
                         </button>
                         <button type="button" class="btn btn-primary btn-sm me-2" onclick="viewDetailedResults()">

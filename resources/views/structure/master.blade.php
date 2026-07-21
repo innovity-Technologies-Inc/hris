@@ -534,13 +534,13 @@
 
     let ignoreBeforeUnload = false;
 
-    // Detect click events on download/PDF/export links to bypass beforeunload loader trigger
+    // Detect click events on download/PDF/export links/buttons to bypass beforeunload loader trigger
     document.addEventListener('click', (e) => {
-        const link = e.target.closest('a');
-        if (link) {
-            const href = link.getAttribute('href');
-            const hasDownloadAttr = link.hasAttribute('download');
-            const hasNoLoaderClass = link.classList.contains('no-loader');
+        const target = e.target.closest('a, button, .no-loader');
+        if (target) {
+            const href = target.getAttribute('href');
+            const hasDownloadAttr = target.hasAttribute('download');
+            const hasNoLoaderClass = target.classList.contains('no-loader') || target.closest('.no-loader');
             const isDownloadRoute = href && (href.includes('/pdf') || href.includes('download') || href.includes('/export'));
             
             if (hasDownloadAttr || hasNoLoaderClass || isDownloadRoute) {
