@@ -61,6 +61,7 @@ This project is a comprehensive Human Resource Management System (HRMS) built wi
     - Every model requiring approval workflows MUST implement the `\Innovity\ApprovalEngine\Traits\Approvable` trait.
     - **Includers & Excluders**: The central approval workflow engine supports multi-value criteria matching. Includers define which roles, user types, or specific users require approval (creating pending requests), and Excluders define which roles, user types, or users bypass approval.
     - **Announcements**: Notice boards and broadcasts are managed in the Announcement module, with target audiences loaded dynamically via 5-tier cascading dropdowns (Company, Branch, Division, Department, Section) and downloadable as styled PDFs.
+    - **Organizational Hierarchy Cascading Dropdowns**: All forms/filters requiring organizational selectors (Company, Branch, Division, Department, Section) MUST load dynamically and cascadingly via AJAX (Company -> Branch `/get-units/{companyId}` -> Division `/get-divisions/{companyId}/{locationId}` -> Department `/get-departments/...` -> Section `/get-sections/...`). To maintain compatibility with headless PHP/Pest assertions, the initial HTML select tags must contain the pre-selected option tag rendered via Blade if preloading request query parameters are present.
 
 ## 📦 Key Packages
 - `daiyanmozumder/laravel-flexsearch`: Core filtering engine.

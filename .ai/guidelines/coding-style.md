@@ -51,6 +51,7 @@ For every new module or major feature, maintain strict directory separation acro
     - Blade Files: `snake_case`.
 - **Filtering & Searching**: Use `daiyanmozumder/laravel-flexsearch`.
 - **Error Handling**: Use try-catch blocks within Service classes and log errors using Laravel's `Log` facade.
+- **Organizational Hierarchy Cascading Dropdowns**: All forms/filters requiring organizational selectors (Company, Branch, Division, Department, Section) MUST load dynamically and cascadingly via AJAX (Company -> Branch `/get-units/{companyId}` -> Division `/get-divisions/{companyId}/{locationId}` -> Department `/get-departments/...` -> Section `/get-sections/...`). To maintain compatibility with headless PHP/Pest assertions, the initial HTML select tags must contain the pre-selected option tag rendered via Blade if preloading request query parameters are present.
 
 ## 📦 Key Packages
 - `daiyanmozumder/laravel-flexsearch`: Core filtering engine.
