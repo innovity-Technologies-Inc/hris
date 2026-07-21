@@ -34,22 +34,34 @@ class UserRoleProvisionSeeder extends Seeder
                 'password' => Hash::make('12345678'),
                 'user_type' => UserType::Group,
                 'status' => 'active',
+                'employee_id' => 201,
             ]
         );
         $adminUser->assignRole($superAdminRole);
 
+        // Link System Administrator employee to the admin user
+        $adminEmployee = Employee::where('work_email', 'admin@example.com')->first();
+        if ($adminEmployee) {
+            $adminEmployee->update(['user_id' => $adminUser->id]);
+        }
+ 
         $this->command->info('Super Admin user created with user_type: Group');
-
+ 
         // 3. Provision Login for All Employees
         $employees = Employee::with('officeInfo.getCurrentDepartment')->get();
-
+ 
         foreach ($employees as $index => $employee) {
             $email = $employee->work_email ?? 'employee' . $employee->id . '@example.com';
+            
+            // Skip the default System Administrator email to prevent overwriting their Super Admin role
+            if ($email === 'admin@example.com') {
+                continue;
+            }
             
             // Determine Role based on Department
             $targetRole = $employeeRole;
             $userType = UserType::Employee;
-
+ 
             $deptName = $employee->officeInfo?->getCurrentDepartment?->department_name ?? '';
             
             if (stripos($deptName, 'Recruitment') !== false || stripos($deptName, 'Payroll') !== false) {
@@ -59,7 +71,7 @@ class UserRoleProvisionSeeder extends Seeder
                  // Make the first 5 employees "Company" level users for variety
                  $userType = UserType::Company;
             }
-
+ 
             $user = User::updateOrCreate(
                 ['email' => $email],
                 [
@@ -70,9 +82,9 @@ class UserRoleProvisionSeeder extends Seeder
                     'status' => 'active',
                 ]
             );
-
+ 
             $user->syncRoles([$targetRole->name]);
-
+ 
             // Link employee to user
             $employee->update(['user_id' => $user->id]);
         }
