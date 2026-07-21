@@ -67,6 +67,7 @@
                     $showEmployeesMenu = $canViewEmployeeInfo || $canReviewProfile || $canSearchEmployee || $canBulkUploadEmployee;
                 @endphp
                 @if($showEmployeesMenu)
+                <li class="menu-title">Employees</li>
                 <li>
                     @if($isEmployeeType && !$canViewEmployeeInfo && !$canReviewProfile)
                         @php
@@ -149,6 +150,7 @@
                     $attendanceOpen = Route::is('attendance.*');
                 @endphp
                 @if($showAttendanceMenu)
+                <li class="menu-title">Attendance</li>
                 <li>
                     <a href="#attendance" data-bs-toggle="collapse"
                         aria-expanded="{{ $attendanceOpen ? 'true' : 'false' }}"
@@ -200,6 +202,7 @@
                     $leavesOpen = Route::is('leave.*');
                 @endphp
                 @if($showLeavesMenu)
+                <li class="menu-title">Leaves</li>
                 <li>
                     <a href="#leaves" data-bs-toggle="collapse" aria-expanded="{{ $leavesOpen ? 'true' : 'false' }}"
                         class="@if ($leavesOpen) menuitem-active @endif">
@@ -234,6 +237,7 @@
                     $movementOpen = Route::is('movement.*');
                 @endphp
                 @if($showMovementMenu)
+                <li class="menu-title">Travel Movement</li>
                 <li>
                     <a href="#movement" data-bs-toggle="collapse"
                         aria-expanded="{{ $movementOpen ? 'true' : 'false' }}"
@@ -269,6 +273,7 @@
                     $transferOpen = Route::is('transfer.*');
                 @endphp
                 @if($showTransferMenu)
+                <li class="menu-title">Career Movement</li>
                 <li>
                     <a href="#transfer" data-bs-toggle="collapse"
                         aria-expanded="{{ $transferOpen ? 'true' : 'false' }}"
@@ -381,6 +386,7 @@
                     $claimExpenseOpen = Route::is('claim_expenses.*');
                 @endphp
                 @if($showClaimExpenseMenu)
+                <li class="menu-title">Claim Expense</li>
                 <li>
                     <a href="#claimExpense" data-bs-toggle="collapse"
                         aria-expanded="{{ $claimExpenseOpen ? 'true' : 'false' }}"
@@ -423,6 +429,7 @@
                     || request()->is('advance-salary*') || request()->is('arrear*') || request()->is('salary*');
                 @endphp
                 @if($showPayrollMenu)
+                <li class="menu-title">Payroll</li>
                 <li>
                     <a href="#payroll" data-bs-toggle="collapse" aria-expanded="{{ $payrollOpen ? 'true' : 'false' }}"
                         class="@if ($payrollOpen) menuitem-active @endif">
@@ -515,6 +522,7 @@
                     $showPlansMenu = $canMealPlans || $canShiftPlans || $canLeavePlans || $canOTPlans || $canRosterPlans || $canOffDayPlans || $canBonusPlans || $canAllowancePlans || $canTAPlans || $canDAPlans || $canDeductionPlans || $canBulkUploadPlans;
                 @endphp
                 @if($showPlansMenu)
+                <li class="menu-title">Plans</li>
                 <li>
                     <a href="#plans" data-bs-toggle="collapse"
                         aria-expanded="{{ Route::is('plan.*') ? 'true' : 'false' }}"
@@ -668,6 +676,7 @@
                         Route::is('expense_types.*');
                 @endphp
                 @if($showCompanyMenu)
+                <li class="menu-title">Company Setup</li>
                 <li>
                     <a href="#sidebarCompany" data-bs-toggle="collapse"
                         aria-expanded="{{ $companyOpen ? 'true' : 'false' }}"
@@ -822,6 +831,7 @@
                     $showStructureMenu = $canStructuralView || $canMembers;
                 @endphp
                 @if($showStructureMenu)
+                <li class="menu-title">Organization Structure</li>
                 <li>
                     <a href="#organization-structure-menu" data-bs-toggle="collapse"
                         aria-expanded="{{ Route::is('organization-structure.*') ? 'true' : 'false' }}"
@@ -863,6 +873,7 @@
                     $transportOpen = Route::is('transport.*');
                 @endphp
                 @if($showTransportMenu)
+                <li class="menu-title">Transport</li>
                 <li>
                     <a href="#sidebarTransport" data-bs-toggle="collapse"
                         aria-expanded="{{ $transportOpen ? 'true' : 'false' }}"
@@ -927,6 +938,7 @@
                     $showSettingsMenu = $canGeneralSettings || $canIDCardDesign || $canAPIKeys || $canSMTP || $canDBBackup || $canRoleManagement || $canApprovalWorkflows;
                 @endphp
                 @if($showSettingsMenu)
+                <li class="menu-title">Settings</li>
                 <li>
                     <a href="#settings" data-bs-toggle="collapse"
                         aria-expanded="{{ Route::is('setting.*') ? 'true' : 'false' }}"
