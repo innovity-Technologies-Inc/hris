@@ -161,10 +161,10 @@
                         @endphp
                         @can($exportPermission)
                         <div class="btn-group">
-                            <button type="button" id="exportExcelBtn" class="btn btn-outline-success btn-sm me-2">
+                            <button type="button" id="exportExcelBtn" class="btn btn-outline-success btn-sm me-2 no-loader">
                                 <i style="height: 12px; width: 12px" data-feather="file-text"></i> Export Excel
                             </button>
-                            <button type="button" id="exportPdfBtn" class="btn btn-outline-danger btn-sm">
+                            <button type="button" id="exportPdfBtn" class="btn btn-outline-danger btn-sm no-loader">
                                 <i style="height: 12px; width: 12px" data-feather="file"></i> Export PDF
                             </button>
                         </div>
@@ -339,6 +339,10 @@
             // Export handlers
             $(document).on('click', '#exportExcelBtn', function(e) {
                 e.preventDefault();
+                window.ignoreBeforeUnload = true;
+                setTimeout(() => {
+                    window.ignoreBeforeUnload = false;
+                }, 2000);
                 let queryString = $('#filterForm').serialize();
                 let baseUrl = "{{ route('offboarding.' . $type . '.export.excel') }}";
                 window.location.href = baseUrl + '?' + queryString;
@@ -346,6 +350,10 @@
 
             $(document).on('click', '#exportPdfBtn', function(e) {
                 e.preventDefault();
+                window.ignoreBeforeUnload = true;
+                setTimeout(() => {
+                    window.ignoreBeforeUnload = false;
+                }, 2000);
                 let queryString = $('#filterForm').serialize();
                 let baseUrl = "{{ route('offboarding.' . $type . '.export.pdf') }}";
                 window.location.href = baseUrl + '?' + queryString;

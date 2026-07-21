@@ -1063,6 +1063,10 @@
             // Export search results to Excel
             $('#btnExportExcel, #btnExportExcelModal').on('click', function(e) {
                 e.preventDefault();
+                window.ignoreBeforeUnload = true;
+                setTimeout(() => {
+                    window.ignoreBeforeUnload = false;
+                }, 2000);
                 const query = $('#employeeSearchForm').serialize();
                 window.location.href = "{{ route('employee.employee.export') }}?" + query;
             });

@@ -532,7 +532,7 @@
         hideLoader();
     });
 
-    let ignoreBeforeUnload = false;
+    window.ignoreBeforeUnload = false;
 
     // Detect click events on download/PDF/export links/buttons to bypass beforeunload loader trigger
     document.addEventListener('click', (e) => {
@@ -544,17 +544,17 @@
             const isDownloadRoute = href && (href.includes('/pdf') || href.includes('download') || href.includes('/export'));
             
             if (hasDownloadAttr || hasNoLoaderClass || isDownloadRoute) {
-                ignoreBeforeUnload = true;
+                window.ignoreBeforeUnload = true;
                 setTimeout(() => {
-                    ignoreBeforeUnload = false;
-                }, 150);
+                    window.ignoreBeforeUnload = false;
+                }, 2000);
             }
         }
     });
 
     // 3. Show on Unload (Links/Redirects)
     window.addEventListener('beforeunload', () => {
-        if (!ignoreBeforeUnload) {
+        if (!window.ignoreBeforeUnload) {
             showLoader();
         }
     });
