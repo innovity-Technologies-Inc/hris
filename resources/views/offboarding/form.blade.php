@@ -51,9 +51,15 @@
                             <label for="branch_id" class="form-label fw-semibold">Branch / Location</label>
                             <select class="form-select select2_list hierarchy-select" id="branch_id" name="branch_id">
                                 <option value="">-- All Branches --</option>
-                                @foreach($branches as $branch)
-                                    <option value="{{ $branch->id }}" {{ (request('branch_id') == $branch->id || request('location_id') == $branch->id) ? 'selected' : '' }}>{{ $branch->name }}</option>
-                                @endforeach
+                                @if(request('branch_id') || request('location_id'))
+                                    @php
+                                        $selBranchId = request('branch_id') ?? request('location_id');
+                                        $selBranch = $branches->firstWhere('id', $selBranchId);
+                                    @endphp
+                                    @if($selBranch)
+                                        <option value="{{ $selBranch->id }}" selected>{{ $selBranch->name }}</option>
+                                    @endif
+                                @endif
                             </select>
                         </div>
                         @endif
@@ -64,9 +70,14 @@
                             <label for="division_id" class="form-label fw-semibold">Division</label>
                             <select class="form-select select2_list hierarchy-select" id="division_id" name="division_id">
                                 <option value="">-- All Divisions --</option>
-                                @foreach($divisions as $division)
-                                    <option value="{{ $division->id }}" {{ (request('division_id') == $division->id) ? 'selected' : '' }}>{{ $division->name }}</option>
-                                @endforeach
+                                @if(request('division_id'))
+                                    @php
+                                        $selDiv = $divisions->firstWhere('id', request('division_id'));
+                                    @endphp
+                                    @if($selDiv)
+                                        <option value="{{ $selDiv->id }}" selected>{{ $selDiv->name }}</option>
+                                    @endif
+                                @endif
                             </select>
                         </div>
                         @endif
@@ -77,9 +88,14 @@
                             <label for="department_id" class="form-label fw-semibold">Department</label>
                             <select class="form-select select2_list hierarchy-select" id="department_id" name="department_id">
                                 <option value="">-- All Departments --</option>
-                                @foreach($departments as $department)
-                                    <option value="{{ $department->id }}" {{ (request('department_id') == $department->id) ? 'selected' : '' }}>{{ $department->department_name }}</option>
-                                @endforeach
+                                @if(request('department_id'))
+                                    @php
+                                        $selDept = $departments->firstWhere('id', request('department_id'));
+                                    @endphp
+                                    @if($selDept)
+                                        <option value="{{ $selDept->id }}" selected>{{ $selDept->department_name }}</option>
+                                    @endif
+                                @endif
                             </select>
                         </div>
                         @endif
@@ -90,9 +106,15 @@
                             <label for="section_id" class="form-label fw-semibold">Section</label>
                             <select class="form-select select2_list hierarchy-select" id="section_id" name="section_id">
                                 <option value="">-- All Sections --</option>
-                                @foreach($sections as $sec)
-                                    <option value="{{ $sec->id }}" {{ (request('section_id') == $sec->id || request('id') == $sec->id) ? 'selected' : '' }}>{{ $sec->name }}</option>
-                                @endforeach
+                                @if(request('section_id') || request('id'))
+                                    @php
+                                        $selSecId = request('section_id') ?? request('id');
+                                        $selSec = $sections->firstWhere('id', $selSecId);
+                                    @endphp
+                                    @if($selSec)
+                                        <option value="{{ $selSec->id }}" selected>{{ $selSec->name }}</option>
+                                    @endif
+                                @endif
                             </select>
                         </div>
                         @endif
@@ -223,6 +245,40 @@ $(document).ready(function() {
     $('#resignation_date, #notice_period_days').on('input change', calculateLastWorkingDay);
 
     @if(!$isEdit)
+    function ajaxLoad(url, $select, placeholder, selectedValue = null){
+        if (!$select.length) return Promise.resolve();
+        return $.get(url).then(function(data){
+            $select.html(`<option value="">${placeholder}</option>`);
+            data.forEach(item=>{
+                $select.append(
+                    `<option value="${item.id}">${item.name ?? item.department_name ?? item.full_name}</option>`
+                );
+            });
+            if(selectedValue){
+                $select.val(selectedValue).trigger('change');
+            }
+        }).catch(function(){
+            $select.html('<option value="">Error loading data</option>');
+        });
+    }
+
+    function loadBranches(companyId, selected=null){
+        if(!companyId) return Promise.resolve();
+        return ajaxLoad(`/get-units/${companyId}`, $('#branch_id'), '-- All Branches --', selected);
+    }
+
+    function loadDivisions(companyId, branchId, selected=null){
+        return ajaxLoad(`/get-divisions/${companyId}/${branchId ?? 'null'}`, $('#division_id'), '-- All Divisions --', selected);
+    }
+
+    function loadDepartments(companyId, branchId, divisionId, selected=null){
+        return ajaxLoad(`/get-departments/${companyId}/${branchId ?? 'null'}/${divisionId ?? 'null'}`, $('#department_id'), '-- All Departments --', selected);
+    }
+
+    function loadSections(companyId, branchId, divisionId, departmentId, selected=null){
+        return ajaxLoad(`/get-sections/${companyId}/${branchId ?? 'null'}/${divisionId ?? 'null'}/${departmentId ?? 'null'}`, $('#section_id'), '-- All Sections --', selected);
+    }
+
     function loadEmployees() {
         const filters = {
             company_id: $('#company_id').val(),
@@ -267,8 +323,75 @@ $(document).ready(function() {
             });
     }
 
-    loadEmployees();
-    $('.hierarchy-select').on('change', loadEmployees);
+    $('#company_id').on('change', function(){
+        let company = $(this).val();
+        if(!company) {
+            $('#branch_id, #division_id, #department_id, #section_id').html('<option value="">-- All --</option>').trigger('change');
+            loadEmployees();
+            return;
+        }
+        loadBranches(company);
+        loadDivisions(company);
+        loadDepartments(company);
+        loadSections(company);
+        loadEmployees();
+    });
+
+    $('#branch_id').on('change', function(){
+        let company = $('#company_id').val();
+        let branch = $(this).val();
+        if(company) {
+            loadDivisions(company, branch);
+            loadDepartments(company, branch);
+            loadSections(company, branch);
+        }
+        loadEmployees();
+    });
+
+    $('#division_id').on('change', function(){
+        let company = $('#company_id').val();
+        let branch = $('#branch_id').val();
+        let division = $(this).val();
+        if(company) {
+            loadDepartments(company, branch, division);
+            loadSections(company, branch, division);
+        }
+        loadEmployees();
+    });
+
+    $('#department_id').on('change', function(){
+        let company = $('#company_id').val();
+        let branch = $('#branch_id').val();
+        let division = $('#division_id').val();
+        let department = $(this).val();
+        if(company) {
+            loadSections(company, branch, division, department);
+        }
+        loadEmployees();
+    });
+
+    $('#section_id').on('change', function(){
+        loadEmployees();
+    });
+
+    // Autoload based on request query parameters
+    const filterData = {
+        company: "{{ request('company_id') ?? '' }}",
+        branch: "{{ request('branch_id') ?? request('location_id') ?? '' }}",
+        division: "{{ request('division_id') ?? '' }}",
+        department: "{{ request('department_id') ?? '' }}",
+        section: "{{ request('section_id') ?? request('id') ?? '' }}"
+    };
+
+    if (filterData.company) {
+        loadBranches(filterData.company, filterData.branch)
+            .then(() => loadDivisions(filterData.company, filterData.branch, filterData.division))
+            .then(() => loadDepartments(filterData.company, filterData.branch, filterData.division, filterData.department))
+            .then(() => loadSections(filterData.company, filterData.branch, filterData.division, filterData.department, filterData.section))
+            .then(() => loadEmployees());
+    } else {
+        loadEmployees();
+    }
     @endif
 
     // Axios Form Submission

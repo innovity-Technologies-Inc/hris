@@ -2,7 +2,7 @@
 
 ## 2026-07-21 (Offboarding Index Page Search & Organization Filters)
 
-**Goal**: Implement advanced search and organization filters (Company, Branch, Division, Department, Section) with cascading AJAX autoload matching general settings visibility, employee name, employee ID, system ID, and date range query parameters on offboarding index views. Also pre-load/pre-select the organizational hierarchy dropdowns from section ID query parameters when creating a new offboarding request.
+**Goal**: Implement advanced search and organization filters (Company, Branch, Division, Department, Section) with cascading AJAX autoload matching general settings visibility, employee name, employee ID, system ID, and date range query parameters on offboarding index views. Also pre-load/pre-select the organizational hierarchy dropdowns from section ID query parameters when creating a new offboarding request, and make all hierarchy selectors cascading and dynamic on the create form just like the establishment filters in career movement.
 
 **Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/OffboardingTest.php --no-coverage`
 
@@ -13,6 +13,7 @@
 - Added Select2 styling, cascading AJAX options autoloading listeners, and query parameter auto-population.
 - Refactored index and form layouts to follow the standard system styling (single card layout, warning-colored Create buttons with feather icons, solid action buttons using data-feather, simple unified form cards).
 - Implemented automatic resolution of section hierarchy parameters (`section_id` or `id`) in `OffboardingController@create` and pre-selected the matching Company, Branch, Division, Department, and Section dropdowns in the UI.
+- Implemented dynamic cascading AJAX filters for the Company, Branch, Division, Department, and Section dropdown selectors on the Create/Edit form, fetching and rendering option values sequentially and refreshing the eligible employees list.
 - Added `offboarding search filters filter records correctly` and `offboarding create view preloads hierarchy from section id query parameter` feature tests in `OffboardingTest.php`.
 - Feature tests passed 4/4 tests (41 assertions) ✅
 
