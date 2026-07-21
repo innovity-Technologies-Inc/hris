@@ -25,7 +25,20 @@
             </div>
 
             <ul id="side-menu">
-                <li class="menu-title">Menu</li>
+                @php
+                    $isEmployeeUser = auth()->user()->user_type === \App\Enums\UserType::Employee;
+                    $isEmployeeType = auth()->user()->user_type === \App\Enums\UserType::Employee;
+                    $canViewEmployeeInfo = auth()->user()->can('employee-management.view');
+                    $canReviewProfile = auth()->user()->can('employee-management.profile-review');
+                    $canSearchEmployee = auth()->user()->can('employee-management.view') && !$isEmployeeType;
+                    $canBulkUploadEmployee = auth()->user()->can('employee-management.import');
+                    $showEmployeesMenu = $canViewEmployeeInfo || $canReviewProfile || $canSearchEmployee || $canBulkUploadEmployee;
+                    $showEmployeeManagementTitle = auth()->user()->can('dashboard.view') || $isEmployeeUser || auth()->user()->can('employee-management.view') || auth()->user()->can('announcements.view') || $showEmployeesMenu;
+                @endphp
+
+                @if($showEmployeeManagementTitle)
+                <li class="menu-title">Employee Management</li>
+                @endif
 
                 @if(auth()->user()->can('dashboard.view'))
                 <li>
@@ -36,9 +49,6 @@
                 </li>
                 @endif
 
-                @php
-                    $isEmployeeUser = auth()->user()->user_type === \App\Enums\UserType::Employee;
-                @endphp
                 @if($isEmployeeUser || auth()->user()->can('employee-management.view'))
                 <li>
                     <a href="{{ route('employee.dashboard') }}" class="@if (Route::is('employee.dashboard*')) menuitem-active @endif">
@@ -58,16 +68,7 @@
                 @endif
 
                 <!-- Employees Menu -->
-                @php
-                    $isEmployeeType = auth()->user()->user_type === \App\Enums\UserType::Employee;
-                    $canViewEmployeeInfo = auth()->user()->can('employee-management.view');
-                    $canReviewProfile = auth()->user()->can('employee-management.profile-review');
-                    $canSearchEmployee = auth()->user()->can('employee-management.view') && !$isEmployeeType;
-                    $canBulkUploadEmployee = auth()->user()->can('employee-management.import');
-                    $showEmployeesMenu = $canViewEmployeeInfo || $canReviewProfile || $canSearchEmployee || $canBulkUploadEmployee;
-                @endphp
                 @if($showEmployeesMenu)
-                <li class="menu-title">Employees</li>
                 <li>
                     @if($isEmployeeType && !$canViewEmployeeInfo && !$canReviewProfile)
                         @php
@@ -140,7 +141,7 @@
                 </li>
                 @endif
 
-                <!-- Attendance Menu -->
+                <!-- Attendance, Leaves, and Plans (Time & Leaves Section) -->
                 @php
                     $canClockInOut = auth()->user()->can('attendance.clock-in-out');
                     $canCreateAttendance = auth()->user()->can('attendance.create');
@@ -148,9 +149,34 @@
                     $canRecords = auth()->user()->can('attendance.view');
                     $showAttendanceMenu = $canClockInOut || $canCreateAttendance || $canBulkUploadAttendance || $canRecords;
                     $attendanceOpen = Route::is('attendance.*');
+
+                    $canLeaveApplication = auth()->user()->can('leaves.create');
+                    $canLeaveLogs = auth()->user()->can('leaves.view');
+                    $showLeavesMenu = $canLeaveApplication || $canLeaveLogs;
+                    $leavesOpen = Route::is('leave.*');
+
+                    $canMealPlans = auth()->user()->can('leave-plans.view') || auth()->user()->can('meal-plans.view');
+                    $canShiftPlans = auth()->user()->can('shift-plans.view');
+                    $canLeavePlans = auth()->user()->can('leave-plans.view');
+                    $canOTPlans = auth()->user()->can('ot-plans.view');
+                    $canRosterPlans = auth()->user()->can('roster-plans.view');
+                    $canOffDayPlans = auth()->user()->can('off-day-work-plans.view');
+                    $canBonusPlans = auth()->user()->can('bonus-plans.view');
+                    $canAllowancePlans = auth()->user()->can('allowance-plans.view');
+                    $canTAPlans = auth()->user()->can('ta-plans.view');
+                    $canDAPlans = auth()->user()->can('da-plans.view');
+                    $canDeductionPlans = auth()->user()->can('deduction-plan.view');
+                    $canBulkUploadPlans = auth()->user()->can('employee-management.import');
+                    $showPlansMenu = $canMealPlans || $canShiftPlans || $canLeavePlans || $canOTPlans || $canRosterPlans || $canOffDayPlans || $canBonusPlans || $canAllowancePlans || $canTAPlans || $canDAPlans || $canDeductionPlans || $canBulkUploadPlans;
+
+                    $showTimeAndLeavesTitle = $showAttendanceMenu || $showLeavesMenu || $showPlansMenu;
                 @endphp
+
+                @if($showTimeAndLeavesTitle)
+                <li class="menu-title">Time & Leaves</li>
+                @endif
+
                 @if($showAttendanceMenu)
-                <li class="menu-title">Attendance</li>
                 <li>
                     <a href="#attendance" data-bs-toggle="collapse"
                         aria-expanded="{{ $attendanceOpen ? 'true' : 'false' }}"
@@ -193,16 +219,7 @@
                 </li>
                 @endif
 
-
-                <!-- Leaves Menu -->
-                @php
-                    $canLeaveApplication = auth()->user()->can('leaves.create');
-                    $canLeaveLogs = auth()->user()->can('leaves.view');
-                    $showLeavesMenu = $canLeaveApplication || $canLeaveLogs;
-                    $leavesOpen = Route::is('leave.*');
-                @endphp
                 @if($showLeavesMenu)
-                <li class="menu-title">Leaves</li>
                 <li>
                     <a href="#leaves" data-bs-toggle="collapse" aria-expanded="{{ $leavesOpen ? 'true' : 'false' }}"
                         class="@if ($leavesOpen) menuitem-active @endif">
@@ -229,300 +246,7 @@
                 </li>
                 @endif
 
-                <!-- Movement Menu -->
-                @php
-                    $canMovementApplication = auth()->user()->can('movement.create');
-                    $canMovementLogs = auth()->user()->can('movement.view');
-                    $showMovementMenu = $canMovementApplication || $canMovementLogs;
-                    $movementOpen = Route::is('movement.*');
-                @endphp
-                @if($showMovementMenu)
-                <li class="menu-title">Travel Movement</li>
-                <li>
-                    <a href="#movement" data-bs-toggle="collapse"
-                        aria-expanded="{{ $movementOpen ? 'true' : 'false' }}"
-                        class="@if ($movementOpen) menuitem-active @endif">
-                        <i data-feather="move"></i>
-                        <span> Travel Movement </span>
-                        <span class="menu-arrow"></span>
-                    </a>
-                    <div class="collapse @if ($movementOpen) show @endif" id="movement">
-                        <ul class="nav-second-level">
-                            @if($canMovementApplication)
-                            <li>
-                                <a class='tp-link @if (Route::is('movement.create')) menuitem-active @endif'
-                                    href='{{ route('movement.create') }}'>Application</a>
-                            </li>
-                            @endif
-                            @if($canMovementLogs)
-                            <li>
-                                <a class='tp-link @if (Route::is('movement.index')) menuitem-active @endif'
-                                    href='{{ route('movement.index') }}'>Logs</a>
-                            </li>
-                            @endif
-                        </ul>
-                    </div>
-                </li>
-                @endif
-
-                <!-- Transfer Menu -->
-                @php
-                    $canTransferApplication = auth()->user()->can('transfers.create');
-                    $canTransferLogs = auth()->user()->can('transfers.view');
-                    $showTransferMenu = $canTransferApplication || $canTransferLogs;
-                    $transferOpen = Route::is('transfer.*');
-                @endphp
-                @if($showTransferMenu)
-                <li class="menu-title">Career Movement</li>
-                <li>
-                    <a href="#transfer" data-bs-toggle="collapse"
-                        aria-expanded="{{ $transferOpen ? 'true' : 'false' }}"
-                        class="@if ($transferOpen) menuitem-active @endif">
-                        <i data-feather="shuffle"></i>
-                        <span> Career Movement </span>
-                        <span class="menu-arrow"></span>
-                    </a>
-                    <div class="collapse @if ($transferOpen) show @endif" id="transfer">
-                        <ul class="nav-second-level">
-                            @if($canTransferApplication)
-                            <li>
-                                <a class='tp-link @if (Route::is('transfer.create')) menuitem-active @endif'
-                                    href='{{ route('transfer.create') }}'>Application</a>
-                            </li>
-                            @endif
-                            @if($canTransferLogs)
-                            <li>
-                                <a class='tp-link @if (Route::is('transfer.index')) menuitem-active @endif'
-                                    href='{{ route('transfer.index') }}'>Logs</a>
-                            </li>
-                            @endif
-                        </ul>
-                    </div>
-                </li>
-                @endif
-
-                <!-- Offboarding Menu Title -->
-                @php
-                    $canResignationsView = auth()->user()->can('resignations.view') || auth()->user()->can('offboarding-resignation.view');
-                    $canResignationsCreate = auth()->user()->can('resignations.create');
-                    $canTerminationsView = auth()->user()->can('terminations.view') || auth()->user()->can('offboarding-termination.view');
-                    $canTerminationsCreate = auth()->user()->can('terminations.create');
-                    $showOffboardingTitle = $canResignationsView || $canResignationsCreate || $canTerminationsView || $canTerminationsCreate;
-                @endphp
-
-                @if($showOffboardingTitle)
-                <li class="menu-title">Offboarding</li>
-
-                {{-- Resignation Menu --}}
-                @if($canResignationsView || $canResignationsCreate)
-                @php
-                    $resignationOpen = Route::is('offboarding.resignation.*');
-                @endphp
-                <li>
-                    <a href="#sidebarResignation" data-bs-toggle="collapse"
-                        aria-expanded="{{ $resignationOpen ? 'true' : 'false' }}"
-                        class="@if ($resignationOpen) menuitem-active @endif">
-                        <i data-feather="file-text"></i>
-                        <span> Resignation </span>
-                        <span class="menu-arrow"></span>
-                    </a>
-                    <div class="collapse @if ($resignationOpen) show @endif" id="sidebarResignation">
-                        <ul class="nav-second-level">
-                            @if($canResignationsCreate)
-                            <li>
-                                <a class='tp-link @if (Route::is('offboarding.resignation.create')) menuitem-active @endif'
-                                    href='{{ route('offboarding.resignation.create', ['type' => 'resignation']) }}'>Request</a>
-                            </li>
-                            @endif
-                            @if($canResignationsView)
-                            <li>
-                                <a class='tp-link @if (Route::is('offboarding.resignation.index')) menuitem-active @endif'
-                                    href='{{ route('offboarding.resignation.index') }}'>Logs</a>
-                            </li>
-                            @endif
-                        </ul>
-                    </div>
-                </li>
-                @endif
-
-                {{-- Termination Menu --}}
-                @if($canTerminationsView || $canTerminationsCreate)
-                @php
-                    $terminationOpen = Route::is('offboarding.termination.*');
-                @endphp
-                <li>
-                    <a href="#sidebarTermination" data-bs-toggle="collapse"
-                        aria-expanded="{{ $terminationOpen ? 'true' : 'false' }}"
-                        class="@if ($terminationOpen) menuitem-active @endif">
-                        <i data-feather="user-minus"></i>
-                        <span> Termination </span>
-                        <span class="menu-arrow"></span>
-                    </a>
-                    <div class="collapse @if ($terminationOpen) show @endif" id="sidebarTermination">
-                        <ul class="nav-second-level">
-                            @if($canTerminationsCreate)
-                            <li>
-                                <a class='tp-link @if (Route::is('offboarding.termination.create')) menuitem-active @endif'
-                                    href='{{ route('offboarding.termination.create', ['type' => 'termination']) }}'>Request</a>
-                            </li>
-                            @endif
-                            @if($canTerminationsView)
-                            <li>
-                                <a class='tp-link @if (Route::is('offboarding.termination.index')) menuitem-active @endif'
-                                    href='{{ route('offboarding.termination.index') }}'>Logs</a>
-                            </li>
-                            @endif
-                        </ul>
-                    </div>
-                </li>
-                @endif
-                @endif
-
-                <!-- Claim Expense Menu -->
-                @php
-                    $canClaimExpenseApplication = auth()->user()->can('claim-expenses.create');
-                    $canClaimExpenseLogs = auth()->user()->can('claim-expenses.view');
-                    $showClaimExpenseMenu = $canClaimExpenseApplication || $canClaimExpenseLogs;
-                    $claimExpenseOpen = Route::is('claim_expenses.*');
-                @endphp
-                @if($showClaimExpenseMenu)
-                <li class="menu-title">Claim Expense</li>
-                <li>
-                    <a href="#claimExpense" data-bs-toggle="collapse"
-                        aria-expanded="{{ $claimExpenseOpen ? 'true' : 'false' }}"
-                        class="@if ($claimExpenseOpen) menuitem-active @endif">
-                        <i data-feather="dollar-sign"></i>
-                        <span> Claim Expense </span>
-                        <span class="menu-arrow"></span>
-                    </a>
-                    <div class="collapse @if ($claimExpenseOpen) show @endif" id="claimExpense">
-                        <ul class="nav-second-level">
-                            @if($canClaimExpenseApplication)
-                            <li>
-                                <a class='tp-link @if (Route::is('claim_expenses.create')) menuitem-active @endif'
-                                    href='{{ route('claim_expenses.create') }}'>Application</a>
-                            </li>
-                            @endif
-                            @if($canClaimExpenseLogs)
-                            <li>
-                                <a class='tp-link @if (Route::is('claim_expenses.index')) menuitem-active @endif'
-                                    href='{{ route('claim_expenses.index') }}'>Logs</a>
-                            </li>
-                            @endif
-                        </ul>
-                    </div>
-                </li>
-                @endif
-
-                <!-- Payroll Menu -->
-                @php
-                    $canPromotions = auth()->user()->can('promotions.view');
-                    $canDemotions = auth()->user()->can('demotions.view');
-                    $canIncrements = auth()->user()->can('increments.view');
-                    $canDecrements = auth()->user()->can('decrements.view');
-                    $canBonuses = auth()->user()->can('bonuses.view');
-                    $canAdvanceSalary = auth()->user()->can('advance-salary.view');
-                    $canArrear = auth()->user()->can('arrear.view');
-                    $canSalary = auth()->user()->can('salary.view');
-                    $showPayrollMenu = $canPromotions || $canDemotions || $canIncrements || $canDecrements || $canBonuses || $canAdvanceSalary || $canArrear || $canSalary;
-                    $payrollOpen = request()->is('promotion*') || request()->is('demotion*') || request()->is('increment*') || request()->is('decrement*') || request()->is('bonus*')
-                    || request()->is('advance-salary*') || request()->is('arrear*') || request()->is('salary*');
-                @endphp
-                @if($showPayrollMenu)
-                <li class="menu-title">Payroll</li>
-                <li>
-                    <a href="#payroll" data-bs-toggle="collapse" aria-expanded="{{ $payrollOpen ? 'true' : 'false' }}"
-                        class="@if ($payrollOpen) menuitem-active @endif">
-                        <i data-feather="dollar-sign"></i>
-                        <span> Payroll </span>
-                        <span class="menu-arrow"></span>
-                    </a>
-                    <div class="collapse @if ($payrollOpen) show @endif" id="payroll">
-                        <ul class="nav-second-level">
-                            @if($canPromotions)
-                            <li>
-                                <a class='tp-link @if (request()->is('promotion') && !request()->is('promotion/create')) menuitem-active @endif'
-                                    href='{{ route('promotion.index') }}'>Promotions</a>
-                            </li>
-                            @endif
-                            @if($canDemotions)
-                            <li>
-                                <a class='tp-link @if (request()->is('demotion') && !request()->is('demotion/create')) menuitem-active @endif'
-                                    href='{{ route('demotion.index') }}'>Demotions</a>
-                            </li>
-                            @endif
-                            @if($canIncrements)
-                            <li>
-                                <a class='tp-link @if (request()->is('increment') && !request()->is('increment/create')) menuitem-active @endif'
-                                    href='{{ route('increment.index') }}'>Increments</a>
-                            </li>
-                            @endif
-                            @if($canDecrements)
-                            <li>
-                                <a class='tp-link @if (request()->is('decrement') && !request()->is('decrement/create')) menuitem-active @endif'
-                                    href='{{ route('decrement.index') }}'>Decrements</a>
-                            </li>
-                            @endif
-                            @if($canBonuses)
-                            <li>
-                                <a class='tp-link @if (request()->is('bonus') && !request()->is('bonus/create')) menuitem-active @endif'
-                                   href='{{ route('bonus.index') }}'>Bonus & Reward</a>
-                            </li>
-                            @endif
-                            @if(auth()->user()->can('penalty-management.view'))
-                            <li>
-                                <a class='tp-link @if (Route::is('payroll.penalty.*')) menuitem-active @endif'
-                                   href='{{ route('payroll.penalty.index') }}'>Penalty Management</a>
-                            </li>
-                            @endif
-                            @if($canAdvanceSalary)
-                            <li>
-                                <a class='tp-link @if (request()->is('advance-salary*')) menuitem-active @endif'
-                                   href='{{ route('advance-salary.index') }}'>Advance Salary</a>
-                            </li>
-                            @endif
-                            @if($canArrear)
-                            <li>
-                                <a class='tp-link @if (request()->is('arrear*')) menuitem-active @endif'
-                                   href='{{ route('arrear.index') }}'>Arrear Management</a>
-                            </li>
-                            @endif
-                            @if($canSalary)
-                            <li>
-                                <a class='tp-link @if (request()->is('salary') && !request()->is('salary/create')) menuitem-active @endif'
-                                   href='{{ route('salary.index') }}'>Salary</a>
-                            </li>
-                            @endif
-                            @if(auth()->user()->can('disbursement.view'))
-                            <li>
-                                <a class='tp-link @if (request()->is('disbursement*')) menuitem-active @endif'
-                                   href='{{ route('disbursement.index') }}'>Disbursement</a>
-                            </li>
-                            @endif
-                        </ul>
-                    </div>
-                </li>
-                @endif
-
-
-                <!-- Plans Menu -->
-                @php
-                    $canMealPlans = auth()->user()->can('meal-plans.view');
-                    $canShiftPlans = auth()->user()->can('shift-plans.view');
-                    $canLeavePlans = auth()->user()->can('leave-plans.view');
-                    $canOTPlans = auth()->user()->can('ot-plans.view');
-                    $canRosterPlans = auth()->user()->can('roster-plans.view');
-                    $canOffDayPlans = auth()->user()->can('off-day-work-plans.view');
-                    $canBonusPlans = auth()->user()->can('bonus-plans.view');
-                    $canAllowancePlans = auth()->user()->can('allowance-plans.view');
-                    $canTAPlans = auth()->user()->can('ta-plans.view');
-                    $canDAPlans = auth()->user()->can('da-plans.view');
-                    $canDeductionPlans = auth()->user()->can('deduction-plan.view');
-                    $canBulkUploadPlans = auth()->user()->can('employee-management.import');
-                    $showPlansMenu = $canMealPlans || $canShiftPlans || $canLeavePlans || $canOTPlans || $canRosterPlans || $canOffDayPlans || $canBonusPlans || $canAllowancePlans || $canTAPlans || $canDAPlans || $canDeductionPlans || $canBulkUploadPlans;
-                @endphp
                 @if($showPlansMenu)
-                <li class="menu-title">Plans</li>
                 <li>
                     <a href="#plans" data-bs-toggle="collapse"
                         aria-expanded="{{ Route::is('plan.*') ? 'true' : 'false' }}"
@@ -623,6 +347,7 @@
                                     href='{{ route('plan.deduction_plans.index') }}'>Deduction</a>
                             </li>
                             @endif
+
                             @if($canBulkUploadPlans)
                             <li>
                                 <a class='tp-link @if (Route::is('plan.bulk_upload')) menuitem-active @endif'
@@ -633,6 +358,285 @@
                     </div>
                 </li>
                 @endif
+
+                <!-- Movements & Offboarding Section -->
+                @php
+                    $canMovementApplication = auth()->user()->can('movement.create');
+                    $canMovementLogs = auth()->user()->can('movement.view');
+                    $showMovementMenu = $canMovementApplication || $canMovementLogs;
+                    $movementOpen = Route::is('movement.*');
+
+                    $canTransferApplication = auth()->user()->can('transfers.create');
+                    $canTransferLogs = auth()->user()->can('transfers.view');
+                    $showTransferMenu = $canTransferApplication || $canTransferLogs;
+                    $transferOpen = Route::is('transfer.*');
+
+                    $canResignationsView = auth()->user()->can('resignations.view') || auth()->user()->can('offboarding-resignation.view');
+                    $canResignationsCreate = auth()->user()->can('resignations.create');
+                    $canTerminationsView = auth()->user()->can('terminations.view') || auth()->user()->can('offboarding-termination.view');
+                    $canTerminationsCreate = auth()->user()->can('terminations.create');
+                    $showOffboardingTitle = $canResignationsView || $canResignationsCreate || $canTerminationsView || $canTerminationsCreate;
+
+                    $showMovementsAndOffboardingTitle = $showMovementMenu || $showTransferMenu || $showOffboardingTitle;
+                @endphp
+
+                @if($showMovementsAndOffboardingTitle)
+                <li class="menu-title">Movements & Offboarding</li>
+                @endif
+
+                @if($showMovementMenu)
+                <li>
+                    <a href="#movement" data-bs-toggle="collapse"
+                        aria-expanded="{{ $movementOpen ? 'true' : 'false' }}"
+                        class="@if ($movementOpen) menuitem-active @endif">
+                        <i data-feather="move"></i>
+                        <span> Travel Movement </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse @if ($movementOpen) show @endif" id="movement">
+                        <ul class="nav-second-level">
+                            @if($canMovementApplication)
+                            <li>
+                                <a class='tp-link @if (Route::is('movement.create')) menuitem-active @endif'
+                                    href='{{ route('movement.create') }}'>Application</a>
+                            </li>
+                            @endif
+                            @if($canMovementLogs)
+                            <li>
+                                <a class='tp-link @if (Route::is('movement.index')) menuitem-active @endif'
+                                    href='{{ route('movement.index') }}'>Logs</a>
+                            </li>
+                            @endif
+                        </ul>
+                    </div>
+                </li>
+                @endif
+
+                @if($showTransferMenu)
+                <li>
+                    <a href="#transfer" data-bs-toggle="collapse"
+                        aria-expanded="{{ $transferOpen ? 'true' : 'false' }}"
+                        class="@if ($transferOpen) menuitem-active @endif">
+                        <i data-feather="shuffle"></i>
+                        <span> Career Movement </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse @if ($transferOpen) show @endif" id="transfer">
+                        <ul class="nav-second-level">
+                            @if($canTransferApplication)
+                            <li>
+                                <a class='tp-link @if (Route::is('transfer.create')) menuitem-active @endif'
+                                    href='{{ route('transfer.create') }}'>Application</a>
+                            </li>
+                            @endif
+                            @if($canTransferLogs)
+                            <li>
+                                <a class='tp-link @if (Route::is('transfer.index')) menuitem-active @endif'
+                                    href='{{ route('transfer.index') }}'>Logs</a>
+                            </li>
+                            @endif
+                        </ul>
+                    </div>
+                </li>
+                @endif
+
+                @if($showOffboardingTitle)
+                {{-- Resignation Menu --}}
+                @if($canResignationsView || $canResignationsCreate)
+                @php
+                    $resignationOpen = Route::is('offboarding.resignation.*');
+                @endphp
+                <li>
+                    <a href="#sidebarResignation" data-bs-toggle="collapse"
+                        aria-expanded="{{ $resignationOpen ? 'true' : 'false' }}"
+                        class="@if ($resignationOpen) menuitem-active @endif">
+                        <i data-feather="file-text"></i>
+                        <span> Resignation </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse @if ($resignationOpen) show @endif" id="sidebarResignation">
+                        <ul class="nav-second-level">
+                            @if($canResignationsCreate)
+                            <li>
+                                <a class='tp-link @if (Route::is('offboarding.resignation.create')) menuitem-active @endif'
+                                    href='{{ route('offboarding.resignation.create', ['type' => 'resignation']) }}'>Request</a>
+                            </li>
+                            @endif
+                            @if($canResignationsView)
+                            <li>
+                                <a class='tp-link @if (Route::is('offboarding.resignation.index')) menuitem-active @endif'
+                                    href='{{ route('offboarding.resignation.index') }}'>Logs</a>
+                            </li>
+                            @endif
+                        </ul>
+                    </div>
+                </li>
+                @endif
+
+                {{-- Termination Menu --}}
+                @if($canTerminationsView || $canTerminationsCreate)
+                @php
+                    $terminationOpen = Route::is('offboarding.termination.*');
+                @endphp
+                <li>
+                    <a href="#sidebarTermination" data-bs-toggle="collapse"
+                        aria-expanded="{{ $terminationOpen ? 'true' : 'false' }}"
+                        class="@if ($terminationOpen) menuitem-active @endif">
+                        <i data-feather="user-minus"></i>
+                        <span> Termination </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse @if ($terminationOpen) show @endif" id="sidebarTermination">
+                        <ul class="nav-second-level">
+                            @if($canTerminationsCreate)
+                            <li>
+                                <a class='tp-link @if (Route::is('offboarding.termination.create')) menuitem-active @endif'
+                                    href='{{ route('offboarding.termination.create', ['type' => 'termination']) }}'>Request</a>
+                            </li>
+                            @endif
+                            @if($canTerminationsView)
+                            <li>
+                                <a class='tp-link @if (Route::is('offboarding.termination.index')) menuitem-active @endif'
+                                    href='{{ route('offboarding.termination.index') }}'>Logs</a>
+                            </li>
+                            @endif
+                        </ul>
+                    </div>
+                </li>
+                @endif
+                @endif
+
+                <!-- Finance & Payroll Section -->
+                @php
+                    $canClaimExpenseApplication = auth()->user()->can('claim-expenses.create');
+                    $canClaimExpenseLogs = auth()->user()->can('claim-expenses.view');
+                    $showClaimExpenseMenu = $canClaimExpenseApplication || $canClaimExpenseLogs;
+                    $claimExpenseOpen = Route::is('claim_expenses.*');
+
+                    $canPromotions = auth()->user()->can('promotions.view');
+                    $canDemotions = auth()->user()->can('demotions.view');
+                    $canIncrements = auth()->user()->can('increments.view');
+                    $canDecrements = auth()->user()->can('decrements.view');
+                    $canBonuses = auth()->user()->can('bonuses.view');
+                    $canAdvanceSalary = auth()->user()->can('advance-salary.view');
+                    $canArrear = auth()->user()->can('arrear.view');
+                    $canSalary = auth()->user()->can('salary.view');
+                    $showPayrollMenu = $canPromotions || $canDemotions || $canIncrements || $canDecrements || $canBonuses || $canAdvanceSalary || $canArrear || $canSalary;
+                    $payrollOpen = request()->is('promotion*') || request()->is('demotion*') || request()->is('increment*') || request()->is('decrement*') || request()->is('bonus*')
+                    || request()->is('advance-salary*') || request()->is('arrear*') || request()->is('salary*');
+
+                    $showFinanceAndPayrollTitle = $showClaimExpenseMenu || $showPayrollMenu;
+                @endphp
+
+                @if($showFinanceAndPayrollTitle)
+                <li class="menu-title">Finance & Payroll</li>
+                @endif
+
+                @if($showClaimExpenseMenu)
+                <li>
+                    <a href="#claimExpense" data-bs-toggle="collapse"
+                        aria-expanded="{{ $claimExpenseOpen ? 'true' : 'false' }}"
+                        class="@if ($claimExpenseOpen) menuitem-active @endif">
+                        <i data-feather="dollar-sign"></i>
+                        <span> Claim Expense </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse @if ($claimExpenseOpen) show @endif" id="claimExpense">
+                        <ul class="nav-second-level">
+                            @if($canClaimExpenseApplication)
+                            <li>
+                                <a class='tp-link @if (Route::is('claim_expenses.create')) menuitem-active @endif'
+                                    href='{{ route('claim_expenses.create') }}'>Application</a>
+                            </li>
+                            @endif
+                            @if($canClaimExpenseLogs)
+                            <li>
+                                <a class='tp-link @if (Route::is('claim_expenses.index')) menuitem-active @endif'
+                                    href='{{ route('claim_expenses.index') }}'>Logs</a>
+                            </li>
+                            @endif
+                        </ul>
+                    </div>
+                </li>
+                @endif
+
+                @if($showPayrollMenu)
+                <li>
+                    <a href="#payroll" data-bs-toggle="collapse" aria-expanded="{{ $payrollOpen ? 'true' : 'false' }}"
+                        class="@if ($payrollOpen) menuitem-active @endif">
+                        <i data-feather="dollar-sign"></i>
+                        <span> Payroll </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse @if ($payrollOpen) show @endif" id="payroll">
+                        <ul class="nav-second-level">
+                            @if($canPromotions)
+                            <li>
+                                <a class='tp-link @if (request()->is('promotion') && !request()->is('promotion/create')) menuitem-active @endif'
+                                    href='{{ route('promotion.index') }}'>Promotions</a>
+                            </li>
+                            @endif
+                            @if($canDemotions)
+                            <li>
+                                <a class='tp-link @if (request()->is('demotion') && !request()->is('demotion/create')) menuitem-active @endif'
+                                    href='{{ route('demotion.index') }}'>Demotions</a>
+                            </li>
+                            @endif
+                            @if($canIncrements)
+                            <li>
+                                <a class='tp-link @if (request()->is('increment') && !request()->is('increment/create')) menuitem-active @endif'
+                                    href='{{ route('increment.index') }}'>Increments</a>
+                            </li>
+                            @endif
+                            @if($canDecrements)
+                            <li>
+                                <a class='tp-link @if (request()->is('decrement') && !request()->is('decrement/create')) menuitem-active @endif'
+                                    href='{{ route('decrement.index') }}'>Decrements</a>
+                            </li>
+                            @endif
+                            @if($canBonuses)
+                            <li>
+                                <a class='tp-link @if (request()->is('bonus') && !request()->is('bonus/create')) menuitem-active @endif'
+                                   href='{{ route('bonus.index') }}'>Bonus & Reward</a>
+                            </li>
+                            @endif
+                            @if(auth()->user()->can('penalty-management.view'))
+                            <li>
+                                <a class='tp-link @if (Route::is('payroll.penalty.*')) menuitem-active @endif'
+                                   href='{{ route('payroll.penalty.index') }}'>Penalty Management</a>
+                            </li>
+                            @endif
+                            @if($canAdvanceSalary)
+                            <li>
+                                <a class='tp-link @if (request()->is('advance-salary*')) menuitem-active @endif'
+                                   href='{{ route('advance-salary.index') }}'>Advance Salary</a>
+                            </li>
+                            @endif
+                            @if($canArrear)
+                            <li>
+                                <a class='tp-link @if (request()->is('arrear*')) menuitem-active @endif'
+                                   href='{{ route('arrear.index') }}'>Arrear Management</a>
+                            </li>
+                            @endif
+                            @if($canSalary)
+                            <li>
+                                <a class='tp-link @if (request()->is('salary') && !request()->is('salary/create')) menuitem-active @endif'
+                                   href='{{ route('salary.index') }}'>Salary</a>
+                            </li>
+                            @endif
+                            @if(auth()->user()->can('disbursement.view'))
+                            <li>
+                                <a class='tp-link @if (request()->is('disbursement*')) menuitem-active @endif'
+                                   href='{{ route('disbursement.index') }}'>Disbursement</a>
+                            </li>
+                            @endif
+                        </ul>
+                    </div>
+                </li>
+                @endif
+
+
+
 
 
                 <!-- Company Info Menu -->
@@ -659,7 +663,6 @@
 
                     $showCompanyMenu = $canGroups || $canCompanyTypes || $canCompanies || $canCompanyBranches || $canDivisions || $canDepartments || $canSections || $canDesignations || $canPayGroups || $canPayScales || $canMovementTypes || $canSalaryGrades || $canBanks || $canBankBranches || $canBankAccounts || $canHolidays || $canJobCreations || $canBulkUploadCompany || $canExpenseTypes;
 
-
                     $companyOpen =
                         Route::is('groups.*') ||
                         Route::is('companies.*') ||
@@ -674,15 +677,35 @@
                         Route::is('gazette_locations.*') ||
                         Route::is('company.bulk_upload') ||
                         Route::is('expense_types.*');
+
+                    // Organization Structure variables
+                    $canStructuralView = auth()->user()->can('structural-view.view');
+                    $canMembers = auth()->user()->can('members.view');
+                    $showStructureMenu = $canStructuralView || $canMembers;
+
+                    // Transport variables
+                    $canVehicles = auth()->user()->can('vehicles.view');
+                    $canAssignDriver = auth()->user()->can('assign-driver.view');
+                    $canVehicleRequisition = auth()->user()->can('vehicle-requisition.view');
+                    $canEmployeeTransport = auth()->user()->can('employee-transport.view');
+                    $canVehicleAllocation = auth()->user()->can('vehicle-allocation.view');
+                    $showTransportMenu = $canVehicles || $canAssignDriver || $canVehicleRequisition || $canEmployeeTransport || $canVehicleAllocation;
+                    $transportOpen = Route::is('transport.*');
+
+                    $showCompanyAdminTitle = $showCompanyMenu || $showStructureMenu || $showTransportMenu;
                 @endphp
+
+                @if($showCompanyAdminTitle)
+                <li class="menu-title">Company Administration</li>
+                @endif
+
                 @if($showCompanyMenu)
-                <li class="menu-title">Company Setup</li>
                 <li>
                     <a href="#sidebarCompany" data-bs-toggle="collapse"
                         aria-expanded="{{ $companyOpen ? 'true' : 'false' }}"
-                        class="@if ($companyOpen) menuitem-active @endif ">
-                        <i data-feather="box"></i>
-                        <span> Company Info </span>
+                        class="@if ($companyOpen) menuitem-active @endif">
+                        <i data-feather="briefcase"></i>
+                        <span> Company Setup </span>
                         <span class="menu-arrow"></span>
                     </a>
                     <div class="collapse @if ($companyOpen) show @endif" id="sidebarCompany">
@@ -690,7 +713,7 @@
                             @if($canGroups)
                             <li>
                                 <a class='tp-link @if (Route::is('groups.*')) menuitem-active @endif'
-                                    href='{{ route('groups.index') }}'>Groups</a>
+                                    href='{{ route('groups.index') }}'>Company Group</a>
                             </li>
                             @endif
                             @if($canCompanyTypes)
@@ -831,7 +854,6 @@
                     $showStructureMenu = $canStructuralView || $canMembers;
                 @endphp
                 @if($showStructureMenu)
-                <li class="menu-title">Organization Structure</li>
                 <li>
                     <a href="#organization-structure-menu" data-bs-toggle="collapse"
                         aria-expanded="{{ Route::is('organization-structure.*') ? 'true' : 'false' }}"
@@ -873,7 +895,6 @@
                     $transportOpen = Route::is('transport.*');
                 @endphp
                 @if($showTransportMenu)
-                <li class="menu-title">Transport</li>
                 <li>
                     <a href="#sidebarTransport" data-bs-toggle="collapse"
                         aria-expanded="{{ $transportOpen ? 'true' : 'false' }}"
