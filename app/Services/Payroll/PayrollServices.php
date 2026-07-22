@@ -128,7 +128,8 @@ class PayrollServices
                 'total_amount' => $total_advance
             ]);
 
-            DB::transaction(function () use ($data, $employeeData, $total_advance, $total_employees, $processId, $salary_month, $startDate, $endDate) {
+            $process = null;
+            DB::transaction(function () use ($data, $employeeData, $total_advance, $total_employees, $processId, $salary_month, $startDate, $endDate, &$process) {
                 if ($processId == null) {
                     $process = PayrollProcess::create([
                         'batch_id' => uniqid('Advance_', true),
@@ -182,6 +183,7 @@ class PayrollServices
             });
 
             Log::info('Advance salary process database transaction committed.');
+            return $process;
 
         } catch (\Exception $e) {
             Log::error('Advance salary processing failure in Service layer.', [

@@ -143,8 +143,10 @@
                 </div>
             </div>
         </div>
-    </div>
 </div>
+
+{{-- Workflow History & Approval Form --}}
+@include('approval_engine.workflow_history', ['approvable' => $process])
 
 {{-- Individual Item Modal --}}
 <div class="modal fade" id="itemDetailsModal" tabindex="-1" aria-hidden="true">

@@ -1294,9 +1294,7 @@ Route::prefix('advance-salary')->name('advance-salary.')->controller(\App\Http\C
         Route::get('edit/{id}', 'edit')->name('edit');
         Route::put('{id}/update', 'save')->name('update');
     });
-    Route::middleware('permission:advance-salary.approve')->group(function () {
-        Route::put('{id}/status-update', 'statusUpdate')->name('status.update');
-    });
+
     Route::middleware('permission:advance-salary.delete')->group(function () {
         Route::delete('{id}/delete', 'destroy')->name('delete');
     });

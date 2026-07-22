@@ -46,6 +46,7 @@ return [
         'offboarding-resignation' => 'Offboarding Resignation',
         'offboarding-termination' => 'Offboarding Termination',
         'penalty' => 'Penalty Management',
+        'advance-salary' => 'Advance Salary',
     ],
 
 ];

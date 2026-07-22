@@ -52,35 +52,13 @@
                     <i class="bi bi-printer"></i>
                 </a>
                 @endcan
-
                 @if ($item->approval_status == 'pending')
                     @can('advance-salary.edit')
                     <a href="{{ route('advance-salary.edit', $item->id) }}" class="btn btn-primary btn-sm" title="Edit">
                         <i style="height: 12px; width: 12px" data-feather="edit"></i>
                     </a>
                     @endcan
-
-                    @can('advance-salary.approve')
-                    <form class="d-inline" action="{{ route('advance-salary.status.update', $item->id) }}" method="POST">
-                        @csrf
-                        @method('PUT')
-                        <input type="hidden" name="status" value="approved">
-                        <button type="submit" class="btn btn-success btn-sm confirmApprove" title="Approve">
-                            <i style="height: 12px; width: 12px" data-feather="check"></i>
-                        </button>
-                    </form>
-
-                    <form class="d-inline" method="POST" action="{{ route('advance-salary.status.update', $item->id) }}">
-                        @csrf
-                        @method('PUT')
-                        <input type="hidden" name="status" value="rejected">
-                        <button type="submit" class="btn btn-danger btn-sm confirmReject" title="Reject">
-                            <i style="height: 12px; width: 12px" data-feather="x"></i>
-                        </button>
-                    </form>
-                    @endcan
                 @endif
-
                 @can('advance-salary.delete')
                 <form class="d-inline" action="{{ route('advance-salary.delete', $item->id) }}" method="POST">
                     @csrf

@@ -94,7 +94,10 @@ class AdvanceSalaryController extends Controller
             $validated = $request->validate($rules);
             Log::info('Advance Salary validation successful.', ['validated_data' => $validated]);
             
-            $this->payrollService->advanceProcess($validated, $id);
+            $process = $this->payrollService->advanceProcess($validated, $id);
+            if (!$id && $process) {
+                $process->startWorkflow('advance-salary');
+            }
             
             Log::info('Advance Salary processing completed successfully.', ['process_id' => $id]);
             return redirect()->route('advance-salary.index')->with([
@@ -168,48 +171,7 @@ class AdvanceSalaryController extends Controller
         }
     }
 
-    public function statusUpdate(Request $request, $id)
-    {
-        Log::info('Updating Advance Salary process status.', [
-            'process_id' => $id,
-            'new_status' => $request->status
-        ]);
 
-        $request->validate([
-            'status' => 'required|in:approved,rejected,pending'
-        ]);
-
-        try {
-            $process = PayrollProcess::findOrFail($id);
-            
-            DB::transaction(function () use ($process, $request) {
-                $process->update([
-                    'approval_status' => $request->status,
-                    'approved_by' => \Illuminate\Support\Facades\Auth::id(),
-                    'approved_at' => now()
-                ]);
-                
-                // Update all items in this batch
-                \App\Models\Payroll\AdvanceSalary::where('process_id', $process->id)
-                    ->update(['status' => $request->status]);
-            });
-
-            Log::info('Advance Salary status updated successfully.', ['process_id' => $id, 'status' => $request->status]);
-            return redirect()->route('advance-salary.index')->with([
-                'alert-type' => 'success',
-                'message' => 'Status Updated Successfully'
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Failed to update Advance Salary status.', [
-                'process_id' => $id,
-                'message' => $e->getMessage()
-            ]);
-            return redirect()->back()->with([
-                'alert-type' => 'error',
-                'message' => 'Failed to update status: ' . $e->getMessage()
-            ]);
-        }
-    }
 
     public function destroy($id)
     {

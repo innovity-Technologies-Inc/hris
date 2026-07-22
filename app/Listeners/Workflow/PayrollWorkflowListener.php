@@ -16,6 +16,12 @@ class PayrollWorkflowListener
             $approvable->update([
                 'approval_status' => 'approved',
             ]);
+
+            if ($approvable->type === 'advance') {
+                $approvable->advanceSalaries()->update(['status' => 'approved']);
+            } elseif ($approvable->type === 'arrear') {
+                $approvable->arrears()->update(['status' => 'approved']);
+            }
         }
     }
 
@@ -27,6 +33,12 @@ class PayrollWorkflowListener
             $approvable->update([
                 'approval_status' => 'rejected',
             ]);
+
+            if ($approvable->type === 'advance') {
+                $approvable->advanceSalaries()->update(['status' => 'rejected']);
+            } elseif ($approvable->type === 'arrear') {
+                $approvable->arrears()->update(['status' => 'rejected']);
+            }
         }
     }
 }

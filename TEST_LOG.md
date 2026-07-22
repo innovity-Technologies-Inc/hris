@@ -1,5 +1,25 @@
 # Test Log
 
+## 2026-07-22 (Advance Salary Approval Workflow Integration)
+
+**Goal**: Remove static approve/reject status-update routes and buttons from Advance Salary and integrate it with the central approval engine workflow.
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest`
+
+**Results**:
+- Added `'advance-salary' => 'Advance Salary'` module registration inside `config/approval-engine.php`.
+- Removed `statusUpdate` action method from `AdvanceSalaryController.php` and deleted the static route `advance-salary.status.update` from `web.php`.
+- Updated `PayrollServices.php` `advanceProcess` method to return the created `PayrollProcess` instance.
+- Updated `AdvanceSalaryController.php` `save` method to trigger `$process->startWorkflow('advance-salary')` on creation.
+- Registered `'advance-salary'` mapping in `WorkflowEventDispatcherService.php` to use the `PayrollWorkflowListener` class.
+- Modified `PayrollWorkflowListener.php` to automatically sync statuses of child items (`advanceSalaries` and `arrears`) upon workflow completion or rejection.
+- Removed static approval check/x forms from the actions cell inside `payroll/advance_salary/partials/search_results.blade.php`.
+- Embedded the interactive approval timeline widget inside `payroll/advance_salary/show.blade.php`.
+- Created `tests/Feature/Payroll/AdvanceSalaryWorkflowTest.php` to verify advance salary workflow triggers, status updates, and child records status sync.
+- Tests passed: 224/224 passed (878 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-22 (Penalty Management Approval Workflow Integration)
 
 **Goal**: Remove static status input from the Employee Penalty form and integrate the Penalty Management module with the central approval engine workflow.
