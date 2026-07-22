@@ -92,7 +92,7 @@ test('it can manage expense types', function () {
         'status' => 'active',
     ]);
 
-    $response->assertStatus(200);
+    $response->assertStatus(201);
     $this->assertDatabaseHas('expense_types', [
         'name' => 'Travel Fuel',
     ]);
@@ -157,7 +157,7 @@ test('it triggers approval workflow on expense application store', function () {
         'remarks' => 'None',
     ]);
 
-    $response->assertStatus(200);
+    $response->assertStatus(201);
     $this->assertDatabaseHas('expense_applications', [
         'employee_id' => $this->employee->id,
         'amount' => 1500.50,

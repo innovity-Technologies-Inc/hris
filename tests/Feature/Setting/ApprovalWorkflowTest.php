@@ -91,7 +91,7 @@ test('it rejects sequential workflow if step order violates authority level hier
 
     $response->assertStatus(422);
     $response->assertJsonFragment([
-        'message' => 'Validation failed: Step 2 (level: section) cannot have a lower authority level than Step 1 (level: department) in a sequential workflow.'
+        'message' => 'Step 2 (level: section) cannot have a lower authority level than Step 1 (level: department) in a sequential workflow.'
     ]);
 });
 

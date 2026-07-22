@@ -71,6 +71,7 @@ class EmployeeOfficeInformationImport implements ToCollection
                 'alternate_off_day' => $this->parseArray($row[30]),
                 'ot_allowed' => $row[31] ?? null,
                 'pf_eligible' => $row[32] ?? null,
+                'salary_type' => $row[33] ?? null,
                 'transport_eligible' => $row[34] ?? null,
                 'can_apply_loan' => $row[35] ?? null,
                 'pf_effective_date' => $this->parseDate($row[36]),

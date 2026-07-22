@@ -76,6 +76,7 @@ class EmployeeEducationInfoImport implements ToCollection, WithHeadingRow
                 [
                     'educations' => $data['educations'],
                     'trainings' => $data['trainings'],
+                    'status' => 'active',
                 ]
             );
             $this->inserted++;

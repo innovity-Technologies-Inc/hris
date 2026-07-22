@@ -30,36 +30,38 @@ class EmployeeNomineeImport implements ToCollection
 
                 // Personal Details
                 'nominee_name' => $row[1] ?? null,
-                'father_name' => $row[2] ?? null,
-                'mother_name' => $row[3] ?? null,
-                'spouse_name' => $row[4] ?? null,
-                'gender' => $row[5] ?? null,
-                'date_of_birth' => $this->parseDate($row[6] ?? null),
-                'religion' => $row[7] ?? null,
-                'marital_status' => $row[8] ?? null,
-                'nationality' => $row[9] ?? null,
-                'blood_group' => $row[10] ?? null,
-                'photo_path' => $row[11] ?? null,
+                'relation' => $row[2] ?? null,
+                'father_name' => $row[3] ?? null,
+                'mother_name' => $row[4] ?? null,
+                'spouse_name' => $row[5] ?? null,
+                'gender' => $row[6] ?? null,
+                'date_of_birth' => $this->parseDate($row[7] ?? null),
+                'religion' => $row[8] ?? null,
+                'marital_status' => $row[9] ?? null,
+                'nationality' => $row[10] ?? null,
+                'blood_group' => $row[11] ?? null,
+                'photo_path' => $row[12] ?? null,
 
                 // Identification
-                'nid' => $row[12] ?? null,
-                'birth_reg_no' => $row[13] ?? null,
+                'nid' => $row[13] ?? null,
+                'birth_reg_no' => $row[14] ?? null,
 
                 // Financial
-                'bank_account_no' => $row[14] ?? null,
-                'ratio' => $row[15] ?? null,
+                'bank_account_no' => $row[15] ?? null,
+                'ratio' => $row[16] ?? null,
 
                 // Contact & Address
-                'phone' => $row[16] ?? null,
-                'mobile' => $row[17] ?? null,
-                'present_address_line' => $row[18] ?? null,
-                'village' => $row[19] ?? null,
-                'post_office' => $row[20] ?? null,
-                'thana' => $row[21] ?? null,
-                'district' => $row[22] ?? null,
-                'state' => $row[23] ?? null,
-                'zip_code' => $row[24] ?? null,
-                'country' => $row[25] ?? null,
+                'phone' => $row[17] ?? null,
+                'mobile' => $row[18] ?? null,
+                'present_address_line' => $row[19] ?? null,
+                'village' => $row[20] ?? null,
+                'post_office' => $row[21] ?? null,
+                'thana' => $row[22] ?? null,
+                'district' => $row[23] ?? null,
+                'state' => $row[24] ?? null,
+                'zip_code' => $row[25] ?? null,
+                'country' => $row[26] ?? null,
+                'status' => 'active',
             ]);
         });
     }

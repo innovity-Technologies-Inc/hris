@@ -23,16 +23,24 @@ class SalaryBreakdownImport implements ToCollection
 
             EmployeeSalaryBreakdown::create([
                 'employee_id'           => $this->getEmployeeId(Employee::class, $row[0]),
-                'basic_salary'          => $row[1] ?? null,
-                'house_allowance'       => $row[2] ?? null,
-                'transport_allowance'   => $row[3] ?? null,
-                'food_allowance'        => $row[4] ?? null,
-                'medical_allowance'     => $row[5] ?? null,
-                'other_earnings'        => $row[6] ?? null,
-                'gross_salary'          => $row[7] ?? null,
-                'currency'              => $row[8] ?? 'BDT',
+                'pay_scale_id'          => $this->getPayScaleId($row[1]),
+                'basic_salary'          => $row[2] ?? null,
+                'house_allowance'       => $row[3] ?? null,
+                'transport_allowance'   => $row[4] ?? null,
+                'food_allowance'        => $row[5] ?? null,
+                'medical_allowance'     => $row[6] ?? null,
+                'other_earnings'        => $row[7] ?? null,
+                'gross_salary'          => $row[8] ?? null,
             ]);
         });
+    }
+
+    private function getPayScaleId($title)
+    {
+        if (empty($title)) return null;
+        $title = trim(strtolower($title));
+        $record = \App\Models\Company\PayScale::whereRaw('LOWER(title) LIKE ?', ["%{$title}%"])->first();
+        return $record ? $record->id : null;
     }
 
     private function getEmployeeId($model, $employee_id)

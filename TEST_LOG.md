@@ -1,5 +1,23 @@
 # Test Log
 
+## 2026-07-22 (Employee Bulk Imports Alignment & Excel Templates Verification)
+
+**Goal**: Check and align all 7 bulk upload imports for employee information with recent table updates, update matching Excel demo templates, configure storage helper references across Blade files, and ensure complete data fields mapping for imports.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest --no-coverage`
+
+**Results**:
+- Aligned name fields mapping, NID (index 57), and date of birth in `EmployeeGeneralInformationImport.php` to match columns order in general info template.
+- Implemented `salary_type` mapping at column index 33 in `EmployeeOfficeInformationImport.php` and added `salary_type` to fillable columns in `EmployeeOfficeInfo` model.
+- Restructured `EmployeeNomineeImport.php` to map the new `relation` (index 2), `bank_account_no` (index 15), and `ratio` (index 16) columns, shifting remaining details accordingly.
+- Integrated `pay_scale_id` lookups by pay scale title at index 1 and adjusted shifted salary columns in `SalaryBreakdownImport.php`.
+- Replaced direct asset storage path helpers with `\App\HelperClass::get_file_url(...)` across 41 Blade templates to support flexible filesystems (MinIO/S3).
+- Added `EmployeeBulkImportTest.php` Pest test file verifying bulk import data saving logic and NID/Relation/PayScale lookups.
+- Corrected route names and type parameter in `ResignationTest.php` and updated expected JSON validation and store response status codes (201 Created) in `AnnouncementTest.php`, `ClaimExpenseTest.php` and `ApprovalWorkflowTest.php` tests.
+- Re-ran the entire test suite successfully (195 tests passed, 0 failures).
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-21 (Offboarding Index Page Search & Organization Filters)
 
 **Goal**: Implement advanced search and organization filters (Company, Branch, Division, Department, Section) with cascading AJAX autoload matching general settings visibility, employee name, employee ID, system ID, and date range query parameters on offboarding index views. Also pre-load/pre-select the organizational hierarchy dropdowns from section ID query parameters when creating a new offboarding request, and make all hierarchy selectors cascading and dynamic on the create form just like the establishment filters in career movement.

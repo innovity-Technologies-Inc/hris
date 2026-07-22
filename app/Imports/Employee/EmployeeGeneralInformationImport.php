@@ -30,10 +30,9 @@ class EmployeeGeneralInformationImport implements ToCollection
                 'system_id' => $row[1] ?? null,
                 'punch_card_no' => $row[2] ?? null,
 
-                // Personal Information
                 'first_name' => $row[3] ?? null,
-                'last_name' => $row[4] ?? null,
-                'middle_name' => $row[5] ?? null,
+                'middle_name' => $row[4] ?? null,
+                'last_name' => $row[5] ?? null,
                 'full_name' => $row[6] ?? null,
                 'father_name' => $row[7] ?? null,
                 'mother_name' => $row[8] ?? null,
@@ -94,20 +93,20 @@ class EmployeeGeneralInformationImport implements ToCollection
                 'visa_expiry' => $this->parseDate($row[53] ?? null),
                 'work_expiry' => $this->parseDate($row[54] ?? null),
                 'residency_id_number' => $row[55] ?? null,
+                'date_of_birth' => $this->parseDate($row[56] ?? null),
+                'nid' => $row[57] ?? null,
 
                 // Birth Information
-
-                'date_of_birth' => $this->parseDate($row[56] ?? null),
-                'birth_country' => $row[57] ?? null,
-                'birth_reg_no' => $row[58] ?? null,
+                'birth_country' => $row[58] ?? null,
+                'birth_reg_no' => $row[59] ?? null,
 
                 // Contact Information
-                'personal_mobile' => $row[59] ?? null,
-                'home_phone' => $row[60] ?? null,
-                'work_mobile' => $row[61] ?? null,
-                'work_phone' => $row[62] ?? null,
-                'work_email' => $row[63] ?? null,
-                'personal_email' => $row[64] ?? null,
+                'personal_mobile' => $row[60] ?? null,
+                'home_phone' => $row[61] ?? null,
+                'work_mobile' => $row[62] ?? null,
+                'work_phone' => $row[63] ?? null,
+                'work_email' => $row[64] ?? null,
+                'personal_email' => $row[65] ?? null,
             ]);
         });
     }

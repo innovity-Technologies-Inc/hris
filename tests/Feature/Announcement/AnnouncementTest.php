@@ -107,7 +107,7 @@ it('can store a new announcement with attachment', function () {
 
     $response = $this->postJson(route('announcements.store'), $data);
 
-    $response->assertStatus(200)
+    $response->assertStatus(201)
         ->assertJson([
             'success' => true,
             'message' => 'Announcement created successfully.',

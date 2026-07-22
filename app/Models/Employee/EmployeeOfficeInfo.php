@@ -30,7 +30,7 @@ class EmployeeOfficeInfo extends Model
          'current_section_id', 'current_designation_id', 'orientation_required', 'orientation_from',
         'orientation_to', 'orientation_type', 'orientation_days', 'confirmation_date', 'probation_duration',
         'next_promotion_date', 'promotion_cycle', 'increment_cycle', 'weekends', 'alternate_off_day',
-        'ot_allowed', 'pf_eligible', 'transport_eligible', 'can_apply_loan',
+        'ot_allowed', 'pf_eligible', 'transport_eligible', 'salary_type', 'can_apply_loan',
         'pf_effective_date', 'can_apply_advance', 'gratuity_eligible',
     ];
 
