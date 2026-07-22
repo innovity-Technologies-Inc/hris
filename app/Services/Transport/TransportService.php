@@ -481,7 +481,7 @@ class TransportService
 
         $driverDesignationIds = Designation::where('company_designation', 'like', '%Driver%')->pluck('id');
 
-        if ($driverDesignationIds->isEmpty()) return collect();
+        if ($driverDesignationIds->isEmpty()) return new Collection();
 
         $driverEmployeeIds = EmployeeOfficeInfo::whereIn('current_designation_id', $driverDesignationIds)
             ->pluck('employee_id');

@@ -2,7 +2,7 @@
 
 ## 2026-07-22 (Employee Transport Reject and Approve Buttons Modification)
 
-**Goal**: Remove the Reject button from the Employee Transport list view, and both Approve and Reject buttons from the details show view.
+**Goal**: Remove the Reject button from the Employee Transport list view, both Approve and Reject buttons from the details show view, and resolve a Typehint Return Value error in `TransportService.php`.
 
 **Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/TransportRouteTest.php`
 
@@ -10,6 +10,7 @@
 - Removed the "Reject" action button from `resources/views/transport/employee_transport/search_results.blade.php` list grid.
 - Removed both the "Approve" and "Reject" buttons and forms from `resources/views/transport/employee_transport/show.blade.php` details view.
 - Cleaned up the script tag push event listener for `#rejectBtn` in `show.blade.php`.
+- Fixed `TypeError` in `TransportService::getEligibleDrivers()` at line 484 by returning an empty Eloquent `Collection` (`new Collection()`) instead of the default Laravel support collection `collect()` helper.
 - Verified that all Vehicle, Driver, Allocation, and Transport route feature tests pass successfully.
 - Tests passed: 9/9 passed (47 assertions) ✅
 
