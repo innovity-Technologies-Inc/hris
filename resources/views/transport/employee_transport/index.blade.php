@@ -8,12 +8,12 @@
                     <a type="button" class="btn btn-warning btn-sm" href="{{ route('transport.employee_transports.create') }}">
                         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                     </a>
-                    <div class="btn-group">
-                        <button type="button" id="exportExcelBtn" class="btn btn-outline-success btn-sm no-loader">
-                            <i style="height: 12px; width: 12px" data-feather="file-text" class="me-1"></i> Export Excel
+                    <div class="d-flex gap-2">
+                        <button type="button" id="exportExcelBtn" class="btn btn-success btn-sm no-loader">
+                            <i class="bi bi-file-earmark-excel me-1"></i> Excel
                         </button>
-                        <button type="button" id="printBtn" class="btn btn-outline-primary btn-sm no-loader">
-                            <i style="height: 12px; width: 12px" data-feather="printer" class="me-1"></i> Print PDF
+                        <button type="button" id="printBtn" class="btn btn-secondary btn-sm no-loader">
+                            <i class="bi bi-printer me-1"></i> Print
                         </button>
                     </div>
                 </div><!-- end card header -->

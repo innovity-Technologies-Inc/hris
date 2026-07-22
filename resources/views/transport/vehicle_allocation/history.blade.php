@@ -16,11 +16,11 @@
                             <a href="{{ route('transport.vehicle_allocations.create') }}" class="btn btn-success btn-sm">
                                 <i class="fas fa-plus me-1"></i>New Allocation
                             </a>
-                            <button type="button" id="exportExcelBtn" class="btn btn-light btn-sm no-loader ms-1">
-                                <i class="fas fa-file-excel text-success me-1"></i>Excel
+                            <button type="button" id="exportExcelBtn" class="btn btn-success btn-sm no-loader">
+                                <i class="bi bi-file-earmark-excel me-1"></i> Excel
                             </button>
-                            <button type="button" id="printBtn" class="btn btn-light btn-sm no-loader">
-                                <i class="fas fa-print text-primary me-1"></i>Print
+                            <button type="button" id="printBtn" class="btn btn-secondary btn-sm no-loader">
+                                <i class="bi bi-printer me-1"></i> Print
                             </button>
                         </div>
                     </div>

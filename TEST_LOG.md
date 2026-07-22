@@ -1,5 +1,19 @@
 # Test Log
 
+## 2026-07-22 (Export Buttons UI & Icon Styling Standardization)
+
+**Goal**: Standardize export and printing button styling (Excel: `btn-success`, bi bi-file-earmark-excel, label: Excel; Print: `btn-secondary`, bi bi-printer, label: Print) across all modules in the codebase.
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest`
+
+**Results**:
+- Standardized buttons styling (classes, icons, and text layout) in `attendance/index.blade.php`, `leave/index.blade.php`, `offboarding/index.blade.php`, `movement/index.blade.php`, `transport/employee_transport/index.blade.php`, `transport/vehicle_allocation/history.blade.php`, and `transport/vehicle_requisition/index.blade.php`.
+- Restored php open tag in `EmployeeTransportController.php` fixing autoloader/class mapping exceptions.
+- Executed the entire Pest feature test suite to verify route resolution, layout matching, and view loading behavior.
+- Tests passed: 218/218 passed (806 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-22 (Promotion, Demotion, Increment, Decrement Export and Print)
 
 **Goal**: Implement unpaginated, filtered Excel export and PDF printing for the Promotion, Demotion, Increment, and Decrement modules.

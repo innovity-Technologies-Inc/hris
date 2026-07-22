@@ -160,12 +160,12 @@
                             $exportPermission = $type === 'termination' ? 'terminations.export' : 'resignations.export';
                         @endphp
                         @can($exportPermission)
-                        <div class="btn-group">
-                            <button type="button" id="exportExcelBtn" class="btn btn-outline-success btn-sm me-2 no-loader">
-                                <i style="height: 12px; width: 12px" data-feather="file-text"></i> Export Excel
+                        <div class="d-flex gap-2">
+                            <button type="button" id="exportExcelBtn" class="btn btn-success btn-sm no-loader">
+                                <i class="bi bi-file-earmark-excel me-1"></i> Excel
                             </button>
-                            <button type="button" id="exportPdfBtn" class="btn btn-outline-danger btn-sm no-loader">
-                                <i style="height: 12px; width: 12px" data-feather="file"></i> Export PDF
+                            <button type="button" id="exportPdfBtn" class="btn btn-secondary btn-sm no-loader">
+                                <i class="bi bi-printer me-1"></i> Print
                             </button>
                         </div>
                         @endcan
