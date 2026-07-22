@@ -134,6 +134,9 @@
             </div>
         </div>
     </div>
+@endsection
+
+@push('scripts')
     <script>
         function releaseVehicle(allocationId) {
             const form = document.getElementById('releaseForm');
@@ -206,5 +209,5 @@
             });
         });
     </script>
-@endsection
+@endpush
 
