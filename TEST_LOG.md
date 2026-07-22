@@ -2,13 +2,14 @@
 
 ## 2026-07-22 (Employee Transport Reject and Approve Buttons Modification)
 
-**Goal**: Remove the Reject button from the Employee Transport list view and the Approve button from the details show view.
+**Goal**: Remove the Reject button from the Employee Transport list view, and both Approve and Reject buttons from the details show view.
 
 **Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/TransportRouteTest.php`
 
 **Results**:
 - Removed the "Reject" action button from `resources/views/transport/employee_transport/search_results.blade.php` list grid.
-- Removed the "Approve" button and form from `resources/views/transport/employee_transport/show.blade.php` details view.
+- Removed both the "Approve" and "Reject" buttons and forms from `resources/views/transport/employee_transport/show.blade.php` details view.
+- Cleaned up the script tag push event listener for `#rejectBtn` in `show.blade.php`.
 - Verified that all Vehicle, Driver, Allocation, and Transport route feature tests pass successfully.
 - Tests passed: 9/9 passed (47 assertions) ✅
 
