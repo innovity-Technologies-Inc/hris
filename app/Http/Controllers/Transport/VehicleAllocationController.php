@@ -106,7 +106,7 @@ class VehicleAllocationController extends Controller
 
         $vehicles = Vehicle::orderBy('model_number')->get();
 
-        if ($request->ajax()) {
+        if ($request->ajax() || $request->boolean('_ajax')) {
             return view('transport.vehicle_allocation.history_results', compact('allocations'))->render();
         }
 

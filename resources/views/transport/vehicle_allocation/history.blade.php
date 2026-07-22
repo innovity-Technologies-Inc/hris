@@ -151,7 +151,7 @@
                 $.ajax({
                     url: url,
                     method: "GET",
-                    data: queryString,
+                    data: queryString + '&_ajax=1',
                     beforeSend: function() {
                         $('#search-result').html(
                             '<div class="text-center py-4 text-muted">Loading Data...</div>');
