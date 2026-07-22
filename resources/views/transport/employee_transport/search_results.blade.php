@@ -55,10 +55,6 @@
                                 class="btn btn-primary btn-sm" title="Edit">
                                 <i data-feather="edit" style="width: 14px; height: 14px;"></i>
                             </a>
-                            <button type="button" class="btn btn-danger btn-sm" title="Reject"
-                                onclick="rejectService({{ $transport->id }})">
-                                <i data-feather="x" style="width: 14px; height: 14px;"></i>
-                            </button>
                         @endif
                     </div>
                 </td>

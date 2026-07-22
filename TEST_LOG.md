@@ -1,5 +1,19 @@
 # Test Log
 
+## 2026-07-22 (Employee Transport Reject and Approve Buttons Modification)
+
+**Goal**: Remove the Reject button from the Employee Transport list view and the Approve button from the details show view.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/TransportRouteTest.php`
+
+**Results**:
+- Removed the "Reject" action button from `resources/views/transport/employee_transport/search_results.blade.php` list grid.
+- Removed the "Approve" button and form from `resources/views/transport/employee_transport/show.blade.php` details view.
+- Verified that all Vehicle, Driver, Allocation, and Transport route feature tests pass successfully.
+- Tests passed: 9/9 passed (47 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-22 (Leave Logs Search Organizational Filters)
 
 **Goal**: Align Leave Logs search UI design to match Attendance index form layouts (exactly 3 rows: 1 core row, 2 organization filter rows) with standard element heights, add company, branch, division, department, and section cascading filters, and integrate unpaginated print/excel exporting matching current filter parameters.

@@ -350,16 +350,6 @@
                                 <button type="button" class="btn btn-danger px-4" id="rejectBtn">
                                     <i class="fas fa-times me-1"></i>Reject
                                 </button>
-                                <form
-                                    action="{{ route('transport.employee_transports.approve', $employeeTransport->id) }}"
-                                    method="POST" class="d-inline"
-                                    onsubmit="return confirm('Are you sure you want to approve this transport service?')">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button type="submit" class="btn btn-success px-4">
-                                        <i class="fas fa-check me-1"></i>Approve
-                                    </button>
-                                </form>
                             </div>
                         </div>
                     @endif
