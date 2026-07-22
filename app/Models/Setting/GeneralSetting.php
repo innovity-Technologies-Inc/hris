@@ -3,14 +3,15 @@
 namespace App\Models\Setting;
 
 use Illuminate\Database\Eloquent\Model;
-
 use App\Traits\Userstamps;
 use App\Traits\Auditable;
 
 class GeneralSetting extends Model
 {
     use Userstamps, Auditable;
+    
     protected $table = 'general_settings';
+    
     protected $fillable = [
         'name', 'currency', 'logo_light', 'logo_dark', 'favicon', 'branch_status', 'division_status',
         'department_status', 'section_status'
@@ -63,7 +64,7 @@ class GeneralSetting extends Model
      */
     public function getLogoLightUrlAttribute(): ?string
     {
-        return $this->logo_light ? asset('storage/' . $this->logo_light) : null;
+        return $this->logo_light ? \App\HelperClass::get_file_url($this->logo_light) : null;
     }
 
     /**
@@ -73,7 +74,7 @@ class GeneralSetting extends Model
      */
     public function getLogoDarkUrlAttribute(): ?string
     {
-        return $this->logo_dark ? asset('storage/' . $this->logo_dark) : null;
+        return $this->logo_dark ? \App\HelperClass::get_file_url($this->logo_dark) : null;
     }
 
     /**
@@ -83,7 +84,6 @@ class GeneralSetting extends Model
      */
     public function getFaviconUrlAttribute(): ?string
     {
-        return $this->favicon ? asset('storage/' . $this->favicon) : null;
+        return $this->favicon ? \App\HelperClass::get_file_url($this->favicon) : null;
     }
 }
-

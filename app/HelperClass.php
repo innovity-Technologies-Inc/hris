@@ -21,14 +21,19 @@ class HelperClass
 
     public static function file_upload($file, $folder_name)
     {
+        $disk = config('filesystems.default');
         $file_name = time() . Str::random(10) . '.' . $file->getClientOriginalExtension();
-        $file_path = $file->storeAs('upload/' . $folder_name, $file_name, 'public');
+        $file_path = $file->storeAs('upload/' . $folder_name, $file_name, [
+            'disk' => $disk,
+            'visibility' => 'public'
+        ]);
         return $file_path;
     }
 
     public static function file_delete($file_path)
     {
-        Storage::disk('public')->delete($file_path);
+        $disk = config('filesystems.default');
+        Storage::disk($disk)->delete($file_path);
     }
 
     public static function indexNumberSerialization($data){
@@ -97,10 +102,22 @@ class HelperClass
     public static function generateAvatar($photoPath, $fullName, $size = 45, $bgColor = '#974063', $extraClass = '', $employeeId = null)
     {
         $avatarHtml = '';
+        $disk = config('filesystems.default');
 
-        // Check if photo exists and file is valid
-        if (!empty($photoPath) && file_exists(public_path('storage/' . $photoPath))) {
-            $avatarHtml = '<img src="' . asset('storage/' . $photoPath) . '"
+        // Determine if file exists
+        $fileExists = false;
+        if (!empty($photoPath)) {
+            if ($disk === 'local' || $disk === 'public') {
+                $fileExists = file_exists(public_path('storage/' . $photoPath)) || file_exists(storage_path('app/public/' . $photoPath));
+            } else {
+                // For cloud/S3/MinIO, we don't perform slow synchronous head requests on page load
+                $fileExists = true;
+            }
+        }
+
+        if ($fileExists) {
+            $photoUrl = Storage::disk($disk)->url($photoPath);
+            $avatarHtml = '<img src="' . $photoUrl . '"
                     alt="' . htmlspecialchars($fullName ?? 'User') . '"
                     class="rounded-circle ' . $extraClass . '"
                     style="width: ' . $size . 'px; height: ' . $size . 'px; object-fit: cover; display: inline-block;">';
@@ -256,6 +273,18 @@ class HelperClass
 
         $config = $configs->where('section', $section)->where('field_name', $fieldName)->first();
         return $config ? (bool)$config->is_required : false;
+    }
+
+    /**
+     * Get URL for any file path dynamically from the configured storage disk.
+     */
+    public static function get_file_url($file_path)
+    {
+        if (empty($file_path)) {
+            return null;
+        }
+        $disk = config('filesystems.default');
+        return Storage::disk($disk)->url($file_path);
     }
 }
 
