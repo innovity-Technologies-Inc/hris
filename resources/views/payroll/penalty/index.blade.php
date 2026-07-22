@@ -5,12 +5,22 @@
     <div class="row">
         <div class="col-xl-12">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     @can('penalty-management.create')
                     <button type="button" class="btn btn-warning btn-sm" id="btnAssignPenalty">
                         <i style="height: 12px; width: 12px" data-feather="plus"></i> Assign Penalty
                     </button>
+                    @else
+                    <div></div>
                     @endcan
+                    <div class="d-flex gap-2">
+                        <button type="button" id="exportExcelBtn" class="btn btn-success btn-sm no-loader">
+                            <i class="bi bi-file-earmark-excel me-1"></i> Excel
+                        </button>
+                        <button type="button" id="printBtn" class="btn btn-secondary btn-sm no-loader">
+                            <i class="bi bi-printer me-1"></i> Print
+                        </button>
+                    </div>
                 </div><!-- end card header -->
 
                 {{-- Search Filter Form --}}
@@ -217,6 +227,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 e.preventDefault();
                 fetchPenalties(this.getAttribute('href'));
             });
+        });
+    }
+
+    // Excel export
+    const exportBtn = document.getElementById('exportExcelBtn');
+    if (exportBtn) {
+        exportBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.ignoreBeforeUnload = true;
+            setTimeout(() => { window.ignoreBeforeUnload = false; }, 2000);
+            
+            const keyword = searchInput.value;
+            window.location.href = "{{ route('payroll.penalty.export.excel') }}?keyword=" + encodeURIComponent(keyword);
+        });
+    }
+
+    // Print
+    const printBtn = document.getElementById('printBtn');
+    if (printBtn) {
+        printBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const keyword = searchInput.value;
+            window.open("{{ route('payroll.penalty.print') }}?keyword=" + encodeURIComponent(keyword), '_blank');
         });
     }
 

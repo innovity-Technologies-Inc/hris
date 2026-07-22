@@ -1,5 +1,22 @@
 # Test Log
 
+## 2026-07-22 (Penalty Management Export and Print Index)
+
+**Goal**: Implement unpaginated, filtered Excel export and PDF printing for the Penalty Management module.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/Payroll/PenaltyTest.php`
+
+**Results**:
+- Added optional pagination support to `getPenalties` in `EmployeePenaltyServices.php` to fetch unpaginated queries for exports.
+- Registered `payroll.penalty.export.excel` and `payroll.penalty.print` routes inside the `payroll/penalty` controller group in `web.php`.
+- Created `PenaltyExport.php` under `app/Exports/Payroll` mapping headings (Employee Name, Employee ID, Penalty Plan, Occurrence Date, Cause, Penalty Amount, Status, Created At).
+- Developed print layout template `print_index.blade.php` in `resources/views/payroll/penalty` with portrait layout.
+- Added Excel and Print action buttons and wired up parameters-forwarding click handlers in `payroll/penalty/index.blade.php` using Vanilla JS.
+- Created `PenaltyTest.php` verifying AJAX keyword search, Excel export download status, and print view correctness.
+- Tests passed: 3/3 passed (8 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-22 (Claim Expense Export and Print Index)
 
 **Goal**: Implement unpaginated, filtered Excel export and PDF printing for the Claim Expense Applications module.

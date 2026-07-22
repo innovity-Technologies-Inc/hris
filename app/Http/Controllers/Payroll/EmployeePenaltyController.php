@@ -23,7 +23,7 @@ class EmployeePenaltyController extends Controller
     {
         $penalties = $this->penaltyServices->getPenalties($request, $flexsearch);
 
-        if ($request->ajax()) {
+        if ($request->ajax() || $request->boolean('_ajax')) {
             return view('payroll.penalty.search_results', compact('penalties'))->render();
         }
 
@@ -70,5 +70,17 @@ class EmployeePenaltyController extends Controller
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
+    }
+
+    public function exportExcel(Request $request, FlexSearch $flexsearch)
+    {
+        $penalties = $this->penaltyServices->getPenalties($request, $flexsearch, false);
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\Payroll\PenaltyExport($penalties), 'employee_penalties_' . now()->format('Ymd_His') . '.xlsx');
+    }
+
+    public function printIndex(Request $request, FlexSearch $flexsearch)
+    {
+        $records = $this->penaltyServices->getPenalties($request, $flexsearch, false);
+        return view('payroll.penalty.print_index', compact('records'));
     }
 }

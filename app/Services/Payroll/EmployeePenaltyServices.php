@@ -20,18 +20,20 @@ class EmployeePenaltyServices
         $this->notificationService = $notificationService;
     }
 
-    /**
-     * Get list of employee penalties with filtering.
-     */
-    public function getPenalties(Request $request, FlexSearch $flexsearch)
+    public function getPenalties(Request $request, FlexSearch $flexsearch, $paginate = true)
     {
         $query = EmployeePenalty::query()->with(['employee', 'penaltyPlan']);
         $keyword = $request->get('keyword');
         $searchableFields = ['cause', 'employee.full_name', 'employee.applicant_id', 'employee.system_id', 'penaltyPlan.title'];
 
-        return $flexsearch->apply($query, [], $keyword, $searchableFields)
-            ->orderBy('id', 'desc')
-            ->paginate($request->get('per_page', 10));
+        $applied = $flexsearch->apply($query, [], $keyword, $searchableFields)
+            ->orderBy('id', 'desc');
+
+        if ($paginate) {
+            return $applied->paginate($request->get('per_page', 10));
+        }
+
+        return $applied->get();
     }
 
     /**

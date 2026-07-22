@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Penalty Logs - Print</title>
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 15mm 10mm;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 9pt;
+            line-height: 1.3;
+            color: #000;
+            background: #fff;
+        }
+
+        .report-header {
+            border-bottom: 3px solid #333;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+        }
+
+        .report-header h1 {
+            font-size: 16pt;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .report-header p {
+            font-size: 8pt;
+            color: #666;
+            margin-bottom: 2px;
+        }
+
+        .report-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding: 6px 8px;
+            background: #f5f5f5;
+            border: 1px solid #ccc;
+            font-size: 8pt;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        thead {
+            background-color: #ddd;
+            border-bottom: 2px solid #333;
+        }
+
+        th {
+            padding: 6px 4px;
+            font-weight: bold;
+            text-align: center;
+            border: 1px solid #999;
+            font-size: 8pt;
+        }
+
+        td {
+            padding: 5px 4px;
+            border: 1px solid #ccc;
+            font-size: 8pt;
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        tbody tr {
+            page-break-inside: avoid;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .text-left {
+            text-align: left;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 1px 5px;
+            border: 1px solid #666;
+            font-size: 7pt;
+        }
+
+        .badge-active   { background: #d1ecf1; border-color: #bee5eb; }
+        .badge-inactive { background: #f8d7da; border-color: #dc3545; }
+
+        .report-footer {
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px solid #ccc;
+            font-size: 8pt;
+            color: #666;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="report-header">
+        <h1>Employee Penalty Management logs</h1>
+        <p>List of all assigned employee penalty records, plan descriptions, and occurrence tracking</p>
+        <p><strong>Report Date:</strong> {{ date('l, F j, Y') }}</p>
+    </div>
+
+    <div class="report-info">
+        <div><strong>Total Penalties:</strong> {{ count($records) }}</div>
+        @if(request('keyword'))
+            <div><strong>Keyword Filter:</strong> "{{ request('keyword') }}"</div>
+        @endif
+        <div><strong>Printed:</strong> {{ date('d M, Y h:i A') }}</div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width:5%;">#</th>
+                <th style="width:25%;">Employee</th>
+                <th style="width:18%;">Penalty Plan</th>
+                <th style="width:15%;">Occurrence Date</th>
+                <th style="width:20%;">Cause</th>
+                <th style="width:12%;">Penalty Amount</th>
+                <th style="width:10%;">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($records as $index => $record)
+                <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td class="text-left">
+                        <strong>{{ $record->employee?->full_name ?? 'N/A' }}</strong><br>
+                        <span style="font-size:7pt; color:#666;">ID: {{ $record->employee?->applicant_id ?? '' }}</span>
+                    </td>
+                    <td>{{ $record->penaltyPlan?->title ?? 'N/A' }}</td>
+                    <td>{{ $record->occurrence_date ? \Carbon\Carbon::parse($record->occurrence_date)->format('d M Y') : '—' }}</td>
+                    <td class="text-left" style="font-size:7.5pt;">{{ $record->cause }}</td>
+                    <td>৳{{ number_format($record->penalty_amount ?? 0, 2) }}</td>
+                    <td>
+                        <span class="badge badge-{{ strtolower($record->status ?? 'active') }}">
+                            {{ ucfirst($record->status ?? 'Active') }}
+                        </span>
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+    <div class="report-footer">
+        <div><strong>Generated by HRMS</strong></div>
+        <div>Page 1 of 1</div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            window.print();
+        };
+    </script>
+
+</body>
+
+</html>
