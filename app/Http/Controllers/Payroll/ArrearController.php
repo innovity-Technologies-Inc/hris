@@ -9,7 +9,10 @@ use App\Models\Payroll\PayrollProcess;
 use App\Services\Payroll\PayrollServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
+use App\Models\Payroll\Arrear;
+use App\Exports\Payroll\ArrearProcessExport;
+use App\Exports\Payroll\ArrearDetailExport;
+use Maatwebsite\Excel\Facades\Excel;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 
 class ArrearController extends Controller
@@ -203,5 +206,40 @@ class ArrearController extends Controller
                 'message' => 'Deletion failed: ' . $e->getMessage()
             ]);
         }
+    }
+
+    public function exportExcel(Request $request, FlexSearch $flexsearch)
+    {
+        $searchResult = $this->payrollService->payrollProcessSearchResult($request, PayrollProcess::class, $flexsearch);
+        $records = $searchResult->where('type', 'arrear')->orderBy('id', 'desc')->get();
+
+        return Excel::download(new ArrearProcessExport($records), 'arrear_adjustment_processes_' . now()->format('YmdHis') . '.xlsx');
+    }
+
+    public function printIndex(Request $request, FlexSearch $flexsearch)
+    {
+        $searchResult = $this->payrollService->payrollProcessSearchResult($request, PayrollProcess::class, $flexsearch);
+        $records = $searchResult->where('type', 'arrear')->orderBy('id', 'desc')->get();
+
+        $title = 'Arrear Adjustment Processes';
+        return view('payroll.arrear.print_index', compact('records', 'title'));
+    }
+
+    public function exportProcessExcel($id)
+    {
+        $process = PayrollProcess::findOrFail($id);
+        $records = Arrear::where('process_id', $process->id)->with('employee')->orderBy('id', 'desc')->get();
+
+        return Excel::download(new ArrearDetailExport($records), 'arrear_adjustments_' . $process->batch_id . '_' . now()->format('YmdHis') . '.xlsx');
+    }
+
+    public function printProcess($id)
+    {
+        $process = PayrollProcess::findOrFail($id);
+        $records = Arrear::where('process_id', $process->id)->with('employee')->orderBy('id', 'desc')->get();
+
+        $title = 'Arrear Adjustments for Batch ' . $process->batch_id;
+        $salary_month = $process->salary_month;
+        return view('payroll.arrear.print_process', compact('records', 'title', 'process', 'salary_month'));
     }
 }

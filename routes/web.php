@@ -1313,6 +1313,10 @@ Route::prefix('disbursement')->name('disbursement.')->controller(\App\Http\Contr
 Route::prefix('arrear')->name('arrear.')->controller(\App\Http\Controllers\Payroll\ArrearController::class)->middleware('auth')->group(function () {
     Route::middleware('permission:arrear.view')->group(function () {
         Route::get('/', 'index')->name('index');
+        Route::get('export-excel', 'exportExcel')->name('export.excel');
+        Route::get('print', 'printIndex')->name('print');
+        Route::get('process/{id}/export-excel', 'exportProcessExcel')->name('process.export.excel');
+        Route::get('process/{id}/print', 'printProcess')->name('process.print');
         Route::get('view/{id}', 'show')->name('show');
     });
     Route::middleware('permission:arrear.create')->group(function () {

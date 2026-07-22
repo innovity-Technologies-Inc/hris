@@ -92,13 +92,23 @@
                 </div>
                 <div class="card-body">
                     {{-- Action Buttons --}}
-                    @can('arrear.create')
                     <div class="d-flex justify-content-between mb-3">
+                        @can('arrear.create')
                         <a type="button" class="btn btn-warning btn-sm" href="{{route('arrear.create')}}">
                             <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                         </a>
+                        @else
+                        <div></div>
+                        @endcan
+                        <div class="d-flex gap-2">
+                            <button type="button" id="exportExcelBtn" class="btn btn-success btn-sm no-loader">
+                                <i class="bi bi-file-earmark-excel me-1"></i> Export
+                            </button>
+                            <button type="button" id="printBtn" class="btn btn-secondary btn-sm no-loader">
+                                <i class="bi bi-printer me-1"></i> Print
+                            </button>
+                        </div>
                     </div>
-                    @endcan
 
                     <div class="table-responsive" id="search-result">
                         @include('payroll.arrear.partials.search_results')
@@ -147,6 +157,23 @@
                 e.preventDefault();
                 const url = $(this).attr('href');
                 if (url) { fetchData(url); }
+            });
+
+            // Excel Export
+            $('#exportExcelBtn').on('click', function(e) {
+                e.preventDefault();
+                window.ignoreBeforeUnload = true;
+                setTimeout(() => { window.ignoreBeforeUnload = false; }, 2000);
+                
+                const queryString = $('#filterForm').serialize();
+                window.location.href = "{{ route('arrear.export.excel') }}?" + queryString;
+            });
+
+            // Print
+            $('#printBtn').on('click', function(e) {
+                e.preventDefault();
+                const queryString = $('#filterForm').serialize();
+                window.open("{{ route('arrear.print') }}?" + queryString, '_blank');
             });
         });
     </script>
