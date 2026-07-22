@@ -59,15 +59,14 @@
                                 <label class="form-label small fw-semibold">Allocation Type</label>
                                 <select name="allocation_type" class="form-select">
                                     <option value="">All Types</option>
-                                    <option value="Trip" {{ request('allocation_type') == 'Trip' ? 'selected' : '' }}>Trip
+                                    <option value="employee_transport"
+                                        {{ request('allocation_type') == 'employee_transport' ? 'selected' : '' }}>
+                                        Employee Transport
                                     </option>
-                                    <option value="Employee Transport"
-                                        {{ request('allocation_type') == 'Employee Transport' ? 'selected' : '' }}>Employee
-                                        Transport</option>
-                                    <option value="Temporary"
-                                        {{ request('allocation_type') == 'Temporary' ? 'selected' : '' }}>Temporary</option>
-                                    <option value="Permanent"
-                                        {{ request('allocation_type') == 'Permanent' ? 'selected' : '' }}>Permanent</option>
+                                    <option value="trip_based"
+                                        {{ request('allocation_type') == 'trip_based' ? 'selected' : '' }}>
+                                        Trip Based
+                                    </option>
                                 </select>
                             </div>
                             <div class="col-md-4">

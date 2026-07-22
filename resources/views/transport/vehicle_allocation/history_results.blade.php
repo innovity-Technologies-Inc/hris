@@ -39,7 +39,9 @@
                     </td>
                     <td>{{ $allocation->name }}</td>
                     <td>
-                        <span class="badge bg-info">{{ $allocation->allocation_type }}</span>
+                        <span class="badge bg-info">
+                            {{ $allocation->allocation_type === 'employee_transport' ? 'Employee Transport' : ($allocation->allocation_type === 'trip_based' ? 'Trip Based' : ucwords(str_replace('_', ' ', $allocation->allocation_type))) }}
+                        </span>
                     </td>
                     <td>
                         @if ($allocation->reference_type && $allocation->reference_id)
