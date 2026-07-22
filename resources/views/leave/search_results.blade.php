@@ -1,4 +1,4 @@
-<table class="table table-bordered mb-0">
+<table class="table table-hover table-borderless align-middle mb-0" id="leaveTable">
     <thead>
     <tr>
         <th scope="col">#</th>
@@ -14,7 +14,7 @@
     <tbody>
     @php $sl = 1; @endphp
     @foreach ($leaves as $application)
-        <tr>
+        <tr class="leave-row">
             <th scope="row">{{ $sl++ }}</th>
             <td>{{ $application->getEmployee->full_name }}</td>
             <td>{{ $application->leave_category_type === 'compensatory' ? 'Compensatory Leave' : ($application->getPlan?->name ?? '-') }}</td>
