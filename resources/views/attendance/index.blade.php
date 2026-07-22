@@ -17,7 +17,7 @@
                                     <label for="keyword" class="form-label text-muted small fw-semibold mb-1">
                                         Employee Name
                                     </label>
-                                    <input type="text" class="form-control form-control-sm" id="keyword" name="keyword"
+                                    <input type="text" class="form-control" id="keyword" name="keyword"
                                         placeholder="Search by employee name" value="{{ request('keyword') }}">
                                 </div>
 
@@ -26,7 +26,7 @@
                                     <label for="from" class="form-label text-muted small fw-semibold mb-1">
                                         From Date
                                     </label>
-                                    <input type="date" id="from" name="from" class="form-control form-control-sm"
+                                    <input type="date" id="from" name="from" class="form-control"
                                         value="{{ request('from') }}">
                                 </div>
 
@@ -35,7 +35,7 @@
                                     <label for="to" class="form-label text-muted small fw-semibold mb-1">
                                         To Date
                                     </label>
-                                    <input type="date" id="to" name="to" class="form-control form-control-sm"
+                                    <input type="date" id="to" name="to" class="form-control"
                                         value="{{ request('to') }}">
                                 </div>
                             </div>
@@ -47,7 +47,7 @@
                                         Company
                                     </label>
                                     <select id="search_company_id" name="company"
-                                        class="form-select form-select-sm select2_list"
+                                        class="form-select select2_list"
                                         data-placeholder="Select Company">
                                         <option value="">Choose One</option>
                                         @foreach ($companies as $company)
@@ -65,7 +65,7 @@
                                             Branch
                                         </label>
                                         <select id="search_business_unit_id" name="business_unit"
-                                            class="form-select form-select-sm select2_list"
+                                            class="form-select select2_list"
                                             data-placeholder="Select Branch">
                                             <option value="">Select Branch</option>
                                             @if ($selectedBranch)
@@ -82,7 +82,7 @@
                                             Division
                                         </label>
                                         <select id="search_division_id" name="division"
-                                            class="form-select form-select-sm select2_list"
+                                            class="form-select select2_list"
                                             data-placeholder="Select Division">
                                             <option value="">Select Division</option>
                                             @if ($selectedDivision)
@@ -101,7 +101,7 @@
                                             Department
                                         </label>
                                         <select id="search_department_id" name="department"
-                                            class="form-select form-select-sm select2_list"
+                                            class="form-select select2_list"
                                             data-placeholder="Select Department">
                                             <option value="">Select Department</option>
                                             @if ($selectedDepartment)
@@ -118,7 +118,7 @@
                                             Section
                                         </label>
                                         <select id="search_section_id" name="section"
-                                            class="form-select form-select-sm select2_list"
+                                            class="form-select select2_list"
                                             data-placeholder="Select Section">
                                             <option value="">Select Section</option>
                                             @if ($selectedSection)
@@ -131,7 +131,7 @@
                                 {{-- Reset Button --}}
                                 <div class="col-md-4">
                                     <label class="form-label mb-1">&nbsp;</label>
-                                    <button type="button" id="resetFilters" class="btn btn-outline-secondary btn-sm w-100">
+                                    <button type="button" id="resetFilters" class="btn btn-outline-secondary w-100">
                                         <i style="height: 14px; width: 14px" data-feather="refresh-cw" class="me-1"></i> Reset Filters
                                     </button>
                                 </div>
