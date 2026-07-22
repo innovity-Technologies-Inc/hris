@@ -48,7 +48,7 @@
                                     @foreach ($vehicles ?? [] as $vehicle)
                                         <option value="{{ $vehicle->id }}"
                                             {{ request('vehicle_id') == $vehicle->id ? 'selected' : '' }}>
-                                            {{ $vehicle->reg_no }}
+                                            {{ $vehicle->license_number }} ({{ $vehicle->vehicle_category }} - {{ $vehicle->model_number }})
                                         </option>
                                     @endforeach
                                 </select>
@@ -164,9 +164,12 @@
                 });
             }
 
-            $('#filterForm').on('input change change.select2', function(e) {
-                e.preventDefault();
-                fetchData();
+            let timer;
+            $(document).on('input change change.select2', '#filterForm input, #filterForm select', function(e) {
+                clearTimeout(timer);
+                timer = setTimeout(function() {
+                    fetchData();
+                }, 300);
             });
 
             $('#filterForm').on('submit', function(e) {
