@@ -42,7 +42,7 @@
 
                             <div class="row g-3 mt-1">
                                 {{-- Company --}}
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <label for="search_company_id" class="form-label text-muted small fw-semibold mb-1">
                                         Company
                                     </label>
@@ -94,7 +94,7 @@
 
                                 {{-- Department --}}
                                 @if (App\HelperClass::getGeneralSetting()->department_status == 1)
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
                                         <label for="search_department_id" class="form-label text-muted small fw-semibold mb-1">
                                             Department
                                         </label>
@@ -125,12 +125,10 @@
                                         </select>
                                     </div>
                                 @endif
-                            </div>
 
-                            {{-- Reset Button --}}
-                            <div class="row mt-3">
-                                <div class="col-md-12 text-end">
-                                    <button type="button" id="resetFilters" class="btn btn-outline-secondary btn-sm">
+                                {{-- Reset Button --}}
+                                <div class="col d-flex align-items-end justify-content-end">
+                                    <button type="button" id="resetFilters" class="btn btn-outline-secondary btn-sm mb-1 w-100 w-md-auto">
                                         <i style="height: 14px; width: 14px" data-feather="refresh-cw" class="me-1"></i> Reset Filters
                                     </button>
                                 </div>
