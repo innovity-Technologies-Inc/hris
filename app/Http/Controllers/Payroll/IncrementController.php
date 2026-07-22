@@ -28,8 +28,8 @@ class IncrementController extends Controller
         $section = 'Employee Increment';
         $sub_section = 'Index';
         $increments = $this->payrollService->searchResult($request, Increment::class, $flexSearch);
-        if ($request->ajax()) {
-            return view('payroll.increment.partials.search-results', compact('increments'));
+        if ($request->ajax() || $request->boolean('_ajax')) {
+            return view('payroll.increment.partials.search-results', compact('increments'))->render();
         }
         return view('payroll.increment.index', compact('title', 'section', 'sub_section',
             'increments'));
@@ -193,6 +193,18 @@ class IncrementController extends Controller
             'message' => 'Updated Successfully',
             'alert-type' => 'success'
         ]);
+    }
+
+    public function exportExcel(Request $request, FlexSearch $flexSearch)
+    {
+        $increments = $this->payrollService->searchResult($request, Increment::class, $flexSearch, false);
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\Payroll\IncrementExport($increments), 'employee_increments_' . now()->format('Ymd_His') . '.xlsx');
+    }
+
+    public function printIndex(Request $request, FlexSearch $flexSearch)
+    {
+        $records = $this->payrollService->searchResult($request, Increment::class, $flexSearch, false);
+        return view('payroll.increment.print_index', compact('records'));
     }
 }
 

@@ -111,6 +111,14 @@
                             </a>
                             @endcan
                         </div>
+                        <div class="d-flex gap-2">
+                            <button type="button" id="exportExcelBtn" class="btn btn-success btn-sm no-loader">
+                                <i class="bi bi-file-earmark-excel me-1"></i> Excel
+                            </button>
+                            <button type="button" id="printBtn" class="btn btn-secondary btn-sm no-loader">
+                                <i class="bi bi-printer me-1"></i> Print
+                            </button>
+                        </div>
                     </div>
 
                     <div id="search-result">
@@ -172,6 +180,23 @@
                 if (url) {
                     fetchData(url);
                 }
+            });
+
+            // Excel Export
+            $('#exportExcelBtn').on('click', function(e) {
+                e.preventDefault();
+                window.ignoreBeforeUnload = true;
+                setTimeout(() => { window.ignoreBeforeUnload = false; }, 2000);
+                
+                const queryString = $('#filterForm').serialize();
+                window.location.href = "{{ route('increment.export.excel') }}?" + queryString;
+            });
+
+            // Print
+            $('#printBtn').on('click', function(e) {
+                e.preventDefault();
+                const queryString = $('#filterForm').serialize();
+                window.open("{{ route('increment.print') }}?" + queryString, '_blank');
             });
         });
     </script>

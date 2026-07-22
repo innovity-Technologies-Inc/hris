@@ -173,3 +173,106 @@ it('updates employee salary breakdown pay_scale_id upon adjustment', function ()
         'gross_salary' => 35000,
     ]);
 });
+
+test('it can export increments, decrements, promotions, and demotions', function () {
+    $this->withoutMiddleware();
+    $this->actingAs($this->admin);
+
+    // Create Increment
+    Increment::create([
+        'employee_id' => $this->employee->id,
+        'pay_scale_id' => $this->payScale->id,
+        'increment_base' => 'gross_salary',
+        'increment_method' => 'fixed',
+        'salary_increase_amount' => 5000,
+        'increment_amount_value' => 5000,
+        'previous_basic_salary' => 21000,
+        'previous_gross_salary' => 30000,
+        'new_gross_salary' => 35000,
+        'effective_from' => '2026-07-01',
+        'status' => 'pending',
+    ]);
+
+    // Create Decrement
+    \App\Models\Payroll\Decrement::create([
+        'employee_id' => $this->employee->id,
+        'pay_scale_id' => $this->payScale->id,
+        'decrement_base' => 'gross_salary',
+        'decrement_method' => 'fixed',
+        'salary_decrease_amount' => 5000,
+        'decrement_amount_value' => 5000,
+        'previous_basic_salary' => 21000,
+        'previous_gross_salary' => 30000,
+        'new_gross_salary' => 25000,
+        'effective_from' => '2026-07-01',
+        'status' => 'pending',
+    ]);
+
+    // Create Promotion
+    Promotion::create([
+        'employee_id' => $this->employee->id,
+        'pay_scale_id' => $this->payScale->id,
+        'previous_designation' => $this->designation1->id,
+        'new_designation' => $this->designation2->id,
+        'increment_base' => 'gross_salary',
+        'increment_method' => 'fixed',
+        'salary_increase_amount' => 10000,
+        'increment_amount_value' => 10000,
+        'previous_basic_salary' => 21000,
+        'previous_gross_salary' => 30000,
+        'new_gross_salary' => 40000,
+        'effective_from' => '2026-07-01',
+        'status' => 'pending',
+    ]);
+
+    // Create Demotion
+    \App\Models\Payroll\Demotion::create([
+        'employee_id' => $this->employee->id,
+        'pay_scale_id' => $this->payScale->id,
+        'previous_designation' => $this->designation2->id,
+        'new_designation' => $this->designation1->id,
+        'decrement_base' => 'gross_salary',
+        'decrement_method' => 'fixed',
+        'salary_decrease_amount' => 10000,
+        'decrement_amount_value' => 10000,
+        'previous_basic_salary' => 28000,
+        'previous_gross_salary' => 40000,
+        'new_gross_salary' => 30000,
+        'effective_from' => '2026-07-01',
+        'status' => 'pending',
+    ]);
+
+    // Test Excel downloads
+    $response = $this->get(route('increment.export.excel'));
+    $response->assertStatus(200);
+    $this->assertTrue(str_contains($response->headers->get('content-disposition'), 'attachment; filename=employee_increments_'));
+
+    $response = $this->get(route('decrement.export.excel'));
+    $response->assertStatus(200);
+    $this->assertTrue(str_contains($response->headers->get('content-disposition'), 'attachment; filename=employee_decrements_'));
+
+    $response = $this->get(route('promotion.export.excel'));
+    $response->assertStatus(200);
+    $this->assertTrue(str_contains($response->headers->get('content-disposition'), 'attachment; filename=employee_promotions_'));
+
+    $response = $this->get(route('demotion.export.excel'));
+    $response->assertStatus(200);
+    $this->assertTrue(str_contains($response->headers->get('content-disposition'), 'attachment; filename=employee_demotions_'));
+
+    // Test print templates
+    $response = $this->get(route('increment.print'));
+    $response->assertStatus(200);
+    $response->assertSee('Employee Salary Increment Sheet');
+
+    $response = $this->get(route('decrement.print'));
+    $response->assertStatus(200);
+    $response->assertSee('Employee Salary Decrement Sheet');
+
+    $response = $this->get(route('promotion.print'));
+    $response->assertStatus(200);
+    $response->assertSee('Employee Promotion Sheet');
+
+    $response = $this->get(route('demotion.print'));
+    $response->assertStatus(200);
+    $response->assertSee('Employee Demotion Sheet');
+});

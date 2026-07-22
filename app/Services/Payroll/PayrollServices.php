@@ -1284,14 +1284,20 @@ class PayrollServices
         });
     }
 
-    public function searchResult(Request $request, $modelName, $flexsearch)
+    public function searchResult(Request $request, $modelName, $flexsearch, $paginate = true)
     {
         $query = $modelName::with('getEmployee');
         $filters = [];
         if ($request->filled('effective_from_start')) $filters['effective_from>='] = $request->input('effective_from_start');
         if ($request->filled('effective_from_end')) $filters['effective_from<='] = $request->input('effective_from_end');
         if ($request->filled('status')) $filters['status'] = $request->input('status');
-        return $flexsearch->apply($query, $filters, $request->get('keyword'), ['getEmployee.applicant_id', 'getEmployee.full_name', 'getEmployee.system_id'])->orderBy('id', 'desc')->paginate(20);
+        
+        $applied = $flexsearch->apply($query, $filters, $request->get('keyword'), ['getEmployee.applicant_id', 'getEmployee.full_name', 'getEmployee.system_id'])->orderBy('id', 'desc');
+
+        if ($paginate) {
+            return $applied->paginate(20);
+        }
+        return $applied->get();
     }
 
     public function payrollProcessSearchResult(Request $request, $modelName, $flexsearch)

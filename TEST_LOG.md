@@ -1,5 +1,22 @@
 # Test Log
 
+## 2026-07-22 (Promotion, Demotion, Increment, Decrement Export and Print)
+
+**Goal**: Implement unpaginated, filtered Excel export and PDF printing for the Promotion, Demotion, Increment, and Decrement modules.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/Payroll/IncrementPromotionPayScaleTest.php`
+
+**Results**:
+- Added optional pagination support to `searchResult` in `PayrollServices.php` to fetch unpaginated queries for exports.
+- Registered `export.excel` and `print` routes inside the `promotion`, `demotion`, `increment`, and `decrement` controller groups in `web.php`.
+- Created export classes: `IncrementExport.php`, `DecrementExport.php`, `PromotionExport.php`, `DemotionExport.php` under `app/Exports/Payroll`.
+- Developed print layout templates `print_index.blade.php` in `resources/views/payroll/increment`, `decrement`, `promotion`, and `demotion`.
+- Added Excel and Print action buttons and wired up parameters-forwarding click handlers in the index views of each of these 4 modules.
+- Updated `IncrementPromotionPayScaleTest.php` verifying Excel export download status, headers, and print view correctness for all 4 modules.
+- Tests passed: 4/4 passed (23 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-22 (Penalty Management Export and Print Index)
 
 **Goal**: Implement unpaginated, filtered Excel export and PDF printing for the Penalty Management module.

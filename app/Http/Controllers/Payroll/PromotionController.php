@@ -28,8 +28,8 @@ class PromotionController extends Controller
         $sub_section = 'Index';
         $promotions = $this->payrollService->searchResult($request, Promotion::class, $flexSearch);
 
-        if ($request->ajax()) {
-            return view('payroll.promotion.partials.search-results', compact('promotions'));
+        if ($request->ajax() || $request->boolean('_ajax')) {
+            return view('payroll.promotion.partials.search-results', compact('promotions'))->render();
         }
         return view('payroll.promotion.index', compact('title', 'section', 'sub_section',
             'promotions'));
@@ -208,6 +208,18 @@ class PromotionController extends Controller
             'message' => 'Updated Successfully',
             'alert-type' => 'success'
         ]);
+    }
+
+    public function exportExcel(Request $request, FlexSearch $flexSearch)
+    {
+        $promotions = $this->payrollService->searchResult($request, Promotion::class, $flexSearch, false);
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\Payroll\PromotionExport($promotions), 'employee_promotions_' . now()->format('Ymd_His') . '.xlsx');
+    }
+
+    public function printIndex(Request $request, FlexSearch $flexSearch)
+    {
+        $records = $this->payrollService->searchResult($request, Promotion::class, $flexSearch, false);
+        return view('payroll.promotion.print_index', compact('records'));
     }
 }
 

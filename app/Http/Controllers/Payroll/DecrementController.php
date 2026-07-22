@@ -28,8 +28,8 @@ class DecrementController extends Controller
         $section = 'Employee Decrement';
         $sub_section = 'Index';
         $decrements = $this->payrollService->searchResult($request, Decrement::class, $flexSearch);
-        if ($request->ajax()) {
-            return view('payroll.decrement.partials.search-results', compact('decrements'));
+        if ($request->ajax() || $request->boolean('_ajax')) {
+            return view('payroll.decrement.partials.search-results', compact('decrements'))->render();
         }
         return view('payroll.decrement.index', compact('title', 'section', 'sub_section', 'decrements'));
     }
@@ -156,5 +156,17 @@ class DecrementController extends Controller
             'message' => 'Updated Successfully',
             'alert-type' => 'success'
         ]);
+    }
+
+    public function exportExcel(Request $request, FlexSearch $flexSearch)
+    {
+        $decrements = $this->payrollService->searchResult($request, Decrement::class, $flexSearch, false);
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\Payroll\DecrementExport($decrements), 'employee_decrements_' . now()->format('Ymd_His') . '.xlsx');
+    }
+
+    public function printIndex(Request $request, FlexSearch $flexSearch)
+    {
+        $records = $this->payrollService->searchResult($request, Decrement::class, $flexSearch, false);
+        return view('payroll.decrement.print_index', compact('records'));
     }
 }

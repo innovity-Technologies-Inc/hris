@@ -30,8 +30,8 @@ class DemotionController extends Controller
         $sub_section = 'Index';
         $demotions = $this->payrollService->searchResult($request, Demotion::class, $flexSearch);
 
-        if ($request->ajax()) {
-            return view('payroll.demotion.partials.search-results', compact('demotions'));
+        if ($request->ajax() || $request->boolean('_ajax')) {
+            return view('payroll.demotion.partials.search-results', compact('demotions'))->render();
         }
         return view('payroll.demotion.index', compact('title', 'section', 'sub_section', 'demotions'));
     }
@@ -168,5 +168,17 @@ class DemotionController extends Controller
             'message' => 'Updated Successfully',
             'alert-type' => 'success'
         ]);
+    }
+
+    public function exportExcel(Request $request, FlexSearch $flexSearch)
+    {
+        $demotions = $this->payrollService->searchResult($request, Demotion::class, $flexSearch, false);
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\Payroll\DemotionExport($demotions), 'employee_demotions_' . now()->format('Ymd_His') . '.xlsx');
+    }
+
+    public function printIndex(Request $request, FlexSearch $flexSearch)
+    {
+        $records = $this->payrollService->searchResult($request, Demotion::class, $flexSearch, false);
+        return view('payroll.demotion.print_index', compact('records'));
     }
 }

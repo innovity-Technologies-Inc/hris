@@ -1117,6 +1117,8 @@ Route::prefix('demotion')->name('demotion.')->controller(DemotionController::cla
     Route::middleware('permission:demotions.view')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('view/{id}', 'show')->name('show');
+        Route::get('export/excel', 'exportExcel')->name('export.excel');
+        Route::get('print', 'printIndex')->name('print');
     });
     Route::middleware('permission:demotions.create')->group(function () {
         Route::get('create', 'create')->name('create');
@@ -1140,6 +1142,8 @@ Route::prefix('promotion')->name('promotion.')->controller(PromotionController::
     Route::middleware('permission:promotions.view')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('view/{id}', 'show')->name('show');
+        Route::get('export/excel', 'exportExcel')->name('export.excel');
+        Route::get('print', 'printIndex')->name('print');
     });
     Route::middleware('permission:promotions.create')->group(function () {
         Route::get('create', 'create')->name('create');
@@ -1162,6 +1166,8 @@ Route::prefix('increment')->name('increment.')->controller(IncrementController::
     Route::middleware('permission:increments.view')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('view/{id}', 'show')->name('show');
+        Route::get('export/excel', 'exportExcel')->name('export.excel');
+        Route::get('print', 'printIndex')->name('print');
     });
     Route::middleware('permission:increments.create')->group(function () {
         Route::get('create', 'create')->name('create');
@@ -1184,6 +1190,8 @@ Route::prefix('decrement')->name('decrement.')->controller(DecrementController::
     Route::middleware('permission:decrements.view')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('view/{id}', 'show')->name('show');
+        Route::get('export/excel', 'exportExcel')->name('export.excel');
+        Route::get('print', 'printIndex')->name('print');
     });
     Route::middleware('permission:decrements.create')->group(function () {
         Route::get('create', 'create')->name('create');
