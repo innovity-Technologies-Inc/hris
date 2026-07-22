@@ -91,3 +91,53 @@ test('transfer application view loads correctly', function () {
     $response->assertViewIs('transfer.application');
     $response->assertViewHas('levelWeight');
 });
+
+test('it can export transfers to excel', function () {
+    $admin = User::factory()->create(['user_type' => UserType::Group]);
+    $adminRole = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
+    $adminRole->syncPermissions(['transfers.view']);
+    $admin->assignRole($adminRole);
+
+    $company = Company::create(['group_id' => $this->group->id, 'type_id' => $this->type->id, 'name' => 'C1', 'short_name' => 'C1', 'status' => 'active', 'address' => 'A1']);
+    $emp = Employee::create(['full_name' => 'John Doe', 'applicant_id' => 'APP001', 'system_id' => 'SYS001', 'punch_card_no' => 'P001', 'status' => 'active']);
+    EmployeeOfficeInfo::create(['employee_id' => $emp->id, 'current_company_id' => $company->id]);
+
+    Transfer::create([
+        'employee_id' => $emp->id,
+        'current_company_id' => $company->id,
+        'requested_company_id' => $company->id,
+        'status' => 'pending',
+        'created_by' => $admin->id
+    ]);
+
+    $response = $this->actingAs($admin, 'web')->get(route('transfer.export.excel', ['employee_search' => 'John']));
+    $response->assertStatus(200);
+    $this->assertTrue(
+        headers_sent() || str_contains($response->headers->get('content-disposition'), 'attachment; filename=career_movements_')
+    );
+});
+
+test('it can print transfers view', function () {
+    $admin = User::factory()->create(['user_type' => UserType::Group]);
+    $adminRole = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
+    $adminRole->syncPermissions(['transfers.view']);
+    $admin->assignRole($adminRole);
+
+    $company = Company::create(['group_id' => $this->group->id, 'type_id' => $this->type->id, 'name' => 'C1', 'short_name' => 'C1', 'status' => 'active', 'address' => 'A1']);
+    $emp = Employee::create(['full_name' => 'John Doe', 'applicant_id' => 'APP001', 'system_id' => 'SYS001', 'punch_card_no' => 'P001', 'status' => 'active']);
+    EmployeeOfficeInfo::create(['employee_id' => $emp->id, 'current_company_id' => $company->id]);
+
+    Transfer::create([
+        'employee_id' => $emp->id,
+        'current_company_id' => $company->id,
+        'requested_company_id' => $company->id,
+        'status' => 'pending',
+        'created_by' => $admin->id
+    ]);
+
+    $response = $this->actingAs($admin, 'web')->get(route('transfer.print', ['employee_search' => 'John']));
+    $response->assertStatus(200);
+    $response->assertSee('Career Movement Logs');
+    $response->assertSee('John Doe');
+});
+

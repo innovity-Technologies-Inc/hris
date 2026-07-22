@@ -83,6 +83,14 @@
                         </button>
                         @endcan
                     </div>
+                    <div class="d-flex gap-2">
+                        <button type="button" id="exportExcelBtn" class="btn btn-success btn-sm no-loader">
+                            <i class="bi bi-file-earmark-excel me-1"></i> Excel
+                        </button>
+                        <button type="button" id="printBtn" class="btn btn-secondary btn-sm no-loader">
+                            <i class="bi bi-printer me-1"></i> Print
+                        </button>
+                    </div>
                 </div>
 
                 <div class="table-responsive">
@@ -421,6 +429,40 @@ $(document).ready(function() {
         nav.append(ul);
         pagination.append(nav);
     }
+
+    // Excel export click handler
+    $('#exportExcelBtn').on('click', function(e) {
+        e.preventDefault();
+        window.ignoreBeforeUnload = true;
+        setTimeout(() => { window.ignoreBeforeUnload = false; }, 2000);
+        
+        const params = $.param({
+            employee_search: filterEmployeeSearch.val(),
+            requested_company_id: filterCompany.val(),
+            requested_business_unit_id: filterUnit.val(),
+            requested_division_id: filterDivision.val(),
+            requested_department_id: filterDept.val(),
+            requested_section_id: filterSection.val()
+        });
+        
+        window.location.href = "{{ route('transfer.export.excel') }}" + '?' + params;
+    });
+
+    // Print click handler
+    $('#printBtn').on('click', function(e) {
+        e.preventDefault();
+        
+        const params = $.param({
+            employee_search: filterEmployeeSearch.val(),
+            requested_company_id: filterCompany.val(),
+            requested_business_unit_id: filterUnit.val(),
+            requested_division_id: filterDivision.val(),
+            requested_department_id: filterDept.val(),
+            requested_section_id: filterSection.val()
+        });
+        
+        window.open("{{ route('transfer.print') }}" + '?' + params, '_blank');
+    });
 
     // Expose to global for onclick
     window.fetchCareerMovements = fetchCareerMovements;

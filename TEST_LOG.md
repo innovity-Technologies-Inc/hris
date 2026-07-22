@@ -1,5 +1,22 @@
 # Test Log
 
+## 2026-07-22 (Career Movement Transfer Export and Print Index)
+
+**Goal**: Implement unpaginated, filtered Excel export and PDF printing for the Career Movement (Transfer) module logs page.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/TransferModuleTest.php`
+
+**Results**:
+- Added optional pagination support to `getTransferList` in `TransferServices.php` to fetch unpaginated queries for exports.
+- Registered `transfer.export.excel` and `transfer.print` routes inside the `transfer` controller group in `web.php`.
+- Created `TransferExport.php` under `app/Exports/Transfer` mapping headings (Employee, Current Placement, Requested Placement, Movement Type, Dates, Status, etc.).
+- Developed print layout template `print_index.blade.php` in `resources/views/transfer` with landscape layout.
+- Added Excel and Print action buttons and wired up parameters-forwarding click handlers in `transfer/logs.blade.php`.
+- Updated `TransferModuleTest.php` verifying Excel export status, filename headers, and print view content correctness.
+- Tests passed: 4/4 passed (12 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-22 (Employee Travel Movement Export and Print Index)
 
 **Goal**: Implement unpaginated, filtered Excel export and PDF printing for the Employee Travel Movement module.

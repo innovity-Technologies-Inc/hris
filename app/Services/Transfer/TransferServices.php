@@ -31,12 +31,12 @@ class TransferServices
         return Employee::select('id', 'full_name', 'applicant_id')->get();
     }
 
-    public function getTransferList(array $filters)
+    public function getTransferList(array $filters, $paginate = true)
     {
         $user = auth()->user();
         
         $query = Transfer::withoutGlobalScopes()
-            ->with(['employee', 'requestedCompany', 'requestedBusinessUnit', 'movementType']);
+            ->with(['employee', 'requestedCompany', 'requestedBusinessUnit', 'movementType', 'currentCompany', 'currentBusinessUnit']);
 
         // 1. Apply Scoping / Permissions manually since we bypassed global scopes
         if ($user->user_type !== UserType::Group) {
@@ -96,7 +96,10 @@ class TransferServices
         if (!empty($filters['requested_department_id'])) $query->where('requested_department_id', $filters['requested_department_id']);
         if (!empty($filters['requested_section_id'])) $query->where('requested_section_id', $filters['requested_section_id']);
 
-        return $query->orderBy('created_at', 'desc')->paginate(10);
+        if ($paginate) {
+            return $query->orderBy('created_at', 'desc')->paginate(10);
+        }
+        return $query->orderBy('created_at', 'desc')->get();
     }
 
     public function searchAuthorities(array $filters)

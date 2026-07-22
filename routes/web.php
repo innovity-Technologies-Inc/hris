@@ -1537,6 +1537,8 @@ Route::prefix('transfer')->name('transfer.')->middleware('auth')->group(function
         Route::middleware('permission:transfers.view')->group(function () {
             Route::get('logs', 'index')->name('index');
             Route::get('view/{id}', 'show')->name('show');
+            Route::get('export/excel', 'exportExcel')->name('export.excel');
+            Route::get('print', 'printIndex')->name('print');
         });
         Route::middleware('permission:transfers.create')->group(function () {
             Route::get('application', 'create')->name('create');

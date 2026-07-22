@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Transfer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Transfer\Transfer;
+use App\Services\Transfer\TransferServices;
+use App\Exports\Transfer\TransferExport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 
 class TransferController extends Controller
@@ -44,5 +47,17 @@ class TransferController extends Controller
         ])->findOrFail($id);
 
         return view('transfer.view', compact('title', 'section', 'transfer'));
+    }
+
+    public function exportExcel(Request $request, TransferServices $transferServices)
+    {
+        $records = $transferServices->getTransferList($request->all(), false);
+        return Excel::download(new TransferExport($records), 'career_movements_' . now()->format('Ymd_His') . '.xlsx');
+    }
+
+    public function printIndex(Request $request, TransferServices $transferServices)
+    {
+        $records = $transferServices->getTransferList($request->all(), false);
+        return view('transfer.print_index', compact('records'));
     }
 }
