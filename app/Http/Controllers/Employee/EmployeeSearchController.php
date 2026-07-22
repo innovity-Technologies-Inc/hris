@@ -81,11 +81,7 @@ class EmployeeSearchController extends Controller
             ];
         });
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Employees retrieved successfully.',
-            'data' => $formatted
-        ]);
+        return $this->successResponse('Employees retrieved successfully.', $formatted);
     }
 
     /**
