@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Movement;
 
 use App\Enums\UserType;
+use App\Exports\Movement\MovementExport;
 use App\Http\Controllers\Controller;
 use App\Models\Plan\DAPlan;
 use App\Models\Employee\Employee;
@@ -13,6 +14,7 @@ use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EmployeeMovementsController extends Controller
 {
@@ -46,7 +48,7 @@ class EmployeeMovementsController extends Controller
         $movements = $flexsearch
             ->apply($query, $filters, $keyword, $searchableColumns)
             ->paginate(10);
-        if ($request->ajax()) {
+        if ($request->ajax() || $request->boolean('_ajax')) {
             return view('movement.partials.search_results', compact('movements'))->render();
         }
         return view('movement.index', compact('title', 'movements', 'section'));
@@ -265,5 +267,61 @@ class EmployeeMovementsController extends Controller
             'message' => 'Payment Status Changed Successfully',
             'alert-type' => 'success'
         ]);
+    }
+
+    /**
+     * Export movements to Excel, respecting active filters.
+     */
+    public function exportExcel(Request $request, FlexSearch $flexsearch): \Symfony\Component\HttpFoundation\BinaryFileResponse
+    {
+        $query = EmployeeMovement::with(['getEmployee', 'getTaPlan', 'getDaPlan']);
+        $searchableColumns = ['getEmployee.full_name'];
+        $keyword = $request->input('keyword');
+        $filters = [];
+
+        if ($request->filled('from')) {
+            $filters['from_date>='] = Carbon::parse($request->input('from'))->copy()->startOfDay();
+        }
+        if ($request->filled('to')) {
+            $filters['from_date<='] = Carbon::parse($request->input('to'))->copy()->endOfDay();
+        }
+        if ($request->filled('status')) {
+            $filters['status'] = $request->input('status');
+        }
+        if ($request->filled('payment_status')) {
+            $filters['payment_status'] = $request->input('payment_status');
+        }
+
+        $records = $flexsearch->apply($query, $filters, $keyword, $searchableColumns)->get();
+
+        return Excel::download(new MovementExport($records), 'travel_movements_' . now()->format('Ymd_His') . '.xlsx');
+    }
+
+    /**
+     * Open a printable PDF-style view of movement records.
+     */
+    public function printIndex(Request $request, FlexSearch $flexsearch): \Illuminate\View\View
+    {
+        $query = EmployeeMovement::with(['getEmployee', 'getTaPlan', 'getDaPlan']);
+        $searchableColumns = ['getEmployee.full_name'];
+        $keyword = $request->input('keyword');
+        $filters = [];
+
+        if ($request->filled('from')) {
+            $filters['from_date>='] = Carbon::parse($request->input('from'))->copy()->startOfDay();
+        }
+        if ($request->filled('to')) {
+            $filters['from_date<='] = Carbon::parse($request->input('to'))->copy()->endOfDay();
+        }
+        if ($request->filled('status')) {
+            $filters['status'] = $request->input('status');
+        }
+        if ($request->filled('payment_status')) {
+            $filters['payment_status'] = $request->input('payment_status');
+        }
+
+        $records = $flexsearch->apply($query, $filters, $keyword, $searchableColumns)->get();
+
+        return view('movement.print_index', compact('records'));
     }
 }

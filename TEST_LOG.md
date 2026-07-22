@@ -1,5 +1,23 @@
 # Test Log
 
+## 2026-07-22 (Employee Travel Movement Export and Print Index)
+
+**Goal**: Implement unpaginated, filtered Excel export and PDF printing for the Employee Travel Movement module.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/EmployeeMovementExportTest.php`
+
+**Results**:
+- Registered `movement.export.excel` and `movement.print` routes inside the `movement` controller group in `web.php`.
+- Created `MovementExport.php` under `app/Exports/Movement` mapped with appropriate headers (System ID, employee name, dates, distance, allowances, status, payment status, etc.).
+- Developed print layout template `print_index.blade.php` in `resources/views/movement` for travel movement records.
+- Added unpaginated Excel and Print action buttons to the index page next to the Create button.
+- Cleaned up duplicate script blocks and structured jQuery event listeners using `@push('scripts')` to avoid `$ is not defined` ReferenceErrors.
+- Integrated debounced input search triggers and handled filter serialized parameters for both exporting and printing.
+- Created `EmployeeMovementExportTest.php` to verify AJAX filters, Excel export file headers, and print content correctness.
+- Tests passed: 3/3 passed (8 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-22 (Employee Transport Reject and Approve Buttons Modification)
 
 **Goal**: Remove the Reject button from the Employee Transport list view, both Approve and Reject buttons from the details show view, resolve a Typehint Return Value error in `TransportService.php`, add database seeder for all transport tables, implement unpaginated and filtered Excel export and PDF printing for vehicle requisitions, employee transports, and vehicle allocations, convert the vehicle allocation history index to live search, and fix the vehicle dropdown labels.

@@ -106,7 +106,17 @@
                         <a class="btn btn-warning btn-sm" href="{{ route('movement.create') }}">
                             <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                         </a>
+                        @else
+                        <div></div>
                         @endcan
+                        <div class="d-flex gap-1">
+                            <button type="button" id="exportExcelBtn" class="btn btn-success btn-sm no-loader">
+                                <i class="mdi mdi-file-excel me-1"></i> Excel
+                            </button>
+                            <button type="button" id="printBtn" class="btn btn-secondary btn-sm no-loader">
+                                <i class="mdi mdi-printer me-1"></i> Print
+                            </button>
+                        </div>
                     </div>
 
                     <div id="search-result">
@@ -123,7 +133,13 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+    {{-- Include Import Modal --}}
+    @include('movement.partials.import_modal')
+@endsection
+
+@push('scripts')
     <script>
         $(document).ready(function() {
             // Function to perform AJAX search
@@ -133,18 +149,16 @@
                 $.ajax({
                     url: url,
                     method: "GET",
-                    data: queryString,
+                    data: queryString + '&_ajax=1',
                     beforeSend: function() {
                         $('#search-result').html(
                             '<div class="text-center py-4 text-muted">Loading Data...</div>');
                     },
                     success: function(response) {
                         $('#search-result').html(response);
-                        // Reinitialize Feather icons if used in results
                         if (typeof feather !== 'undefined') {
                             feather.replace();
                         }
-                        // Update URL without page param
                         const newUrl = '?' + queryString;
                         window.history.pushState(null, '', newUrl || location.pathname);
                     },
@@ -154,21 +168,19 @@
                 });
             }
 
-            // Trigger search on input or change
-            $('#filterForm').on('input change', function(e) {
-                e.preventDefault();
-                fetchData();
+            // Trigger search on input or change (debounced)
+            let timer;
+            $(document).on('input change', '#filterForm input, #filterForm select', function() {
+                clearTimeout(timer);
+                timer = setTimeout(function() {
+                    fetchData();
+                }, 300);
             });
 
-            // Reset filters: clear form and reload base URL
+            // Reset filters
             $('#resetFilters').on('click', function() {
-                // Clear all form fields
                 $('#filterForm')[0].reset();
-
-                // If using Select2, you may need to trigger change
                 $('.select2_list').val(null).trigger('change');
-
-                // Reload the page without query string
                 window.location.href = "{{ route('movement.index') }}";
             });
 
@@ -178,10 +190,21 @@
                 const url = $(this).attr('href');
                 fetchData(url);
             });
+
+            // Excel export
+            $(document).on('click', '#exportExcelBtn', function() {
+                window.ignoreBeforeUnload = true;
+                setTimeout(() => { window.ignoreBeforeUnload = false; }, 2000);
+                let queryString = $('#filterForm').serialize();
+                window.location.href = "{{ route('movement.export.excel') }}" + '?' + queryString;
+            });
+
+            // Print
+            $(document).on('click', '#printBtn', function() {
+                let queryString = $('#filterForm').serialize();
+                window.open("{{ route('movement.print') }}" + '?' + queryString, '_blank');
+            });
         });
     </script>
-
-    {{-- Include Import Modal --}}
-    @include('movement.partials.import_modal')
-@endsection
+@endpush
 

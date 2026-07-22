@@ -1091,6 +1091,8 @@ Route::prefix('leaves')->middleware('auth')->group(function () {
 Route::controller(EmployeeMovementsController::class)->prefix('movement')->middleware('auth')->group(function (){
     Route::middleware('permission:movement.view')->group(function () {
         Route::get('/', 'index')->name('movement.index');
+        Route::get('export/excel', 'exportExcel')->name('movement.export.excel');
+        Route::get('print', 'printIndex')->name('movement.print');
     });
     Route::middleware('permission:movement.create')->group(function () {
         Route::get('create', 'form')->name('movement.create');
