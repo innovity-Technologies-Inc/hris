@@ -29,6 +29,7 @@ class WorkflowEventDispatcherService
         'claim-expense'            => \App\Listeners\Workflow\ClaimExpenseWorkflowListener::class,
         'penalty'                  => \App\Listeners\Workflow\PenaltyWorkflowListener::class,
         'advance-salary'           => \App\Listeners\Workflow\PayrollWorkflowListener::class,
+        'arrear'                   => \App\Listeners\Workflow\PayrollWorkflowListener::class,
     ];
 
     /**

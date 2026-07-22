@@ -1,5 +1,25 @@
 # Test Log
 
+## 2026-07-22 (Arrear Management Approval Workflow Integration)
+
+**Goal**: Remove static approve/reject status-update routes and buttons from Arrear Management and integrate it with the central approval engine workflow.
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest`
+
+**Results**:
+- Added `'arrear' => 'Arrear Management'` module registration inside `config/approval-engine.php`.
+- Removed `statusUpdate` action method from `ArrearController.php` and deleted the static route `arrear.status.update` from `web.php`.
+- Updated `PayrollServices.php` `arrearProcess` method to return the created `PayrollProcess` instance.
+- Updated `ArrearController.php` `save` method to trigger `$process->startWorkflow('arrear')` on creation.
+- Registered `'arrear'` mapping in `WorkflowEventDispatcherService.php` to use the `PayrollWorkflowListener` class.
+- Modified `PayrollWorkflowListener.php` to automatically sync statuses of child items (`advanceSalaries` and `arrears`) upon workflow completion or rejection.
+- Removed static approval check/x forms from the actions cell inside `payroll/arrear/partials/search_results.blade.php`.
+- Embedded the interactive approval timeline widget inside `payroll/arrear/show.blade.php`.
+- Created `tests/Feature/Payroll/ArrearWorkflowTest.php` to verify arrear workflow triggers, status updates, and child records status sync.
+- Tests passed: 225/225 passed (888 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-22 (Advance Salary Approval Workflow Integration)
 
 **Goal**: Remove static approve/reject status-update routes and buttons from Advance Salary and integrate it with the central approval engine workflow.

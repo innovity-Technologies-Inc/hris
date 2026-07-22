@@ -1330,9 +1330,7 @@ Route::prefix('arrear')->name('arrear.')->controller(\App\Http\Controllers\Payro
         Route::get('edit/{id}', 'edit')->name('edit');
         Route::put('{id}/update', 'save')->name('update');
     });
-    Route::middleware('permission:arrear.approve')->group(function () {
-        Route::put('{id}/status-update', 'statusUpdate')->name('status.update');
-    });
+
     Route::middleware('permission:arrear.delete')->group(function () {
         Route::delete('{id}/delete', 'destroy')->name('delete');
     });

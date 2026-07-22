@@ -91,7 +91,10 @@ class ArrearController extends Controller
 
         try {
             $validated = $request->validate($rules);
-            $this->payrollService->arrearProcess($validated, $id);
+            $process = $this->payrollService->arrearProcess($validated, $id);
+            if (!$id && $process) {
+                $process->startWorkflow('arrear');
+            }
             
             Log::info('Arrear processing completed successfully.', ['process_id' => $id]);
             return redirect()->route('arrear.index')->with([
@@ -157,38 +160,6 @@ class ArrearController extends Controller
         } catch (\Exception $e) {
             Log::error('Error loading Arrear details.', ['process_id' => $id, 'message' => $e->getMessage()]);
             return redirect()->route('arrear.index')->with(['alert-type' => 'error', 'message' => 'Details not found.']);
-        }
-    }
-
-    public function statusUpdate(Request $request, $id)
-    {
-        $request->validate([
-            'status' => 'required|in:approved,rejected,pending'
-        ]);
-
-        try {
-            $process = PayrollProcess::findOrFail($id);
-            
-            DB::transaction(function () use ($process, $request) {
-                $process->update([
-                    'approval_status' => $request->status,
-                    'approved_by' => \Illuminate\Support\Facades\Auth::id(),
-                    'approved_at' => now()
-                ]);
-                
-                \App\Models\Payroll\Arrear::where('process_id', $process->id)
-                    ->update(['status' => $request->status]);
-            });
-
-            return redirect()->route('arrear.index')->with([
-                'alert-type' => 'success',
-                'message' => 'Status Updated Successfully'
-            ]);
-        } catch (\Exception $e) {
-            return redirect()->back()->with([
-                'alert-type' => 'error',
-                'message' => 'Failed to update status: ' . $e->getMessage()
-            ]);
         }
     }
 

@@ -1283,6 +1283,7 @@ class PayrollServices
                 ]);
             }
             Log::info('Arrear process completed.', ['id' => $process->id]);
+            return $process;
         });
     }
 
