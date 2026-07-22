@@ -510,4 +510,43 @@ test('it can print vehicle allocations and export to excel', function () {
     expect($response->headers->get('content-type'))->toContain('spreadsheet');
 });
 
+test('it can search vehicle allocations history via AJAX', function () {
+    $vehicle = \App\Models\Transport\Vehicle::create([
+        'vehicle_category' => 'Car',
+        'model_number' => 'TEST-555',
+        'manufacture_year' => 2023,
+        'fuel_type' => 'Petrol',
+        'purchase_type' => 'Purchase',
+        'ownership_type' => 'Company-owned',
+        'status' => 'Active',
+    ]);
+
+    $allocation1 = \App\Models\Transport\VehicleAllocation::create([
+        'vehicle_id' => $vehicle->id,
+        'name' => 'Matching Allocation Name',
+        'allocated_to' => 'department',
+        'approved_by' => 1,
+        'start_date' => '2026-07-22',
+        'status' => 'Active',
+    ]);
+
+    $allocation2 = \App\Models\Transport\VehicleAllocation::create([
+        'vehicle_id' => $vehicle->id,
+        'name' => 'Other Name',
+        'allocated_to' => 'department',
+        'approved_by' => 1,
+        'start_date' => '2026-07-22',
+        'status' => 'Active',
+    ]);
+
+    $response = $this->actingAs($this->user)
+        ->get(route('transport.vehicle_allocations.history', ['keyword' => 'Matching']), [
+            'HTTP_X-Requested-With' => 'XMLHttpRequest'
+        ]);
+
+    $response->assertStatus(200);
+    $response->assertSee('Matching Allocation Name');
+    $response->assertDontSee('Other Name');
+});
+
 

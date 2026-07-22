@@ -2,7 +2,7 @@
 
 ## 2026-07-22 (Employee Transport Reject and Approve Buttons Modification)
 
-**Goal**: Remove the Reject button from the Employee Transport list view, both Approve and Reject buttons from the details show view, resolve a Typehint Return Value error in `TransportService.php`, add database seeder for all transport tables, and implement unpaginated and filtered Excel export and PDF printing for vehicle requisitions, employee transports, and vehicle allocations.
+**Goal**: Remove the Reject button from the Employee Transport list view, both Approve and Reject buttons from the details show view, resolve a Typehint Return Value error in `TransportService.php`, add database seeder for all transport tables, implement unpaginated and filtered Excel export and PDF printing for vehicle requisitions, employee transports, and vehicle allocations, and convert the vehicle allocation history index to live search (removing the filter icon and adding keyword searching).
 
 **Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/TransportRouteTest.php`
 
@@ -16,8 +16,12 @@
 - Created `VehicleRequisitionExport.php`, `EmployeeTransportExport.php`, and `VehicleAllocationExport.php` excel mapper classes under `app/Exports/Transport`.
 - Developed print layout templates `print_index.blade.php` for requisitions, employee transports, and allocations.
 - Integrated Excel and Print action buttons and click listeners inside the index blades for the three transport sections.
+- Refactored `resources/views/transport/vehicle_allocation/history.blade.php` to include keyword search input and removed the filter icon submit button.
+- Extracted vehicle allocation table results into a partial blade view `history_results.blade.php` to enable asynchronous updates.
+- Implemented AJAX live search trigger listeners on input/change events for the filter form.
+- Wrote Pest feature test verifying AJAX keyword search behavior in `TransportRouteTest.php`.
 - Verified that all Vehicle, Driver, Allocation, Requisition, and Transport route feature tests pass successfully.
-- Tests passed: 12/12 passed (65 assertions) ✅
+- Tests passed: 13/13 passed (68 assertions) ✅
 
 **Status**: ✅ SUCCESS
 
