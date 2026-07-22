@@ -527,65 +527,6 @@
             </div>
         </div>
 
-        {{-- Hidden employee data for processing --}}
-        <div style="display:none;">
-            <table id="hiddenEmployeeTable">
-                <tbody id="employeeTableBody">
-                    @foreach ($filterOptions['employees'] as $index => $employee)
-                        @php
-                            $age = $employee->date_of_birth
-                                ? \Carbon\Carbon::parse($employee->date_of_birth)->age
-                                : null;
-                            $country = $employee->permanent_address['country'] ?? '';
-
-                            // Get office info
-                            $officeInfo = $employee->officeInfo;
-
-                            // Company
-                            $companyId = optional($officeInfo)->current_company_id ?? '';
-                            $companyName = optional(optional($officeInfo)->getCurrentCompany)->name ?? '';
-
-                            // Branch (Business Unit) - uses name field from company_locations table
-                            $businessUnitId = optional($officeInfo)->current_business_unit_id ?? '';
-                            $businessUnitObj = optional($officeInfo)->getCurrentBusinessUnit;
-                            $businessUnitName = $businessUnitObj ? $businessUnitObj->name : '';
-
-                            // Division
-                            $divisionId = optional($officeInfo)->current_division_id ?? '';
-                            $divisionName = optional(optional($officeInfo)->getCurrentDivision)->name ?? '';
-
-                            // Department
-                            $departmentId = optional($officeInfo)->current_department_id ?? '';
-                            $departmentName =
-                                optional(optional($officeInfo)->getCurrentDepartment)->department_name ?? '';
-
-                            // Section
-                            $sectionId = optional($officeInfo)->current_section_id ?? '';
-                            $sectionName = optional(optional($officeInfo)->getCurrentSection)->name ?? '';
-
-                            // Employee Type
-                            $empType = optional($officeInfo)->emp_type ?? '';
-                        @endphp
-                        <tr class="employee-row" data-system-id="{{ $employee->system_id }}"
-                            data-employee-id="{{ $employee->applicant_id }}"
-                            data-name="{{ strtolower($employee->full_name) }}" data-age="{{ $age }}"
-                            data-gender="{{ $employee->gender }}" data-marital-status="{{ $employee->marital_status }}"
-                            data-emp-type="{{ $empType }}" data-blood-group="{{ $employee->blood_group }}"
-                            data-religion="{{ $employee->religion }}" data-nationality="{{ $employee->nationality }}"
-                            data-country="{{ $country }}" data-company-id="{{ $companyId }}"
-                            data-company="{{ $companyName }}" data-business-unit-id="{{ $businessUnitId }}"
-                            data-branch="{{ $businessUnitName }}" data-division-id="{{ $divisionId }}"
-                            data-division="{{ $divisionName }}" data-department-id="{{ $departmentId }}"
-                            data-department="{{ $departmentName }}" data-section-id="{{ $sectionId }}"
-                            data-section="{{ $sectionName }}"
-                            data-email="{{ $employee->work_email ?? $employee->personal_email }}"
-                            data-phone="{{ $employee->personal_mobile }}" data-full-name="{{ $employee->full_name }}">
-                            <td>{{ $index + 1 }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
     </div>
 
     @include('employee.search_results_modal')
@@ -755,102 +696,41 @@
                 loadSections();
             });
 
-            // Client-side filtering function
+            // Database-side filtering function via Axios
             function filterEmployees() {
-                const keyword = $('#keywordSearch').val().toLowerCase();
-                const employeeName = $('#employeeName').val();
-                const employeeId = $('#employeeId').val();
-                const systemId = $('#systemId').val();
-                const company = $('#search_company_id').val();
-                const businessUnit = $('#search_business_unit_id').val();
-                const division = $('#search_division_id').val();
-                const department = $('#search_department_id').val();
-                const section = $('#search_section_id').val();
-                const empType = $('#empType').val();
-                const gender = $('#gender').val();
-                const maritalStatus = $('#maritalStatus').val();
-                const ageFrom = parseInt($('#ageFrom').val()) || 0;
-                const ageTo = parseInt($('#ageTo').val()) || 999;
-                const religion = $('#religion').val();
-                const bloodGroup = $('#bloodGroup').val();
-                const nationality = $('#nationality').val();
-                const country = $('#country').val();
-
-                filteredEmployees = [];
-
-                $('.employee-row').each(function() {
-                    const row = $(this);
-                    const rowData = {
-                        systemId: row.data('system-id'),
-                        employeeId: row.data('employee-id'),
-                        name: row.data('name'),
-                        fullName: row.data('full-name'),
-                        age: parseInt(row.data('age')),
-                        gender: row.data('gender'),
-                        companyId: row.data('company-id'),
-                        company: row.data('company'),
-                        businessUnitId: row.data('business-unit-id'),
-                        branch: row.data('branch'),
-                        divisionId: row.data('division-id'),
-                        division: row.data('division'),
-                        departmentId: row.data('department-id'),
-                        department: row.data('department'),
-                        sectionId: row.data('section-id'),
-                        section: row.data('section'),
-                        employeeType: row.data('emp-type'),
-                        maritalStatus: row.data('marital-status'),
-                        bloodGroup: row.data('blood-group'),
-                        religion: row.data('religion'),
-                        nationality: row.data('nationality'),
-                        country: row.data('country'),
-                        email: row.data('email'),
-                        phone: row.data('phone')
-                    };
-
-                    let matches = true;
-
-                    // Keyword search (checks name, system ID, employee ID)
-                    if (keyword &&
-                        !rowData.name.includes(keyword) &&
-                        !rowData.systemId.toLowerCase().includes(keyword) &&
-                        !rowData.employeeId.toLowerCase().includes(keyword)) {
-                        matches = false;
-                    }
-
-                    // Individual field filters
-                    if (employeeName && rowData.fullName !== employeeName) matches = false;
-                    if (employeeId && rowData.employeeId !== employeeId) matches = false;
-                    if (systemId && rowData.systemId !== systemId) matches = false;
-                    if (company && rowData.companyId != company) matches = false;
-                    if (businessUnit && rowData.businessUnitId != businessUnit) matches = false;
-                    if (division && rowData.divisionId != division) matches = false;
-                    if (department && rowData.departmentId != department) matches = false;
-                    if (section && rowData.sectionId != section) matches = false;
-                    if (empType && rowData.employeeType !== empType) matches = false;
-                    if (gender && rowData.gender !== gender) matches = false;
-                    if (maritalStatus && rowData.maritalStatus !== maritalStatus) matches = false;
-                    if (rowData.age < ageFrom || rowData.age > ageTo) matches = false;
-                    if (religion && rowData.religion !== religion) matches = false;
-                    if (bloodGroup && rowData.bloodGroup !== bloodGroup) matches = false;
-                    if (nationality && rowData.nationality !== nationality) matches = false;
-                    if (country && rowData.country !== country) matches = false;
-
-                    if (matches) {
-                        filteredEmployees.push(rowData);
-                    }
-                });
-
-                // Show statistical results or no data message
-                if (filteredEmployees.length === 0) {
-                    $('#statisticalResults').hide();
-                    $('#noDataMessage').show();
-                } else {
-                    $('#noDataMessage').hide();
-                    $('#statisticalResults').show();
-                    $('#totalEmployeesFound').text(filteredEmployees.length + ' Employee' + (filteredEmployees
-                        .length > 1 ? 's' : '') + ' Found');
-                    generateCharts();
+                // Show loader
+                if (typeof showLoader === 'function') {
+                    showLoader();
                 }
+
+                const formData = $('#employeeSearchForm').serialize();
+
+                axios.get("{{ route('employee.employee.data') }}?" + formData)
+                    .then(response => {
+                        if (response.data.success) {
+                            filteredEmployees = response.data.data;
+
+                            // Show statistical results or no data message
+                            if (filteredEmployees.length === 0) {
+                                $('#statisticalResults').hide();
+                                $('#noDataMessage').show();
+                            } else {
+                                $('#noDataMessage').hide();
+                                $('#statisticalResults').show();
+                                $('#totalEmployeesFound').text(filteredEmployees.length + ' Employee' + (filteredEmployees.length > 1 ? 's' : '') + ' Found');
+                                generateCharts();
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching filtered employees:', error);
+                    })
+                    .finally(() => {
+                        // Hide loader
+                        if (typeof hideLoader === 'function') {
+                            hideLoader();
+                        }
+                    });
             }
 
             // Generate pie charts

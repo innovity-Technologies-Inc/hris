@@ -441,6 +441,7 @@ Route::prefix('company-setup')->middleware('auth')->group(function () {
 Route::controller(EmployeeSearchController::class)->middleware('auth')->group(function () {
     Route::middleware('permission:employee-management.view')->group(function () {
         Route::get('search/employee', 'index')->name('employee.employee');
+        Route::get('search/employee/data', 'search')->name('employee.employee.data');
         Route::get('search/employee/export', 'export')->name('employee.employee.export');
     });
 });

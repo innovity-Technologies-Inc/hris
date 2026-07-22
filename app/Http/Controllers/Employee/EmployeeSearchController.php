@@ -2,350 +2,99 @@
 
 namespace App\Http\Controllers\Employee;
 
-use App\Enums\UserType;
 use App\Http\Controllers\Controller;
-
-use App\Models\Employee\Employee;
-use App\Models\Company\Company;
-use App\Services\Employee\EmployeeServices;
-use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
+use App\Http\Requests\Employee\EmployeeSearchRequest;
+use App\Services\Employee\EmployeeSearchServices;
 use App\Exports\Employee\EmployeeSearchExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Http\JsonResponse;
 
 class EmployeeSearchController extends Controller
 {
-    protected $employeeServices;
+    protected $searchServices;
 
-    public function __construct(EmployeeServices $employeeServices)
+    public function __construct(EmployeeSearchServices $searchServices)
     {
-        $this->employeeServices = $employeeServices;
+        $this->searchServices = $searchServices;
     }
 
     /**
-     * Display the employee search page with real data from database
-     * Uses FlexSearch for efficient searching and filtering
-     *
-     * @param Request $request
-     * @param FlexSearch $flexsearch
-     * @return \Illuminate\View\View|\Illuminate\Http\JsonResponse
+     * Display the employee search page
      */
-    public function index(Request $request, FlexSearch $flexsearch)
+    public function index()
     {
-        // Security check: Employees should not be able to search other employees
-        if (auth()->user()->user_type === UserType::Employee) {
-            abort(403, 'Unauthorized access to employee search.');
-        }
-
         $title = 'Search Employee';
         $section = 'Employees';
         $sub_section = 'Search';
 
-        // Build query with necessary relationships
-        $query = Employee::with([
-            'officeInfo.getCurrentCompany',
-            'officeInfo.getCurrentBusinessUnit',
-            'officeInfo.getCurrentDivision',
-            'officeInfo.getCurrentDepartment',
-            'officeInfo.getCurrentSection'
-        ]);
-
-        // Handle country filter separately (JSON field)
-        if ($request->filled('country')) {
-            $query->where('permanent_address->country', $request->input('country'));
-        }
-
-        // Handle organizational filters via EmployeeOfficeInfo relationship
-        if ($request->filled('company')) {
-            $query->whereHas('officeInfo', function($q) use ($request) {
-                $q->where('current_company_id', $request->input('company'));
-            });
-        }
-
-        if ($request->filled('business_unit')) {
-            $query->whereHas('officeInfo', function($q) use ($request) {
-                $q->where('current_business_unit_id', $request->input('business_unit'));
-            });
-        }
-
-        if ($request->filled('division')) {
-            $query->whereHas('officeInfo', function($q) use ($request) {
-                $q->where('current_division_id', $request->input('division'));
-            });
-        }
-
-        if ($request->filled('department')) {
-            $query->whereHas('officeInfo', function($q) use ($request) {
-                $q->where('current_department_id', $request->input('department'));
-            });
-        }
-
-        if ($request->filled('section')) {
-            $query->whereHas('officeInfo', function($q) use ($request) {
-                $q->where('current_section_id', $request->input('section'));
-            });
-        }
-
-        // Handle employee type filter via EmployeeOfficeInfo relationship
-        if ($request->filled('emp_type')) {
-            $query->whereHas('officeInfo', function($q) use ($request) {
-                $q->where('emp_type', $request->input('emp_type'));
-            });
-        }
-
-        // Define searchable columns for FlexSearch fuzzy matching
-        $searchableColumns = [
-            'applicant_id',
-            'full_name',
-            'system_id',
-            'personal_mobile',
-            'work_email',
-            'personal_email'
-        ];
-
-        // Get keyword search term
-        $keyword = $request->input('keyword');
-
-        // Build filters array from request
-        $filters = $this->buildFilters($request);
-
-        // Apply FlexSearch with filters and keyword search
-        $employees = $flexsearch
-            ->apply($query, $filters, $keyword, $searchableColumns)
-            ->orderBy('id', 'desc')
-            ->paginate(50);
-
-        // Return AJAX response if requested
-        if ($request->ajax()) {
-            return response()->json([
-                'success' => true,
-                'data' => $employees->items(),
-                'total' => $employees->total(),
-                'per_page' => $employees->perPage(),
-                'current_page' => $employees->currentPage()
-            ]);
-        }
-
-        // Get filter options from database for dropdowns
-        $filterOptions = $this->getFilterOptions();
+        $filterOptions = $this->searchServices->getFilterOptions();
 
         return view('employee.search_employee', compact(
             'title',
             'section',
             'sub_section',
-            'employees',
             'filterOptions'
         ));
     }
 
     /**
-     * Build filters array from request parameters
-     * Follows FlexSearch filter format: ['field' => 'value'] or ['field>=' => value]
-     *
-     * @param Request $request
-     * @return array
+     * Get search results as JSON
      */
-    private function buildFilters(Request $request)
+    public function search(EmployeeSearchRequest $request): JsonResponse
     {
-        $filters = [];
+        $employees = $this->searchServices->searchEmployees($request->validated());
 
-        // Basic search filters - exact matches
-        if ($request->filled('employee_id')) {
-            $filters['applicant_id'] = $request->input('employee_id');
-        }
+        // Format employee data for client-side processing
+        $formatted = $employees->map(function ($employee) {
+            $age = $employee->date_of_birth
+                ? \Carbon\Carbon::parse($employee->date_of_birth)->age
+                : null;
+            
+            $officeInfo = $employee->officeInfo;
 
-        if ($request->filled('employee_name')) {
-            $filters['full_name'] = $request->input('employee_name');
-        }
-
-        if ($request->filled('system_id')) {
-            $filters['system_id'] = $request->input('system_id');
-        }
-
-        // Personal attributes - exact matches
-        if ($request->filled('gender')) {
-            $filters['gender'] = $request->input('gender');
-        }
-
-        if ($request->filled('marital_status')) {
-            $filters['marital_status'] = $request->input('marital_status');
-        }
-
-        if ($request->filled('religion')) {
-            $filters['religion'] = $request->input('religion');
-        }
-
-        if ($request->filled('nationality')) {
-            $filters['nationality'] = $request->input('nationality');
-        }
-
-        if ($request->filled('blood_group')) {
-            $filters['blood_group'] = $request->input('blood_group');
-        }
-
-        // Note: Organizational filters (company, branch, division, etc.)
-        // would need to be handled via relationships in Employee model
-        // For now, they are excluded as Employee model doesn't have direct fields
-        // If EmployeeOfficeInfo relationship exists, those filters would be added here
-
-        return $filters;
-    }
-
-    /**
-     * Get unique filter options from database for dropdown population
-     * Uses efficient queries without caching full collection
-     *
-     * @return array
-     */
-    private function getFilterOptions()
-    {
-        // Load employees with relationships using eager loading
-        $employees = Employee::with([
-            'officeInfo.getCurrentCompany',
-            'officeInfo.getCurrentBusinessUnit',
-            'officeInfo.getCurrentDivision',
-            'officeInfo.getCurrentDepartment',
-            'officeInfo.getCurrentSection'
-        ])
-        ->select(
-            'id',
-            'applicant_id',
-            'system_id',
-            'full_name',
-            'gender',
-            'marital_status',
-            'blood_group',
-            'religion',
-            'nationality',
-            'date_of_birth',
-            'permanent_address',
-            'personal_mobile',
-            'work_email'
-        )->get();
-
-        // Cache only the filter arrays, not the full employee collection
-        $cachedFilters = Cache::remember('employee_search_filters_data', 3600, function() use ($employees) {
             return [
-                'employee_names' => $employees->pluck('full_name')->unique()->sort()->values()->toArray(),
-                'employee_ids' => $employees->pluck('applicant_id')->unique()->sort()->values()->toArray(),
-                'system_ids' => $employees->pluck('system_id')->unique()->sort()->values()->toArray(),
-                'religions' => $employees->pluck('religion')->filter()->unique()->sort()->values()->toArray(),
-                'nationalities' => $employees->pluck('nationality')->filter()->unique()->sort()->values()->toArray(),
-                'countries' => $employees->map(function($emp) {
-                    return $emp->permanent_address['country'] ?? null;
-                })->filter()->unique()->sort()->values()->toArray(),
+                'id' => $employee->id,
+                'systemId' => $employee->system_id ?? '',
+                'employeeId' => $employee->applicant_id ?? '',
+                'name' => strtolower($employee->full_name ?? ''),
+                'fullName' => $employee->full_name ?? '',
+                'age' => $age,
+                'gender' => $employee->gender ?? '',
+                'maritalStatus' => $employee->marital_status ?? '',
+                'bloodGroup' => $employee->blood_group ?? '',
+                'religion' => $employee->religion ?? '',
+                'nationality' => $employee->nationality ?? '',
+                'country' => $employee->permanent_address['country'] ?? '',
+                'email' => $employee->work_email ?? $employee->personal_email ?? '',
+                'phone' => $employee->personal_mobile ?? '',
+                'companyId' => $officeInfo->current_company_id ?? '',
+                'company' => $officeInfo->getCurrentCompany->name ?? '',
+                'businessUnitId' => $officeInfo->current_business_unit_id ?? '',
+                'branch' => $officeInfo->getCurrentBusinessUnit->name ?? '',
+                'divisionId' => $officeInfo->current_division_id ?? '',
+                'division' => $officeInfo->getCurrentDivision->name ?? '',
+                'departmentId' => $officeInfo->current_department_id ?? '',
+                'department' => $officeInfo->getCurrentDepartment->department_name ?? '',
+                'sectionId' => $officeInfo->current_section_id ?? '',
+                'section' => $officeInfo->getCurrentSection->name ?? '',
+                'employeeType' => $officeInfo->emp_type ?? '',
             ];
         });
 
-        // Get organizational data - only companies loaded initially
-        $companies = Company::select('id', 'name')->orderBy('name')->get();
-
-        return [
-            'employees' => $employees,
-            'employee_names' => collect($cachedFilters['employee_names']),
-            'employee_ids' => collect($cachedFilters['employee_ids']),
-            'system_ids' => collect($cachedFilters['system_ids']),
-            'genders' => ['Male', 'Female', 'Other'],
-            'marital_statuses' => ['Single', 'Married', 'Divorced', 'Widowed'],
-            'employee_types' => ['permanent', 'contractual'],
-            'blood_groups' => ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
-            'religions' => collect($cachedFilters['religions']),
-            'nationalities' => collect($cachedFilters['nationalities']),
-            'countries' => collect($cachedFilters['countries']),
-            'companies' => $companies,
-        ];
+        return response()->json([
+            'success' => true,
+            'message' => 'Employees retrieved successfully.',
+            'data' => $formatted
+        ]);
     }
 
     /**
      * Export search results to Excel
-     *
-     * @param Request $request
-     * @param FlexSearch $flexsearch
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
-    public function export(Request $request, FlexSearch $flexsearch)
+    public function export(EmployeeSearchRequest $request)
     {
-        // Security check: Employees should not be able to export employee data
-        if (auth()->user()->user_type === UserType::Employee) {
-            abort(403, 'Unauthorized access to employee export.');
-        }
-
-        // Build query with necessary relationships
-        $query = Employee::with([
-            'officeInfo.getCurrentCompany',
-            'officeInfo.getCurrentBusinessUnit',
-            'officeInfo.getCurrentDivision',
-            'officeInfo.getCurrentDepartment',
-            'officeInfo.getCurrentSection'
-        ]);
-
-        // Handle country filter separately (JSON field)
-        if ($request->filled('country')) {
-            $query->where('permanent_address->country', $request->input('country'));
-        }
-
-        // Handle organizational filters via EmployeeOfficeInfo relationship
-        if ($request->filled('company')) {
-            $query->whereHas('officeInfo', function($q) use ($request) {
-                $q->where('current_company_id', $request->input('company'));
-            });
-        }
-
-        if ($request->filled('business_unit')) {
-            $query->whereHas('officeInfo', function($q) use ($request) {
-                $q->where('current_business_unit_id', $request->input('business_unit'));
-            });
-        }
-
-        if ($request->filled('division')) {
-            $query->whereHas('officeInfo', function($q) use ($request) {
-                $q->where('current_division_id', $request->input('division'));
-            });
-        }
-
-        if ($request->filled('department')) {
-            $query->whereHas('officeInfo', function($q) use ($request) {
-                $q->where('current_department_id', $request->input('department'));
-            });
-        }
-
-        if ($request->filled('section')) {
-            $query->whereHas('officeInfo', function($q) use ($request) {
-                $q->where('current_section_id', $request->input('section'));
-            });
-        }
-
-        // Handle employee type filter via EmployeeOfficeInfo relationship
-        if ($request->filled('emp_type')) {
-            $query->whereHas('officeInfo', function($q) use ($request) {
-                $q->where('emp_type', $request->input('emp_type'));
-            });
-        }
-
-        // Define searchable columns for FlexSearch fuzzy matching
-        $searchableColumns = [
-            'applicant_id',
-            'full_name',
-            'system_id',
-            'personal_mobile',
-            'work_email',
-            'personal_email'
-        ];
-
-        // Get keyword search term
-        $keyword = $request->input('keyword');
-
-        // Build filters array from request
-        $filters = $this->buildFilters($request);
-
-        // Apply FlexSearch with filters and keyword search (no pagination)
-        $employees = $flexsearch
-            ->apply($query, $filters, $keyword, $searchableColumns)
-            ->orderBy('id', 'desc')
-            ->get();
+        $employees = $this->searchServices->searchEmployees($request->validated());
 
         return Excel::download(new EmployeeSearchExport($employees), 'employee_search_export.xlsx');
     }
 }
-

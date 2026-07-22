@@ -94,3 +94,43 @@ test('employee search export is forbidden for standard employee user type', func
 
     $response->assertStatus(403);
 });
+
+test('employee search data endpoint returns json matching search filters', function () {
+    $company = Company::factory()->create(['name' => 'Acme Corporation']);
+
+    $employeeMatch = Employee::factory()->create(['full_name' => 'John Doe']);
+    $employeeMatch->officeInfo()->create([
+        'current_company_id' => $company->id,
+        'emp_type' => 'permanent',
+    ]);
+
+    $employeeOther = Employee::factory()->create(['full_name' => 'Jane Smith']);
+    $employeeOther->officeInfo()->create([
+        'current_company_id' => 999,
+        'emp_type' => 'contractual',
+    ]);
+
+    $response = $this->actingAs($this->user)
+        ->getJson(route('employee.employee.data', [
+            'company' => $company->id
+        ]));
+
+    $response->assertStatus(200);
+    $response->assertJson([
+        'success' => true,
+        'message' => 'Employees retrieved successfully.',
+    ]);
+
+    $data = $response->json('data');
+    expect($data)->toHaveCount(1);
+    expect($data[0]['fullName'])->toBe('John Doe');
+});
+
+test('employee search data endpoint is forbidden for standard employee user type', function () {
+    $employeeUser = User::factory()->create(['user_type' => UserType::Employee]);
+
+    $response = $this->actingAs($employeeUser)
+        ->getJson(route('employee.employee.data'));
+
+    $response->assertStatus(403);
+});
