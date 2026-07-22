@@ -73,14 +73,9 @@
                                 <label class="form-label small fw-semibold">Status</label>
                                 <select name="status" class="form-select">
                                     <option value="">All Status</option>
-                                    <option value="Allocated" {{ request('status') == 'Allocated' ? 'selected' : '' }}>
-                                        Allocated</option>
-                                    <option value="Active" {{ request('status') == 'Active' ? 'selected' : '' }}>Active
-                                    </option>
-                                    <option value="Released" {{ request('status') == 'Released' ? 'selected' : '' }}>
-                                        Released</option>
-                                    <option value="Completed" {{ request('status') == 'Completed' ? 'selected' : '' }}>
-                                        Completed</option>
+                                    <option value="Active" {{ request('status') == 'Active' ? 'selected' : '' }}>Active</option>
+                                    <option value="Inactive" {{ request('status') == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+                                    <option value="Completed" {{ request('status') == 'Completed' ? 'selected' : '' }}>Completed</option>
                                 </select>
                             </div>
                             <div class="col-md-2">

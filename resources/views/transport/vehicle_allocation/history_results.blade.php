@@ -69,12 +69,10 @@
                     <td>
                         @php
                             $statusClass = match ($allocation->status) {
-                                'Allocated' => 'warning',
-                                'Active' => 'success',
-                                'Released' => 'secondary',
+                                'Active'    => 'success',
+                                'Inactive'  => 'secondary',
                                 'Completed' => 'primary',
-                                'Cancelled' => 'danger',
-                                default => 'secondary',
+                                default     => 'secondary',
                             };
                         @endphp
                         <span class="badge bg-{{ $statusClass }}">{{ $allocation->status }}</span>
@@ -94,7 +92,7 @@
                                 class="btn btn-outline-info" title="View">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            @if ($allocation->status == 'Active' || $allocation->status == 'Allocated')
+                            @if ($allocation->status == 'Active')
                                 <button type="button" class="btn btn-outline-danger"
                                     onclick="releaseVehicle({{ $allocation->id }})" title="Release">
                                     <i class="fas fa-unlock"></i>
