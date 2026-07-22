@@ -53,7 +53,7 @@
                     </div>
                 </div>
             </td>
-            <td class="text-center" style="width: 200px" >
+            <td class="text-center" style="width: 240px" >
                 @can('bonuses.view')
                 <button type="button" class="btn btn-info btn-sm view-details"
                         data-id="{{ $item->id }}"
@@ -74,6 +74,12 @@
                         title="View Details">
                     <i style="height: 12px; width: 12px" data-feather="eye"></i>
                 </button>
+                <a href="{{ route('bonus.process.export.excel', $item->id) }}" class="btn btn-success btn-sm no-loader" title="Export Excel">
+                    <i class="bi bi-file-earmark-excel"></i>
+                </a>
+                <a href="{{ route('bonus.process.print', $item->id) }}" target="_blank" class="btn btn-secondary btn-sm no-loader" title="Print PDF">
+                    <i class="bi bi-printer"></i>
+                </a>
                 @endcan
 
                 @if ($item->approval_status == 'pending')

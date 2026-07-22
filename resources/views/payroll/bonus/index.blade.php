@@ -112,7 +112,17 @@
                         <a type="button" class="btn btn-warning btn-sm" href="{{route('bonus.create')}}">
                             <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                         </a>
+                        @else
+                        <div></div>
                         @endcan
+                        <div class="d-flex gap-2">
+                            <button type="button" id="exportExcelBtn" class="btn btn-success btn-sm no-loader">
+                                <i class="bi bi-file-earmark-excel me-1"></i> Export
+                            </button>
+                            <button type="button" id="printBtn" class="btn btn-secondary btn-sm no-loader">
+                                <i class="bi bi-printer me-1"></i> Print
+                            </button>
+                        </div>
                     </div>
 
                     <div class="table-responsive" id="search-result">
@@ -213,6 +223,23 @@
                 if (url) {
                     fetchData(url);
                 }
+            });
+
+            // Excel Export
+            $('#exportExcelBtn').on('click', function(e) {
+                e.preventDefault();
+                window.ignoreBeforeUnload = true;
+                setTimeout(() => { window.ignoreBeforeUnload = false; }, 2000);
+                
+                const queryString = $('#filterForm').serialize();
+                window.location.href = "{{ route('bonus.export.excel') }}?" + queryString;
+            });
+
+            // Print
+            $('#printBtn').on('click', function(e) {
+                e.preventDefault();
+                const queryString = $('#filterForm').serialize();
+                window.open("{{ route('bonus.print') }}?" + queryString, '_blank');
             });
         });
     </script>

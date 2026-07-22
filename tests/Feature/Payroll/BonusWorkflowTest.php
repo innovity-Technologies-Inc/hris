@@ -193,4 +193,25 @@ test('it processes bonus using central approval engine sequential workflow', fun
     // Refresh and verify it is approved
     $process->refresh();
     expect($process->approval_status)->toBe('approved');
+
+    // Test export and print routes
+    $this->withoutMiddleware();
+    
+    // Index-level export and print
+    $response = $this->actingAs($hrUser)->get(route('bonus.export.excel'));
+    $response->assertStatus(200);
+    $this->assertTrue(str_contains($response->headers->get('content-disposition'), 'attachment; filename=bonus_and_reward_processes_'));
+
+    $response = $this->actingAs($hrUser)->get(route('bonus.print'));
+    $response->assertStatus(200);
+    $response->assertViewIs('payroll.bonus.print_index');
+
+    // Process-level export and print
+    $response = $this->actingAs($hrUser)->get(route('bonus.process.export.excel', $process->id));
+    $response->assertStatus(200);
+    $this->assertTrue(str_contains($response->headers->get('content-disposition'), 'attachment; filename=bonus_eligible_employees_'));
+
+    $response = $this->actingAs($hrUser)->get(route('bonus.process.print', $process->id));
+    $response->assertStatus(200);
+    $response->assertViewIs('payroll.bonus.print_process');
 });

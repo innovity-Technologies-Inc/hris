@@ -12,7 +12,9 @@ use App\Services\Payroll\PayrollServices;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use App\Exports\Payroll\BonusProcessExport;
+use App\Exports\Payroll\BonusDetailExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BonusController extends Controller
 {
@@ -128,6 +130,41 @@ class BonusController extends Controller
             'message' => 'Deleted Successfully',
             'alert-type' => 'success'
         ]);
+    }
+
+    public function exportExcel(Request $request, FlexSearch $flexSearch)
+    {
+        $searchResult = $this->payrollService->payrollProcessSearchResult($request, PayrollProcess::class, $flexSearch);
+        $records = $searchResult->where('type', 'bonus')->orderBy('created_at', 'desc')->get();
+
+        return Excel::download(new BonusProcessExport($records), 'bonus_and_reward_processes_' . now()->format('YmdHis') . '.xlsx');
+    }
+
+    public function printIndex(Request $request, FlexSearch $flexSearch)
+    {
+        $searchResult = $this->payrollService->payrollProcessSearchResult($request, PayrollProcess::class, $flexSearch);
+        $records = $searchResult->where('type', 'bonus')->orderBy('created_at', 'desc')->get();
+
+        $title = 'Bonus and Reward Processes';
+        return view('payroll.bonus.print_index', compact('records', 'title'));
+    }
+
+    public function exportProcessExcel($id)
+    {
+        $process = PayrollProcess::findOrFail($id);
+        $records = Bonus::where('batch_id', $process->batch_id)->with('getEmployee')->orderBy('created_at', 'desc')->get();
+
+        return Excel::download(new BonusDetailExport($records), 'bonus_eligible_employees_' . $process->batch_id . '_' . now()->format('YmdHis') . '.xlsx');
+    }
+
+    public function printProcess($id)
+    {
+        $process = PayrollProcess::findOrFail($id);
+        $records = Bonus::where('batch_id', $process->batch_id)->with('getEmployee')->orderBy('created_at', 'desc')->get();
+
+        $title = 'Eligible Employees for Bonus Batch ' . $process->batch_id;
+        $salary_month = $process->salary_month;
+        return view('payroll.bonus.print_process', compact('records', 'title', 'process', 'salary_month'));
     }
 
 }

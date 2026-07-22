@@ -1,5 +1,22 @@
 # Test Log
 
+## 2026-07-22 (Bonus & Reward Processes Export and Print)
+
+**Goal**: Implement Excel export and Print/PDF printing for the Bonus and Reward processes list (at index page header level) and specific batch details (at row level).
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest`
+
+**Results**:
+- Registered `bonus.export.excel`, `bonus.print`, `bonus.process.export.excel`, and `bonus.process.print` routes inside `web.php`.
+- Created export classes: `BonusProcessExport.php` (batch list) and `BonusDetailExport.php` (eligible employees detail list) under `app/Exports/Payroll`.
+- Developed print layout templates `print_index.blade.php` and `print_process.blade.php` under `resources/views/payroll/bonus`.
+- Integrated Excel and Print action buttons with parameters-forwarding click handlers in `payroll/bonus/index.blade.php` using Vanilla JS.
+- Integrated row-level icon-only Excel export (green) and Print (secondary) action buttons inside `payroll/bonus/partials/search_results.blade.php`.
+- Updated `BonusWorkflowTest.php` to verify all 4 route endpoints (status codes, headers, and view names).
+- Tests passed: 219/219 passed (822 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-22 (Bonus & Reward Approval Workflow Integration)
 
 **Goal**: Integrate the Bonus and Reward process batch with the central approval engine workflow, removing static status updating features.
