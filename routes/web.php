@@ -1252,6 +1252,10 @@ Route::prefix('payroll/penalty')->name('payroll.penalty.')->controller(\App\Http
 Route::prefix('salary-process')->name('salary.')->controller(\App\Http\Controllers\Payroll\SalaryController::class)->middleware('auth')->group(function () {
     Route::middleware('permission:salary.view')->group(function () {
         Route::get('/', 'index')->name('index');
+        Route::get('export-excel', 'exportExcel')->name('export.excel');
+        Route::get('print', 'printIndex')->name('print');
+        Route::get('process/{id}/export-excel', 'exportProcessExcel')->name('process.export.excel');
+        Route::get('process/{id}/print', 'printProcess')->name('process.print');
         Route::get('view/{id}', 'show')->name('show');
         Route::get('payroll-detail/{id}', 'showPayroll')->name('payroll.show');
         Route::get('generate-payslip/{id}', 'generatePayslip')->name('payroll.payslip');

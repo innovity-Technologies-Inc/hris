@@ -1,5 +1,22 @@
 # Test Log
 
+## 2026-07-22 (Salary Processes Export and Print)
+
+**Goal**: Implement Excel export and Print/PDF printing for the Salary processes list (at index page header level) and specific batch details (at row level).
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest`
+
+**Results**:
+- Registered `salary.export.excel`, `salary.print`, `salary.process.export.excel`, and `salary.process.print` routes inside `web.php`.
+- Created export classes: `SalaryProcessExport.php` (batch list) and `SalaryDetailExport.php` (batch details list) under `app/Exports/Payroll`.
+- Developed print layout templates `print_index.blade.php` and `print_process.blade.php` under `resources/views/payroll/salary`.
+- Integrated Excel and Print action buttons with parameters-forwarding click handlers in `payroll/salary/index.blade.php` using Vanilla JS.
+- Integrated row-level icon-only Excel export (green) and Print (secondary) action buttons inside `payroll/salary/partials/search_results.blade.php` and widened Action headers.
+- Created `tests/Feature/Payroll/SalaryExportTest.php` to verify all 4 route endpoints (status codes, headers, and view names).
+- Tests passed: 222/222 passed (858 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-22 (Arrear adjustment Processes Export and Print)
 
 **Goal**: Implement Excel export and Print/PDF printing for the Arrear adjustment processes list (at index page header level) and specific batch details (at row level).

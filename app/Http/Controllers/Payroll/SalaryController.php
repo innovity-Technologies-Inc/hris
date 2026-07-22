@@ -15,6 +15,9 @@ use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Exports\Payroll\SalaryProcessExport;
+use App\Exports\Payroll\SalaryDetailExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SalaryController extends Controller
 {
@@ -214,6 +217,41 @@ class SalaryController extends Controller
         return redirect()->route('salary.index')->with([
             'message' => 'Updated Successfully',
         ]);
+    }
+
+    public function exportExcel(Request $request, FlexSearch $flexSearch)
+    {
+        $searchResult = $this->payrollService->payrollProcessSearchResult($request, PayrollProcess::class, $flexSearch);
+        $records = $searchResult->where('type', 'salary')->orderBy('created_at', 'desc')->get();
+
+        return Excel::download(new SalaryProcessExport($records), 'salary_generation_processes_' . now()->format('YmdHis') . '.xlsx');
+    }
+
+    public function printIndex(Request $request, FlexSearch $flexSearch)
+    {
+        $searchResult = $this->payrollService->payrollProcessSearchResult($request, PayrollProcess::class, $flexSearch);
+        $records = $searchResult->where('type', 'salary')->orderBy('created_at', 'desc')->get();
+
+        $title = 'Salary Generation Processes';
+        return view('payroll.salary.print_index', compact('records', 'title'));
+    }
+
+    public function exportProcessExcel($id)
+    {
+        $process = PayrollProcess::findOrFail($id);
+        $records = Payroll::where('process_id', $process->id)->with('getEmployee')->orderBy('created_at', 'desc')->get();
+
+        return Excel::download(new SalaryDetailExport($records), 'salary_calculations_' . $process->batch_id . '_' . now()->format('YmdHis') . '.xlsx');
+    }
+
+    public function printProcess($id)
+    {
+        $process = PayrollProcess::findOrFail($id);
+        $records = Payroll::where('process_id', $process->id)->with('getEmployee')->orderBy('created_at', 'desc')->get();
+
+        $title = 'Salary Calculations for Batch ' . $process->batch_id;
+        $salary_month = $process->salary_month;
+        return view('payroll.salary.print_process', compact('records', 'title', 'process', 'salary_month'));
     }
 }
 
