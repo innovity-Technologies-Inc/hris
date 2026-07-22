@@ -27,13 +27,43 @@ class LeaveServices
      */
     public function getLeavesPaginated(FlexSearch $flexsearch, Request $request)
     {
-        $query = Leave::with('getEmployee', 'getPlan');
+        $query = Leave::with('getEmployee.officeInfo.getCurrentCompany', 'getEmployee.officeInfo.getCurrentBusinessUnit', 'getPlan');
         $searchableColumns = ['getEmployee.full_name', 'getPlan.name', 'getPlan.leave_type', 'leave_count'];
         $keyword = $request->input('keyword');
         $filters = [
             'from>=' => $request->input('from'),
             'from<=' => $request->input('to'),
         ];
+
+        if ($request->filled('company')) {
+            $query->whereHas('getEmployee.officeInfo', function($q) use ($request) {
+                $q->where('current_company_id', $request->input('company'));
+            });
+        }
+
+        if ($request->filled('business_unit')) {
+            $query->whereHas('getEmployee.officeInfo', function($q) use ($request) {
+                $q->where('current_business_unit_id', $request->input('business_unit'));
+            });
+        }
+
+        if ($request->filled('division')) {
+            $query->whereHas('getEmployee.officeInfo', function($q) use ($request) {
+                $q->where('current_division_id', $request->input('division'));
+            });
+        }
+
+        if ($request->filled('department')) {
+            $query->whereHas('getEmployee.officeInfo', function($q) use ($request) {
+                $q->where('current_department_id', $request->input('department'));
+            });
+        }
+
+        if ($request->filled('section')) {
+            $query->whereHas('getEmployee.officeInfo', function($q) use ($request) {
+                $q->where('current_section_id', $request->input('section'));
+            });
+        }
 
         return $flexsearch->apply($query, $filters, $keyword, $searchableColumns)->paginate(10);
     }

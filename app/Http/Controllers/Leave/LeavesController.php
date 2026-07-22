@@ -10,6 +10,11 @@ use App\Services\Leave\LeaveServices;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Models\Company\Company;
+use App\Models\Company\CompanyLocation;
+use App\Models\Company\Division;
+use App\Models\Company\Department;
+use App\Models\Company\Section;
 
 class LeavesController extends Controller
 {
@@ -32,7 +37,31 @@ class LeavesController extends Controller
             return view('leave.search_results', compact('leaves'))->render();
         }
 
-        return view('leave.index', compact('leaves', 'title', 'section', 'sub_section'));
+        $companies = Company::select('id', 'name')->orderBy('name')->get();
+        $selectedBranch = $request->filled('business_unit') 
+            ? CompanyLocation::find($request->input('business_unit')) 
+            : null;
+        $selectedDivision = $request->filled('division') 
+            ? Division::find($request->input('division')) 
+            : null;
+        $selectedDepartment = $request->filled('department') 
+            ? Department::find($request->input('department')) 
+            : null;
+        $selectedSection = $request->filled('section') 
+            ? Section::find($request->input('section')) 
+            : null;
+
+        return view('leave.index', compact(
+            'leaves',
+            'title',
+            'section',
+            'sub_section',
+            'companies',
+            'selectedBranch',
+            'selectedDivision',
+            'selectedDepartment',
+            'selectedSection'
+        ));
     }
 
     public function create()

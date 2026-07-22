@@ -21,47 +21,128 @@
                         <div class="col-md-12">
                             <div class="border-0 rounded-3 p-0">
                                 <form id="filterForm">
-                                    {{-- First Row: Keyword Search --}}
-                                    <div class="row mb-2">
-                                        <div class="col-12">
-                                            <label for="keywordSearch" class="form-label text-muted small fw-semibold mb-1">
-                                                Keyword Search
+                                    <div class="row g-3">
+                                        {{-- Employee Name / Keyword --}}
+                                        <div class="col-md-4">
+                                            <label for="keyword" class="form-label text-muted small fw-semibold mb-1">
+                                                Employee Name
                                             </label>
-                                            <div class="input-group input-group-md">
-                                                <input type="text" class="form-control border-end-0" id="keywordSearch"
-                                                    name="keyword" placeholder="Search by employee name, leave plan, plan type and days"
-                                                    aria-label="Keyword Search" value="{{ request('keyword') }}">
-                                                <span class="input-group-text border-start-0 input-group-bg">
-                                                    <i class="mdi mdi-magnify text-muted"></i>
-                                                </span>
-                                            </div>
+                                            <input type="text" class="form-control" id="keyword" name="keyword"
+                                                placeholder="Search by employee name, leave plan..." value="{{ request('keyword') }}">
                                         </div>
-                                    </div>
 
-                                    {{-- Second Row: Date Range --}}
-                                    <div class="row mb-2">
-                                        <div class="col-md-6">
-                                            <label for="fromDate" class="form-label text-muted small fw-semibold mb-1">
+                                        {{-- From Date --}}
+                                        <div class="col-md-4">
+                                            <label for="from" class="form-label text-muted small fw-semibold mb-1">
                                                 From Date
                                             </label>
-                                            <input type="date" class="form-control" id="fromDate" name="from"
+                                            <input type="date" id="from" name="from" class="form-control"
                                                 value="{{ request('from') }}">
                                         </div>
-                                        <div class="col-md-6">
-                                            <label for="toDate" class="form-label text-muted small fw-semibold mb-1">
+
+                                        {{-- To Date --}}
+                                        <div class="col-md-4">
+                                            <label for="to" class="form-label text-muted small fw-semibold mb-1">
                                                 To Date
                                             </label>
-                                            <input type="date" class="form-control" id="toDate" name="to"
+                                            <input type="date" id="to" name="to" class="form-control"
                                                 value="{{ request('to') }}">
                                         </div>
                                     </div>
 
-                                    {{-- Reset Button --}}
-                                    <div class="row">
-                                        <div class="col-12 text-end">
-                                            <button type="button" id="resetFilters"
-                                                class="btn btn-outline-secondary btn-sm">
-                                                <i class="mdi mdi-refresh"></i> Reset
+                                    <div class="row g-3 mt-1">
+                                        {{-- Company --}}
+                                        <div class="col-md-4">
+                                            <label for="search_company_id" class="form-label text-muted small fw-semibold mb-1">
+                                                Company
+                                            </label>
+                                            <select id="search_company_id" name="company"
+                                                class="form-select select2_list"
+                                                data-placeholder="Select Company">
+                                                <option value="">Choose One</option>
+                                                @foreach ($companies as $company)
+                                                    <option value="{{ $company->id }}" {{ request('company') == $company->id ? 'selected' : '' }}>
+                                                        {{ $company->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        {{-- Branch --}}
+                                        @if (App\HelperClass::getGeneralSetting()->branch_status == 1)
+                                            <div class="col-md-4">
+                                                <label for="search_business_unit_id" class="form-label text-muted small fw-semibold mb-1">
+                                                    Branch
+                                                </label>
+                                                <select id="search_business_unit_id" name="business_unit"
+                                                    class="form-select select2_list"
+                                                    data-placeholder="Select Branch">
+                                                    <option value="">Select Branch</option>
+                                                    @if ($selectedBranch)
+                                                        <option value="{{ $selectedBranch->id }}" selected>{{ $selectedBranch->name }}</option>
+                                                    @endif
+                                                </select>
+                                            </div>
+                                        @endif
+
+                                        {{-- Division --}}
+                                        @if (App\HelperClass::getGeneralSetting()->division_status == 1)
+                                            <div class="col-md-4">
+                                                <label for="search_division_id" class="form-label text-muted small fw-semibold mb-1">
+                                                    Division
+                                                </label>
+                                                <select id="search_division_id" name="division"
+                                                    class="form-select select2_list"
+                                                    data-placeholder="Select Division">
+                                                    <option value="">Select Division</option>
+                                                    @if ($selectedDivision)
+                                                        <option value="{{ $selectedDivision->id }}" selected>{{ $selectedDivision->name }}</option>
+                                                    @endif
+                                                </select>
+                                            </div>
+                                        @endif
+                                    </div>
+
+                                    <div class="row g-3 mt-1">
+                                        {{-- Department --}}
+                                        @if (App\HelperClass::getGeneralSetting()->department_status == 1)
+                                            <div class="col-md-4">
+                                                <label for="search_department_id" class="form-label text-muted small fw-semibold mb-1">
+                                                    Department
+                                                </label>
+                                                <select id="search_department_id" name="department"
+                                                    class="form-select select2_list"
+                                                    data-placeholder="Select Department">
+                                                    <option value="">Select Department</option>
+                                                    @if ($selectedDepartment)
+                                                        <option value="{{ $selectedDepartment->id }}" selected>{{ $selectedDepartment->department_name }}</option>
+                                                    @endif
+                                                </select>
+                                            </div>
+                                        @endif
+
+                                        {{-- Section --}}
+                                        @if (App\HelperClass::getGeneralSetting()->section_status == 1)
+                                            <div class="col-md-4">
+                                                <label for="search_section_id" class="form-label text-muted small fw-semibold mb-1">
+                                                    Section
+                                                </label>
+                                                <select id="search_section_id" name="section"
+                                                    class="form-select select2_list"
+                                                    data-placeholder="Select Section">
+                                                    <option value="">Select Section</option>
+                                                    @if ($selectedSection)
+                                                        <option value="{{ $selectedSection->id }}" selected>{{ $selectedSection->name }}</option>
+                                                    @endif
+                                                </select>
+                                            </div>
+                                        @endif
+
+                                        {{-- Reset Button --}}
+                                        <div class="col-md-4">
+                                            <label class="form-label mb-1">&nbsp;</label>
+                                            <button type="button" id="resetFilters" class="btn btn-outline-secondary w-100">
+                                                <i style="height: 14px; width: 14px" data-feather="refresh-cw" class="me-1"></i> Reset Filters
                                             </button>
                                         </div>
                                     </div>
@@ -125,6 +206,22 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
         $(document).ready(function() {
+            // Initialize Select2 for all select2_list elements
+            $('.select2_list').select2({
+                placeholder: function() {
+                    return $(this).data('placeholder');
+                },
+                allowClear: true,
+                width: '100%'
+            });
+
+            // Initialize Feather icons
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
+
+            let silenceChangeEvents = false;
+
             // Function to perform AJAX search
             function fetchData(url = "{{ route('leave.index') }}") {
                 const queryString = $('#filterForm').serialize();
@@ -135,7 +232,8 @@
                     data: queryString,
                     beforeSend: function() {
                         $('#search-result').html(
-                            '<div class="text-center py-4 text-muted">Loading Data...</div>');
+                            '<div class="text-center py-4 text-muted">Loading Data...</div>'
+                        );
                     },
                     success: function(response) {
                         $('#search-result').html(response);
@@ -153,21 +251,137 @@
                 });
             }
 
-            // Trigger search on input or change
-            $('#filterForm').on('input change', function(e) {
-                e.preventDefault();
+            // Standard Ajax Loader with Pre-selection support
+            function ajaxLoad(url, $select, placeholder, selectedValue = null) {
+                if (!$select.length) return Promise.resolve();
+                return $.get(url).then(function (data) {
+                    $select.html(`<option value="">${placeholder}</option>`);
+                    $.each(data, function (_, item) {
+                        $select.append(
+                            `<option value="${item.id}">${item.name ?? item.department_name ?? item.full_name}</option>`
+                        );
+                    });
+                    if (selectedValue && selectedValue !== 'null' && selectedValue !== '') {
+                        $select.val(selectedValue).trigger('change.select2');
+                    } else {
+                        $select.val('').trigger('change.select2');
+                    }
+                }).catch(function () {
+                    $select.html('<option value="">Error loading data</option>');
+                });
+            }
+
+            function loadHierarchy(companyId, branchId = null, divisionId = null, departmentId = null, sectionId = null) {
+                if (!companyId) {
+                    resetSelect($('#search_business_unit_id'), 'Select Branch');
+                    resetSelect($('#search_division_id'), 'Select Division');
+                    resetSelect($('#search_department_id'), 'Select Department');
+                    resetSelect($('#search_section_id'), 'Select Section');
+                    return Promise.resolve();
+                }
+
+                let branchPromise = Promise.resolve();
+                if ($('#search_business_unit_id').length) {
+                    branchPromise = ajaxLoad(`/get-units/${companyId}`, $('#search_business_unit_id'), 'Select Branch', branchId);
+                }
+
+                return branchPromise.then(() => {
+                    const currentBranchId = $('#search_business_unit_id').val() || 'null';
+                    return ajaxLoad(`/get-divisions/${companyId}/${currentBranchId}`, $('#search_division_id'), 'Select Division', divisionId);
+                }).then(() => {
+                    const currentBranchId = $('#search_business_unit_id').val() || 'null';
+                    const currentDivisionId = $('#search_division_id').val() || 'null';
+                    return ajaxLoad(`/get-departments/${companyId}/${currentBranchId}/${currentDivisionId}`, $('#search_department_id'), 'Select Department', departmentId);
+                }).then(() => {
+                    const currentBranchId = $('#search_business_unit_id').val() || 'null';
+                    const currentDivisionId = $('#search_division_id').val() || 'null';
+                    const currentDeptId = $('#search_department_id').val() || 'null';
+                    return ajaxLoad(`/get-sections/${companyId}/${currentBranchId}/${currentDivisionId}/${currentDeptId}`, $('#search_section_id'), 'Select Section', sectionId);
+                });
+            }
+
+            function resetSelect($select, placeholder) {
+                $select.html(`<option value="">${placeholder}</option>`).val('').trigger('change.select2');
+            }
+
+            // On page load, if company is preloaded/selected:
+            const initialCompanyId = $('#search_company_id').val();
+            if (initialCompanyId) {
+                const initialBranchId = "{{ request('business_unit') }}";
+                const initialDivisionId = "{{ request('division') }}";
+                const initialDepartmentId = "{{ request('department') }}";
+                const initialSectionId = "{{ request('section') }}";
+
+                silenceChangeEvents = true;
+                loadHierarchy(initialCompanyId, initialBranchId, initialDivisionId, initialDepartmentId, initialSectionId).then(() => {
+                    silenceChangeEvents = false;
+                });
+            }
+
+            // Change listeners for cascading dropdowns
+            $('#search_company_id').on('change', function (e) {
+                if (silenceChangeEvents) return;
+                silenceChangeEvents = true;
+                loadHierarchy($(this).val()).then(() => {
+                    silenceChangeEvents = false;
+                    fetchData();
+                });
+            });
+
+            $('#search_business_unit_id').on('change', function (e) {
+                if (silenceChangeEvents) return;
+                silenceChangeEvents = true;
+                const companyId = $('#search_company_id').val();
+                loadHierarchy(companyId, $(this).val()).then(() => {
+                    silenceChangeEvents = false;
+                    fetchData();
+                });
+            });
+
+            $('#search_division_id').on('change', function (e) {
+                if (silenceChangeEvents) return;
+                silenceChangeEvents = true;
+                const companyId = $('#search_company_id').val();
+                const branchId = $('#search_business_unit_id').val() || 'null';
+                loadHierarchy(companyId, branchId, $(this).val()).then(() => {
+                    silenceChangeEvents = false;
+                    fetchData();
+                });
+            });
+
+            $('#search_department_id').on('change', function (e) {
+                if (silenceChangeEvents) return;
+                silenceChangeEvents = true;
+                const companyId = $('#search_company_id').val();
+                const branchId = $('#search_business_unit_id').val() || 'null';
+                const divisionId = $('#search_division_id').val() || 'null';
+                loadHierarchy(companyId, branchId, divisionId, $(this).val()).then(() => {
+                    silenceChangeEvents = false;
+                    fetchData();
+                });
+            });
+
+            $('#search_section_id').on('change', function (e) {
+                if (silenceChangeEvents) return;
                 fetchData();
             });
 
-            // Reset filters: clear form and reload base URL
+            // Trigger search on input or change
+            $('#filterForm').on('input change', function(e) {
+                e.preventDefault();
+                // If it's a programmatic change from a select2_list, we skip it because
+                // it is handled by the dedicated change listeners above.
+                if (silenceChangeEvents) return;
+                if (e.type === 'change' && e.target.classList.contains('select2_list') && !e.originalEvent) {
+                    return;
+                }
+                fetchData();
+            });
+
+            // Reset filters: clear form, select2 inputs, and reload base URL
             $('#resetFilters').on('click', function() {
-                // Clear all form fields
                 $('#filterForm')[0].reset();
-
-                // If using Select2, you may need to trigger change
-                $('.select2_list').val(null).trigger('change');
-
-                // Reload the page without query string
+                $('.select2_list').val('').trigger('change.select2');
                 window.location.href = "{{ route('leave.index') }}";
             });
 

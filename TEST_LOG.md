@@ -1,5 +1,22 @@
 # Test Log
 
+## 2026-07-22 (Leave Logs Search Organizational Filters)
+
+**Goal**: Align Leave Logs search UI design to match Attendance index form layouts (exactly 3 rows: 1 core row, 2 organization filter rows) with standard element heights, and add company, branch, division, department, and section cascading filters.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/Leave/LeaveLogsTest.php`
+
+**Results**:
+- Added Company, Branch, Division, Department, and Section filters inside `leave/index.blade.php`.
+- Organized the search form fields into exactly three rows (`col-md-4` each) and styled the Reset Filters button with label spacing to match adjacent dropdown heights and alignments.
+- Implemented sequential promise-based AJAX cascading hierarchy loaders inside the JavaScript block, using state tracking (`silenceChangeEvents`) to avoid redundant search queries.
+- Configured `LeavesController.php` index action to load companies and requested filter units.
+- Updated `LeaveServices::getLeavesPaginated` to query `getEmployee.officeInfo` for company, branch, division, department, and section filters.
+- Created `LeaveLogsTest.php` Pest feature test verifying leave logs index accessibility and organizational query constraint application.
+- Tests passed: 2/2 passed (5 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-22 (Attendance Records Search Organizational Filters)
 
 **Goal**: Add organization fields (Company, Branch, Division, Department, Section) to the attendance records search and filter functionality, implementing dynamic cascading AJAX autoloading and retaining pre-selected options to support Pest/headless assertions, formatted in exactly three rows (1 row of core filters, 2 rows of organizational filters) with standard uniform element heights (38px).
