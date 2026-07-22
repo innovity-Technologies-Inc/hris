@@ -9,7 +9,9 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     // Create a user and assign necessary permissions
-    $this->user = User::factory()->create();
+    $this->user = User::factory()->create([
+        'user_type' => \App\Enums\UserType::Group
+    ]);
     $role = Role::create(['name' => 'Admin']);
     $permissions = [
         'vehicles.view',
@@ -40,9 +42,8 @@ beforeEach(function () {
     // Setup for Vehicle Driver create
     \App\Models\Company\Designation::create([
         'company_designation' => 'Driver',
-        'short_name' => 'DRV',
         'designation_level' => 1,
-        'status' => 'Active',
+        'status' => 'active',
     ]);
 });
 
@@ -395,6 +396,118 @@ test('employee transport CRUD, reject, and cancel behavior', function () {
         'id' => $service->id,
         'status' => 'Rejected'
     ]);
+});
+
+test('it can print vehicle requisitions and export to excel', function () {
+    $employee = \App\Models\Employee\Employee::factory()->create(['full_name' => 'John Smith']);
+    $requisition = \App\Models\Transport\VehicleRequisition::create([
+        'employee_id' => $employee->id,
+        'trip_type' => 'Official',
+        'trip_mode' => 'Round-trip',
+        'purpose_of_travel' => 'Client meeting',
+        'start_date_time' => '2026-07-22 10:00:00',
+        'end_date_time' => '2026-07-22 14:00:00',
+        'pickup_location' => 'A',
+        'destination' => 'B',
+        'no_of_passengers' => 1,
+        'vehicle_type_required' => 'Car',
+        'approval_status' => 'Pending',
+    ]);
+
+    // Print
+    $response = $this->actingAs($this->user)
+        ->get(route('transport.vehicle_requisitions.print', ['status' => 'Pending']));
+    $response->assertStatus(200);
+    $response->assertViewIs('transport.vehicle_requisition.print_index');
+    $response->assertViewHas('records');
+    expect($response->viewData('records'))->toHaveCount(1);
+
+    // Excel
+    $response = $this->actingAs($this->user)
+        ->get(route('transport.vehicle_requisitions.export.excel', ['status' => 'Pending']));
+    $response->assertStatus(200);
+    expect($response->headers->get('content-type'))->toContain('spreadsheet');
+});
+
+test('it can print employee transports and export to excel', function () {
+    $group = \App\Models\Company\Group::create(['name' => 'Group A', 'short_name' => 'GA', 'status' => 'active']);
+    $type = \App\Models\Company\CompanyType::create(['name' => 'Type A', 'short_name' => 'TA', 'status' => 'active']);
+    $company = \App\Models\Company\Company::create([
+        'group_id' => $group->id,
+        'type_id' => $type->id,
+        'name' => 'Company A',
+        'short_name' => 'CA',
+        'address' => 'Addr',
+        'status' => 'active'
+    ]);
+
+    $routeMap = \App\Models\Transport\RouteMap::create([
+        'route_name' => 'Office route',
+        'start_point' => 'A',
+        'end_point' => 'B',
+        'status' => 'Active',
+    ]);
+
+    $transport = \App\Models\Transport\EmployeeTransport::create([
+        'type' => 'company',
+        'company_id' => $company->id,
+        'service_name' => 'Staff Shuttle',
+        'transport_type' => 'Daily Commute',
+        'purpose' => 'Staff commute to office',
+        'route_map_id' => $routeMap->id,
+        'start_date' => '2026-07-22',
+        'end_date' => '2026-08-22',
+        'status' => 'Pending',
+    ]);
+
+    // Print
+    $response = $this->actingAs($this->user)
+        ->get(route('transport.employee_transports.print', ['status' => 'Pending']));
+    $response->assertStatus(200);
+    $response->assertViewIs('transport.employee_transport.print_index');
+    $response->assertViewHas('records');
+    expect($response->viewData('records'))->toHaveCount(1);
+
+    // Excel
+    $response = $this->actingAs($this->user)
+        ->get(route('transport.employee_transports.export.excel', ['status' => 'Pending']));
+    $response->assertStatus(200);
+    expect($response->headers->get('content-type'))->toContain('spreadsheet');
+});
+
+test('it can print vehicle allocations and export to excel', function () {
+    $vehicle = \App\Models\Transport\Vehicle::create([
+        'vehicle_category' => 'Car',
+        'model_number' => 'TEST-123',
+        'manufacture_year' => 2023,
+        'fuel_type' => 'Petrol',
+        'purchase_type' => 'Purchase',
+        'ownership_type' => 'Company-owned',
+        'status' => 'Active',
+    ]);
+
+    $allocation = \App\Models\Transport\VehicleAllocation::create([
+        'vehicle_id' => $vehicle->id,
+        'name' => 'Test Allocation',
+        'allocated_to' => 'department',
+        'approved_by' => 1,
+        'start_date' => '2026-07-22',
+        'status' => 'Active',
+    ]);
+
+    // Print
+    $response = $this->actingAs($this->user)
+        ->get(route('transport.vehicle_allocations.print', ['status' => 'Active']));
+    $response->assertStatus(200);
+    $response->assertViewIs('transport.vehicle_allocation.print_index');
+    $response->assertViewHas('records');
+    expect($response->viewData('records'))->toHaveCount(1);
+
+    // Excel
+    $response = $this->actingAs($this->user)
+        ->get(route('transport.vehicle_allocations.export.excel', ['status' => 'Active']));
+    $response->assertStatus(200);
+    expect($response->headers->get('content-type'))->toContain('spreadsheet');
 });
 
 

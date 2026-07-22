@@ -4,10 +4,18 @@
     <div class="row">
         <div class="col-xl-12">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     <a type="button" class="btn btn-warning btn-sm" href="{{ route('transport.employee_transports.create') }}">
                         <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
                     </a>
+                    <div class="btn-group">
+                        <button type="button" id="exportExcelBtn" class="btn btn-outline-success btn-sm no-loader">
+                            <i style="height: 12px; width: 12px" data-feather="file-text" class="me-1"></i> Export Excel
+                        </button>
+                        <button type="button" id="printBtn" class="btn btn-outline-primary btn-sm no-loader">
+                            <i style="height: 12px; width: 12px" data-feather="printer" class="me-1"></i> Print PDF
+                        </button>
+                    </div>
                 </div><!-- end card header -->
 
                 {{-- Search Filter Form --}}
@@ -135,6 +143,26 @@
                     }
                 });
             };
+
+            // Excel Export click handler
+            $(document).on('click', '#exportExcelBtn', function(e) {
+                e.preventDefault();
+                window.ignoreBeforeUnload = true;
+                setTimeout(() => {
+                    window.ignoreBeforeUnload = false;
+                }, 2000);
+                let queryString = $('#filterForm').serialize();
+                let baseUrl = "{{ route('transport.employee_transports.export.excel') }}";
+                window.location.href = baseUrl + '?' + queryString;
+            });
+
+            // Print click handler
+            $(document).on('click', '#printBtn', function(e) {
+                e.preventDefault();
+                let queryString = $('#filterForm').serialize();
+                let baseUrl = "{{ route('transport.employee_transports.print') }}";
+                window.open(baseUrl + '?' + queryString, '_blank');
+            });
         });
     </script>
 @endsection

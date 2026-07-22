@@ -13,6 +13,8 @@ use App\Services\Transport\TransportService;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Exports\Transport\VehicleRequisitionExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class VehicleRequisitionController extends Controller
 {
@@ -49,6 +51,38 @@ class VehicleRequisitionController extends Controller
         }
 
         return view('transport.vehicle_requisition.index', compact('title', 'section', 'sub_section', 'vehicleRequisitions'));
+    }
+
+    public function exportExcel(FlexSearch $flexsearch, Request $request)
+    {
+        $query = VehicleRequisition::with(['getEmployee', 'getDepartment', 'getAssignedVehicle']);
+        $searchableColumns = ['trip_type', 'trip_mode', 'vehicle_type_required', 'approval_status', 'pickup_location', 'destination'];
+        $keyword = $request->input('keyword');
+        $filters = [];
+
+        if ($request->filled('status')) {
+            $query->where('approval_status', $request->status);
+        }
+
+        $records = $flexsearch->apply($query, $filters, $keyword, $searchableColumns)->latest()->get();
+
+        return Excel::download(new VehicleRequisitionExport($records), 'vehicle_requisitions.xlsx');
+    }
+
+    public function printIndex(FlexSearch $flexsearch, Request $request)
+    {
+        $query = VehicleRequisition::with(['getEmployee', 'getDepartment', 'getAssignedVehicle']);
+        $searchableColumns = ['trip_type', 'trip_mode', 'vehicle_type_required', 'approval_status', 'pickup_location', 'destination'];
+        $keyword = $request->input('keyword');
+        $filters = [];
+
+        if ($request->filled('status')) {
+            $query->where('approval_status', $request->status);
+        }
+
+        $records = $flexsearch->apply($query, $filters, $keyword, $searchableColumns)->latest()->get();
+
+        return view('transport.vehicle_requisition.print_index', compact('records'));
     }
 
     /**

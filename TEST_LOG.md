@@ -2,7 +2,7 @@
 
 ## 2026-07-22 (Employee Transport Reject and Approve Buttons Modification)
 
-**Goal**: Remove the Reject button from the Employee Transport list view, both Approve and Reject buttons from the details show view, and resolve a Typehint Return Value error in `TransportService.php`.
+**Goal**: Remove the Reject button from the Employee Transport list view, both Approve and Reject buttons from the details show view, resolve a Typehint Return Value error in `TransportService.php`, add database seeder for all transport tables, and implement unpaginated and filtered Excel export and PDF printing for vehicle requisitions, employee transports, and vehicle allocations.
 
 **Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/TransportRouteTest.php`
 
@@ -11,8 +11,13 @@
 - Removed both the "Approve" and "Reject" buttons and forms from `resources/views/transport/employee_transport/show.blade.php` details view.
 - Cleaned up the script tag push event listener for `#rejectBtn` in `show.blade.php`.
 - Fixed `TypeError` in `TransportService::getEligibleDrivers()` at line 484 by returning an empty Eloquent `Collection` (`new Collection()`) instead of the default Laravel support collection `collect()` helper.
-- Verified that all Vehicle, Driver, Allocation, and Transport route feature tests pass successfully.
-- Tests passed: 9/9 passed (47 assertions) ✅
+- Created `TransportSeeder.php` database seeder populating active vehicles, active drivers with driver designations, route maps, pending/active requisitions, and allocations.
+- Registered Excel export and PDF print routes for vehicle-requisitions, employee-transports, and vehicle-allocations inside the `transport.` route prefix group in `web.php`.
+- Created `VehicleRequisitionExport.php`, `EmployeeTransportExport.php`, and `VehicleAllocationExport.php` excel mapper classes under `app/Exports/Transport`.
+- Developed print layout templates `print_index.blade.php` for requisitions, employee transports, and allocations.
+- Integrated Excel and Print action buttons and click listeners inside the index blades for the three transport sections.
+- Verified that all Vehicle, Driver, Allocation, Requisition, and Transport route feature tests pass successfully.
+- Tests passed: 12/12 passed (65 assertions) ✅
 
 **Status**: ✅ SUCCESS
 

@@ -14,6 +14,8 @@ use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Exports\Transport\VehicleAllocationExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class VehicleAllocationController extends Controller
 {
@@ -115,6 +117,68 @@ class VehicleAllocationController extends Controller
             'allocations',
             'vehicles'
         ));
+    }
+
+    public function exportExcel(FlexSearch $flexsearch, Request $request)
+    {
+        $query = VehicleAllocation::with(['getVehicle', 'getRoutes']);
+        $searchableColumns = ['name', 'allocation_type', 'status'];
+        $keyword = $request->input('keyword');
+        $filters = [];
+
+        if ($request->filled('vehicle_id')) {
+            $query->where('vehicle_id', $request->vehicle_id);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('allocation_type')) {
+            $query->where('allocation_type', $request->allocation_type);
+        }
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('start_date', '>=', $request->from_date);
+        }
+        if ($request->filled('to_date')) {
+            $query->whereDate('end_date', '<=', $request->to_date);
+        }
+
+        $records = $flexsearch->apply($query, $filters, $keyword, $searchableColumns)->latest()->get();
+
+        return Excel::download(new VehicleAllocationExport($records), 'vehicle_allocations.xlsx');
+    }
+
+    public function printIndex(FlexSearch $flexsearch, Request $request)
+    {
+        $query = VehicleAllocation::with(['getVehicle', 'getRoutes']);
+        $searchableColumns = ['name', 'allocation_type', 'status'];
+        $keyword = $request->input('keyword');
+        $filters = [];
+
+        if ($request->filled('vehicle_id')) {
+            $query->where('vehicle_id', $request->vehicle_id);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('allocation_type')) {
+            $query->where('allocation_type', $request->allocation_type);
+        }
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('start_date', '>=', $request->from_date);
+        }
+        if ($request->filled('to_date')) {
+            $query->whereDate('end_date', '<=', $request->to_date);
+        }
+
+        $records = $flexsearch->apply($query, $filters, $keyword, $searchableColumns)->latest()->get();
+
+        return view('transport.vehicle_allocation.print_index', compact('records'));
     }
 
     /**

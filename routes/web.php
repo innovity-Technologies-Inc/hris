@@ -1430,6 +1430,8 @@ Route::prefix('transport')->name('transport.')->middleware('auth')->group(functi
         });
         Route::middleware('permission:vehicle-requisition.view')->group(function () {
             Route::get('vehicle-requisitions', 'index')->name('vehicle_requisitions.index');
+            Route::get('vehicle-requisitions/export-excel', 'exportExcel')->name('vehicle_requisitions.export.excel');
+            Route::get('vehicle-requisitions/print', 'printIndex')->name('vehicle_requisitions.print');
             Route::get('vehicle-requisitions/{id}', 'show')->name('vehicle_requisitions.show');
         });
         Route::middleware('permission:vehicle-requisition.edit')->group(function () {
@@ -1447,6 +1449,8 @@ Route::prefix('transport')->name('transport.')->middleware('auth')->group(functi
         });
         Route::middleware('permission:employee-transport.view')->group(function () {
             Route::get('employee-transports', 'index')->name('employee_transports.index');
+            Route::get('employee-transports/export-excel', 'exportExcel')->name('employee_transports.export.excel');
+            Route::get('employee-transports/print', 'printIndex')->name('employee_transports.print');
             Route::get('employee-transports/search', 'search')->name('employee_transports.search');
             Route::get('employee-transports/{id}', 'show')->name('employee_transports.show');
         });
@@ -1494,6 +1498,8 @@ Route::prefix('transport')->name('transport.')->middleware('auth')->group(functi
         Route::middleware('permission:vehicle-allocation.view')->group(function () {
             Route::get('vehicle-allocations', 'dashboard')->name('vehicle_allocations.dashboard');
             Route::get('vehicle-allocations/history', 'history')->name('vehicle_allocations.history');
+            Route::get('vehicle-allocations/export-excel', 'exportExcel')->name('vehicle_allocations.export.excel');
+            Route::get('vehicle-allocations/print', 'printIndex')->name('vehicle_allocations.print');
             Route::get('api/application-details', 'getApplicationDetails')->name('vehicle_allocations.application_details');
             Route::get('vehicle-allocations/{id}', 'show')->name('vehicle_allocations.show');
         });

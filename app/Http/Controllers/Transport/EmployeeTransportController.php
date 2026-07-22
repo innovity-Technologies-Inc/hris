@@ -13,6 +13,8 @@ use App\HelperClass;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Exports\Transport\EmployeeTransportExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EmployeeTransportController extends Controller
 {
@@ -69,6 +71,60 @@ class EmployeeTransportController extends Controller
             'sub_section',
             'employeeTransports'
         ));
+    }
+
+    public function exportExcel(FlexSearch $flexsearch, Request $request)
+    {
+        $query = EmployeeTransport::with('getCompany');
+        $searchableColumns = ['service_name', 'transport_type', 'purpose', 'pickup_location', 'drop_location', 'status'];
+        $keyword = $request->input('keyword');
+        $filters = [];
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('transport_type')) {
+            $query->where('transport_type', $request->transport_type);
+        }
+
+        if ($request->filled('start_date')) {
+            $query->where('start_date', '>=', $request->start_date);
+        }
+        if ($request->filled('end_date')) {
+            $query->where('end_date', '<=', $request->end_date);
+        }
+
+        $records = $flexsearch->apply($query, $filters, $keyword, $searchableColumns)->latest()->get();
+
+        return Excel::download(new EmployeeTransportExport($records), 'employee_transports.xlsx');
+    }
+
+    public function printIndex(FlexSearch $flexsearch, Request $request)
+    {
+        $query = EmployeeTransport::with('getCompany');
+        $searchableColumns = ['service_name', 'transport_type', 'purpose', 'pickup_location', 'drop_location', 'status'];
+        $keyword = $request->input('keyword');
+        $filters = [];
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('transport_type')) {
+            $query->where('transport_type', $request->transport_type);
+        }
+
+        if ($request->filled('start_date')) {
+            $query->where('start_date', '>=', $request->start_date);
+        }
+        if ($request->filled('end_date')) {
+            $query->where('end_date', '<=', $request->end_date);
+        }
+
+        $records = $flexsearch->apply($query, $filters, $keyword, $searchableColumns)->latest()->get();
+
+        return view('transport.employee_transport.print_index', compact('records'));
     }
 
     /**

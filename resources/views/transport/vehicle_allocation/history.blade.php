@@ -16,13 +16,19 @@
                             <a href="{{ route('transport.vehicle_allocations.create') }}" class="btn btn-success btn-sm">
                                 <i class="fas fa-plus me-1"></i>New Allocation
                             </a>
+                            <button type="button" id="exportExcelBtn" class="btn btn-light btn-sm no-loader ms-1">
+                                <i class="fas fa-file-excel text-success me-1"></i>Excel
+                            </button>
+                            <button type="button" id="printBtn" class="btn btn-light btn-sm no-loader">
+                                <i class="fas fa-print text-primary me-1"></i>Print
+                            </button>
                         </div>
                     </div>
                 </div>
 
                 <div class="card-body">
                     <!-- Filters -->
-                    <form action="{{ route('transport.vehicle_allocations.history') }}" method="GET" class="mb-4">
+                    <form action="{{ route('transport.vehicle_allocations.history') }}" method="GET" class="mb-4" id="filterForm">
                         <div class="row g-3 align-items-end">
                             <div class="col-md-3">
                                 <label class="form-label small fw-semibold">Vehicle</label>
@@ -237,9 +243,6 @@
             </div>
         </div>
     </div>
-@endsection
-
-@push('scripts')
     <script>
         function releaseVehicle(allocationId) {
             const form = document.getElementById('releaseForm');
@@ -247,6 +250,28 @@
             const modal = new bootstrap.Modal(document.getElementById('releaseModal'));
             modal.show();
         }
+
+        $(document).ready(function() {
+            // Excel Export click handler
+            $(document).on('click', '#exportExcelBtn', function(e) {
+                e.preventDefault();
+                window.ignoreBeforeUnload = true;
+                setTimeout(() => {
+                    window.ignoreBeforeUnload = false;
+                }, 2000);
+                let queryString = $('#filterForm').serialize();
+                let baseUrl = "{{ route('transport.vehicle_allocations.export.excel') }}";
+                window.location.href = baseUrl + '?' + queryString;
+            });
+
+            // Print click handler
+            $(document).on('click', '#printBtn', function(e) {
+                e.preventDefault();
+                let queryString = $('#filterForm').serialize();
+                let baseUrl = "{{ route('transport.vehicle_allocations.print') }}";
+                window.open(baseUrl + '?' + queryString, '_blank');
+            });
+        });
     </script>
-@endpush
+@endsection
 
