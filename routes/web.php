@@ -1221,7 +1221,6 @@ Route::prefix('bonus')->name('bonus.')->controller(\App\Http\Controllers\Payroll
     Route::middleware('permission:bonuses.edit')->group(function () {
         Route::get('edit/{id}', 'edit')->name('edit');
         Route::put('{id}/update', 'save')->name('update');
-        Route::put('{id}/status-update', 'statusUpdate')->name('status.update');
     });
     Route::middleware('permission:bonuses.delete')->group(function () {
         Route::delete('{id}/delete', 'delete')->name('delete');

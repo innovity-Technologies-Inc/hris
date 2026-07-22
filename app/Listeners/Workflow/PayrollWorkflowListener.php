@@ -15,7 +15,6 @@ class PayrollWorkflowListener
         if ($approvable instanceof PayrollProcess) {
             $approvable->update([
                 'approval_status' => 'approved',
-                'status' => 'approved'
             ]);
         }
     }
@@ -27,7 +26,6 @@ class PayrollWorkflowListener
         if ($approvable instanceof PayrollProcess) {
             $approvable->update([
                 'approval_status' => 'rejected',
-                'status' => 'rejected'
             ]);
         }
     }

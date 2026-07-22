@@ -27,7 +27,7 @@ return [
     |
     */
     'modules' => [
-        'bonus' => 'Bonus',
+        'bonus' => 'Bonus and Reward',
         'career-movement' => 'Career Movement',
         'decrement' => 'Decrement',
         'employee-bank-account' => 'Employee Bank Account',

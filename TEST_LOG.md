@@ -1,5 +1,22 @@
 # Test Log
 
+## 2026-07-22 (Bonus & Reward Approval Workflow Integration)
+
+**Goal**: Integrate the Bonus and Reward process batch with the central approval engine workflow, removing static status updating features.
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest`
+
+**Results**:
+- Added `'bonus' => 'Bonus and Reward'` module registration inside `config/approval-engine.php`.
+- Corrected `@include('approval_engine.workflow_history')` parameters in `resources/views/payroll/bonus/view.blade.php` to pass `['approvable' => $process]` instead of `['model' => $process]`.
+- Removed the deprecated, static `status.update` route from `routes/web.php` and `statusUpdate` method from `BonusController.php`.
+- Standardized approval status badge checks inside `payroll/bonus/partials/search_results.blade.php` to run case-insensitive strtolower matching.
+- Fixed an invalid `'status' => 'approved'`/`'status' => 'rejected'` data truncation assignment on `PayrollProcess` inside `PayrollWorkflowListener.php`.
+- Created `tests/Feature/Payroll/BonusWorkflowTest.php` verifying sequential workflow step initialization, approval request creation, and dynamic status updates.
+- Tests passed: 219/219 passed (814 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-22 (Standardize Excel Button Text to 'Export')
 
 **Goal**: Standardize the text label on all Excel export buttons to "Export" instead of "Excel" or "Export Excel" across the entire codebase.

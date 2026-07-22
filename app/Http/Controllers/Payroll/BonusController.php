@@ -130,19 +130,5 @@ class BonusController extends Controller
         ]);
     }
 
-    public function statusUpdate(Request $request, $id){
-        $request->validate([
-            'status' => 'required|in:approved,rejected',
-        ]);
-        $process = PayrollProcess::find($id);
-            $process->update([
-                'approval_status' => $request->status,
-            ]);
-
-        return redirect()->route('bonus.index')->with([
-            'message' => 'Updated Successfully',
-        ]);
-    }
-
 }
 

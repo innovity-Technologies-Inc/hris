@@ -28,11 +28,11 @@
             </td>
 
             <td class="text-center">
-                @if ($item->approval_status == 'Approved')
+                @if (strtolower($item->approval_status) == 'approved')
                     <span class="badge text-bg-success">Approved</span>
-                @elseif($item->approval_status == 'Pending')
+                @elseif(strtolower($item->approval_status) == 'pending')
                     <span class="badge text-bg-warning">Pending</span>
-                @elseif($item->approval_status == 'Rejected')
+                @elseif(strtolower($item->approval_status) == 'rejected')
                     <span class="badge text-bg-danger">Rejected</span>
                 @else
                     <span class="badge text-bg-secondary">{{ $item->approval_status }}</span>

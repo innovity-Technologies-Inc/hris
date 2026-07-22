@@ -79,7 +79,7 @@
                     </div>
 
                     {{-- Approval Engine Workflow History --}}
-                    @include('approval_engine.workflow_history', ['model' => $process])
+                    @include('approval_engine.workflow_history', ['approvable' => $process])
 
                     <div class="table-responsive" id="search-result">
                         <table class="table table-bordered table-hover mb-0">
