@@ -42,7 +42,7 @@
 
                             <div class="row g-3 mt-1">
                                 {{-- Company --}}
-                                <div class="col-md-2">
+                                <div class="col-md-4">
                                     <label for="search_company_id" class="form-label text-muted small fw-semibold mb-1">
                                         Company
                                     </label>
@@ -60,7 +60,7 @@
 
                                 {{-- Branch --}}
                                 @if (App\HelperClass::getGeneralSetting()->branch_status == 1)
-                                    <div class="col-md-2">
+                                    <div class="col-md-4">
                                         <label for="search_business_unit_id" class="form-label text-muted small fw-semibold mb-1">
                                             Branch
                                         </label>
@@ -77,7 +77,7 @@
 
                                 {{-- Division --}}
                                 @if (App\HelperClass::getGeneralSetting()->division_status == 1)
-                                    <div class="col-md-2">
+                                    <div class="col-md-4">
                                         <label for="search_division_id" class="form-label text-muted small fw-semibold mb-1">
                                             Division
                                         </label>
@@ -91,10 +91,12 @@
                                         </select>
                                     </div>
                                 @endif
+                            </div>
 
+                            <div class="row g-3 mt-1">
                                 {{-- Department --}}
                                 @if (App\HelperClass::getGeneralSetting()->department_status == 1)
-                                    <div class="col-md-2">
+                                    <div class="col-md-4">
                                         <label for="search_department_id" class="form-label text-muted small fw-semibold mb-1">
                                             Department
                                         </label>
@@ -111,7 +113,7 @@
 
                                 {{-- Section --}}
                                 @if (App\HelperClass::getGeneralSetting()->section_status == 1)
-                                    <div class="col-md-2">
+                                    <div class="col-md-4">
                                         <label for="search_section_id" class="form-label text-muted small fw-semibold mb-1">
                                             Section
                                         </label>

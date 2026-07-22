@@ -2,7 +2,7 @@
 
 ## 2026-07-22 (Attendance Records Search Organizational Filters)
 
-**Goal**: Add organization fields (Company, Branch, Division, Department, Section) to the attendance records search and filter functionality, implementing dynamic cascading AJAX autoloading and retaining pre-selected options to support Pest/headless assertions, formatted in exactly two rows.
+**Goal**: Add organization fields (Company, Branch, Division, Department, Section) to the attendance records search and filter functionality, implementing dynamic cascading AJAX autoloading and retaining pre-selected options to support Pest/headless assertions, formatted in exactly three rows (1 row of core filters, 2 rows of organizational filters).
 
 **Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/Attendance/AttendanceExportPrintTest.php`
 
@@ -10,7 +10,7 @@
 - Added `applyFilters` helper method in `AttendancesController.php` to apply `company`, `business_unit` (branch), `division`, `department`, and `section` query filters.
 - Retrieved and passed `$companies` list and selected entities (`$selectedBranch`, `$selectedDivision`, `$selectedDepartment`, `$selectedSection`) from `AttendancesController@index` to pre-select options in the Blade view.
 - Added company, branch, division, department, and section dropdowns to the filter form in `attendance/index.blade.php`.
-- Refined filter controls and layout to reside in exactly two rows by adjusting column widths and integrating the Reset Filters button as a dynamic bottom-aligned flex element within the second row.
+- Divided organizational filters into two separate rows of 3 columns (`col-md-4` each) to align perfectly with the core filters row, and integrated the Reset Filters button as a dynamic bottom-aligned flex element within the final row.
 - Implemented AJAX hierarchy cascading loading (`/get-units`, `/get-divisions`, `/get-departments`, `/get-sections`) in the Blade scripts utilizing unified promise-based loaders.
 - Added state-controlled change triggers (`silenceChangeEvents`) to prevent redundant searches while cascading option updates.
 - Added `it can filter attendance records by organization` feature test verifying successful company-scoped record retrieval.
