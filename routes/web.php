@@ -1357,6 +1357,7 @@ Route::controller(DataController::class)->middleware('auth')->group(function () 
             Route::get('/', 'index')->name('attendance.index');
             Route::get('print', 'printIndex')->name('attendance.print');
             Route::get('print/{id}', 'printDetail')->name('attendance.print-detail');
+            Route::get('export/excel', 'exportExcel')->name('attendance.export.excel');
         });
         Route::middleware('permission:attendance.create')->group(function () {
             Route::get('create', 'create')->name('attendance.create');

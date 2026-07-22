@@ -181,10 +181,46 @@ class AttendancesController extends Controller
         }
     }
 
-    public function printIndex(Request $request){
+    public function printIndex(FlexSearch $flexsearch, Request $request){
         $query = Attendance::with('getEmployee')->orderBy('in_time', 'desc');
-        $attendanceRecords = $query->get();
+        $searchableColumns = ['getEmployee.full_name'];
+        $keyword = $request->input('keyword');
+        $filters = [];
+
+        if ($request->filled('from')) {
+            $filters['in_time>='] = Carbon::parse($request->input('from'))->copy()->startOfDay();
+        }
+
+        if ($request->filled('to')) {
+            $filters['in_time<='] = Carbon::parse($request->input('to'))->copy()->endOfDay();
+        }
+
+        $attendanceRecords = $flexsearch
+            ->apply($query, $filters, $keyword, $searchableColumns)
+            ->get();
+
         return view('attendance.print_index', compact('attendanceRecords'));
+    }
+
+    public function exportExcel(FlexSearch $flexsearch, Request $request){
+        $query = Attendance::with('getEmployee')->orderBy('in_time', 'desc');
+        $searchableColumns = ['getEmployee.full_name'];
+        $keyword = $request->input('keyword');
+        $filters = [];
+
+        if ($request->filled('from')) {
+            $filters['in_time>='] = Carbon::parse($request->input('from'))->copy()->startOfDay();
+        }
+
+        if ($request->filled('to')) {
+            $filters['in_time<='] = Carbon::parse($request->input('to'))->copy()->endOfDay();
+        }
+
+        $attendanceRecords = $flexsearch
+            ->apply($query, $filters, $keyword, $searchableColumns)
+            ->get();
+
+        return Excel::download(new \App\Exports\Attendance\AttendanceExport($attendanceRecords), 'attendance_records.xlsx');
     }
 
     public function printDetail($id){
