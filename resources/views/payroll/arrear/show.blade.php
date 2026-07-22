@@ -67,7 +67,7 @@
                                     <div class="d-flex align-items-center">
                                         <div class="avatar-sm me-2">
                                             @if($item->employee->photo_path)
-                                                <img src="{{ asset('storage/' . $item->employee->photo_path) }}" 
+                                                <img src="{{ \App\HelperClass::get_file_url($item->employee->photo_path) }}" 
                                                      alt="user-img" class="rounded-circle img-thumbnail shadow-sm" style="width: 32px; height: 32px; object-fit: cover;">
                                             @else
                                                 <div class="avatar-title rounded-circle bg-soft-primary text-primary d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; font-size: 12px; border: 1px solid #dee2e6;">
@@ -112,7 +112,7 @@
                                     <button type="button" class="btn btn-outline-primary btn-sm view-item-details"
                                             data-name="{{ $item->employee->full_name }}"
                                             data-id="{{ $item->employee->system_id }}"
-                                            data-photo="{{ $item->employee->photo_path ? asset('storage/' . $item->employee->photo_path) : '' }}"
+                                            data-photo="{{ $item->employee->photo_path ? \App\HelperClass::get_file_url($item->employee->photo_path) : '' }}"
                                             data-amount="{{ number_format($item->amount, 2) }}"
                                             data-type="{{ $item->type }}"
                                             data-month="{{ \Carbon\Carbon::parse($item->payment_month)->format('F Y') }}"

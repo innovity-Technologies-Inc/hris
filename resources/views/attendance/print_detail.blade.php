@@ -264,7 +264,7 @@
         <div class="section-body">
             <div class="employee-photo">
                 @if ($record->getEmployee && $record->getEmployee->photo_path)
-                    <img src="{{ asset('storage/' . $record->getEmployee->photo_path) }}"
+                    <img src="{{ \App\HelperClass::get_file_url($record->getEmployee->photo_path) }}"
                         alt="{{ $record->getEmployee->full_name }}">
                 @else
                     <div class="employee-avatar">

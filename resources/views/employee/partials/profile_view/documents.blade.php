@@ -69,7 +69,7 @@
                             <h6 class="mt-3 fw-bold text-truncate w-100 px-2" title="{{ $document->title }}">{{ $document->title }}</h6>
                             <p class="small text-muted mb-3">{{ strtoupper($ext) }} File &bull; {{ $document->created_at->format('M d, Y') }}</p>
                             
-                            <a href="{{ asset('storage/' . $document->file_path) }}" target="_blank" class="btn btn-outline-primary btn-sm px-4 rounded-pill mt-auto">
+                            <a href="{{ \App\HelperClass::get_file_url($document->file_path) }}" target="_blank" class="btn btn-outline-primary btn-sm px-4 rounded-pill mt-auto">
                                 <i class="mdi mdi-eye me-1"></i> View File
                             </a>
                         </div>

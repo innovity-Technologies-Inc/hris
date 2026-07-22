@@ -15,10 +15,10 @@
                     </span>
                     <span class="logo-lg">
                         <img class="logo-img-light"
-                            src="{{ isset($generalSettings->logo_dark) ? asset('storage/' . $generalSettings->logo_dark) : asset('assets/images/logo-light.png') }}"
+                            src="{{ isset($generalSettings->logo_dark) ? \App\HelperClass::get_file_url($generalSettings->logo_dark) : asset('assets/images/logo-light.png') }}"
                             alt="" height="24">
                         <img class="logo-img-dark"
-                            src="{{ isset($generalSettings->logo_light) ? asset('storage/' . $generalSettings->logo_light) : asset('assets/images/logo-dark.png') }}"
+                            src="{{ isset($generalSettings->logo_light) ? \App\HelperClass::get_file_url($generalSettings->logo_light) : asset('assets/images/logo-dark.png') }}"
                             alt="" height="24">
                     </span>
                 </a>

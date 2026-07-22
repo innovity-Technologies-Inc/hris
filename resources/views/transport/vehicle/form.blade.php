@@ -271,7 +271,7 @@
                                     <small class="text-muted">PDF, JPG, PNG (Max: 5MB)</small>
                                     @if (isset($vehicle) && $vehicle->license_document)
                                         <div class="file-preview">
-                                            <a href="{{ asset('storage/' . $vehicle->license_document) }}"
+                                            <a href="{{ \App\HelperClass::get_file_url($vehicle->license_document) }}"
                                                 target="_blank" class="btn btn-sm btn-outline-info">
                                                 <i data-feather="eye" style="width: 14px; height: 14px;"></i> View Current
                                             </a>
@@ -290,7 +290,7 @@
                                     <small class="text-muted">JPG, PNG, GIF (Max: 5MB)</small>
                                     @if (isset($vehicle) && $vehicle->vehicle_image)
                                         <div class="file-preview">
-                                            <img src="{{ asset('storage/' . $vehicle->vehicle_image) }}"
+                                            <img src="{{ \App\HelperClass::get_file_url($vehicle->vehicle_image) }}"
                                                 alt="Vehicle" class="rounded" style="max-height: 60px;">
                                         </div>
                                     @endif
@@ -360,7 +360,7 @@
                                     <small class="text-muted">PDF, JPG, PNG (Max: 5MB)</small>
                                     @if (isset($vehicle) && $vehicle->purchase_document)
                                         <div class="file-preview">
-                                            <a href="{{ asset('storage/' . $vehicle->purchase_document) }}"
+                                            <a href="{{ \App\HelperClass::get_file_url($vehicle->purchase_document) }}"
                                                 target="_blank" class="btn btn-sm btn-outline-info">
                                                 <i data-feather="eye" style="width: 14px; height: 14px;"></i> View Current
                                             </a>

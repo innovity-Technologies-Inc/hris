@@ -79,7 +79,7 @@
                                                 class="border border-3 border-dashed rounded-3 d-flex align-items-center justify-content-center"
                                                 id="logoLightPreview" style="height: 150px;">
                                                 @if(isset($generalSetting) && $generalSetting->logo_light)
-                                                    <img src="{{ asset('storage/' . $generalSetting->logo_light) }}"
+                                                    <img src="{{ \App\HelperClass::get_file_url($generalSetting->logo_light) }}"
                                                          alt="Light Logo"
                                                          class="img-fluid rounded-3 shadow"
                                                          style="max-width: 100%; max-height: 100%; object-fit: contain;">
@@ -114,7 +114,7 @@
                                                 class="border border-3 border-dashed rounded-3 bg-dark d-flex align-items-center justify-content-center"
                                                 id="logoDarkPreview" style="height: 150px;">
                                                 @if(isset($generalSetting) && $generalSetting->logo_dark)
-                                                    <img src="{{ asset('storage/' . $generalSetting->logo_dark) }}"
+                                                    <img src="{{ \App\HelperClass::get_file_url($generalSetting->logo_dark) }}"
                                                          alt="Light Logo"
                                                          class="img-fluid rounded-3 shadow"
                                                          style="max-width: 100%; max-height: 100%; object-fit: contain;">
@@ -150,7 +150,7 @@
                                                 class="border border-3 border-dashed rounded-3 bg-light d-flex align-items-center justify-content-center"
                                                 id="faviconPreview" style="height: 150px;">
                                                 @if(isset($generalSetting) && $generalSetting->favicon)
-                                                    <img src="{{ asset('storage/' . $generalSetting->favicon) }}"
+                                                    <img src="{{ \App\HelperClass::get_file_url($generalSetting->favicon) }}"
                                                          alt="Favicon"
                                                          class="img-fluid rounded-3 shadow"
                                                          style="max-width: 100%; max-height: 100%; object-fit: contain;">

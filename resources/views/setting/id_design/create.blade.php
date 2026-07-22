@@ -181,10 +181,10 @@
                         <div class="card-body">
                             <pre class="mb-0 small"><code>&lt;div class="id-card"&gt;
     &lt;div class="header"&gt;
-        &lt;img src="@{{ asset('storage/'.$company - > logo_light) }}" alt="Company Logo"&gt;
+        &lt;img src="@{{ \App\HelperClass::get_file_url($company - > logo_light) }}" alt="Company Logo"&gt;
     &lt;/div&gt;
     &lt;div class="photo"&gt;
-        &lt;img src="@{{ asset('storage/'.$employee - > photo_path) }}" alt="Employee Photo"&gt;
+        &lt;img src="@{{ \App\HelperClass::get_file_url($employee - > photo_path) }}" alt="Employee Photo"&gt;
     &lt;/div&gt;
     &lt;h3&gt;@{{ $employee - > full_name }}&lt;/h3&gt;
     &lt;p&gt;ID: @{{ $employee - > system_id }}&lt;/p&gt;

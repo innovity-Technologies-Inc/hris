@@ -408,8 +408,8 @@
                                             @if (isset($employee->photo_path))
                                                 @if (file_exists(public_path('storage/' . $employee->photo_path)))
                                                     <a href="#" class="btn btn-sm btn-primary view-link"
-                                                        data-img="{{ asset('storage/' . $employee->photo_path) }}">View</a>
-                                                    <a href="{{ asset('storage/' . $employee->photo_path) }}"
+                                                        data-img="{{ \App\HelperClass::get_file_url($employee->photo_path) }}">View</a>
+                                                    <a href="{{ \App\HelperClass::get_file_url($employee->photo_path) }}"
                                                         class="btn btn-sm btn-outline-primary" download>Download</a>
                                                 @else
                                                     <p class="text-muted">Photo deleted or moved</p>
@@ -432,8 +432,8 @@
                                             @if (isset($employee->fingerprint_path))
                                                 @if (file_exists(public_path('storage/' . $employee->fingerprint_path)))
                                                     <a href="#" class="btn btn-sm btn-success view-link"
-                                                        data-img="{{ asset('storage/' . $employee->fingerprint_path) }}">View</a>
-                                                    <a href="{{ asset('storage/' . $employee->fingerprint_path) }}"
+                                                        data-img="{{ \App\HelperClass::get_file_url($employee->fingerprint_path) }}">View</a>
+                                                    <a href="{{ \App\HelperClass::get_file_url($employee->fingerprint_path) }}"
                                                         class="btn btn-sm btn-outline-success" download>Download</a>
                                                 @else
                                                     <p class="text-muted">Fingerprint may Deleted or moved</p>
@@ -454,8 +454,8 @@
                                             @if (isset($employee->signature_path))
                                                 @if (file_exists(public_path('storage/' . $employee->signature_path)))
                                                     <a href="#" class="btn btn-sm btn-warning view-link"
-                                                        data-img="{{ asset('storage/' . $employee->signature_path) }}">View</a>
-                                                    <a href="{{ asset('storage/' . $employee->signature_path) }}"
+                                                        data-img="{{ \App\HelperClass::get_file_url($employee->signature_path) }}">View</a>
+                                                    <a href="{{ \App\HelperClass::get_file_url($employee->signature_path) }}"
                                                         class="btn btn-sm btn-outline-warning" download>Download</a>
                                                 @else
                                                     <p class="text-muted">Signature file deleted or moved</p>
@@ -476,7 +476,7 @@
                                             <h6 class="fw-semibold">Experience Documents</h6>
                                             @if (isset($employee->experience_attachment_path))
                                                 @if (file_exists(public_path('storage/' . $employee->experience_attachment_path)))
-                                                    <a href="{{ asset('storage/' . $employee->experience_attachment_path) }}"
+                                                    <a href="{{ \App\HelperClass::get_file_url($employee->experience_attachment_path) }}"
                                                         class="btn btn-sm btn-outline-info" download>Download</a>
                                                 @else
                                                     <p class="text-muted">Experience document deleted or moved</p>

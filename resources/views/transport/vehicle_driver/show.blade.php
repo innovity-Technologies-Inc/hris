@@ -80,7 +80,7 @@
                         @if ($vehicleDriver->getVehicle)
                             <div class="text-center mb-3">
                                 @if ($vehicleDriver->getVehicle->vehicle_image)
-                                    <img src="{{ asset('storage/' . $vehicleDriver->getVehicle->vehicle_image) }}"
+                                    <img src="{{ \App\HelperClass::get_file_url($vehicleDriver->getVehicle->vehicle_image) }}"
                                         alt="{{ $vehicleDriver->getVehicle->model_number }}" class="rounded"
                                         style="max-height: 200px; object-fit: cover;">
                                 @else

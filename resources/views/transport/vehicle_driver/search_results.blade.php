@@ -19,7 +19,7 @@
                 <td>
                     <div class="d-flex align-items-center">
                         @if ($item->getVehicle && $item->getVehicle->vehicle_image)
-                            <img src="{{ asset('storage/' . $item->getVehicle->vehicle_image) }}"
+                            <img src="{{ \App\HelperClass::get_file_url($item->getVehicle->vehicle_image) }}"
                                 alt="{{ $item->getVehicle->model_number ?? 'Vehicle' }}" class="rounded me-2"
                                 style="width: 45px; height: 45px; object-fit: cover;">
                         @else

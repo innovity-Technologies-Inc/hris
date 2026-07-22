@@ -259,7 +259,7 @@
                                             <td>
                                                 <div class="d-flex align-items-center gap-2">
                                                     @if ($allocation->getVehicle->vehicle_image)
-                                                        <img src="{{ asset('storage/' . $allocation->getVehicle->vehicle_image) }}"
+                                                        <img src="{{ \App\HelperClass::get_file_url($allocation->getVehicle->vehicle_image) }}"
                                                             alt="Vehicle" class="rounded"
                                                             style="width: 50px; height: 50px; object-fit: cover;">
                                                     @else
@@ -341,7 +341,7 @@
                                 <div class="list-group-item d-flex justify-content-between align-items-start">
                                     <div class="d-flex align-items-start gap-2 flex-grow-1">
                                         @if ($vehicle->vehicle_image)
-                                            <img src="{{ asset('storage/' . $vehicle->vehicle_image) }}" alt="Vehicle"
+                                            <img src="{{ \App\HelperClass::get_file_url($vehicle->vehicle_image) }}" alt="Vehicle"
                                                 class="rounded" style="width: 40px; height: 40px; object-fit: cover;">
                                         @else
                                             <div class="bg-light rounded d-flex align-items-center justify-content-center"

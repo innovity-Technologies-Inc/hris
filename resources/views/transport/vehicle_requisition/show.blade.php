@@ -330,7 +330,7 @@
                                         <div class="d-flex align-items-start">
                                             <div class="me-3">
                                                 @if ($vehicleRequisition->getAssignedVehicle->vehicle_image)
-                                                    <img src="{{ asset('storage/' . $vehicleRequisition->getAssignedVehicle->vehicle_image) }}"
+                                                    <img src="{{ \App\HelperClass::get_file_url($vehicleRequisition->getAssignedVehicle->vehicle_image) }}"
                                                         alt="Vehicle" class="rounded-3 border border-success border-2"
                                                         width="80" height="80" style="object-fit: cover;">
                                                 @else

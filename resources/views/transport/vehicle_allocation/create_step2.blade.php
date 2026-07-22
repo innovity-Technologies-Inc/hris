@@ -165,7 +165,7 @@
                                         <div class="position-relative"
                                             style="height: 100px; overflow: hidden; background: #f8f9fa;">
                                             @if ($vehicle->vehicle_image)
-                                                <img src="{{ asset('storage/' . $vehicle->vehicle_image) }}"
+                                                <img src="{{ \App\HelperClass::get_file_url($vehicle->vehicle_image) }}"
                                                     alt="{{ $vehicle->license_number }}" class="w-100 h-100"
                                                     style="object-fit: cover;">
                                             @else

@@ -284,7 +284,7 @@
                                                     <td>{{ $index + 1 }}</td>
                                                     <td>
                                                         @if ($vehicle->vehicle_image)
-                                                            <img src="{{ asset('storage/' . $vehicle->vehicle_image) }}"
+                                                            <img src="{{ \App\HelperClass::get_file_url($vehicle->vehicle_image) }}"
                                                                 alt="Vehicle" class="rounded"
                                                                 style="width: 50px; height: 50px; object-fit: cover;">
                                                         @else

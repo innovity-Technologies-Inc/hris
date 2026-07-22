@@ -32,10 +32,10 @@
                 <div class="card shadow-sm border-0">
                     <div class="card-body p-0">
                         @if ($vehicle->vehicle_image)
-                            <img src="{{ asset('storage/' . $vehicle->vehicle_image) }}"
+                            <img src="{{ \App\HelperClass::get_file_url($vehicle->vehicle_image) }}"
                                 alt="{{ $vehicle->model_number }}" class="w-100 rounded-top vehicle-image-thumb"
                                 style="height: 350px; object-fit: contain; background: var(--bs-body-bg); cursor: pointer;"
-                                data-image-url="{{ asset('storage/' . $vehicle->vehicle_image) }}">
+                                data-image-url="{{ \App\HelperClass::get_file_url($vehicle->vehicle_image) }}">
                         @else
                             <div class="text-center p-5 bg-light rounded-top"
                                 style="height: 350px; display: flex; align-items: center; justify-content: center;">
@@ -311,7 +311,7 @@
                                                     <strong>License Document</strong>
                                                 </div>
                                                 @if ($vehicle->license_document)
-                                                    <a href="{{ asset('storage/' . $vehicle->license_document) }}"
+                                                    <a href="{{ \App\HelperClass::get_file_url($vehicle->license_document) }}"
                                                         target="_blank" class="btn btn-sm btn-success">
                                                         <i data-feather="download" style="width: 14px; height: 14px;"></i>
                                                         Download
@@ -331,7 +331,7 @@
                                                     <strong>Purchase Invoice</strong>
                                                 </div>
                                                 @if ($vehicle->purchase_document)
-                                                    <a href="{{ asset('storage/' . $vehicle->purchase_document) }}"
+                                                    <a href="{{ \App\HelperClass::get_file_url($vehicle->purchase_document) }}"
                                                         target="_blank" class="btn btn-sm btn-primary">
                                                         <i data-feather="download" style="width: 14px; height: 14px;"></i>
                                                         Download

@@ -17,12 +17,12 @@
                     <div class="col-md-12 mb-4 text-center">
                         @php($isKey = ($member->member_type ?? '') === 'Key Member')
                         @if ($isKey && $member->getEmployee && $member->getEmployee->photo_path)
-                            <img src="{{ asset('storage/' . $member->getEmployee->photo_path) }}"
+                            <img src="{{ \App\HelperClass::get_file_url($member->getEmployee->photo_path) }}"
                                 class="rounded-circle border-3 border-primary shadow-sm"
                                 style="width: 120px; height: 120px; object-fit: cover; border: 3px solid;"
                                 alt="Profile Image">
                         @elseif ($member->photo_path)
-                            <img src="{{ asset('storage/' . $member->photo_path) }}"
+                            <img src="{{ \App\HelperClass::get_file_url($member->photo_path) }}"
                                 class="rounded-circle border-3 border-primary shadow-sm"
                                 style="width: 120px; height: 120px; object-fit: cover; border: 3px solid;"
                                 alt="Profile Image">

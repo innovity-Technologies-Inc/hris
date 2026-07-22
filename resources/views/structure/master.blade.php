@@ -39,7 +39,7 @@
 
     <!-- App favicon -->
     <link rel="shortcut icon"
-        href="{{ isset($generalSettings->favicon) ? asset('storage/' . $generalSettings->favicon) : asset('assets/images/favicon.png') }}">
+        href="{{ isset($generalSettings->favicon) ? \App\HelperClass::get_file_url($generalSettings->favicon) : asset('assets/images/favicon.png') }}">
 
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">

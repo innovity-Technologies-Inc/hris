@@ -21,7 +21,7 @@
                 <tr>
                     <th scope="row">{{ $sl++ }}</th>
                     <td>
-                        <img src="{{ asset('storage/' . $item->logo) }}" height="24px" alt="Logo">
+                        <img src="{{ \App\HelperClass::get_file_url($item->logo) }}" height="24px" alt="Logo">
                     </td>
                     <td>{{ $item->name }}</td>
                     <td>{{ $item->getCompanyType->name ?? 'N/A' }}</td>

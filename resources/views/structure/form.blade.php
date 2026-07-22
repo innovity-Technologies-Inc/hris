@@ -150,7 +150,7 @@
                                         @if (isset($organizationStructure) && $organizationStructure->photo_path)
                                             <div class="col-12 mb-3 text-center">
                                                 <div class="mb-2">
-                                                    <img src="{{ asset('storage/' . $organizationStructure->photo_path) }}"
+                                                    <img src="{{ \App\HelperClass::get_file_url($organizationStructure->photo_path) }}"
                                                         class="rounded-circle border-primary shadow"
                                                         style="width: 100px; height: 100px; object-fit: cover; border: 3px solid;"
                                                         alt="Current Profile">

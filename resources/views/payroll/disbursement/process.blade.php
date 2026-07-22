@@ -64,7 +64,7 @@
                                                 <div class="d-flex align-items-center">
                                                     <div class="avatar-sm me-3">
                                                         @if($employee->photo_path)
-                                                            <img src="{{ asset('storage/' . $employee->photo_path) }}" alt="user-img" class="rounded-circle img-thumbnail shadow-sm" style="width: 44px; height: 42px; object-fit: cover;">
+                                                            <img src="{{ \App\HelperClass::get_file_url($employee->photo_path) }}" alt="user-img" class="rounded-circle img-thumbnail shadow-sm" style="width: 44px; height: 42px; object-fit: cover;">
                                                         @else
                                                             <div class="avatar-title rounded-circle bg-soft-primary text-primary d-flex align-items-center justify-content-center fw-bold" style="width: 44px; height: 42px; font-size: 16px; border: 1px solid rgba(16, 141, 255, 0.2);">
                                                                 {{ strtoupper(substr($employee->full_name, 0, 1)) }}

@@ -19,7 +19,7 @@
                 <th scope="row" class="text-center">{{ $sl++ }}</th>
                 <td class="text-center">
                     @if ($item->vehicle_image)
-                        <img src="{{ asset('storage/' . $item->vehicle_image) }}" alt="{{ $item->model_number }}"
+                        <img src="{{ \App\HelperClass::get_file_url($item->vehicle_image) }}" alt="{{ $item->model_number }}"
                             class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
                     @else
                         <div class="bg-light rounded d-flex align-items-center justify-content-center"

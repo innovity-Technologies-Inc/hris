@@ -18,7 +18,7 @@
                     <div class="row">
                         <div class="col-md-2 text-center">
                             @if ($historyData['vehicle']->vehicle_image)
-                                <img src="{{ asset('storage/' . $historyData['vehicle']->vehicle_image) }}"
+                                <img src="{{ \App\HelperClass::get_file_url($historyData['vehicle']->vehicle_image) }}"
                                     alt="{{ $historyData['vehicle']->model_number }}" class="img-fluid rounded shadow-sm"
                                     style="max-height: 150px; object-fit: cover;">
                             @else

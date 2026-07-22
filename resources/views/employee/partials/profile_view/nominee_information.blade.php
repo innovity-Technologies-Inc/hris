@@ -133,7 +133,7 @@
                                     <h5 class="fs-16 text-dark fw-semibold mb-3 mt-4">Photo</h5>
                                     <div class="card bg-light border-0">
                                         <div class="card-body text-center">
-                                            <img src="{{ asset('storage/'.$employee_nominee_info->photo_path) }}" alt="Emergency Contact Photo"
+                                            <img src="{{ \App\HelperClass::get_file_url($employee_nominee_info->photo_path) }}" alt="Emergency Contact Photo"
                                                  class="img-thumbnail" style="max-width: 200px;">
                                         </div>
                                     </div>

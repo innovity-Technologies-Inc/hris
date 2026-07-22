@@ -91,9 +91,9 @@
             <tr>
                 <td class="header">
                     @if(isset($generalSettings->logo))
-                        <img src="{{ asset('storage/' . $generalSettings->logo) }}" alt="{{ $appName }}" class="logo">
+                        <img src="{{ \App\HelperClass::get_file_url($generalSettings->logo) }}" alt="{{ $appName }}" class="logo">
                     @elseif(isset($generalSettings->favicon))
-                        <img src="{{ asset('storage/' . $generalSettings->favicon) }}" alt="{{ $appName }}" class="logo" style="max-width: 60px;">
+                        <img src="{{ \App\HelperClass::get_file_url($generalSettings->favicon) }}" alt="{{ $appName }}" class="logo" style="max-width: 60px;">
                     @else
                         <div class="brand-name">{{ $appName }}</div>
                     @endif

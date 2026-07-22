@@ -21,7 +21,7 @@
                         <div class="card bg-light">
                             <div class="card-body">
                                 <div class="d-flex align-items-center mb-3">
-                                    <img src="{{ asset('storage/' . $item->logo) }}" class="rounded me-3"
+                                    <img src="{{ \App\HelperClass::get_file_url($item->logo) }}" class="rounded me-3"
                                         style="width: 80px; height: 80px; object-fit: contain; background: white; padding: 8px; border: 1px solid #dee2e6;"
                                         alt="Company Logo">
                                     <div>

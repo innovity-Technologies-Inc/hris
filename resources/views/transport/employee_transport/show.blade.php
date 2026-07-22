@@ -273,7 +273,7 @@
                                                 <td>
                                                     <div class="d-flex align-items-center">
                                                         @if ($allocation->vehicle && $allocation->vehicle->vehicle_image)
-                                                            <img src="{{ asset('storage/' . $allocation->vehicle->vehicle_image) }}"
+                                                            <img src="{{ \App\HelperClass::get_file_url($allocation->vehicle->vehicle_image) }}"
                                                                 alt="Vehicle" class="rounded me-2"
                                                                 style="width: 60px; height: 60px; object-fit: cover;">
                                                         @else

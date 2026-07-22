@@ -18,7 +18,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
         <!-- App favicon -->
-        <link rel="shortcut icon" href="{{ isset($generalSettings->favicon) ? asset('storage/' . $generalSettings->favicon) : asset('assets/images/favicon.png') }}">
+        <link rel="shortcut icon" href="{{ isset($generalSettings->favicon) ? \App\HelperClass::get_file_url($generalSettings->favicon) : asset('assets/images/favicon.png') }}">
 
         <!-- Bootstrap 5 CSS -->
         <link href="{{ asset('assets/css/app.css') }}" rel="stylesheet" type="text/css" id="app-style">
@@ -342,7 +342,7 @@
                 <div class="auth-header text-center text-lg-start">
                     <div class="auth-logo-box mx-auto mx-lg-0">
                         @if(isset($generalSettings->favicon))
-                            <img src="{{ asset('storage/' . $generalSettings->favicon) }}" alt="Favicon" style="max-width: 45px; max-height: 45px; object-fit: contain;">
+                            <img src="{{ \App\HelperClass::get_file_url($generalSettings->favicon) }}" alt="Favicon" style="max-width: 45px; max-height: 45px; object-fit: contain;">
                         @else
                             <i class="fas fa-fingerprint fa-2x" style="color: var(--primary-color)"></i>
                         @endif

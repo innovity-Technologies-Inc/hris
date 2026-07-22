@@ -54,7 +54,7 @@
                                     @if ($allocation->getVehicle)
                                         <div class="text-center mb-4">
                                             @if ($allocation->getVehicle->vehicle_image)
-                                                <img src="{{ asset('storage/' . $allocation->getVehicle->vehicle_image) }}"
+                                                <img src="{{ \App\HelperClass::get_file_url($allocation->getVehicle->vehicle_image) }}"
                                                     alt="Vehicle" class="rounded shadow-sm"
                                                     style="max-width: 100%; height: 200px; object-fit: cover;">
                                             @else

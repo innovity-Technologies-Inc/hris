@@ -193,7 +193,7 @@
                 <div class="card-body">
                     <div class="d-flex flex-wrap gap-2">
                         @foreach($incrementData->attachments as $attachment)
-                            <a href="{{ asset('storage/' . $attachment->file_path) }}" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                            <a href="{{ \App\HelperClass::get_file_url($attachment->file_path) }}" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3">
                                 <i style="height: 12px; width: 12px" data-feather="download"></i>
                                 {{ $attachment->file_name }}
                             </a>

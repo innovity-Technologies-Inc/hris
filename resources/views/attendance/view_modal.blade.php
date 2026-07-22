@@ -24,7 +24,7 @@
                             {{-- Employee Photo --}}
                             <div class="col-md-3 text-center mb-2 mb-md-0">
                                 @if ($record->getEmployee && $record->getEmployee->photo_path)
-                                    <img src="{{ asset('storage/' . $record->getEmployee->photo_path) }}"
+                                    <img src="{{ \App\HelperClass::get_file_url($record->getEmployee->photo_path) }}"
                                         class="rounded-circle border border-primary border-2 shadow-sm"
                                         style="width: 100px; height: 100px; object-fit: cover;"
                                         alt="{{ $record->getEmployee->full_name }}">
