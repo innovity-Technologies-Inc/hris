@@ -205,20 +205,6 @@ class SalaryController extends Controller
         ]);
     }
 
-    public function statusUpdate(Request $request, $id){
-        $request->validate([
-            'status' => 'required|in:approved,rejected',
-        ]);
-        $process = PayrollProcess::find($id);
-        $process->update([
-            'approval_status' => $request->status,
-        ]);
-
-        return redirect()->route('salary.index')->with([
-            'message' => 'Updated Successfully',
-        ]);
-    }
-
     public function exportExcel(Request $request, FlexSearch $flexSearch)
     {
         $searchResult = $this->payrollService->payrollProcessSearchResult($request, PayrollProcess::class, $flexSearch);

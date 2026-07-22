@@ -1270,7 +1270,6 @@ Route::prefix('salary-process')->name('salary.')->controller(\App\Http\Controlle
     Route::middleware('permission:salary.edit')->group(function () {
         Route::get('edit/{id}', 'edit')->name('edit');
         Route::put('{id}/update', 'save')->name('update');
-        Route::put('{id}/status-update', 'statusUpdate')->name('status.update');
     });
     Route::middleware('permission:salary.delete')->group(function () {
         Route::delete('{id}/delete', 'delete')->name('delete');

@@ -1,5 +1,19 @@
 # Test Log
 
+## 2026-07-22 (Salary Process Approval Workflow Integration)
+
+**Goal**: Remove static status-update routes and update the workflow history variables for the Salary Process module under the central approval engine.
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest`
+
+**Results**:
+- Removed the unused `statusUpdate` action method from `SalaryController.php` and deleted the static route `salary.status.update` from `web.php`.
+- Corrected the variable name key passed to the `workflow_history` widget from `'model'` to `'approvable'` inside `payroll/salary/view.blade.php`.
+- Created `tests/Feature/Payroll/SalaryWorkflowTest.php` to verify salary process workflow triggers and manual approval actions.
+- Tests passed: 226/226 passed (895 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-22 (Arrear Management Approval Workflow Integration)
 
 **Goal**: Remove static approve/reject status-update routes and buttons from Arrear Management and integrate it with the central approval engine workflow.
