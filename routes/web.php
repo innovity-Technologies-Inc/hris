@@ -1583,6 +1583,8 @@ Route::prefix('claim-expense')->middleware('auth')->group(function () {
         Route::middleware('permission:claim-expenses.view')->group(function () {
             Route::get('logs', 'index')->name('claim_expenses.index');
             Route::get('applications/{id}', 'show')->name('claim_expenses.show');
+            Route::get('export/excel', 'exportExcel')->name('claim_expenses.export.excel');
+            Route::get('print', 'printIndex')->name('claim_expenses.print');
         });
         Route::middleware('permission:claim-expenses.create')->group(function () {
             Route::get('application', 'create')->name('claim_expenses.create');

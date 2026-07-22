@@ -26,42 +26,57 @@ class ExpenseApplicationController extends Controller
         $title = 'Claim Expense Logs';
         $section = 'Claim Expense';
 
-        if ($request->ajax()) {
-            $user = auth()->user();
-            $query = ExpenseApplication::withoutGlobalScopes()
-                ->with(['employee', 'expenseType']);
-
-            // Apply organization / user scoping manually
-            if ($user->user_type !== UserType::Group) {
-                $query->where(function($q) use ($user) {
-                    $q->where('created_by', $user->id);
-
-                    $employee = $user->employee()->with('officeInfo')->first();
-                    if ($employee && $employee->officeInfo) {
-                        $office = $employee->officeInfo;
-                        $q->orWhereHas('employee.officeInfo', function($oq) use ($user, $office) {
-                            if ($user->user_type === UserType::Company) $oq->where('current_company_id', $office->current_company_id);
-                            elseif ($user->user_type === UserType::BusinessUnit) $oq->where('current_business_unit_id', $office->current_business_unit_id);
-                            elseif ($user->user_type === UserType::Division) $oq->where('current_division_id', $office->current_division_id);
-                            elseif ($user->user_type === UserType::Department) $oq->where('current_department_id', $office->current_department_id);
-                            elseif ($user->user_type === UserType::Section) $oq->where('current_section_id', $office->current_section_id);
-                        });
-                    }
-
-                    $q->orWhereHas('approvalRequests.stepRequests', function($sq) use ($user) {
-                        $sq->where('approver_id', $user->id)->where('status', 'pending');
-                    });
-                });
-            }
-
-            $applications = $flexsearch->apply($query, [], $request->get('keyword'), ['employee.full_name', 'expenseType.name', 'purpose', 'payment_method', 'status'])
-                ->orderBy('id', 'desc')
-                ->paginate(15);
-
+        if ($request->ajax() || $request->boolean('_ajax')) {
+            $applications = $this->getApplicationsQuery($request, $flexsearch)->paginate(15);
             return view('claim_expense.expense_applications.search_results', compact('applications'))->render();
         }
 
         return view('claim_expense.expense_applications.index', compact('title', 'section'));
+    }
+
+    private function getApplicationsQuery(Request $request, FlexSearch $flexsearch)
+    {
+        $user = auth()->user();
+        $query = ExpenseApplication::withoutGlobalScopes()
+            ->with(['employee', 'expenseType']);
+
+        // Apply organization / user scoping manually
+        if ($user->user_type !== UserType::Group) {
+            $query->where(function($q) use ($user) {
+                $q->where('created_by', $user->id);
+
+                $employee = $user->employee()->with('officeInfo')->first();
+                if ($employee && $employee->officeInfo) {
+                    $office = $employee->officeInfo;
+                    $q->orWhereHas('employee.officeInfo', function($oq) use ($user, $office) {
+                        if ($user->user_type === UserType::Company) $oq->where('current_company_id', $office->current_company_id);
+                        elseif ($user->user_type === UserType::BusinessUnit) $oq->where('current_business_unit_id', $office->current_business_unit_id);
+                        elseif ($user->user_type === UserType::Division) $oq->where('current_division_id', $office->current_division_id);
+                        elseif ($user->user_type === UserType::Department) $oq->where('current_department_id', $office->current_department_id);
+                        elseif ($user->user_type === UserType::Section) $oq->where('current_section_id', $office->current_section_id);
+                    });
+                }
+
+                $q->orWhereHas('approvalRequests.stepRequests', function($sq) use ($user) {
+                    $sq->where('approver_id', $user->id)->where('status', 'pending');
+                });
+            });
+        }
+
+        return $flexsearch->apply($query, [], $request->get('keyword'), ['employee.full_name', 'expenseType.name', 'purpose', 'payment_method', 'status'])
+            ->orderBy('id', 'desc');
+    }
+
+    public function exportExcel(Request $request, FlexSearch $flexsearch)
+    {
+        $records = $this->getApplicationsQuery($request, $flexsearch)->get();
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\ClaimExpense\ExpenseApplicationExport($records), 'claim_expenses_' . now()->format('Ymd_His') . '.xlsx');
+    }
+
+    public function printIndex(Request $request, FlexSearch $flexsearch)
+    {
+        $records = $this->getApplicationsQuery($request, $flexsearch)->get();
+        return view('claim_expense.expense_applications.print_index', compact('records'));
     }
 
     public function create()

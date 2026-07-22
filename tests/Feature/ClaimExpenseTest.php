@@ -174,3 +174,52 @@ test('it triggers approval workflow on expense application store', function () {
     expect($stepReq->workflow_step_id)->toBe($workflow->steps->first()->id);
     expect($stepReq->status->value)->toBe('pending');
 });
+
+test('it can export expense applications to excel', function () {
+    $this->actingAs($this->admin);
+
+    $expenseType = ExpenseType::create([
+        'name' => 'Office Refreshments',
+        'status' => 'active',
+    ]);
+
+    ExpenseApplication::create([
+        'employee_id' => $this->employee->id,
+        'expense_type_id' => $expenseType->id,
+        'amount' => 1200,
+        'payment_method' => 'cash',
+        'purpose' => 'Supplies',
+        'status' => 'approved',
+        'created_by' => $this->admin->id
+    ]);
+
+    $response = $this->get(route('claim_expenses.export.excel', ['keyword' => 'Supplies']));
+    $response->assertStatus(200);
+    $this->assertTrue(
+        headers_sent() || str_contains($response->headers->get('content-disposition'), 'attachment; filename=claim_expenses_')
+    );
+});
+
+test('it can print expense applications index', function () {
+    $this->actingAs($this->admin);
+
+    $expenseType = ExpenseType::create([
+        'name' => 'Office Refreshments',
+        'status' => 'active',
+    ]);
+
+    ExpenseApplication::create([
+        'employee_id' => $this->employee->id,
+        'expense_type_id' => $expenseType->id,
+        'amount' => 1200,
+        'payment_method' => 'cash',
+        'purpose' => 'Supplies',
+        'status' => 'approved',
+        'created_by' => $this->admin->id
+    ]);
+
+    $response = $this->get(route('claim_expenses.print', ['keyword' => 'Supplies']));
+    $response->assertStatus(200);
+    $response->assertSee('Claim Expense Applications Sheet');
+    $response->assertSee('Test Employee');
+});

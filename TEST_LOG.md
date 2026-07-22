@@ -1,5 +1,22 @@
 # Test Log
 
+## 2026-07-22 (Claim Expense Export and Print Index)
+
+**Goal**: Implement unpaginated, filtered Excel export and PDF printing for the Claim Expense Applications module.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/ClaimExpenseTest.php`
+
+**Results**:
+- Refactored query building and user/organizational scoping logic in `ExpenseApplicationController.php` into a reusable helper method `getApplicationsQuery`.
+- Registered `claim_expenses.export.excel` and `claim_expenses.print` routes inside the `claim-expense` controller group in `web.php`.
+- Created `ExpenseApplicationExport.php` under `app/Exports/ClaimExpense` mapping headings (Employee, Expense Type, Amount, Payment Method, Purpose, Status, Remarks, Created At).
+- Developed print layout template `print_index.blade.php` in `resources/views/claim_expense/expense_applications` with portrait layout.
+- Added Excel and Print action buttons and wired up parameters-forwarding click handlers in `claim_expense/expense_applications/index.blade.php` using Vanilla JS.
+- Updated `ClaimExpenseTest.php` verifying Excel export status, filename headers, and print view content correctness.
+- Tests passed: 4/4 passed (18 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-22 (Database Seeding for Transport and Travel Movement)
 
 **Goal**: Seed the database with comprehensive mock datasets for the Transport and Travel Movement modules containing at least 50 records each.

@@ -9,7 +9,17 @@
                     <a href="{{ route('claim_expenses.create') }}" class="btn btn-warning btn-sm">
                         <i style="height: 12px; width: 12px" data-feather="plus"></i> New Claim
                     </a>
+                    @else
+                    <div></div>
                     @endcan
+                    <div class="d-flex gap-2">
+                        <button type="button" id="exportExcelBtn" class="btn btn-success btn-sm no-loader">
+                            <i class="bi bi-file-earmark-excel me-1"></i> Excel
+                        </button>
+                        <button type="button" id="printBtn" class="btn btn-secondary btn-sm no-loader">
+                            <i class="bi bi-printer me-1"></i> Print
+                        </button>
+                    </div>
                 </div>
 
                 <div class="card-body">
@@ -98,6 +108,29 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
             });
+        });
+    }
+
+    // Excel export
+    const exportBtn = document.getElementById('exportExcelBtn');
+    if (exportBtn) {
+        exportBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.ignoreBeforeUnload = true;
+            setTimeout(() => { window.ignoreBeforeUnload = false; }, 2000);
+            
+            const keyword = searchInput.value;
+            window.location.href = "{{ route('claim_expenses.export.excel') }}?keyword=" + encodeURIComponent(keyword);
+        });
+    }
+
+    // Print
+    const printBtn = document.getElementById('printBtn');
+    if (printBtn) {
+        printBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const keyword = searchInput.value;
+            window.open("{{ route('claim_expenses.print') }}?keyword=" + encodeURIComponent(keyword), '_blank');
         });
     }
 
