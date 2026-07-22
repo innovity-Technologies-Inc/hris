@@ -65,9 +65,9 @@
                                         leave application information</p>
                                 </div>
                                 <div class="d-flex gap-2">
-                                    <a href="{{ asset('samples/leaves_import_template.html') }}"
+                                    <a href="{{ asset('assets/excel/leaves.xlsx') }}"
                                         class="btn btn-success text-decoration-none"
-                                        download="leaves_import_template.html">
+                                        download="leaves_import_template.xlsx">
                                         <i class="mdi mdi-file-excel me-1"></i> Excel Format
                                     </a>
                                     <a href="{{ asset('assets/csv/leaves.csv') }}"

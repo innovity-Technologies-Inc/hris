@@ -12,6 +12,8 @@
 - Standardized leave log card layouts using clean `card border-0 shadow-sm rounded` styling and matching headers without excessive shadow/padding, replicating the Attendance search aesthetics.
 - Relocated Create and Bulk Upload action buttons into the main card body, applying warning (`btn-warning`) and outline-success classes.
 - Standardized leave list results table using `table table-hover table-borderless align-middle mb-0` class with `id="leaveTable"` and row hovering custom classes.
+- Generated `leaves.xlsx` Excel template containing sample data rows matching bulk validation requirements, saving it to `public/assets/excel/leaves.xlsx`.
+- Corrected the Excel and CSV download paths inside `leave/partials/import_modal.blade.php` to point to valid public files (`public/assets/excel/leaves.xlsx` and `public/assets/csv/leaves.csv`).
 - Implemented sequential promise-based AJAX cascading hierarchy loaders inside the JavaScript block, using state tracking (`silenceChangeEvents`) to avoid redundant search queries.
 - Configured `LeavesController.php` index action to load companies and requested filter units.
 - Updated `LeaveServices::getLeavesPaginated` to query `getEmployee.officeInfo` for company, branch, division, department, and section filters.
