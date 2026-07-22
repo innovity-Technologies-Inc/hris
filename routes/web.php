@@ -1072,6 +1072,8 @@ Route::prefix('leaves')->middleware('auth')->group(function () {
     Route::controller(LeavesController::class)->group(function (){
         Route::middleware('permission:leaves.view')->group(function () {
             Route::get('/', 'index')->name('leave.index');
+            Route::get('export-excel', 'exportExcel')->name('leave.export.excel');
+            Route::get('print', 'printIndex')->name('leave.print');
             Route::get('/{id}/view', 'show')->name('leave.show');
         });
         Route::middleware('permission:leaves.create')->group(function () {

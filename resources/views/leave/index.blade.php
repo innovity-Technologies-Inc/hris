@@ -163,12 +163,25 @@
                         <div></div>
                         @endcan
 
-                        @can('leaves.import')
-                        <button type="button" class="btn btn-outline-success btn-sm" data-bs-toggle="modal"
-                            data-bs-target="#bulkUploadModal">
-                            <i style="height: 12px; width: 12px" data-feather="upload" class="me-1"></i> Upload Bulk
-                        </button>
-                        @endcan
+                        <div class="d-flex gap-2">
+                            @can('leaves.view')
+                            <div class="btn-group">
+                                <button type="button" id="exportExcelBtn" class="btn btn-outline-success btn-sm no-loader">
+                                    <i style="height: 12px; width: 12px" data-feather="file-text" class="me-1"></i> Export Excel
+                                </button>
+                                <button type="button" id="printBtn" class="btn btn-outline-primary btn-sm no-loader">
+                                    <i style="height: 12px; width: 12px" data-feather="printer" class="me-1"></i> Print PDF
+                                </button>
+                            </div>
+                            @endcan
+
+                            @can('leaves.import')
+                            <button type="button" class="btn btn-outline-success btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#bulkUploadModal">
+                                <i style="height: 12px; width: 12px" data-feather="upload" class="me-1"></i> Upload Bulk
+                            </button>
+                            @endcan
+                        </div>
                     </div>
                     @if ($leaves->isEmpty())
                         <div class="text-center py-5 text-muted">
@@ -419,6 +432,26 @@
                             });
                     }
                 });
+            });
+
+            // Excel Export click handler
+            $(document).on('click', '#exportExcelBtn', function(e) {
+                e.preventDefault();
+                window.ignoreBeforeUnload = true;
+                setTimeout(() => {
+                    window.ignoreBeforeUnload = false;
+                }, 2000);
+                let queryString = $('#filterForm').serialize();
+                let baseUrl = "{{ route('leave.export.excel') }}";
+                window.location.href = baseUrl + '?' + queryString;
+            });
+
+            // Print click handler
+            $(document).on('click', '#printBtn', function(e) {
+                e.preventDefault();
+                let queryString = $('#filterForm').serialize();
+                let baseUrl = "{{ route('leave.print') }}";
+                window.open(baseUrl + '?' + queryString, '_blank');
             });
         });
     </script>

@@ -2,7 +2,7 @@
 
 ## 2026-07-22 (Leave Logs Search Organizational Filters)
 
-**Goal**: Align Leave Logs search UI design to match Attendance index form layouts (exactly 3 rows: 1 core row, 2 organization filter rows) with standard element heights, and add company, branch, division, department, and section cascading filters.
+**Goal**: Align Leave Logs search UI design to match Attendance index form layouts (exactly 3 rows: 1 core row, 2 organization filter rows) with standard element heights, add company, branch, division, department, and section cascading filters, and integrate unpaginated print/excel exporting matching current filter parameters.
 
 **Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/Leave/LeaveLogsTest.php`
 
@@ -14,11 +14,16 @@
 - Standardized leave list results table using `table table-hover table-borderless align-middle mb-0` class with `id="leaveTable"` and row hovering custom classes.
 - Generated `leaves.xlsx` Excel template containing sample data rows matching bulk validation requirements, saving it to `public/assets/excel/leaves.xlsx`.
 - Corrected the Excel and CSV download paths inside `leave/partials/import_modal.blade.php` to point to valid public files (`public/assets/excel/leaves.xlsx` and `public/assets/csv/leaves.csv`).
+- Registered `leave.export.excel` and `leave.print` routes in `routes/web.php` mapped to `LeavesController`.
+- Created `LeaveExport.php` excel generation concern mapping System ID, Employee ID, Employee Name, Plan Name, Days, Dates, Reason, and Status attributes.
+- Implemented `print_index.blade.php` A4 layout print sheet styled similarly to attendance print index with a list summary.
+- Implemented `getLeavesAll` inside `LeaveServices.php` to query the entire matching unpaginated search result.
+- Added Export Excel and Print PDF buttons and listeners inside `leave/index.blade.php` to trigger files download or new print window.
 - Implemented sequential promise-based AJAX cascading hierarchy loaders inside the JavaScript block, using state tracking (`silenceChangeEvents`) to avoid redundant search queries.
 - Configured `LeavesController.php` index action to load companies and requested filter units.
 - Updated `LeaveServices::getLeavesPaginated` to query `getEmployee.officeInfo` for company, branch, division, department, and section filters.
-- Created `LeaveLogsTest.php` Pest feature test verifying leave logs index accessibility and organizational query constraint application.
-- Tests passed: 2/2 passed (5 assertions) ✅
+- Created `LeaveLogsTest.php` Pest feature test verifying leave logs index accessibility, organizational query constraint application, excel export, and print operations.
+- Tests passed: 4/4 passed (11 assertions) ✅
 
 **Status**: ✅ SUCCESS
 

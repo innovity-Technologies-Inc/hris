@@ -15,6 +15,8 @@ use App\Models\Company\CompanyLocation;
 use App\Models\Company\Division;
 use App\Models\Company\Department;
 use App\Models\Company\Section;
+use App\Exports\Leave\LeaveExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class LeavesController extends Controller
 {
@@ -62,6 +64,18 @@ class LeavesController extends Controller
             'selectedDepartment',
             'selectedSection'
         ));
+    }
+
+    public function printIndex(FlexSearch $flexsearch, Request $request)
+    {
+        $leaveRecords = $this->leaveService->getLeavesAll($flexsearch, $request);
+        return view('leave.print_index', compact('leaveRecords'));
+    }
+
+    public function exportExcel(FlexSearch $flexsearch, Request $request)
+    {
+        $leaveRecords = $this->leaveService->getLeavesAll($flexsearch, $request);
+        return Excel::download(new LeaveExport($leaveRecords), 'leave_records.xlsx');
     }
 
     public function create()
