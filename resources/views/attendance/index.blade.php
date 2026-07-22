@@ -17,7 +17,7 @@
                                     <label for="keyword" class="form-label text-muted small fw-semibold mb-1">
                                         Employee Name
                                     </label>
-                                    <input type="text" class="form-control" id="keyword" name="keyword"
+                                    <input type="text" class="form-control form-control-sm" id="keyword" name="keyword"
                                         placeholder="Search by employee name" value="{{ request('keyword') }}">
                                 </div>
 
@@ -26,7 +26,7 @@
                                     <label for="from" class="form-label text-muted small fw-semibold mb-1">
                                         From Date
                                     </label>
-                                    <input type="date" id="from" name="from" class="form-control"
+                                    <input type="date" id="from" name="from" class="form-control form-control-sm"
                                         value="{{ request('from') }}">
                                 </div>
 
@@ -35,7 +35,7 @@
                                     <label for="to" class="form-label text-muted small fw-semibold mb-1">
                                         To Date
                                     </label>
-                                    <input type="date" id="to" name="to" class="form-control"
+                                    <input type="date" id="to" name="to" class="form-control form-control-sm"
                                         value="{{ request('to') }}">
                                 </div>
                             </div>
@@ -129,8 +129,9 @@
                                 @endif
 
                                 {{-- Reset Button --}}
-                                <div class="col d-flex align-items-end justify-content-end">
-                                    <button type="button" id="resetFilters" class="btn btn-outline-secondary btn-sm mb-1 w-100 w-md-auto">
+                                <div class="col-md-4">
+                                    <label class="form-label mb-1">&nbsp;</label>
+                                    <button type="button" id="resetFilters" class="btn btn-outline-secondary btn-sm w-100">
                                         <i style="height: 14px; width: 14px" data-feather="refresh-cw" class="me-1"></i> Reset Filters
                                     </button>
                                 </div>
