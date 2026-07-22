@@ -1,5 +1,21 @@
 # Test Log
 
+## 2026-07-22 (Database Seeding for Transport and Travel Movement)
+
+**Goal**: Seed the database with comprehensive mock datasets for the Transport and Travel Movement modules containing at least 50 records each.
+
+**Exact Command**: `php artisan db:seed --class=TransportSeeder && php artisan db:seed --class=EmployeeMovementSeeder`
+
+**Results**:
+- Reconfigured `TransportSeeder.php` to generate a robust dataset consisting of 10 drivers, 15 vehicles (under valid database enum categories: Car, Bus, Micro Bus, Van), 10 route maps, 25 requisitions (under valid enum vehicle types: Car, Bus, Micro), 25 vehicle allocations, and 20 employee transports.
+- Created `EmployeeMovementSeeder.php` seeding 55 travel movement records mapped dynamically with coordinates, distances, standard daily/travel allowances, status, and payment status.
+- Included `EmployeeMovementSeeder` inside the `DatabaseSeeder.php` array.
+- Verified seeder execution successfully populates the primary database with 55 Travel Movements, 27 Vehicle Requisitions, and 29 Vehicle Allocations.
+- Cleared configuration cache and ran tests verifying all 20 related transport, transfer, and movement feature tests pass successfully.
+- Tests passed: 20/20 passed (88 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-22 (Career Movement Transfer Export and Print Index)
 
 **Goal**: Implement unpaginated, filtered Excel export and PDF printing for the Career Movement (Transfer) module logs page.

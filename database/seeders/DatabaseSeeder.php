@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             ApprovalWorkflowSeeder::class,
             ProfileFieldConfigSeeder::class,
             TransportSeeder::class,
+            EmployeeMovementSeeder::class,
         ]);
     }
 }
