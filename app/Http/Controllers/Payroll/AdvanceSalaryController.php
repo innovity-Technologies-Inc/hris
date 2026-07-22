@@ -10,7 +10,10 @@ use App\Services\Payroll\PayrollServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
-use Illuminate\Support\Facades\DB;
+use App\Models\Payroll\AdvanceSalary;
+use App\Exports\Payroll\AdvanceSalaryProcessExport;
+use App\Exports\Payroll\AdvanceSalaryDetailExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AdvanceSalaryController extends Controller
 {
@@ -228,5 +231,40 @@ class AdvanceSalaryController extends Controller
                 'message' => 'Deletion failed: ' . $e->getMessage()
             ]);
         }
+    }
+
+    public function exportExcel(Request $request, FlexSearch $flexsearch)
+    {
+        $searchResult = $this->payrollService->payrollProcessSearchResult($request, PayrollProcess::class, $flexsearch);
+        $records = $searchResult->where('type', 'advance')->orderBy('id', 'desc')->get();
+
+        return Excel::download(new AdvanceSalaryProcessExport($records), 'advance_salary_processes_' . now()->format('YmdHis') . '.xlsx');
+    }
+
+    public function printIndex(Request $request, FlexSearch $flexsearch)
+    {
+        $searchResult = $this->payrollService->payrollProcessSearchResult($request, PayrollProcess::class, $flexsearch);
+        $records = $searchResult->where('type', 'advance')->orderBy('id', 'desc')->get();
+
+        $title = 'Advance Salary Processes';
+        return view('payroll.advance_salary.print_index', compact('records', 'title'));
+    }
+
+    public function exportProcessExcel($id)
+    {
+        $process = PayrollProcess::findOrFail($id);
+        $records = AdvanceSalary::where('process_id', $process->id)->with('employee')->orderBy('id', 'desc')->get();
+
+        return Excel::download(new AdvanceSalaryDetailExport($records), 'advance_salary_allocations_' . $process->batch_id . '_' . now()->format('YmdHis') . '.xlsx');
+    }
+
+    public function printProcess($id)
+    {
+        $process = PayrollProcess::findOrFail($id);
+        $records = AdvanceSalary::where('process_id', $process->id)->with('employee')->orderBy('id', 'desc')->get();
+
+        $title = 'Advance Salary Allocations for Batch ' . $process->batch_id;
+        $salary_month = $process->salary_month;
+        return view('payroll.advance_salary.print_process', compact('records', 'title', 'process', 'salary_month'));
     }
 }

@@ -1,5 +1,23 @@
 # Test Log
 
+## 2026-07-22 (Advance Salary Processes Export and Print)
+
+**Goal**: Implement Excel export and Print/PDF printing for the Advance Salary processes list (at index page header level) and specific batch details (at row level).
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest`
+
+**Results**:
+- Registered `advance-salary.export.excel`, `advance-salary.print`, `advance-salary.process.export.excel`, and `advance-salary.process.print` routes inside `web.php`.
+- Created export classes: `AdvanceSalaryProcessExport.php` (batch list) and `AdvanceSalaryDetailExport.php` (batch details list) under `app/Exports/Payroll`.
+- Developed print layout templates `print_index.blade.php` and `print_process.blade.php` under `resources/views/payroll/advance_salary`.
+- Integrated Excel and Print action buttons with parameters-forwarding click handlers in `payroll/advance_salary/index.blade.php` using Vanilla JS.
+- Integrated row-level icon-only Excel export (green) and Print (secondary) action buttons inside `payroll/advance_salary/partials/search_results.blade.php` and widened Action headers.
+- Fixed a filter query bug in `app/Services/Payroll/PayrollServices.php` where `employee_id` filter was matching `id` instead of `employee_id` on the `employee_office_infos` table.
+- Created `tests/Feature/Payroll/AdvanceSalaryExportTest.php` to verify all 4 route endpoints (status codes, headers, and view names).
+- Tests passed: 220/220 passed (834 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-22 (Bonus & Reward Processes Export and Print)
 
 **Goal**: Implement Excel export and Print/PDF printing for the Bonus and Reward processes list (at index page header level) and specific batch details (at row level).

@@ -648,7 +648,7 @@ class PayrollServices
                     $q->where('current_section_id', $data['section_id']);
                 }
                 if (!empty($data['employee_id'])) {
-                    $q->where('id', $data['employee_id']);
+                    $q->where('employee_id', $data['employee_id']);
                 }
             })
             ->whereHas('employeeEligibility', function ($q) use ($firstDayOfSalaryMonth) {
