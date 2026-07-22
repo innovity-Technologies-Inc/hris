@@ -39,11 +39,11 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     <i class="mdi mdi-close"></i> Close
                 </button>
-                <button type="button" class="btn btn-success no-loader" id="btnExportExcelModal">
-                    <i class="bi bi-file-earmark-excel me-1"></i> Export Excel
+                <button type="button" class="btn btn-success btn-sm no-loader" id="btnExportExcelModal">
+                    <i class="bi bi-file-earmark-excel me-1"></i> Export
                 </button>
-                <button type="button" class="btn btn-primary" onclick="printResults()">
-                    <i class="mdi mdi-printer"></i> Print
+                <button type="button" class="btn btn-secondary btn-sm no-loader" onclick="printResults()">
+                    <i class="bi bi-printer me-1"></i> Print
                 </button>
             </div>
         </div>

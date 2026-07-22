@@ -339,14 +339,14 @@
                     </h5>
                     <div>
                         <span class="badge bg-success me-2" id="totalEmployeesFound">0 Employees Found</span>
-                        <button type="button" class="btn btn-success btn-sm me-2 no-loader" id="btnExportExcel">
-                            <i class="bi bi-file-earmark-excel me-1"></i> Export Excel
+                        <button type="button" class="btn btn-success btn-sm no-loader me-2" id="btnExportExcel">
+                            <i class="bi bi-file-earmark-excel me-1"></i> Export
                         </button>
                         <button type="button" class="btn btn-primary btn-sm me-2" onclick="viewDetailedResults()">
                             <i class="mdi mdi-table-eye"></i> View Details
                         </button>
-                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="printResults()">
-                            <i class="mdi mdi-printer"></i> Print
+                        <button type="button" class="btn btn-secondary btn-sm no-loader" onclick="printResults()">
+                            <i class="bi bi-printer me-1"></i> Print
                         </button>
                     </div>
                 </div>
