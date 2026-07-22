@@ -27,6 +27,7 @@ class WorkflowEventDispatcherService
         'employee-bank-account'    => \App\Listeners\Workflow\ProfileUpdateWorkflowListener::class,
         'career-movement'          => \App\Listeners\Workflow\TransferWorkflowListener::class,
         'claim-expense'            => \App\Listeners\Workflow\ClaimExpenseWorkflowListener::class,
+        'penalty'                  => \App\Listeners\Workflow\PenaltyWorkflowListener::class,
     ];
 
     /**

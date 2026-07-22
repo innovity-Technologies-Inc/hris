@@ -1234,6 +1234,7 @@ Route::prefix('bonus')->name('bonus.')->controller(\App\Http\Controllers\Payroll
 Route::prefix('payroll/penalty')->name('payroll.penalty.')->controller(\App\Http\Controllers\Payroll\EmployeePenaltyController::class)->middleware('auth')->group(function () {
     Route::middleware('permission:penalty-management.view')->group(function () {
         Route::get('index', 'index')->name('index');
+        Route::get('show/{id}', 'show')->name('show');
         Route::get('export/excel', 'exportExcel')->name('export.excel');
         Route::get('print', 'printIndex')->name('print');
     });

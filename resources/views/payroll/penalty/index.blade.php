@@ -95,14 +95,6 @@
                             <label class="form-label fw-semibold">Cause</label>
                             <textarea class="form-control" name="cause" id="cause" rows="2" placeholder="Describe the reason for penalty"></textarea>
                         </div>
-                        <div class="mb-0">
-                            <label class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
-                            <select class="form-select" name="status" id="status" required>
-                                <option value="pending">Pending</option>
-                                <option value="approved">Approved</option>
-                                <option value="deducted">Deducted</option>
-                            </select>
-                        </div>
                     </div>
                     <div class="modal-footer border-0 p-4 pt-0">
                         <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
@@ -185,7 +177,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         document.getElementById('occurrence_date').value = data.occurrence_date;
                         document.getElementById('cause').value = data.cause || '';
                         document.getElementById('penalty_amount').value = data.penalty_amount;
-                        document.getElementById('status').value = data.status;
                         
                         document.getElementById('penaltyModalLabel').innerText = 'Edit Assigned Penalty';
                         modal.show();

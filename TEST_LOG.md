@@ -1,5 +1,25 @@
 # Test Log
 
+## 2026-07-22 (Penalty Management Approval Workflow Integration)
+
+**Goal**: Remove static status input from the Employee Penalty form and integrate the Penalty Management module with the central approval engine workflow.
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest`
+
+**Results**:
+- Added `'penalty' => 'Penalty Management'` module registration inside `config/approval-engine.php`.
+- Created database migration `2026_07_23_000000_add_rejected_to_employee_penalties_status.php` to include `'rejected'` state in the `employee_penalties` table's status enum column.
+- Added `Innovity\ApprovalEngine\Traits\Approvable` and `App\Traits\OrganizationScoped` traits to `EmployeePenalty` model.
+- Removed `'status'` validation from `StoreEmployeePenaltyRequest.php` and deleted the static status dropdown from the creation modal inside `payroll/penalty/index.blade.php`.
+- Updated `EmployeePenaltyServices.php` to trigger `startWorkflow('penalty')` upon penalty creation.
+- Created `PenaltyWorkflowListener.php` and registered it in `WorkflowEventDispatcherService.php` to update penalty status to `'approved'` or `'rejected'` upon workflow completion or rejection.
+- Created a `show.blade.php` view under `resources/views/payroll/penalty` to render individual penalty details and the approval workflow history timeline.
+- Added a "View Details" action icon link (`bi bi-eye`) inside `payroll/penalty/search_results.blade.php` and registered the `show` route in `web.php`.
+- Created `tests/Feature/Payroll/PenaltyWorkflowTest.php` to verify workflow trigger, auto-approval conditions, manual approval, and rejection handlers.
+- Tests passed: 223/223 passed (868 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-22 (Salary Processes Export and Print)
 
 **Goal**: Implement Excel export and Print/PDF printing for the Salary processes list (at index page header level) and specific batch details (at row level).

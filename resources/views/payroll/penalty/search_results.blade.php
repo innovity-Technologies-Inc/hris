@@ -29,11 +29,18 @@
                             <span class="badge text-bg-warning">Pending</span>
                         @elseif ($penalty->status === 'approved')
                             <span class="badge text-bg-success">Approved</span>
+                        @elseif ($penalty->status === 'rejected')
+                            <span class="badge text-bg-danger">Rejected</span>
                         @else
                             <span class="badge text-bg-info">Deducted</span>
                         @endif
                     </td>
                     <td class="text-end">
+                        @can('penalty-management.view')
+                        <a href="{{ route('payroll.penalty.show', $penalty->id) }}" class="btn btn-info btn-sm me-1" title="View Details">
+                            <i style="height: 12px; width: 12px" data-feather="eye"></i>
+                        </a>
+                        @endcan
                         @can('penalty-management.edit')
                         <button type="button" class="btn btn-primary btn-sm me-1 edit-penalty" 
                                 data-id="{{ $penalty->id }}" title="Edit">

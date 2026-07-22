@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Traits\Userstamps;
 use App\Traits\Auditable;
+use App\Traits\OrganizationScoped;
+use Innovity\ApprovalEngine\Traits\Approvable;
 
 class EmployeePenalty extends Model
 {
-    use Userstamps, Auditable;
+    use Userstamps, Auditable, Approvable, OrganizationScoped;
     protected $table = 'employee_penalties';
 
     protected $fillable = [

@@ -56,6 +56,7 @@ class EmployeePenaltyServices
                 $action = 'Updated';
             } else {
                 $penalty = EmployeePenalty::create($data);
+                $penalty->startWorkflow('penalty');
                 $action = 'Assigned';
             }
 

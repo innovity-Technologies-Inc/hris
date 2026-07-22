@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Payroll\StoreEmployeePenaltyRequest;
 use App\Models\Employee\Employee;
 use App\Models\Plan\PenaltyPlan;
+use App\Models\Payroll\EmployeePenalty;
 use App\Services\Payroll\EmployeePenaltyServices;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
@@ -82,5 +83,15 @@ class EmployeePenaltyController extends Controller
     {
         $records = $this->penaltyServices->getPenalties($request, $flexsearch, false);
         return view('payroll.penalty.print_index', compact('records'));
+    }
+
+    public function show($id)
+    {
+        $title = 'Employee Penalty Details';
+        $section = 'Payroll';
+        $sub_section = 'Penalty Details';
+        $penalty = EmployeePenalty::with(['employee', 'penaltyPlan'])->findOrFail($id);
+
+        return view('payroll.penalty.show', compact('title', 'section', 'sub_section', 'penalty'));
     }
 }

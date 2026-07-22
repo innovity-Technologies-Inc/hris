@@ -19,7 +19,6 @@ class StoreEmployeePenaltyRequest extends FormRequest
             'occurrence_date' => 'required|date',
             'cause' => 'nullable|string',
             'penalty_amount' => 'required|numeric|min:0',
-            'status' => 'required|in:pending,approved,deducted',
         ];
     }
 }
