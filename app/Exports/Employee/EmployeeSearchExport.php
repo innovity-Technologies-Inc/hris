@@ -50,9 +50,9 @@ class EmployeeSearchExport implements FromCollection, WithHeadings, WithMapping
             $row->gender ?? '',
             $officeInfo?->getCurrentCompany?->name ?? 'N/A',
             $officeInfo?->getCurrentBusinessUnit?->name ?? 'N/A',
-            $officeInfo?->getCurrentDivision?->division_name ?? 'N/A',
+            $officeInfo?->getCurrentDivision?->name ?? 'N/A',
             $officeInfo?->getCurrentDepartment?->department_name ?? 'N/A',
-            $officeInfo?->getCurrentSection?->section_name ?? 'N/A',
+            $officeInfo?->getCurrentSection?->name ?? 'N/A',
             ucfirst($officeInfo?->emp_type ?? 'N/A'),
         ];
     }
