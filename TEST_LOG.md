@@ -1,5 +1,22 @@
 # Test Log
 
+## 2026-07-22 (Attendance Records Search Organizational Filters)
+
+**Goal**: Add organization fields (Company, Branch, Division, Department, Section) to the attendance records search and filter functionality, implementing dynamic cascading AJAX autoloading and retaining pre-selected options to support Pest/headless assertions.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/Attendance/AttendanceExportPrintTest.php`
+
+**Results**:
+- Added `applyFilters` helper method in `AttendancesController.php` to apply `company`, `business_unit` (branch), `division`, `department`, and `section` query filters.
+- Retrieved and passed `$companies` list and selected entities (`$selectedBranch`, `$selectedDivision`, `$selectedDepartment`, `$selectedSection`) from `AttendancesController@index` to pre-select options in the Blade view.
+- Added company, branch, division, department, and section dropdowns to the filter form in `attendance/index.blade.php`.
+- Implemented AJAX hierarchy cascading loading (`/get-units`, `/get-divisions`, `/get-departments`, `/get-sections`) in the Blade scripts utilizing unified promise-based loaders.
+- Added state-controlled change triggers (`silenceChangeEvents`) to prevent redundant searches while cascading option updates.
+- Added `it can filter attendance records by organization` feature test verifying successful company-scoped record retrieval.
+- Tests passed: 4/4 passed (11 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-22 (Attendance Records Export & Print Alignment)
 
 **Goal**: Redesign the Attendance index page to match the unified glassmorphism styling, and fix the Print and Export Excel functionality to respect search and date filters.

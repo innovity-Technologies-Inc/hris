@@ -87,3 +87,68 @@ test('it can export attendance records to excel with filters', function () {
         )
     );
 });
+
+test('it can filter attendance records by organization', function () {
+    // Setup companies
+    $group = \App\Models\Company\Group::create(['name' => 'Test Group', 'short_name' => 'TG', 'status' => 'active']);
+    $type = \App\Models\Company\CompanyType::create(['name' => 'Test Type', 'short_name' => 'TT', 'status' => 'active']);
+    
+    $companyA = \App\Models\Company\Company::create([
+        'name' => 'Company A',
+        'short_name' => 'COA',
+        'type_id' => $type->id,
+        'group_id' => $group->id,
+        'address' => 'Addr A',
+        'status' => 'active'
+    ]);
+    
+    $companyB = \App\Models\Company\Company::create([
+        'name' => 'Company B',
+        'short_name' => 'COB',
+        'type_id' => $type->id,
+        'group_id' => $group->id,
+        'address' => 'Addr B',
+        'status' => 'active'
+    ]);
+
+    $employee1 = Employee::factory()->create(['full_name' => 'Jane Doe']);
+    $employee2 = Employee::factory()->create(['full_name' => 'John Smith']);
+
+    \App\Models\Employee\EmployeeOfficeInfo::create([
+        'employee_id' => $employee1->id,
+        'current_company_id' => $companyA->id,
+        'joining_company_id' => $companyA->id,
+        'joining_division_id' => 1,
+    ]);
+
+    \App\Models\Employee\EmployeeOfficeInfo::create([
+        'employee_id' => $employee2->id,
+        'current_company_id' => $companyB->id,
+        'joining_company_id' => $companyB->id,
+        'joining_division_id' => 1,
+    ]);
+
+    Attendance::create([
+        'employee_id' => $employee1->id,
+        'in_time' => '2026-07-22 09:00:00',
+        'in_status' => 'On-Time',
+        'attendance_status' => 'Present',
+    ]);
+
+    Attendance::create([
+        'employee_id' => $employee2->id,
+        'in_time' => '2026-07-22 09:05:00',
+        'in_status' => 'On-Time',
+        'attendance_status' => 'Present',
+    ]);
+
+    // Request with company filter
+    $response = $this->actingAs($this->admin)
+        ->get(route('attendance.index', ['company' => $companyA->id]));
+
+    $response->assertStatus(200);
+    $response->assertViewHas('attendanceRecords');
+    $records = $response->viewData('attendanceRecords');
+    expect($records)->toHaveCount(1);
+    expect($records->first()->getEmployee->full_name)->toBe('Jane Doe');
+});

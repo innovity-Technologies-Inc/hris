@@ -12,6 +12,11 @@ use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\Company\Company;
+use App\Models\Company\CompanyLocation;
+use App\Models\Company\Division;
+use App\Models\Company\Department;
+use App\Models\Company\Section;
 
 class AttendancesController extends Controller
 {
@@ -21,7 +26,7 @@ class AttendancesController extends Controller
     }
     public function index(FlexSearch $flexsearch, Request $request)
     {
-        $query = Attendance::with('getEmployee')->orderBy('in_time', 'desc');
+        $query = Attendance::with('getEmployee.officeInfo.getCurrentCompany', 'getEmployee.officeInfo.getCurrentBusinessUnit')->orderBy('in_time', 'desc');
 
         $searchableColumns = ['getEmployee.full_name'];
         $keyword = $request->input('keyword');
@@ -36,6 +41,8 @@ class AttendancesController extends Controller
             $filters['in_time<='] = Carbon::parse($request->input('to'))->copy()->endOfDay();
         }
 
+        $query = $this->applyFilters($query, $request);
+
         $title = 'Employee Attendance';
         $section = 'Attendance';
         $sub_section = 'Records';
@@ -48,11 +55,30 @@ class AttendancesController extends Controller
             return view('attendance.partials.search_results', compact('attendanceRecords'))->render();
         }
 
+        $companies = Company::select('id', 'name')->orderBy('name')->get();
+        $selectedBranch = $request->filled('business_unit') 
+            ? CompanyLocation::find($request->input('business_unit')) 
+            : null;
+        $selectedDivision = $request->filled('division') 
+            ? Division::find($request->input('division')) 
+            : null;
+        $selectedDepartment = $request->filled('department') 
+            ? Department::find($request->input('department')) 
+            : null;
+        $selectedSection = $request->filled('section') 
+            ? Section::find($request->input('section')) 
+            : null;
+
         return view('attendance.index', compact(
             'attendanceRecords',
             'title',
             'section',
-            'sub_section'
+            'sub_section',
+            'companies',
+            'selectedBranch',
+            'selectedDivision',
+            'selectedDepartment',
+            'selectedSection'
         ));
     }
 
@@ -195,6 +221,8 @@ class AttendancesController extends Controller
             $filters['in_time<='] = Carbon::parse($request->input('to'))->copy()->endOfDay();
         }
 
+        $query = $this->applyFilters($query, $request);
+
         $attendanceRecords = $flexsearch
             ->apply($query, $filters, $keyword, $searchableColumns)
             ->get();
@@ -215,6 +243,8 @@ class AttendancesController extends Controller
         if ($request->filled('to')) {
             $filters['in_time<='] = Carbon::parse($request->input('to'))->copy()->endOfDay();
         }
+
+        $query = $this->applyFilters($query, $request);
 
         $attendanceRecords = $flexsearch
             ->apply($query, $filters, $keyword, $searchableColumns)
@@ -259,6 +289,41 @@ class AttendancesController extends Controller
                 'alert-type' => 'error'
             ]);
         }
+    }
+
+    private function applyFilters($query, Request $request)
+    {
+        if ($request->filled('company')) {
+            $query->whereHas('getEmployee.officeInfo', function($q) use ($request) {
+                $q->where('current_company_id', $request->input('company'));
+            });
+        }
+
+        if ($request->filled('business_unit')) {
+            $query->whereHas('getEmployee.officeInfo', function($q) use ($request) {
+                $q->where('current_business_unit_id', $request->input('business_unit'));
+            });
+        }
+
+        if ($request->filled('division')) {
+            $query->whereHas('getEmployee.officeInfo', function($q) use ($request) {
+                $q->where('current_division_id', $request->input('division'));
+            });
+        }
+
+        if ($request->filled('department')) {
+            $query->whereHas('getEmployee.officeInfo', function($q) use ($request) {
+                $q->where('current_department_id', $request->input('department'));
+            });
+        }
+
+        if ($request->filled('section')) {
+            $query->whereHas('getEmployee.officeInfo', function($q) use ($request) {
+                $q->where('current_section_id', $request->input('section'));
+            });
+        }
+
+        return $query;
     }
 }
 
