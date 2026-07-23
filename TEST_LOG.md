@@ -2,7 +2,7 @@
 
 ## 2026-07-23 (Tax Policy Configuration Module Creation)
 
-**Goal**: Implement the new Tax Policy and Tax Slabs module with full CRUD, validation rules, organization scoping, dynamic formula calculations, and Axios form submissions.
+**Goal**: Implement the new Tax Policy and Tax Slabs module as a single configuration page, with organization scoping, dynamic formula calculations, and Axios form submissions.
 
 **Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest tests/Feature/Payroll/TaxPolicyTest.php`
 

@@ -726,8 +726,8 @@
                 <li>
                     <a href="#taxConfig" data-bs-toggle="collapse" aria-expanded="{{ $taxConfigOpen ? 'true' : 'false' }}"
                         class="@if ($taxConfigOpen) menuitem-active @endif">
-                        <i data-feather="settings"></i>
-                        <span> Tax Configuration </span>
+                        <i data-feather="percent"></i>
+                        <span> Tax </span>
                         <span class="menu-arrow"></span>
                     </a>
                     <div class="collapse @if ($taxConfigOpen) show @endif" id="taxConfig">

@@ -5,222 +5,240 @@
         $isEdit = isset($policy);
     @endphp
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card shadow-sm border-0 mb-4">
-                <div class="card-header bg-primary text-white py-3">
-                    <h5 class="card-title mb-0 text-white">
-                        <i data-feather="{{ $isEdit ? 'edit' : 'plus' }}" class="me-2"></i>
-                        {{ $isEdit ? 'Edit' : 'Create' }} Tax Policy
-                    </h5>
-                </div>
-                <div class="card-body p-4">
-                    <form action="{{ $isEdit ? route('tax-policy.update', $policy->id) : route('tax-policy.store') }}"
-                          method="POST" id="taxPolicyForm">
-                        @csrf
-                        @if($isEdit) @method('PUT') @endif
-
-                        <div class="row g-4">
-                            {{-- LEFT COLUMN: Tax Policy Details --}}
-                            <div class="col-lg-6">
-                                <div class="card border border-light shadow-none h-100" style="border-radius: 12px;">
-                                    <div class="card-header bg-light">
-                                        <h6 class="fw-bold mb-0 text-dark">Tax Policy Details</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        {{-- Company & Branch (Organizational Scoping) --}}
-                                        <div class="row mb-3 g-3">
-                                            <div class="col-md-6">
-                                                <label class="form-label fw-semibold">Company</label>
-                                                <select class="select2" name="company_id" id="company_id">
-                                                    <option value="">Global (All Companies)</option>
-                                                    @foreach($companies as $company)
-                                                        <option value="{{ $company->id }}" {{ ($isEdit && $policy->company_id == $company->id) ? 'selected' : '' }}>
-                                                            {{ $company->name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label fw-semibold">Branch</label>
-                                                <select class="select2" name="branch_id" id="branch_id">
-                                                    <option value="">All Branches</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        {{-- Zero Tax Return Limits --}}
-                                        <div class="row mb-3 g-3">
-                                            <div class="col-md-6">
-                                                <label class="form-label fw-semibold">Zero Tax Return Income (Male) <span class="text-danger">*</span></label>
-                                                <div class="input-group">
-                                                    <span class="input-group-text">৳</span>
-                                                    <input type="number" step="0.01" class="form-control" name="zero_tax_male" id="zero_tax_male" 
-                                                           value="{{ $isEdit ? $policy->zero_tax_male : '0.00' }}" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label fw-semibold">Zero Tax Return Income (Female) <span class="text-danger">*</span></label>
-                                                <div class="input-group">
-                                                    <span class="input-group-text">৳</span>
-                                                    <input type="number" step="0.01" class="form-control" name="zero_tax_female" id="zero_tax_female" 
-                                                           value="{{ $isEdit ? $policy->zero_tax_female : '0.00' }}" required>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {{-- Minimum Tax Amount --}}
-                                        <div class="mb-4">
-                                            <label class="form-label fw-semibold">Minimum Tax Amount <span class="text-danger">*</span></label>
-                                            <div class="input-group">
-                                                <span class="input-group-text">৳</span>
-                                                <input type="number" step="0.01" class="form-control" name="min_tax_amount" id="min_tax_amount" 
-                                                       value="{{ $isEdit ? $policy->min_tax_amount : '0.00' }}" required>
-                                            </div>
-                                        </div>
-
-                                        <hr class="my-4">
-
-                                        {{-- Exemption Policy Section --}}
-                                        <h6 class="fw-bold mb-3 text-primary">Exemption Policy</h6>
-                                        
-                                        <div class="mb-3">
-                                            <label class="form-label fw-semibold">Exemption Type <span class="text-danger">*</span></label>
-                                            <select class="form-select" name="exemption_type" id="exemption_type" required>
-                                                <option value="fixed" {{ ($isEdit && $policy->exemption_type === 'fixed') ? 'selected' : '' }}>Fixed</option>
-                                                <option value="exempt_allowance" {{ ($isEdit && $policy->exemption_type === 'exempt_allowance') ? 'selected' : '' }}>Exempt Allowances</option>
-                                            </select>
-                                        </div>
-
-                                        {{-- Exemption Type: Fixed Inputs --}}
-                                        <div class="row mb-3 g-3" id="fixedExemptionSection">
-                                            <div class="col-md-6">
-                                                <label class="form-label fw-semibold">Salary Ratio</label>
-                                                <input type="text" class="form-control" name="salary_ratio" id="salary_ratio" 
-                                                       value="{{ $isEdit ? $policy->salary_ratio : '' }}" placeholder="e.g. 1/3, 2/3">
-                                                <div class="form-text text-muted" style="font-size: 11px;">Note: Enter as a fraction like 1/3, 2/3.</div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label fw-semibold">Fixed Amount</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-text">৳</span>
-                                                    <input type="number" step="0.01" class="form-control" name="fixed_amount" id="fixed_amount" 
-                                                           value="{{ $isEdit ? $policy->fixed_amount : '' }}">
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {{-- Exemption Type: Exempt Allowances Inputs --}}
-                                        <div class="mb-3" id="exemptAllowancesSection" style="display: none;">
-                                            <label class="form-label fw-semibold">Select Allowance to Add</label>
-                                            <div class="input-group mb-3">
-                                                <select class="form-select" id="allowanceDropdown">
-                                                    <option value="">Select Allowance</option>
-                                                    @foreach($allowanceMapping as $dbField => $displayName)
-                                                        <option value="{{ $dbField }}">{{ $displayName }}</option>
-                                                    @endforeach
-                                                </select>
-                                                <button class="btn btn-primary btn-sm" type="button" id="addAllowanceBtn">
-                                                    <i data-feather="plus" style="width: 14px; height: 14px;"></i> Add
-                                                </button>
-                                            </div>
-                                            
-                                            <div id="allowanceListContainer" class="d-flex flex-wrap gap-2 border p-3 rounded" style="min-height: 60px; background: rgba(0,0,0,0.01);">
-                                                {{-- Existing allowances badges go here --}}
-                                                @if($isEdit && $policy->exemption_type === 'exempt_allowance' && is_array($policy->exempt_allowances))
-                                                    @foreach($policy->exempt_allowances as $allowance)
-                                                        @if(isset($allowanceMapping[$allowance]))
-                                                            <span class="badge bg-primary text-white d-flex align-items-center gap-1 p-2 allowance-badge" data-value="{{ $allowance }}">
-                                                                {{ $allowanceMapping[$allowance] }}
-                                                                <span class="remove-allowance-badge text-white ms-1" data-value="{{ $allowance }}" style="cursor: pointer; font-size: 14px; font-weight: bold;">&times;</span>
-                                                                <input type="hidden" name="exempt_allowances[]" value="{{ $allowance }}">
-                                                            </span>
-                                                        @endif
-                                                    @endforeach
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {{-- RIGHT COLUMN: Tax Slabs Management --}}
-                            <div class="col-lg-6">
-                                <div class="card border border-light shadow-none h-100" style="border-radius: 12px;">
-                                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                                        <h6 class="fw-bold mb-0 text-dark">Tax Slabs Configuration</h6>
-                                        <button type="button" class="btn btn-outline-primary btn-sm rounded-pill" id="addSlabBtn">
-                                            <i data-feather="plus" class="me-1" style="width: 14px;"></i> Add Slab
-                                        </button>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="table-responsive">
-                                            <table class="table align-middle" id="slabsTable">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Taxable Amount (৳) <span class="text-danger">*</span></th>
-                                                        <th style="width: 100px;">Tax (%) <span class="text-danger">*</span></th>
-                                                        <th>Calculated Tax (৳)</th>
-                                                        <th style="width: 50px;"></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="slabsContainer">
-                                                    {{-- Existing Slabs go here --}}
-                                                    @if($isEdit && $policy->slabs->isNotEmpty())
-                                                        @foreach($policy->slabs as $index => $slab)
-                                                            <tr class="slab-row">
-                                                                <td>
-                                                                    <input type="number" step="0.01" name="slabs[{{ $index }}][taxable_amount]" 
-                                                                           class="form-control form-control-sm slab-taxable-amount" value="{{ $slab->taxable_amount }}" required>
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" step="0.01" name="slabs[{{ $index }}][tax_percentage]" 
-                                                                           class="form-control form-control-sm slab-tax-percentage" value="{{ $slab->tax_percentage }}" required>
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" step="0.01" name="slabs[{{ $index }}][tax_amount]" 
-                                                                           class="form-control form-control-sm slab-tax-amount text-muted bg-light" value="{{ $slab->tax_amount }}" readonly required>
-                                                                </td>
-                                                                <td class="text-center">
-                                                                    <button type="button" class="btn btn-link text-danger p-0 delete-slab-row">
-                                                                        <i data-feather="trash-2" style="width: 16px;"></i>
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
-                                                    @endif
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Footer Buttons --}}
-                        <div class="text-end mt-4">
-                            <button type="submit" class="btn btn-primary px-4 py-2 rounded-pill fw-bold shadow-lg" id="submitBtn">
-                                <i data-feather="check-circle" class="me-1"></i> Save Tax Policy
-                            </button>
-                        </div>
-                    </form>
-                </div>
+    <div class="py-4" style="max-width: 1200px; margin: 0 auto;">
+        <!-- Header Block -->
+        <div class="d-flex align-items-center mb-4 p-3 bg-white rounded-4 shadow-sm border">
+            <div class="bg-primary bg-opacity-10 rounded-circle p-3 me-3 d-inline-flex align-items-center justify-content-center" style="width: 56px; height: 56px;">
+                <i data-feather="percent" class="text-primary fs-3" style="width: 24px; height: 24px;"></i>
+            </div>
+            <div>
+                <h3 class="fs-4 fw-bold text-dark mb-1">Tax & Exemption Policy</h3>
+                <p class="text-muted mb-0 small">Configure zero-tax income thresholds, exemption policies, and taxable slab percentages.</p>
             </div>
         </div>
+
+        <form action="{{ route('tax-policy.update', $policy->id) }}" method="POST" id="taxPolicyForm">
+            @csrf
+            @method('PUT')
+
+            <div class="row g-4">
+                {{-- LEFT COLUMN: Tax Policy & Exemption Rules --}}
+                <div class="col-lg-6">
+                    <div class="card shadow border-0 rounded-4 h-100 overflow-hidden">
+                        <div class="card-header bg-white py-3 border-bottom border-light">
+                            <h5 class="fw-bold mb-0 text-dark d-flex align-items-center">
+                                <i data-feather="sliders" class="me-2 text-primary" style="width: 18px; height: 18px;"></i>
+                                General Policy Settings
+                            </h5>
+                        </div>
+                        <div class="card-body p-4">
+                            {{-- Company & Branch Scoping --}}
+                            <div class="row mb-4 g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold text-muted small uppercase tracking-wider mb-2">Company Scope</label>
+                                    <select class="select2 rounded-3" name="company_id" id="company_id">
+                                        <option value="">Global (All Companies)</option>
+                                        @foreach($companies as $company)
+                                            <option value="{{ $company->id }}" {{ ($policy->company_id == $company->id) ? 'selected' : '' }}>
+                                                {{ $company->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold text-muted small uppercase tracking-wider mb-2">Branch Scope</label>
+                                    <select class="select2 rounded-3" name="branch_id" id="branch_id">
+                                        <option value="">All Branches</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <hr class="my-4" style="border-style: dashed; opacity: 0.15;">
+
+                            {{-- Zero Tax Return Limits --}}
+                            <div class="row mb-4 g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold text-dark">Zero Tax Limit (Male) <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light text-muted border-end-0 fw-bold">৳</span>
+                                        <input type="number" step="0.01" class="form-control form-control-md border-start-0" 
+                                               name="zero_tax_male" id="zero_tax_male" 
+                                               value="{{ $policy->zero_tax_male }}" required>
+                                    </div>
+                                    <div class="form-text small text-muted">Annual income threshold.</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold text-dark">Zero Tax Limit (Female) <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light text-muted border-end-0 fw-bold">৳</span>
+                                        <input type="number" step="0.01" class="form-control form-control-md border-start-0" 
+                                               name="zero_tax_female" id="zero_tax_female" 
+                                               value="{{ $policy->zero_tax_female }}" required>
+                                    </div>
+                                    <div class="form-text small text-muted">Annual income threshold.</div>
+                                </div>
+                            </div>
+
+                            {{-- Minimum Tax Amount --}}
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold text-dark">Minimum Tax Amount <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-muted border-end-0 fw-bold">৳</span>
+                                    <input type="number" step="0.01" class="form-control form-control-md border-start-0" 
+                                           name="min_tax_amount" id="min_tax_amount" 
+                                           value="{{ $policy->min_tax_amount }}" required>
+                                </div>
+                                <div class="form-text small text-muted">Minimum tax liability if taxable income exceeds limit.</div>
+                            </div>
+
+                            <hr class="my-4" style="border-style: dashed; opacity: 0.15;">
+
+                            {{-- Exemption Policy Header --}}
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-success bg-opacity-10 rounded-circle p-2 me-2 d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                                    <i data-feather="gift" class="text-success" style="width: 16px; height: 16px;"></i>
+                                </div>
+                                <h6 class="fw-bold mb-0 text-dark">Exemption Policy Details</h6>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold text-dark">Exemption Rule Type <span class="text-danger">*</span></label>
+                                <select class="form-select form-select-md rounded-3" name="exemption_type" id="exemption_type" required>
+                                    <option value="fixed" {{ ($policy->exemption_type === 'fixed') ? 'selected' : '' }}>Fixed Amount / Ratio</option>
+                                    <option value="exempt_allowance" {{ ($policy->exemption_type === 'exempt_allowance') ? 'selected' : '' }}>Exempt Allowances</option>
+                                </select>
+                            </div>
+
+                            {{-- Exemption Mode: Fixed Inputs --}}
+                            <div class="row mb-3 g-3" id="fixedExemptionSection">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold text-dark">Salary Ratio limit</label>
+                                    <input type="text" class="form-control form-control-md rounded-3" 
+                                           name="salary_ratio" id="salary_ratio" 
+                                           value="{{ $policy->salary_ratio }}" placeholder="e.g. 1/3, 2/3">
+                                    <div class="form-text small text-muted">Use standard fractional input formats like 1/3.</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold text-dark">Fixed Exempt Amount</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light text-muted border-end-0 fw-bold">৳</span>
+                                        <input type="number" step="0.01" class="form-control form-control-md border-start-0" 
+                                               name="fixed_amount" id="fixed_amount" 
+                                               value="{{ $policy->fixed_amount }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Exemption Mode: Exempt Allowances Dynamic Selector --}}
+                            <div class="mb-3" id="exemptAllowancesSection" style="display: none;">
+                                <label class="form-label fw-semibold text-dark">Add Exempt Allowance</label>
+                                <div class="input-group mb-3 shadow-sm rounded-3 overflow-hidden">
+                                    <select class="form-select border-end-0" id="allowanceDropdown">
+                                        <option value="">Select an allowance...</option>
+                                        @foreach($allowanceMapping as $dbField => $displayName)
+                                            <option value="{{ $dbField }}">{{ $displayName }}</option>
+                                        @endforeach
+                                    </select>
+                                    <button class="btn btn-primary px-3 fw-bold" type="button" id="addAllowanceBtn">
+                                        <i data-feather="plus" class="me-1" style="width: 16px; height: 16px;"></i> Add
+                                    </button>
+                                </div>
+                                
+                                <div id="allowanceListContainer" class="d-flex flex-wrap gap-2 border p-3 rounded-4" style="min-height: 80px; background-color: #fafbfc;">
+                                    {{-- Rendered badges --}}
+                                    @if($policy->exemption_type === 'exempt_allowance' && is_array($policy->exempt_allowances))
+                                        @foreach($policy->exempt_allowances as $allowance)
+                                            @if(isset($allowanceMapping[$allowance]))
+                                                <span class="badge bg-primary text-white d-flex align-items-center gap-2 px-3 py-2 rounded-pill shadow-sm allowance-badge" data-value="{{ $allowance }}">
+                                                    {{ $allowanceMapping[$allowance] }}
+                                                    <span class="remove-allowance-badge text-white font-bold" data-value="{{ $allowance }}" style="cursor: pointer; font-size: 16px; line-height: 1;">&times;</span>
+                                                    <input type="hidden" name="exempt_allowances[]" value="{{ $allowance }}">
+                                                </span>
+                                            @endif
+                                        @endforeach
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- RIGHT COLUMN: Tax Slabs Management --}}
+                <div class="col-lg-6">
+                    <div class="card shadow border-0 rounded-4 h-100 overflow-hidden">
+                        <div class="card-header bg-white py-3 border-bottom border-light d-flex justify-content-between align-items-center">
+                            <h5 class="fw-bold mb-0 text-dark d-flex align-items-center">
+                                <i data-feather="layers" class="me-2 text-primary" style="width: 18px; height: 18px;"></i>
+                                Tax Slabs Configuration
+                            </h5>
+                            <button type="button" class="btn btn-primary btn-sm rounded-pill shadow-sm px-3" id="addSlabBtn">
+                                <i data-feather="plus" class="me-1" style="width: 14px; height: 14px;"></i> Add Slab
+                            </button>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="table-responsive">
+                                <table class="table align-middle" id="slabsTable">
+                                    <thead>
+                                        <tr class="text-muted small uppercase">
+                                            <th>Taxable Slab Limit (৳) <span class="text-danger">*</span></th>
+                                            <th style="width: 110px;">Tax Rate (%) <span class="text-danger">*</span></th>
+                                            <th>Calculated Max Tax (৳)</th>
+                                            <th style="width: 50px;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="slabsContainer">
+                                        @if($policy->slabs->isNotEmpty())
+                                            @foreach($policy->slabs as $index => $slab)
+                                                <tr class="slab-row">
+                                                    <td>
+                                                        <input type="number" step="0.01" name="slabs[{{ $index }}][taxable_amount]" 
+                                                               class="form-control form-control-md slab-taxable-amount rounded-3" value="{{ $slab->taxable_amount }}" required>
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" step="0.01" name="slabs[{{ $index }}][tax_percentage]" 
+                                                               class="form-control form-control-md slab-tax-percentage rounded-3" value="{{ $slab->tax_percentage }}" required>
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" step="0.01" name="slabs[{{ $index }}][tax_amount]" 
+                                                               class="form-control form-control-md slab-tax-amount text-muted bg-light border-0 rounded-3" value="{{ $slab->tax_amount }}" readonly required>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <button type="button" class="btn btn-link text-danger p-0 delete-slab-row shadow-none">
+                                                            <i data-feather="trash-2" style="width: 18px; height: 18px;"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Submit Action --}}
+            <div class="d-flex justify-content-end mt-4">
+                <button type="submit" class="btn btn-lg btn-primary rounded-pill px-5 fw-bold shadow" id="submitBtn">
+                    <i data-feather="check-circle" class="me-1"></i> Save Configuration
+                </button>
+            </div>
+        </form>
     </div>
 @endsection
 
 @push('scripts')
     <script>
         $(function() {
-            // Select2 Init
+            // Select2 initialization
             $('.select2').select2({
                 theme: 'bootstrap-5',
                 allowClear: true,
                 width: '100%'
             });
 
-            // AJAX loader helper for organization units
+            // Cascading units AJAX loading
             function ajaxLoad(url, $select, placeholder, selectedValue = null){
                 if (!$select.length) return Promise.resolve();
                 return $.get(url).then(function(data){
@@ -251,17 +269,14 @@
                 loadBranches(company);
             });
 
-            @if($isEdit)
-                const editData = {
-                    company: "{{ $policy->company_id ?? '' }}",
-                    branch: "{{ $policy->branch_id ?? '' }}"
-                };
-                if(editData.company) {
-                    loadBranches(editData.company, editData.branch);
-                }
-            @endif
+            // If editing preloaded scopes
+            const initialCompany = "{{ $policy->company_id ?? '' }}";
+            const initialBranch = "{{ $policy->branch_id ?? '' }}";
+            if (initialCompany) {
+                loadBranches(initialCompany, initialBranch);
+            }
 
-            // Toggle Exemption Type
+            // Exemption Policy interactive toggle
             const exemptionType = $('#exemption_type');
             const fixedSection = $('#fixedExemptionSection');
             const allowancesSection = $('#exemptAllowancesSection');
@@ -290,21 +305,21 @@
 
                 if (!val) return;
 
-                // Check if already added
+                // Check if already in the list
                 if ($(`#allowanceListContainer .allowance-badge[data-value="${val}"]`).length > 0) {
                     Swal.fire({
                         icon: 'warning',
-                        title: 'Already Added',
-                        text: 'This allowance is already in the exempt list.'
+                        title: 'Allowance Added',
+                        text: 'This allowance is already in the list of exempt items.'
                     });
                     return;
                 }
 
-                // Add Badge
+                // Append Badge
                 const html = `
-                    <span class="badge bg-primary text-white d-flex align-items-center gap-1 p-2 allowance-badge animate__animated animate__fadeIn" data-value="${val}">
+                    <span class="badge bg-primary text-white d-flex align-items-center gap-2 px-3 py-2 rounded-pill shadow-sm allowance-badge animate__animated animate__fadeIn" data-value="${val}">
                         ${text}
-                        <span class="remove-allowance-badge text-white ms-1" data-value="${val}" style="cursor: pointer; font-size: 14px; font-weight: bold;">&times;</span>
+                        <span class="remove-allowance-badge text-white" data-value="${val}" style="cursor: pointer; font-size: 16px; line-height: 1;">&times;</span>
                         <input type="hidden" name="exempt_allowances[]" value="${val}">
                     </span>
                 `;
@@ -312,15 +327,15 @@
                 dropdown.val('').trigger('change');
             });
 
-            // Remove Allowance Badge
+            // Remove Badge
             $(document).on('click', '.remove-allowance-badge', function() {
                 $(this).closest('.allowance-badge').remove();
             });
 
-            // Slab row index generator
-            let slabIndex = {{ $isEdit ? $policy->slabs->count() : 0 }};
+            // Slabs dynamically generated rows indices
+            let slabIndex = {{ $policy->slabs->count() }};
 
-            // Calculate slab tax amount
+            // Max Tax calculation per slab row
             function calculateSlabTax($row) {
                 const amount = parseFloat($row.find('.slab-taxable-amount').val() || 0);
                 const pct = parseFloat($row.find('.slab-tax-percentage').val() || 0);
@@ -328,32 +343,30 @@
                 $row.find('.slab-tax-amount').val(tax.toFixed(2));
             }
 
-            // Dynamic calculation listeners
             $(document).on('input change', '.slab-taxable-amount, .slab-tax-percentage', function() {
-                const row = $(this).closest('.slab-row');
-                calculateSlabTax(row);
+                calculateSlabTax($(this).closest('.slab-row'));
             });
 
-            // Add Slab row
+            // Add new Slab row
             $('#addSlabBtn').on('click', function(e) {
                 e.preventDefault();
                 const html = `
                     <tr class="slab-row animate__animated animate__fadeIn">
                         <td>
                             <input type="number" step="0.01" name="slabs[${slabIndex}][taxable_amount]" 
-                                   class="form-control form-control-sm slab-taxable-amount" value="0.00" required>
+                                   class="form-control form-control-md slab-taxable-amount rounded-3" value="0.00" required>
                         </td>
                         <td>
                             <input type="number" step="0.01" name="slabs[${slabIndex}][tax_percentage]" 
-                                   class="form-control form-control-sm slab-tax-percentage" value="0.00" required>
+                                   class="form-control form-control-md slab-tax-percentage rounded-3" value="0.00" required>
                         </td>
                         <td>
                             <input type="number" step="0.01" name="slabs[${slabIndex}][tax_amount]" 
-                                   class="form-control form-control-sm slab-tax-amount text-muted bg-light" value="0.00" readonly required>
+                                   class="form-control form-control-md slab-tax-amount text-muted bg-light border-0 rounded-3" value="0.00" readonly required>
                         </td>
                         <td class="text-center">
-                            <button type="button" class="btn btn-link text-danger p-0 delete-slab-row">
-                                <i data-feather="trash-2" style="width: 16px;"></i>
+                            <button type="button" class="btn btn-link text-danger p-0 delete-slab-row shadow-none">
+                                <i data-feather="trash-2" style="width: 18px; height: 18px;"></i>
                             </button>
                         </td>
                     </tr>
@@ -368,18 +381,18 @@
                 $(this).closest('.slab-row').remove();
             });
 
-            // Axios Form Submission
+            // Axios configuration save
             $('#taxPolicyForm').on('submit', function(e) {
                 e.preventDefault();
                 const form = this;
                 const submitBtn = $('#submitBtn');
 
-                // Validation checks
+                // Client-side validations
                 if ($('#exemption_type').val() === 'exempt_allowance' && $('#allowanceListContainer .allowance-badge').length === 0) {
                     Swal.fire({
                         icon: 'warning',
                         title: 'Select Allowances',
-                        text: 'Exempt Allowances type requires at least one allowance added to the list.'
+                        text: 'Please select and add at least one allowance for exempt rules.'
                     });
                     return;
                 }
@@ -387,8 +400,8 @@
                 if ($('#slabsContainer .slab-row').length === 0) {
                     Swal.fire({
                         icon: 'warning',
-                        title: 'Add Slabs',
-                        text: 'Please configure at least one tax slab.'
+                        title: 'Configure Slabs',
+                        text: 'Please define at least one tax slab bracket.'
                     });
                     return;
                 }
@@ -405,7 +418,7 @@
                         if (res.success) {
                             Swal.fire({
                                 icon: 'success',
-                                title: 'Success',
+                                title: 'Saved!',
                                 text: res.message,
                                 timer: 2000,
                                 showConfirmButton: false
@@ -415,18 +428,16 @@
                         }
                     })
                     .catch(error => {
-                        submitBtn.prop('disabled', false).html('<i data-feather="check-circle" class="me-1"></i> Save Tax Policy');
+                        submitBtn.prop('disabled', false).html('<i data-feather="check-circle" class="me-1"></i> Save Configuration');
                         if (typeof feather !== 'undefined') feather.replace();
 
                         if (error.response && error.response.status === 422) {
                             const errors = error.response.data.errors;
                             if (errors) {
                                 Object.keys(errors).forEach(key => {
-                                    // Handle array-based validation keys (like slabs.0.taxable_amount)
-                                    const cleanKey = key.replace(/\./g, '_');
                                     let input = form.querySelector(`[name="${key}"]`);
                                     
-                                    // If not found directly, try select2 or other formats
+                                    // Slabs array based elements validation keys mapping
                                     if (!input && key.includes('.')) {
                                         const parts = key.split('.');
                                         const arrayName = parts[0];
@@ -450,7 +461,7 @@
                                 });
                             }
                         } else {
-                            const msg = error.response?.data?.message || 'Something went wrong!';
+                            const msg = error.response?.data?.message || 'Failed to save configuration settings.';
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Operation Failed',

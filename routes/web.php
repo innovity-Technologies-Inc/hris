@@ -1303,16 +1303,8 @@ Route::prefix('tax-policy')->name('tax-policy.')->controller(\App\Http\Controlle
     Route::middleware('permission:tax-policy.view')->group(function () {
         Route::get('/', 'index')->name('index');
     });
-    Route::middleware('permission:tax-policy.create')->group(function () {
-        Route::get('create', 'create')->name('create');
-        Route::post('store', 'store')->name('store');
-    });
     Route::middleware('permission:tax-policy.edit')->group(function () {
-        Route::get('{id}/edit', 'edit')->name('edit');
         Route::put('{id}', 'update')->name('update');
-    });
-    Route::middleware('permission:tax-policy.delete')->group(function () {
-        Route::delete('{id}', 'destroy')->name('destroy');
     });
 });
 
