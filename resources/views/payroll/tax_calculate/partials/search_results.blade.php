@@ -20,7 +20,9 @@
                         <th scope="col">Taxable Income</th>
                         <th scope="col">Slab Details (JSON)</th>
                         <th scope="col" class="text-center">Slabs Reached</th>
-                        <th scope="col">Total Tax Amount</th>
+                        <th scope="col">Total Tax</th>
+                        <th scope="col">Tax Payable (Annual)</th>
+                        <th scope="col" class="text-success fw-bold">Tax Per Month</th>
                         <th scope="col">Calculation Date</th>
                     </tr>
                 </thead>
@@ -74,7 +76,7 @@
                                         @endforeach
                                     </div>
                                 @else
-                                    <span class="text-muted small">No tax applied (Below Threshold)</span>
+                                    <span class="text-muted small">No tax applied</span>
                                 @endif
                             </td>
                             <td class="text-center">
@@ -83,12 +85,19 @@
                                 </span>
                             </td>
                             <td>
-                                <div class="fw-bold text-success fs-6">
+                                <div class="text-dark small">
                                     {{ $currency }}{{ number_format($calculation->total_tax_amount, 2) }}
                                 </div>
-                                @if($calculation->total_tax_amount > 0)
-                                    <small class="text-muted">Monthly: {{ $currency }}{{ number_format($calculation->total_tax_amount / 12, 2) }}</small>
-                                @endif
+                            </td>
+                            <td>
+                                <div class="fw-semibold text-dark">
+                                    {{ $currency }}{{ number_format($calculation->tax_payable, 2) }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="fw-bold text-success fs-6">
+                                    {{ $currency }}{{ number_format($calculation->tax_per_month, 2) }}
+                                </div>
                             </td>
                             <td>
                                 <span class="small text-muted">{{ $calculation->updated_at->format('d M Y, h:i A') }}</span>

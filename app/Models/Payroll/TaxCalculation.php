@@ -22,6 +22,8 @@ class TaxCalculation extends Model
         'slab_taxes',
         'slabs_reached',
         'total_tax_amount',
+        'tax_payable',
+        'tax_per_month',
     ];
 
     protected $casts = [
@@ -30,6 +32,8 @@ class TaxCalculation extends Model
         'exemption_amount' => 'decimal:2',
         'taxable_amount' => 'decimal:2',
         'total_tax_amount' => 'decimal:2',
+        'tax_payable' => 'decimal:2',
+        'tax_per_month' => 'decimal:2',
         'slabs_reached' => 'integer',
     ];
 

@@ -18,6 +18,8 @@ class TaxPolicy extends Model
         'salary_ratio',
         'fixed_amount',
         'exempt_allowances',
+        'min_negotiable_tax_limit',
+        'tax_payable_percentage',
     ];
 
     protected $casts = [
@@ -26,6 +28,8 @@ class TaxPolicy extends Model
         'zero_tax_female' => 'decimal:2',
         'min_tax_amount' => 'decimal:2',
         'fixed_amount' => 'decimal:2',
+        'min_negotiable_tax_limit' => 'decimal:2',
+        'tax_payable_percentage' => 'decimal:2',
     ];
 
     public function slabs()

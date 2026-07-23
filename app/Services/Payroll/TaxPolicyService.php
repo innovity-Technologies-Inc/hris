@@ -36,6 +36,8 @@ class TaxPolicyService
                     'salary_ratio' => $data['salary_ratio'],
                     'fixed_amount' => $data['fixed_amount'],
                     'exempt_allowances' => $data['exempt_allowances'] ?? [],
+                    'min_negotiable_tax_limit' => $data['min_negotiable_tax_limit'],
+                    'tax_payable_percentage' => $data['tax_payable_percentage'],
                 ]
             );
 

@@ -66,6 +66,8 @@ class TaxCalculateService
                             'slab_taxes' => $result['slab_taxes'],
                             'slabs_reached' => $result['slabs_reached'],
                             'total_tax_amount' => $result['total_tax_amount'],
+                            'tax_payable' => $result['tax_payable'],
+                            'tax_per_month' => $result['tax_per_month'],
                         ]
                     );
                 }
@@ -105,6 +107,8 @@ class TaxCalculateService
                 'slab_taxes' => [],
                 'slabs_reached' => 0,
                 'total_tax_amount' => 0.00,
+                'tax_payable' => 0.00,
+                'tax_per_month' => 0.00,
             ];
         }
 
@@ -198,6 +202,18 @@ class TaxCalculateService
             }
         }
 
+        // Calculate Tax Payable based on Minimum Negotiable Tax Limit and Tax Payable Percentage
+        $minNegotiableTax = (double) $policy->min_negotiable_tax_limit;
+        $taxPayablePct = (double) $policy->tax_payable_percentage;
+
+        if ($totalTax > $minNegotiableTax) {
+            $taxPayable = $totalTax * ($taxPayablePct / 100);
+        } else {
+            $taxPayable = $totalTax;
+        }
+
+        $taxPerMonth = $taxPayable / 12;
+
         return [
             'gross_salary' => $annualGross,
             'exemption_amount' => $exemptionAmount,
@@ -205,6 +221,8 @@ class TaxCalculateService
             'slab_taxes' => $slabTaxes,
             'slabs_reached' => $slabsReached,
             'total_tax_amount' => $totalTax,
+            'tax_payable' => $taxPayable,
+            'tax_per_month' => $taxPerMonth,
         ];
     }
 }

@@ -2,18 +2,18 @@
 
 ## 2026-07-23 (Tax Calculate Module Creation)
 
-**Goal**: Implement the new Tax Calculate module with search filters, batch calculations, progressive tax slab algorithms, system settings currency, background Jobs, and Axios endpoints.
+**Goal**: Implement the new Tax Calculate module with search filters, batch calculations, progressive tax slab algorithms, system settings currency, background Jobs, negotiable tax payable limit reductions, monthly tax divisions, and Axios endpoints.
 
 **Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest tests/Feature/Payroll/TaxCalculateTest.php`
 
 **Results**:
-- Created `tax_calculations` migration and `TaxCalculation` model.
-- Created `TaxCalculateService` carrying FlexSearch keyword filters and batch progressive tax algorithms.
+- Created `tax_calculations` migration and `TaxCalculation` model with `tax_payable` and `tax_per_month` columns.
+- Created `TaxCalculateService` carrying FlexSearch keyword filters, batch progressive tax, and negotiable payable/monthly calculations.
 - Created background `ProcessTaxCalculationJob`.
 - Created `TaxCalculateController` dishing JSON actions via Axios.
-- Built Index and Search Results tables.
+- Built Index and Search Results tables displaying tax payable and tax per month.
 - Wrote feature test suite validating index render, queue dispatching, and detailed progressive tax math.
-- Tests passed: 3/3 passed (10 assertions) ✅
+- Tests passed: 3/3 passed (11 assertions) ✅
 
 **Status**: ✅ SUCCESS
 

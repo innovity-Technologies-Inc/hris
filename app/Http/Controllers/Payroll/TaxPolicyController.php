@@ -54,6 +54,8 @@ class TaxPolicyController extends Controller
                 'exemption_type' => 'fixed',
                 'salary_ratio' => '1/3',
                 'fixed_amount' => 120000.00,
+                'min_negotiable_tax_limit' => 50000.00,
+                'tax_payable_percentage' => 80.00,
             ]);
             
             // Create default slabs

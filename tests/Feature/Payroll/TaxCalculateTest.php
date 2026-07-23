@@ -42,7 +42,7 @@ test('tax calculation endpoint dispatches ProcessTaxCalculationJob successfully'
     Queue::assertPushed(ProcessTaxCalculationJob::class);
 });
 
-test('tax calculation logic evaluates progressive math correctly', function () {
+test('tax calculation logic evaluates progressive math and payable negotiable tax correctly', function () {
     // 1. Setup a Tax Policy
     $policy = TaxPolicy::create([
         'zero_tax_male' => 350000.00,
@@ -51,6 +51,8 @@ test('tax calculation logic evaluates progressive math correctly', function () {
         'exemption_type' => 'fixed',
         'salary_ratio' => '1/3',
         'fixed_amount' => 120000.00,
+        'min_negotiable_tax_limit' => 50000.00,
+        'tax_payable_percentage' => 80.00,
     ]);
 
     // Setup slabs:
@@ -85,10 +87,18 @@ test('tax calculation logic evaluates progressive math correctly', function () {
     $service = new TaxCalculateService();
     $result = $service->calculateTaxForEmployee($employee, $policy);
 
+    // Calculated:
+    // Total Tax: 56,000.00
+    // Since 56,000.00 > 50,000.00 (min negotiable limit),
+    // Tax Payable: 56,000.00 * 80% = 44,800.00
+    // Tax per month: 44,800.00 / 12 = 3,733.33
+
     expect($result)->not->toBeNull();
     expect($result['gross_salary'])->toEqual(960000.00);
     expect($result['exemption_amount'])->toEqual(120000.00);
     expect($result['taxable_amount'])->toEqual(840000.00);
     expect($result['total_tax_amount'])->toEqual(56000.00);
+    expect($result['tax_payable'])->toEqual(44800.00);
+    expect(round($result['tax_per_month'], 2))->toEqual(3733.33);
     expect($result['slabs_reached'])->toBe(4);
 });

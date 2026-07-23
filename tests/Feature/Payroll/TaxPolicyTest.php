@@ -28,6 +28,8 @@ test('tax policy single-page configuration update works correctly via Axios', fu
         'zero_tax_male' => 360000.00,
         'zero_tax_female' => 410000.00,
         'min_tax_amount' => 6000.00,
+        'min_negotiable_tax_limit' => 50000.00,
+        'tax_payable_percentage' => 80.00,
         'exemption_type' => 'exempt_allowance',
         'exempt_allowances' => ['house_allowance', 'medical_allowance'],
         'slabs' => [
@@ -52,6 +54,8 @@ test('tax policy single-page configuration update works correctly via Axios', fu
 
     $policy->refresh();
     expect($policy->zero_tax_male)->toEqual(360000.00);
+    expect($policy->min_negotiable_tax_limit)->toEqual(50000.00);
+    expect($policy->tax_payable_percentage)->toEqual(80.00);
     expect($policy->exemption_type)->toBe('exempt_allowance');
     expect($policy->exempt_allowances)->toBe(['house_allowance', 'medical_allowance']);
     expect($policy->slabs->count())->toBe(2);

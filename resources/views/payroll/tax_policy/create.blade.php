@@ -70,6 +70,30 @@
                                 <div class="form-text small text-muted">Minimum tax liability if taxable income exceeds limit.</div>
                             </div>
 
+                            {{-- Negotiable Tax Settings --}}
+                            <div class="row mb-4 g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold text-dark">Min Negotiable Tax Limit <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light text-muted border-end-0 fw-bold">{{ $currency }}</span>
+                                        <input type="number" step="0.01" class="form-control form-control-md border-start-0" 
+                                               name="min_negotiable_tax_limit" id="min_negotiable_tax_limit" 
+                                               value="{{ $policy->min_negotiable_tax_limit }}" required>
+                                    </div>
+                                    <div class="form-text small text-muted">Minimum threshold to apply reduction.</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold text-dark">Tax Payable Percentage (%) <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light text-muted border-end-0 fw-bold">%</span>
+                                        <input type="number" step="0.01" class="form-control form-control-md border-start-0" 
+                                               name="tax_payable_percentage" id="tax_payable_percentage" 
+                                               value="{{ $policy->tax_payable_percentage }}" required>
+                                    </div>
+                                    <div class="form-text small text-muted">Percentage of tax to actually pay.</div>
+                                </div>
+                            </div>
+
                             <hr class="my-4" style="border-style: dashed; opacity: 0.15;">
 
                             {{-- Exemption Policy Header --}}
