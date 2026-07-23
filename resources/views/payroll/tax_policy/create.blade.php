@@ -32,28 +32,6 @@
                             </h5>
                         </div>
                         <div class="card-body p-4">
-                            {{-- Company & Branch Scoping --}}
-                            <div class="row mb-4 g-3">
-                                <div class="col-md-6">
-                                    <label class="form-label fw-semibold text-muted small uppercase tracking-wider mb-2">Company Scope</label>
-                                    <select class="select2 rounded-3" name="company_id" id="company_id">
-                                        <option value="">Global (All Companies)</option>
-                                        @foreach($companies as $company)
-                                            <option value="{{ $company->id }}" {{ ($policy->company_id == $company->id) ? 'selected' : '' }}>
-                                                {{ $company->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label fw-semibold text-muted small uppercase tracking-wider mb-2">Branch Scope</label>
-                                    <select class="select2 rounded-3" name="branch_id" id="branch_id">
-                                        <option value="">All Branches</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <hr class="my-4" style="border-style: dashed; opacity: 0.15;">
 
                             {{-- Zero Tax Return Limits --}}
                             <div class="row mb-4 g-3">
@@ -239,42 +217,7 @@
             });
 
             // Cascading units AJAX loading
-            function ajaxLoad(url, $select, placeholder, selectedValue = null){
-                if (!$select.length) return Promise.resolve();
-                return $.get(url).then(function(data){
-                    $select.html(`<option value="">${placeholder}</option>`);
-                    data.forEach(item=>{
-                        $select.append(
-                            `<option value="${item.id}">${item.name ?? item.department_name ?? item.full_name}</option>`
-                        );
-                    });
-                    if(selectedValue){
-                        $select.val(selectedValue).trigger('change');
-                    }
-                }).catch(function(){
-                    $select.html('<option value="">Error loading data</option>');
-                });
-            }
 
-            function loadBranches(companyId, selected=null){
-                if(!companyId) {
-                    $('#branch_id').html('<option value="">All Branches</option>').trigger('change');
-                    return Promise.resolve();
-                }
-                return ajaxLoad(`/get-units/${companyId}`, $('#branch_id'), 'All Branches', selected);
-            }
-
-            $('#company_id').on('change', function() {
-                let company = $(this).val();
-                loadBranches(company);
-            });
-
-            // If editing preloaded scopes
-            const initialCompany = "{{ $policy->company_id ?? '' }}";
-            const initialBranch = "{{ $policy->branch_id ?? '' }}";
-            if (initialCompany) {
-                loadBranches(initialCompany, initialBranch);
-            }
 
             // Exemption Policy interactive toggle
             const exemptionType = $('#exemption_type');

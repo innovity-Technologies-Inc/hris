@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Payroll;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Payroll\StoreTaxPolicyRequest;
 use App\Models\Payroll\TaxPolicy;
-use App\Models\Company\Company;
 use App\Services\Payroll\TaxPolicyService;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
@@ -67,10 +66,9 @@ class TaxPolicyController extends Controller
             $policy->load('slabs');
         }
 
-        $companies = Company::all();
         $allowanceMapping = $this->getAllowanceMapping();
 
-        return view('payroll.tax_policy.create', compact('title', 'section', 'sub_section', 'policy', 'companies', 'allowanceMapping'));
+        return view('payroll.tax_policy.create', compact('title', 'section', 'sub_section', 'policy', 'allowanceMapping'));
     }
 
     /**

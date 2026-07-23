@@ -14,9 +14,6 @@ class StoreTaxPolicyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company_id' => 'nullable|exists:companies,id',
-            'branch_id' => 'nullable|exists:company_locations,id',
-            
             'zero_tax_male' => 'required|numeric|min:0',
             'zero_tax_female' => 'required|numeric|min:0',
             'min_tax_amount' => 'required|numeric|min:0',

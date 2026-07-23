@@ -3,20 +3,14 @@
 namespace App\Models\Payroll;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\OrganizationScoped;
 use App\Traits\Userstamps;
 use App\Traits\Auditable;
 
 class TaxPolicy extends Model
 {
     use Userstamps, Auditable;
-    use OrganizationScoped;
-
-    public $allowNullableOrgScope = true;
 
     protected $fillable = [
-        'company_id',
-        'branch_id',
         'zero_tax_male',
         'zero_tax_female',
         'min_tax_amount',

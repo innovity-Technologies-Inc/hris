@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Company\Company;
 use App\Models\Payroll\TaxPolicy;
 use App\Models\User;
 use Spatie\Permission\Models\Permission;
@@ -15,8 +14,6 @@ test('tax policy single-page configuration update works correctly via Axios', fu
     $user = User::factory()->create();
     $user->givePermissionTo(['tax-policy.view', 'tax-policy.edit']);
 
-    $company = Company::factory()->create(['name' => 'Tax Policy Test Company']);
-
     // 1. Get configuration page (Index triggers auto-creation of default policy)
     $response = $this->actingAs($user)->get(route('tax-policy.index'));
     $response->assertStatus(200);
@@ -27,8 +24,6 @@ test('tax policy single-page configuration update works correctly via Axios', fu
 
     // 2. Update Tax Policy (Exemption type: exempt_allowance) via PUT request
     $response = $this->actingAs($user)->putJson(route('tax-policy.update', $policy->id), [
-        'company_id' => $company->id,
-        'branch_id' => null,
         'zero_tax_male' => 360000.00,
         'zero_tax_female' => 410000.00,
         'min_tax_amount' => 6000.00,

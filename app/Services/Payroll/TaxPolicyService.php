@@ -29,8 +29,6 @@ class TaxPolicyService
             $taxPolicy = TaxPolicy::updateOrCreate(
                 ['id' => $id],
                 [
-                    'company_id' => $data['company_id'] ?? null,
-                    'branch_id' => $data['branch_id'] ?? null,
                     'zero_tax_male' => $data['zero_tax_male'],
                     'zero_tax_female' => $data['zero_tax_female'],
                     'min_tax_amount' => $data['min_tax_amount'],
