@@ -1308,6 +1308,15 @@ Route::prefix('tax-policy')->name('tax-policy.')->controller(\App\Http\Controlle
     });
 });
 
+Route::prefix('tax-calculate')->name('tax-calculate.')->controller(\App\Http\Controllers\Payroll\TaxCalculateController::class)->middleware('auth')->group(function () {
+    Route::middleware('permission:tax-policy.view')->group(function () {
+        Route::get('/', 'index')->name('index');
+    });
+    Route::middleware('permission:tax-policy.edit')->group(function () {
+        Route::post('calculate', 'calculate')->name('calculate');
+    });
+});
+
 Route::prefix('disbursement')->name('disbursement.')->controller(\App\Http\Controllers\Payroll\DisbursementController::class)->middleware('auth')->group(function () {
     Route::middleware('permission:disbursement.view')->group(function () {
         Route::get('/', 'index')->name('index');
