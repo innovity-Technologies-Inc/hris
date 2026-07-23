@@ -2,18 +2,19 @@
 
 ## 2026-07-23 (Tax Policy Configuration Module Creation)
 
-**Goal**: Implement the new Tax Policy and Tax Slabs module as a single configuration settings page, with dynamic formula calculations and Axios form submissions.
+**Goal**: Implement the new Tax Policy and Tax Slabs module as a single configuration settings page, with dynamic min/max amount ranges (where the last slab's max amount can be null), system currency settings integration, and Axios form submissions.
 
 **Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest tests/Feature/Payroll/TaxPolicyTest.php`
 
 **Results**:
-- Created `tax_policies` and `tax_slabs` migrations.
+- Created `tax_policies` and `tax_slabs` migrations with `min_amount` and `max_amount` columns.
 - Created `TaxPolicy` and `TaxSlab` models.
 - Created `StoreTaxPolicyRequest` and `TaxPolicyService` for business validation and database operations.
 - Created `TaxPolicyController` utilizing `ApiResponse` trait for JSON responses.
 - Implemented Side-by-Side Tax Policy & Slabs Blade forms.
+- Configured dynamic currency loaders utilizing `\App\HelperClass::getCurrency()`.
 - Created feature test suite validating CRUD and calculations.
-- Tests passed: 1/1 passed (17 assertions) ✅
+- Tests passed: 1/1 passed (11 assertions) ✅
 
 **Status**: ✅ SUCCESS
 

@@ -58,9 +58,9 @@ class TaxPolicyController extends Controller
             
             // Create default slabs
             $policy->slabs()->createMany([
-                ['taxable_amount' => 300000.00, 'tax_percentage' => 0.00, 'tax_amount' => 0.00],
-                ['taxable_amount' => 100000.00, 'tax_percentage' => 5.00, 'tax_amount' => 5000.00],
-                ['taxable_amount' => 300000.00, 'tax_percentage' => 10.00, 'tax_amount' => 30000.00],
+                ['min_amount' => 0.00, 'max_amount' => 350000.00, 'tax_percentage' => 0.00, 'tax_amount' => 0.00],
+                ['min_amount' => 350000.00, 'max_amount' => 450000.00, 'tax_percentage' => 5.00, 'tax_amount' => 5000.00],
+                ['min_amount' => 450000.00, 'max_amount' => null, 'tax_percentage' => 10.00, 'tax_amount' => 0.00],
             ]);
             
             $policy->load('slabs');

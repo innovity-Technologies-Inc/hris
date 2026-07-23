@@ -3,6 +3,7 @@
 @section('content')
     @php
         $isEdit = isset($policy);
+        $currency = \App\HelperClass::getCurrency() ?? '৳';
     @endphp
 
     <div class="py-4" style="max-width: 1200px; margin: 0 auto;">
@@ -13,7 +14,7 @@
             </div>
             <div>
                 <h3 class="fs-4 fw-bold text-dark mb-1">Tax & Exemption Policy</h3>
-                <p class="text-muted mb-0 small">Configure zero-tax income thresholds, exemption policies, and taxable slab percentages.</p>
+                <p class="text-muted mb-0 small">Configure zero-tax income thresholds, exemption policies, and taxable slab ranges.</p>
             </div>
         </div>
 
@@ -38,7 +39,7 @@
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold text-dark">Zero Tax Limit (Male) <span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <span class="input-group-text bg-light text-muted border-end-0 fw-bold">৳</span>
+                                        <span class="input-group-text bg-light text-muted border-end-0 fw-bold">{{ $currency }}</span>
                                         <input type="number" step="0.01" class="form-control form-control-md border-start-0" 
                                                name="zero_tax_male" id="zero_tax_male" 
                                                value="{{ $policy->zero_tax_male }}" required>
@@ -48,7 +49,7 @@
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold text-dark">Zero Tax Limit (Female) <span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <span class="input-group-text bg-light text-muted border-end-0 fw-bold">৳</span>
+                                        <span class="input-group-text bg-light text-muted border-end-0 fw-bold">{{ $currency }}</span>
                                         <input type="number" step="0.01" class="form-control form-control-md border-start-0" 
                                                name="zero_tax_female" id="zero_tax_female" 
                                                value="{{ $policy->zero_tax_female }}" required>
@@ -61,7 +62,7 @@
                             <div class="mb-4">
                                 <label class="form-label fw-semibold text-dark">Minimum Tax Amount <span class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    <span class="input-group-text bg-light text-muted border-end-0 fw-bold">৳</span>
+                                    <span class="input-group-text bg-light text-muted border-end-0 fw-bold">{{ $currency }}</span>
                                     <input type="number" step="0.01" class="form-control form-control-md border-start-0" 
                                            name="min_tax_amount" id="min_tax_amount" 
                                            value="{{ $policy->min_tax_amount }}" required>
@@ -99,7 +100,7 @@
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold text-dark">Fixed Exempt Amount</label>
                                     <div class="input-group">
-                                        <span class="input-group-text bg-light text-muted border-end-0 fw-bold">৳</span>
+                                        <span class="input-group-text bg-light text-muted border-end-0 fw-bold">{{ $currency }}</span>
                                         <input type="number" step="0.01" class="form-control form-control-md border-start-0" 
                                                name="fixed_amount" id="fixed_amount" 
                                                value="{{ $policy->fixed_amount }}">
@@ -111,7 +112,7 @@
                             <div class="mb-3" id="exemptAllowancesSection" style="display: none;">
                                 <label class="form-label fw-semibold text-dark">Add Exempt Allowance</label>
                                 <div class="input-group mb-3 shadow-sm rounded-3 overflow-hidden">
-                                    <select class="form-select border-end-0" id="allowanceDropdown">
+                                    <select class="form-select border-end-0 select2" id="allowanceDropdown">
                                         <option value="">Select an allowance...</option>
                                         @foreach($allowanceMapping as $dbField => $displayName)
                                             <option value="{{ $dbField }}">{{ $displayName }}</option>
@@ -158,9 +159,10 @@
                                 <table class="table align-middle" id="slabsTable">
                                     <thead>
                                         <tr class="text-muted small uppercase">
-                                            <th>Taxable Slab Limit (৳) <span class="text-danger">*</span></th>
-                                            <th style="width: 110px;">Tax Rate (%) <span class="text-danger">*</span></th>
-                                            <th>Calculated Max Tax (৳)</th>
+                                            <th>Min Amount ({{ $currency }}) <span class="text-danger">*</span></th>
+                                            <th>Max Amount ({{ $currency }})</th>
+                                            <th style="width: 100px;">Tax (%) <span class="text-danger">*</span></th>
+                                            <th>Calculated Tax ({{ $currency }})</th>
                                             <th style="width: 50px;"></th>
                                         </tr>
                                     </thead>
@@ -169,8 +171,12 @@
                                             @foreach($policy->slabs as $index => $slab)
                                                 <tr class="slab-row">
                                                     <td>
-                                                        <input type="number" step="0.01" name="slabs[{{ $index }}][taxable_amount]" 
-                                                               class="form-control form-control-md slab-taxable-amount rounded-3" value="{{ $slab->taxable_amount }}" required>
+                                                        <input type="number" step="0.01" name="slabs[{{ $index }}][min_amount]" 
+                                                               class="form-control form-control-md slab-min-amount rounded-3" value="{{ $slab->min_amount }}" required>
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" step="0.01" name="slabs[{{ $index }}][max_amount]" 
+                                                               class="form-control form-control-md slab-max-amount rounded-3" value="{{ $slab->max_amount }}" placeholder="Unlimited">
                                                     </td>
                                                     <td>
                                                         <input type="number" step="0.01" name="slabs[{{ $index }}][tax_percentage]" 
@@ -215,9 +221,6 @@
                 allowClear: true,
                 width: '100%'
             });
-
-            // Cascading units AJAX loading
-
 
             // Exemption Policy interactive toggle
             const exemptionType = $('#exemption_type');
@@ -280,13 +283,22 @@
 
             // Max Tax calculation per slab row
             function calculateSlabTax($row) {
-                const amount = parseFloat($row.find('.slab-taxable-amount').val() || 0);
+                const minVal = parseFloat($row.find('.slab-min-amount').val() || 0);
+                const maxValRaw = $row.find('.slab-max-amount').val();
                 const pct = parseFloat($row.find('.slab-tax-percentage').val() || 0);
-                const tax = (amount * pct) / 100;
-                $row.find('.slab-tax-amount').val(tax.toFixed(2));
+                
+                if (maxValRaw === '' || maxValRaw === null || maxValRaw === undefined) {
+                    // Open-ended slab
+                    $row.find('.slab-tax-amount').val('0.00');
+                } else {
+                    const maxVal = parseFloat(maxValRaw);
+                    const range = Math.max(0, maxVal - minVal);
+                    const tax = (range * pct) / 100;
+                    $row.find('.slab-tax-amount').val(tax.toFixed(2));
+                }
             }
 
-            $(document).on('input change', '.slab-taxable-amount, .slab-tax-percentage', function() {
+            $(document).on('input change', '.slab-min-amount, .slab-max-amount, .slab-tax-percentage', function() {
                 calculateSlabTax($(this).closest('.slab-row'));
             });
 
@@ -296,8 +308,12 @@
                 const html = `
                     <tr class="slab-row animate__animated animate__fadeIn">
                         <td>
-                            <input type="number" step="0.01" name="slabs[${slabIndex}][taxable_amount]" 
-                                   class="form-control form-control-md slab-taxable-amount rounded-3" value="0.00" required>
+                            <input type="number" step="0.01" name="slabs[${slabIndex}][min_amount]" 
+                                   class="form-control form-control-md slab-min-amount rounded-3" value="0.00" required>
+                        </td>
+                        <td>
+                            <input type="number" step="0.01" name="slabs[${slabIndex}][max_amount]" 
+                                   class="form-control form-control-md slab-max-amount rounded-3" value="" placeholder="Unlimited">
                         </td>
                         <td>
                             <input type="number" step="0.01" name="slabs[${slabIndex}][tax_percentage]" 

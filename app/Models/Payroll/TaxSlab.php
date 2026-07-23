@@ -12,13 +12,15 @@ class TaxSlab extends Model
 
     protected $fillable = [
         'tax_policy_id',
-        'taxable_amount',
+        'min_amount',
+        'max_amount',
         'tax_percentage',
         'tax_amount',
     ];
 
     protected $casts = [
-        'taxable_amount' => 'decimal:2',
+        'min_amount' => 'decimal:2',
+        'max_amount' => 'decimal:2',
         'tax_percentage' => 'decimal:2',
         'tax_amount' => 'decimal:2',
     ];
