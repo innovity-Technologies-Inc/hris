@@ -92,8 +92,9 @@ class TaxCalculateService
             return null;
         }
 
+        $totalTaxMonth = (int) ($policy->total_tax_month ?? 12);
         $monthlyGross = (double) $salaryBreakdown->gross_salary;
-        $annualGross = $monthlyGross * 12;
+        $annualGross = $monthlyGross * $totalTaxMonth;
 
         // Based on the gender, check if they have more income than the zero tax limit
         $gender = strtolower($employee->gender ?? 'male');
@@ -212,7 +213,7 @@ class TaxCalculateService
             $taxPayable = $totalTax;
         }
 
-        $taxPerMonth = $taxPayable / 12;
+        $taxPerMonth = $taxPayable / $totalTaxMonth;
 
         return [
             'gross_salary' => $annualGross,

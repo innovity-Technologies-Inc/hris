@@ -1056,7 +1056,10 @@ class PayrollServices
                 $previousDues = \App\Models\Payroll\PreviousDue::where('employee_id', $employee->id)->where('status', 'pending')->get();
                 $previousDueAmount = $previousDues->sum('amount');
 
-                $salary_amount = $calculatedGrossSalary + $offDayWorkSalary + $overTimeSalary + $arrears->sum('amount') - $deductionData['total'] - $penalties->sum('penalty_amount') - $advances->sum('amount') - $previousDueAmount;
+                $taxCalculation = \App\Models\Payroll\TaxCalculation::where('employee_id', $employee->id)->first();
+                $taxDeduction = $taxCalculation ? (double) $taxCalculation->tax_per_month : 0.00;
+
+                $salary_amount = $calculatedGrossSalary + $offDayWorkSalary + $overTimeSalary + $arrears->sum('amount') - $deductionData['total'] - $taxDeduction - $penalties->sum('penalty_amount') - $advances->sum('amount') - $previousDueAmount;
                 
                 $newDueAmount = 0;
                 if ($salary_amount < 0) {
@@ -1079,7 +1082,7 @@ class PayrollServices
                     'overtime_amount' => $overTimeSalary,
                     'offday_work_count' => $employeeAttendance->where('shift_type', 'paid-off')->count(),
                     'offday_work_salary' => $offDayWorkSalary,
-                    'deduction_amount' => $deductionData['total'],
+                    'deduction_amount' => $deductionData['total'] + $taxDeduction,
                     'late_deduction_amount' => $deductionData['late_deduction_amount'],
                     'excessive_late_deduction_amount' => $deductionData['excessive_late_deduction_amount'],
                     'absent_deduction_amount' => $deductionData['absent_deduction_amount'],

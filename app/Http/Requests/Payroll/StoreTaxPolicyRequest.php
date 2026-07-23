@@ -19,6 +19,7 @@ class StoreTaxPolicyRequest extends FormRequest
             'min_tax_amount' => 'required|numeric|min:0',
             'min_negotiable_tax_limit' => 'required|numeric|min:0',
             'tax_payable_percentage' => 'required|numeric|min:0|max:100',
+            'total_tax_month' => 'required|integer|min:1|max:24',
             
             'exemption_type' => 'required|in:fixed,exempt_allowance',
             'salary_ratio' => 'required_if:exemption_type,fixed|nullable|string',

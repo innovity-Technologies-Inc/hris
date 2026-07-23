@@ -56,6 +56,7 @@ class TaxPolicyController extends Controller
                 'fixed_amount' => 120000.00,
                 'min_negotiable_tax_limit' => 50000.00,
                 'tax_payable_percentage' => 80.00,
+                'total_tax_month' => 12,
             ]);
             
             // Create default slabs

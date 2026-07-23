@@ -6,7 +6,7 @@
         $currency = \App\HelperClass::getCurrency() ?? '৳';
     @endphp
 
-    <div class="py-4" style="max-width: 1200px; margin: 0 auto;">
+    <div class="py-4 w-100">
         <!-- Header Block -->
         <div class="d-flex align-items-center mb-4 p-3 bg-white rounded-4 shadow-sm border">
             <div class="bg-primary bg-opacity-10 rounded-circle p-3 me-3 d-inline-flex align-items-center justify-content-center" style="width: 56px; height: 56px;">
@@ -24,7 +24,7 @@
 
             <div class="row g-4">
                 {{-- LEFT COLUMN: Tax Policy & Exemption Rules --}}
-                <div class="col-lg-6">
+                <div class="col-6">
                     <div class="card shadow border-0 rounded-4 h-100 overflow-hidden">
                         <div class="card-header bg-white py-3 border-bottom border-light">
                             <h5 class="fw-bold mb-0 text-dark d-flex align-items-center">
@@ -92,6 +92,18 @@
                                     </div>
                                     <div class="form-text small text-muted">Percentage of tax to actually pay.</div>
                                 </div>
+                            </div>
+
+                            {{-- Tax Month Setting --}}
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold text-dark">Total Tax Months <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-muted border-end-0 fw-bold"><i data-feather="calendar" style="width: 16px; height: 16px;"></i></span>
+                                    <input type="number" class="form-control form-control-md border-start-0" 
+                                           name="total_tax_month" id="total_tax_month" 
+                                           value="{{ $policy->total_tax_month ?? 12 }}" required>
+                                </div>
+                                <div class="form-text small text-muted">Specify the total tax months (Note: the tax month will be including the bonus).</div>
                             </div>
 
                             <hr class="my-4" style="border-style: dashed; opacity: 0.15;">
@@ -167,7 +179,7 @@
                 </div>
 
                 {{-- RIGHT COLUMN: Tax Slabs Management --}}
-                <div class="col-lg-6">
+                <div class="col-6">
                     <div class="card shadow border-0 rounded-4 h-100 overflow-hidden">
                         <div class="card-header bg-white py-3 border-bottom border-light d-flex justify-content-between align-items-center">
                             <h5 class="fw-bold mb-0 text-dark d-flex align-items-center">

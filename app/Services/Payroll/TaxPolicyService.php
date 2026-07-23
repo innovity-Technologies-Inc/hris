@@ -38,6 +38,7 @@ class TaxPolicyService
                     'exempt_allowances' => $data['exempt_allowances'] ?? [],
                     'min_negotiable_tax_limit' => $data['min_negotiable_tax_limit'],
                     'tax_payable_percentage' => $data['tax_payable_percentage'],
+                    'total_tax_month' => $data['total_tax_month'],
                 ]
             );
 

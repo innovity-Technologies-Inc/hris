@@ -20,6 +20,7 @@ class TaxPolicy extends Model
         'exempt_allowances',
         'min_negotiable_tax_limit',
         'tax_payable_percentage',
+        'total_tax_month',
     ];
 
     protected $casts = [
@@ -30,6 +31,7 @@ class TaxPolicy extends Model
         'fixed_amount' => 'decimal:2',
         'min_negotiable_tax_limit' => 'decimal:2',
         'tax_payable_percentage' => 'decimal:2',
+        'total_tax_month' => 'integer',
     ];
 
     public function slabs()
