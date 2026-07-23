@@ -30,6 +30,6 @@ class TaxPolicy extends Model
 
     public function slabs()
     {
-        return $this->hasMany(TaxSlab::class, 'tax_policy_id')->orderBy('min_amount', 'asc');
+        return $this->hasMany(TaxSlab::class, 'tax_policy_id')->orderBy('id', 'asc');
     }
 }

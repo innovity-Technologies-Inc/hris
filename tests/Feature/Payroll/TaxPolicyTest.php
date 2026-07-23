@@ -23,7 +23,7 @@ test('tax policy single-page configuration update works correctly via Axios', fu
     expect($policy->zero_tax_male)->toEqual(350000.00);
 
     // 2. Update Tax Policy (Exemption type: exempt_allowance) via PUT request
-    // Tests having min_amount, max_amount and max_amount = null for last slab.
+    // Tests having taxable_amount and taxable_amount = null for last slab.
     $response = $this->actingAs($user)->putJson(route('tax-policy.update', $policy->id), [
         'zero_tax_male' => 360000.00,
         'zero_tax_female' => 410000.00,
@@ -32,14 +32,12 @@ test('tax policy single-page configuration update works correctly via Axios', fu
         'exempt_allowances' => ['house_allowance', 'medical_allowance'],
         'slabs' => [
             [
-                'min_amount' => 0.00,
-                'max_amount' => 150000.00,
+                'taxable_amount' => 150000.00,
                 'tax_percentage' => 6.00,
                 'tax_amount' => 9000.00,
             ],
             [
-                'min_amount' => 150000.00,
-                'max_amount' => null, // Last slab max amount can be null
+                'taxable_amount' => null, // Last slab taxable amount can be null
                 'tax_percentage' => 10.00,
                 'tax_amount' => 0.00,
             ]
@@ -59,6 +57,5 @@ test('tax policy single-page configuration update works correctly via Axios', fu
     expect($policy->slabs->count())->toBe(2);
     
     $lastSlab = $policy->slabs->last();
-    expect($lastSlab->min_amount)->toEqual(150000.00);
-    expect($lastSlab->max_amount)->toBeNull();
+    expect($lastSlab->taxable_amount)->toBeNull();
 });

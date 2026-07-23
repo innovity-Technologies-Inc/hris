@@ -26,8 +26,7 @@ class StoreTaxPolicyRequest extends FormRequest
             'exempt_allowances.*' => 'required|string',
             
             'slabs' => 'nullable|array',
-            'slabs.*.min_amount' => 'required|numeric|min:0',
-            'slabs.*.max_amount' => 'nullable|numeric|min:0',
+            'slabs.*.taxable_amount' => 'nullable|numeric|min:0',
             'slabs.*.tax_percentage' => 'required|numeric|min:0|max:100',
             'slabs.*.tax_amount' => 'required|numeric|min:0',
         ];

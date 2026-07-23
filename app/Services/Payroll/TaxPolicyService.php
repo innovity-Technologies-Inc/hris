@@ -45,8 +45,7 @@ class TaxPolicyService
             if (!empty($data['slabs'])) {
                 foreach ($data['slabs'] as $slab) {
                     $taxPolicy->slabs()->create([
-                        'min_amount' => $slab['min_amount'],
-                        'max_amount' => $slab['max_amount'] ?? null,
+                        'taxable_amount' => $slab['taxable_amount'] ?? null,
                         'tax_percentage' => $slab['tax_percentage'],
                         'tax_amount' => $slab['tax_amount'],
                     ]);

@@ -14,7 +14,7 @@
             </div>
             <div>
                 <h3 class="fs-4 fw-bold text-dark mb-1">Tax & Exemption Policy</h3>
-                <p class="text-muted mb-0 small">Configure zero-tax income thresholds, exemption policies, and taxable slab ranges.</p>
+                <p class="text-muted mb-0 small">Configure zero-tax income thresholds, exemption policies, and taxable slab percentages.</p>
             </div>
         </div>
 
@@ -159,9 +159,8 @@
                                 <table class="table align-middle" id="slabsTable">
                                     <thead>
                                         <tr class="text-muted small uppercase">
-                                            <th>Min Amount ({{ $currency }}) <span class="text-danger">*</span></th>
-                                            <th>Max Amount ({{ $currency }})</th>
-                                            <th style="width: 100px;">Tax (%) <span class="text-danger">*</span></th>
+                                            <th>Taxable Amount ({{ $currency }})</th>
+                                            <th style="width: 120px;">Tax (%) <span class="text-danger">*</span></th>
                                             <th>Calculated Tax ({{ $currency }})</th>
                                             <th style="width: 50px;"></th>
                                         </tr>
@@ -171,12 +170,8 @@
                                             @foreach($policy->slabs as $index => $slab)
                                                 <tr class="slab-row">
                                                     <td>
-                                                        <input type="number" step="0.01" name="slabs[{{ $index }}][min_amount]" 
-                                                               class="form-control form-control-md slab-min-amount rounded-3" value="{{ $slab->min_amount }}" required>
-                                                    </td>
-                                                    <td>
-                                                        <input type="number" step="0.01" name="slabs[{{ $index }}][max_amount]" 
-                                                               class="form-control form-control-md slab-max-amount rounded-3" value="{{ $slab->max_amount }}" placeholder="Unlimited">
+                                                        <input type="number" step="0.01" name="slabs[{{ $index }}][taxable_amount]" 
+                                                               class="form-control form-control-md slab-taxable-amount rounded-3" value="{{ $slab->taxable_amount }}" placeholder="Unlimited">
                                                     </td>
                                                     <td>
                                                         <input type="number" step="0.01" name="slabs[{{ $index }}][tax_percentage]" 
@@ -283,22 +278,20 @@
 
             // Max Tax calculation per slab row
             function calculateSlabTax($row) {
-                const minVal = parseFloat($row.find('.slab-min-amount').val() || 0);
-                const maxValRaw = $row.find('.slab-max-amount').val();
+                const taxableValRaw = $row.find('.slab-taxable-amount').val();
                 const pct = parseFloat($row.find('.slab-tax-percentage').val() || 0);
                 
-                if (maxValRaw === '' || maxValRaw === null || maxValRaw === undefined) {
+                if (taxableValRaw === '' || taxableValRaw === null || taxableValRaw === undefined) {
                     // Open-ended slab
                     $row.find('.slab-tax-amount').val('0.00');
                 } else {
-                    const maxVal = parseFloat(maxValRaw);
-                    const range = Math.max(0, maxVal - minVal);
-                    const tax = (range * pct) / 100;
+                    const taxableVal = parseFloat(taxableValRaw);
+                    const tax = (taxableVal * pct) / 100;
                     $row.find('.slab-tax-amount').val(tax.toFixed(2));
                 }
             }
 
-            $(document).on('input change', '.slab-min-amount, .slab-max-amount, .slab-tax-percentage', function() {
+            $(document).on('input change', '.slab-taxable-amount, .slab-tax-percentage', function() {
                 calculateSlabTax($(this).closest('.slab-row'));
             });
 
@@ -308,12 +301,8 @@
                 const html = `
                     <tr class="slab-row animate__animated animate__fadeIn">
                         <td>
-                            <input type="number" step="0.01" name="slabs[${slabIndex}][min_amount]" 
-                                   class="form-control form-control-md slab-min-amount rounded-3" value="0.00" required>
-                        </td>
-                        <td>
-                            <input type="number" step="0.01" name="slabs[${slabIndex}][max_amount]" 
-                                   class="form-control form-control-md slab-max-amount rounded-3" value="" placeholder="Unlimited">
+                            <input type="number" step="0.01" name="slabs[${slabIndex}][taxable_amount]" 
+                                   class="form-control form-control-md slab-taxable-amount rounded-3" value="" placeholder="Unlimited">
                         </td>
                         <td>
                             <input type="number" step="0.01" name="slabs[${slabIndex}][tax_percentage]" 
