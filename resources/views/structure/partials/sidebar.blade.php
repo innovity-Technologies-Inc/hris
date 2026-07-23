@@ -121,7 +121,7 @@
                     $payrollOpen = request()->is('promotion*') || request()->is('demotion*') || request()->is('increment*') || request()->is('decrement*') || request()->is('bonus*')
                     || request()->is('advance-salary*') || request()->is('arrear*') || request()->is('salary*');
 
-                    $showFinanceTitle = $showMovementMenu || $showClaimExpenseMenu || $showPayrollMenu;
+                    $showFinanceTitle = $showMovementMenu || $showClaimExpenseMenu || $showPayrollMenu || auth()->user()->can('tax-policy.view');
 
                     // Company Setup / Setup, Structure, Settings
                     $canGroups = auth()->user()->can('groups.view');
@@ -713,6 +713,29 @@
                                     href='{{ route('claim_expenses.index') }}'>Logs</a>
                             </li>
                             @endif
+                        </ul>
+                    </div>
+                </li>
+                @endif
+
+                @php
+                    $canTaxPolicyView = auth()->user()->can('tax-policy.view');
+                    $taxConfigOpen = request()->is('tax-policy*');
+                @endphp
+                @if($canTaxPolicyView)
+                <li>
+                    <a href="#taxConfig" data-bs-toggle="collapse" aria-expanded="{{ $taxConfigOpen ? 'true' : 'false' }}"
+                        class="@if ($taxConfigOpen) menuitem-active @endif">
+                        <i data-feather="settings"></i>
+                        <span> Tax Configuration </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse @if ($taxConfigOpen) show @endif" id="taxConfig">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link @if (Route::is('tax-policy.index') || Route::is('tax-policy.create') || Route::is('tax-policy.edit')) menuitem-active @endif'
+                                    href='{{ route('tax-policy.index') }}'>Tax Policy</a>
+                            </li>
                         </ul>
                     </div>
                 </li>
