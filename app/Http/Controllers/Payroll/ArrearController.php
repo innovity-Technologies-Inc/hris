@@ -15,6 +15,8 @@ use App\Exports\Payroll\ArrearDetailExport;
 use Maatwebsite\Excel\Facades\Excel;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 
+use App\Http\Requests\Payroll\StoreArrearRequest;
+
 class ArrearController extends Controller
 {
     protected $payrollService;
@@ -54,43 +56,15 @@ class ArrearController extends Controller
         }
     }
 
-    public function save(Request $request, $id = null)
+    public function save(StoreArrearRequest $request, $id = null)
     {
-        Log::info('Processing Arrear request.', [
+        Log::info('Processing Arrear request via StoreArrearRequest.', [
             'process_id' => $id,
             'input' => $request->all()
         ]);
 
-        $rules = [
-            'company_id' => 'required|exists:companies,id',
-            'branch_id' => 'nullable|exists:company_locations,id',
-            'division_id' => 'nullable|exists:divisions,id',
-            'department_id' => 'nullable|exists:departments,id',
-            'section_id' => 'nullable|exists:sections,id',
-            'pay_group_id' => 'required|exists:pay_groups,id',
-            'employee_id' => 'nullable|exists:employees,id',
-            'type' => 'required|in:Salary Adjustment,Overtime,Off Day Work,Bonus & Reward,others',
-            'payment_month' => 'required',
-            'amount_type' => 'required|in:fixed,percentage',
-            'amount_value' => 'required|numeric|min:0.01',
-            'percentage_base' => 'required_if:amount_type,percentage|in:basic_salary,gross_salary',
-            'reason' => 'nullable|string',
-        ];
-
-        // Dynamic validation based on Pay Group frequency
-        $payGroup = PayGroup::find($request->pay_group_id);
-        if ($payGroup) {
-            $frequency = strtolower($payGroup->payroll_frequency);
-            if ($frequency === 'monthly') {
-                $rules['salary_month'] = 'required';
-            } else {
-                $rules['start_date'] = 'required|date';
-                $rules['end_date'] = 'required|date|after_or_equal:start_date';
-            }
-        }
-
         try {
-            $validated = $request->validate($rules);
+            $validated = $request->validated();
             $process = $this->payrollService->arrearProcess($validated, $id);
             if (!$id && $process) {
                 $process->startWorkflow('arrear');
@@ -101,8 +75,6 @@ class ArrearController extends Controller
                 'alert-type' => 'success',
                 'message' => 'Arrear processed successfully!'
             ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return redirect()->back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
             Log::error('Critical error in Arrear processing.', [
                 'message' => $e->getMessage()

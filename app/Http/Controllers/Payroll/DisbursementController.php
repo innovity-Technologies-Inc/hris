@@ -9,6 +9,8 @@ use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
+use App\Http\Requests\Payroll\StoreDisbursementRequest;
+
 class DisbursementController extends Controller
 {
     protected $disbursementService;
@@ -87,18 +89,11 @@ class DisbursementController extends Controller
         }
     }
 
-    public function store(Request $request)
+    public function store(StoreDisbursementRequest $request)
     {
-        $request->validate([
-            'process_id' => 'required|exists:payroll_process,id',
-            'record_ids' => 'required|array|min:1',
-            'payment_method' => 'required|string|max:255',
-            'note' => 'nullable|string',
-            'attachments.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png,zip|max:5120', // 5MB max
-        ]);
-
         try {
-            $disbursement = $this->disbursementService->processDisbursement($request->all());
+            $validated = $request->validated();
+            $disbursement = $this->disbursementService->processDisbursement($validated);
             
             return response()->json([
                 'success' => true,

@@ -1,5 +1,20 @@
 # Test Log
 
+## 2026-07-22 (Payroll Controllers Refactoring)
+
+**Goal**: Refactor fat payroll controllers into thin controllers using dedicated Laravel FormRequest classes, separating validation rules from controller logic.
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest`
+
+**Results**:
+- Created custom FormRequest classes: `StoreAdvanceSalaryRequest`, `StoreArrearRequest`, `StoreSalaryRequest`, `StoreBonusRequest`, `StoreDisbursementRequest`, `IncrementRequest`, and `PromotionRequest` under `App\Http\Requests\Payroll`.
+- Refactored `AdvanceSalaryController`, `ArrearController`, `SalaryController`, `BonusController`, `DisbursementController`, `IncrementController`, and `PromotionController` to utilize the new FormRequest classes.
+- Removed inline validations and type hinted the custom request classes in `save`/`store` methods.
+- Verified that all business logic and tests remain fully functional and correct.
+- Tests passed: 226/226 passed (895 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-22 (Salary Process Approval Workflow Integration)
 
 **Goal**: Remove static status-update routes and update the workflow history variables for the Salary Process module under the central approval engine.

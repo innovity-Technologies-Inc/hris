@@ -15,6 +15,8 @@ use App\Exports\Payroll\AdvanceSalaryProcessExport;
 use App\Exports\Payroll\AdvanceSalaryDetailExport;
 use Maatwebsite\Excel\Facades\Excel;
 
+use App\Http\Requests\Payroll\StoreAdvanceSalaryRequest;
+
 class AdvanceSalaryController extends Controller
 {
     protected $payrollService;
@@ -54,44 +56,15 @@ class AdvanceSalaryController extends Controller
         }
     }
 
-    public function save(Request $request, $id = null)
+    public function save(StoreAdvanceSalaryRequest $request, $id = null)
     {
-        Log::info('Processing Advance Salary request.', [
+        Log::info('Processing Advance Salary request via StoreAdvanceSalaryRequest.', [
             'process_id' => $id,
             'input' => $request->all()
         ]);
 
-        $rules = [
-            'company_id' => 'required|exists:companies,id',
-            'branch_id' => 'nullable|exists:company_locations,id',
-            'division_id' => 'nullable|exists:divisions,id',
-            'department_id' => 'nullable|exists:departments,id',
-            'section_id' => 'nullable|exists:sections,id',
-            'pay_group_id' => 'required|exists:pay_groups,id',
-            'employee_id' => 'nullable|exists:employees,id',
-            'deduction_month' => 'required',
-            'amount_type' => 'required|in:fixed,percentage',
-            'amount_value' => 'required|numeric|min:0.01',
-            'percentage_base' => 'required_if:amount_type,percentage|in:basic_salary,gross_salary',
-            'reason' => 'nullable|string',
-        ];
-
-        // Dynamic validation based on Pay Group frequency
-        $payGroup = PayGroup::find($request->pay_group_id);
-        if ($payGroup) {
-            $frequency = strtolower($payGroup->payroll_frequency);
-            Log::info('Determined Pay Group frequency for Advance.', ['frequency' => $frequency]);
-            
-            if ($frequency === 'monthly') {
-                $rules['salary_month'] = 'required';
-            } else {
-                $rules['start_date'] = 'required|date';
-                $rules['end_date'] = 'required|date|after_or_equal:start_date';
-            }
-        }
-
         try {
-            $validated = $request->validate($rules);
+            $validated = $request->validated();
             Log::info('Advance Salary validation successful.', ['validated_data' => $validated]);
             
             $process = $this->payrollService->advanceProcess($validated, $id);
@@ -104,9 +77,6 @@ class AdvanceSalaryController extends Controller
                 'alert-type' => 'success',
                 'message' => 'Advance Salary processed successfully!'
             ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            Log::warning('Advance Salary validation failed.', ['errors' => $e->errors()]);
-            throw $e;
         } catch (\Exception $e) {
             Log::error('Critical error in Advance Salary processing.', [
                 'message' => $e->getMessage(),

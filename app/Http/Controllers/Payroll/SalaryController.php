@@ -19,6 +19,8 @@ use App\Exports\Payroll\SalaryProcessExport;
 use App\Exports\Payroll\SalaryDetailExport;
 use Maatwebsite\Excel\Facades\Excel;
 
+use App\Http\Requests\Payroll\StoreSalaryRequest;
+
 class SalaryController extends Controller
 {
     protected $payrollService;
@@ -139,7 +141,7 @@ class SalaryController extends Controller
             'section_url', 'salaryData', 'employees', 'sub_section', 'companies', 'payGroups'));
     }
 
-    public function save(Request $request, $id=null){
+    public function save(StoreSalaryRequest $request, $id=null){
         Log::info('Salary generation started.', [
             'id' => $id,
             'request_data' => $request->all()

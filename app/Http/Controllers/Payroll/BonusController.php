@@ -16,6 +16,8 @@ use App\Exports\Payroll\BonusProcessExport;
 use App\Exports\Payroll\BonusDetailExport;
 use Maatwebsite\Excel\Facades\Excel;
 
+use App\Http\Requests\Payroll\StoreBonusRequest;
+
 class BonusController extends Controller
 {
     protected $payrollService;
@@ -68,7 +70,7 @@ class BonusController extends Controller
             'section_url', 'bonusData', 'employees', 'sub_section', 'bonusPlans', 'companies', 'payGroups'));
     }
 
-    public function save(Request $request, $id=null){
+    public function save(StoreBonusRequest $request, $id=null){
         $data = $this->payrollService->payrollProcessDataValidation($request, $flag='bonus');
         try{
             if ($id == null) {
