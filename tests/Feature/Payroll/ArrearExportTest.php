@@ -127,7 +127,10 @@ test('it exports and prints arrear process lists and batch details', function ()
         'reason' => 'Previous balance correction'
     ]);
 
-    $response->assertRedirect(route('arrear.index'));
+    $response->assertJson([
+        'success' => true,
+        'redirect_url' => route('arrear.index')
+    ]);
 
     $process = PayrollProcess::latest()->first();
     expect($process)->not->toBeNull();

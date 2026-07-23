@@ -73,9 +73,10 @@ class AdvanceSalaryController extends Controller
             }
             
             Log::info('Advance Salary processing completed successfully.', ['process_id' => $id]);
-            return redirect()->route('advance-salary.index')->with([
-                'alert-type' => 'success',
-                'message' => 'Advance Salary processed successfully!'
+            return response()->json([
+                'success' => true,
+                'message' => 'Advance Salary processed successfully!',
+                'redirect_url' => route('advance-salary.index')
             ]);
         } catch (\Exception $e) {
             Log::error('Critical error in Advance Salary processing.', [
@@ -84,10 +85,10 @@ class AdvanceSalaryController extends Controller
                 'line' => $e->getLine(),
                 'trace' => $e->getTraceAsString()
             ]);
-            return redirect()->back()->with([
-                'alert-type' => 'error',
+            return response()->json([
+                'success' => false,
                 'message' => 'Processing failed: ' . $e->getMessage()
-            ]);
+            ], 400);
         }
     }
 

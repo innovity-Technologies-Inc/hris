@@ -82,14 +82,15 @@ class BonusController extends Controller
             }
         }catch (\Exception $exception){
             Log::error($exception->getMessage());
-            return redirect()->back()->with([
-                'alert-type' => 'error',
-                'message' => $exception->getMessage() == 'Eligible Employees not found.'?  $exception->getMessage() : 'Something went wrong! '
-            ]);
+            return response()->json([
+                'success' => false,
+                'message' => $exception->getMessage() == 'Eligible Employees not found.' ? $exception->getMessage() : 'Something went wrong!'
+            ], 400);
         }
-        return redirect()->route('bonus.index')->with([
-            'alert-type' => 'success',
-            'message' => 'Bonus Processed successfully! Wait for approval.'
+        return response()->json([
+            'success' => true,
+            'message' => 'Bonus Processed successfully! Wait for approval.',
+            'redirect_url' => route('bonus.index')
         ]);
     }
 

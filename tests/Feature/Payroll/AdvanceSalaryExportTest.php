@@ -126,7 +126,10 @@ test('it exports and prints advance salary process lists and batch details', fun
         'reason' => 'Festival preparation'
     ]);
 
-    $response->assertRedirect(route('advance-salary.index'));
+    $response->assertJson([
+        'success' => true,
+        'redirect_url' => route('advance-salary.index')
+    ]);
 
     $process = PayrollProcess::latest()->first();
     expect($process)->not->toBeNull();

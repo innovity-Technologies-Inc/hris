@@ -122,7 +122,10 @@ test('it exports and prints salary process lists and batch details', function ()
         'salary_month' => '2026-07'
     ]);
 
-    $response->assertRedirect(route('salary.index'));
+    $response->assertJson([
+        'success' => true,
+        'redirect_url' => route('salary.index')
+    ]);
 
     $process = PayrollProcess::latest()->first();
     expect($process)->not->toBeNull();

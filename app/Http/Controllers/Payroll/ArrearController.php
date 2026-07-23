@@ -71,18 +71,19 @@ class ArrearController extends Controller
             }
             
             Log::info('Arrear processing completed successfully.', ['process_id' => $id]);
-            return redirect()->route('arrear.index')->with([
-                'alert-type' => 'success',
-                'message' => 'Arrear processed successfully!'
+            return response()->json([
+                'success' => true,
+                'message' => 'Arrear processed successfully!',
+                'redirect_url' => route('arrear.index')
             ]);
         } catch (\Exception $e) {
             Log::error('Critical error in Arrear processing.', [
                 'message' => $e->getMessage()
             ]);
-            return redirect()->back()->with([
-                'alert-type' => 'error',
+            return response()->json([
+                'success' => false,
                 'message' => 'Processing failed: ' . $e->getMessage()
-            ]);
+            ], 400);
         }
     }
 

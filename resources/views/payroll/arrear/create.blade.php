@@ -329,14 +329,16 @@
             $('#pay_group_id').on('change', handlePayGroupChange);
             handlePayGroupChange();
 
-            @if(!$isEdit)
+            // AXIOS SUBMIT FOR ARREAR FORM
             $('#arrearForm').on('submit', function(e) {
+                e.preventDefault();
+                
                 const $empSelect = $('#employeeSelect');
                 const optionCount = $empSelect.find('option').length;
                 const selectedVal = $empSelect.val();
 
+                @if(!$isEdit)
                 if (!selectedVal && optionCount <= 1) {
-                    e.preventDefault();
                     Swal.fire({
                         icon: 'warning',
                         title: 'No Eligible Employees Found',
@@ -345,8 +347,63 @@
                     });
                     return false;
                 }
+                @endif
+
+                const form = this;
+                const submitBtn = $(form).find('button[type="submit"]');
+                
+                $('.invalid-feedback').remove();
+                $('.is-invalid').removeClass('is-invalid');
+                submitBtn.prop('disabled', true);
+
+                const formData = new FormData(form);
+
+                axios.post(form.action, formData)
+                    .then(response => {
+                        const res = response.data;
+                        if (res.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: res.message,
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then(() => {
+                                window.location.href = res.redirect_url;
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        submitBtn.prop('disabled', false);
+                        if (error.response && error.response.status === 422) {
+                            const errors = error.response.data.errors;
+                            if (errors) {
+                                Object.keys(errors).forEach(key => {
+                                    const input = form.querySelector(`[name="${key}"]`);
+                                    if (input) {
+                                        $(input).addClass('is-invalid');
+                                        const errorDiv = document.createElement('div');
+                                        errorDiv.className = 'invalid-feedback';
+                                        errorDiv.innerText = errors[key][0];
+                                        
+                                        if ($(input).hasClass('select2_list') || $(input).hasClass('select2')) {
+                                            $(input).next('.select2-container').after(errorDiv);
+                                        } else {
+                                            input.after(errorDiv);
+                                        }
+                                    }
+                                });
+                            }
+                        } else {
+                            const msg = error.response?.data?.message || 'Something went wrong!';
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Operation Failed',
+                                text: msg
+                            });
+                        }
+                    });
             });
-            @endif
         });
     </script>
     @endpush

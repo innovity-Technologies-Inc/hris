@@ -138,7 +138,7 @@ test('it processes advance salary using central approval engine sequential workf
     $admin = User::factory()->create(['user_type' => UserType::Company]);
     $admin->givePermissionTo('advance-salary.create');
 
-    $response = $this->actingAs($admin)->post(route('advance-salary.store'), [
+    $response = $this->actingAs($admin)->postJson(route('advance-salary.store'), [
         'company_id' => $this->company->id,
         'branch_id' => null,
         'division_id' => null,
@@ -153,7 +153,10 @@ test('it processes advance salary using central approval engine sequential workf
         'salary_month' => '2026-07'
     ]);
 
-    $response->assertRedirect(route('advance-salary.index'));
+    $response->assertJson([
+        'success' => true,
+        'redirect_url' => route('advance-salary.index')
+    ]);
 
     $process = PayrollProcess::latest()->first();
     expect($process->approval_status)->toBe('pending');

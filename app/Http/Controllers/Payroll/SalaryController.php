@@ -161,15 +161,16 @@ class SalaryController extends Controller
                 'message' => $exception->getMessage(),
                 'trace' => $exception->getTraceAsString()
             ]);
-            return redirect()->back()->with([
-                'alert-type' => 'error',
-                'message' => $exception->getMessage() == 'Eligible Employees not found.'?  $exception->getMessage() : 'Something went wrong! '
-            ]);
+            return response()->json([
+                'success' => false,
+                'message' => $exception->getMessage() == 'Eligible Employees not found.' ? $exception->getMessage() : 'Something went wrong!'
+            ], 400);
         }
         Log::info('Salary generation completed successfully.', ['id' => $id]);
-        return redirect()->route('salary.index')->with([
-            'alert-type' => 'success',
-            'message' => 'Salary Generated successfully! Wait for approval.'
+        return response()->json([
+            'success' => true,
+            'message' => 'Salary Generated successfully! Wait for approval.',
+            'redirect_url' => route('salary.index')
         ]);
     }
 

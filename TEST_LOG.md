@@ -1,5 +1,19 @@
 # Test Log
 
+## 2026-07-22 (Axios & API Payment Controllers Integration)
+
+**Goal**: Convert Salary, Arrear, Advance Salary, and Bonus save operations to be full API and Axios-based with dynamic validation highlights.
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest`
+
+**Results**:
+- Converted `save` endpoints in `SalaryController`, `BonusController`, `ArrearController`, and `AdvanceSalaryController` to return structured JSON responses.
+- Updated create/edit Blade forms to intercept submissions, post via Axios, show sweetalert feedback, and highlight validation errors inline.
+- Updated feature workflow and export tests to assert JSON responses.
+- Tests passed: 226/226 passed (888 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-22 (Payroll Controllers Refactoring)
 
 **Goal**: Refactor fat payroll controllers into thin controllers using dedicated Laravel FormRequest classes, separating validation rules from controller logic.

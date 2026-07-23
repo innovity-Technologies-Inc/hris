@@ -156,7 +156,7 @@ test('it processes bonus using central approval engine sequential workflow', fun
     // Create and store bonus batch
     $admin = User::factory()->create(['user_type' => UserType::Company]);
     $admin->givePermissionTo('bonuses.create');
-    $response = $this->actingAs($admin)->post(route('bonus.store'), [
+    $response = $this->actingAs($admin)->postJson(route('bonus.store'), [
         'company_id' => $this->company->id,
         'branch_id' => null,
         'division_id' => null,
@@ -167,7 +167,10 @@ test('it processes bonus using central approval engine sequential workflow', fun
         'plan_ids' => [$bonusPlan->id]
     ]);
 
-    $response->assertRedirect(route('bonus.index'));
+    $response->assertJson([
+        'success' => true,
+        'redirect_url' => route('bonus.index')
+    ]);
     
     $process = PayrollProcess::latest()->first();
 

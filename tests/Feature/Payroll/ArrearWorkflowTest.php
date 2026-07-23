@@ -138,7 +138,7 @@ test('it processes arrear using central approval engine sequential workflow', fu
     $admin = User::factory()->create(['user_type' => UserType::Company]);
     $admin->givePermissionTo('arrear.create');
 
-    $response = $this->actingAs($admin)->post(route('arrear.store'), [
+    $response = $this->actingAs($admin)->postJson(route('arrear.store'), [
         'company_id' => $this->company->id,
         'branch_id' => null,
         'division_id' => null,
@@ -154,7 +154,10 @@ test('it processes arrear using central approval engine sequential workflow', fu
         'reason' => 'Previous balance correction'
     ]);
 
-    $response->assertRedirect(route('arrear.index'));
+    $response->assertJson([
+        'success' => true,
+        'redirect_url' => route('arrear.index')
+    ]);
 
     $process = PayrollProcess::latest()->first();
     expect($process->approval_status)->toBe('pending');
