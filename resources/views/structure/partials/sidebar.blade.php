@@ -738,7 +738,7 @@
                             </li>
                             <li>
                                 <a class='tp-link @if (Route::is('tax-calculate.index')) menuitem-active @endif'
-                                    href='{{ route('tax-calculate.index') }}'>Tax Calculate</a>
+                                    href='{{ route('tax-calculate.index') }}'>Employee Tax</a>
                             </li>
                         </ul>
                     </div>

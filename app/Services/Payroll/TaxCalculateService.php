@@ -28,6 +28,37 @@ class TaxCalculateService
             });
         }
 
+        // Organizational Search Filters
+        if ($request->filled('company')) {
+            $query->whereHas('employee.officeInfo', function($q) use ($request) {
+                $q->where('current_company_id', $request->input('company'));
+            });
+        }
+
+        if ($request->filled('business_unit')) {
+            $query->whereHas('employee.officeInfo', function($q) use ($request) {
+                $q->where('current_business_unit_id', $request->input('business_unit'));
+            });
+        }
+
+        if ($request->filled('division')) {
+            $query->whereHas('employee.officeInfo', function($q) use ($request) {
+                $q->where('current_division_id', $request->input('division'));
+            });
+        }
+
+        if ($request->filled('department')) {
+            $query->whereHas('employee.officeInfo', function($q) use ($request) {
+                $q->where('current_department_id', $request->input('department'));
+            });
+        }
+
+        if ($request->filled('section')) {
+            $query->whereHas('employee.officeInfo', function($q) use ($request) {
+                $q->where('current_section_id', $request->input('section'));
+            });
+        }
+
         if ($paginate) {
             return $query->paginate(15);
         }
