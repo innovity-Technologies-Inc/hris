@@ -1,5 +1,21 @@
 # Test Log
 
+## 2026-07-25 (Dashboard Stat Card Hover Contrast Fix)
+
+**Goal**: Fix the stat card hover issue on the dashboard where all text turns white but the card background remains white, making all text invisible.
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest`
+
+**Results**:
+- Modified `public/assets/css/style.css`:
+  - Configured a default hover background color (`var(--primary-color)`) for `.stat-card` on hover.
+  - Set the left border of the card to change to white (`#fff`) on hover (and `var(--bs-dashboard-accent)` in dark mode) for clean styling.
+- This restores readability on hover by ensuring white text sits on a dark background.
+- Verified that all unit and feature tests pass.
+- Tests passed: 233/233 passed (922 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-25 (Global Card Border Suppression CSS Fix)
 
 **Goal**: Implement a global styling fix to prevent card header/footer background colors from suppressing/bleeding over the card borders on all screens in the application.

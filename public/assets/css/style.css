@@ -1020,7 +1020,16 @@ html[data-bs-theme='light'] .app-sidebar-menu .logo-lg img.logo-img-dark {
     opacity: 0 !important;
 }
 
-.stat-card:hover { transform: translateY(-3px) !important; box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; }
+.stat-card:hover { 
+    transform: translateY(-3px) !important; 
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; 
+    background-color: var(--primary-color) !important;
+    border-left-color: #fff !important;
+}
+[data-bs-theme=dark] .stat-card:hover { 
+    background-color: var(--primary-color) !important;
+    border-left-color: var(--bs-dashboard-accent) !important;
+}
 .stat-card:hover * { color: #fff !important; }
 
 /* Dynamic Background Colors for Stat Cards */
