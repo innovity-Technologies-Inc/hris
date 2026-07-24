@@ -1,5 +1,19 @@
 # Test Log
 
+## 2026-07-25 (MinIO Bucket Access Policy Update)
+
+**Goal**: Configure MinIO bucket access policy to `download` (read-only) so host browsers can access uploaded logos and favicons anonymously.
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest`
+
+**Results**:
+- Ran `mc anonymous set download local/hrms-dev` and `mc anonymous set download local/hrms-prod` inside the `hrms-minio` container.
+- Cleared and rebuilt Laravel configuration caches using `php artisan optimize && php artisan config:clear`.
+- Verified that all unit and feature tests pass.
+- Tests passed: 233/233 passed (922 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-25 (MinIO Asset Host URL Configuration)
 
 **Goal**: Configure `AWS_URL` to route asset URLs generated inside Docker to a host-resolvable port `9090` instead of the internal container endpoint.
