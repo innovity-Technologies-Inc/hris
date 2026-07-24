@@ -1,5 +1,21 @@
 # Test Log
 
+## 2026-07-25 (General Settings Level 1 and 2 Badge Styling Updates)
+
+**Goal**: Update styling of Level 1 and Level 2 boxes to have no background color (only border) and assign the previous `bg-secondary` color directly to the badges.
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest`
+
+**Results**:
+- Modified `resources/views/setting/general_settings.blade.php`:
+  - Replaced the card styling class `bg-secondary text-white border-0` with `border` on Level 1 and Level 2.
+  - Set the badge background color of Level 1 and Level 2 to `.bg-secondary.text-white` to match the previous card background color.
+  - Styled Level 1 and Level 2 label text color to dynamically inherit the body text color for theme compatibility.
+- Verified that all unit and feature tests pass.
+- Tests passed: 233/233 passed (922 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-25 (General Settings UI Improvements)
 
 **Goal**: Refactor the General Settings page to be full-width, resolve sub-card border suppression, and improve the style and vertical alignment of organizational level cards.

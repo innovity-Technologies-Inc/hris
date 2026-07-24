@@ -274,12 +274,12 @@
                                 <div class="row g-3">
                                     <!-- Level 1: Group -->
                                     <div class="col-md-4">
-                                        <div class="card bg-secondary text-white border-0 h-100">
+                                        <div class="card h-100 border">
                                             <div class="card-body p-3 d-flex align-items-center">
                                                 <div class="d-flex align-items-center w-100">
-                                                    <span class="badge bg-dark text-white me-2">Level 1</span>
+                                                    <span class="badge bg-secondary text-white me-2">Level 1</span>
                                                     <div class="flex-fill d-flex align-items-center">
-                                                        <i class="bi bi-building me-2 fs-5"></i>
+                                                        <i class="bi bi-building me-2 fs-5 text-secondary"></i>
                                                         <span class="fw-bold">Group</span>
                                                     </div>
                                                 </div>
@@ -289,12 +289,12 @@
 
                                     <!-- Level 2: Company -->
                                     <div class="col-md-4">
-                                        <div class="card bg-secondary text-white border-0 h-100">
+                                        <div class="card h-100 border">
                                             <div class="card-body p-3 d-flex align-items-center">
                                                 <div class="d-flex align-items-center w-100">
-                                                    <span class="badge bg-dark text-white me-2">Level 2</span>
+                                                    <span class="badge bg-secondary text-white me-2">Level 2</span>
                                                     <div class="flex-fill d-flex align-items-center">
-                                                        <i class="bi bi-buildings me-2 fs-5"></i>
+                                                        <i class="bi bi-buildings me-2 fs-5 text-secondary"></i>
                                                         <span class="fw-bold">Company</span>
                                                     </div>
                                                 </div>
