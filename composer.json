@@ -22,6 +22,7 @@
         "innovity/laravel-approval-engine": "dev-main",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
+        "league/flysystem-aws-s3-v3": "^3.35",
         "maatwebsite/excel": "^3.1",
         "spatie/browsershot": "^5.2",
         "spatie/laravel-activitylog": "^4.12",

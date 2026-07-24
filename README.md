@@ -162,11 +162,26 @@ php artisan storage:link
 
 ## Running the Application
 
+### Option A: Running Locally (Traditional)
 Once the installation is complete, you can start the development server:
-
 ```bash
 php artisan serve
 ```
+
+### Option B: Running with Docker & MinIO (Recommended)
+This project includes a `docker-compose.yml` file to orchestrate containers for PHP-FPM, Nginx, MySQL, Queue workers, Scheduler, and MinIO storage.
+
+1. **Start the containers**:
+   ```bash
+   docker-compose up -d --build
+   ```
+2. **Access the Application**:
+   * App URL: `http://localhost`
+   * MinIO Console: `http://localhost:9001` (Credentials: `minioadmin` / `minioadmin`)
+3. **Configure MinIO Bucket**:
+   * Open the MinIO Console at `http://localhost:9001`.
+   * Go to **Buckets** -> **Create Bucket** and name it `hrms` (matching `AWS_BUCKET` in your `.env` file).
+   * Go to bucket **Access Policy** and set it to `Public` to allow browser access to assets.
 
 ---
 
