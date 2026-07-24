@@ -1,5 +1,20 @@
 # Test Log
 
+## 2026-07-25 (Docker Database Seeding & Profile Field Configuration Fix)
+
+**Goal**: Populate the empty local database inside Docker with the required seeds (including profile field configurations) to resolve missing UI fields.
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest`
+
+**Results**:
+- Ran `docker exec hrms-app php artisan db:seed` to seed the newly initialized database inside the Docker environment.
+- Verified that `profile_field_configs` table was successfully populated (139 config records added).
+- Cleared and rebuilt configurations.
+- Verified that all unit and feature tests pass.
+- Tests passed: 233/233 passed (922 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-25 (MinIO Bucket Access Policy Update)
 
 **Goal**: Configure MinIO bucket access policy to `download` (read-only) so host browsers can access uploaded logos and favicons anonymously.
