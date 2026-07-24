@@ -1,5 +1,22 @@
 # Test Log
 
+## 2026-07-25 (General Settings UI Improvements)
+
+**Goal**: Refactor the General Settings page to be full-width, resolve sub-card border suppression, and improve the style and vertical alignment of organizational level cards.
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest`
+
+**Results**:
+- Modified `resources/views/setting/general_settings.blade.php`:
+  - Removed fixed `max-width` on the wrapper `div` to make the form full width.
+  - Added `overflow-hidden` to parent cards to clip header backgrounds and prevent them from suppressing the rounded borders of the cards.
+  - Changed badge color of Level 1 and Level 2 to `.bg-dark.text-white` so text is not black in light theme.
+  - Centered contents of Level 1 and Level 2 cards vertically and horizontally using flex utility classes.
+- Verified that all unit and feature tests pass.
+- Tests passed: 233/233 passed (922 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-25 (Local Filesystem Configuration Change)
 
 **Goal**: Configure `FILESYSTEM_DISK` in the environment files to use the local `public` disk instead of MinIO.

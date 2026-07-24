@@ -1,7 +1,7 @@
 @extends('structure.master')
 
 @section('content')
-    <div class="py-4" style="max-width: 1000px; margin: 0 auto;">
+    <div class="py-4 w-100">
         <!-- Main Card -->
         <div class="card shadow-lg border-0 rounded-4">
 
@@ -53,7 +53,7 @@
                         </div>
 
                         <!-- Branding Assets -->
-                        <div class="card border shadow-sm mb-4">
+                        <div class="card border shadow-sm mb-4 overflow-hidden">
                             <div class="card-header bg-light border-bottom py-3">
                                 <div class="d-flex align-items-center">
                                     <i class="bi bi-palette-fill text-info me-2"></i>
@@ -262,7 +262,7 @@
                         </div>
 
                         <!-- Fixed Hierarchy Display -->
-                        <div class="card border shadow-sm mb-4">
+                        <div class="card border shadow-sm mb-4 overflow-hidden">
                             <div class="card-header bg-light border-bottom py-3">
                                 <div class="d-flex align-items-center">
                                     <i class="bi bi-lock-fill text-secondary me-2"></i>
@@ -275,11 +275,11 @@
                                     <!-- Level 1: Group -->
                                     <div class="col-md-4">
                                         <div class="card bg-secondary text-white border-0 h-100">
-                                            <div class="p-2">
-                                                <div class="d-flex align-items-center">
-                                                    <span class="badge text-dark me-2">Level 1</span>
-                                                    <div class="flex-fill">
-                                                        <i class="bi bi-building me-2"></i>
+                                            <div class="card-body p-3 d-flex align-items-center">
+                                                <div class="d-flex align-items-center w-100">
+                                                    <span class="badge bg-dark text-white me-2">Level 1</span>
+                                                    <div class="flex-fill d-flex align-items-center">
+                                                        <i class="bi bi-building me-2 fs-5"></i>
                                                         <span class="fw-bold">Group</span>
                                                     </div>
                                                 </div>
@@ -290,11 +290,11 @@
                                     <!-- Level 2: Company -->
                                     <div class="col-md-4">
                                         <div class="card bg-secondary text-white border-0 h-100">
-                                            <div class="p-2">
-                                                <div class="d-flex align-items-center">
-                                                    <span class="badge text-dark me-2">Level 2</span>
-                                                    <div class="flex-fill">
-                                                        <i class="bi bi-buildings me-2"></i>
+                                            <div class="card-body p-3 d-flex align-items-center">
+                                                <div class="d-flex align-items-center w-100">
+                                                    <span class="badge bg-dark text-white me-2">Level 2</span>
+                                                    <div class="flex-fill d-flex align-items-center">
+                                                        <i class="bi bi-buildings me-2 fs-5"></i>
                                                         <span class="fw-bold">Company</span>
                                                     </div>
                                                 </div>
@@ -306,7 +306,7 @@
                         </div>
 
                         <!-- Selectable Levels -->
-                        <div class="card border shadow-sm">
+                        <div class="card border shadow-sm overflow-hidden">
                             <div class="card-header bg-light border-bottom py-3">
                                 <div class="d-flex align-items-center">
                                     <i class="bi bi-check2-square text-success me-2"></i>
