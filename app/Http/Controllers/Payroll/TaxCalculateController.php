@@ -85,15 +85,14 @@ class TaxCalculateController extends Controller
     public function calculate(Request $request)
     {
         try {
-            Log::info('TaxCalculateController: Dispatching tax calculation job.');
+            Log::info('TaxCalculateController: Starting tax calculation.');
             
-            // Dispatch job
-            ProcessTaxCalculationJob::dispatch();
+            $this->taxCalculateService->calculateTaxForAllEmployees();
 
-            return $this->successResponse('Tax calculation initiated successfully. Slabs are being evaluated in the background.');
+            return $this->successResponse('Tax calculation completed successfully.');
         } catch (\Exception $e) {
-            Log::error('TaxCalculateController: Failed to trigger tax calculation.', ['error' => $e->getMessage()]);
-            return $this->errorResponse('Failed to trigger tax calculation: ' . $e->getMessage());
+            Log::error('TaxCalculateController: Failed to calculate tax.', ['error' => $e->getMessage()]);
+            return $this->errorResponse('Failed to calculate tax: ' . $e->getMessage());
         }
     }
 }

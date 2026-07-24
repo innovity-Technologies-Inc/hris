@@ -15,8 +15,9 @@
 - Created `TaxCalculateController` dishing JSON actions via Axios and Excel exports.
 - Built `EmployeeTaxExport` handling Excel download logs mappings.
 - Built Index and Search Results tables displaying tax payable, tax per month, and Export button.
-- Wrote feature test suite validating index render, queue dispatching, excel download, and detailed progressive tax math.
-- Tests passed: 231/231 passed (916 assertions) ✅
+- Updated tax calculations to execute synchronously to ensure immediate database writes and UI rendering (fixing background queue latency issues).
+- Wrote feature test suite validating index render, synchronous calculations, excel download, and detailed progressive tax math.
+- Tests passed: 231/231 passed (915 assertions) ✅
 
 **Status**: ✅ SUCCESS
 

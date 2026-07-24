@@ -25,9 +25,7 @@ test('tax calculate index page returns correct view', function () {
     $response->assertStatus(200);
 });
 
-test('tax calculation endpoint dispatches ProcessTaxCalculationJob successfully', function () {
-    Queue::fake();
-
+test('tax calculation endpoint completes successfully', function () {
     $user = User::factory()->create();
     $user->givePermissionTo(['tax-policy.edit']);
 
@@ -36,10 +34,8 @@ test('tax calculation endpoint dispatches ProcessTaxCalculationJob successfully'
     $response->assertStatus(200)
         ->assertJson([
             'success' => true,
-            'message' => 'Tax calculation initiated successfully. Slabs are being evaluated in the background.'
+            'message' => 'Tax calculation completed successfully.'
         ]);
-
-    Queue::assertPushed(ProcessTaxCalculationJob::class);
 });
 
 test('tax calculation export endpoint returns 200 and triggers excel download', function () {
