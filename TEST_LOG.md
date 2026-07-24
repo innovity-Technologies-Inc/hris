@@ -1,5 +1,20 @@
 # Test Log
 
+## 2026-07-25 (Docker CSS MIME Type Resolution)
+
+**Goal**: Resolve MIME type mismatch error in Docker for Google Fonts stylesheet (`css2` loaded as `application/octet-stream`) by renaming it to `css2.css` and updating the import path in `app.css`.
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest`
+
+**Results**:
+- Renamed the extensionless stylesheet file `public/assets/css/css2` to `public/assets/css/css2.css` via Git.
+- Updated `@import url(css2);` to `@import url(css2.css);` on line 2 of `public/assets/css/app.css` to ensure it is served with the correct `text/css` MIME type.
+- Ran optimization commands `php artisan optimize` and `php artisan config:clear` to verify configuration health.
+- Ran full test suite to guarantee no regressions were introduced.
+- Tests passed: 233/233 passed (922 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-23 (Tax Calculate Module Creation)
 
 **Goal**: Implement the new Tax Calculate module with search filters, batch calculations, progressive tax slab algorithms, system settings currency, background Jobs, negotiable tax payable limit reductions, total tax month setting (including bonus), monthly tax divisions, salary process deduction integration, col-6/col-6 full width cards, Excel exports (not paginated), and Axios endpoints.
