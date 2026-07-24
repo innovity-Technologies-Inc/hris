@@ -25,10 +25,11 @@ test('tax calculate index page returns correct view', function () {
     $response->assertStatus(200);
 });
 
-test('tax calculation endpoint completes successfully', function () {
+test('tax calculation endpoint completes synchronously for small employee counts', function () {
     $user = User::factory()->create();
     $user->givePermissionTo(['tax-policy.edit']);
 
+    // Active employee count is 0 (<= 500), should execute synchronously
     $response = $this->actingAs($user)->postJson(route('tax-calculate.calculate'));
 
     $response->assertStatus(200)
@@ -36,6 +37,26 @@ test('tax calculation endpoint completes successfully', function () {
             'success' => true,
             'message' => 'Tax calculation completed successfully.'
         ]);
+});
+
+test('tax calculation endpoint dispatches background job for large employee counts', function () {
+    Queue::fake();
+
+    $user = User::factory()->create();
+    $user->givePermissionTo(['tax-policy.edit']);
+
+    // Create 501 active employees to cross the threshold
+    Employee::factory()->count(501)->create(['status' => 'active']);
+
+    $response = $this->actingAs($user)->postJson(route('tax-calculate.calculate'));
+
+    $response->assertStatus(200)
+        ->assertJson([
+            'success' => true,
+            'message' => 'Tax calculation initiated successfully. Slabs are being evaluated in the background.'
+        ]);
+
+    Queue::assertPushed(ProcessTaxCalculationJob::class);
 });
 
 test('tax calculation export endpoint returns 200 and triggers excel download', function () {

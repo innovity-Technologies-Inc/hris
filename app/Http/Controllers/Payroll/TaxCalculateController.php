@@ -85,11 +85,19 @@ class TaxCalculateController extends Controller
     public function calculate(Request $request)
     {
         try {
-            Log::info('TaxCalculateController: Starting tax calculation.');
-            
-            $this->taxCalculateService->calculateTaxForAllEmployees();
+            $employeeCount = \App\Models\Employee\Employee::withoutGlobalScopes()->where('status', 'active')->count();
 
-            return $this->successResponse('Tax calculation completed successfully.');
+            // Threshold: if dataset is small (e.g. <= 500 employees), process synchronously for instant feedback.
+            // Otherwise, dispatch background queue job to avoid HTTP gateway timeout.
+            if ($employeeCount <= 500) {
+                Log::info('TaxCalculateController: Processing tax calculation synchronously.', ['count' => $employeeCount]);
+                $this->taxCalculateService->calculateTaxForAllEmployees();
+                return $this->successResponse('Tax calculation completed successfully.');
+            } else {
+                Log::info('TaxCalculateController: Dispatching background queue job.', ['count' => $employeeCount]);
+                ProcessTaxCalculationJob::dispatch();
+                return $this->successResponse('Tax calculation initiated successfully. Slabs are being evaluated in the background.');
+            }
         } catch (\Exception $e) {
             Log::error('TaxCalculateController: Failed to calculate tax.', ['error' => $e->getMessage()]);
             return $this->errorResponse('Failed to calculate tax: ' . $e->getMessage());
