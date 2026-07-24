@@ -178,10 +178,10 @@ This project includes a `docker-compose.yml` file to orchestrate containers for 
 2. **Access the Application**:
    * App URL: `http://localhost`
    * MinIO Console: `http://localhost:9001` (Credentials: `minioadmin` / `minioadmin`)
-3. **Configure MinIO Bucket**:
+3. **Configure MinIO Buckets**:
    * Open the MinIO Console at `http://localhost:9001`.
-   * Go to **Buckets** -> **Create Bucket** and name it `hrms` (matching `AWS_BUCKET` in your `.env` file).
-   * Go to bucket **Access Policy** and set it to `Public` to allow browser access to assets.
+   * Go to **Buckets** -> **Create Bucket** and create two buckets: `hrms-dev` (for development, matching `AWS_BUCKET` in your `.env`) and `hrms-prod` (for production).
+   * Set the **Access Policy** for both buckets to `Public` to allow browser access to assets.
 
 ---
 
