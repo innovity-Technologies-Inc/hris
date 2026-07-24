@@ -58,12 +58,25 @@ if [ "$APP_ENV" = "local" ]; then
     php artisan cache:clear
     php artisan route:clear
 
-    # Seeder Lock
-    if [ ! -f "storage/logs/seeded.lock" ]; then
-        echo "Running seeders for the first time..."
+    # Check if database is already seeded by checking users count
+    DB_USER_COUNT=$(php -r "
+        require 'vendor/autoload.php';
+        \$app = require_once 'bootstrap/app.php';
+        \$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+        try {
+            echo Illuminate\Support\Facades\DB::table('users')->count();
+        } catch (Exception \$e) {
+            echo 0;
+        }
+    ")
+
+    if [ -z "$DB_USER_COUNT" ] || [ "$DB_USER_COUNT" -eq 0 ]; then
+        echo "Database is empty (users count: $DB_USER_COUNT). Running seeders..."
         php artisan db:seed --no-interaction
         php artisan view:cache
         touch storage/logs/seeded.lock
+    else
+        echo "Database is already seeded ($DB_USER_COUNT users found). Skipping seeding."
     fi
 else
     echo "Running in PRODUCTION environment..."
