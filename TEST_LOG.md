@@ -1,5 +1,19 @@
 # Test Log
 
+## 2026-07-25 (Local Filesystem Configuration Change)
+
+**Goal**: Configure `FILESYSTEM_DISK` in the environment files to use the local `public` disk instead of MinIO.
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest`
+
+**Results**:
+- Updated `.env` and `.env.example` to set `FILESYSTEM_DISK=public`.
+- Cleared and rebuilt Laravel configuration caches.
+- Verified that all unit and feature tests pass.
+- Tests passed: 233/233 passed (922 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-25 (Docker Entrypoint Seeding Logic Improvement)
 
 **Goal**: Make the Docker entrypoint automatic seeding logic robust by counting database users instead of relying on the local `seeded.lock` file (which is shared with the host volume and causes seeders to be skipped when resetting Docker database volumes).
