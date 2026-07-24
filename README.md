@@ -123,18 +123,36 @@ On a live server, you must add a single Cron entry to your server.
 * * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
 ```
 
-### 8. Database Seeding (Optional)
+### 8. Queue Configuration (For background jobs)
+
+This project offloads heavy tasks (like processing progressive tax calculations for large datasets) to background queues.
+
+#### A. Configure Queue Driver (`.env`)
+In your `.env` file, configure the connection type:
+```env
+QUEUE_CONNECTION=database
+```
+*For production with large datasets, it is highly recommended to use `redis`.*
+
+#### B. Start Queue Worker
+* **Local Development**: Keep this command running in a separate terminal window:
+  ```bash
+  php artisan queue:work
+  ```
+* **Production**: Set up a process supervisor (like **Supervisor** on Linux) to keep `php artisan queue:work` running continuously in the background.
+
+### 9. Database Seeding (Optional)
 If you want to populate the database with sample data:
 ```bash
 php artisan db:seed
 ```
 
-### 8. Default Credentials
+### 10. Default Credentials
 Use the following credentials to access the admin panel:
 - **Email:** admin@example.com
 - **Password:** 12345678
 
-### 9. Storage Symlink
+### 11. Storage Symlink
 
 If there is an existing `storage` folder inside the `public` directory, delete it first. Then, run the following command to create the symbolic link:
 
