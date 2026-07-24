@@ -23,7 +23,7 @@ services:
       - AWS_ACCESS_KEY_ID=${MINIO_ROOT_USER:-minioadmin}
       - AWS_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD:-minioadmin}
       - AWS_DEFAULT_REGION=us-east-1
-      - AWS_BUCKET=${MINIO_BUCKET:-hrms}
+      - AWS_BUCKET=${AWS_BUCKET:-hrms-dev}
       - AWS_ENDPOINT=http://minio:9000
       - AWS_USE_PATH_STYLE_ENDPOINT=true
     volumes:
@@ -113,7 +113,7 @@ services:
       - AWS_ACCESS_KEY_ID=${MINIO_ROOT_USER:-minioadmin}
       - AWS_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD:-minioadmin}
       - AWS_DEFAULT_REGION=us-east-1
-      - AWS_BUCKET=${MINIO_BUCKET:-hrms}
+      - AWS_BUCKET=${AWS_BUCKET:-hrms-dev}
       - AWS_ENDPOINT=http://minio:9000
       - AWS_USE_PATH_STYLE_ENDPOINT=true
     volumes:
@@ -151,7 +151,7 @@ services:
       - AWS_ACCESS_KEY_ID=${MINIO_ROOT_USER:-minioadmin}
       - AWS_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD:-minioadmin}
       - AWS_DEFAULT_REGION=us-east-1
-      - AWS_BUCKET=${MINIO_BUCKET:-hrms}
+      - AWS_BUCKET=${AWS_BUCKET:-hrms-dev}
       - AWS_ENDPOINT=http://minio:9000
       - AWS_USE_PATH_STYLE_ENDPOINT=true
     volumes:

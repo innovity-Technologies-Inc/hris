@@ -1,5 +1,20 @@
 # Test Log
 
+## 2026-07-25 (Docker Environment Alignment for AWS_BUCKET)
+
+**Goal**: Align local environment settings and docker-compose configurations to point `AWS_BUCKET` to `hrms-dev` by default.
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest`
+
+**Results**:
+- Updated `.env` and `.env.example` to set the default development bucket name (`AWS_BUCKET=hrms-dev`).
+- Modified `docker-compose.yml` across `app`, `queue-worker`, and `scheduler` services to map `AWS_BUCKET` to the host's `AWS_BUCKET` variable, falling back to `hrms-dev`.
+- Recreated Docker containers using `docker compose up -d` to load the updated environment variables.
+- Verified that all unit and feature tests pass.
+- Tests passed: 233/233 passed (922 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-25 (Docker Source Map 404 Resolution & MinIO Bucket Creation)
 
 **Goal**: Resolve the stylesheet 404 source map console errors for `app.css` and `icons.min.css`. Also, create two new MinIO buckets: `hrms-dev` and `hrms-prod`.
