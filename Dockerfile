@@ -19,6 +19,9 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+# Install MinIO Client (mc)
+COPY --from=minio/mc:latest /usr/bin/mc /usr/bin/mc
+
 # Set working directory
 WORKDIR /var/www/html
 
@@ -27,6 +30,9 @@ COPY . .
 
 # Ensure entrypoint script is executable
 RUN chmod +x /var/www/html/docker/entrypoint.sh
+
+# Expose PHP-FPM communication port
+EXPOSE 9000
 
 # Define entrypoint
 ENTRYPOINT ["bash", "/var/www/html/docker/entrypoint.sh"]
