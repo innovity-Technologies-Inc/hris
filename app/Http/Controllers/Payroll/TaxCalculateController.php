@@ -11,10 +11,12 @@ use App\Models\Company\Department;
 use App\Models\Company\Section;
 use App\Services\Payroll\TaxCalculateService;
 use App\Jobs\Payroll\ProcessTaxCalculationJob;
+use App\Exports\Payroll\EmployeeTaxExport;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TaxCalculateController extends Controller
 {
@@ -60,6 +62,21 @@ class TaxCalculateController extends Controller
             'title', 'section', 'sub_section', 'calculations', 'companies',
             'selectedBranch', 'selectedDivision', 'selectedDepartment', 'selectedSection'
         ));
+    }
+
+    /**
+     * Export employee tax calculations to Excel (not paginated).
+     */
+    public function export(Request $request, FlexSearch $flexSearch)
+    {
+        Log::info('TaxCalculateController: Exporting employee taxes.');
+        
+        $calculations = $this->taxCalculateService->searchResult($request, TaxCalculation::class, $flexSearch, false);
+
+        return Excel::download(
+            new EmployeeTaxExport($calculations),
+            'employee_taxes_' . now()->format('Ymd_His') . '.xlsx'
+        );
     }
 
     /**

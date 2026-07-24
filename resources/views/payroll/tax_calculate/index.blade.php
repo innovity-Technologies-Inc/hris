@@ -131,11 +131,16 @@
                         <i data-feather="list" class="me-2 text-primary" style="width: 20px; height: 20px;"></i>
                         Employee Tax List
                     </h5>
-                    @can('tax-policy.edit')
-                    <button type="button" class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold no-loader" id="calculateTaxBtn">
-                        <i data-feather="cpu" class="me-1" style="width: 16px; height: 16px;"></i> Calculate Tax
-                    </button>
-                    @endcan
+                    <div class="d-flex gap-2">
+                        <button type="button" id="exportExcelBtn" class="btn btn-success rounded-pill px-4 shadow-sm fw-bold no-loader">
+                            <i class="bi bi-file-earmark-excel me-1"></i> Export
+                        </button>
+                        @can('tax-policy.edit')
+                        <button type="button" class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold no-loader" id="calculateTaxBtn">
+                            <i data-feather="cpu" class="me-1" style="width: 16px; height: 16px;"></i> Calculate Tax
+                        </button>
+                        @endcan
+                    </div>
                 </div>
                 <div class="card-body">
                     <div id="search-result">
@@ -374,6 +379,14 @@
                             });
                     }
                 });
+            });
+
+            // Excel Export click handler
+            $(document).on('click', '#exportExcelBtn', function(e) {
+                e.preventDefault();
+                let queryString = $('#filterForm').serialize();
+                let baseUrl = "{{ route('tax-calculate.export') }}";
+                window.location.href = baseUrl + '?' + queryString;
             });
         });
     </script>
