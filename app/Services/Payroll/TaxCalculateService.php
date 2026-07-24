@@ -80,35 +80,48 @@ class TaxCalculateService
             return;
         }
 
-        // Get all active employees with salary breakdowns
-        $employees = Employee::has('salary')->where('status', 'active')->get();
+        // Chunk active employees with salary breakdowns to keep memory usage low and constant
+        Employee::has('salary')
+            ->where('status', 'active')
+            ->chunk(500, function ($employees) use ($policy) {
+                $records = [];
 
-        foreach ($employees as $employee) {
-            try {
-                $result = $this->calculateTaxForEmployee($employee, $policy);
-                if ($result) {
-                    TaxCalculation::updateOrCreate(
-                        ['employee_id' => $employee->id],
-                        [
-                            'policy_id' => $policy->id,
-                            'gross_salary' => $result['gross_salary'],
-                            'exemption_amount' => $result['exemption_amount'],
-                            'taxable_amount' => $result['taxable_amount'],
-                            'slab_taxes' => $result['slab_taxes'],
-                            'slabs_reached' => $result['slabs_reached'],
-                            'total_tax_amount' => $result['total_tax_amount'],
-                            'tax_payable' => $result['tax_payable'],
-                            'tax_per_month' => $result['tax_per_month'],
-                        ]
-                    );
+                foreach ($employees as $employee) {
+                    try {
+                        $result = $this->calculateTaxForEmployee($employee, $policy);
+                        if ($result) {
+                            $records[] = [
+                                'employee_id' => $employee->id,
+                                'policy_id' => $policy->id,
+                                'gross_salary' => $result['gross_salary'],
+                                'exemption_amount' => $result['exemption_amount'],
+                                'taxable_amount' => $result['taxable_amount'],
+                                'slab_taxes' => json_encode($result['slab_taxes']),
+                                'slabs_reached' => $result['slabs_reached'],
+                                'total_tax_amount' => $result['total_tax_amount'],
+                                'tax_payable' => $result['tax_payable'],
+                                'tax_per_month' => $result['tax_per_month'],
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ];
+                        }
+                    } catch (\Exception $e) {
+                        Log::error('TaxCalculateService: Failed to calculate tax for employee.', [
+                            'employee_id' => $employee->id,
+                            'error' => $e->getMessage()
+                        ]);
+                    }
                 }
-            } catch (\Exception $e) {
-                Log::error('TaxCalculateService: Failed to calculate tax for employee.', [
-                    'employee_id' => $employee->id,
-                    'error' => $e->getMessage()
-                ]);
-            }
-        }
+
+                if (!empty($records)) {
+                    // Bulk insert/update in a single query per chunk
+                    TaxCalculation::upsert($records, ['employee_id'], [
+                        'policy_id', 'gross_salary', 'exemption_amount', 'taxable_amount',
+                        'slab_taxes', 'slabs_reached', 'total_tax_amount', 'tax_payable',
+                        'tax_per_month', 'updated_at'
+                    ]);
+                }
+            });
 
         Log::info('TaxCalculateService: Completed tax calculations.');
     }

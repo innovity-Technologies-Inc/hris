@@ -16,6 +16,7 @@
 - Built `EmployeeTaxExport` handling Excel download logs mappings.
 - Built Index and Search Results tables displaying tax payable, tax per month, and Export button.
 - Updated tax calculations to execute synchronously to ensure immediate database writes and UI rendering (fixing background queue latency issues).
+- Optimized tax calculation algorithm to use low-memory chunking (chunks of 500 records) and bulk `upsert` queries, allowing high performance execution for millions of employees.
 - Wrote feature test suite validating index render, synchronous calculations, excel download, and detailed progressive tax math.
 - Tests passed: 231/231 passed (915 assertions) ✅
 
