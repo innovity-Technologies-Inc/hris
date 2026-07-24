@@ -40,10 +40,29 @@ class TransportSeeder extends Seeder
 
         // 2. Fetch or create multiple driver employees (10 drivers)
         $drivers = [];
-        for ($i = 1; $i <= 10; $i++) {
-            $driverEmail = "driver{$i}@example.com";
-            $driver = Employee::where('personal_mobile', '017000000' . sprintf('%02d', $i))->first();
-            if (!$driver) {
+        $requesters = [];
+        $existingEmployees = Employee::take(20)->get();
+
+        if ($existingEmployees->count() >= 20) {
+            // Use existing employees from the database
+            for ($i = 0; $i < 10; $i++) {
+                $driver = $existingEmployees[$i];
+                EmployeeOfficeInfo::updateOrCreate(
+                    ['employee_id' => $driver->id],
+                    [
+                        'current_designation_id' => $designation->id,
+                        'joining_designation_id' => $designation->id,
+                    ]
+                );
+                $drivers[] = $driver;
+            }
+
+            for ($i = 10; $i < 20; $i++) {
+                $requesters[] = $existingEmployees[$i];
+            }
+        } else {
+            // Fallback: Create mock drivers if not enough existing employees
+            for ($i = 1; $i <= 10; $i++) {
                 $driver = Employee::create([
                     'first_name' => 'Driver',
                     'last_name' => (string)$i,
@@ -73,8 +92,8 @@ class TransportSeeder extends Seeder
                     'joining_division_id' => 1,
                     'date_of_join' => '2023-01-01',
                 ]);
+                $drivers[] = $driver;
             }
-            $drivers[] = $driver;
         }
 
         // 3. Create multiple Vehicles (15 vehicles)
@@ -128,32 +147,33 @@ class TransportSeeder extends Seeder
         }
 
         // 6. Get/create requester employees
-        $requesters = [];
-        for ($i = 1; $i <= 10; $i++) {
-            $mobile = '018000000' . sprintf('%02d', $i);
-            $requester = Employee::where('personal_mobile', $mobile)->first();
-            if (!$requester) {
-                $requester = Employee::create([
-                    'first_name' => 'Requester',
-                    'last_name' => (string)$i,
-                    'full_name' => "Requester {$i}",
-                    'father_name' => 'Father',
-                    'mother_name' => 'Mother',
-                    'nationality' => 'Bangladeshi',
-                    'religion' => 'Islam',
-                    'present_address' => json_encode(['address' => "Dhaka Zone {$i}"]),
-                    'personal_mobile' => $mobile,
-                    'date_of_birth' => '1995-08-20',
-                    'system_id' => "SysREQ" . sprintf('%03d', 100 + $i),
-                    'applicant_id' => "REQ-" . sprintf('%03d', 100 + $i),
-                    'punch_card_no' => "PC-REQ-" . sprintf('%03d', 100 + $i),
-                    'gender' => 'Male',
-                    'marital_status' => 'Single',
-                    'blood_group' => 'A+',
-                    'status' => 'active',
-                ]);
+        if (empty($requesters)) {
+            for ($i = 1; $i <= 10; $i++) {
+                $mobile = '018000000' . sprintf('%02d', $i);
+                $requester = Employee::where('personal_mobile', $mobile)->first();
+                if (!$requester) {
+                    $requester = Employee::create([
+                        'first_name' => 'Requester',
+                        'last_name' => (string)$i,
+                        'full_name' => "Requester {$i}",
+                        'father_name' => 'Father',
+                        'mother_name' => 'Mother',
+                        'nationality' => 'Bangladeshi',
+                        'religion' => 'Islam',
+                        'present_address' => json_encode(['address' => "Dhaka Zone {$i}"]),
+                        'personal_mobile' => $mobile,
+                        'date_of_birth' => '1995-08-20',
+                        'system_id' => "SysREQ" . sprintf('%03d', 100 + $i),
+                        'applicant_id' => "REQ-" . sprintf('%03d', 100 + $i),
+                        'punch_card_no' => "PC-REQ-" . sprintf('%03d', 100 + $i),
+                        'gender' => 'Male',
+                        'marital_status' => 'Single',
+                        'blood_group' => 'A+',
+                        'status' => 'active',
+                    ]);
+                }
+                $requesters[] = $requester;
             }
-            $requesters[] = $requester;
         }
 
         // 7. Create Vehicle Requisitions (25 requisitions)

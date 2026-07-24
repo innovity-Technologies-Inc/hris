@@ -1,5 +1,22 @@
 # Test Log
 
+## 2026-07-25 (TransportSeeder Employee Generation Refactoring)
+
+**Goal**: Refactor `TransportSeeder` to use existing seeded employees as drivers and requesters rather than creating fake `SysDRV` and `SysREQ` records, maintaining a clean database state.
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest`
+
+**Results**:
+- Refactored `TransportSeeder` to query the first 20 employees from the database (seeded by `EmployeeSeeder`).
+- Configured the seeder to update the first 10 employees to have the "Driver" designation, and use the remaining 10 as trip requesters.
+- Kept the generation of mock employees as a fallback if the database has less than 20 employees.
+- Wiped the database and executed migrations and seeders from scratch.
+- Verified that the database contains exactly 201 employees (instead of 221) and that 10 are correctly designated as "Driver".
+- Verified that all unit and feature tests pass.
+- Tests passed: 233/233 passed (922 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-25 (Docker Database Seeding & Profile Field Configuration Fix)
 
 **Goal**: Populate the empty local database inside Docker with the required seeds (including profile field configurations) to resolve missing UI fields.
