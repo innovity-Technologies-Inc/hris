@@ -1052,3 +1052,9 @@ textarea.form-control { background-color: rgba(0,0,0,0.02) !important; transitio
 [data-bs-theme=dark] textarea.form-control { background-color: rgba(255,255,255,0.05) !important; }
 textarea.form-control:focus { background-color: transparent !important; }
 
+/* Card Overflow Control to Prevent Background Leakage over Rounded Borders */
+.card:has(.card-header),
+.card:has(.card-footer) {
+    overflow: hidden;
+}
+

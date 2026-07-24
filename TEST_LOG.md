@@ -1,5 +1,25 @@
 # Test Log
 
+## 2026-07-25 (Global Card Border Suppression CSS Fix)
+
+**Goal**: Implement a global styling fix to prevent card header/footer background colors from suppressing/bleeding over the card borders on all screens in the application.
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest`
+
+**Results**:
+- Added global card overflow styling rule to `public/assets/css/style.css`:
+  ```css
+  .card:has(.card-header),
+  .card:has(.card-footer) {
+      overflow: hidden;
+  }
+  ```
+- This ensures any card containing a header or footer will clip the header/footer background correctly to preserve the card's rounded borders.
+- Verified that all unit and feature tests pass.
+- Tests passed: 233/233 passed (922 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-25 (General Settings Level 1 and 2 Badge Styling Updates)
 
 **Goal**: Update styling of Level 1 and Level 2 boxes to have no background color (only border) and assign the previous `bg-secondary` color directly to the badges.
