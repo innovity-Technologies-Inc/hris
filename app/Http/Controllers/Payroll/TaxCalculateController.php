@@ -85,7 +85,7 @@ class TaxCalculateController extends Controller
     public function calculate(Request $request)
     {
         try {
-            $employeeCount = \App\Models\Employee\Employee::withoutGlobalScopes()->where('status', 'active')->count();
+            $employeeCount = \App\Models\Employee\Employee::where('status', 'active')->count();
 
             // Threshold: if dataset is small (e.g. <= 500 employees), process synchronously for instant feedback.
             // Otherwise, dispatch background queue job to avoid HTTP gateway timeout.

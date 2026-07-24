@@ -26,7 +26,9 @@ test('tax calculate index page returns correct view', function () {
 });
 
 test('tax calculation endpoint completes synchronously for small employee counts', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->create([
+        'user_type' => \App\Enums\UserType::Group
+    ]);
     $user->givePermissionTo(['tax-policy.edit']);
 
     // Active employee count is 0 (<= 500), should execute synchronously
@@ -42,7 +44,9 @@ test('tax calculation endpoint completes synchronously for small employee counts
 test('tax calculation endpoint dispatches background job for large employee counts', function () {
     Queue::fake();
 
-    $user = User::factory()->create();
+    $user = User::factory()->create([
+        'user_type' => \App\Enums\UserType::Group
+    ]);
     $user->givePermissionTo(['tax-policy.edit']);
 
     // Create 501 active employees to cross the threshold
