@@ -78,7 +78,7 @@ services:
     image: minio/minio:latest
     container_name: hrms-minio
     ports:
-      - "9000:9000"
+      - "9090:9000"
       - "9001:9001"
     restart: unless-stopped
     environment:
