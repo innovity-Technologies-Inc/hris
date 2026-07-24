@@ -1,5 +1,20 @@
 # Test Log
 
+## 2026-07-25 (MinIO Asset Host URL Configuration)
+
+**Goal**: Configure `AWS_URL` to route asset URLs generated inside Docker to a host-resolvable port `9090` instead of the internal container endpoint.
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest`
+
+**Results**:
+- Added `AWS_URL=http://localhost:9090/hrms-dev` to `.env` and `.env.example`.
+- Configured `docker-compose.yml` to map `AWS_URL` across `app`, `queue-worker`, and `scheduler` services, defaulting to `http://localhost:9090/hrms-dev`.
+- Recreated docker containers to apply updated variables.
+- Verified that all unit and feature tests pass.
+- Tests passed: 233/233 passed (922 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-25 (Docker Environment Alignment for AWS_BUCKET)
 
 **Goal**: Align local environment settings and docker-compose configurations to point `AWS_BUCKET` to `hrms-dev` by default.
