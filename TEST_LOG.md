@@ -1,5 +1,24 @@
 # Test Log
 
+## 2026-07-25 (Paygroup Frequency Tax Calculation & Payroll Generation Fix)
+
+**Goal**: Adjust tax calculation and payroll generation to calculate the gross salary correctly depending on the pay group's payroll frequency (hourly, daily, weekly, bi-weekly, semi-monthly, and monthly), and align the pay group validator to allow "Daily" frequency.
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest`
+
+**Results**:
+- Modified `app/Services/Payroll/TaxCalculateService.php`:
+  - Resolved `payScale` and `payGroup` relationship from the salary breakdown.
+  - Dynamically calculated the projected annual gross salary based on the payroll frequency. For hourly, it multiplies by standard hours per day and days per cycle. For daily, it multiplies by standard days per cycle. For weekly, bi-weekly, and semi-monthly, it scales by 52, 26, and 24 weeks/cycles respectively.
+- Modified `app/Services/Payroll/PayrollServices.php`:
+  - Adjusted `$taxDeduction` logic in the salary processing routine so that weekly, bi-weekly, and semi-monthly paygroups deduct a fraction of the annual tax payable rather than deducting the full monthly tax.
+- Modified `app/Http/Requests/Company/PayGroupRequest.php`:
+  - Added `'Daily'` to the list of allowed values in the `payroll_frequency` validation rule.
+- Verified that all unit and feature tests pass.
+- Tests passed: 233/233 passed (922 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-25 (Dashboard Stat Card Hover Contrast Fix)
 
 **Goal**: Fix the stat card hover issue on the dashboard where all text turns white but the card background remains white, making all text invisible.

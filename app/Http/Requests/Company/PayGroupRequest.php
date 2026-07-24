@@ -23,7 +23,7 @@ class PayGroupRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
-            'payroll_frequency' => 'required|in:Hourly,Monthly,Weekly',
+            'payroll_frequency' => 'required|in:Hourly,Monthly,Weekly,Daily',
             'working_hours_per_day' => 'required_if:payroll_frequency,Monthly,Weekly|nullable|numeric|min:1|max:24',
             'working_days_per_cycle' => 'required_if:payroll_frequency,Monthly,Weekly|nullable|numeric|min:1|max:31',
             'salary_processing_day' => 'required|string|max:50',

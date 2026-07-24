@@ -175,9 +175,33 @@ class TaxCalculateService
             return null;
         }
 
+        $payScale = $salaryBreakdown->payScale;
+        $payGroup = $payScale ? $payScale->payGroup : null;
+        $frequency = $payGroup ? strtolower($payGroup->payroll_frequency) : 'monthly';
+        
+        $workingDaysPerCycle = $payGroup ? ($payGroup->working_days_per_cycle ?? 30) : 30;
+        $workingHoursPerDay = $payGroup ? ($payGroup->working_hours_per_day ?? 8) : 8;
+        
         $totalTaxMonth = (int) ($policy->total_tax_month ?? 12);
-        $monthlyGross = (double) $salaryBreakdown->gross_salary;
-        $annualGross = $monthlyGross * $totalTaxMonth;
+        
+        // Calculate projected annual gross salary based on paygroup frequency
+        if ($frequency === 'hourly') {
+            $monthlyGross = (double) $salaryBreakdown->gross_salary * $workingHoursPerDay * $workingDaysPerCycle;
+            $annualGross = $monthlyGross * 12;
+        } elseif ($frequency === 'daily') {
+            $monthlyGross = (double) $salaryBreakdown->gross_salary * $workingDaysPerCycle;
+            $annualGross = $monthlyGross * 12;
+        } elseif ($frequency === 'weekly') {
+            $annualGross = (double) $salaryBreakdown->gross_salary * 52;
+        } elseif ($frequency === 'bi-weekly') {
+            $annualGross = (double) $salaryBreakdown->gross_salary * 26;
+        } elseif ($frequency === 'semi-monthly') {
+            $annualGross = (double) $salaryBreakdown->gross_salary * 24;
+        } else {
+            // monthly or fallback
+            $monthlyGross = (double) $salaryBreakdown->gross_salary;
+            $annualGross = $monthlyGross * $totalTaxMonth;
+        }
 
         // Based on the gender, check if they have more income than the zero tax limit
         $gender = strtolower($employee->gender ?? 'male');
