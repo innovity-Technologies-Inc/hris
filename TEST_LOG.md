@@ -1,5 +1,20 @@
 # Test Log
 
+## 2026-07-25 (Docker Source Map 404 Resolution & MinIO Bucket Creation)
+
+**Goal**: Resolve the stylesheet 404 source map console errors for `app.css` and `icons.min.css`. Also, create two new MinIO buckets: `hrms-dev` and `hrms-prod`.
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest`
+
+**Results**:
+- Removed the `sourceMappingURL` comments from the bottom of `public/assets/css/app.css` and `public/assets/css/icons.min.css` to fix the browser console 404 error.
+- Set up local credentials alias for the MinIO Client inside the `hrms-minio` container.
+- Created the two requested buckets `hrms-dev` and `hrms-prod` using the `mc` command inside Docker.
+- Verified that all unit and feature tests pass.
+- Tests passed: 233/233 passed (922 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-25 (Docker CSS MIME Type Resolution)
 
 **Goal**: Resolve MIME type mismatch error in Docker for Google Fonts stylesheet (`css2` loaded as `application/octet-stream`) by renaming it to `css2.css` and updating the import path in `app.css`.
