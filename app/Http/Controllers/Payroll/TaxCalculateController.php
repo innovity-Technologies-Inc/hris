@@ -103,4 +103,18 @@ class TaxCalculateController extends Controller
             return $this->errorResponse('Failed to calculate tax: ' . $e->getMessage());
         }
     }
+
+    /**
+     * Get tax calculation progress status.
+     */
+    public function progress()
+    {
+        $status = \Illuminate\Support\Facades\Cache::get('tax_calculation_status', [
+            'total' => 0,
+            'processed' => 0,
+            'status' => 'idle'
+        ]);
+
+        return response()->json($status);
+    }
 }

@@ -17,8 +17,9 @@
 - Built Index and Search Results tables displaying tax payable, tax per month, and Export button.
 - Updated tax calculations to execute synchronously when active employee count is <= 500 to ensure immediate database writes and UI rendering, and automatically dispatch background queue job `ProcessTaxCalculationJob` for larger employee counts (> 500) to avoid HTTP timeouts.
 - Optimized tax calculation algorithm to use low-memory chunking (chunks of 500 records) and bulk `upsert` queries, allowing high performance execution for millions of employees.
-- Wrote feature test suite validating index render, synchronous/queued threshold calculations, excel download, and detailed progressive tax math.
-- Tests passed: 232/232 passed (918 assertions) ✅
+- Implemented real-time Cache-based progress tracking and built a SweetAlert progress bar in the frontend to display processed percentages (`%`) and counts in real-time.
+- Wrote feature test suite validating index render, progress monitoring JSON endpoint, synchronous/queued threshold calculations, excel download, and detailed progressive tax math.
+- Tests passed: 233/233 passed (922 assertions) ✅
 
 **Status**: ✅ SUCCESS
 

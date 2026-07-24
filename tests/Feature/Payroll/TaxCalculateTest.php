@@ -72,6 +72,19 @@ test('tax calculation export endpoint returns 200 and triggers excel download', 
     $response->assertHeader('content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 });
 
+test('tax calculation progress endpoint returns correct progress structure', function () {
+    $user = User::factory()->create();
+    $user->givePermissionTo(['tax-policy.view']);
+
+    $response = $this->actingAs($user)->get(route('tax-calculate.progress'));
+    $response->assertStatus(200)
+        ->assertJsonStructure([
+            'total',
+            'processed',
+            'status'
+        ]);
+});
+
 test('tax calculation logic evaluates progressive math, total tax month multiplier, and payable negotiable tax correctly', function () {
     // 1. Setup a Tax Policy
     $policy = TaxPolicy::create([

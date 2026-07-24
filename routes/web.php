@@ -1312,6 +1312,7 @@ Route::prefix('tax-calculate')->name('tax-calculate.')->controller(\App\Http\Con
     Route::middleware('permission:tax-policy.view')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('export', 'export')->name('export');
+        Route::get('progress', 'progress')->name('progress');
     });
     Route::middleware('permission:tax-policy.edit')->group(function () {
         Route::post('calculate', 'calculate')->name('calculate');

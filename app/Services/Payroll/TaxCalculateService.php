@@ -7,6 +7,7 @@ use App\Models\Payroll\TaxPolicy;
 use App\Models\Payroll\TaxCalculation;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 
 class TaxCalculateService
@@ -71,59 +72,97 @@ class TaxCalculateService
      */
     public function calculateTaxForAllEmployees(): void
     {
-        Log::info('TaxCalculateService: Beginning tax calculations for all employees.');
+        Log::info('TaxCalculateService: Beginning tax calculations.');
 
         // Get the active tax policy
         $policy = TaxPolicy::with('slabs')->first();
         if (!$policy) {
             Log::warning('TaxCalculateService: No Tax Policy configured.');
+            Cache::put('tax_calculation_status', [
+                'total' => 0,
+                'processed' => 0,
+                'status' => 'failed',
+                'error' => 'No Tax Policy configured.'
+            ], 300);
             return;
         }
 
-        // Chunk active employees with salary breakdowns to keep memory usage low and constant
-        Employee::has('salary')
-            ->where('status', 'active')
-            ->chunk(500, function ($employees) use ($policy) {
-                $records = [];
+        $total = Employee::where('status', 'active')->count();
+        Cache::put('tax_calculation_status', [
+            'total' => $total,
+            'processed' => 0,
+            'status' => 'processing'
+        ], 300);
 
-                foreach ($employees as $employee) {
-                    try {
-                        $result = $this->calculateTaxForEmployee($employee, $policy);
-                        if ($result) {
-                            $records[] = [
+        try {
+            $processedCount = 0;
+
+            // Chunk active employees with salary breakdowns to keep memory usage low and constant
+            Employee::has('salary')
+                ->where('status', 'active')
+                ->chunk(500, function ($employees) use ($policy, &$processedCount, $total) {
+                    $records = [];
+
+                    foreach ($employees as $employee) {
+                        try {
+                            $result = $this->calculateTaxForEmployee($employee, $policy);
+                            if ($result) {
+                                $records[] = [
+                                    'employee_id' => $employee->id,
+                                    'policy_id' => $policy->id,
+                                    'gross_salary' => $result['gross_salary'],
+                                    'exemption_amount' => $result['exemption_amount'],
+                                    'taxable_amount' => $result['taxable_amount'],
+                                    'slab_taxes' => json_encode($result['slab_taxes']),
+                                    'slabs_reached' => $result['slabs_reached'],
+                                    'total_tax_amount' => $result['total_tax_amount'],
+                                    'tax_payable' => $result['tax_payable'],
+                                    'tax_per_month' => $result['tax_per_month'],
+                                    'created_at' => now(),
+                                    'updated_at' => now(),
+                                ];
+                            }
+                        } catch (\Exception $e) {
+                            Log::error('TaxCalculateService: Failed to calculate tax for employee.', [
                                 'employee_id' => $employee->id,
-                                'policy_id' => $policy->id,
-                                'gross_salary' => $result['gross_salary'],
-                                'exemption_amount' => $result['exemption_amount'],
-                                'taxable_amount' => $result['taxable_amount'],
-                                'slab_taxes' => json_encode($result['slab_taxes']),
-                                'slabs_reached' => $result['slabs_reached'],
-                                'total_tax_amount' => $result['total_tax_amount'],
-                                'tax_payable' => $result['tax_payable'],
-                                'tax_per_month' => $result['tax_per_month'],
-                                'created_at' => now(),
-                                'updated_at' => now(),
-                            ];
+                                'error' => $e->getMessage()
+                            ]);
                         }
-                    } catch (\Exception $e) {
-                        Log::error('TaxCalculateService: Failed to calculate tax for employee.', [
-                            'employee_id' => $employee->id,
-                            'error' => $e->getMessage()
+                    }
+
+                    if (!empty($records)) {
+                        // Bulk insert/update in a single query per chunk
+                        TaxCalculation::upsert($records, ['employee_id'], [
+                            'policy_id', 'gross_salary', 'exemption_amount', 'taxable_amount',
+                            'slab_taxes', 'slabs_reached', 'total_tax_amount', 'tax_payable',
+                            'tax_per_month', 'updated_at'
                         ]);
                     }
-                }
 
-                if (!empty($records)) {
-                    // Bulk insert/update in a single query per chunk
-                    TaxCalculation::upsert($records, ['employee_id'], [
-                        'policy_id', 'gross_salary', 'exemption_amount', 'taxable_amount',
-                        'slab_taxes', 'slabs_reached', 'total_tax_amount', 'tax_payable',
-                        'tax_per_month', 'updated_at'
-                    ]);
-                }
-            });
+                    $processedCount += $employees->count();
+                    Cache::put('tax_calculation_status', [
+                        'total' => $total,
+                        'processed' => min($processedCount, $total),
+                        'status' => 'processing'
+                    ], 300);
+                });
 
-        Log::info('TaxCalculateService: Completed tax calculations.');
+            Cache::put('tax_calculation_status', [
+                'total' => $total,
+                'processed' => $total,
+                'status' => 'completed'
+            ], 300);
+            Log::info('TaxCalculateService: Completed tax calculations successfully.');
+        } catch (\Exception $e) {
+            Log::error('TaxCalculateService: Batch tax calculation failed.', ['error' => $e->getMessage()]);
+            Cache::put('tax_calculation_status', [
+                'total' => $total,
+                'processed' => $processedCount,
+                'status' => 'failed',
+                'error' => $e->getMessage()
+            ], 300);
+            throw $e;
+        }
     }
 
     /**
