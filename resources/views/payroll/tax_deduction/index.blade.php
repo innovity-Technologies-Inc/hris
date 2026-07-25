@@ -142,11 +142,19 @@
 
         <div class="col-lg-12 mt-3">
             <div class="card border-0 shadow-sm rounded">
-                <div class="card-header bg-white py-3 border-bottom border-light">
+                <div class="card-header bg-white py-3 border-bottom border-light d-flex justify-content-between align-items-center">
                     <h5 class="card-title mb-0 fw-bold text-dark d-flex align-items-center">
                         <i data-feather="list" class="me-2 text-primary" style="width: 20px; height: 20px;"></i>
                         Tax Deduction History
                     </h5>
+                    <div class="d-flex gap-2">
+                        <button type="button" id="exportExcelBtn" class="btn btn-success btn-sm no-loader">
+                            <i class="bi bi-file-earmark-excel me-1"></i> Export
+                        </button>
+                        <button type="button" id="printBtn" class="btn btn-secondary btn-sm no-loader">
+                            <i class="bi bi-printer me-1"></i> Print
+                        </button>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div id="search-result">
@@ -333,6 +341,22 @@
                 if (url) {
                     fetchData(url);
                 }
+            });
+
+            // Export Excel click handler
+            $(document).on('click', '#exportExcelBtn', function(e) {
+                e.preventDefault();
+                let queryString = $('#filterForm').serialize();
+                let baseUrl = "{{ route('tax-deduction.export') }}";
+                window.location.href = baseUrl + '?' + queryString;
+            });
+
+            // Print click handler
+            $(document).on('click', '#printBtn', function(e) {
+                e.preventDefault();
+                let queryString = $('#filterForm').serialize();
+                let baseUrl = "{{ route('tax-deduction.print') }}";
+                window.open(baseUrl + '?' + queryString, '_blank');
             });
         });
     </script>

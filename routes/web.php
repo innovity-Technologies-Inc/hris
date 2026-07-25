@@ -1327,6 +1327,8 @@ Route::prefix('tax-calculate')->name('tax-calculate.')->controller(\App\Http\Con
 Route::prefix('tax-deduction')->name('tax-deduction.')->controller(\App\Http\Controllers\Payroll\TaxDeductionController::class)->middleware('auth')->group(function () {
     Route::middleware('permission:tax-deduction.view')->group(function () {
         Route::get('/', 'index')->name('index');
+        Route::get('export', 'export')->name('export');
+        Route::get('print', 'printIndex')->name('print');
     });
 });
 

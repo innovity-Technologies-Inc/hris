@@ -178,3 +178,21 @@ test('tax deduction history index view returns 200 and loads results', function 
     $response = $this->actingAs($user)->get(route('tax-deduction.index'));
     $response->assertStatus(200);
 });
+
+test('tax deduction history export endpoint returns 200 and triggers excel download', function () {
+    $user = User::factory()->create();
+    $user->givePermissionTo(['tax-deduction.view']);
+
+    $response = $this->actingAs($user)->get(route('tax-deduction.export'));
+    $response->assertStatus(200);
+    $response->assertHeader('content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+});
+
+test('tax deduction history print endpoint returns 200 and loads print view', function () {
+    $user = User::factory()->create();
+    $user->givePermissionTo(['tax-deduction.view']);
+
+    $response = $this->actingAs($user)->get(route('tax-deduction.print'));
+    $response->assertStatus(200);
+    $response->assertViewIs('payroll.tax_deduction.print_index');
+});

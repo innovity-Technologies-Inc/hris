@@ -1,5 +1,22 @@
 # Test Log
 
+## 2026-07-26 (Tax Deduction Export & Print Functionality)
+
+**Goal**: Implement unpaginated Excel export and print sheet reports for Tax Deduction History, adhering to filters and search query parameters.
+
+**Exact Command**: `php artisan optimize:clear && vendor/bin/pest`
+
+**Results**:
+- Created Export: `app/Exports/Payroll/TaxDeductionExport.php` to define headings and mappings for Excel file generation.
+- Created View: `resources/views/payroll/tax_deduction/print_index.blade.php` to lay out professional landscape printable styles and print triggers.
+- Modified Controller: `app/Http/Controllers/Payroll/TaxDeductionController.php` to register `export` and `printIndex` endpoints.
+- Modified Routes: `routes/web.php` to define `tax-deduction.export` and `tax-deduction.print` routes.
+- Modified View: `resources/views/payroll/tax_deduction/index.blade.php` to place Export & Print buttons inside the header and write JS handlers.
+- Modified Test: `tests/Feature/Payroll/TaxDeductionHistoryTest.php` to add feature test coverage verifying successful 200 responses.
+- Tests passed: 244/244 passed (969 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-26 (Tax Buttons Theme Color Standardization)
 
 **Goal**: Standardize the design of primary tax action buttons (such as the "Start Tax Calculation" triggers and "Save Configuration" buttons) to utilize the project's primary brand theme color `--primary-color`.

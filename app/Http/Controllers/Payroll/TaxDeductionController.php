@@ -14,6 +14,9 @@ use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 
+use App\Exports\Payroll\TaxDeductionExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 class TaxDeductionController extends Controller
 {
     use ApiResponse;
@@ -58,5 +61,29 @@ class TaxDeductionController extends Controller
             'title', 'section', 'sub_section', 'deductions', 'companies',
             'selectedBranch', 'selectedDivision', 'selectedDepartment', 'selectedSection'
         ));
+    }
+
+    /**
+     * Export tax deductions to Excel (not paginated).
+     */
+    public function export(Request $request, FlexSearch $flexSearch)
+    {
+        $deductions = $this->taxDeductionServices->searchResult($request, $flexSearch, false);
+
+        return Excel::download(
+            new TaxDeductionExport($deductions),
+            'tax_deduction_history_' . now()->format('Ymd_His') . '.xlsx'
+        );
+    }
+
+    /**
+     * Print tax deduction list (not paginated).
+     */
+    public function printIndex(Request $request, FlexSearch $flexSearch)
+    {
+        $records = $this->taxDeductionServices->searchResult($request, $flexSearch, false);
+        $title = 'Tax Deduction History';
+
+        return view('payroll.tax_deduction.print_index', compact('records', 'title'));
     }
 }
