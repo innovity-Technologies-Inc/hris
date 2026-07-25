@@ -311,7 +311,7 @@ class TaxCalculateService
         $taxPayablePct = (double) $policy->tax_payable_percentage;
 
         if ($totalTax > $minNegotiableTax) {
-            $taxPayable = $totalTax * ($taxPayablePct / 100);
+            $taxPayable = max($minNegotiableTax, $totalTax * ($taxPayablePct / 100));
         } else {
             $taxPayable = $totalTax;
         }

@@ -146,3 +146,61 @@ test('tax calculation logic evaluates progressive math, total tax month multipli
     expect(round($result['tax_per_month'], 2))->toEqual(4533.33);
     expect($result['slabs_reached'])->toBe(4);
 });
+
+test('tax calculation logic floors tax payable to minimum negotiable tax limit when percentage reduces it below limit', function () {
+    // 1. Setup a Tax Policy
+    $policy = TaxPolicy::create([
+        'zero_tax_male' => 350000.00,
+        'zero_tax_female' => 400000.00,
+        'min_tax_amount' => 5000.00,
+        'exemption_type' => 'fixed',
+        'salary_ratio' => '1/3',
+        'fixed_amount' => 120000.00,
+        'min_negotiable_tax_limit' => 50000.00, // Min limit is 50,000
+        'tax_payable_percentage' => 80.00,      // 80% payable
+        'total_tax_month' => 12,
+    ]);
+
+    // Setup slabs:
+    $policy->slabs()->createMany([
+        ['taxable_amount' => 300000.00, 'tax_percentage' => 0.00, 'tax_amount' => 0.00],
+        ['taxable_amount' => 100000.00, 'tax_percentage' => 5.00, 'tax_amount' => 5000.00],
+        ['taxable_amount' => 300000.00, 'tax_percentage' => 10.00, 'tax_amount' => 30000.00],
+        ['taxable_amount' => null, 'tax_percentage' => 15.00, 'tax_amount' => 0.00],
+    ]);
+
+    // 2. Setup an active employee
+    $employee = Employee::factory()->create([
+        'gender' => 'male',
+        'status' => 'active',
+    ]);
+
+    // Monthly Gross = 80,000 => Annual Gross = 80,000 * 12 = 960,000.00
+    // Exemption = min(120,000, 960,000 * 1/3) = 120,000.00
+    // Taxable Amount = 840,000.00
+    // Slab 1 (300k @ 0%): 0.00
+    // Slab 2 (100k @ 5%): 5,000.00
+    // Slab 3 (300k @ 10%): 30,000.00
+    // Slab 4 (140k @ 15%): 21,000.00
+    // Total Calculated Tax: 56,000.00 (which is > 50,000 limit)
+    // Applying 80% payable: 56,000 * 80% = 44,800.00
+    // Since 44,800.00 < 50,000.00 (min negotiable tax limit),
+    // Tax Payable should be floored to 50,000.00!
+    // Tax per month: 50,000.00 / 12 = 4,166.67
+    $salary = EmployeeSalaryBreakdown::create([
+        'employee_id' => $employee->id,
+        'gross_salary' => 80000.00,
+        'basic_salary' => 40000.00,
+        'house_allowance' => 20000.00,
+        'medical_allowance' => 10000.00,
+        'transport_allowance' => 10000.00,
+    ]);
+
+    $service = new TaxCalculateService();
+    $result = $service->calculateTaxForEmployee($employee, $policy);
+
+    expect($result)->not->toBeNull();
+    expect($result['total_tax_amount'])->toEqual(56000.00);
+    expect($result['tax_payable'])->toEqual(50000.00); // Floored to min_negotiable_tax_limit
+    expect(round($result['tax_per_month'], 2))->toEqual(4166.67);
+});

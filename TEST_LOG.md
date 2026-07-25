@@ -1,5 +1,21 @@
 # Test Log
 
+## 2026-07-25 (Tax Payable Flooring Logic Fix)
+
+**Goal**: Implement a minimum negotiable tax flooring logic to prevent the tax payable from falling below the minimum negotiable tax limit after applying the tax payable percentage.
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest`
+
+**Results**:
+- Modified `app/Services/Payroll/TaxCalculateService.php`:
+  - Wrapped the tax payable calculation with `max($minNegotiableTax, $totalTax * ($taxPayablePct / 100))` to enforce the floor.
+- Modified `tests/Feature/Payroll/TaxCalculateTest.php`:
+  - Added a new test `tax calculation logic floors tax payable to minimum negotiable tax limit when percentage reduces it below limit` to verify the flooring behavior.
+- Verified that all unit and feature tests pass.
+- Tests passed: 234/234 passed (926 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-25 (Tax Per Month Always Divide by 12 & Revert Payroll Tax Proration)
 
 **Goal**: Change the `tax_per_month` calculation to always divide by 12 instead of dividing by `total_tax_month`, revert the prorating changes in `PayrollServices.php`, and update the corresponding test assertion.
