@@ -1,5 +1,22 @@
 # Test Log
 
+## 2026-07-25 (Dynamic Pay Group Tax Deductions)
+
+**Goal**: Implement dynamic payroll tax deduction rules for different pay groups: Monthly gets full tax_per_month, Weekly gets tax_per_month / 4, Daily/Hourly get pro-rated by working days/hours per cycle.
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest`
+
+**Results**:
+- Modified `app/Services/Payroll/PayrollServices.php`:
+  - Weekly deductions: `$taxDeduction = $taxCalculation->tax_per_month / 4`
+  - Daily deductions: `$taxDeduction = ($taxCalculation->tax_per_month / $workingDaysPerCycle) * $totalDaysInRange`
+  - Hourly deductions: `$taxDeduction = ($taxCalculation->tax_per_month / ($workingDaysPerCycle * $workingHoursPerDay)) * $hoursWorked`
+  - Monthly/default: `$taxDeduction = $taxCalculation->tax_per_month`
+- Verified that all unit and feature tests pass.
+- Tests passed: 234/234 passed (926 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-25 (Tax Payable Flooring Logic Fix)
 
 **Goal**: Implement a minimum negotiable tax flooring logic to prevent the tax payable from falling below the minimum negotiable tax limit after applying the tax payable percentage.
