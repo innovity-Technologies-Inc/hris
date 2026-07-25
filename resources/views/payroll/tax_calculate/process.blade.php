@@ -26,8 +26,8 @@
                         <div class="mb-4 text-muted small">
                             Ready to compute progressive tax slabs? Click the button below to start.
                         </div>
-                        @can('tax-policy.edit')
-                        <button type="button" class="btn btn-primary btn-lg rounded-pill px-5 shadow fw-bold text-uppercase py-3" id="calculateTaxBtn">
+                        @can('tax-calculate.process')
+                        <button type="button" class="btn btn-lg rounded-pill px-5 shadow fw-bold text-uppercase py-3 text-white" id="calculateTaxBtn" style="background-color: var(--primary-color, #974063); border-color: var(--primary-color, #974063);">
                             <i data-feather="play-circle" class="me-1 fs-5 align-middle" style="width: 20px; height: 20px;"></i> Start Tax Calculation
                         </button>
                         @else

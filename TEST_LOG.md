@@ -1,5 +1,18 @@
 # Test Log
 
+## 2026-07-26 (Tax Buttons Theme Color Standardization)
+
+**Goal**: Standardize the design of primary tax action buttons (such as the "Start Tax Calculation" triggers and "Save Configuration" buttons) to utilize the project's primary brand theme color `--primary-color`.
+
+**Exact Command**: `php artisan optimize:clear && vendor/bin/pest`
+
+**Results**:
+- Modified View: `resources/views/payroll/tax_calculate/process.blade.php` to style the "Start Tax Calculation" button with `background-color: var(--primary-color, #974063)`.
+- Modified View: `resources/views/payroll/tax_policy/create.blade.php` to style "Add Allowance", "Add Slab", and "Save Configuration" submit buttons using `var(--primary-color, #974063)`.
+- Tests passed: 242/242 passed (964 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-26 (Tax Challan Row Action Buttons Styling Align)
 
 **Goal**: Standardize the design of the Edit and Delete table row action buttons in the Tax Challan listing to match solid themes and feather icons of other system lists.

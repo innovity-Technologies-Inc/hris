@@ -172,7 +172,7 @@
                                             <option value="{{ $dbField }}">{{ $displayName }}</option>
                                         @endforeach
                                     </select>
-                                    <button class="btn btn-primary px-3 fw-bold" type="button" id="addAllowanceBtn">
+                                    <button class="btn px-3 fw-bold text-white" type="button" id="addAllowanceBtn" style="background-color: var(--primary-color, #974063); border-color: var(--primary-color, #974063);">
                                         <i data-feather="plus" class="me-1" style="width: 16px; height: 16px;"></i> Add
                                     </button>
                                 </div>
@@ -204,8 +204,8 @@
                                 <i data-feather="layers" class="me-2 text-primary" style="width: 18px; height: 18px;"></i>
                                 Tax Slabs Configuration
                             </h5>
-                            <button type="button" class="btn btn-primary btn-sm rounded-pill shadow-sm px-3" id="addSlabBtn">
-                                <i data-feather="plus" class="me-1" style="width: 14px; height: 14px;"></i> Add Slab
+                            <button type="button" class="btn btn-sm rounded-pill shadow-sm px-3 text-white" id="addSlabBtn" style="background-color: var(--primary-color, #974063); border-color: var(--primary-color, #974063);">
+                                        <i data-feather="plus" class="me-1" style="width: 14px; height: 14px;"></i> Add Slab
                             </button>
                         </div>
                         <div class="card-body p-4">
@@ -253,7 +253,7 @@
 
             {{-- Submit Action --}}
             <div class="d-flex justify-content-end mt-4">
-                <button type="submit" class="btn btn-lg btn-primary rounded-pill px-5 fw-bold shadow" id="submitBtn">
+                <button type="submit" class="btn btn-lg rounded-pill px-5 fw-bold shadow text-white" id="submitBtn" style="background-color: var(--primary-color, #974063); border-color: var(--primary-color, #974063);">
                     <i data-feather="check-circle" class="me-1"></i> Save Configuration
                 </button>
             </div>
