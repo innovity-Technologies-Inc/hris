@@ -121,7 +121,14 @@
                     $payrollOpen = request()->is('promotion*') || request()->is('demotion*') || request()->is('increment*') || request()->is('decrement*') || request()->is('bonus*')
                     || request()->is('advance-salary*') || request()->is('arrear*') || request()->is('salary*');
 
-                    $showFinanceTitle = $showMovementMenu || $showClaimExpenseMenu || $showPayrollMenu || auth()->user()->can('tax-policy.view');
+                    $canTaxPolicyView = auth()->user()->can('tax-policy.view');
+                    $canTaxCalculateView = auth()->user()->can('tax-calculate.view');
+                    $canEstimatedTaxView = auth()->user()->can('estimated-tax.view');
+                    $canTaxDeductionView = auth()->user()->can('tax-deduction.view');
+                    $canTaxChallanView = auth()->user()->can('tax-challan.view');
+                    $showTaxMenu = $canTaxPolicyView || $canTaxCalculateView || $canEstimatedTaxView || $canTaxDeductionView || $canTaxChallanView;
+
+                    $showFinanceTitle = $showMovementMenu || $showClaimExpenseMenu || $showPayrollMenu || $showTaxMenu;
 
                     // Company Setup / Setup, Structure, Settings
                     $canGroups = auth()->user()->can('groups.view');
@@ -719,10 +726,9 @@
                 @endif
 
                 @php
-                    $canTaxPolicyView = auth()->user()->can('tax-policy.view');
                     $taxConfigOpen = request()->is('tax-policy*') || request()->is('tax-calculate*') || request()->is('tax-deduction*') || request()->is('tax-challan*');
                 @endphp
-                @if($canTaxPolicyView)
+                @if($showTaxMenu)
                 <li>
                     <a href="#taxConfig" data-bs-toggle="collapse" aria-expanded="{{ $taxConfigOpen ? 'true' : 'false' }}"
                           class="@if ($taxConfigOpen) menuitem-active @endif">
@@ -732,26 +738,36 @@
                     </a>
                     <div class="collapse @if ($taxConfigOpen) show @endif" id="taxConfig">
                         <ul class="nav-second-level">
+                            @if($canTaxPolicyView)
                             <li>
                                 <a class='tp-link @if (Route::is('tax-policy.index') || Route::is('tax-policy.create') || Route::is('tax-policy.edit')) menuitem-active @endif'
                                     href='{{ route('tax-policy.index') }}'>Tax Policy</a>
                             </li>
+                            @endif
+                            @if($canTaxCalculateView)
                             <li>
                                 <a class='tp-link @if (Route::is('tax-calculate.process')) menuitem-active @endif'
                                     href='{{ route('tax-calculate.process') }}'>Calculate Tax</a>
                             </li>
+                            @endif
+                            @if($canEstimatedTaxView)
                             <li>
                                 <a class='tp-link @if (Route::is('tax-calculate.index')) menuitem-active @endif'
                                     href='{{ route('tax-calculate.index') }}'>Estimated Tax</a>
                             </li>
+                            @endif
+                            @if($canTaxDeductionView)
                             <li>
                                 <a class='tp-link @if (Route::is('tax-deduction.index')) menuitem-active @endif'
                                     href='{{ route('tax-deduction.index') }}'>Tax Deduction</a>
                             </li>
+                            @endif
+                            @if($canTaxChallanView)
                             <li>
                                 <a class='tp-link @if (Route::is('tax-challan.index')) menuitem-active @endif'
                                     href='{{ route('tax-challan.index') }}'>Tax Challan</a>
                             </li>
+                            @endif
                         </ul>
                     </div>
                 </li>

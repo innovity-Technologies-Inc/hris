@@ -1,5 +1,20 @@
 # Test Log
 
+## 2026-07-26 (Claim Expense & Tax Modules Permissions Refactor)
+
+**Goal**: Refactor Claim Expense module permissions to be unified under `claim-expenses` parent slug, featuring `create`, `edit`, `view`, `delete`, and `export` actions. Introduce new Tax module permissions under `tax` parent slug in `PermissionSeeder.php`, featuring specific actions for: Tax Policy (`view`, `edit`), Calculate Tax (`view`, `process`), Estimated Tax (`view`, `export`), Tax Deduction (`view`, `delete`), and Tax Challan (`view`, `create`, `edit`, `delete`). Map permissions dynamically to Spatie roles, and configure the sidebar template and web routes to utilize these granular security middlewares.
+
+**Exact Command**: `php artisan db:seed --class=PermissionSeeder && php artisan optimize:clear && vendor/bin/pest`
+
+**Results**:
+- Modified Seeder: `database/seeders/PermissionSeeder.php` to respect explicit slugs for parent menu seeds, refactor Claim Expense sub-menus to a single actions list under the `claim-expenses` slug, register `tax` sub-menus and permissions, and assign new permissions to Employee, Manager, and Super Admin roles.
+- Modified Routes: `routes/web.php` to secure Tax Calculate, Tax Deduction, and Tax Challan routes using the new specific permissions instead of `tax-policy.*`.
+- Modified Sidebar: `resources/views/structure/partials/sidebar.blade.php` to enforce granular Spatie permissions check for each Tax submenu link.
+- Modified Tests: `TaxCalculateTest.php`, `TaxChallanTest.php`, and `TaxDeductionHistoryTest.php` to seed and assign the updated granular permissions for HTTP route testing.
+- Tests passed: 242/242 passed (964 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-26 (Employee Tax Menu Splitting)
 
 **Goal**: Split the single "Employee Tax" page into two separate menus: "Calculate Tax" (which contains the instruction page and the Calculate Tax CPU trigger button) and "Estimated Tax" (which contains only the search/listing table and Excel export without the calculate button).

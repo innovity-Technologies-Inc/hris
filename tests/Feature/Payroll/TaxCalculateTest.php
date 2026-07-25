@@ -15,11 +15,15 @@ beforeEach(function () {
     // Ensure permissions exist
     Permission::firstOrCreate(['name' => 'tax-policy.view', 'guard_name' => 'web']);
     Permission::firstOrCreate(['name' => 'tax-policy.edit', 'guard_name' => 'web']);
+    Permission::firstOrCreate(['name' => 'tax-calculate.view', 'guard_name' => 'web']);
+    Permission::firstOrCreate(['name' => 'tax-calculate.process', 'guard_name' => 'web']);
+    Permission::firstOrCreate(['name' => 'estimated-tax.view', 'guard_name' => 'web']);
+    Permission::firstOrCreate(['name' => 'estimated-tax.export', 'guard_name' => 'web']);
 });
 
 test('tax calculate index page returns correct view', function () {
     $user = User::factory()->create();
-    $user->givePermissionTo(['tax-policy.view']);
+    $user->givePermissionTo(['estimated-tax.view']);
 
     $response = $this->actingAs($user)->get(route('tax-calculate.index'));
     $response->assertStatus(200);
@@ -27,7 +31,7 @@ test('tax calculate index page returns correct view', function () {
 
 test('tax calculate process page returns correct view', function () {
     $user = User::factory()->create();
-    $user->givePermissionTo(['tax-policy.view']);
+    $user->givePermissionTo(['tax-calculate.view']);
 
     $response = $this->actingAs($user)->get(route('tax-calculate.process'));
     $response->assertStatus(200);
@@ -37,7 +41,7 @@ test('tax calculation endpoint completes synchronously for small employee counts
     $user = User::factory()->create([
         'user_type' => \App\Enums\UserType::Group
     ]);
-    $user->givePermissionTo(['tax-policy.edit']);
+    $user->givePermissionTo(['tax-calculate.process']);
 
     // Active employee count is 0 (<= 500), should execute synchronously
     $response = $this->actingAs($user)->postJson(route('tax-calculate.calculate'));
@@ -55,10 +59,10 @@ test('tax calculation endpoint dispatches background job for large employee coun
     $user = User::factory()->create([
         'user_type' => \App\Enums\UserType::Group
     ]);
-    $user->givePermissionTo(['tax-policy.edit']);
+    $user->givePermissionTo(['tax-calculate.process']);
 
     // Create 501 active employees to cross the threshold
-    Employee::factory()->count(501)->create(['status' => 'active']);
+    $employees = Employee::factory()->count(501)->create(['status' => 'active']);
 
     $response = $this->actingAs($user)->postJson(route('tax-calculate.calculate'));
 
@@ -73,7 +77,7 @@ test('tax calculation endpoint dispatches background job for large employee coun
 
 test('tax calculation export endpoint returns 200 and triggers excel download', function () {
     $user = User::factory()->create();
-    $user->givePermissionTo(['tax-policy.view']);
+    $user->givePermissionTo(['estimated-tax.export']);
 
     $response = $this->actingAs($user)->get(route('tax-calculate.export'));
     $response->assertStatus(200);
@@ -82,7 +86,7 @@ test('tax calculation export endpoint returns 200 and triggers excel download', 
 
 test('tax calculation progress endpoint returns correct progress structure', function () {
     $user = User::factory()->create();
-    $user->givePermissionTo(['tax-policy.view']);
+    $user->givePermissionTo(['tax-calculate.view']);
 
     $response = $this->actingAs($user)->get(route('tax-calculate.progress'));
     $response->assertStatus(200)

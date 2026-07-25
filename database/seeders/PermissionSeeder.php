@@ -104,10 +104,8 @@ class PermissionSeeder extends Seeder
                 'name' => 'Claim Expense',
                 'icon' => 'dollar-sign',
                 'slug' => 'claim-expenses',
-                'submenus' => [
-                    ['name' => 'Application', 'slug' => 'claim-expense-application', 'route' => 'claim_expenses.create', 'actions' => ['create']],
-                    ['name' => 'Logs', 'slug' => 'claim-expense-logs', 'route' => 'claim_expenses.index', 'actions' => ['view', 'edit', 'delete']],
-                ]
+                'route' => 'claim_expenses.index',
+                'actions' => ['view', 'create', 'edit', 'delete', 'export']
             ],
 
             [
@@ -122,6 +120,18 @@ class PermissionSeeder extends Seeder
                     ['name' => 'Arrear Management', 'slug' => 'arrear', 'route' => 'arrear.index', 'actions' => ['view', 'create', 'edit', 'delete']],
                     ['name' => 'Salary', 'route' => 'salary.index', 'actions' => ['view', 'create', 'edit', 'delete']],
                     ['name' => 'Disbursement', 'slug' => 'disbursement', 'route' => 'disbursement.index', 'actions' => ['view', 'process']],
+                ]
+            ],
+            [
+                'name' => 'Tax',
+                'icon' => 'percent',
+                'slug' => 'tax',
+                'submenus' => [
+                    ['name' => 'Tax Policy', 'slug' => 'tax-policy', 'route' => 'tax-policy.index', 'actions' => ['view', 'edit']],
+                    ['name' => 'Calculate Tax', 'slug' => 'tax-calculate', 'route' => 'tax-calculate.process', 'actions' => ['view', 'process']],
+                    ['name' => 'Estimated Tax', 'slug' => 'estimated-tax', 'route' => 'tax-calculate.index', 'actions' => ['view', 'export']],
+                    ['name' => 'Tax Deduction', 'slug' => 'tax-deduction', 'route' => 'tax-deduction.index', 'actions' => ['view', 'delete']],
+                    ['name' => 'Tax Challan', 'slug' => 'tax-challan', 'route' => 'tax-challan.index', 'actions' => ['view', 'create', 'edit', 'delete']],
                 ]
             ],
             [
@@ -208,7 +218,7 @@ class PermissionSeeder extends Seeder
         foreach ($menus as $index => $m) {
             $parent = Menu::create([
                 'name' => $m['name'],
-                'slug' => Str::slug($m['name']),
+                'slug' => $m['slug'] ?? Str::slug($m['name']),
                 'icon' => $m['icon'],
                 'route' => $m['route'] ?? null,
                 'order' => $index,
@@ -285,6 +295,8 @@ class PermissionSeeder extends Seeder
             'movement.create',
             'transfers.view',
             'transfers.create',
+            'claim-expenses.view',
+            'claim-expenses.create',
         ]);
 
         // Create Manager role and assign specific permissions exactly as in DB
@@ -311,6 +323,8 @@ class PermissionSeeder extends Seeder
             'transfers.view',
             'transfers.create',
             'transfers.edit',
+            'claim-expenses.view',
+            'claim-expenses.create',
             'promotions.view',
             'promotions.create',
             'promotions.edit',

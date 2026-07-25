@@ -22,6 +22,7 @@ uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 beforeEach(function () {
     app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
     Permission::firstOrCreate(['name' => 'tax-policy.view', 'guard_name' => 'web']);
+    Permission::firstOrCreate(['name' => 'tax-deduction.view', 'guard_name' => 'web']);
     
     $this->group = Group::create(['name' => 'Test Group', 'status' => 'active']);
     $this->type = CompanyType::create(['name' => 'IT', 'short_name' => 'IT', 'status' => 'active']);
@@ -172,7 +173,7 @@ test('it records tax deduction history during payroll generation and deletes it 
 
 test('tax deduction history index view returns 200 and loads results', function () {
     $user = User::factory()->create();
-    $user->givePermissionTo(['tax-policy.view']);
+    $user->givePermissionTo(['tax-deduction.view']);
 
     $response = $this->actingAs($user)->get(route('tax-deduction.index'));
     $response->assertStatus(200);

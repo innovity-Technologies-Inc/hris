@@ -1309,29 +1309,39 @@ Route::prefix('tax-policy')->name('tax-policy.')->controller(\App\Http\Controlle
 });
 
 Route::prefix('tax-calculate')->name('tax-calculate.')->controller(\App\Http\Controllers\Payroll\TaxCalculateController::class)->middleware('auth')->group(function () {
-    Route::middleware('permission:tax-policy.view')->group(function () {
+    Route::middleware('permission:estimated-tax.view')->group(function () {
         Route::get('/', 'index')->name('index');
+    });
+    Route::middleware('permission:tax-calculate.view')->group(function () {
         Route::get('process', 'processPage')->name('process');
-        Route::get('export', 'export')->name('export');
         Route::get('progress', 'progress')->name('progress');
     });
-    Route::middleware('permission:tax-policy.edit')->group(function () {
+    Route::middleware('permission:estimated-tax.export')->group(function () {
+        Route::get('export', 'export')->name('export');
+    });
+    Route::middleware('permission:tax-calculate.process')->group(function () {
         Route::post('calculate', 'calculate')->name('calculate');
     });
 });
 
 Route::prefix('tax-deduction')->name('tax-deduction.')->controller(\App\Http\Controllers\Payroll\TaxDeductionController::class)->middleware('auth')->group(function () {
-    Route::middleware('permission:tax-policy.view')->group(function () {
+    Route::middleware('permission:tax-deduction.view')->group(function () {
         Route::get('/', 'index')->name('index');
     });
 });
 
 Route::prefix('tax-challan')->name('tax-challan.')->controller(\App\Http\Controllers\Payroll\TaxChallanController::class)->middleware('auth')->group(function () {
-    Route::middleware('permission:tax-policy.view')->group(function () {
+    Route::middleware('permission:tax-challan.view')->group(function () {
         Route::get('/', 'index')->name('index');
+    });
+    Route::middleware('permission:tax-challan.create')->group(function () {
         Route::post('store', 'store')->name('store');
+    });
+    Route::middleware('permission:tax-challan.edit')->group(function () {
         Route::get('{id}/edit', 'edit')->name('edit');
         Route::post('{id}/update', 'update')->name('update');
+    });
+    Route::middleware('permission:tax-challan.delete')->group(function () {
         Route::delete('{id}', 'destroy')->name('destroy');
     });
 });

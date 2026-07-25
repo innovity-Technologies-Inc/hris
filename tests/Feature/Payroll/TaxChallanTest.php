@@ -15,7 +15,10 @@ uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
 beforeEach(function () {
     app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
-    Permission::firstOrCreate(['name' => 'tax-policy.view', 'guard_name' => 'web']);
+    Permission::firstOrCreate(['name' => 'tax-challan.view', 'guard_name' => 'web']);
+    Permission::firstOrCreate(['name' => 'tax-challan.create', 'guard_name' => 'web']);
+    Permission::firstOrCreate(['name' => 'tax-challan.edit', 'guard_name' => 'web']);
+    Permission::firstOrCreate(['name' => 'tax-challan.delete', 'guard_name' => 'web']);
 
     $this->group = Group::create(['name' => 'Test Group', 'status' => 'active']);
     $this->type = CompanyType::create(['name' => 'IT', 'short_name' => 'IT', 'status' => 'active']);
@@ -46,7 +49,7 @@ beforeEach(function () {
     $this->admin = User::factory()->create([
         'user_type' => \App\Enums\UserType::Company,
     ]);
-    $this->admin->givePermissionTo('tax-policy.view');
+    $this->admin->givePermissionTo(['tax-challan.view', 'tax-challan.create', 'tax-challan.edit', 'tax-challan.delete']);
 
     // Fake the default storage disk
     $this->disk = config('filesystems.default');
