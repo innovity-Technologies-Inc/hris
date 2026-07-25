@@ -1,8 +1,8 @@
 @extends('structure.master')
 
 @section('content')
-    <div class="row justify-content-center">
-        <div class="col-lg-8 col-md-10">
+    <div class="row">
+        <div class="col-12">
             <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
                 <div class="card-header bg-white py-3 border-bottom border-light">
                     <h5 class="card-title mb-0 fw-bold text-dark d-flex align-items-center">
