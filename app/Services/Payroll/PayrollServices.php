@@ -1014,6 +1014,7 @@ class PayrollServices
             $total_salary = 0;
             $employeeData = [];
             $penaltiesToUpdate = [];
+            $policy = \App\Models\Payroll\TaxPolicy::first();
 
             foreach ($employees as $employee) {
                 $employeeAttendance = Attendance::where('employee_id', $employee->id)->whereBetween('in_time', [$startDate, $endDate])->get();
@@ -1056,9 +1057,17 @@ class PayrollServices
                 $previousDues = \App\Models\Payroll\PreviousDue::where('employee_id', $employee->id)->where('status', 'pending')->get();
                 $previousDueAmount = $previousDues->sum('amount');
 
+                $empPayGroup = $employeeSalary->payScale?->pay_group_id ?? null;
+                $isTaxApplicable = false;
+                if ($policy && !empty($policy->applicable_pay_groups) && $empPayGroup) {
+                    if (in_array((string)$empPayGroup, array_map('strval', $policy->applicable_pay_groups))) {
+                        $isTaxApplicable = true;
+                    }
+                }
+
                 $taxCalculation = \App\Models\Payroll\TaxCalculation::where('employee_id', $employee->id)->first();
                 $taxDeduction = 0.00;
-                if ($taxCalculation) {
+                if ($taxCalculation && $isTaxApplicable) {
                     if ($frequency === 'weekly') {
                         $taxDeduction = (double) $taxCalculation->tax_per_month / 4;
                     } elseif ($frequency === 'daily') {

@@ -32,6 +32,9 @@ class StoreTaxPolicyRequest extends FormRequest
             'slabs.*.taxable_amount' => 'nullable|numeric|min:0',
             'slabs.*.tax_percentage' => 'required|numeric|min:0|max:100',
             'slabs.*.tax_amount' => 'required|numeric|min:0',
+            
+            'applicable_pay_groups' => 'nullable|array',
+            'applicable_pay_groups.*' => 'required|exists:pay_groups,id',
         ];
     }
 }

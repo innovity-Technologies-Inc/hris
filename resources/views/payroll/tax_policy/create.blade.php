@@ -102,8 +102,25 @@
                                     <input type="number" class="form-control form-control-md border-start-0" 
                                            name="total_tax_month" id="total_tax_month" 
                                            value="{{ $policy->total_tax_month ?? 12 }}" required>
-                                </div>
                                 <div class="form-text small text-muted">Specify the total tax months (Note: the tax month will be including the bonus).</div>
+                            </div>
+
+                            {{-- Applicable Pay Groups Checkbox List --}}
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold text-dark mb-2">Applicable Pay Groups <span class="text-danger">*</span></label>
+                                <div class="border rounded-4 p-3" style="background-color: #fafbfc; max-height: 200px; overflow-y: auto;">
+                                    @foreach($payGroups as $payGroup)
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" name="applicable_pay_groups[]" 
+                                                   id="paygroup_{{ $payGroup->id }}" value="{{ $payGroup->id }}"
+                                                   @if(!empty($policy->applicable_pay_groups) && in_array($payGroup->id, $policy->applicable_pay_groups)) checked @endif>
+                                            <label class="form-check-label text-dark fw-semibold small" for="paygroup_{{ $payGroup->id }}">
+                                                {{ $payGroup->title }} ({{ $payGroup->payroll_frequency }})
+                                            </label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <div class="form-text small text-muted">Select the pay groups for which tax calculation is applicable. Ineligible pay groups will have 0.00 tax deduction.</div>
                             </div>
 
                             <hr class="my-4" style="border-style: dashed; opacity: 0.15;">

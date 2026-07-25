@@ -1,5 +1,25 @@
 # Test Log
 
+## 2026-07-26 (Tax Policy Applicable Pay Groups Condition)
+
+**Goal**: Implement dynamic configuration to enable/disable tax calculation on specific pay groups under the Tax Exemption Policy. Add a checklist of active pay groups to the configuration view, validating and saving selections to a new JSON column `applicable_pay_groups` on the `tax_policies` table. During payroll processes and batch tax calculations, check if the employee's pay group is checked in the active policy; if not, tax calculation is skipped and the payroll deduction amount defaults to 0.00.
+
+**Exact Command**: `php artisan optimize:clear && vendor/bin/pest`
+
+**Results**:
+- Created Migration: `database/migrations/2026_07_26_020000_add_applicable_pay_groups_to_tax_policies_table.php`.
+- Modified Model: `app/Models/Payroll/TaxPolicy.php` to include `applicable_pay_groups` in `$fillable` and cast as `array`.
+- Modified Request: `StoreTaxPolicyRequest.php` to validate `applicable_pay_groups` as a array of valid pay group IDs.
+- Modified Service: `app/Services/Payroll/TaxPolicyService.php` to persist selections.
+- Modified Service: `app/Services/Payroll/TaxCalculateService.php` to set calculation parameters to `0.00` for employees in ineligible pay groups.
+- Modified Service: `app/Services/Payroll/PayrollServices.php` to ignore tax deduction (set to `0.00`) during payroll processing if the pay group is not active in the tax policy.
+- Modified Controller: `TaxPolicyController.php` to pass active pay groups and default automatically to checking all active pay groups on initialize.
+- Modified View: `resources/views/payroll/tax_policy/create.blade.php` to add checkboxes for pay groups.
+- Modified Tests: `TaxDeductionHistoryTest.php` and `TaxPolicyTest.php` to assign pay groups to the tax policy during testing.
+- Tests passed: 241/241 passed (963 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-26 (Tax Challan Management & File Uploads)
 
 **Goal**: Develop a new `tax_challans` module to manage tax challan records with file attachments. Features include an Axios/API-based modal form to add/edit challans, multiple file uploads, removal of old files during edits, delete confirmation via SweetAlert2, and index search filtering by company, date range, keyword (employee name, system id, applicant id).

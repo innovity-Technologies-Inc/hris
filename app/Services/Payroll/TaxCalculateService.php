@@ -99,25 +99,51 @@ class TaxCalculateService
 
             // Chunk active employees with salary breakdowns to keep memory usage low and constant
             Employee::has('salary')
+                ->with(['salary.payScale'])
                 ->where('status', 'active')
                 ->chunk(500, function ($employees) use ($policy, &$processedCount, $total) {
                     $records = [];
 
                     foreach ($employees as $employee) {
                         try {
-                            $result = $this->calculateTaxForEmployee($employee, $policy);
-                            if ($result) {
+                            $empPayGroup = $employee->salary?->payScale?->pay_group_id;
+                            $isTaxApplicable = false;
+                            if ($policy && !empty($policy->applicable_pay_groups) && $empPayGroup) {
+                                if (in_array((string)$empPayGroup, array_map('strval', $policy->applicable_pay_groups))) {
+                                    $isTaxApplicable = true;
+                                }
+                            }
+
+                            if ($isTaxApplicable) {
+                                $result = $this->calculateTaxForEmployee($employee, $policy);
+                                if ($result) {
+                                    $records[] = [
+                                        'employee_id' => $employee->id,
+                                        'policy_id' => $policy->id,
+                                        'gross_salary' => $result['gross_salary'],
+                                        'exemption_amount' => $result['exemption_amount'],
+                                        'taxable_amount' => $result['taxable_amount'],
+                                        'slab_taxes' => json_encode($result['slab_taxes']),
+                                        'slabs_reached' => $result['slabs_reached'],
+                                        'total_tax_amount' => $result['total_tax_amount'],
+                                        'tax_payable' => $result['tax_payable'],
+                                        'tax_per_month' => $result['tax_per_month'],
+                                        'created_at' => now(),
+                                        'updated_at' => now(),
+                                    ];
+                                }
+                            } else {
                                 $records[] = [
                                     'employee_id' => $employee->id,
                                     'policy_id' => $policy->id,
-                                    'gross_salary' => $result['gross_salary'],
-                                    'exemption_amount' => $result['exemption_amount'],
-                                    'taxable_amount' => $result['taxable_amount'],
-                                    'slab_taxes' => json_encode($result['slab_taxes']),
-                                    'slabs_reached' => $result['slabs_reached'],
-                                    'total_tax_amount' => $result['total_tax_amount'],
-                                    'tax_payable' => $result['tax_payable'],
-                                    'tax_per_month' => $result['tax_per_month'],
+                                    'gross_salary' => $employee->salary->gross_salary ?? 0.00,
+                                    'exemption_amount' => 0.00,
+                                    'taxable_amount' => 0.00,
+                                    'slab_taxes' => json_encode([]),
+                                    'slabs_reached' => 0,
+                                    'total_tax_amount' => 0.00,
+                                    'tax_payable' => 0.00,
+                                    'tax_per_month' => 0.00,
                                     'created_at' => now(),
                                     'updated_at' => now(),
                                 ];

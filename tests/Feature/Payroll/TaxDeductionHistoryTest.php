@@ -43,6 +43,15 @@ beforeEach(function () {
 test('it records tax deduction history during payroll generation and deletes it on rollback', function () {
     $this->withoutExceptionHandling();
 
+    $payGroup = PayGroup::create([
+        'title' => 'Monthly Staff',
+        'payroll_frequency' => 'Monthly',
+        'salary_processing_day' => '25',
+        'working_hours_per_day' => 8,
+        'working_days_per_cycle' => 30,
+        'status' => 'active'
+    ]);
+
     // 1. Create a Tax Policy & Slabs
     $policy = TaxPolicy::create([
         'zero_tax_male' => 350000.00,
@@ -54,6 +63,7 @@ test('it records tax deduction history during payroll generation and deletes it 
         'min_negotiable_tax_limit' => 50000.00,
         'tax_payable_percentage' => 80.00,
         'total_tax_month' => 12,
+        'applicable_pay_groups' => [$payGroup->id],
     ]);
 
     $policy->slabs()->createMany([
@@ -80,15 +90,6 @@ test('it records tax deduction history during payroll generation and deletes it 
     $grade = SalaryGrade::create([
         'grade_code' => 'G1',
         'grade_name' => 'Grade 1',
-        'status' => 'active'
-    ]);
-
-    $payGroup = PayGroup::create([
-        'title' => 'Monthly Staff',
-        'payroll_frequency' => 'Monthly',
-        'salary_processing_day' => '25',
-        'working_hours_per_day' => 8,
-        'working_days_per_cycle' => 30,
         'status' => 'active'
     ]);
 

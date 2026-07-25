@@ -22,6 +22,23 @@ test('tax policy single-page configuration update works correctly via Axios', fu
     expect($policy)->not->toBeNull();
     expect($policy->zero_tax_male)->toEqual(350000.00);
 
+    $payGroup1 = \App\Models\Company\PayGroup::create([
+        'title' => 'Paygroup 1',
+        'payroll_frequency' => 'Monthly',
+        'salary_processing_day' => '25',
+        'working_hours_per_day' => 8,
+        'working_days_per_cycle' => 30,
+        'status' => 'active'
+    ]);
+    $payGroup2 = \App\Models\Company\PayGroup::create([
+        'title' => 'Paygroup 2',
+        'payroll_frequency' => 'Weekly',
+        'salary_processing_day' => '7',
+        'working_hours_per_day' => 8,
+        'working_days_per_cycle' => 30,
+        'status' => 'active'
+    ]);
+
     // 2. Update Tax Policy (Exemption type: exempt_allowance) via PUT request
     // Tests having taxable_amount and taxable_amount = null for last slab.
     $response = $this->actingAs($user)->putJson(route('tax-policy.update', $policy->id), [
@@ -33,6 +50,7 @@ test('tax policy single-page configuration update works correctly via Axios', fu
         'total_tax_month' => 12,
         'exemption_type' => 'exempt_allowance',
         'exempt_allowances' => ['house_allowance', 'medical_allowance'],
+        'applicable_pay_groups' => [$payGroup1->id, $payGroup2->id],
         'slabs' => [
             [
                 'taxable_amount' => 150000.00,
@@ -60,6 +78,7 @@ test('tax policy single-page configuration update works correctly via Axios', fu
     expect($policy->total_tax_month)->toEqual(12);
     expect($policy->exemption_type)->toBe('exempt_allowance');
     expect($policy->exempt_allowances)->toBe(['house_allowance', 'medical_allowance']);
+    expect($policy->applicable_pay_groups)->toEqual([$payGroup1->id, $payGroup2->id]);
     expect($policy->slabs->count())->toBe(2);
     
     $lastSlab = $policy->slabs->last();

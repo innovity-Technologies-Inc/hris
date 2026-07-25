@@ -39,6 +39,7 @@ class TaxPolicyService
                     'min_negotiable_tax_limit' => $data['min_negotiable_tax_limit'],
                     'tax_payable_percentage' => $data['tax_payable_percentage'],
                     'total_tax_month' => $data['total_tax_month'],
+                    'applicable_pay_groups' => $data['applicable_pay_groups'] ?? [],
                 ]
             );
 

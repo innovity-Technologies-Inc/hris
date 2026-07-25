@@ -21,10 +21,12 @@ class TaxPolicy extends Model
         'min_negotiable_tax_limit',
         'tax_payable_percentage',
         'total_tax_month',
+        'applicable_pay_groups',
     ];
 
     protected $casts = [
         'exempt_allowances' => 'array',
+        'applicable_pay_groups' => 'array',
         'zero_tax_male' => 'decimal:2',
         'zero_tax_female' => 'decimal:2',
         'min_tax_amount' => 'decimal:2',

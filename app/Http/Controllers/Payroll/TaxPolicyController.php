@@ -47,6 +47,7 @@ class TaxPolicyController extends Controller
         // Load the first available policy or initialize/save a default one
         $policy = TaxPolicy::with('slabs')->first();
         if (!$policy) {
+            $payGroupIds = \App\Models\Company\PayGroup::where('status', 'active')->pluck('id')->map('strval')->toArray();
             $policy = TaxPolicy::create([
                 'zero_tax_male' => 350000.00,
                 'zero_tax_female' => 400000.00,
@@ -57,6 +58,7 @@ class TaxPolicyController extends Controller
                 'min_negotiable_tax_limit' => 50000.00,
                 'tax_payable_percentage' => 80.00,
                 'total_tax_month' => 12,
+                'applicable_pay_groups' => $payGroupIds,
             ]);
             
             // Create default slabs
@@ -70,8 +72,9 @@ class TaxPolicyController extends Controller
         }
 
         $allowanceMapping = $this->getAllowanceMapping();
+        $payGroups = \App\Models\Company\PayGroup::where('status', 'active')->orderBy('title')->get();
 
-        return view('payroll.tax_policy.create', compact('title', 'section', 'sub_section', 'policy', 'allowanceMapping'));
+        return view('payroll.tax_policy.create', compact('title', 'section', 'sub_section', 'policy', 'allowanceMapping', 'payGroups'));
     }
 
     /**
