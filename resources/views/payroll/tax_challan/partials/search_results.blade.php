@@ -29,23 +29,27 @@
                             <th scope="row" class="fw-semibold">{{ $sl++ }}</th>
                             <td class="fw-semibold text-dark">{{ $challan->company->name ?? 'N/A' }}</td>
                             <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    {!! \App\HelperClass::generateAvatar(
-                                        $challan->employee->photo_path ?? null,
-                                        $challan->employee->full_name ?? 'N/A',
-                                        36,
-                                        '#974063',
-                                        '',
-                                        $challan->employee_id,
-                                    ) !!}
-                                    <div>
-                                        <a href="{{ route('employee.profile.general_informations', $challan->employee_id) }}"
-                                            class="text-decoration-none fw-semibold text-dark">
-                                            {{ $challan->employee->full_name ?? 'N/A' }}
-                                        </a>
-                                        <div class="text-muted small">ID: {{ $challan->employee->applicant_id ?? $challan->employee->system_id ?? 'N/A' }}</div>
+                                @if($challan->employee)
+                                    <div class="d-flex align-items-center gap-2">
+                                        {!! \App\HelperClass::generateAvatar(
+                                            $challan->employee->photo_path ?? null,
+                                            $challan->employee->full_name ?? 'N/A',
+                                            36,
+                                            '#974063',
+                                            '',
+                                            $challan->employee_id,
+                                        ) !!}
+                                        <div>
+                                            <a href="{{ route('employee.profile.general_informations', $challan->employee_id) }}"
+                                                class="text-decoration-none fw-semibold text-dark">
+                                                {{ $challan->employee->full_name }}
+                                            </a>
+                                            <div class="text-muted small">ID: {{ $challan->employee->applicant_id ?? $challan->employee->system_id ?? 'N/A' }}</div>
+                                        </div>
                                     </div>
-                                </div>
+                                @else
+                                    <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 px-2.5 py-1.5 rounded-pill fw-semibold small">Company-wide</span>
+                                @endif
                             </td>
                             <td class="text-center fw-semibold text-dark">
                                 {{ Carbon\Carbon::parse($challan->tax_paid_from . '-01')->format('M Y') }}
