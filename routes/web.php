@@ -1325,6 +1325,16 @@ Route::prefix('tax-deduction')->name('tax-deduction.')->controller(\App\Http\Con
     });
 });
 
+Route::prefix('tax-challan')->name('tax-challan.')->controller(\App\Http\Controllers\Payroll\TaxChallanController::class)->middleware('auth')->group(function () {
+    Route::middleware('permission:tax-policy.view')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('store', 'store')->name('store');
+        Route::get('{id}/edit', 'edit')->name('edit');
+        Route::post('{id}/update', 'update')->name('update');
+        Route::delete('{id}', 'destroy')->name('destroy');
+    });
+});
+
 Route::prefix('disbursement')->name('disbursement.')->controller(\App\Http\Controllers\Payroll\DisbursementController::class)->middleware('auth')->group(function () {
     Route::middleware('permission:disbursement.view')->group(function () {
         Route::get('/', 'index')->name('index');

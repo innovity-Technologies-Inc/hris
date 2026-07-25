@@ -1,5 +1,25 @@
 # Test Log
 
+## 2026-07-26 (Tax Challan Management & File Uploads)
+
+**Goal**: Develop a new `tax_challans` module to manage tax challan records with file attachments. Features include an Axios/API-based modal form to add/edit challans, multiple file uploads, removal of old files during edits, delete confirmation via SweetAlert2, and index search filtering by company, date range, keyword (employee name, system id, applicant id).
+
+**Exact Command**: `php artisan optimize:clear && vendor/bin/pest`
+
+**Results**:
+- Created Migration: `database/migrations/2026_07_26_010000_create_tax_challans_table.php`.
+- Created Model: `app/Models/Payroll/TaxChallan.php` (uses `OrganizationScoped`).
+- Created Requests: `StoreTaxChallanRequest.php` & `UpdateTaxChallanRequest.php` under `App\Http\Requests\Payroll`.
+- Created Service: `app/Services/Payroll/TaxChallanServices.php` to handle business logic and upload operations.
+- Created Controller: `app/Http/Controllers/Payroll/TaxChallanController.php` with CRUD JSON responses.
+- Created Views: `resources/views/payroll/tax_challan/index.blade.php` and `resources/views/payroll/tax_challan/partials/search_results.blade.php`.
+- Modified Sidebar: `resources/views/structure/partials/sidebar.blade.php` to include Tax Challan sub-menu.
+- Registered Routes: `routes/web.php` for `tax-challan` prefix.
+- Created Test File: `tests/Feature/Payroll/TaxChallanTest.php` verifying storage faking, store, update, delete, index 200, and file delete logic.
+- Tests passed: 240/240 passed (957 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-26 (Tax Deduction History Search & Persistence)
 
 **Goal**: Implement `tax_deduction_histories` database table to track tax deduction details during payroll run and rollback. Create search listing page with date range search, keyword search (system id, name) and organizational cascade unit filters.

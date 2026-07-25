@@ -720,7 +720,7 @@
 
                 @php
                     $canTaxPolicyView = auth()->user()->can('tax-policy.view');
-                    $taxConfigOpen = request()->is('tax-policy*') || request()->is('tax-calculate*') || request()->is('tax-deduction*');
+                    $taxConfigOpen = request()->is('tax-policy*') || request()->is('tax-calculate*') || request()->is('tax-deduction*') || request()->is('tax-challan*');
                 @endphp
                 @if($canTaxPolicyView)
                 <li>
@@ -743,6 +743,10 @@
                             <li>
                                 <a class='tp-link @if (Route::is('tax-deduction.index')) menuitem-active @endif'
                                     href='{{ route('tax-deduction.index') }}'>Tax Deduction</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('tax-challan.index')) menuitem-active @endif'
+                                    href='{{ route('tax-challan.index') }}'>Tax Challan</a>
                             </li>
                         </ul>
                     </div>
