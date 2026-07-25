@@ -73,13 +73,13 @@
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2">
                                     @can('tax-challan.edit')
-                                    <button type="button" class="btn btn-sm btn-outline-primary edit-challan" data-id="{{ $challan->id }}" title="Edit Challan">
-                                        <i class="mdi mdi-pencil"></i>
+                                    <button type="button" class="btn btn-primary btn-sm edit-challan" data-id="{{ $challan->id }}" title="Edit Challan">
+                                        <i style="height: 12px; width: 12px" data-feather="edit"></i>
                                     </button>
                                     @endcan
                                     @can('tax-challan.delete')
-                                    <button type="button" class="btn btn-sm btn-outline-danger delete-challan" data-id="{{ $challan->id }}" title="Delete Challan">
-                                        <i class="mdi mdi-trash-can"></i>
+                                    <button type="button" class="btn btn-danger btn-sm delete-challan" data-id="{{ $challan->id }}" title="Delete Challan">
+                                        <i style="height: 12px; width: 12px" data-feather="trash"></i>
                                     </button>
                                     @endcan
                                 </div>
