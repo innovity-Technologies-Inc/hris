@@ -1,5 +1,18 @@
 # Test Log
 
+## 2026-07-26 (Tax Challan Add Button Styling Align)
+
+**Goal**: Standardize the design of the Add New Challan action button in the Tax Challan index page card header and secure the action button elements under explicit permission gate checks.
+
+**Exact Command**: `php artisan optimize:clear && vendor/bin/pest`
+
+**Results**:
+- Modified View: `resources/views/payroll/tax_challan/index.blade.php` to wrap the add action button under `@can('tax-challan.create')` check, styling the element class to `btn-warning btn-sm` (matching the style standard of all other system list indexes).
+- Modified View: `resources/views/payroll/tax_challan/partials/search_results.blade.php` to wrap edit and delete actions with `@can('tax-challan.edit')` and `@can('tax-challan.delete')` checks respectively.
+- Tests passed: 242/242 passed (964 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-26 (Tax Challan Nullable Employee View Fix)
 
 **Goal**: Fix 500 server error on the Tax Challan index page when listing records with a null `employee_id` by wrapping the avatar and profile route generation with a clean null check.

@@ -72,12 +72,16 @@
                             </td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2">
+                                    @can('tax-challan.edit')
                                     <button type="button" class="btn btn-sm btn-outline-primary edit-challan" data-id="{{ $challan->id }}" title="Edit Challan">
                                         <i class="mdi mdi-pencil"></i>
                                     </button>
+                                    @endcan
+                                    @can('tax-challan.delete')
                                     <button type="button" class="btn btn-sm btn-outline-danger delete-challan" data-id="{{ $challan->id }}" title="Delete Challan">
                                         <i class="mdi mdi-trash-can"></i>
                                     </button>
+                                    @endcan
                                 </div>
                             </td>
                         </tr>

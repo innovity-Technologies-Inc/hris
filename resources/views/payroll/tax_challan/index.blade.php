@@ -81,8 +81,8 @@
                         <i data-feather="list" class="me-2 text-primary" style="width: 20px; height: 20px;"></i>
                         Tax Challan List
                     </h5>
-                    @can('tax-policy.edit')
-                    <button type="button" class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold no-loader" id="addChallanBtn">
+                    @can('tax-challan.create')
+                    <button type="button" class="btn btn-warning btn-sm" id="addChallanBtn">
                         <i class="bi bi-plus-lg me-1"></i> Add New Challan
                     </button>
                     @endcan
