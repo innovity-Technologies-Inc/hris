@@ -737,8 +737,12 @@
                                     href='{{ route('tax-policy.index') }}'>Tax Policy</a>
                             </li>
                             <li>
+                                <a class='tp-link @if (Route::is('tax-calculate.process')) menuitem-active @endif'
+                                    href='{{ route('tax-calculate.process') }}'>Calculate Tax</a>
+                            </li>
+                            <li>
                                 <a class='tp-link @if (Route::is('tax-calculate.index')) menuitem-active @endif'
-                                    href='{{ route('tax-calculate.index') }}'>Employee Tax</a>
+                                    href='{{ route('tax-calculate.index') }}'>Estimated Tax</a>
                             </li>
                             <li>
                                 <a class='tp-link @if (Route::is('tax-deduction.index')) menuitem-active @endif'

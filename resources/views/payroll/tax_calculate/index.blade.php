@@ -135,11 +135,6 @@
                         <button type="button" id="exportExcelBtn" class="btn btn-success rounded-pill px-4 shadow-sm fw-bold no-loader">
                             <i class="bi bi-file-earmark-excel me-1"></i> Export
                         </button>
-                        @can('tax-policy.edit')
-                        <button type="button" class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold no-loader" id="calculateTaxBtn">
-                            <i data-feather="cpu" class="me-1" style="width: 16px; height: 16px;"></i> Calculate Tax
-                        </button>
-                        @endcan
                     </div>
                 </div>
                 <div class="card-body">
@@ -324,98 +319,7 @@
                 }
             });
 
-            // Trigger Tax Calculation batch processing
-            $('#calculateTaxBtn').on('click', function(e) {
-                e.preventDefault();
 
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "This will run the tax calculation formula for all active employees. Existing tax logs will be updated.",
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, calculate now!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        let progressInterval = null;
-
-                        Swal.fire({
-                            title: 'Calculating...',
-                            html: `
-                                <div class="text-center">
-                                    <p id="taxProgressMessage" class="mb-2 text-muted">Starting employee tax bracket processing...</p>
-                                    <div class="progress mt-3" style="height: 25px; border-radius: 12px; overflow: hidden; background-color: rgba(0,0,0,0.05);">
-                                        <div id="taxProgressBar" class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: 0%; font-weight: bold; line-height: 25px;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
-                                    </div>
-                                    <small class="text-muted mt-2 d-block" id="taxProgressCounter">Preparing calculation parameters...</small>
-                                </div>
-                            `,
-                            allowOutsideClick: false,
-                            showConfirmButton: false
-                        });
-
-                        // Start polling progress
-                        progressInterval = setInterval(() => {
-                            axios.get("{{ route('tax-calculate.progress') }}")
-                                .then(res => {
-                                    const data = res.data;
-                                    if (data && data.total > 0) {
-                                        const percentage = Math.round((data.processed / data.total) * 100);
-                                        $('#taxProgressBar').css('width', percentage + '%').attr('aria-valuenow', percentage).text(percentage + '%');
-                                        $('#taxProgressCounter').text(`Processed ${data.processed} of ${data.total} employees`);
-                                        if (data.status === 'completed') {
-                                            clearInterval(progressInterval);
-                                        } else if (data.status === 'failed') {
-                                            clearInterval(progressInterval);
-                                            Swal.fire({
-                                                icon: 'error',
-                                                title: 'Calculation Failed',
-                                                text: data.error || 'Failed to process calculations.'
-                                            });
-                                        }
-                                    }
-                                })
-                                .catch(err => {
-                                    console.error('Error fetching progress:', err);
-                                });
-                        }, 800);
-
-                        axios.post("{{ route('tax-calculate.calculate') }}")
-                            .then(response => {
-                                clearInterval(progressInterval);
-                                Swal.close();
-                                if (response.data.success) {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Calculated!',
-                                        text: response.data.message,
-                                        timer: 2000,
-                                        showConfirmButton: false
-                                    }).then(() => {
-                                        fetchData();
-                                    });
-                                } else {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Calculation Failed',
-                                        text: response.data.message
-                                    });
-                                }
-                            })
-                            .catch(error => {
-                                clearInterval(progressInterval);
-                                Swal.close();
-                                const msg = error.response?.data?.message || 'Failed to trigger tax calculation process.';
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error',
-                                    text: msg
-                                });
-                            });
-                    }
-                });
-            });
 
             // Excel Export click handler
             $(document).on('click', '#exportExcelBtn', function(e) {

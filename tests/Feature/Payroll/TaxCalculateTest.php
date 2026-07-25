@@ -25,6 +25,14 @@ test('tax calculate index page returns correct view', function () {
     $response->assertStatus(200);
 });
 
+test('tax calculate process page returns correct view', function () {
+    $user = User::factory()->create();
+    $user->givePermissionTo(['tax-policy.view']);
+
+    $response = $this->actingAs($user)->get(route('tax-calculate.process'));
+    $response->assertStatus(200);
+});
+
 test('tax calculation endpoint completes synchronously for small employee counts', function () {
     $user = User::factory()->create([
         'user_type' => \App\Enums\UserType::Group

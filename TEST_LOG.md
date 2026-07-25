@@ -1,5 +1,22 @@
 # Test Log
 
+## 2026-07-26 (Employee Tax Menu Splitting)
+
+**Goal**: Split the single "Employee Tax" page into two separate menus: "Calculate Tax" (which contains the instruction page and the Calculate Tax CPU trigger button) and "Estimated Tax" (which contains only the search/listing table and Excel export without the calculate button).
+
+**Exact Command**: `php artisan optimize:clear && vendor/bin/pest`
+
+**Results**:
+- Modified Controller: `TaxCalculateController.php` to add `processPage` method.
+- Modified Routes: `routes/web.php` to register `tax-calculate.process`.
+- Modified Sidebar: `resources/views/structure/partials/sidebar.blade.php` to split sub-menu links.
+- Modified View: `resources/views/payroll/tax_calculate/index.blade.php` to remove Calculate Tax trigger button and its JS handlers.
+- Created View: `resources/views/payroll/tax_calculate/process.blade.php` to hold the instruction manual layout, CPU trigger button, SweetAlert trigger, and Axios progress bar polling script.
+- Modified Test: `tests/Feature/Payroll/TaxCalculateTest.php` to add verification test case for the process route.
+- Tests passed: 242/242 passed (964 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-26 (Tax Policy Applicable Pay Groups Condition)
 
 **Goal**: Implement dynamic configuration to enable/disable tax calculation on specific pay groups under the Tax Exemption Policy. Add a checklist of active pay groups to the configuration view, validating and saving selections to a new JSON column `applicable_pay_groups` on the `tax_policies` table. During payroll processes and batch tax calculations, check if the employee's pay group is checked in the active policy; if not, tax calculation is skipped and the payroll deduction amount defaults to 0.00.

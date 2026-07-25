@@ -1311,6 +1311,7 @@ Route::prefix('tax-policy')->name('tax-policy.')->controller(\App\Http\Controlle
 Route::prefix('tax-calculate')->name('tax-calculate.')->controller(\App\Http\Controllers\Payroll\TaxCalculateController::class)->middleware('auth')->group(function () {
     Route::middleware('permission:tax-policy.view')->group(function () {
         Route::get('/', 'index')->name('index');
+        Route::get('process', 'processPage')->name('process');
         Route::get('export', 'export')->name('export');
         Route::get('progress', 'progress')->name('progress');
     });

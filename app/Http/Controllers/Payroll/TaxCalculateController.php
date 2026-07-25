@@ -65,6 +65,18 @@ class TaxCalculateController extends Controller
     }
 
     /**
+     * Display the instruction and calculate tax trigger page.
+     */
+    public function processPage()
+    {
+        $title = 'Calculate Tax';
+        $section = 'Finance';
+        $sub_section = 'Calculate Tax';
+
+        return view('payroll.tax_calculate.process', compact('title', 'section', 'sub_section'));
+    }
+
+    /**
      * Export employee tax calculations to Excel (not paginated).
      */
     public function export(Request $request, FlexSearch $flexSearch)
