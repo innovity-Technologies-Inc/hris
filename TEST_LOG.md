@@ -1,5 +1,22 @@
 # Test Log
 
+## 2026-07-25 (Paygroup Working Metrics Visibility and Validation Fix)
+
+**Goal**: Make the `working_hours_per_day` and `working_days_per_cycle` fields always visible and required for all payroll frequencies on the pay group modal and validator.
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest`
+
+**Results**:
+- Modified `app/Http/Requests/Company/PayGroupRequest.php`:
+  - Changed validation rules to make `working_hours_per_day` and `working_days_per_cycle` required unconditionally.
+- Modified `resources/views/company/pay_groups/index.blade.php`:
+  - Updated the modal HTML to display the `#dynamicWorkingMetrics` container block by default and marked inputs as `required`.
+  - Updated `updateProcessingDayInput` JS function to keep metrics container visible (`style.display = 'block'`) and inputs marked as `required` for all frequencies.
+- Verified that all unit and feature tests pass.
+- Tests passed: 234/234 passed (926 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-25 (Dynamic Pay Group Tax Deductions)
 
 **Goal**: Implement dynamic payroll tax deduction rules for different pay groups: Monthly gets full tax_per_month, Weekly gets tax_per_month / 4, Daily/Hourly get pro-rated by working days/hours per cycle.

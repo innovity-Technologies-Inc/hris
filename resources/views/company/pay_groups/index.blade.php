@@ -63,15 +63,15 @@
                                 <option value="Daily">Daily</option>
                             </select>
                         </div>
-                        <div id="dynamicWorkingMetrics" style="display: none;">
+                        <div id="dynamicWorkingMetrics" style="display: block;">
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold">Working Hours / Day <span class="text-danger">*</span></label>
-                                    <input type="number" step="0.01" class="form-control" name="working_hours_per_day" id="working_hours_per_day" placeholder="e.g. 8">
+                                    <input type="number" step="0.01" class="form-control" name="working_hours_per_day" id="working_hours_per_day" placeholder="e.g. 8" required>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold">Working Days / Cycle <span class="text-danger">*</span></label>
-                                    <input type="number" step="0.01" class="form-control" name="working_days_per_cycle" id="working_days_per_cycle" placeholder="e.g. 30">
+                                    <input type="number" step="0.01" class="form-control" name="working_days_per_cycle" id="working_days_per_cycle" placeholder="e.g. 30" required>
                                 </div>
                             </div>
                         </div>
@@ -132,6 +132,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const workingHoursInput = document.getElementById('working_hours_per_day');
         const workingDaysInput = document.getElementById('working_days_per_cycle');
 
+        // Always show the working metrics and make them required
+        dynamicWorkingMetrics.style.display = 'block';
+        workingHoursInput.required = true;
+        workingDaysInput.required = true;
+
         if (frequency === 'Monthly') {
             dayLabel.innerText = 'Generation Date of Each Month';
             html = `<select class="form-select" name="salary_processing_day" required>`;
@@ -139,10 +144,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 html += `<option value="${i}">${i}</option>`;
             }
             html += `</select>`;
-            
-            dynamicWorkingMetrics.style.display = 'block';
-            workingHoursInput.required = true;
-            workingDaysInput.required = true;
             
         } else if (frequency === 'Weekly') {
             dayLabel.innerText = 'Generation Day of the Week';
@@ -153,19 +154,9 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             html += `</select>`;
             
-            dynamicWorkingMetrics.style.display = 'block';
-            workingHoursInput.required = true;
-            workingDaysInput.required = true;
-            
         } else {
             dayLabel.innerText = 'Salary Processing Date';
             html = `<input type="text" class="form-control bg-light" name="salary_processing_day" value="Daily" readonly>`;
-            
-            dynamicWorkingMetrics.style.display = 'none';
-            workingHoursInput.required = false;
-            workingDaysInput.required = false;
-            workingHoursInput.value = '';
-            workingDaysInput.value = '';
         }
         
         dayInputContainer.innerHTML = html;
