@@ -92,6 +92,27 @@ test('it can store a tax challan with multiple attachments', function () {
     Storage::disk($this->disk)->assertExists($challan->attachments[1]);
 });
 
+test('it can store a tax challan with null employee_id', function () {
+    $data = [
+        'company_id' => $this->company->id,
+        'employee_id' => null,
+        'tax_paid_from' => '2026-01',
+        'tax_paid_to' => '2026-06',
+        'attachments' => []
+    ];
+
+    $response = $this->actingAs($this->admin)
+        ->postJson(route('tax-challan.store'), $data);
+
+    $response->assertStatus(201);
+
+    $challan = TaxChallan::whereNull('employee_id')->first();
+    expect($challan)->not->toBeNull();
+    expect($challan->company_id)->toEqual($this->company->id);
+    expect($challan->tax_paid_from)->toEqual('2026-01');
+    expect($challan->tax_paid_to)->toEqual('2026-06');
+});
+
 test('it can update a tax challan and manage attachments', function () {
     $fileOld = UploadedFile::fake()->create('old_doc.pdf', 100);
     

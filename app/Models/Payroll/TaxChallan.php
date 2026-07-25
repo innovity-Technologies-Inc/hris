@@ -18,10 +18,6 @@ class TaxChallan extends Model
     protected $fillable = [
         'employee_id',
         'company_id',
-        'branch_id',
-        'division_id',
-        'department_id',
-        'section_id',
         'tax_paid_from',
         'tax_paid_to',
         'attachments',

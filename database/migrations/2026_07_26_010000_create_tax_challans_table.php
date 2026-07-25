@@ -14,13 +14,9 @@ return new class extends Migration
         Schema::create('tax_challans', function (Blueprint $table) {
             $table->id();
             
-            // Relationships & Organization Context
+            // Relationships
             $table->unsignedBigInteger('employee_id')->nullable();
             $table->unsignedBigInteger('company_id')->nullable();
-            $table->unsignedBigInteger('branch_id')->nullable();
-            $table->unsignedBigInteger('division_id')->nullable();
-            $table->unsignedBigInteger('department_id')->nullable();
-            $table->unsignedBigInteger('section_id')->nullable();
             
             // Month and Year ranges
             $table->string('tax_paid_from', 7); // e.g. "2026-07"

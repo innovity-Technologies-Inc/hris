@@ -121,8 +121,8 @@
                                 <div class="invalid-feedback d-block" id="error_company_id"></div>
                             </div>
                             <div class="col-md-6">
-                                <label for="employee_id" class="form-label fw-semibold">Employee <span class="text-danger">*</span></label>
-                                <select id="employee_id" name="employee_id" class="form-select select2_modal" required>
+                                <label for="employee_id" class="form-label fw-semibold">Employee</label>
+                                <select id="employee_id" name="employee_id" class="form-select select2_modal">
                                     <option value="">Select Employee</option>
                                     @foreach ($employees as $employee)
                                         <option value="{{ $employee->id }}">

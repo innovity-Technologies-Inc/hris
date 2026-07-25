@@ -23,7 +23,7 @@ class UpdateTaxChallanRequest extends FormRequest
     {
         return [
             'company_id' => 'required|exists:companies,id',
-            'employee_id' => 'required|exists:employees,id',
+            'employee_id' => 'nullable|exists:employees,id',
             'tax_paid_from' => 'required|regex:/^\d{4}-\d{2}$/',
             'tax_paid_to' => 'required|regex:/^\d{4}-\d{2}$/|after_or_equal:tax_paid_from',
             'attachments' => 'nullable|array',

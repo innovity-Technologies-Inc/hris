@@ -7,16 +7,16 @@
 **Exact Command**: `php artisan optimize:clear && vendor/bin/pest`
 
 **Results**:
-- Created Migration: `database/migrations/2026_07_26_010000_create_tax_challans_table.php`.
-- Created Model: `app/Models/Payroll/TaxChallan.php` (uses `OrganizationScoped`).
-- Created Requests: `StoreTaxChallanRequest.php` & `UpdateTaxChallanRequest.php` under `App\Http\Requests\Payroll`.
-- Created Service: `app/Services/Payroll/TaxChallanServices.php` to handle business logic and upload operations.
+- Created Migration: `database/migrations/2026_07_26_010000_create_tax_challans_table.php` (simplified: only company_id and employee_id, which is nullable).
+- Created Model: `app/Models/Payroll/TaxChallan.php` (uses `OrganizationScoped` dynamically).
+- Created Requests: `StoreTaxChallanRequest.php` & `UpdateTaxChallanRequest.php` under `App\Http\Requests\Payroll` (making `employee_id` optional/nullable).
+- Created Service: `app/Services/Payroll/TaxChallanServices.php` to handle upload operations without division/department lookup.
 - Created Controller: `app/Http/Controllers/Payroll/TaxChallanController.php` with CRUD JSON responses.
-- Created Views: `resources/views/payroll/tax_challan/index.blade.php` and `resources/views/payroll/tax_challan/partials/search_results.blade.php`.
+- Created Views: `resources/views/payroll/tax_challan/index.blade.php` and `resources/views/payroll/tax_challan/partials/search_results.blade.php` (removed required requirements for Employee).
 - Modified Sidebar: `resources/views/structure/partials/sidebar.blade.php` to include Tax Challan sub-menu.
 - Registered Routes: `routes/web.php` for `tax-challan` prefix.
-- Created Test File: `tests/Feature/Payroll/TaxChallanTest.php` verifying storage faking, store, update, delete, index 200, and file delete logic.
-- Tests passed: 240/240 passed (957 assertions) ✅
+- Created Test File: `tests/Feature/Payroll/TaxChallanTest.php` verifying storage faking, store, update, delete, index 200, file delete, and nullable employee logic.
+- Tests passed: 241/241 passed (962 assertions) ✅
 
 **Status**: ✅ SUCCESS
 

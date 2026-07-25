@@ -63,12 +63,7 @@ class TaxChallanServices
         }
         $data['attachments'] = $filePaths;
 
-        // Fetch employee office info to inherit unit hierarchy context
-        $employee = Employee::with('officeInfo')->findOrFail($data['employee_id']);
-        $data['branch_id'] = $employee->officeInfo?->current_business_unit_id;
-        $data['division_id'] = $employee->officeInfo?->current_division_id;
-        $data['department_id'] = $employee->officeInfo?->current_department_id;
-        $data['section_id'] = $employee->officeInfo?->current_section_id;
+
 
         return TaxChallan::create($data);
     }
@@ -101,11 +96,7 @@ class TaxChallanServices
 
         $data['attachments'] = $filePaths;
 
-        $employee = Employee::with('officeInfo')->findOrFail($data['employee_id']);
-        $data['branch_id'] = $employee->officeInfo?->current_business_unit_id;
-        $data['division_id'] = $employee->officeInfo?->current_division_id;
-        $data['department_id'] = $employee->officeInfo?->current_department_id;
-        $data['section_id'] = $employee->officeInfo?->current_section_id;
+
 
         $challan->update($data);
         return $challan;
