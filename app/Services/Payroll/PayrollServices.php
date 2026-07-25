@@ -1110,6 +1110,17 @@ class PayrollServices
                     'advance_ids' => $advances->pluck('id')->toArray(),
                     'arrear_ids' => $arrears->pluck('id')->toArray(),
                     'previous_due_ids' => $previousDues->pluck('id')->toArray(),
+                    'tax_deducted' => $taxDeduction,
+                    'annual_tax_payable' => $taxCalculation ? $taxCalculation->tax_payable : 0.00,
+                    'monthly_tax_rate' => $taxCalculation ? $taxCalculation->tax_per_month : 0.00,
+                    'frequency' => $frequency,
+                    'hours_worked' => ($frequency === 'hourly' && isset($hoursWorked)) ? $hoursWorked : null,
+                    'days_worked' => ($frequency === 'daily' && isset($totalDaysInRange)) ? $totalDaysInRange : null,
+                    'company_id' => $employee->company_id,
+                    'branch_id' => $employee->branch_id,
+                    'division_id' => $employee->division_id,
+                    'department_id' => $employee->department_id,
+                    'section_id' => $employee->section_id,
                 ];
             }
 
@@ -1134,6 +1145,27 @@ class PayrollServices
                         'reason' => 'Negative salary balance carried over from ' . $salary_month
                     ]);
                 }
+                
+                // Add tax deduction history
+                if ($emp['tax_deducted'] > 0) {
+                    \App\Models\Payroll\TaxDeductionHistory::create([
+                        'employee_id' => $emp['employee_id'],
+                        'payroll_process_id' => $process->id,
+                        'company_id' => $emp['company_id'],
+                        'branch_id' => $emp['branch_id'],
+                        'division_id' => $emp['division_id'],
+                        'department_id' => $emp['department_id'],
+                        'section_id' => $emp['section_id'],
+                        'salary_month' => $salary_month,
+                        'deduction_date' => now()->format('Y-m-d'),
+                        'annual_tax_payable' => $emp['annual_tax_payable'],
+                        'monthly_tax_rate' => $emp['monthly_tax_rate'],
+                        'amount' => $emp['tax_deducted'],
+                        'frequency' => $emp['frequency'],
+                        'hours_worked' => $emp['hours_worked'],
+                        'days_worked' => $emp['days_worked'],
+                    ]);
+                }
             }
             if ($penaltiesToUpdate) \App\Models\Payroll\EmployeePenalty::whereIn('id', $penaltiesToUpdate)->update(['status' => 'deducted']);
             return $process;
@@ -1151,6 +1183,9 @@ class PayrollServices
                 Arrear::whereIn('employee_id', $employeeIds)->where('payment_month', $process->salary_month)->where('status', 'paid')->update(['status' => 'approved']);
                 \App\Models\Payroll\PreviousDue::whereIn('employee_id', $employeeIds)->where('status', 'deducted')->update(['status' => 'pending']);
                 \App\Models\Payroll\PreviousDue::whereIn('employee_id', $employeeIds)->where('salary_month', $process->salary_month)->where('status', 'pending')->delete();
+                
+                // Delete associated tax deduction histories
+                \App\Models\Payroll\TaxDeductionHistory::where('payroll_process_id', $id)->delete();
             }
             Payroll::where('process_id', $id)->delete();
         }

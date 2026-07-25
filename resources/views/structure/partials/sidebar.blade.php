@@ -720,12 +720,12 @@
 
                 @php
                     $canTaxPolicyView = auth()->user()->can('tax-policy.view');
-                    $taxConfigOpen = request()->is('tax-policy*') || request()->is('tax-calculate*');
+                    $taxConfigOpen = request()->is('tax-policy*') || request()->is('tax-calculate*') || request()->is('tax-deduction*');
                 @endphp
                 @if($canTaxPolicyView)
                 <li>
                     <a href="#taxConfig" data-bs-toggle="collapse" aria-expanded="{{ $taxConfigOpen ? 'true' : 'false' }}"
-                         class="@if ($taxConfigOpen) menuitem-active @endif">
+                          class="@if ($taxConfigOpen) menuitem-active @endif">
                         <i data-feather="percent"></i>
                         <span> Tax </span>
                         <span class="menu-arrow"></span>
@@ -739,6 +739,10 @@
                             <li>
                                 <a class='tp-link @if (Route::is('tax-calculate.index')) menuitem-active @endif'
                                     href='{{ route('tax-calculate.index') }}'>Employee Tax</a>
+                            </li>
+                            <li>
+                                <a class='tp-link @if (Route::is('tax-deduction.index')) menuitem-active @endif'
+                                    href='{{ route('tax-deduction.index') }}'>Tax Deduction</a>
                             </li>
                         </ul>
                     </div>

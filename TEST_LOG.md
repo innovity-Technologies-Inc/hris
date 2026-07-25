@@ -1,5 +1,28 @@
 # Test Log
 
+## 2026-07-26 (Tax Deduction History Search & Persistence)
+
+**Goal**: Implement `tax_deduction_histories` database table to track tax deduction details during payroll run and rollback. Create search listing page with date range search, keyword search (system id, name) and organizational cascade unit filters.
+
+**Exact Command**: `php artisan optimize:clear && vendor/bin/pest`
+
+**Results**:
+- Created Migration: `database/migrations/2026_07_26_000000_create_tax_deduction_histories_table.php`.
+- Created Model: `app/Models/Payroll/TaxDeductionHistory.php` (uses `OrganizationScoped`).
+- Modified `app/Services/Payroll/PayrollServices.php`:
+  - Captured tax deduction history events in `salaryProcess()` loop.
+  - Cleaned up history records in `rollbackSalaryProcess()`.
+- Created Service: `app/Services/Payroll/TaxDeductionServices.php` to handle search queries with FlexSearch.
+- Created Controller: `app/Http/Controllers/Payroll/TaxDeductionController.php` to route requests.
+- Created Views: `resources/views/payroll/tax_deduction/index.blade.php` and `resources/views/payroll/tax_deduction/partials/search_results.blade.php`.
+- Modified Sidebar: `resources/views/structure/partials/sidebar.blade.php` to include Tax Deduction sub-menu.
+- Registered Route: `routes/web.php` for `tax-deduction` prefix.
+- Created Test File: `tests/Feature/Payroll/TaxDeductionHistoryTest.php` verifying record creation, cascade delete on rollback, and index page loading.
+- Verified that all unit and feature tests pass.
+- Tests passed: 236/236 passed (934 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-25 (Paygroup Working Metrics Visibility and Validation Fix)
 
 **Goal**: Make the `working_hours_per_day` and `working_days_per_cycle` fields always visible and required for all payroll frequencies on the pay group modal and validator.
