@@ -1061,10 +1061,6 @@ class PayrollServices
                 if ($taxCalculation) {
                     if ($frequency === 'weekly') {
                         $taxDeduction = (double) $taxCalculation->tax_payable / 52;
-                    } elseif ($frequency === 'bi-weekly') {
-                        $taxDeduction = (double) $taxCalculation->tax_payable / 26;
-                    } elseif ($frequency === 'semi-monthly') {
-                        $taxDeduction = (double) $taxCalculation->tax_payable / 24;
                     } else {
                         $taxDeduction = (double) $taxCalculation->tax_per_month;
                     }

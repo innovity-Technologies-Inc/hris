@@ -187,16 +187,12 @@ class TaxCalculateService
         // Calculate projected annual gross salary based on paygroup frequency
         if ($frequency === 'hourly') {
             $monthlyGross = (double) $salaryBreakdown->gross_salary * $workingHoursPerDay * $workingDaysPerCycle;
-            $annualGross = $monthlyGross * 12;
+            $annualGross = $monthlyGross * $totalTaxMonth;
         } elseif ($frequency === 'daily') {
             $monthlyGross = (double) $salaryBreakdown->gross_salary * $workingDaysPerCycle;
-            $annualGross = $monthlyGross * 12;
+            $annualGross = $monthlyGross * $totalTaxMonth;
         } elseif ($frequency === 'weekly') {
-            $annualGross = (double) $salaryBreakdown->gross_salary * 52;
-        } elseif ($frequency === 'bi-weekly') {
-            $annualGross = (double) $salaryBreakdown->gross_salary * 26;
-        } elseif ($frequency === 'semi-monthly') {
-            $annualGross = (double) $salaryBreakdown->gross_salary * 24;
+            $annualGross = (double) $salaryBreakdown->gross_salary * (52 / 12) * $totalTaxMonth;
         } else {
             // monthly or fallback
             $monthlyGross = (double) $salaryBreakdown->gross_salary;

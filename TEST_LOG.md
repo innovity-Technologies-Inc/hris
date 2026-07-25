@@ -1,5 +1,23 @@
 # Test Log
 
+## 2026-07-25 (Tax Policy Months Integration for Weekly, Daily, and Hourly Paygroups)
+
+**Goal**: Update the annual gross salary calculation for weekly, daily, and hourly paygroups to scale correctly using the tax policy's `total_tax_month` value instead of hardcoding 12 or 52 directly, and clean up the bi-weekly/semi-monthly calculations.
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest`
+
+**Results**:
+- Modified `app/Services/Payroll/TaxCalculateService.php`:
+  - Removed bi-weekly and semi-monthly calculation cases.
+  - Set hourly and daily annual projections to use `$totalTaxMonth` dynamically.
+  - Set weekly annual projection to `weekly_salary * (52 / 12) * $totalTaxMonth` dynamically.
+- Modified `app/Services/Payroll/PayrollServices.php`:
+  - Removed unused bi-weekly and semi-monthly cases from `$taxDeduction` calculation.
+- Verified that all unit and feature tests pass.
+- Tests passed: 233/233 passed (922 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-25 (Paygroup Frequency Tax Calculation & Payroll Generation Fix)
 
 **Goal**: Adjust tax calculation and payroll generation to calculate the gross salary correctly depending on the pay group's payroll frequency (hourly, daily, weekly, bi-weekly, semi-monthly, and monthly), and align the pay group validator to allow "Daily" frequency.
