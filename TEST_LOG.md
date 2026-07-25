@@ -1,5 +1,23 @@
 # Test Log
 
+## 2026-07-25 (Tax Per Month Always Divide by 12 & Revert Payroll Tax Proration)
+
+**Goal**: Change the `tax_per_month` calculation to always divide by 12 instead of dividing by `total_tax_month`, revert the prorating changes in `PayrollServices.php`, and update the corresponding test assertion.
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest`
+
+**Results**:
+- Modified `app/Services/Payroll/TaxCalculateService.php`:
+  - Changed `$taxPerMonth = $taxPayable / 12` so that it always divides by 12.
+- Modified `app/Services/Payroll/PayrollServices.php`:
+  - Reverted the tax deduction calculation to use flat `tax_per_month` directly for all frequencies.
+- Modified `tests/Feature/Payroll/TaxCalculateTest.php`:
+  - Updated the test assertion value for `tax_per_month` to expect division by 12 (`4,533.33`).
+- Verified that all unit and feature tests pass.
+- Tests passed: 233/233 passed (922 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-25 (Tax Policy Months Integration for Weekly, Daily, and Hourly Paygroups)
 
 **Goal**: Update the annual gross salary calculation for weekly, daily, and hourly paygroups to scale correctly using the tax policy's `total_tax_month` value instead of hardcoding 12 or 52 directly, and clean up the bi-weekly/semi-monthly calculations.

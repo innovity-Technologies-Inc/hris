@@ -316,7 +316,7 @@ class TaxCalculateService
             $taxPayable = $totalTax;
         }
 
-        $taxPerMonth = $taxPayable / $totalTaxMonth;
+        $taxPerMonth = $taxPayable / 12;
 
         return [
             'gross_salary' => $annualGross,

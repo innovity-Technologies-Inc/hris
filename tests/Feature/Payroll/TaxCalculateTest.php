@@ -135,7 +135,7 @@ test('tax calculation logic evaluates progressive math, total tax month multipli
     // Total Tax: 68,000.00
     // Since 68,000.00 > 50,000.00 (min negotiable limit),
     // Tax Payable: 68,000.00 * 80% = 54,400.00
-    // Tax per month: 54,400.00 / 13 = 4,184.62
+    // Tax per month: 54,400.00 / 12 = 4,533.33
 
     expect($result)->not->toBeNull();
     expect($result['gross_salary'])->toEqual(1040000.00);
@@ -143,6 +143,6 @@ test('tax calculation logic evaluates progressive math, total tax month multipli
     expect($result['taxable_amount'])->toEqual(920000.00);
     expect($result['total_tax_amount'])->toEqual(68000.00);
     expect($result['tax_payable'])->toEqual(54400.00);
-    expect(round($result['tax_per_month'], 2))->toEqual(4184.62);
+    expect(round($result['tax_per_month'], 2))->toEqual(4533.33);
     expect($result['slabs_reached'])->toBe(4);
 });

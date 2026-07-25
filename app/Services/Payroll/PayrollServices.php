@@ -1057,14 +1057,7 @@ class PayrollServices
                 $previousDueAmount = $previousDues->sum('amount');
 
                 $taxCalculation = \App\Models\Payroll\TaxCalculation::where('employee_id', $employee->id)->first();
-                $taxDeduction = 0.00;
-                if ($taxCalculation) {
-                    if ($frequency === 'weekly') {
-                        $taxDeduction = (double) $taxCalculation->tax_payable / 52;
-                    } else {
-                        $taxDeduction = (double) $taxCalculation->tax_per_month;
-                    }
-                }
+                $taxDeduction = $taxCalculation ? (double) $taxCalculation->tax_per_month : 0.00;
 
                 $salary_amount = $calculatedGrossSalary + $offDayWorkSalary + $overTimeSalary + $arrears->sum('amount') - $deductionData['total'] - $taxDeduction - $penalties->sum('penalty_amount') - $advances->sum('amount') - $previousDueAmount;
                 
