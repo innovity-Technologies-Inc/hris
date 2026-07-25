@@ -102,6 +102,7 @@
                                     <input type="number" class="form-control form-control-md border-start-0" 
                                            name="total_tax_month" id="total_tax_month" 
                                            value="{{ $policy->total_tax_month ?? 12 }}" required>
+                                </div>
                                 <div class="form-text small text-muted">Specify the total tax months (Note: the tax month will be including the bonus).</div>
                             </div>
 
