@@ -5,6 +5,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      ssh:
+        - default
     image: hrms-app
     container_name: hrms-app
     restart: unless-stopped
@@ -95,6 +97,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      ssh:
+        - default
     image: hrms-app
     container_name: hrms-queue-worker
     restart: unless-stopped
@@ -134,6 +138,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      ssh:
+        - default
     image: hrms-app
     container_name: hrms-scheduler
     restart: unless-stopped

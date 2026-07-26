@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1
+
 # ==========================================
 # Stage 1: PHP Application Base
 # ==========================================
@@ -10,7 +12,13 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     git \
+    openssh-client \
     && rm -rf /var/lib/apt/lists/*
+
+# Trust GitHub's SSH host during private repository clones
+RUN mkdir -p /root/.ssh && \
+    chmod 700 /root/.ssh && \
+    ssh-keyscan -H github.com >> /root/.ssh/known_hosts
 
 # Install official PHP extension installer helper
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
@@ -40,7 +48,8 @@ COPY . .
 
 # Install production dependencies
 ENV COMPOSER_ALLOW_SUPERUSER=1
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
+RUN --mount=type=ssh \
+    composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache

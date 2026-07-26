@@ -169,19 +169,149 @@ php artisan serve
 ```
 
 ### Option B: Running with Docker & MinIO (Recommended)
-This project includes a `docker-compose.yml` file to orchestrate containers for PHP-FPM, Nginx, MySQL, Queue workers, Scheduler, and MinIO storage.
 
-1. **Start the containers**:
-   ```bash
-   docker-compose up -d --build
-   ```
-2. **Access the Application**:
-   * App URL: `http://localhost`
-   * MinIO Console: `http://localhost:9001` (Credentials: `minioadmin` / `minioadmin`)
-3. **Configure MinIO Buckets**:
-   * Open the MinIO Console at `http://localhost:9001`.
-   * Go to **Buckets** -> **Create Bucket** and create two buckets: `hrms-dev` (for development, matching `AWS_BUCKET` in your `.env`) and `hrms-prod` (for production).
-   * Set the **Access Policy** for both buckets to `Public` to allow browser access to assets.
+The Compose configuration runs PHP-FPM, Nginx, MySQL, the queue worker, the Laravel scheduler, and MinIO.
+
+#### Docker prerequisites
+
+- Docker Engine or Docker Desktop with BuildKit enabled
+- Docker Compose v2 (`docker compose`)
+- An SSH key with access to the private
+  `innovity-Technologies-Inc/laravel-approval-engine` GitHub repository
+
+#### 1. Configure GitHub SSH access
+
+Composer installs the private package during the image build. The Dockerfile uses
+BuildKit SSH forwarding, so the key remains on the host and is not copied into the
+image.
+
+Confirm that the host can access GitHub:
+
+```bash
+ssh -T git@github.com
+```
+
+Check whether the required key is loaded:
+
+```bash
+ssh-add -l
+```
+
+If it is not loaded, add it to the SSH agent:
+
+```bash
+ssh-add
+```
+
+This loads SSH keys from their standard locations. If the authorized key uses a
+custom filename or location, pass its path to `ssh-add`. For example:
+
+```bash
+ssh-add ~/.ssh/id_ed25519
+```
+
+Replace the example path with the path to your authorized private key. Confirm
+that the associated GitHub account has access to the
+`innovity-Technologies-Inc` organization and the private
+`laravel-approval-engine` repository. If the organization enforces SAML SSO,
+authorize the SSH key for `innovity-Technologies-Inc` as well.
+
+#### 2. Configure the environment
+
+Create the local environment file if it does not exist:
+
+```bash
+cp .env.example .env
+```
+
+The Compose file configures container-specific database and MinIO hostnames.
+Values such as `DB_DATABASE`, `DB_PASSWORD`, `MINIO_ROOT_USER`, and
+`MINIO_ROOT_PASSWORD` can be overridden in `.env`.
+
+#### 3. Build and start the stack
+
+```bash
+docker compose up -d --build
+```
+
+The first startup can take a few minutes. The application container waits for
+MySQL, generates an application key if needed, runs migrations, and seeds an
+empty database in the local environment.
+
+Check container status and follow the application logs:
+
+```bash
+docker compose ps
+docker compose logs -f app
+```
+
+#### 4. Access the services
+
+- Application: `http://localhost`
+- MinIO Console: `http://localhost:9001`
+- Default MinIO credentials: `minioadmin` / `minioadmin`
+
+Open the MinIO Console and create the following buckets:
+
+- `hrms-dev`, matching the default `AWS_BUCKET`
+- `hrms-prod`, for production use
+
+Set the required bucket access policy for browser-accessible assets. Do not make
+private documents public.
+
+#### Common Docker commands
+
+```bash
+# Run an Artisan command
+docker compose exec app php artisan about
+
+# Run migrations
+docker compose exec app php artisan migrate
+
+# Follow logs from every service
+docker compose logs -f
+
+# Stop the stack
+docker compose down
+
+# Rebuild after dependency or Dockerfile changes
+docker compose build --no-cache
+docker compose up -d
+```
+
+To also remove the MySQL and MinIO volumes, use
+`docker compose down --volumes`. This permanently removes the local database and
+object-storage data.
+
+#### Build the application image without Compose
+
+Forward the active SSH agent explicitly:
+
+```bash
+docker build --ssh default -t hrms-app .
+```
+
+The resulting image runs PHP-FPM on port `9000` and requires external database
+and object-storage services plus the corresponding environment variables.
+
+#### Private repository troubleshooting
+
+If Composer reports `Failed to download innovity/laravel-approval-engine`,
+`Permission denied (publickey)`, or a private GitHub archive returns `404`:
+
+```bash
+ssh-add -l
+ssh -T git@github.com
+docker compose --progress plain build --no-cache
+```
+
+Verify that:
+
+- The loaded key has access to the private repository.
+- The key is authorized for the GitHub organization when SSO is enforced.
+- `SSH_AUTH_SOCK` is available in the shell running Docker.
+- The build uses BuildKit; do not copy private SSH keys into the image or build
+  context.
 
 ---
 
