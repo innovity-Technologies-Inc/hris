@@ -116,7 +116,8 @@ class HelperClass
         }
 
         if ($fileExists) {
-            $photoUrl = Storage::disk($disk)->url($photoPath);
+            $effectiveDisk = ($disk === 'local') ? 'public' : $disk;
+            $photoUrl = Storage::disk($effectiveDisk)->url($photoPath);
             $avatarHtml = '<img src="' . $photoUrl . '"
                     alt="' . htmlspecialchars($fullName ?? 'User') . '"
                     class="rounded-circle ' . $extraClass . '"
@@ -283,7 +284,13 @@ class HelperClass
         if (empty($file_path)) {
             return null;
         }
-        $disk = config('filesystems.default');
+        if (str_starts_with($file_path, 'http://') || str_starts_with($file_path, 'https://')) {
+            return $file_path;
+        }
+        $disk = config('filesystems.default', 'public');
+        if ($disk === 'local') {
+            $disk = 'public';
+        }
         return Storage::disk($disk)->url($file_path);
     }
 }
