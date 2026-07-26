@@ -85,9 +85,9 @@ class ResignationServices
 
             $resignation = Resignation::create($data);
 
-            // Trigger approval workflow engine for resign module
+            // Trigger approval workflow engine for resignation module
             if (method_exists($resignation, 'startWorkflow')) {
-                $resignation->startWorkflow('resign');
+                $resignation->startWorkflow('resignation');
             }
 
             return $resignation;

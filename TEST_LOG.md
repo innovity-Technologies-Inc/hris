@@ -2478,3 +2478,16 @@ Status: ✅ SUCCESS
 - **Tests**: Created and updated `EmployeeAccountCreationTest.php` to test explicit creation, auto-generation, and mailable logo/name rendering. Passed all 248 tests successfully ✅
 
 **Status**: ✅ SUCCESS
+
+## 2026-07-26 (Workflow Module Renaming & Seeder Consolidation)
+
+**Goal**: Standardize workflow module names from `offboarding-resignation` / `offboarding-termination` / `resign` to `resignation` and `termination`. Update service callers and populate all workflow module configurations in `ApprovalWorkflowSeeder.php`.
+
+**Exact Command**: `php artisan db:seed --class=ApprovalWorkflowSeeder && php artisan config:clear && php artisan test`
+
+**Results**:
+- **Config & Services**: Updated `config/approval-engine.php` to register `resignation` and `termination` module names. Updated `OffboardingServices.php` and `ResignationServices.php` to initiate workflow calls with `resignation` and `termination`.
+- **Seeder & Database**: Updated existing database records and refactored `ApprovalWorkflowSeeder.php` to seed all 20 module workflows with complete step hierarchies and role exclusions.
+- **Verification**: Cleared config cache and executed `ApprovalWorkflowSeeder` followed by `php artisan test`. All 248 tests passed successfully ✅
+
+**Status**: ✅ SUCCESS

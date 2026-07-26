@@ -150,7 +150,7 @@ class OffboardingServices
 
             // Trigger approval workflow engine for offboarding type
             if (method_exists($offboarding, 'startWorkflow')) {
-                $moduleName = 'offboarding-' . $data['offboarding_type'];
+                $moduleName = $data['offboarding_type'];
                 $offboarding->startWorkflow($moduleName);
             }
 
