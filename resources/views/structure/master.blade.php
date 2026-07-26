@@ -1,7 +1,7 @@
+<!DOCTYPE html>
 @php
     $generalSettings = \App\HelperClass::getGeneralSetting();
 @endphp
-<!DOCTYPE html>
 <html lang="en">
 
 <head>

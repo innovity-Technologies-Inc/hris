@@ -2530,3 +2530,15 @@ Status: ✅ SUCCESS
 - **Verification**: Executed tests successfully ✅
 
 **Status**: ✅ SUCCESS
+
+## 2026-07-26 (HTML5 Standards Mode & Quirks Mode Fix)
+
+**Goal**: Fix browser Quirks Mode layout breakage by ensuring `<!DOCTYPE html>` is rendered at line 1, byte 0 in layout Blade files before any `@php` blocks or whitespace.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/Setting/GoogleMapApiTest.php`
+
+**Results**:
+- **Master Layout**: Moved `<!DOCTYPE html>` to the absolute top of [master.blade.php](file:///P:/Project/Web/hrms/resources/views/structure/master.blade.php) and [guest.blade.php](file:///P:/Project/Web/hrms/resources/views/layouts/guest.blade.php) before `@php` blocks to guarantee HTML5 Standards Mode in all browsers.
+- **Verification**: Executed tests successfully ✅
+
+**Status**: ✅ SUCCESS

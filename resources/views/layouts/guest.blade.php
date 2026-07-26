@@ -1,9 +1,9 @@
+<!DOCTYPE html>
 @php
     $generalSettings = \App\HelperClass::getGeneralSetting();
     $primaryColor = '#974063';
     $primaryRGB = '151, 64, 99';
 @endphp
-<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-bs-theme="light">
     <head>
         <meta charset="utf-8">
