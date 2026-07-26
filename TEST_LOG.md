@@ -2518,3 +2518,15 @@ Status: ✅ SUCCESS
 - **Tests**: Created a new test case in [EmployeeAccountCreationTest.php](file:///P:/Project/Web/hrms/tests/Feature/Employee/EmployeeAccountCreationTest.php) verifying edit view population. Passed all 249 tests successfully ✅
 
 **Status**: ✅ SUCCESS
+
+## 2026-07-26 (HTTPS Force Scheme & Production Mixed Content Resolution)
+
+**Goal**: Fix Mixed Active Content (`http://` vs `https://`) and reverse proxy header detection on live production server (`hris.gen-itech.com`).
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest tests/Feature/Setting/GoogleMapApiTest.php`
+
+**Results**:
+- **AppServiceProvider**: Updated `boot()` in [AppServiceProvider.php](file:///P:/Project/Web/hrms/app/Providers/AppServiceProvider.php) to automatically enforce `URL::forceScheme('https')` when requests arrive over SSL proxies (`x-forwarded-proto: https`), HTTPS server parameters, or when `APP_URL` starts with `https://`.
+- **Verification**: Executed tests successfully ✅
+
+**Status**: ✅ SUCCESS

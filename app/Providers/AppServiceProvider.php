@@ -49,7 +49,7 @@ class AppServiceProvider extends ServiceProvider
             $view->with('roles', Role::all());
         });
 
-        if (env('APP_FORCE_HTTPS', false)) {
+        if (env('APP_FORCE_HTTPS', false) || request()->header('x-forwarded-proto') === 'https' || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || str_starts_with(config('app.url'), 'https')) {
             URL::forceScheme('https');
         }
         
