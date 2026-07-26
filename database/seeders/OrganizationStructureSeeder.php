@@ -61,16 +61,13 @@ class OrganizationStructureSeeder extends Seeder
         'Tejgaon', 'Shantinagar', 'Badda', 'Rampura', 'Khilgaon', 'Mogbazar', 'Shahbag', 'Farmgate'
     ];
 
-    public function __construct()
-    {
-        $this->faker = Faker::create();
-    }
-
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
+        $this->faker = class_exists(Faker::class) ? Faker::create() : null;
+
         // Disable foreign key checks
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         DB::table('organization_structure')->truncate();

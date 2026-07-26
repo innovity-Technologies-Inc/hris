@@ -30,16 +30,12 @@ class OrganizationSeeder extends Seeder
         'Gazipur', 'Narayanganj', 'Mymensingh', 'Bogra', 'Jessore', "Cox's Bazar", 'Dinajpur', 'Brahmanbaria'
     ];
 
-    public function __construct()
-    {
-        $this->faker = Faker::create();
-    }
-
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
+        $this->faker = class_exists(Faker::class) ? Faker::create() : null;
         // Disable foreign key checks for clean insertion and truncation
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 

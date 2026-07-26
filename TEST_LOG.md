@@ -2491,3 +2491,16 @@ Status: ✅ SUCCESS
 - **Verification**: Cleared config cache and executed `ApprovalWorkflowSeeder` followed by `php artisan test`. All 248 tests passed successfully ✅
 
 **Status**: ✅ SUCCESS
+
+## 2026-07-26 (Faker Dependency & Seeder Safe-Initialization Fix)
+
+**Goal**: Fix `Class "Faker\Factory" not found` error during seeder execution by moving `fakerphp/faker` to production dependencies in `composer.json` and deferring Faker instantiation from `__construct()` to `run()` across all seeders.
+
+**Exact Command**: `php artisan db:seed --class=PlanSeeder && php artisan config:clear && php artisan test`
+
+**Results**:
+- **Package Configuration**: Moved `"fakerphp/faker": "^1.23"` from `"require-dev"` to `"require"` in `composer.json` so that Faker is available in production and non-dev environments.
+- **Seeder Refactoring**: Updated `PlanSeeder.php`, `OrganizationSeeder.php`, `OrganizationStructureSeeder.php`, and `PenaltySeeder.php` to initialize Faker inside `run()` with `class_exists()` checks, preventing instantiation errors when seeders are reflected or loaded.
+- **Verification**: Executed `PlanSeeder` and ran full test suite. All 248 tests passed successfully ✅
+
+**Status**: ✅ SUCCESS

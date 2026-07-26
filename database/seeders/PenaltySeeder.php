@@ -18,7 +18,10 @@ class PenaltySeeder extends Seeder
         DB::table('employee_penalties')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
-        $faker = Faker::create();
+        $faker = class_exists(Faker::class) ? Faker::create() : null;
+        if (!$faker) {
+            return;
+        }
         $employees = DB::table('employees')->pluck('id')->toArray();
         $penaltyPlans = DB::table('penalty_plans')->get();
 
