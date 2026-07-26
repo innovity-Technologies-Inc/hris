@@ -86,7 +86,7 @@
                                             class="text-danger">*</span></label>
                                     <input type="text" class="form-control @error('first_name') is-invalid @enderror"
                                         id="first_name" name="first_name"
-                                        value="{{ isset($employee) ? $employee->first_name : old('first_name') }}" required>
+                                        value="{{ isset($employee) ? ($employee->first_name ?: $employee->full_name) : old('first_name') }}" required>
                                     @error('first_name')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -520,9 +520,9 @@
 
                                 <div class="col-lg-6 mb-3">
                                     <label for="work_email" class="form-label">Work Email</label>
-                                    <input type="email" class="form-control @error('work_email') is-invalid @enderror"
+                                     <input type="email" class="form-control @error('work_email') is-invalid @enderror"
                                         id="work_email" name="work_email"
-                                        value="{{ isset($employee) ? $employee->work_email : old('work_email') }}">
+                                        value="{{ isset($employee) ? ($employee->work_email ?: $employee->user?->email) : old('work_email') }}">
                                     @error('work_email')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror

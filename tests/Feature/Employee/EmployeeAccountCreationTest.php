@@ -151,3 +151,25 @@ test('it renders employee account created mailable with settings name and logo',
     expect($html)->toContain('settings/logo.png');
 });
 
+test('editing employee created via store_account populates first_name and work_email', function () {
+    $this->actingAs($this->user);
+
+    $this->post(route('employee.store_account'), [
+        'full_name' => 'Michael Smith',
+        'punch_card_no' => 'PUNCH999',
+        'work_email' => 'michael.smith@example.com',
+        'user_type' => UserType::Employee->value,
+        'password' => 'password123',
+        'password_confirmation' => 'password123',
+    ]);
+
+    $employee = Employee::where('work_email', 'michael.smith@example.com')->first();
+    expect($employee)->not->toBeNull();
+
+    $response = $this->get(route('employee.general_informations.edit', $employee->id));
+    $response->assertStatus(200);
+    $response->assertSee('Michael');
+    $response->assertSee('michael.smith@example.com');
+});
+
+

@@ -131,6 +131,66 @@ class Employee extends Model
     }
 
     /**
+     * Get the employee's first name with fallback to full_name or user name.
+     */
+    public function getFirstNameAttribute($value): ?string
+    {
+        if (!empty($value)) {
+            return $value;
+        }
+
+        if (!empty($this->attributes['full_name'] ?? null)) {
+            $parts = explode(' ', trim($this->attributes['full_name']), 2);
+            return $parts[0];
+        }
+
+        if ($this->user && !empty($this->user->name)) {
+            $parts = explode(' ', trim($this->user->name), 2);
+            return $parts[0];
+        }
+
+        return $value;
+    }
+
+    /**
+     * Get the employee's last name with fallback to full_name or user name.
+     */
+    public function getLastNameAttribute($value): ?string
+    {
+        if (!empty($value)) {
+            return $value;
+        }
+
+        if (!empty($this->attributes['full_name'] ?? null)) {
+            $parts = explode(' ', trim($this->attributes['full_name']), 2);
+            return $parts[1] ?? null;
+        }
+
+        if ($this->user && !empty($this->user->name)) {
+            $parts = explode(' ', trim($this->user->name), 2);
+            return $parts[1] ?? null;
+        }
+
+        return $value;
+    }
+
+    /**
+     * Get the employee's work email with fallback to user email.
+     */
+    public function getWorkEmailAttribute($value): ?string
+    {
+        if (!empty($value)) {
+            return $value;
+        }
+
+        if ($this->user && !empty($this->user->email)) {
+            return $this->user->email;
+        }
+
+        return $value;
+    }
+
+    /**
      * Get the active ID card for this employee
      */
     public function activeIdCard(): HasOne

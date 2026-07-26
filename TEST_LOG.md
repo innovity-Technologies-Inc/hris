@@ -2504,3 +2504,17 @@ Status: ✅ SUCCESS
 - **Verification**: Executed `PlanSeeder` and ran full test suite. All 248 tests passed successfully ✅
 
 **Status**: ✅ SUCCESS
+
+## 2026-07-26 (Employee Edit Name & Work Email Population Fix)
+
+**Goal**: Ensure employees created via quick account creation (`createEmployeeAccount`) display their name (`first_name`, `last_name`) and `work_email` when opening the edit profile form.
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- **Model Accessors**: Added `getFirstNameAttribute`, `getLastNameAttribute`, and `getWorkEmailAttribute` to [Employee.php](file:///P:/Project/Web/hrms/app/Models/Employee/Employee.php) to fallback dynamically to `full_name` or `user->name` / `user->email` when columns in `employees` table are `NULL`.
+- **Account Creation Service**: Updated `createEmployeeAccount` in [EmployeeServices.php](file:///P:/Project/Web/hrms/app/Services/Employee/EmployeeServices.php) to split `full_name` into `first_name` and `last_name` upon creation and eager load `user` in `getEmployeeById`.
+- **View Fallbacks**: Updated [form.blade.php](file:///P:/Project/Web/hrms/resources/views/employee/general_informations/form.blade.php) with explicit Blade fallbacks for `first_name` and `work_email`.
+- **Tests**: Created a new test case in [EmployeeAccountCreationTest.php](file:///P:/Project/Web/hrms/tests/Feature/Employee/EmployeeAccountCreationTest.php) verifying edit view population. Passed all 249 tests successfully ✅
+
+**Status**: ✅ SUCCESS

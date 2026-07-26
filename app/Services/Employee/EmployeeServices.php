@@ -355,7 +355,7 @@ class EmployeeServices
     public function getEmployeeById($id)
     {
         try {
-            $employee = Employee::find($id);
+            $employee = Employee::with('user')->find($id);
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Error in EmployeeServices@getEmployeeById: ' . $e->getMessage(), ['exception' => $e]);
             return redirect()->back()->with([
@@ -1028,10 +1028,16 @@ class EmployeeServices
             } while (Employee::where('system_id', $systemId)->exists());
         }
 
+        $nameParts = explode(' ', trim($request->full_name), 2);
+        $firstName = $nameParts[0];
+        $lastName = $nameParts[1] ?? '';
+
         try {
-            return DB::transaction(function () use ($request, $applicantId, $systemId) {
+            return DB::transaction(function () use ($request, $applicantId, $systemId, $firstName, $lastName) {
                 // 1. Create Employee
                 $employee = Employee::create([
+                    'first_name' => $firstName,
+                    'last_name' => $lastName,
                     'full_name' => $request->full_name,
                     'work_email' => $request->work_email,
                     'applicant_id' => $applicantId,
