@@ -127,3 +127,27 @@ test('it can save general info and auto-generate applicant_id and system_id if n
 
     $response->assertRedirect(route('employee.profile.general_informations', $employee->id));
 });
+
+test('it renders employee account created mailable with settings name and logo', function () {
+    // Setup setting
+    $settings = \App\Models\Setting\GeneralSetting::first();
+    $settings->update([
+        'name' => 'My Custom HRMS',
+        'logo_light' => 'settings/logo.png',
+        'favicon' => 'settings/favicon.png',
+    ]);
+
+    $mailable = new \App\Mail\Employee\EmployeeAccountCreated('John Doe', 'john@example.com', 'password123');
+
+    // Build the mailable view data
+    $data = $mailable->content()->with;
+
+    expect($data['appName'])->toBe('My Custom HRMS');
+    expect($data['generalSettings']->logo)->toBe('settings/logo.png');
+
+    // Render HTML and assert it contains logo and name
+    $html = $mailable->render();
+    expect($html)->toContain('My Custom HRMS');
+    expect($html)->toContain('settings/logo.png');
+});
+

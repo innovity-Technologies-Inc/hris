@@ -48,6 +48,16 @@ class GeneralSetting extends Model
     }
 
     /**
+     * Get the logo attribute (prefers light logo)
+     *
+     * @return string|null
+     */
+    public function getLogoAttribute(): ?string
+    {
+        return $this->logo_light ?: $this->logo_dark;
+    }
+
+    /**
      * Get the primary logo path (prefers light logo)
      *
      * @return string|null

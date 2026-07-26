@@ -2465,15 +2465,16 @@ Status: ✅ SUCCESS
 
 **Status**: ✅ SUCCESS
 
-## 2026-07-26 (Employee Account Validation and Auto-ID Generation)
+## 2026-07-26 (Employee Account Validation, Auto-ID Generation, and Mail Setting Fix)
 
-**Goal**: Make `applicant_id` and `system_id` optional in employee account and general info creation. Automatically generate sequential IDs (e.g. `APP000001`, `SYS000001`) if left blank. Apply the `required` attribute to all fields marked with an asterisk in the general info form for frontend validation.
+**Goal**: Make `applicant_id` and `system_id` optional in employee account and general info creation, automatically generating sequential IDs (e.g. `APP000001`, `SYS000001`) if empty. Apply the `required` attribute to all fields marked with an asterisk in the general info form for frontend validation. Also resolve the missing email logo and software name by adding the missing dynamic `logo` attribute accessor in the `GeneralSetting` model.
 
 **Exact Command**: `php artisan config:clear && php artisan test`
 
 **Results**:
 - **Service & Requests**: Updated `createEmployeeAccount` and `employeeInfoSave` in `EmployeeServices.php` to handle auto-generation of sequential IDs when empty. Changed `EmployeeGeneralInfoRequest` validation rules to allow `nullable` values for both fields.
+- **Model Dynamic Accessor**: Added a dynamic `logo` attribute getter in `GeneralSetting.php` to fallback to `logo_light` or `logo_dark` dynamically, allowing all mail views using `isset($generalSettings->logo)` to resolve and display the logo correctly.
 - **Frontend Views**: Modified `login_info_form.blade.php` and `form.blade.php` to remove the required asterisk for `applicant_id` and `system_id` and added helpful auto-generation placeholders. Added `required` HTML attributes to other mandatory input fields to trigger browser-side HTML5 validation.
-- **Tests**: Created a new feature test `EmployeeAccountCreationTest.php` covering explicit and auto-generated paths. Passed all 247 tests successfully ✅
+- **Tests**: Created and updated `EmployeeAccountCreationTest.php` to test explicit creation, auto-generation, and mailable logo/name rendering. Passed all 248 tests successfully ✅
 
 **Status**: ✅ SUCCESS
