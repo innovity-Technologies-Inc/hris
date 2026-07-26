@@ -289,6 +289,32 @@ class EmployeeServices
             $validated = $this->employeeAttachmentValidation($validated, $request, $experience_attachment, 'experience_attachment_path');
         }
         if (empty($id)) {
+            if (empty($validated['applicant_id'])) {
+                $latest = Employee::where('applicant_id', 'LIKE', 'APP%')
+                    ->select('applicant_id')
+                    ->orderByRaw('CAST(SUBSTRING(applicant_id, 4) AS UNSIGNED) DESC')
+                    ->first();
+                $num = $latest ? intval(substr($latest->applicant_id, 3)) + 1 : 1;
+                do {
+                    $applicantId = 'APP' . str_pad($num, 6, '0', STR_PAD_LEFT);
+                    $num++;
+                } while (Employee::where('applicant_id', $applicantId)->exists());
+                $validated['applicant_id'] = $applicantId;
+            }
+
+            if (empty($validated['system_id'])) {
+                $latest = Employee::where('system_id', 'LIKE', 'SYS%')
+                    ->select('system_id')
+                    ->orderByRaw('CAST(SUBSTRING(system_id, 4) AS UNSIGNED) DESC')
+                    ->first();
+                $num = $latest ? intval(substr($latest->system_id, 3)) + 1 : 1;
+                do {
+                    $systemId = 'SYS' . str_pad($num, 6, '0', STR_PAD_LEFT);
+                    $num++;
+                } while (Employee::where('system_id', $systemId)->exists());
+                $validated['system_id'] = $systemId;
+            }
+
             $employee_data = Employee::create($validated);
             $employee_data->general_info_status = (auth()->user()->user_type === UserType::Employee) ? 'pending' : 'active';
             $employee_data->save();
@@ -963,15 +989,12 @@ class EmployeeServices
         return $employee;
     }
 
-    /**
-     * Create a new employee and system user account
-     */
     public function createEmployeeAccount(Request $request)
     {
         $request->validate([
             'full_name' => 'required|string|max:255',
-            'applicant_id' => 'required|string|unique:employees,applicant_id',
-            'system_id' => 'required|string|unique:employees,system_id',
+            'applicant_id' => 'nullable|string|unique:employees,applicant_id',
+            'system_id' => 'nullable|string|unique:employees,system_id',
             'punch_card_no' => 'required|string|unique:employees,punch_card_no',
             'work_email' => 'required|email|unique:users,email|unique:employees,work_email',
             'user_type' => 'required|string|in:' . implode(',', UserType::values()),
@@ -979,14 +1002,40 @@ class EmployeeServices
             'password' => 'required|min:8|confirmed',
         ]);
 
+        $applicantId = $request->input('applicant_id');
+        if (empty($applicantId)) {
+            $latest = Employee::where('applicant_id', 'LIKE', 'APP%')
+                ->select('applicant_id')
+                ->orderByRaw('CAST(SUBSTRING(applicant_id, 4) AS UNSIGNED) DESC')
+                ->first();
+            $num = $latest ? intval(substr($latest->applicant_id, 3)) + 1 : 1;
+            do {
+                $applicantId = 'APP' . str_pad($num, 6, '0', STR_PAD_LEFT);
+                $num++;
+            } while (Employee::where('applicant_id', $applicantId)->exists());
+        }
+
+        $systemId = $request->input('system_id');
+        if (empty($systemId)) {
+            $latest = Employee::where('system_id', 'LIKE', 'SYS%')
+                ->select('system_id')
+                ->orderByRaw('CAST(SUBSTRING(system_id, 4) AS UNSIGNED) DESC')
+                ->first();
+            $num = $latest ? intval(substr($latest->system_id, 3)) + 1 : 1;
+            do {
+                $systemId = 'SYS' . str_pad($num, 6, '0', STR_PAD_LEFT);
+                $num++;
+            } while (Employee::where('system_id', $systemId)->exists());
+        }
+
         try {
-            return DB::transaction(function () use ($request) {
+            return DB::transaction(function () use ($request, $applicantId, $systemId) {
                 // 1. Create Employee
                 $employee = Employee::create([
                     'full_name' => $request->full_name,
                     'work_email' => $request->work_email,
-                    'applicant_id' => $request->applicant_id,
-                    'system_id' => $request->system_id,
+                    'applicant_id' => $applicantId,
+                    'system_id' => $systemId,
                     'punch_card_no' => $request->punch_card_no,
                     'status' => 'active', // Default to active for manually created accounts
                 ]);

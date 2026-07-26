@@ -27,8 +27,8 @@ class EmployeeGeneralInfoRequest extends FormRequest
 
         $rules = [
             // System Identifiers
-            'applicant_id' => $isEmployee ? 'nullable|string' : 'required|string|unique:employees,applicant_id,' . $id,
-            'system_id' => $isEmployee ? 'nullable|string' : 'required|string|unique:employees,system_id,' . $id,
+            'applicant_id' => 'nullable|string|unique:employees,applicant_id,' . $id,
+            'system_id' => 'nullable|string|unique:employees,system_id,' . $id,
             'punch_card_no' => $isEmployee ? 'nullable|string' : 'required|string|unique:employees,punch_card_no,' . $id,
 
             // Personal Information

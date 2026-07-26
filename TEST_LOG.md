@@ -2464,3 +2464,16 @@ Status: ✅ SUCCESS
 - **Validation**: Cleared configuration cache and ran all tests. All 244 tests passed successfully ✅
 
 **Status**: ✅ SUCCESS
+
+## 2026-07-26 (Employee Account Validation and Auto-ID Generation)
+
+**Goal**: Make `applicant_id` and `system_id` optional in employee account and general info creation. Automatically generate sequential IDs (e.g. `APP000001`, `SYS000001`) if left blank. Apply the `required` attribute to all fields marked with an asterisk in the general info form for frontend validation.
+
+**Exact Command**: `php artisan config:clear && php artisan test`
+
+**Results**:
+- **Service & Requests**: Updated `createEmployeeAccount` and `employeeInfoSave` in `EmployeeServices.php` to handle auto-generation of sequential IDs when empty. Changed `EmployeeGeneralInfoRequest` validation rules to allow `nullable` values for both fields.
+- **Frontend Views**: Modified `login_info_form.blade.php` and `form.blade.php` to remove the required asterisk for `applicant_id` and `system_id` and added helpful auto-generation placeholders. Added `required` HTML attributes to other mandatory input fields to trigger browser-side HTML5 validation.
+- **Tests**: Created a new feature test `EmployeeAccountCreationTest.php` covering explicit and auto-generated paths. Passed all 247 tests successfully ✅
+
+**Status**: ✅ SUCCESS
