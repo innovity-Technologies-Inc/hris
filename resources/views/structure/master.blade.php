@@ -195,12 +195,6 @@
         });
     </script>
 
-    <!-- Apexcharts JS -->
-    <script src="{{ asset('assets/libs/apexcharts/apexcharts.min.js') }}"></script>
-
-    <!-- Widgets Init Js -->
-    <script src="{{ asset('assets/js/pages/crm-dashboard.init.js') }}"></script>
-
     <!-- App js-->
     <script src="{{ asset('assets/js/app.js') }}"></script>
 
