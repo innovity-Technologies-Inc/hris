@@ -2452,10 +2452,15 @@ Status: ✅ SUCCESS
 
 **Status**: ✅ SUCCESS
 
+## 2026-07-26 (MinIO Separate Credentials Configuration)
 
+**Goal**: Configure MinIO disk in `config/filesystems.php` to use dedicated `MINIO_` prefix environment variables while keeping compatibility fallbacks for `AWS_` variables, and define the credentials separately in `.env` and `.env.example`.
 
+**Exact Command**: `php artisan config:clear && php artisan test`
 
+**Results**:
+- **Filesystem Configuration**: Updated `minio` disk config in `config/filesystems.php` to map keys, secret, region, bucket, endpoint, and url to `MINIO_` environment variables with `AWS_` fallbacks.
+- **Environment Templates**: Added the separate `# MinIO Object Storage (S3-Compatible)` block containing `MINIO_ACCESS_KEY`, `MINIO_SECRET_KEY`, `MINIO_REGION`, `MINIO_BUCKET`, `MINIO_ENDPOINT`, `MINIO_URL`, `MINIO_BUCKET_DEV`, and `MINIO_BUCKET_PROD` to both `.env` and `.env.example`.
+- **Validation**: Cleared configuration cache and ran all tests. All 244 tests passed successfully ✅
 
-
-
-
+**Status**: ✅ SUCCESS
