@@ -268,6 +268,20 @@ docker compose exec app php artisan about
 # Run migrations
 docker compose exec app php artisan migrate
 
+# Clear & rebuild application cache
+docker compose exec app php artisan optimize
+docker compose exec app php artisan config:clear
+
+# Run database seeders
+docker compose exec app php artisan db:seed
+docker compose exec app php artisan db:seed --class=ApprovalWorkflowSeeder
+
+# Open interactive shell terminal inside app container
+docker compose exec app bash
+
+# Run single command via direct Docker CLI
+docker exec -it hrms-app php artisan optimize
+
 # Follow logs from every service
 docker compose logs -f
 
