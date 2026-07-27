@@ -249,6 +249,126 @@ Using `Spatie Browsershot`, the system compiles Blade templates into standard PD
 
 ---
 
+### 🧾 Tax Deduction Module
+
+A fully automated, policy-driven income tax calculation and deduction engine tightly integrated with the payroll processing pipeline. The module covers tax policy setup, per-employee pre-computation, payroll-time deduction application, and historical audit trails.
+
+#### Architecture & Key Components
+
+| Layer | File |
+|---|---|
+| Controller (Policy) | [TaxPolicyController](file:///P:/Project/Web/hrms/app/Http/Controllers/Payroll/TaxPolicyController.php) |
+| Controller (History) | [TaxDeductionController](file:///P:/Project/Web/hrms/app/Http/Controllers/Payroll/TaxDeductionController.php) |
+| Service (Policy CRUD) | [TaxPolicyService](file:///P:/Project/Web/hrms/app/Services/Payroll/TaxPolicyService.php) |
+| Service (Calculation) | [TaxCalculateService](file:///P:/Project/Web/hrms/app/Services/Payroll/TaxCalculateService.php) |
+| Service (History Search) | [TaxDeductionServices](file:///P:/Project/Web/hrms/app/Services/Payroll/TaxDeductionServices.php) |
+| Model (Policy) | [TaxPolicy](file:///P:/Project/Web/hrms/app/Models/Payroll/TaxPolicy.php) |
+| Model (Computed Result) | [TaxCalculation](file:///P:/Project/Web/hrms/app/Models/Payroll/TaxCalculation.php) |
+| Model (Deduction Log) | [TaxDeductionHistory](file:///P:/Project/Web/hrms/app/Models/Payroll/TaxDeductionHistory.php) |
+| Export | [TaxDeductionExport](file:///P:/Project/Web/hrms/app/Exports/Payroll/TaxDeductionExport.php) |
+
+#### 1. Tax Policy Configuration (`TaxPolicy`)
+A **single global tax policy** governs all calculations. It is auto-initialized with sensible defaults if none exists. Configurable fields include:
+- **Zero Tax Limits**: Gender-differentiated annual income thresholds below which no tax is levied (`zero_tax_male`, `zero_tax_female`).
+- **Exemption Type**: `fixed` — uses a salary ratio (e.g., `1/3`) and a fixed cap (e.g., 120,000 BDT) to calculate the exemption as the lesser of the two; **or** `allowance` — sums specific exempt allowance fields (House, Transport, Food, Medical, Other Earnings) from the employee's salary breakdown.
+- **Minimum Tax Amount**: The floor tax amount applied regardless of calculated tax.
+- **Minimum Negotiable Tax Limit & Payable Percentage**: When calculated tax exceeds the negotiable limit, the final `tax_payable` is the maximum of the limit and `total_tax * tax_payable_percentage / 100`.
+- **Total Tax Month**: Number of months used to spread annual tax (default 12).
+- **Applicable Pay Groups**: JSON array of Pay Group IDs — only employees whose salary is linked to one of these pay groups are subject to tax.
+- **Progressive Tax Slabs (`TaxSlab`)**: One-to-many slabs, each containing a `taxable_amount` (income band limit, `null` for the last unlimited slab) and `tax_percentage`. Tax is computed progressively — each slab absorbs its limit of income until the taxable amount is exhausted.
+
+#### 2. Tax Calculation Engine (`TaxCalculateService`)
+- **Bulk Pre-Computation**: `calculateTaxForAllEmployees()` chunks active employees (500 per chunk) for memory safety, applies the global policy per employee, and bulk-upserts results into `tax_calculations` using a single DB query per chunk. Progress is tracked in the Laravel Cache (`tax_calculation_status`) for real-time UI feedback.
+- **Single Employee Calculation**: `calculateTaxForEmployee(Employee, TaxPolicy)` executes:
+  1. **Annual Gross Projection**: Adapts based on the employee's Pay Group frequency — Monthly (`gross × totalTaxMonth`), Daily (`gross × workingDays × totalTaxMonth`), Hourly (`gross × hoursPerDay × workingDays × totalTaxMonth`), Weekly (`gross × 52/12 × totalTaxMonth`).
+  2. **Gender-Based Zero Tax Gate**: Returns zero tax if the projected annual gross falls at or below the configured gender threshold.
+  3. **Exemption Calculation**: Computes the tax exemption via the configured `exemption_type` logic.
+  4. **Progressive Slab Application**: Iterates over ordered slabs, subtracting taxable income from each slab band and accumulating tax per slab until the taxable amount is exhausted.
+  5. **Final Payable Computation**: Applies the negotiable tax limit and payable percentage floor to derive the final `tax_payable` and divides by 12 to get `tax_per_month`.
+- **Computed Result Storage**: Results are persisted in `tax_calculations` (one row per employee), which acts as a snapshot cache used by the payroll engine during salary generation.
+
+#### 3. Payroll-Time Deduction & History Logging
+During salary processing in [PayrollServices](file:///P:/Project/Web/hrms/app/Services/Payroll/PayrollServices.php):
+- The engine reads the pre-computed `TaxCalculation` record for each eligible employee.
+- Tax is scaled by payroll frequency (Monthly = `tax_per_month`; Weekly = `tax_per_month / 4`; Daily = `dailyTax × daysInRange`; Hourly = `hourlyTax × hoursWorked`).
+- The resulting `taxDeduction` is subtracted from the final `total_salary` and is included in the aggregated `deduction_amount` column.
+- A **`TaxDeductionHistory`** record is created per employee per payroll process, capturing: `salary_month`, `deduction_date`, `annual_tax_payable`, `monthly_tax_rate`, `amount`, `frequency`, `hours_worked`, and `days_worked`.
+- **Rollback Safety**: When a salary process is rolled back or deleted, all associated `TaxDeductionHistory` records are hard-deleted to maintain clean audit trails.
+
+#### 4. Tax Deduction History UI & Export
+- **Index View**: Paginated, filterable list of all tax deduction events across the organization.
+- **Search & Filtering**: Powered by [TaxDeductionServices](file:///P:/Project/Web/hrms/app/Services/Payroll/TaxDeductionServices.php) via FlexSearch — supports filtering by employee name, ID, system ID, date range, and the full 5-tier organizational hierarchy (Company → Branch → Division → Department → Section).
+- **Excel Export**: All currently filtered records can be exported to a timestamped Excel file via [TaxDeductionExport](file:///P:/Project/Web/hrms/app/Exports/Payroll/TaxDeductionExport.php).
+- **Print View**: A printer-friendly HTML report of filtered records.
+
+---
+
+### 🚪 Offboarding Module
+
+A complete employee exit management system handling voluntary resignations and involuntary terminations. The module covers the full offboarding lifecycle: record creation, status tracking, approval workflows, employee status mutation, self-service portal access, and export reporting.
+
+#### Architecture & Key Components
+
+| Layer | File |
+|---|---|
+| Controller | [OffboardingController](file:///P:/Project/Web/hrms/app/Http/Controllers/Offboarding/OffboardingController.php) |
+| Service | [OffboardingServices](file:///P:/Project/Web/hrms/app/Services/Offboarding/OffboardingServices.php) |
+| Model | [Offboarding](file:///P:/Project/Web/hrms/app/Models/Offboarding/Offboarding.php) |
+| Requests | `StoreOffboardingRequest`, `UpdateOffboardingRequest` |
+| Export | [OffboardingExport](file:///P:/Project/Web/hrms/app/Exports/Offboarding/OffboardingExport.php) |
+
+#### 1. Offboarding Types
+The module handles two distinct exit categories, each with its own index page, routes, and export files:
+- **Resignation** (`offboarding_type = 'resignation'`): Voluntary exit initiated by the employee. Employee status is immediately set to `resigned`.
+- **Termination** (`offboarding_type = 'termination'`): Involuntary exit initiated by HR/management. Employee status is immediately set to `terminated`.
+
+#### 2. Data Model (`offboardings` table)
+Key columns in the [Offboarding](file:///P:/Project/Web/hrms/app/Models/Offboarding/Offboarding.php) model:
+
+| Column | Type | Description |
+|---|---|---|
+| `employee_id` | FK | Linked employee |
+| `offboarding_type` | enum | `resignation` or `termination` |
+| `resignation_date` | date | Date resignation/termination was submitted |
+| `notice_period_days` | integer | Required notice period (default 30 days) |
+| `last_working_day` | date | Auto-calculated: `resignation_date + notice_period_days` |
+| `reason` | text | Detailed reason for the offboarding |
+| `status` | enum | `pending`, `approved`, `rejected`, `cancelled` |
+| `remarks` | text | HR remarks or additional comments |
+| `created_by` / `updated_by` | FK | Audit trail via Userstamps |
+
+- Uses `SoftDeletes` for safe deletion.
+- Implements `OrganizationScoped` trait with `allowNullableOrgScope = true` for visibility control.
+- Implements `Approvable` trait from the approval workflow engine.
+
+#### 3. Lifecycle & Workflow
+
+1. **Creation**: HR creates a resignation or termination via a shared form. The form features cascading 5-tier AJAX hierarchy dropdowns (Company → Branch → Division → Department → Section) to filter and load the relevant employee. The `last_working_day` is auto-calculated client-side from `resignation_date + notice_period_days`.
+2. **Immediate Status Mutation**: Inside a `DB::transaction`, on store, the target employee's status is immediately changed to `resigned` or `terminated` — before workflow approval.
+3. **Approval Workflow**: `$offboarding->startWorkflow($offboarding_type)` is invoked immediately after creation, triggering the multi-stage approval engine for the `resignation` or `termination` module respectively.
+4. **Update**: Status can be manually updated by HR (e.g., from `pending` to `approved`). Approval/rejection status changes re-confirm the employee status mutation.
+5. **Deletion**: Hard-deletes the offboarding record (soft delete) inside a transaction.
+
+#### 4. Employee Self-Service Portal (`My Offboarding`)
+- **Restricted Portal Access**: When an employee has been offboarded, their account portal access is restricted to a single read-only page via `myOffboarding()`.
+- **View**: Displays their offboarding type (badge-labeled), resignation date, notice period, last working day, status badge, and reason text.
+- **Fallback**: If no active offboarding record is found, a message prompts them to contact HR.
+
+#### 5. Filtering & Search
+[OffboardingServices](file:///P:/Project/Web/hrms/app/Services/Offboarding/OffboardingServices.php) provides powerful filtered queries (shared between paginated listing and full export):
+- Employee name, applicant ID, system ID (via `whereHas`)
+- Date range filtering on `resignation_date`
+- Status filter
+- Full 5-tier hierarchy filter via `employee.officeInfo` relationship (Company, Branch, Division, Department, Section)
+- Keyword search across `reason`, `status`, `remarks` via FlexSearch
+
+#### 6. Exports & PDF Generation
+- **Excel Export**: Separate routes for resignation and termination exports using [OffboardingExport](file:///P:/Project/Web/hrms/app/Exports/Offboarding/OffboardingExport.php) via `maatwebsite/excel`.
+- **PDF Export**: Branded PDF generated via Spatie Browsershot rendering the `offboarding.pdf` Blade template. The PDF header name is resolved from the authenticated user's company (or Group name for Group-level users).
+- Both exports respect all active search/filter parameters.
+
+---
+
 ### 📊 Employee Personal Dashboard & Journey Timeline
 A dedicated analytical view providing a 360-degree overview of an employee's career and financial growth within the organization.
 - **Visual Analytics**: Beautiful "Glassmorphism" cards showing:
