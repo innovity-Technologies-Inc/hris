@@ -342,6 +342,12 @@ class TaxCalculateService
             $taxPayable = $totalTax;
         }
 
+        // Apply minimum tax amount of the tax policy if any tax is applicable
+        $minTaxAmount = (double) $policy->min_tax_amount;
+        if ($totalTax > 0) {
+            $taxPayable = max($taxPayable, $minTaxAmount);
+        }
+
         $taxPerMonth = $taxPayable / 12;
 
         return [

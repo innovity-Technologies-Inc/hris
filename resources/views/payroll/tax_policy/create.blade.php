@@ -67,7 +67,7 @@
                                            name="min_tax_amount" id="min_tax_amount" 
                                            value="{{ $policy->min_tax_amount }}" required>
                                 </div>
-                                <div class="form-text small text-muted">Minimum tax liability if taxable income exceeds limit.</div>
+                                <div class="form-text small text-muted">The minimum tax amount should be paid if any tax is applicable.</div>
                             </div>
 
                             {{-- Negotiable Tax Settings --}}

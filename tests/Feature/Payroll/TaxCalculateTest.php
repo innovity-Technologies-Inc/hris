@@ -216,3 +216,57 @@ test('tax calculation logic floors tax payable to minimum negotiable tax limit w
     expect($result['tax_payable'])->toEqual(50000.00); // Floored to min_negotiable_tax_limit
     expect(round($result['tax_per_month'], 2))->toEqual(4166.67);
 });
+
+test('tax calculation logic floors tax payable to minimum tax amount of the tax policy when tax is applicable but below limit', function () {
+    // 1. Setup a Tax Policy
+    $policy = TaxPolicy::create([
+        'zero_tax_male' => 350000.00,
+        'zero_tax_female' => 400000.00,
+        'min_tax_amount' => 5000.00,          // Minimum tax amount is 5,000
+        'exemption_type' => 'fixed',
+        'salary_ratio' => '1/3',
+        'fixed_amount' => 120000.00,
+        'min_negotiable_tax_limit' => 50000.00,
+        'tax_payable_percentage' => 80.00,
+        'total_tax_month' => 12,
+    ]);
+
+    // Setup slabs:
+    $policy->slabs()->createMany([
+        ['taxable_amount' => 300000.00, 'tax_percentage' => 0.00, 'tax_amount' => 0.00],
+        ['taxable_amount' => 100000.00, 'tax_percentage' => 5.00, 'tax_amount' => 5000.00],
+        ['taxable_amount' => 300000.00, 'tax_percentage' => 10.00, 'tax_amount' => 30000.00],
+        ['taxable_amount' => null, 'tax_percentage' => 15.00, 'tax_amount' => 0.00],
+    ]);
+
+    // 2. Setup an active employee
+    $employee = Employee::factory()->create([
+        'gender' => 'male',
+        'status' => 'active',
+    ]);
+
+    // Monthly Gross = 40,000 => Annual Gross = 40,000 * 12 = 480,000.00
+    // Exemption = min(120,000, 480,000 * 1/3) = 120,000.00
+    // Taxable Amount = 360,000.00
+    // Slab 1 (300k @ 0%): 0.00
+    // Slab 2 (60k @ 5%): 3,000.00
+    // Total calculated tax = 3,000.00.
+    // Taxable amount = 360,000.00 => Gross salary = 360,000 + 120,000 (exemption) = 480,000.00
+    // Monthly gross = 480,000 / 12 = 40,000.00.
+    $salary = EmployeeSalaryBreakdown::create([
+        'employee_id' => $employee->id,
+        'gross_salary' => 40000.00,
+        'basic_salary' => 20000.00,
+        'house_allowance' => 10000.00,
+        'medical_allowance' => 5000.00,
+        'transport_allowance' => 5000.00,
+    ]);
+
+    $service = new TaxCalculateService();
+    $result = $service->calculateTaxForEmployee($employee, $policy);
+
+    expect($result)->not->toBeNull();
+    expect($result['total_tax_amount'])->toEqual(3000.00);
+    expect($result['tax_payable'])->toEqual(5000.00); // Floored to min_tax_amount (5000.00) instead of 3000.00!
+    expect(round($result['tax_per_month'], 2))->toEqual(416.67); // 5000.00 / 12
+});

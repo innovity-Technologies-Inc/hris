@@ -2570,4 +2570,19 @@ Status: ✅ SUCCESS
 
 **Status**: ✅ SUCCESS
 
+## 2026-07-28 (Tax Calculation Minimum Tax Amount Floor & Note Fix)
+
+**Goal**: Floor tax payable to minimum tax amount of the tax policy if any tax is applicable, and update the help text note in the Tax Policy configuration UI.
+
+**Exact Command**: `php artisan config:clear && vendor\bin\pest && php artisan optimize`
+
+**Results**:
+- **Tax Calculation Service**: Modified [TaxCalculateService.php](file:///P:/Project/Web/hrms/app/Services/Payroll/TaxCalculateService.php) to ensure `tax_payable` is floored to `min_tax_amount` of the tax policy whenever `total_tax_amount > 0`.
+- **UI Note Update**: Updated the help text note under the Minimum Tax Amount input field in [create.blade.php](file:///P:/Project/Web/hrms/resources/views/payroll/tax_policy/create.blade.php) to say: *"The minimum tax amount should be paid if any tax is applicable."*
+- **Feature Test**: Added a Pest test case to [TaxCalculateTest.php](file:///P:/Project/Web/hrms/tests/Feature/Payroll/TaxCalculateTest.php) to verify that a calculated tax below the threshold correctly floors to the minimum tax amount.
+- **Verification**: Ran Pest tests. All 251/251 tests passed successfully ✅
+
+**Status**: ✅ SUCCESS
+
+
 
