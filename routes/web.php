@@ -86,10 +86,16 @@ Route::prefix('notifications')->middleware('auth')->group(function () {
 
 Route::get('/', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard.index');
 
-// Private file streaming route — proxies MinIO/S3 private bucket files through the app
+// Solution 1: PHP streaming — proxies MinIO/S3 files through PHP (fallback)
 Route::get('file/serve/{encodedPath}', [\App\Http\Controllers\FileStreamController::class, 'serve'])
     ->middleware('auth')
     ->name('file.serve')
+    ->where('encodedPath', '.+');
+
+// Solution 2: Nginx X-Accel-Redirect — PHP signs URL, Nginx fetches from MinIO directly (active)
+Route::get('file/accel/{encodedPath}', [\App\Http\Controllers\FileStreamController::class, 'serveViaAccel'])
+    ->middleware('auth')
+    ->name('file.accel')
     ->where('encodedPath', '.+');
 
 

@@ -295,11 +295,13 @@ class HelperClass
 
         $disk = config('filesystems.default', 'public');
 
-        // For cloud/private disks, proxy through the app so private buckets work
+        // For cloud/private disks, use Nginx X-Accel-Redirect (Solution 2 — active).
+        // PHP only signs the URL; Nginx fetches the file from MinIO directly.
+        // Fall back to route('file.serve') for PHP streaming if Nginx is not available.
         if (in_array($disk, ['minio', 's3'])) {
             // Encode the path so slashes and special chars survive the URL safely
             $encodedPath = base64_encode($file_path);
-            return route('file.serve', ['encodedPath' => $encodedPath]);
+            return route('file.accel', ['encodedPath' => $encodedPath]);
         }
 
         // For local disk, serve via the public symlink disk
