@@ -94,18 +94,25 @@ html[data-bs-theme='dark'] .app-sidebar-menu {
 
 .app-sidebar-menu .logo {
     margin: 0;
-    line-height: 0;
-    display: inline-flex;
+    line-height: normal;
+    display: flex;
+    width: 100%;
     align-items: center;
     justify-content: center;
     gap: 8px;
 }
 
-.app-sidebar-menu .logo-sm,
-.app-sidebar-menu .logo-lg {
+.app-sidebar-menu .logo-sm {
     display: inline-flex;
     align-items: center;
     line-height: 0;
+}
+
+.app-sidebar-menu .logo-lg {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
 }
 
 .app-sidebar-menu .logo img {
@@ -437,10 +444,13 @@ html[data-bs-theme='dark'] .app-sidebar-menu {
 .app-sidebar-menu .logo-lg img.logo-img-light,
 .app-sidebar-menu .logo-lg img.logo-img-dark {
     display: none !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
 }
 
 html[data-bs-theme='dark'] .app-sidebar-menu .logo-lg img.logo-img-light {
-    display: inline-block !important;
+    display: block !important;
 }
 
 html[data-bs-theme='dark'] .app-sidebar-menu .logo-lg img.logo-img-dark {
@@ -452,7 +462,7 @@ html[data-bs-theme='light'] .app-sidebar-menu .logo-lg img.logo-img-light {
 }
 
 html[data-bs-theme='light'] .app-sidebar-menu .logo-lg img.logo-img-dark {
-    display: inline-block !important;
+    display: block !important;
 }
 
 .spinner {
