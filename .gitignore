@@ -22,3 +22,6 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Laravel compiled/cache files — must NOT be shared between local & Docker environments
+/bootstrap/cache/*.php
