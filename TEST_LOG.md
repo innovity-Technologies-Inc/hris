@@ -2542,3 +2542,18 @@ Status: ✅ SUCCESS
 - **Verification**: Executed tests successfully ✅
 
 **Status**: ✅ SUCCESS
+
+## 2026-07-28 (Nginx X-Accel-Redirect 500 Error Fix)
+
+**Goal**: Resolve 500 Internal Server Error for Nginx X-Accel-Redirect file serving routes by ensuring variable definition occurs before rewriting.
+
+**Exact Command**: `docker compose exec app php artisan config:clear && docker compose exec app vendor/bin/pest`
+
+**Results**:
+- **Nginx Configuration**: Swapped the order of `set $minio_upstream minio:9000;` and `rewrite ^/minio-internal/(.*)$ /$1 break;` in [default.conf](file:///P:/Project/Web/hrms/docker/nginx/default.conf) so that the variable is defined before the rewrite block halts directive evaluation.
+- **Nginx Reload**: Reloaded Nginx configurations successfully in the web container.
+- **Feature Test**: Created [FileStreamControllerTest.php](file:///P:/Project/Web/hrms/tests/Feature/FileStreamControllerTest.php) covering file streaming via Nginx X-Accel-Redirect.
+- **Verification**: Ran Pest tests. 105/105 passed successfully ✅
+
+**Status**: ✅ SUCCESS
+
