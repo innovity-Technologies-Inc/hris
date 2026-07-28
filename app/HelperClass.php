@@ -293,6 +293,16 @@ class HelperClass
             return $file_path;
         }
 
+        // Local public asset paths (e.g. assets/images/favicon.png, images/logo.png)
+        // These live in the /public directory and must NEVER go through MinIO proxy.
+        // Return them directly using the asset() helper.
+        $localAssetPrefixes = ['assets/', 'images/', 'css/', 'js/', 'fonts/', 'storage/app/public/'];
+        foreach ($localAssetPrefixes as $prefix) {
+            if (str_starts_with($file_path, $prefix)) {
+                return asset($file_path);
+            }
+        }
+
         $disk = config('filesystems.default', 'public');
 
         // For cloud/private disks, use Nginx X-Accel-Redirect (Solution 2 — active).
@@ -311,6 +321,7 @@ class HelperClass
 
         return Storage::disk($disk)->url($file_path);
     }
+
 
 }
 
