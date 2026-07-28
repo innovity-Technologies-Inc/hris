@@ -116,8 +116,7 @@ class HelperClass
         }
 
         if ($fileExists) {
-            $effectiveDisk = ($disk === 'local') ? 'public' : $disk;
-            $photoUrl = Storage::disk($effectiveDisk)->url($photoPath);
+            $photoUrl = self::get_file_url($photoPath);
             $avatarHtml = '<img src="' . $photoUrl . '"
                     alt="' . htmlspecialchars($fullName ?? 'User') . '"
                     class="rounded-circle ' . $extraClass . '"
@@ -278,20 +277,38 @@ class HelperClass
 
     /**
      * Get URL for any file path dynamically from the configured storage disk.
+     *
+     * - For `local` / `public` disks: returns the standard public storage URL.
+     * - For `minio` / `s3` disks: returns a Laravel proxy route URL that streams
+     *   the file securely through the application, supporting private bucket access.
      */
-    public static function get_file_url($file_path)
+    public static function get_file_url($file_path): ?string
     {
         if (empty($file_path)) {
             return null;
         }
+
+        // Already a full URL (e.g. external link stored in DB) — return as-is
         if (str_starts_with($file_path, 'http://') || str_starts_with($file_path, 'https://')) {
             return $file_path;
         }
+
         $disk = config('filesystems.default', 'public');
+
+        // For cloud/private disks, proxy through the app so private buckets work
+        if (in_array($disk, ['minio', 's3'])) {
+            // Encode the path so slashes and special chars survive the URL safely
+            $encodedPath = base64_encode($file_path);
+            return route('file.serve', ['encodedPath' => $encodedPath]);
+        }
+
+        // For local disk, serve via the public symlink disk
         if ($disk === 'local') {
             $disk = 'public';
         }
+
         return Storage::disk($disk)->url($file_path);
     }
+
 }
 

@@ -86,6 +86,11 @@ Route::prefix('notifications')->middleware('auth')->group(function () {
 
 Route::get('/', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard.index');
 
+// Private file streaming route — proxies MinIO/S3 private bucket files through the app
+Route::get('file/serve/{encodedPath}', [\App\Http\Controllers\FileStreamController::class, 'serve'])
+    ->middleware('auth')
+    ->name('file.serve')
+    ->where('encodedPath', '.+');
 
 
 
