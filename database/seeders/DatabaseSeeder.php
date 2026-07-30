@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             GeneralSettingSeeder::class,
+            TaxPolicySeeder::class,
             OrganizationSeeder::class,
             PlanSeeder::class,
             EmployeeSeeder::class,
