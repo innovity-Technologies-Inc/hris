@@ -91,6 +91,11 @@
                     $showTransportMenu = $showVehicleRouteMenu || $showRequisitionMenu || $canVehicleAllocation;
                     $transportOpen = Route::is('transport.*');
 
+                    // Onboarding
+                    $canCvBankView = auth()->user()->can('cv-bank.view');
+                    $showOnboardingTitle = $canCvBankView;
+                    $onboardingOpen = Route::is('cv_bank.*');
+
                     // Offboarding
                     $canResignationsView = auth()->user()->can('resignations.view') || auth()->user()->can('offboarding-resignation.view');
                     $canResignationsCreate = auth()->user()->can('resignations.create');
@@ -325,6 +330,20 @@
                             @endif
                         </ul>
                     </div>
+                </li>
+                @endif
+
+                {{-- Onboarding Section --}}
+                @if($showOnboardingTitle)
+                <li class="menu-title">Onboarding</li>
+                @endif
+
+                @if($canCvBankView)
+                <li>
+                    <a href="{{ route('cv_bank.index') }}" class="tp-link @if (Route::is('cv_bank.*')) menuitem-active @endif">
+                        <i data-feather="user-plus"></i>
+                        <span> CV Bank </span>
+                    </a>
                 </li>
                 @endif
 
