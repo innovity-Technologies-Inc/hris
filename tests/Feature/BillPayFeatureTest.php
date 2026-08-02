@@ -124,7 +124,7 @@ test('user can toggle payment status and delete bills', function () {
     ]);
     $response->assertJson([
         'success' => true,
-        'message' => 'Bill payment status updated successfully.'
+        'message' => 'Resource updated successfully.'
     ]);
 
     $this->assertDatabaseHas('bills', [

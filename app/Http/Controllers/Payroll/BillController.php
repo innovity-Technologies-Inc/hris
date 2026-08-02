@@ -3,12 +3,20 @@
 namespace App\Http\Controllers\Payroll;
 
 use App\Http\Controllers\Controller;
-use App\Models\Payroll\Bill;
+use App\Http\Requests\Payroll\UpdateBillPaymentStatusRequest;
+use App\Services\Payroll\BillServices;
 use Illuminate\Http\Request;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 
 class BillController extends Controller
 {
+    protected BillServices $billServices;
+
+    public function __construct(BillServices $billServices)
+    {
+        $this->billServices = $billServices;
+    }
+
     /**
      * Display a listing of the bills.
      */
@@ -18,19 +26,14 @@ class BillController extends Controller
         $section = 'Payroll';
         $sub_section = 'Bill Pay';
 
-        $query = Bill::with('employee')->latest();
-
-        $searchableColumns = ['employee.full_name', 'type', 'expense_type', 'payment_status'];
-        $keyword = $request->input('keyword');
-
         $filters = [];
         if ($request->filled('payment_status')) {
             $filters['payment_status'] = $request->input('payment_status');
         }
 
-        $bills = $flexsearch
-            ->apply($query, $filters, $keyword, $searchableColumns)
-            ->paginate(10);
+        $keyword = $request->input('keyword');
+
+        $bills = $this->billServices->getBillsList($filters, $keyword, $flexsearch);
 
         if ($request->ajax() || $request->boolean('_ajax')) {
             return view('payroll.bills.partials.search_results', compact('bills'))->render();
@@ -42,29 +45,18 @@ class BillController extends Controller
     /**
      * Change payment status of a bill.
      */
-    public function changePaymentStatus(Request $request)
+    public function changePaymentStatus(UpdateBillPaymentStatusRequest $request)
     {
-        $request->validate([
-            'id' => 'required|exists:bills,id',
-            'payment_status' => 'required|in:paid,unpaid',
-        ]);
-
-        $bill = Bill::findOrFail($request->input('id'));
-        $bill->update([
-            'payment_status' => $request->input('payment_status'),
-        ]);
-
-        // Sync with EmployeeMovement if applicable
-        if ($bill->type === 'travel-movement') {
-            $movement = \App\Models\Movement\EmployeeMovement::find($bill->expense_id);
-            if ($movement) {
-                $movement->update(['payment_status' => $bill->payment_status]);
-            }
-        }
+        $validated = $request->validated();
+        
+        $bill = $this->billServices->updatePaymentStatus(
+            (int) $validated['id'],
+            $validated['payment_status']
+        );
 
         return response()->json([
             'success' => true,
-            'message' => 'Bill payment status updated successfully.',
+            'message' => 'Resource updated successfully.',
             'data' => $bill,
         ]);
     }
@@ -74,8 +66,7 @@ class BillController extends Controller
      */
     public function destroy($id)
     {
-        $bill = Bill::findOrFail($id);
-        $bill->delete();
+        $this->billServices->deleteBill((int) $id);
 
         return response()->json([
             'success' => true,
