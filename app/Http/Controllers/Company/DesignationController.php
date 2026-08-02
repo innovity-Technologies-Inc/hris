@@ -20,7 +20,7 @@ class DesignationController extends Controller
         $query = Designation::query();
         $searchTerm = $request->get('keyword');
         $searchableFields = ['designation_level', 'company_designation'];
-        $designations = $flexsearch->apply($query, [], $searchTerm, $searchableFields)->orderBy('company_designation')->paginate(10);
+        $designations = $flexsearch->apply($query, [], $searchTerm, $searchableFields)->orderBy('id', 'desc')->paginate(10);
         if ($request->ajax()) {
             return view('company.designation.search_results', compact('designations'))->render();
         }

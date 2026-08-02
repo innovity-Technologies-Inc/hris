@@ -233,6 +233,7 @@ class VehicleDriverController extends Controller
         $filters = [];
 
         $vehicleDrivers = $flexsearch->apply($query, $filters, $keyword, $searchableColumns)
+            ->latest()
             ->paginate(10);
 
         // Group by date for display

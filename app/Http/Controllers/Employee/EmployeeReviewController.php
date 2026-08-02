@@ -50,6 +50,7 @@ class EmployeeReviewController extends Controller
         $filters = [];
 
         $employees = $flexsearch->apply($query, $filters, $keyword, $searchableColumns)
+            ->orderBy('id', 'desc')
             ->paginate(10);
 
         if ($request->ajax()) {

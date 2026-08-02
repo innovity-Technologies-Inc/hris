@@ -49,6 +49,7 @@ class AttendancesController extends Controller
 
         $attendanceRecords = $flexsearch
             ->apply($query, $filters, $keyword, $searchableColumns)
+            ->orderBy('id', 'desc')
             ->paginate(10);
 
         if ($request->ajax()) {

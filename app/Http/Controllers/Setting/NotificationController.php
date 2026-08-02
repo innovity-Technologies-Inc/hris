@@ -27,6 +27,7 @@ class NotificationController extends Controller
         $user = Auth::user();
         
         $notifications = $this->notificationServices->getVisibleNotifications($user)
+            ->latest()
             ->paginate(20);
 
         return view('notifications.index', compact('title', 'section', 'sub_section', 'notifications'));
