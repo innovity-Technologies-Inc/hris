@@ -15,7 +15,7 @@
     </thead>
     <tbody>
     @php 
-        $sl = 1;
+        $sl = 1 + ($movements->currentPage() - 1) * $movements->perPage();
         $isEmployee = auth()->user()->user_type === \App\Enums\UserType::Employee;
     @endphp
     @foreach ($movements as $movement)
@@ -72,6 +72,10 @@
     @endforeach
     </tbody>
 </table>
+
+<div class="mt-4 d-flex justify-content-end">
+    {{ $movements->links() }}
+</div>
 
 <script>
     // Reinitialize feather icons after table load
