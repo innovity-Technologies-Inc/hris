@@ -146,62 +146,39 @@
                         </h6>
                     </div>
                     <div class="card-body">
-                        @if($movement->details->isEmpty())
-                            {{-- Legacy movements support --}}
-                            <div class="border rounded p-3 bg-light">
-                                <div class="row g-2">
-                                    <div class="col-md-6">
-                                        <small class="text-muted d-block fw-bold text-uppercase">Source</small>
-                                        <span class="text-dark text-sm">{{ $movement->source_address }}</span>
+                        <div class="timeline-route">
+                            @foreach($movement->details as $index => $detail)
+                                <div class="border border-info rounded p-3 mb-3 shadow-sm bg-light-subtle">
+                                    <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
+                                        <span class="fw-bold text-dark"><i class="bi bi-tag-fill text-info me-1"></i>Leg #{{ $index + 1 }}</span>
+                                        <span class="badge bg-primary fs-7">{{ number_format($detail->distance, 2) }} KM</span>
                                     </div>
-                                    <div class="col-md-6">
-                                        <small class="text-muted d-block fw-bold text-uppercase">Destination</small>
-                                        <span class="text-dark text-sm">{{ $movement->destination_address }}</span>
-                                    </div>
-                                    <div class="col-md-8 mt-2">
-                                        <small class="text-muted d-block fw-bold text-uppercase">Reason</small>
-                                        <span class="text-dark text-sm">{{ $movement->reason }}</span>
-                                    </div>
-                                    <div class="col-md-4 mt-2 text-end">
-                                        <span class="badge bg-secondary">{{ number_format($movement->distance, 2) }} KM</span>
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <small class="text-muted d-block fw-semibold text-uppercase" style="font-size: 0.75rem;">Source</small>
+                                            <span class="text-dark text-sm">{{ $detail->source_address }}</span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <small class="text-muted d-block fw-semibold text-uppercase" style="font-size: 0.75rem;">Destination</small>
+                                            <span class="text-dark text-sm">{{ $detail->destination_address }}</span>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <small class="text-muted d-block fw-semibold text-uppercase" style="font-size: 0.75rem;">Reason</small>
+                                            <span class="text-dark text-sm">{{ $detail->reason }}</span>
+                                        </div>
+                                        <div class="col-md-4 text-md-end d-flex align-items-end justify-content-md-end">
+                                            @if($detail->attachment_path)
+                                                <a href="{{ \Illuminate\Support\Facades\Storage::url($detail->attachment_path) }}" target="_blank" class="btn btn-outline-secondary btn-sm py-1 px-2">
+                                                    <i class="bi bi-file-earmark-arrow-down-fill me-1"></i>View Attachment
+                                                </a>
+                                            @else
+                                                <span class="text-muted small">No attachment</span>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        @else
-                            <div class="timeline-route">
-                                @foreach($movement->details as $index => $detail)
-                                    <div class="border border-info rounded p-3 mb-3 shadow-sm bg-light-subtle">
-                                        <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
-                                            <span class="fw-bold text-dark"><i class="bi bi-tag-fill text-info me-1"></i>Leg #{{ $index + 1 }}</span>
-                                            <span class="badge bg-primary fs-7">{{ number_format($detail->distance, 2) }} KM</span>
-                                        </div>
-                                        <div class="row g-3">
-                                            <div class="col-md-6">
-                                                <small class="text-muted d-block fw-semibold text-uppercase" style="font-size: 0.75rem;">Source</small>
-                                                <span class="text-dark text-sm">{{ $detail->source_address }}</span>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <small class="text-muted d-block fw-semibold text-uppercase" style="font-size: 0.75rem;">Destination</small>
-                                                <span class="text-dark text-sm">{{ $detail->destination_address }}</span>
-                                            </div>
-                                            <div class="col-md-8">
-                                                <small class="text-muted d-block fw-semibold text-uppercase" style="font-size: 0.75rem;">Reason</small>
-                                                <span class="text-dark text-sm">{{ $detail->reason }}</span>
-                                            </div>
-                                            <div class="col-md-4 text-md-end d-flex align-items-end justify-content-md-end">
-                                                @if($detail->attachment_path)
-                                                    <a href="{{ \Illuminate\Support\Facades\Storage::url($detail->attachment_path) }}" target="_blank" class="btn btn-outline-secondary btn-sm py-1 px-2">
-                                                        <i class="bi bi-file-earmark-arrow-down-fill me-1"></i>View Attachment
-                                                    </a>
-                                                @else
-                                                    <span class="text-muted small">No attachment</span>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        @endif
+                            @endforeach
+                        </div>
                     </div>
                 </div>
 
@@ -220,7 +197,7 @@
                         </div>
                     @else
                         {{-- Approved/Completed Status Allowance Form --}}
-                        <form action="{{ route('movement.save_allowances', $movement->id) }}" method="POST" id="allowanceForm{{ $movement->id }}">
+                        <form action="{{ route('movement.save_allowances', $movement->id) }}" method="POST" class="allowance-form-submit" id="allowanceForm{{ $movement->id }}">
                             @csrf
                             @method('PUT')
                             <div class="card border-success mb-4 shadow-sm">
@@ -248,14 +225,9 @@
                                                 </select>
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label small fw-semibold text-muted mb-1">Custom TA Amount (Overrides Plan)</label>
-                                                <input type="number" step="0.01" min="0" name="custom_ta" class="form-control form-control-sm custom-ta-input" data-movement-id="{{ $movement->id }}"
-                                                       value="{{ old('custom_ta', $movement->custom_ta) }}" placeholder="Enter custom TA amount">
-                                            </div>
-                                            <div class="bg-light p-2 rounded d-flex justify-content-between align-items-center">
-                                                <span class="text-muted small">Total TA Amount:</span>
-                                                <strong class="text-success" id="calc_ta_display{{ $movement->id }}">৳{{ number_format($movement->total_ta, 2) }}</strong>
-                                                <input type="hidden" name="total_ta" id="total_ta{{ $movement->id }}" value="{{ $movement->total_ta }}">
+                                                <label class="form-label small fw-semibold text-muted mb-1">Total TA Amount</label>
+                                                <input type="number" step="0.01" min="0" name="total_ta" id="total_ta{{ $movement->id }}" class="form-control form-control-sm total-ta-input" data-movement-id="{{ $movement->id }}"
+                                                       value="{{ old('total_ta', $movement->total_ta ?? '0.00') }}" placeholder="Total TA Amount">
                                             </div>
                                         </div>
 
@@ -275,23 +247,18 @@
                                                 </select>
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label small fw-semibold text-muted mb-1">Custom DA Amount (Overrides Plan)</label>
-                                                <input type="number" step="0.01" min="0" name="custom_da" class="form-control form-control-sm custom-da-input" data-movement-id="{{ $movement->id }}"
-                                                       value="{{ old('custom_da', $movement->custom_da) }}" placeholder="Enter custom DA amount">
-                                            </div>
-                                            <div class="bg-light p-2 rounded d-flex justify-content-between align-items-center">
-                                                <span class="text-muted small">Total DA Amount:</span>
-                                                <strong class="text-warning" id="calc_da_display{{ $movement->id }}">৳{{ number_format($movement->total_da, 2) }}</strong>
-                                                <input type="hidden" name="total_da" id="total_da{{ $movement->id }}" value="{{ $movement->total_da }}">
+                                                <label class="form-label small fw-semibold text-muted mb-1">Total DA Amount</label>
+                                                <input type="number" step="0.01" min="0" name="total_da" id="total_da{{ $movement->id }}" class="form-control form-control-sm total-da-input" data-movement-id="{{ $movement->id }}"
+                                                       value="{{ old('total_da', $movement->total_da ?? '0.00') }}" placeholder="Total DA Amount">
                                             </div>
                                         </div>
 
                                         <!-- Grand Total -->
                                         <div class="col-12 mt-3">
                                             <div class="card bg-success text-white border-0 shadow-sm">
-                                                <div class="card-body d-flex justify-content-between align-items-center py-2">
-                                                    <span class="fw-bold"><i class="bi bi-calculator me-2"></i>Grand Total Allowance Value (TA + DA):</span>
-                                                    <h3 class="mb-0 fw-bold text-white" id="grand_total_display{{ $movement->id }}">৳{{ number_format($movement->total_allowance, 2) }}</h3>
+                                                <div class="card-body d-flex justify-content-between align-items-center py-2 px-3">
+                                                    <span class="fw-bold"><i class="bi bi-calculator me-2"></i>Grand Total Allowance (TA + DA):</span>
+                                                    <h3 class="mb-0 fw-bold text-white">৳<span id="grand_total_display{{ $movement->id }}">{{ number_format($movement->total_allowance, 2) }}</span></h3>
                                                     <input type="hidden" name="total_allowance" id="total_allowance{{ $movement->id }}" value="{{ $movement->total_allowance }}">
                                                 </div>
                                             </div>
@@ -309,7 +276,7 @@
                     @endif
                 @else
                     {{-- Employee Read-only Allowances Details --}}
-                    @if($movement->total_allowance > 0 || $movement->ta_plan_id || $movement->da_plan_id || $movement->custom_ta || $movement->custom_da)
+                    @if($movement->total_allowance > 0 || $movement->ta_plan_id || $movement->da_plan_id)
                         <div class="card border-success mb-4 shadow-sm">
                             <div class="card-header bg-success bg-opacity-10">
                                 <h6 class="mb-0 text-success fw-semibold">
@@ -323,15 +290,13 @@
                                         <div class="card bg-light border-0 h-100 shadow-none">
                                             <div class="card-body py-3">
                                                 <h6 class="text-success mb-2 fw-semibold"><i class="bi bi-cash-coin me-2"></i>Travel Allowance (TA)</h6>
-                                                @if($movement->custom_ta)
-                                                    <small class="text-muted d-block">Custom Amount (Overridden):</small>
-                                                    <div class="fw-bold text-dark">৳{{ number_format($movement->custom_ta, 2) }}</div>
-                                                @else
+                                                @if($movement->ta_plan_id)
                                                     <small class="text-muted d-block">Plan Name:</small>
                                                     <div class="fw-semibold">{{ $movement->getTaPlan->name ?? 'N/A' }}</div>
                                                     <small class="text-muted d-block mt-1">Rate per KM:</small>
                                                     <div class="fw-semibold">৳{{ number_format($movement->getTaPlan->remuneration ?? 0, 2) }}</div>
-                                                    <small class="text-muted d-block mt-1">Calculated for {{ number_format($movement->distance, 2) }} KM:</small>
+                                                @else
+                                                    <div class="text-muted small">Direct Input (No Plan Selected)</div>
                                                 @endif
                                                 <hr class="my-2">
                                                 <div class="d-flex justify-content-between align-items-center">
@@ -347,15 +312,13 @@
                                         <div class="card bg-light border-0 h-100 shadow-none">
                                             <div class="card-body py-3">
                                                 <h6 class="text-warning mb-2 fw-semibold"><i class="bi bi-wallet me-2"></i>Daily Allowance (DA)</h6>
-                                                @if($movement->custom_da)
-                                                    <small class="text-muted d-block">Custom Amount (Overridden):</small>
-                                                    <div class="fw-bold text-dark">৳{{ number_format($movement->custom_da, 2) }}</div>
-                                                @else
+                                                @if($movement->da_plan_id)
                                                     <small class="text-muted d-block">Plan Name:</small>
                                                     <div class="fw-semibold">{{ $movement->getDaPlan->name ?? 'N/A' }}</div>
                                                     <small class="text-muted d-block mt-1">Rate per Day:</small>
                                                     <div class="fw-semibold">৳{{ number_format($movement->getDaPlan->remuneration ?? 0, 2) }}</div>
-                                                    <small class="text-muted d-block mt-1">Calculated for {{ $movement->total_days }} days:</small>
+                                                @else
+                                                    <div class="text-muted small">Direct Input (No Plan Selected)</div>
                                                 @endif
                                                 <hr class="my-2">
                                                 <div class="d-flex justify-content-between align-items-center">
@@ -427,7 +390,7 @@
                             </button>
                             <ul class="dropdown-menu shadow border-0">
                                 <li>
-                                    <form action="{{ route('movement.change_status') }}" method="POST">
+                                    <form class="status-change-api-form" action="{{ route('movement.change_status') }}" method="POST">
                                         @csrf @method('PUT')
                                         <input type="hidden" name="id" value="{{ $movement->id }}">
                                         <input type="hidden" name="status" value="approved">
@@ -435,7 +398,7 @@
                                     </form>
                                 </li>
                                 <li>
-                                    <form action="{{ route('movement.change_status') }}" method="POST">
+                                    <form class="status-change-api-form" action="{{ route('movement.change_status') }}" method="POST">
                                         @csrf @method('PUT')
                                         <input type="hidden" name="id" value="{{ $movement->id }}">
                                         <input type="hidden" name="status" value="rejected">
@@ -443,7 +406,7 @@
                                     </form>
                                 </li>
                                 <li>
-                                    <form action="{{ route('movement.change_status') }}" method="POST">
+                                    <form class="status-change-api-form" action="{{ route('movement.change_status') }}" method="POST">
                                         @csrf @method('PUT')
                                         <input type="hidden" name="id" value="{{ $movement->id }}">
                                         <input type="hidden" name="status" value="completed">
@@ -460,7 +423,7 @@
                             </button>
                             <ul class="dropdown-menu shadow border-0">
                                 <li>
-                                    <form action="{{ route('movement.change_payment_status') }}" method="POST">
+                                    <form class="status-change-api-form" action="{{ route('movement.change_payment_status') }}" method="POST">
                                         @csrf @method('PUT')
                                         <input type="hidden" name="id" value="{{ $movement->id }}">
                                         <input type="hidden" name="payment_status" value="paid">
@@ -468,7 +431,7 @@
                                     </form>
                                 </li>
                                 <li>
-                                    <form action="{{ route('movement.change_payment_status') }}" method="POST">
+                                    <form class="status-change-api-form" action="{{ route('movement.change_payment_status') }}" method="POST">
                                         @csrf @method('PUT')
                                         <input type="hidden" name="id" value="{{ $movement->id }}">
                                         <input type="hidden" name="payment_status" value="unpaid">

@@ -17,12 +17,9 @@ class EmployeeMovement extends Model
     use OrganizationScoped;
     protected $fillable = [
         'employee_id', 'from_date', 'to_date',
-        'source_address', 'source_lat', 'source_lng',
-        'destination_address', 'dest_lat', 'dest_lng',
         'distance', 'ta_plan_id', 'da_plan_id',
         'total_ta', 'total_da', 'total_days', 'total_allowance',
-        'custom_ta', 'custom_da',
-        'reason', 'status', 'payment_status',
+        'status', 'payment_status',
     ];
 
     public function getEmployee()

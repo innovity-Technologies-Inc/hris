@@ -1107,11 +1107,11 @@ Route::controller(EmployeeMovementsController::class)->prefix('movement')->middl
     });
     Route::middleware('permission:movement.create')->group(function () {
         Route::get('create', 'form')->name('movement.create');
-        Route::post('store', 'save')->name('movement.store');
+        Route::post('store', 'store')->name('movement.store');
     });
     Route::middleware('permission:movement.edit')->group(function () {
         Route::get('{id}/edit', 'form')->name('movement.edit');
-        Route::put('{id}/update', 'save')->name('movement.update');
+        Route::put('{id}/update', 'update')->name('movement.update');
     });
     Route::middleware('permission:movement.hr-approve')->group(function () {
         Route::put('change-status', 'changeStatus')->name('movement.change_status');

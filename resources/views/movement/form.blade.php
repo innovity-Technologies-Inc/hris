@@ -301,6 +301,18 @@
                 const container = document.getElementById('route-legs-container');
                 const template = document.getElementById('route-leg-template').innerHTML;
                 
+                // Fetch destination details of previous/last card for auto-population
+                const cards = container.querySelectorAll('.route-card');
+                let prevDestAddr = '';
+                let prevDestLat = '';
+                let prevDestLng = '';
+                if (cards.length > 0) {
+                    const lastCard = cards[cards.length - 1];
+                    prevDestAddr = lastCard.querySelector('.destination-address').value;
+                    prevDestLat = lastCard.querySelector('.dest-lat').value;
+                    prevDestLng = lastCard.querySelector('.dest-lng').value;
+                }
+
                 // Get next index
                 const nextIndex = container.querySelectorAll('.route-card').length;
                 const html = template.replace(/__INDEX__/g, nextIndex);
@@ -310,6 +322,14 @@
                 
                 // Initialize autocomplete for the new card
                 const newCard = container.querySelector(`.route-card[data-index="${nextIndex}"]`);
+                
+                // Auto-populate new card's source with previous card's destination
+                if (prevDestAddr) {
+                    newCard.querySelector('.source-address').value = prevDestAddr;
+                    newCard.querySelector('.source-lat').value = prevDestLat;
+                    newCard.querySelector('.source-lng').value = prevDestLng;
+                }
+
                 initLegAutocomplete(newCard);
                 
                 // Show remove buttons since we have more than one card
@@ -354,6 +374,104 @@
                     span.textContent = idx + 1;
                 });
             }
+
+            // Axios Form Submission Intercept
+            const form = document.getElementById('employeeTravelMovementForm');
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                // Clear previous validation error highlights
+                document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+                document.querySelectorAll('.invalid-feedback').forEach(el => el.remove());
+
+                const formData = new FormData(form);
+
+                // Disable submit button
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalBtnHtml = submitBtn.innerHTML;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Submitting...';
+
+                axios({
+                    method: 'post',
+                    url: form.getAttribute('action'),
+                    data: formData,
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                })
+                .then(response => {
+                    if (response.data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.data.message,
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.href = "{{ route('movement.index') }}";
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.data.message || 'Something went wrong.'
+                        });
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalBtnHtml;
+                    }
+                })
+                .catch(error => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnHtml;
+
+                    if (error.response && error.response.status === 422) {
+                        const errors = error.response.data.errors;
+                        
+                        // Highlight errors dynamically next to fields
+                        Object.keys(errors).forEach(key => {
+                            // Map dots in nested key names to array notation (e.g. items.0.reason -> items[0][reason])
+                            let inputName = key;
+                            if (key.includes('.')) {
+                                const parts = key.split('.');
+                                inputName = parts[0] + '[' + parts[1] + ']';
+                                for (let i = 2; i < parts.length; i++) {
+                                    inputName += '[' + parts[i] + ']';
+                                }
+                            }
+
+                            const input = form.querySelector(`[name="${inputName}"]`);
+                            if (input) {
+                                input.classList.add('is-invalid');
+                                const feedback = document.createElement('div');
+                                feedback.className = 'invalid-feedback';
+                                feedback.textContent = errors[key][0];
+                                
+                                // Insert feedback after input or input-group parent
+                                const inputGroup = input.closest('.input-group');
+                                if (inputGroup) {
+                                    inputGroup.after(feedback);
+                                } else {
+                                    input.after(feedback);
+                                }
+                            }
+                        });
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Error',
+                            text: 'Please correct the highlighted errors before submitting.'
+                        });
+                    } else {
+                        const errMsg = error.response && error.response.data && error.response.data.message
+                            ? error.response.data.message
+                            : 'An unexpected error occurred. Please try again.';
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: errMsg
+                        });
+                    }
+                });
+            });
         });
     </script>
 @endpush

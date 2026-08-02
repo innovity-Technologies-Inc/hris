@@ -205,45 +205,116 @@
                 window.open("{{ route('movement.print') }}" + '?' + queryString, '_blank');
             });
 
-            // Allowance Setup Calculator in modal
-            $(document).on('change input', '.ta-plan-select, .da-plan-select, .custom-ta-input, .custom-da-input', function() {
+            // Allowance Setup Plan Calculator
+            $(document).on('change', '.ta-plan-select', function() {
                 const modal = $(this).closest('.modal');
                 const movementId = $(this).data('movement-id');
                 const distance = parseFloat(modal.find('.distance-value').data('distance')) || 0;
-                const days = parseFloat(modal.find('.days-value').data('days')) || 0;
-
-                const taPlanSelect = modal.find('.ta-plan-select');
-                const taRate = parseFloat(taPlanSelect.find('option:selected').data('rate')) || 0;
-                const customTaVal = modal.find('.custom-ta-input').val();
+                const taRate = parseFloat($(this).find('option:selected').data('rate')) || 0;
+                const calculatedTa = distance * taRate;
                 
-                const daPlanSelect = modal.find('.da-plan-select');
-                const daRate = parseFloat(daPlanSelect.find('option:selected').data('rate')) || 0;
-                const customDaVal = modal.find('.custom-da-input').val();
+                modal.find('#total_ta' + movementId).val(calculatedTa.toFixed(2)).trigger('input');
+            });
 
-                let totalTa = 0;
-                if (customTaVal !== '' && !isNaN(parseFloat(customTaVal))) {
-                    totalTa = parseFloat(customTaVal);
-                } else {
-                    totalTa = distance * taRate;
-                }
+            $(document).on('change', '.da-plan-select', function() {
+                const modal = $(this).closest('.modal');
+                const movementId = $(this).data('movement-id');
+                const days = parseFloat(modal.find('.days-value').data('days')) || 0;
+                const daRate = parseFloat($(this).find('option:selected').data('rate')) || 0;
+                const calculatedDa = days * daRate;
+                
+                modal.find('#total_da' + movementId).val(calculatedDa.toFixed(2)).trigger('input');
+            });
 
-                let totalDa = 0;
-                if (customDaVal !== '' && !isNaN(parseFloat(customDaVal))) {
-                    totalDa = parseFloat(customDaVal);
-                } else {
-                    totalDa = days * daRate;
-                }
-
+            // Allowance Setup Summation (triggered when typing/changing totals)
+            $(document).on('input change', '.total-ta-input, .total-da-input', function() {
+                const modal = $(this).closest('.modal');
+                const movementId = $(this).data('movement-id');
+                
+                const totalTa = parseFloat(modal.find('#total_ta' + movementId).val()) || 0;
+                const totalDa = parseFloat(modal.find('#total_da' + movementId).val()) || 0;
                 const totalAllowance = totalTa + totalDa;
 
-                modal.find('#calc_ta_display' + movementId).text('৳' + totalTa.toFixed(2));
-                modal.find('#total_ta' + movementId).val(totalTa.toFixed(2));
-
-                modal.find('#calc_da_display' + movementId).text('৳' + totalDa.toFixed(2));
-                modal.find('#total_da' + movementId).val(totalDa.toFixed(2));
-
-                modal.find('#grand_total_display' + movementId).text('৳' + totalAllowance.toFixed(2));
+                modal.find('#grand_total_display' + movementId).text(totalAllowance.toFixed(2));
                 modal.find('#total_allowance' + movementId).val(totalAllowance.toFixed(2));
+            });
+
+            // Axios Status Change submission
+            $(document).on('submit', '.status-change-api-form', function(e) {
+                e.preventDefault();
+                const form = $(this);
+                const modal = form.closest('.modal');
+                const submitBtn = form.find('button[type="submit"]');
+                const originalHtml = submitBtn.html();
+
+                submitBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1"></span>');
+
+                axios.post(form.attr('action'), form.serialize())
+                .then(response => {
+                    if (response.data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.data.message,
+                            timer: 1500,
+                            showConfirmButton: false
+                        }).then(() => {
+                            modal.modal('hide');
+                            $('body').removeClass('modal-open');
+                            $('.modal-backdrop').remove();
+                            window.location.reload();
+                        });
+                    } else {
+                        Swal.fire({ icon: 'error', title: 'Error', text: response.data.message });
+                        submitBtn.prop('disabled', false).html(originalHtml);
+                    }
+                })
+                .catch(error => {
+                    submitBtn.prop('disabled', false).html(originalHtml);
+                    const errMsg = error.response && error.response.data && error.response.data.message
+                        ? error.response.data.message
+                        : 'An unexpected error occurred.';
+                    Swal.fire({ icon: 'error', title: 'Error', text: errMsg });
+                });
+            });
+
+            // Axios Allowance Form submission
+            $(document).on('submit', '.allowance-form-submit', function(e) {
+                e.preventDefault();
+                const form = $(this);
+                const modal = form.closest('.modal');
+                const submitBtn = form.find('button[type="submit"]');
+                const originalHtml = submitBtn.html();
+
+                submitBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1"></span> Saving...');
+
+                axios.post(form.attr('action'), form.serialize())
+                .then(response => {
+                    if (response.data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.data.message,
+                            timer: 1500,
+                            showConfirmButton: false
+                        }).then(() => {
+                            modal.modal('hide');
+                            $('body').removeClass('modal-open');
+                            $('.modal-backdrop').remove();
+                            window.location.reload();
+                        });
+                    } else {
+                        Swal.fire({ icon: 'error', title: 'Error', text: response.data.message });
+                        submitBtn.prop('disabled', false).html(originalHtml);
+                    }
+                })
+                .catch(error => {
+                    submitBtn.prop('disabled', false).html(originalHtml);
+                    const errMsg = error.response && error.response.data && error.response.data.message
+                        ? error.response.data.message
+                        : 'An unexpected error occurred.';
+                    Swal.fire({ icon: 'error', title: 'Error', text: errMsg });
+                });
             });
         });
     </script>

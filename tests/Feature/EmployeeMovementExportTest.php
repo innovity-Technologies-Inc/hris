@@ -39,10 +39,20 @@ test('it can access movement index and filter via ajax', function () {
         'status' => 'active'
     ]);
 
-    EmployeeMovement::create([
+    $movement = EmployeeMovement::create([
         'employee_id' => $employee->id,
         'from_date' => '2026-07-22 09:00:00',
         'to_date' => '2026-07-22 17:00:00',
+        'distance' => 10,
+        'ta_plan_id' => $this->taPlan->id,
+        'da_plan_id' => $this->daPlan->id,
+        'total_days' => 1,
+        'total_allowance' => 500,
+        'status' => 'approved',
+        'payment_status' => 'unpaid'
+    ]);
+
+    $movement->details()->create([
         'source_address' => 'Office A',
         'source_lat' => 23.8103,
         'source_lng' => 90.4125,
@@ -50,13 +60,7 @@ test('it can access movement index and filter via ajax', function () {
         'dest_lat' => 23.8103,
         'dest_lng' => 90.4125,
         'distance' => 10,
-        'ta_plan_id' => $this->taPlan->id,
-        'da_plan_id' => $this->daPlan->id,
-        'total_days' => 1,
-        'total_allowance' => 500,
         'reason' => 'Official visit',
-        'status' => 'approved',
-        'payment_status' => 'unpaid'
     ]);
 
     $response = $this->actingAs($admin, 'web')->get(route('movement.index'));
@@ -82,10 +86,20 @@ test('it can export employee movements to excel', function () {
         'status' => 'active'
     ]);
 
-    EmployeeMovement::create([
+    $movement = EmployeeMovement::create([
         'employee_id' => $employee->id,
         'from_date' => '2026-07-22 09:00:00',
         'to_date' => '2026-07-22 17:00:00',
+        'distance' => 10,
+        'ta_plan_id' => $this->taPlan->id,
+        'da_plan_id' => $this->daPlan->id,
+        'total_days' => 1,
+        'total_allowance' => 500,
+        'status' => 'approved',
+        'payment_status' => 'unpaid'
+    ]);
+
+    $movement->details()->create([
         'source_address' => 'Office A',
         'source_lat' => 23.8103,
         'source_lng' => 90.4125,
@@ -93,13 +107,7 @@ test('it can export employee movements to excel', function () {
         'dest_lat' => 23.8103,
         'dest_lng' => 90.4125,
         'distance' => 10,
-        'ta_plan_id' => $this->taPlan->id,
-        'da_plan_id' => $this->daPlan->id,
-        'total_days' => 1,
-        'total_allowance' => 500,
         'reason' => 'Official visit',
-        'status' => 'approved',
-        'payment_status' => 'unpaid'
     ]);
 
     $response = $this->actingAs($admin, 'web')->get(route('movement.export.excel', ['keyword' => 'Jane']));
@@ -123,10 +131,20 @@ test('it can print employee movements view', function () {
         'status' => 'active'
     ]);
 
-    EmployeeMovement::create([
+    $movement = EmployeeMovement::create([
         'employee_id' => $employee->id,
         'from_date' => '2026-07-22 09:00:00',
         'to_date' => '2026-07-22 17:00:00',
+        'distance' => 10,
+        'ta_plan_id' => $this->taPlan->id,
+        'da_plan_id' => $this->daPlan->id,
+        'total_days' => 1,
+        'total_allowance' => 500,
+        'status' => 'approved',
+        'payment_status' => 'unpaid'
+    ]);
+
+    $movement->details()->create([
         'source_address' => 'Office A',
         'source_lat' => 23.8103,
         'source_lng' => 90.4125,
@@ -134,13 +152,7 @@ test('it can print employee movements view', function () {
         'dest_lat' => 23.8103,
         'dest_lng' => 90.4125,
         'distance' => 10,
-        'ta_plan_id' => $this->taPlan->id,
-        'da_plan_id' => $this->daPlan->id,
-        'total_days' => 1,
-        'total_allowance' => 500,
         'reason' => 'Official visit',
-        'status' => 'approved',
-        'payment_status' => 'unpaid'
     ]);
 
     $response = $this->actingAs($admin, 'web')->get(route('movement.print', ['keyword' => 'Jane']));

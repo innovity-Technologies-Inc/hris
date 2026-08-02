@@ -90,16 +90,17 @@ test('it can create employee movement with multiple route legs and file attachme
     $response = $this->actingAs($user, 'web')
         ->post(route('movement.store'), $payload);
 
-    $response->assertRedirect(route('movement.index'));
+    $response->assertStatus(201);
+    $response->assertJson([
+        'success' => true,
+        'message' => 'Resource created successfully.'
+    ]);
 
     $this->assertDatabaseHas('employee_movements', [
         'employee_id' => $employee->id,
         'distance' => 50.00,
         'total_days' => 3,
         'status' => 'pending',
-        // Should also fall back to first source and last destination address
-        'source_address' => 'Dhaka Office',
-        'destination_address' => 'Sylhet Office',
     ]);
 
     $movement = EmployeeMovement::first();
@@ -146,11 +147,8 @@ test('it can update employee movement routes and edit details', function () {
         'employee_id' => $employee->id,
         'from_date' => '2026-08-05 08:00:00',
         'to_date' => '2026-08-07 18:00:00',
-        'source_address' => 'Old Source',
-        'destination_address' => 'Old Dest',
         'distance' => 15.00,
         'total_days' => 3,
-        'reason' => 'Old Reason',
         'status' => 'pending',
     ]);
 
@@ -205,13 +203,15 @@ test('it can update employee movement routes and edit details', function () {
     $response = $this->actingAs($user, 'web')
         ->put(route('movement.update', $movement->id), $payload);
 
-    $response->assertRedirect(route('movement.index'));
+    $response->assertStatus(200);
+    $response->assertJson([
+        'success' => true,
+        'message' => 'Resource updated successfully.'
+    ]);
 
     $this->assertDatabaseHas('employee_movements', [
         'id' => $movement->id,
         'distance' => 45.00,
-        'source_address' => 'New Source 1',
-        'destination_address' => 'New Dest 2',
     ]);
 
     $this->assertDatabaseHas('employee_movement_details', [
@@ -251,21 +251,16 @@ test('approver can save and edit allowances after accepting the workflow', funct
         'employee_id' => $employee->id,
         'from_date' => '2026-08-05 08:00:00',
         'to_date' => '2026-08-07 18:00:00',
-        'source_address' => 'Office A',
-        'destination_address' => 'Office B',
         'distance' => 100.00,
         'total_days' => 3,
-        'reason' => 'Inspection tour',
         // Workflow is accepted (Approved)
         'status' => 'approved',
     ]);
 
-    // Save Allowances using TA plan and DA plan, and custom overrides
+    // Save Allowances using TA plan and DA plan
     $payload = [
         'ta_plan_id' => $this->taPlan->id,
         'da_plan_id' => $this->daPlan->id,
-        'custom_ta' => 1200.00, // Custom override
-        'custom_da' => null,    // Calculate via plan (3 days * 200.00 = 600.00)
         'total_ta' => 1200.00,
         'total_da' => 600.00,
         'total_allowance' => 1800.00,
@@ -274,14 +269,16 @@ test('approver can save and edit allowances after accepting the workflow', funct
     $response = $this->actingAs($admin, 'web')
         ->put(route('movement.save_allowances', $movement->id), $payload);
 
-    $response->assertRedirect();
+    $response->assertStatus(200);
+    $response->assertJson([
+        'success' => true,
+        'message' => 'Allowances updated successfully.'
+    ]);
 
     $this->assertDatabaseHas('employee_movements', [
         'id' => $movement->id,
         'ta_plan_id' => $this->taPlan->id,
         'da_plan_id' => $this->daPlan->id,
-        'custom_ta' => 1200.00,
-        'custom_da' => null,
         'total_ta' => 1200.00,
         'total_da' => 600.00,
         'total_allowance' => 1800.00,

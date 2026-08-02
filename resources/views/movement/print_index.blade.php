@@ -177,8 +177,8 @@
                     <td>{{ $record->from_date ? \Carbon\Carbon::parse($record->from_date)->format('d M Y') : '—' }}</td>
                     <td>{{ $record->to_date  ? \Carbon\Carbon::parse($record->to_date)->format('d M Y')  : '—' }}</td>
                     <td>{{ $record->total_days ?? '—' }}</td>
-                    <td class="text-left" style="font-size:6.5pt;">{{ $record->source_address ?? '—' }}</td>
-                    <td class="text-left" style="font-size:6.5pt;">{{ $record->destination_address ?? '—' }}</td>
+                    <td class="text-left" style="font-size:6.5pt;">{{ $record->details->first()?->source_address ?? '—' }}</td>
+                    <td class="text-left" style="font-size:6.5pt;">{{ $record->details->last()?->destination_address ?? '—' }}</td>
                     <td>{{ $record->distance ?? '0' }}</td>
                     <td>{{ number_format($record->total_allowance ?? 0, 2) }}</td>
                     <td>

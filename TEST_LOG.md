@@ -1,24 +1,27 @@
 # Test Log
 
-## 2026-08-02 (Travel Movement Dynamic Routes & Allowances)
+## 2026-08-02 (Travel Movement API-first & Dynamic Routes)
 
-**Goal**: Implement multiple route leg cards with file uploads for the travel movement application form. Hide allowances breakdown from the creation form, showing it inside the view/approval modal where HR/approvers can select plans and enter custom TA/DA values upon approval.
+**Goal**: Implement API-first and Axios-based travel movement submissions with FormRequests and service classes. Drop deprecated single-route columns (`source_address`, `destination_address`, etc.) and custom allowance columns (`custom_ta`, `custom_da`) from the database. Support auto-populating new leg source address with the previous leg's destination in JS. Enable directly editable total TA and DA fields without selecting plans.
 
-**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest tests/Feature/EmployeeMovementExportTest.php tests/Feature/EmployeeMovementFeatureTest.php`
+**Exact Command**: `php artisan route:clear; php artisan config:clear; vendor/bin/pest tests/Feature/EmployeeMovementExportTest.php tests/Feature/EmployeeMovementFeatureTest.php`
 
 **Results**:
-- Created Migration: `database/migrations/2026_08_02_103517_create_employee_movement_details_table.php` to create the `employee_movement_details` table with userstamps, make previous single-route columns nullable, and add `custom_ta` and `custom_da` to the main `employee_movements` table.
+- Created Migrations: 
+  - `database/migrations/2026_08_02_103517_create_employee_movement_details_table.php` (created detail legs table).
+  - `database/migrations/2026_08_02_105703_remove_single_route_columns_from_employee_movements_table.php` (dropped single-route columns).
 - Created Model: `app/Models/Movement/EmployeeMovementDetail.php`.
-- Modified Model: `app/Models/Movement/EmployeeMovement.php` to register `custom_ta`, `custom_da` in fillable fields and define the `details` relationship.
-- Modified Controller: `app/Http/Controllers/Movement/EmployeeMovementsController.php` to update the `save` method to handle array sync with file uploads, eager load `details` in `form` and `index`, and added `saveAllowances` endpoint.
-- Modified Routes: `routes/web.php` to add `movement.save_allowances` route.
-- Modified View: `resources/views/movement/form.blade.php` to build dynamic leg cards, remove allowance fields during creation, and support adding/removing routes.
-- Created View Partial: `resources/views/movement/partials/route_leg_card.blade.php` for dynamic route leg template.
-- Modified View: `resources/views/movement/partials/view_modal.blade.php` to list all route legs (with attachment download links) and show/edit allowances setup for approvers on approved movements.
-- Modified View: `resources/views/movement/partials/search_results.blade.php` to pass active plans to view modal.
-- Modified View: `resources/views/movement/index.blade.php` to implement JavaScript calculator inside the modal.
-- Created Feature Test: `tests/Feature/EmployeeMovementFeatureTest.php` to verify all dynamic legs saving, updating, and allowances editing functionality.
-- Tests passed: 6/6 feature tests passed (22 assertions) ✅
+- Created FormRequests: `StoreTravelMovementRequest` and `UpdateTravelMovementRequest` under `App\Http\Requests\Movement`.
+- Created Service: `EmployeeMovementServices` under `App\Services\Movement`.
+- Modified Controller: `EmployeeMovementsController.php` to inject the service, handle validation via FormRequests, and return standardized JSON responses.
+- Modified Routes: `routes/web.php` to define separate `store` and `update` routes, plus PUT `save_allowances` endpoint.
+- Modified Views:
+  - `form.blade.php` to submit via Axios, intercept response status `422` to display invalid error highlights, and auto-populate new card source address with previous card destination address.
+  - `view_modal.blade.php` to replace display of dropped single-route columns with route legs, make `total_ta`/`total_da` directly editable number inputs, and remove custom fields.
+  - `index.blade.php` to handle dynamic allowance math on edit and submit change status & allowances forms via Axios with SweetAlert feedback.
+- Modified Export & Print: `MovementExport.php` and `print_index.blade.php` to pull source, destination, and reason dynamically from details.
+- Updated Feature Tests: `EmployeeMovementFeatureTest.php` and `EmployeeMovementExportTest.php` to verify API JSON responses, file attachments, and direct allowances updates.
+- Tests passed: 6/6 passed (23 assertions) ✅
 
 **Status**: ✅ SUCCESS
 

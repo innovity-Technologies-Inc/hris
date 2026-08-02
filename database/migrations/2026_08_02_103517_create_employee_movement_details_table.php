@@ -34,9 +34,6 @@ return new class extends Migration
             $table->unsignedBigInteger('ta_plan_id')->nullable()->change();
             $table->unsignedBigInteger('da_plan_id')->nullable()->change();
             $table->text('reason')->nullable()->change();
-            
-            $table->decimal('custom_ta', 10, 2)->nullable()->after('total_ta');
-            $table->decimal('custom_da', 10, 2)->nullable()->after('total_da');
         });
     }
 
@@ -45,9 +42,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('employee_movements', function (Blueprint $table) {
-            $table->dropColumn(['custom_ta', 'custom_da']);
-        });
         Schema::dropIfExists('employee_movement_details');
     }
 };
