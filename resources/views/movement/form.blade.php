@@ -44,7 +44,7 @@
                     <div class="card-body">
                         <div class="row">
                             <!-- Employee Selection -->
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-12 mb-3">
                                 <label for="employee_id" class="form-label fw-semibold">Employee <span class="text-danger">*</span></label>
                                 <select name="employee_id" id="employee_id" class="form-select select2_list" required @if($isEmployee) disabled @endif>
                                     <option value="">Select Employee</option>
@@ -58,24 +58,7 @@
                                 @if($isEmployee)
                                     <input type="hidden" name="employee_id" value="{{ $loggedInEmployeeId }}">
                                 @endif
-                            </div>
-
-                            <!-- Status -->
-                            <div class="col-md-6 mb-3">
-                                <label for="status" class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
-                                @if(!$isEmployee)
-                                    <select name="status" class="form-select" required>
-                                        @foreach($statusOptions as $status)
-                                            <option value="{{ $status['value'] }}"
-                                                {{ old('status', $movement->status ?? 'pending') == $status['value'] ? 'selected' : '' }}>
-                                                {{ $status['label'] }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                @else
-                                    <input type="text" class="form-control bg-light" value="Pending" readonly>
-                                    <input type="hidden" name="status" value="pending">
-                                @endif
+                                <input type="hidden" name="status" value="{{ $movement->status ?? 'pending' }}">
                             </div>
                         </div>
                     </div>

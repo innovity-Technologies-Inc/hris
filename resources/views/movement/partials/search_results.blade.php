@@ -8,7 +8,7 @@
         @if(auth()->user()->user_type !== \App\Enums\UserType::Employee)
             <th scope="col">Total Allowance</th>
             <th scope="col">Status</th>
-            <th scope="col">Payment</th>
+            <th scope="col">Payment Status</th>
         @endif
         <th scope="col">Action</th>
     </tr>
@@ -60,10 +60,9 @@
                 <div class="d-flex gap-1">
                     {{-- View Button --}}
                     @can('movement.view')
-                    <button type="button" class="btn btn-info btn-sm" title="View Details" data-bs-toggle="modal"
-                            data-bs-target="#viewTravelMovementModal{{ $movement->id }}">
+                    <a href="{{ route('movement.show', $movement->id) }}" class="btn btn-info btn-sm text-white" title="View Details">
                         <i style="height: 12px; width: 12px" data-feather="eye"></i>
-                    </button>
+                    </a>
                     @endcan
 
                     {{-- Edit Button --}}
@@ -82,9 +81,6 @@
                 </div>
             </td>
         </tr>
-
-        {{-- Include View Modal for each movement --}}
-        @include('movement.partials.view_modal', ['movement' => $movement, 'taPlans' => $taPlans, 'daPlans' => $daPlans])
     @endforeach
     </tbody>
 </table>

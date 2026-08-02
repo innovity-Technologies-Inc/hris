@@ -1104,6 +1104,7 @@ Route::controller(EmployeeMovementsController::class)->prefix('movement')->middl
         Route::get('/', 'index')->name('movement.index');
         Route::get('export/excel', 'exportExcel')->name('movement.export.excel');
         Route::get('print', 'printIndex')->name('movement.print');
+        Route::get('{id}', 'show')->name('movement.show');
     });
     Route::middleware('permission:movement.create')->group(function () {
         Route::get('create', 'form')->name('movement.create');

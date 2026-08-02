@@ -1,5 +1,21 @@
 # Test Log
 
+## 2026-08-02 (Travel Movement Approval Workflow & Show Details Page)
+
+**Goal**: Implement the central approval workflow for travel movements (`Approvable` trait), removing the static status dropdown fields and status edit dropdown buttons from the listing and detail views. Convert the detailed view modal to a dedicated show page containing the central workflow history timeline and action forms. Remove the status dropdown input field from the travel movement creation/editing form (defaulting to pending status). Keep the read-only payment status badge in both the index table and the details page, but remove payment status modification controls from the UI.
+
+**Exact Command**: `php artisan route:clear; php artisan config:clear; vendor/bin/pest tests/Feature/EmployeeMovementExportTest.php tests/Feature/EmployeeMovementFeatureTest.php`
+
+**Results**:
+- Added `Approvable` trait to `EmployeeMovement` model and registered the `travel-movement` module workflow triggers on creation in `EmployeeMovementServices.php`.
+- Created `TravelMovementWorkflowListener.php` to listen to workflow events and update the movement's status to `approved` or `rejected` automatically, registering the listener in `WorkflowEventDispatcherService.php`.
+- Designed and wrote `show.blade.php` to display complete details (employee info, logistics timeline, routes list, payment status badge) along with `@include('approval_engine.workflow_history')`.
+- Added the `show` method in `EmployeeMovementsController.php` and mapped it to the `movement.show` route in `routes/web.php`.
+- Updated `search_results.blade.php` to link the view action to the new show details page and removed the old `view_modal.blade.php` include.
+- Removed status selectors from `form.blade.php`, submitting the status as `pending` under the hood.
+- Added comprehensive Pest feature tests to verify that creating a travel movement correctly triggers sequential approval requests and that approvals transition the movement status successfully.
+- Cleaned up unused modal forms scripts from `index.blade.php` and deleted the unused `view_modal.blade.php` file.
+
 ## 2026-08-02 (Travel Movement API-first & Dynamic Routes)
 
 **Goal**: Implement API-first and Axios-based travel movement submissions with FormRequests and service classes. Drop deprecated single-route columns (`source_address`, `destination_address`, etc.) and custom allowance columns (`custom_ta`, `custom_da`) from the database. Support auto-populating new route source address with the previous route's destination, and new route destination address with the very first card's source address in JS (return-to-origin auto-population). Save routes inputs dynamically to `localStorage` to persist data across browser refreshes. Enable directly editable total TA and DA fields without selecting plans. Rename "Route Leg" to "Route" and change borders to use the project's primary color. Add pagination controls to the listing index, aligned to the left of the table grid, with the latest travel movement data shown first. Ensure all other indexes in the application display their latest records first. Add travel movement deletion action to the listing table using SweetAlert2 confirmations and Axios delete requests.

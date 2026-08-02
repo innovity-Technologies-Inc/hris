@@ -67,6 +67,20 @@ class EmployeeMovementsController extends Controller
         return view('movement.index', compact('title', 'movements', 'section', 'taPlans', 'daPlans'));
     }
 
+    public function show($id)
+    {
+        $title = 'Employee Travel Movement Details';
+        $section = 'Travel Movement';
+        $sub_section = 'Details';
+
+        $movement = EmployeeMovement::with(['getEmployee', 'details', 'getTaPlan', 'getDaPlan'])->findOrFail($id);
+
+        $taPlans = TAPlan::where('status', 'active')->get();
+        $daPlans = DAPlan::where('status', 'active')->get();
+
+        return view('movement.show', compact('title', 'section', 'sub_section', 'movement', 'taPlans', 'daPlans'));
+    }
+
     public function form($id = null)
     {
         $title = (!empty($id) ? 'Edit' : 'Add') . ' Employee Travel Movement Information';

@@ -29,6 +29,11 @@ class EmployeeMovementServices
                 $movement->update($movementData);
             } else {
                 $movement = EmployeeMovement::create($movementData);
+                try {
+                    $movement->startWorkflow('travel-movement');
+                } catch (\Exception $e) {
+                    Log::error('Approval workflow failed to start for Travel Movement #' . $movement->id . ': ' . $e->getMessage());
+                }
             }
 
             // Process route leg items

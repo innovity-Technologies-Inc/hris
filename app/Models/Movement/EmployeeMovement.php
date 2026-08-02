@@ -10,11 +10,13 @@ use App\Traits\OrganizationScoped;
 
 use App\Traits\Userstamps;
 use App\Traits\Auditable;
+use Innovity\ApprovalEngine\Traits\Approvable;
 
 class EmployeeMovement extends Model
 {
     use Userstamps, Auditable;
     use OrganizationScoped;
+    use Approvable;
     protected $fillable = [
         'employee_id', 'from_date', 'to_date',
         'distance', 'ta_plan_id', 'da_plan_id',

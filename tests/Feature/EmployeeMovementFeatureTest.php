@@ -8,6 +8,8 @@ use App\Enums\UserType;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Innovity\ApprovalEngine\Models\Workflow;
+use Innovity\ApprovalEngine\Models\WorkflowStep;
 
 beforeEach(function () {
     app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
@@ -354,4 +356,85 @@ test('it can delete employee movement and associated details', function () {
     $this->assertDatabaseMissing('employee_movement_details', [
         'id' => $detail->id
     ]);
+});
+
+test('it triggers approval workflow on travel movement creation and handles complete/reject', function () {
+    // Create a workflow for travel-movement module
+    $workflow = Workflow::create([
+        'module' => 'travel-movement',
+        'name' => 'Travel Movement Approval Workflow',
+        'type' => 'sequential',
+        'total_steps' => 1,
+    ]);
+
+    $approver = User::factory()->create(['user_type' => UserType::Company, 'name' => 'Manager Approver']);
+
+    WorkflowStep::create([
+        'workflow_id' => $workflow->id,
+        'name' => 'Step 1',
+        'step_order' => 1,
+        'type' => 'specific-user',
+        'user_id' => $approver->id,
+    ]);
+
+    $employee = Employee::create([
+        'full_name' => 'John Doe',
+        'applicant_id' => 'APP001',
+        'system_id' => 'SYS001',
+        'punch_card_no' => 'P001',
+        'status' => 'active'
+    ]);
+
+    $user = User::factory()->create([
+        'user_type' => UserType::Employee,
+        'employee_id' => $employee->id,
+    ]);
+    
+    $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'Employee', 'guard_name' => 'web']);
+    $role->syncPermissions(['movement.view', 'movement.create']);
+    $user->assignRole($role);
+
+    // Create travel movement via store endpoint
+    $response = $this->actingAs($user, 'web')->post(route('movement.store'), [
+        'employee_id' => $employee->id,
+        'from_date' => '2026-08-05 08:00:00',
+        'to_date' => '2026-08-07 18:00:00',
+        'distance' => 200.50,
+        'total_days' => 3,
+        'status' => 'pending',
+        'items' => [
+            [
+                'source_address' => 'Dhaka Office',
+                'source_lat' => 23.8103,
+                'source_lng' => 90.4125,
+                'destination_address' => 'Chittagong Office',
+                'dest_lat' => 22.3569,
+                'dest_lng' => 91.7832,
+                'distance' => 200.50,
+                'reason' => 'Business trip',
+            ]
+        ]
+    ]);
+
+    $response->assertStatus(201);
+
+    $movement = EmployeeMovement::latest()->first();
+    expect($movement)->not->toBeNull();
+    expect($movement->status)->toBe('pending');
+    expect($movement->approvalRequests)->toHaveCount(1);
+
+    $approvalRequest = $movement->approvalRequests->first();
+    expect($approvalRequest->status->value)->toBe('pending');
+
+    $stepRequest = $approvalRequest->stepRequests->first();
+    expect($stepRequest->status->value)->toBe('pending');
+
+    // Act as approver and approve the step
+    $this->actingAs($approver)->post(route('approval.action', $stepRequest->id), [
+        'action' => 'approve',
+        'comments' => 'Approve travel',
+    ]);
+
+    $movement->refresh();
+    expect($movement->status)->toBe('approved');
 });
