@@ -131,6 +131,9 @@ class WorkflowStepRequestService
                     if ($normalizedRoute === 'claim_expense') {
                         $normalizedRoute = 'claim_expenses';
                     }
+                    if ($normalizedRoute === 'travel_movement') {
+                        $normalizedRoute = 'movement';
+                    }
                     $url = Route::has($normalizedRoute . '.show') 
                             ? route($normalizedRoute . '.show', $approvable->id, false) 
                             : '/' . $moduleName;

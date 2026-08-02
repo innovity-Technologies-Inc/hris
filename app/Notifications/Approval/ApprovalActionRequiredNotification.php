@@ -45,6 +45,9 @@ class ApprovalActionRequiredNotification extends Notification
             if ($normalizedRoute === 'claim_expense') {
                 $normalizedRoute = 'claim_expenses';
             }
+            if ($normalizedRoute === 'travel_movement') {
+                $normalizedRoute = 'movement';
+            }
             $url = \Illuminate\Support\Facades\Route::has($normalizedRoute . '.show') && $approvable
                     ? route($normalizedRoute . '.show', $approvable->id) 
                     : url('/' . $moduleName);
@@ -75,6 +78,9 @@ class ApprovalActionRequiredNotification extends Notification
             $normalizedRoute = str_replace('-', '_', $moduleName);
             if ($normalizedRoute === 'claim_expense') {
                 $normalizedRoute = 'claim_expenses';
+            }
+            if ($normalizedRoute === 'travel_movement') {
+                $normalizedRoute = 'movement';
             }
             $url = \Illuminate\Support\Facades\Route::has($normalizedRoute . '.show') && $approvable
                     ? route($normalizedRoute . '.show', $approvable->id, false) 
