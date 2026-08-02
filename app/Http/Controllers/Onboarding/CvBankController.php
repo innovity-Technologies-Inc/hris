@@ -7,6 +7,8 @@ use App\Http\Requests\Onboarding\StoreCvBankRequest;
 use App\Http\Requests\Onboarding\UpdateCvBankRequest;
 use App\Services\Onboarding\CvBankServices;
 use App\Models\Onboarding\CvBank;
+use App\Models\Company\Company;
+use App\Models\Company\Designation;
 use Illuminate\Http\Request;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use App\Http\Responses\ApiResponse;
@@ -39,16 +41,25 @@ class CvBankController extends Controller
         if ($request->filled('max_score')) {
             $filters['max_score'] = $request->input('max_score');
         }
+        if ($request->filled('company_name')) {
+            $filters['company_name'] = $request->input('company_name');
+        }
+        if ($request->filled('designation')) {
+            $filters['designation'] = $request->input('designation');
+        }
 
         $keyword = $request->input('keyword');
 
         $cvs = $this->cvBankServices->getCvsList($filters, $keyword, $flexsearch);
+        
+        $companies = Company::orderBy('name')->get();
+        $designations = Designation::orderBy('company_designation')->get();
 
         if ($request->ajax() || $request->boolean('_ajax')) {
             return view('onboarding.cv_bank.partials.search_results', compact('cvs'))->render();
         }
 
-        return view('onboarding.cv_bank.index', compact('title', 'section', 'sub_section', 'cvs'));
+        return view('onboarding.cv_bank.index', compact('title', 'section', 'sub_section', 'cvs', 'companies', 'designations'));
     }
 
     /**
@@ -70,7 +81,10 @@ class CvBankController extends Controller
         $section = 'Onboarding';
         $sub_section = 'CV Bank';
 
-        return view('onboarding.cv_bank.create', compact('title', 'section', 'sub_section'));
+        $companies = Company::orderBy('name')->get();
+        $designations = Designation::orderBy('company_designation')->get();
+
+        return view('onboarding.cv_bank.create', compact('title', 'section', 'sub_section', 'companies', 'designations'));
     }
 
     /**
@@ -95,8 +109,10 @@ class CvBankController extends Controller
         $sub_section = 'CV Bank';
 
         $cv = CvBank::findOrFail($id);
+        $companies = Company::orderBy('name')->get();
+        $designations = Designation::orderBy('company_designation')->get();
 
-        return view('onboarding.cv_bank.edit', compact('title', 'section', 'sub_section', 'cv'));
+        return view('onboarding.cv_bank.edit', compact('title', 'section', 'sub_section', 'cv', 'companies', 'designations'));
     }
 
     /**

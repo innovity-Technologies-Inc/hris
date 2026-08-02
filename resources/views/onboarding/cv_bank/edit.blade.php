@@ -24,11 +24,21 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label small fw-semibold text-muted mb-1">Company Name *</label>
-                                <input type="text" name="company_name" value="{{ old('company_name', $cv->company_name) }}" class="form-control" required placeholder="e.g. TechCorp">
+                                <select name="company_name" class="form-select" required>
+                                    <option value="">Select Company</option>
+                                    @foreach($companies as $company)
+                                        <option value="{{ $company->name }}" {{ old('company_name', $cv->company_name) === $company->name ? 'selected' : '' }}>{{ $company->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label small fw-semibold text-muted mb-1">Designation *</label>
-                                <input type="text" name="designation" value="{{ old('designation', $cv->designation) }}" class="form-control" required placeholder="e.g. Software Engineer">
+                                <select name="designation" class="form-select" required>
+                                    <option value="">Select Designation</option>
+                                    @foreach($designations as $designation)
+                                        <option value="{{ $designation->company_designation }}" {{ old('designation', $cv->designation) === $designation->company_designation ? 'selected' : '' }}>{{ $designation->company_designation }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="col-md-8">
                                 <label class="form-label small fw-semibold text-muted mb-1">Career Level *</label>

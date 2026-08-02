@@ -62,9 +62,10 @@
 
                 <div class="card-body">
                     <!-- Filters Form -->
+                    <!-- Filters Form -->
                     <form id="filterForm" class="mb-4">
                         <div class="row g-3">
-                            <div class="col-md-5 col-12">
+                            <div class="col-lg-3 col-md-6 col-12">
                                 <label class="form-label small fw-semibold text-muted mb-1">Search Keyword</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control border-end-0" id="searchKeyword"
@@ -74,7 +75,25 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="col-md-3 col-sm-6 col-12">
+                            <div class="col-lg-2 col-md-3 col-sm-6 col-12">
+                                <label class="form-label small fw-semibold text-muted mb-1">Company</label>
+                                <select name="company_name" id="filterCompany" class="form-select">
+                                    <option value="">All Companies</option>
+                                    @foreach($companies as $company)
+                                        <option value="{{ $company->name }}">{{ $company->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-lg-2 col-md-3 col-sm-6 col-12">
+                                <label class="form-label small fw-semibold text-muted mb-1">Designation</label>
+                                <select name="designation" id="filterDesignation" class="form-select">
+                                    <option value="">All Designations</option>
+                                    @foreach($designations as $designation)
+                                        <option value="{{ $designation->company_designation }}">{{ $designation->company_designation }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-lg-2 col-md-4 col-sm-6 col-12">
                                 <label class="form-label small fw-semibold text-muted mb-1">Career Level</label>
                                 <select name="career_level" id="filterCareerLevel" class="form-select">
                                     <option value="">All Levels</option>
@@ -84,7 +103,7 @@
                                     <option value="Executive">Executive</option>
                                 </select>
                             </div>
-                            <div class="col-md-4 col-sm-6 col-12">
+                            <div class="col-lg-3 col-md-8 col-sm-6 col-12">
                                 <label class="form-label small fw-semibold text-muted mb-1">Score Range</label>
                                 <div class="input-group">
                                     <input type="number" min="0" max="100" class="form-control" id="filterMinScore" name="min_score" placeholder="Min">
@@ -112,6 +131,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('logContainer');
     const searchInput = document.getElementById('searchKeyword');
+    const companySelect = document.getElementById('filterCompany');
+    const designationSelect = document.getElementById('filterDesignation');
     const careerLevelSelect = document.getElementById('filterCareerLevel');
     const minScoreInput = document.getElementById('filterMinScore');
     const maxScoreInput = document.getElementById('filterMaxScore');
@@ -131,17 +152,21 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     searchInput.addEventListener('input', triggerSearch);
+    companySelect.addEventListener('change', triggerSearch);
+    designationSelect.addEventListener('change', triggerSearch);
     careerLevelSelect.addEventListener('change', triggerSearch);
     minScoreInput.addEventListener('input', triggerSearch);
     maxScoreInput.addEventListener('input', triggerSearch);
 
     function fetchLogs(url = "{{ route('cv_bank.index') }}") {
         const keyword = searchInput.value;
+        const company = companySelect.value;
+        const designation = designationSelect.value;
         const level = careerLevelSelect.value;
         const min = minScoreInput.value;
         const max = maxScoreInput.value;
 
-        const fullUrl = `${url}${url.includes('?') ? '&' : '?'}keyword=${encodeURIComponent(keyword)}&career_level=${encodeURIComponent(level)}&min_score=${encodeURIComponent(min)}&max_score=${encodeURIComponent(max)}`;
+        const fullUrl = `${url}${url.includes('?') ? '&' : '?'}keyword=${encodeURIComponent(keyword)}&company_name=${encodeURIComponent(company)}&designation=${encodeURIComponent(designation)}&career_level=${encodeURIComponent(level)}&min_score=${encodeURIComponent(min)}&max_score=${encodeURIComponent(max)}`;
 
         axios.get(fullUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
             .then(response => {

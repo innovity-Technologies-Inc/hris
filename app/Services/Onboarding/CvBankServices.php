@@ -29,6 +29,14 @@ class CvBankServices
             $query->where('career_level', $filters['career_level']);
         }
 
+        // Apply company and designation filters if set
+        if (isset($filters['company_name']) && $filters['company_name'] !== '') {
+            $query->where('company_name', $filters['company_name']);
+        }
+        if (isset($filters['designation']) && $filters['designation'] !== '') {
+            $query->where('designation', $filters['designation']);
+        }
+
         $searchableColumns = ['company_name', 'designation', 'applicant_name', 'career_level', 'cv_score'];
 
         return $flexsearch

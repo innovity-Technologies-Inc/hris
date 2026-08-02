@@ -35,11 +35,21 @@
                                     </div>
                                     <div class="col-md-4 col-sm-6">
                                         <label class="form-label small fw-semibold text-muted mb-1">Company Name *</label>
-                                        <input type="text" name="cvs[0][company_name]" class="form-control form-control-sm" required placeholder="e.g. TechCorp">
+                                        <select name="cvs[0][company_name]" class="form-select form-select-sm" required>
+                                            <option value="">Select Company</option>
+                                            @foreach($companies as $company)
+                                                <option value="{{ $company->name }}">{{ $company->name }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                     <div class="col-md-4 col-sm-6">
                                         <label class="form-label small fw-semibold text-muted mb-1">Designation *</label>
-                                        <input type="text" name="cvs[0][designation]" class="form-control form-control-sm" required placeholder="e.g. Software Engineer">
+                                        <select name="cvs[0][designation]" class="form-select form-select-sm" required>
+                                            <option value="">Select Designation</option>
+                                            @foreach($designations as $designation)
+                                                <option value="{{ $designation->company_designation }}">{{ $designation->company_designation }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                     <div class="col-md-4 col-sm-6">
                                         <label class="form-label small fw-semibold text-muted mb-1">Career Level *</label>
@@ -99,11 +109,21 @@
                 </div>
                 <div class="col-md-4 col-sm-6">
                     <label class="form-label small fw-semibold text-muted mb-1">Company Name *</label>
-                    <input type="text" name="cvs[__INDEX__][company_name]" class="form-control form-control-sm" required placeholder="e.g. TechCorp">
+                    <select name="cvs[__INDEX__][company_name]" class="form-select form-select-sm" required>
+                        <option value="">Select Company</option>
+                        @foreach($companies as $company)
+                            <option value="{{ $company->name }}">{{ $company->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="col-md-4 col-sm-6">
                     <label class="form-label small fw-semibold text-muted mb-1">Designation *</label>
-                    <input type="text" name="cvs[__INDEX__][designation]" class="form-control form-control-sm" required placeholder="e.g. Software Engineer">
+                    <select name="cvs[__INDEX__][designation]" class="form-select form-select-sm" required>
+                        <option value="">Select Designation</option>
+                        @foreach($designations as $designation)
+                            <option value="{{ $designation->company_designation }}">{{ $designation->company_designation }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="col-md-4 col-sm-6">
                     <label class="form-label small fw-semibold text-muted mb-1">Career Level *</label>
