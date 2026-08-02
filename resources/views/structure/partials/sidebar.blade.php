@@ -122,9 +122,10 @@
                     $canAdvanceSalary = auth()->user()->can('advance-salary.view');
                     $canArrear = auth()->user()->can('arrear.view');
                     $canSalary = auth()->user()->can('salary.view');
-                    $showPayrollMenu = $canPromotions || $canDemotions || $canIncrements || $canDecrements || $canBonuses || $canAdvanceSalary || $canArrear || $canSalary;
+                    $canBills = auth()->user()->can('bills.view');
+                    $showPayrollMenu = $canPromotions || $canDemotions || $canIncrements || $canDecrements || $canBonuses || $canAdvanceSalary || $canArrear || $canSalary || $canBills;
                     $payrollOpen = request()->is('promotion*') || request()->is('demotion*') || request()->is('increment*') || request()->is('decrement*') || request()->is('bonus*')
-                    || request()->is('advance-salary*') || request()->is('arrear*') || request()->is('salary*');
+                    || request()->is('advance-salary*') || request()->is('arrear*') || request()->is('salary*') || request()->is('bills*');
 
                     $canTaxPolicyView = auth()->user()->can('tax-policy.view');
                     $canTaxCalculateView = auth()->user()->can('tax-calculate.view');
@@ -860,6 +861,12 @@
                             <li>
                                 <a class='tp-link @if (request()->is('disbursement*')) menuitem-active @endif'
                                    href='{{ route('disbursement.index') }}'>Disbursement</a>
+                            </li>
+                            @endif
+                            @if($canBills)
+                            <li>
+                                <a class='tp-link @if (request()->is('bills*')) menuitem-active @endif'
+                                   href='{{ route('bills.index') }}'>Bill Pay</a>
                             </li>
                             @endif
                         </ul>
