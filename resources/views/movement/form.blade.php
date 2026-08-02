@@ -352,6 +352,12 @@
             document.getElementById('total_days_input').value = days;
         }
 
+        function updateLegNumbers() {
+            document.querySelectorAll('#route-legs-container .leg-number').forEach((span, idx) => {
+                span.textContent = idx + 1;
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('from_date')?.addEventListener('change', calculateTotalDays);
             document.getElementById('to_date')?.addEventListener('change', calculateTotalDays);
@@ -455,12 +461,7 @@
                 calculateOverallDistance();
                 saveRoutesDraft();
             });
-            
-            function updateLegNumbers() {
-                document.querySelectorAll('#route-legs-container .leg-number').forEach((span, idx) => {
-                    span.textContent = idx + 1;
-                });
-            }
+
 
             // Axios Form Submission Intercept
             const form = document.getElementById('employeeTravelMovementForm');
