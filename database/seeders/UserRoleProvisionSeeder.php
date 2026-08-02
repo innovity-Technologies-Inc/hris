@@ -48,8 +48,30 @@ class UserRoleProvisionSeeder extends Seeder
  
         $this->command->info('Super Admin user created with user_type: Group');
 
-        // Mappings for employee IDs 194 to 200
+        // Mappings for employee IDs 192 to 200 (including User IDs 194, 195, 196)
         $specificMappings = [
+            192 => [
+                'user_type' => UserType::Department,
+                'role' => 'HR Manager',
+                'office_info' => [
+                    'current_company_id' => 101,
+                    'current_business_unit_id' => 211,
+                    'current_division_id' => 311,
+                    'current_department_id' => 411,
+                    'current_section_id' => 551,
+                ]
+            ],
+            193 => [
+                'user_type' => UserType::Employee,
+                'role' => 'Manager',
+                'office_info' => [
+                    'current_company_id' => 110,
+                    'current_business_unit_id' => 210,
+                    'current_division_id' => 310,
+                    'current_department_id' => 410,
+                    'current_section_id' => 550,
+                ]
+            ],
             194 => [
                 'user_type' => UserType::Company,
                 'role' => 'HR Manager',
