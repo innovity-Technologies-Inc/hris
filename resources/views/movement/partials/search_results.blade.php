@@ -73,7 +73,7 @@
     </tbody>
 </table>
 
-<div class="mt-4 d-flex justify-content-end">
+<div class="mt-4 d-flex justify-content-start">
     {{ $movements->links() }}
 </div>
 
