@@ -2,11 +2,12 @@
 
 ## 2026-08-02 (Travel Movement API-first & Dynamic Routes)
 
-**Goal**: Implement API-first and Axios-based travel movement submissions with FormRequests and service classes. Drop deprecated single-route columns (`source_address`, `destination_address`, etc.) and custom allowance columns (`custom_ta`, `custom_da`) from the database. Support auto-populating new route source address with the previous route's destination, and new route destination address with the very first card's source address in JS (return-to-origin auto-population). Enable directly editable total TA and DA fields without selecting plans. Rename "Route Leg" to "Route" and change borders to use the project's primary color.
+**Goal**: Implement API-first and Axios-based travel movement submissions with FormRequests and service classes. Drop deprecated single-route columns (`source_address`, `destination_address`, etc.) and custom allowance columns (`custom_ta`, `custom_da`) from the database. Support auto-populating new route source address with the previous route's destination, and new route destination address with the very first card's source address in JS (return-to-origin auto-population). Save routes inputs dynamically to `localStorage` to persist data across browser refreshes. Enable directly editable total TA and DA fields without selecting plans. Rename "Route Leg" to "Route" and change borders to use the project's primary color.
 
 **Exact Command**: `php artisan route:clear; php artisan config:clear; vendor/bin/pest tests/Feature/EmployeeMovementExportTest.php tests/Feature/EmployeeMovementFeatureTest.php`
 
 **Results**:
+- Integrated `localStorage` draft saving and auto-loading within `form.blade.php` to persist user-added routes and inputs during page refreshes (auto-clears on successful Axios submission).
 - Modified JS inside `form.blade.php` to extract previous destination and the very first card's starting source, auto-populating the new route (new source = previous destination, new destination = first starting source) and triggering immediate distance calculations.
 - Modified Views (`route_leg_card.blade.php`, `form.blade.php`, `view_modal.blade.php`) to rename "Route Leg" to "Route" and apply project primary color (`var(--primary-color)`) to all route borders.
 - Created Migrations: 

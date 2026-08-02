@@ -184,12 +184,86 @@
     <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_key') }}&libraries=places&callback=initAllAutocompletes" async defer></script>
     <script>
         let autocompleteInstances = [];
+        
+        const formId = "{{ $movement->id ?? 'new' }}";
+        const draftKey = `travel_movement_routes_draft_${formId}`;
+
+        // Save routes inputs to localStorage draft
+        function saveRoutesDraft() {
+            const routes = [];
+            document.querySelectorAll('#route-legs-container .route-card').forEach(card => {
+                const idInput = card.querySelector('[name*="[id]"]');
+                const reasonInput = card.querySelector('[name*="[reason]"]');
+                routes.push({
+                    id: idInput ? idInput.value : '',
+                    source_address: card.querySelector('.source-address').value,
+                    source_lat: card.querySelector('.source-lat').value,
+                    source_lng: card.querySelector('.source-lng').value,
+                    destination_address: card.querySelector('.destination-address').value,
+                    dest_lat: card.querySelector('.dest-lat').value,
+                    dest_lng: card.querySelector('.dest-lng').value,
+                    distance: card.querySelector('.leg-distance').value,
+                    reason: reasonInput ? reasonInput.value : '',
+                });
+            });
+            localStorage.setItem(draftKey, JSON.stringify(routes));
+        }
+
+        // Restore routes inputs from localStorage draft
+        function loadRoutesDraft() {
+            const draft = localStorage.getItem(draftKey);
+            if (!draft) return false;
+
+            try {
+                const routes = JSON.parse(draft);
+                if (!Array.isArray(routes) || routes.length === 0) return false;
+
+                const container = document.getElementById('route-legs-container');
+                container.innerHTML = '';
+
+                routes.forEach((route, index) => {
+                    const template = document.getElementById('route-leg-template').innerHTML;
+                    const html = template.replace(/__INDEX__/g, index);
+                    container.insertAdjacentHTML('beforeend', html);
+
+                    const newCard = container.querySelector(`.route-card[data-index="${index}"]`);
+                    const idInput = newCard.querySelector('[name*="[id]"]');
+                    const reasonInput = newCard.querySelector('[name*="[reason]"]');
+                    if (idInput) idInput.value = route.id || '';
+                    newCard.querySelector('.source-address').value = route.source_address || '';
+                    newCard.querySelector('.source-lat').value = route.source_lat || '';
+                    newCard.querySelector('.source-lng').value = route.source_lng || '';
+                    newCard.querySelector('.destination-address').value = route.destination_address || '';
+                    newCard.querySelector('.dest-lat').value = route.dest_lat || '';
+                    newCard.querySelector('.dest-lng').value = route.dest_lng || '';
+                    newCard.querySelector('.leg-distance').value = route.distance || '0.00';
+                    if (reasonInput) reasonInput.value = route.reason || '';
+
+                    initLegAutocomplete(newCard);
+                });
+
+                calculateOverallDistance();
+                updateLegNumbers();
+
+                // Show remove buttons if more than 1 card
+                if (routes.length > 1) {
+                    container.querySelectorAll('.remove-leg-btn').forEach(btn => btn.classList.remove('d-none'));
+                }
+                return true;
+            } catch (e) {
+                console.error('Error loading routes draft:', e);
+                return false;
+            }
+        }
 
         function initAllAutocompletes() {
-            document.querySelectorAll('.route-card').forEach(card => {
-                initLegAutocomplete(card);
-            });
-            calculateOverallDistance();
+            const loaded = loadRoutesDraft();
+            if (!loaded) {
+                document.querySelectorAll('.route-card').forEach(card => {
+                    initLegAutocomplete(card);
+                });
+                calculateOverallDistance();
+            }
             calculateTotalDays();
         }
 
@@ -254,6 +328,7 @@
                 
                 card.querySelector('.leg-distance').value = dist.toFixed(2);
                 calculateOverallDistance();
+                saveRoutesDraft();
             });
         }
 
@@ -296,7 +371,12 @@
             document.getElementById('from_date')?.addEventListener('change', calculateTotalDays);
             document.getElementById('to_date')?.addEventListener('change', calculateTotalDays);
 
-            // Add Leg Card Action
+            // Trigger auto-save draft on any input changes in routes
+            const container = document.getElementById('route-legs-container');
+            container.addEventListener('input', saveRoutesDraft);
+            container.addEventListener('change', saveRoutesDraft);
+
+            // Add Route Card Action
             document.getElementById('add-leg-btn').addEventListener('click', () => {
                 const container = document.getElementById('route-legs-container');
                 const template = document.getElementById('route-leg-template').innerHTML;
@@ -357,9 +437,10 @@
                 
                 // Update route numbers
                 updateLegNumbers();
+                saveRoutesDraft();
             });
 
-            // Remove Leg Card Action (Delegated)
+            // Remove Route Card Action (Delegated)
             document.getElementById('route-legs-container').addEventListener('click', (e) => {
                 const removeBtn = e.target.closest('.remove-leg-btn');
                 if (!removeBtn) return;
@@ -387,6 +468,7 @@
 
                 updateLegNumbers();
                 calculateOverallDistance();
+                saveRoutesDraft();
             });
             
             function updateLegNumbers() {
@@ -420,6 +502,9 @@
                 })
                 .then(response => {
                     if (response.data.success) {
+                        // Clear draft on successful submit
+                        localStorage.removeItem(draftKey);
+
                         Swal.fire({
                             icon: 'success',
                             title: 'Success',
