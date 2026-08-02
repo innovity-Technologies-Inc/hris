@@ -316,7 +316,48 @@
                     Swal.fire({ icon: 'error', title: 'Error', text: errMsg });
                 });
             });
+
+            // Delete travel movement handler
+            $(document).on('click', '.delete-movement', function (e) {
+                e.preventDefault();
+                const id = $(this).data('id');
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this travel movement!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        axios.delete(`/movement/${id}/delete`, {
+                            data: { _token: "{{ csrf_token() }}" }
+                        })
+                        .then(response => {
+                            if (response.data.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Deleted!',
+                                    text: response.data.message,
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                }).then(() => {
+                                    fetchData();
+                                });
+                            } else {
+                                Swal.fire('Error!', response.data.message || 'Deletion failed', 'error');
+                            }
+                        })
+                        .catch(error => {
+                            const errMsg = error.response && error.response.data && error.response.data.message
+                                ? error.response.data.message
+                                : 'Deletion failed';
+                            Swal.fire('Error!', errMsg, 'error');
+                        });
+                    }
+                });
+            });
         });
     </script>
 @endpush
-

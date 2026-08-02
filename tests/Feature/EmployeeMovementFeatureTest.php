@@ -14,6 +14,7 @@ beforeEach(function () {
     Permission::firstOrCreate(['name' => 'movement.view', 'guard_name' => 'web']);
     Permission::firstOrCreate(['name' => 'movement.create', 'guard_name' => 'web']);
     Permission::firstOrCreate(['name' => 'movement.edit', 'guard_name' => 'web']);
+    Permission::firstOrCreate(['name' => 'movement.delete', 'guard_name' => 'web']);
     Permission::firstOrCreate(['name' => 'movement.hr-approve', 'guard_name' => 'web']);
 
     $this->taPlan = \App\Models\Plan\TAPlan::create([
@@ -297,4 +298,60 @@ test('approver can save and edit allowances after accepting the workflow', funct
         ->put(route('movement.save_allowances', $movement->id), $payload);
 
     $failResponse->assertStatus(403);
+});
+
+test('it can delete employee movement and associated details', function () {
+    $employee = Employee::create([
+        'full_name' => 'John Doe',
+        'applicant_id' => 'APP001',
+        'system_id' => 'SYS001',
+        'punch_card_no' => 'P001',
+        'status' => 'active'
+    ]);
+
+    $admin = User::factory()->create([
+        'user_type' => UserType::Company,
+    ]);
+    
+    $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'Admin', 'guard_name' => 'web']);
+    $role->syncPermissions(['movement.view', 'movement.delete']);
+    $admin->assignRole($role);
+
+    $movement = EmployeeMovement::create([
+        'employee_id' => $employee->id,
+        'from_date' => '2026-08-05 08:00:00',
+        'to_date' => '2026-08-07 18:00:00',
+        'distance' => 100.00,
+        'total_days' => 3,
+        'status' => 'approved',
+    ]);
+
+    $detail = $movement->details()->create([
+        'source_address' => 'Dhaka Office',
+        'source_lat' => 23.8103,
+        'source_lng' => 90.4125,
+        'destination_address' => 'Chittagong Office',
+        'dest_lat' => 22.3569,
+        'dest_lng' => 91.7832,
+        'distance' => 100.00,
+        'reason' => 'Client visit',
+        'attachment_path' => 'movements/sample.pdf'
+    ]);
+
+    $response = $this->actingAs($admin, 'web')
+        ->delete(route('movement.destroy', $movement->id));
+
+    $response->assertStatus(200);
+    $response->assertJson([
+        'success' => true,
+        'message' => 'Resource deleted successfully.'
+    ]);
+
+    $this->assertDatabaseMissing('employee_movements', [
+        'id' => $movement->id
+    ]);
+
+    $this->assertDatabaseMissing('employee_movement_details', [
+        'id' => $detail->id
+    ]);
 });

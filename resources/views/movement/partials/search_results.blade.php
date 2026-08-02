@@ -57,13 +57,29 @@
             </td>
             @endif
             <td>
-                {{-- View Button --}}
-                @can('movement.view')
-                <button type="button" class="btn btn-info btn-sm" title="View Details" data-bs-toggle="modal"
-                        data-bs-target="#viewTravelMovementModal{{ $movement->id }}">
-                    <i style="height: 12px; width: 12px" data-feather="eye"></i>
-                </button>
-                @endcan
+                <div class="d-flex gap-1">
+                    {{-- View Button --}}
+                    @can('movement.view')
+                    <button type="button" class="btn btn-info btn-sm" title="View Details" data-bs-toggle="modal"
+                            data-bs-target="#viewTravelMovementModal{{ $movement->id }}">
+                        <i style="height: 12px; width: 12px" data-feather="eye"></i>
+                    </button>
+                    @endcan
+
+                    {{-- Edit Button --}}
+                    @can('movement.edit')
+                    <a href="{{ route('movement.edit', $movement->id) }}" class="btn btn-warning btn-sm text-white" title="Edit">
+                        <i style="height: 12px; width: 12px" data-feather="edit"></i>
+                    </a>
+                    @endcan
+
+                    {{-- Delete Button --}}
+                    @can('movement.delete')
+                    <button type="button" class="btn btn-danger btn-sm delete-movement" data-id="{{ $movement->id }}" title="Delete">
+                        <i style="height: 12px; width: 12px" data-feather="trash-2"></i>
+                    </button>
+                    @endcan
+                </div>
             </td>
         </tr>
 
