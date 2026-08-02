@@ -71,7 +71,7 @@ class PermissionSeeder extends Seeder
             [
                 'name' => 'Movement',
                 'icon' => 'person-walking-arrow-right',
-                'actions' => ['view', 'create', 'edit', 'delete']
+                'actions' => ['view', 'create', 'edit', 'delete', 'process']
             ],
 
             [

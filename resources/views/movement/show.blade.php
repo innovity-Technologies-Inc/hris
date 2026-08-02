@@ -189,7 +189,7 @@
                                         <h6 class="text-success mb-2 fw-bold text-sm"><i class="bi bi-cash-coin me-1"></i> Travel Allowance (TA)</h6>
                                         <div class="mb-3">
                                             <label class="form-label small fw-semibold text-muted mb-1">TA Plan</label>
-                                            <select name="ta_plan_id" id="ta_plan_select" class="form-select form-select-sm">
+                                            <select name="ta_plan_id" id="ta_plan_select" class="form-select form-select-sm" @cannot('movement.process') disabled @endcannot>
                                                 <option value="" data-rate="0">Select TA Plan</option>
                                                 @foreach($taPlans as $plan)
                                                     <option value="{{ $plan->id }}" data-rate="{{ $plan->remuneration }}"
@@ -202,7 +202,7 @@
                                         <div class="mb-3">
                                             <label class="form-label small fw-semibold text-muted mb-1">Total TA Amount</label>
                                             <input type="number" step="0.01" min="0" name="total_ta" id="total_ta" class="form-control form-control-sm"
-                                                   value="{{ old('total_ta', $movement->total_ta ?? '0.00') }}" placeholder="Total TA Amount">
+                                                   value="{{ old('total_ta', $movement->total_ta ?? '0.00') }}" placeholder="Total TA Amount" @cannot('movement.process') disabled @endcannot>
                                         </div>
                                     </div>
 
@@ -211,7 +211,7 @@
                                         <h6 class="text-warning mb-2 fw-bold text-sm"><i class="bi bi-wallet me-1"></i> Daily Allowance (DA)</h6>
                                         <div class="mb-3">
                                             <label class="form-label small fw-semibold text-muted mb-1">DA Plan</label>
-                                            <select name="da_plan_id" id="da_plan_select" class="form-select form-select-sm">
+                                            <select name="da_plan_id" id="da_plan_select" class="form-select form-select-sm" @cannot('movement.process') disabled @endcannot>
                                                 <option value="" data-rate="0">Select DA Plan</option>
                                                 @foreach($daPlans as $plan)
                                                     <option value="{{ $plan->id }}" data-rate="{{ $plan->remuneration }}"
@@ -224,7 +224,7 @@
                                         <div class="mb-3">
                                             <label class="form-label small fw-semibold text-muted mb-1">Total DA Amount</label>
                                             <input type="number" step="0.01" min="0" name="total_da" id="total_da" class="form-control form-control-sm"
-                                                   value="{{ old('total_da', $movement->total_da ?? '0.00') }}" placeholder="Total DA Amount">
+                                                   value="{{ old('total_da', $movement->total_da ?? '0.00') }}" placeholder="Total DA Amount" @cannot('movement.process') disabled @endcannot>
                                         </div>
                                     </div>
 
@@ -240,9 +240,15 @@
                                     </div>
 
                                     <div class="col-12 text-end mt-2">
-                                        <button type="submit" class="btn btn-success btn-sm px-4">
-                                            <i class="bi bi-check-circle me-1"></i> Save/Update Allowances
-                                        </button>
+                                        @can('movement.process')
+                                            <button type="submit" class="btn btn-success btn-sm px-4">
+                                                <i class="bi bi-check-circle me-1"></i> Save/Update Allowances
+                                            </button>
+                                        @else
+                                            <button type="button" class="btn btn-secondary btn-sm px-4" disabled>
+                                                <i class="bi bi-lock-fill me-1"></i> Save Locked (Unauthorized)
+                                            </button>
+                                        @endcan
                                     </div>
                                 </div>
                             </div>

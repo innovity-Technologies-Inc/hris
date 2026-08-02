@@ -18,6 +18,7 @@ beforeEach(function () {
     Permission::firstOrCreate(['name' => 'movement.edit', 'guard_name' => 'web']);
     Permission::firstOrCreate(['name' => 'movement.delete', 'guard_name' => 'web']);
     Permission::firstOrCreate(['name' => 'movement.hr-approve', 'guard_name' => 'web']);
+    Permission::firstOrCreate(['name' => 'movement.process', 'guard_name' => 'web']);
 
     $this->taPlan = \App\Models\Plan\TAPlan::create([
         'name' => 'Standard TA Plan',
@@ -247,7 +248,7 @@ test('approver can save and edit allowances after accepting the workflow', funct
     ]);
     
     $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'Admin', 'guard_name' => 'web']);
-    $role->syncPermissions(['movement.view', 'movement.hr-approve']);
+    $role->syncPermissions(['movement.view', 'movement.hr-approve', 'movement.process']);
     $admin->assignRole($role);
 
     $movement = EmployeeMovement::create([
