@@ -1116,6 +1116,7 @@ Route::controller(EmployeeMovementsController::class)->prefix('movement')->middl
     Route::middleware('permission:movement.hr-approve')->group(function () {
         Route::put('change-status', 'changeStatus')->name('movement.change_status');
         Route::put('change-payment-status', 'changePaymentStatus')->name('movement.change_payment_status');
+        Route::put('{id}/save-allowances', 'saveAllowances')->name('movement.save_allowances');
     });
     Route::middleware('permission:movement.delete')->group(function () {
         Route::delete('{id}/delete', 'destroy')->name('movement.destroy');

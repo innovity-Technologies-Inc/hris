@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Plan\DAPlan;
 use App\Models\Employee\Employee;
 use App\Models\Movement\EmployeeMovement;
+use App\Models\Movement\EmployeeMovementDetail;
 use App\Models\Plan\TAPlan;
 use Carbon\Carbon;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
@@ -48,10 +49,14 @@ class EmployeeMovementsController extends Controller
         $movements = $flexsearch
             ->apply($query, $filters, $keyword, $searchableColumns)
             ->paginate(10);
+
+        $taPlans = TAPlan::where('status', 'active')->get();
+        $daPlans = DAPlan::where('status', 'active')->get();
+
         if ($request->ajax() || $request->boolean('_ajax')) {
-            return view('movement.partials.search_results', compact('movements'))->render();
+            return view('movement.partials.search_results', compact('movements', 'taPlans', 'daPlans'))->render();
         }
-        return view('movement.index', compact('title', 'movements', 'section'));
+        return view('movement.index', compact('title', 'movements', 'section', 'taPlans', 'daPlans'));
     }
 
     public function form($id = null)
@@ -78,7 +83,7 @@ class EmployeeMovementsController extends Controller
         ];
 
         if (!empty($id)){
-            $movement = EmployeeMovement::findorFail($id);
+            $movement = EmployeeMovement::with('details')->findOrFail($id);
             // Security: Employees can only edit their own movements
             if ($isEmployee && $movement->employee_id != auth()->user()->employee_id) {
                 abort(403, 'Unauthorized access.');
@@ -120,94 +125,177 @@ class EmployeeMovementsController extends Controller
         }
 
         $validated = $request->validate([
+            'employee_id' => ['required', 'exists:employees,id'],
+            'from_date' => ['required', 'date'],
+            'to_date'   => ['required', 'date', 'after_or_equal:from_date'],
+            'distance' => ['required', 'numeric', 'min:0'],
+            'total_days' => ['required', 'numeric'],
+            'status' => ['required', 'in:pending,approved,rejected'],
 
-                'employee_id' => ['required', 'exists:employees,id'],
+            'items' => ['required', 'array', 'min:1'],
+            'items.*.id' => ['nullable'],
+            'items.*.source_address' => ['required', 'string', 'max:255'],
+            'items.*.source_lat' => ['required', 'numeric', 'between:-90,90'],
+            'items.*.source_lng' => ['required', 'numeric', 'between:-180,180'],
+            'items.*.destination_address' => ['required', 'string', 'max:255'],
+            'items.*.dest_lat' => ['required', 'numeric', 'between:-90,90'],
+            'items.*.dest_lng' => ['required', 'numeric', 'between:-180,180'],
+            'items.*.distance' => ['required', 'numeric', 'min:0'],
+            'items.*.reason' => ['nullable', 'string', 'max:1000'],
+            'items.*.attachment' => ['nullable', 'file', 'max:5120'], // 5MB limit
+        ], [
+            'employee_id.required' => 'Please select an employee.',
+            'from_date.required' => 'From date and time is required.',
+            'to_date.required' => 'To date and time is required.',
+            'to_date.after_or_equal' => 'To date must be later than or equal to From date.',
+            'distance.required' => 'Total distance must be calculated before submitting.',
+            'total_days.required' => 'Total days must be calculated before submitting.',
+            'items.required' => 'At least one travel route/destination card is required.',
+            'items.*.source_address.required' => 'Source address is required for all routes.',
+            'items.*.destination_address.required' => 'Destination address is required for all routes.',
+            'items.*.distance.required' => 'Distance must be calculated for all routes.',
+        ]);
 
-                'from_date' => ['required', 'date'],
-                'to_date'   => ['required', 'date', 'after_or_equal:from_date'],
+        try {
+            DB::beginTransaction();
 
-                'source_address' => ['required', 'string', 'max:255'],
-                'source_lat'     => ['required', 'numeric', 'between:-90,90'],
-                'source_lng'     => ['required', 'numeric', 'between:-180,180'],
+            $movementData = [
+                'employee_id' => $validated['employee_id'],
+                'from_date' => $validated['from_date'],
+                'to_date' => $validated['to_date'],
+                'distance' => $validated['distance'],
+                'total_days' => $validated['total_days'],
+                'status' => $validated['status'],
+            ];
 
-                'destination_address' => ['required', 'string', 'max:255'],
-                'dest_lat'            => ['required', 'numeric', 'between:-90,90'],
-                'dest_lng'            => ['required', 'numeric', 'between:-180,180'],
-
-                'distance' => ['required', 'numeric', 'min:0'],
-
-                'ta_plan_id' => ['nullable', 'exists:ta_plans,id'],
-                'da_plan_id' => ['nullable', 'exists:da_plans,id'],
-
-                'reason' => ['nullable', 'string', 'max:1000'],
-                'total_days' => ['required', 'numeric'],
-                'total_ta' => ['nullable', 'numeric'],
-            'total_da' => ['nullable', 'numeric'],
-            'total_allowance' => ['nullable', 'numeric'],
-
-                'status' => ['required', 'in:pending,approved,rejected'],
-            ],
-
-            [
-                'employee_id.required' => 'Please select an employee.',
-                'employee_id.exists'   => 'Selected employee is invalid.',
-
-                'from_date.required' => 'From date and time is required.',
-                'from_date.date'     => 'From date must be a valid date.',
-                'to_date.required'   => 'To date and time is required.',
-                'to_date.date'       => 'To date must be a valid date.',
-                'to_date.after_or_equal' => 'To date must be later than or equal to From date.',
-
-                'source_address.required' => 'Source address is required.',
-                'source_lat.required'     => 'Please select a valid source location from the map.',
-                'source_lng.required'     => 'Source longitude is missing.',
-                'source_lat.numeric'      => 'Source latitude must be numeric.',
-                'source_lng.numeric'      => 'Source longitude must be numeric.',
-
-                'destination_address.required' => 'Destination address is required.',
-                'dest_lat.required'            => 'Please select a valid destination location from the map.',
-                'dest_lng.required'            => 'Destination longitude is missing.',
-                'dest_lat.numeric'             => 'Destination latitude must be numeric.',
-                'dest_lng.numeric'             => 'Destination longitude must be numeric.',
-
-                'distance.required' => 'Distance must be calculated before submitting.',
-                'distance.numeric'  => 'Distance must be a valid number.',
-                'distance.min'      => 'Distance cannot be negative.',
-
-                'ta_plan_id.required' => 'Please select a TA plan.',
-                'ta_plan_id.exists'   => 'Selected TA plan is invalid.',
-                'da_plan_id.required' => 'Please select a DA plan.',
-                'da_plan_id.exists'   => 'Selected DA plan is invalid.',
-
-                'reason.required' => 'Please provide a reason for the movement.',
-                'reason.max'      => 'Reason cannot exceed 1000 characters.',
-                'status.required' => 'Please select a status.',
-                'status.in'       => 'Selected status is invalid.',
-                'total_days.required' => 'Total days must be calculated before submitting.',
-                'total_days.numeric'  => 'Total days must be a valid number.',
-                'total_allowance.numeric'  => 'Total allowance must be a valid number.',
-                'total_ta.numeric'  => 'Total TA must be a valid number.',
-                'total_da.numeric'  => 'Total DA must be a valid number.',
-            ]
-        );
-
-        try{
-            if ($id){
-                $movement = EmployeeMovement::findOrFail($id);
-                $movement->update($validated);
-                return redirect()->route('movement.index')->with([
-                    'message' => 'Updated successfully.',
-                    'alert-type' => 'success'
-                ]);
-            }else{
-                EmployeeMovement::create($validated);
-                return redirect()->route('movement.index')->with([
-                    'message' => 'Created successfully.',
-                    'alert-type' => 'success'
-                ]);
+            // Set main source/destination/reason from first/last items for compatibility
+            $items = $request->input('items', []);
+            if (!empty($items)) {
+                $firstItem = reset($items);
+                $lastItem = end($items);
+                $movementData['source_address'] = $firstItem['source_address'] ?? '';
+                $movementData['source_lat'] = $firstItem['source_lat'] ?? null;
+                $movementData['source_lng'] = $firstItem['source_lng'] ?? null;
+                $movementData['destination_address'] = $lastItem['destination_address'] ?? '';
+                $movementData['dest_lat'] = $lastItem['dest_lat'] ?? null;
+                $movementData['dest_lng'] = $lastItem['dest_lng'] ?? null;
+                $movementData['reason'] = $firstItem['reason'] ?? '';
             }
-        }catch (\Exception $e){
-            Log::error($e->getMessage());
+
+            if ($id) {
+                $movement = EmployeeMovement::findOrFail($id);
+                $movement->update($movementData);
+            } else {
+                $movement = EmployeeMovement::create($movementData);
+            }
+
+            // Sync items (details)
+            $existingItemIds = $movement->details()->pluck('id')->toArray();
+            $newItemIds = [];
+
+            foreach ($items as $index => $itemData) {
+                $detailId = $itemData['id'] ?? null;
+                $detailData = [
+                    'source_address' => $itemData['source_address'],
+                    'source_lat' => $itemData['source_lat'],
+                    'source_lng' => $itemData['source_lng'],
+                    'destination_address' => $itemData['destination_address'],
+                    'dest_lat' => $itemData['dest_lat'],
+                    'dest_lng' => $itemData['dest_lng'],
+                    'distance' => $itemData['distance'],
+                    'reason' => $itemData['reason'] ?? null,
+                ];
+
+                // Handle attachment upload
+                if ($request->hasFile("items.{$index}.attachment")) {
+                    $file = $request->file("items.{$index}.attachment");
+                    $filePath = \App\HelperClass::file_upload($file, 'movements');
+                    $detailData['attachment_path'] = $filePath;
+                }
+
+                if ($detailId && in_array($detailId, $existingItemIds)) {
+                    $detail = EmployeeMovementDetail::findOrFail($detailId);
+                    // Keep old attachment if no new file is uploaded
+                    if (!isset($detailData['attachment_path'])) {
+                        unset($detailData['attachment_path']);
+                    } else {
+                        // Delete old file if updated
+                        if ($detail->attachment_path) {
+                            \App\HelperClass::file_delete($detail->attachment_path);
+                        }
+                    }
+                    $detail->update($detailData);
+                    $newItemIds[] = $detailId;
+                } else {
+                    $detail = $movement->details()->create($detailData);
+                    $newItemIds[] = $detail->id;
+                }
+            }
+
+            // Delete removed items
+            $itemsToDelete = array_diff($existingItemIds, $newItemIds);
+            foreach ($itemsToDelete as $deleteId) {
+                $detail = EmployeeMovementDetail::find($deleteId);
+                if ($detail) {
+                    if ($detail->attachment_path) {
+                        \App\HelperClass::file_delete($detail->attachment_path);
+                    }
+                    $detail->delete();
+                }
+            }
+
+            DB::commit();
+
+            return redirect()->route('movement.index')->with([
+                'message' => $id ? 'Updated successfully.' : 'Created successfully.',
+                'alert-type' => 'success'
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error saving movement: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
+            return redirect()->back()->with([
+                'message' => 'Something went wrong. Please try again later.',
+                'alert-type' => 'error'
+            ])->withInput();
+        }
+    }
+
+    public function saveAllowances(Request $request, $id)
+    {
+        // Only HR/Admin can save/edit allowances
+        if (auth()->user()->user_type === UserType::Employee) {
+            abort(403, 'Unauthorized access.');
+        }
+
+        $validated = $request->validate([
+            'ta_plan_id' => ['nullable', 'exists:ta_plans,id'],
+            'da_plan_id' => ['nullable', 'exists:da_plans,id'],
+            'custom_ta' => ['nullable', 'numeric', 'min:0'],
+            'custom_da' => ['nullable', 'numeric', 'min:0'],
+            'total_ta' => ['required', 'numeric', 'min:0'],
+            'total_da' => ['required', 'numeric', 'min:0'],
+            'total_allowance' => ['required', 'numeric', 'min:0'],
+        ]);
+
+        try {
+            $movement = EmployeeMovement::findOrFail($id);
+            $movement->update([
+                'ta_plan_id' => $validated['ta_plan_id'],
+                'da_plan_id' => $validated['da_plan_id'],
+                'custom_ta' => $validated['custom_ta'],
+                'custom_da' => $validated['custom_da'],
+                'total_ta' => $validated['total_ta'],
+                'total_da' => $validated['total_da'],
+                'total_allowance' => $validated['total_allowance'],
+            ]);
+
+            return redirect()->back()->with([
+                'message' => 'Allowances updated successfully.',
+                'alert-type' => 'success'
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error saving allowances: ' . $e->getMessage());
             return redirect()->back()->with([
                 'message' => 'Something went wrong. Please try again later.',
                 'alert-type' => 'error'

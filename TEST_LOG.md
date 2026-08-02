@@ -1,5 +1,27 @@
 # Test Log
 
+## 2026-08-02 (Travel Movement Dynamic Routes & Allowances)
+
+**Goal**: Implement multiple route leg cards with file uploads for the travel movement application form. Hide allowances breakdown from the creation form, showing it inside the view/approval modal where HR/approvers can select plans and enter custom TA/DA values upon approval.
+
+**Exact Command**: `php artisan config:clear && php artisan route:clear && vendor/bin/pest tests/Feature/EmployeeMovementExportTest.php tests/Feature/EmployeeMovementFeatureTest.php`
+
+**Results**:
+- Created Migration: `database/migrations/2026_08_02_103517_create_employee_movement_details_table.php` to create the `employee_movement_details` table with userstamps, make previous single-route columns nullable, and add `custom_ta` and `custom_da` to the main `employee_movements` table.
+- Created Model: `app/Models/Movement/EmployeeMovementDetail.php`.
+- Modified Model: `app/Models/Movement/EmployeeMovement.php` to register `custom_ta`, `custom_da` in fillable fields and define the `details` relationship.
+- Modified Controller: `app/Http/Controllers/Movement/EmployeeMovementsController.php` to update the `save` method to handle array sync with file uploads, eager load `details` in `form` and `index`, and added `saveAllowances` endpoint.
+- Modified Routes: `routes/web.php` to add `movement.save_allowances` route.
+- Modified View: `resources/views/movement/form.blade.php` to build dynamic leg cards, remove allowance fields during creation, and support adding/removing routes.
+- Created View Partial: `resources/views/movement/partials/route_leg_card.blade.php` for dynamic route leg template.
+- Modified View: `resources/views/movement/partials/view_modal.blade.php` to list all route legs (with attachment download links) and show/edit allowances setup for approvers on approved movements.
+- Modified View: `resources/views/movement/partials/search_results.blade.php` to pass active plans to view modal.
+- Modified View: `resources/views/movement/index.blade.php` to implement JavaScript calculator inside the modal.
+- Created Feature Test: `tests/Feature/EmployeeMovementFeatureTest.php` to verify all dynamic legs saving, updating, and allowances editing functionality.
+- Tests passed: 6/6 feature tests passed (22 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-07-26 (Tax Deduction Export & Print Functionality)
 
 **Goal**: Implement unpaginated Excel export and print sheet reports for Tax Deduction History, adhering to filters and search query parameters.

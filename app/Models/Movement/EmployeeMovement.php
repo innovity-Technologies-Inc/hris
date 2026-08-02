@@ -21,6 +21,7 @@ class EmployeeMovement extends Model
         'destination_address', 'dest_lat', 'dest_lng',
         'distance', 'ta_plan_id', 'da_plan_id',
         'total_ta', 'total_da', 'total_days', 'total_allowance',
+        'custom_ta', 'custom_da',
         'reason', 'status', 'payment_status',
     ];
 
@@ -38,5 +39,9 @@ class EmployeeMovement extends Model
     {
         return $this->belongsTo(DAPlan::class, 'da_plan_id', 'id');
     }
-}
 
+    public function details()
+    {
+        return $this->hasMany(EmployeeMovementDetail::class, 'employee_movement_id');
+    }
+}

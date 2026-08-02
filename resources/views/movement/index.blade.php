@@ -204,6 +204,47 @@
                 let queryString = $('#filterForm').serialize();
                 window.open("{{ route('movement.print') }}" + '?' + queryString, '_blank');
             });
+
+            // Allowance Setup Calculator in modal
+            $(document).on('change input', '.ta-plan-select, .da-plan-select, .custom-ta-input, .custom-da-input', function() {
+                const modal = $(this).closest('.modal');
+                const movementId = $(this).data('movement-id');
+                const distance = parseFloat(modal.find('.distance-value').data('distance')) || 0;
+                const days = parseFloat(modal.find('.days-value').data('days')) || 0;
+
+                const taPlanSelect = modal.find('.ta-plan-select');
+                const taRate = parseFloat(taPlanSelect.find('option:selected').data('rate')) || 0;
+                const customTaVal = modal.find('.custom-ta-input').val();
+                
+                const daPlanSelect = modal.find('.da-plan-select');
+                const daRate = parseFloat(daPlanSelect.find('option:selected').data('rate')) || 0;
+                const customDaVal = modal.find('.custom-da-input').val();
+
+                let totalTa = 0;
+                if (customTaVal !== '' && !isNaN(parseFloat(customTaVal))) {
+                    totalTa = parseFloat(customTaVal);
+                } else {
+                    totalTa = distance * taRate;
+                }
+
+                let totalDa = 0;
+                if (customDaVal !== '' && !isNaN(parseFloat(customDaVal))) {
+                    totalDa = parseFloat(customDaVal);
+                } else {
+                    totalDa = days * daRate;
+                }
+
+                const totalAllowance = totalTa + totalDa;
+
+                modal.find('#calc_ta_display' + movementId).text('৳' + totalTa.toFixed(2));
+                modal.find('#total_ta' + movementId).val(totalTa.toFixed(2));
+
+                modal.find('#calc_da_display' + movementId).text('৳' + totalDa.toFixed(2));
+                modal.find('#total_da' + movementId).val(totalDa.toFixed(2));
+
+                modal.find('#grand_total_display' + movementId).text('৳' + totalAllowance.toFixed(2));
+                modal.find('#total_allowance' + movementId).val(totalAllowance.toFixed(2));
+            });
         });
     </script>
 @endpush

@@ -16,6 +16,9 @@
             <div class="modal-body p-4">
                 @php $isEmployee = auth()->user()->user_type === \App\Enums\UserType::Employee; @endphp
 
+                <span class="distance-value d-none" data-distance="{{ $movement->distance }}"></span>
+                <span class="days-value d-none" data-days="{{ $movement->total_days }}"></span>
+
                 {{-- Status Badges --}}
                 @if(!$isEmployee)
                 <div class="text-center mb-4 d-flex justify-content-center gap-3">
@@ -68,11 +71,11 @@
                     </div>
                 </div>
 
-                {{-- Travel Movement Details Card --}}
+                {{-- Travel Movement Timeline & Details --}}
                 <div class="card border-info mb-4 shadow-sm">
                     <div class="card-header bg-info bg-opacity-10">
                         <h6 class="mb-0 text-info fw-semibold">
-                            <i class="bi bi-calendar-event me-2"></i>Travel Movement Timeline & Location
+                            <i class="bi bi-calendar-event me-2"></i>Timeline & Duration
                         </h6>
                     </div>
                     <div class="card-body">
@@ -88,12 +91,14 @@
                                         <div class="fw-semibold text-dark">
                                             {{ \Carbon\Carbon::parse($movement->from_date)->format('l, d F Y') }}
                                         </div>
-                                        <div class="text-muted">
+                                        <div class="text-muted text-sm">
                                             {{ \Carbon\Carbon::parse($movement->from_date)->format('h:i A') }}
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
+                            <div class="col-md-6">
                                 <div class="mb-3">
                                     <div class="d-flex align-items-center mb-2">
                                         <i class="bi bi-calendar-x text-danger me-2 fs-5"></i>
@@ -103,13 +108,15 @@
                                         <div class="fw-semibold text-dark">
                                             {{ \Carbon\Carbon::parse($movement->to_date)->format('l, d F Y') }}
                                         </div>
-                                        <div class="text-muted">
+                                        <div class="text-muted text-sm">
                                             {{ \Carbon\Carbon::parse($movement->to_date)->format('h:i A') }}
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <div class="alert alert-info d-flex align-items-center border-0 py-2" role="alert">
+                            <div class="col-md-6">
+                                <div class="alert alert-info d-flex align-items-center border-0 py-2 mb-0" role="alert">
                                     <i class="bi bi-clock-history me-2 fs-5"></i>
                                     <div>
                                         <strong>Total Duration:</strong> {{ $movement->total_days }}
@@ -118,36 +125,11 @@
                                 </div>
                             </div>
 
-                            {{-- Locations --}}
                             <div class="col-md-6">
-                                <div class="mb-3">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <i class="bi bi-pin-map text-info me-2 fs-5"></i>
-                                        <strong class="text-muted">Source Address</strong>
-                                    </div>
-                                    <div class="ps-4 border-start border-info border-2 ms-2">
-                                        <div class="text-dark small">{{ $movement->source_address }}</div>
-                                    </div>
-                                </div>
-
-                                <div class="text-center my-2">
-                                    <i class="bi bi-arrow-down-circle text-primary fs-4"></i>
-                                </div>
-
-                                <div class="mb-3">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <i class="bi bi-geo-alt text-warning me-2 fs-5"></i>
-                                        <strong class="text-muted">Destination Address</strong>
-                                    </div>
-                                    <div class="ps-4 border-start border-warning border-2 ms-2">
-                                        <div class="text-dark small">{{ $movement->destination_address }}</div>
-                                    </div>
-                                </div>
-
-                                <div class="alert alert-warning d-flex align-items-center border-0 py-2" role="alert">
+                                <div class="alert alert-warning d-flex align-items-center border-0 py-2 mb-0" role="alert">
                                     <i class="bi bi-speedometer2 me-2 fs-5"></i>
                                     <div>
-                                        <strong>Covered Distance:</strong>
+                                        <strong>Overall Calculated Distance:</strong>
                                         {{ number_format($movement->distance, 2) }} KM
                                     </div>
                                 </div>
@@ -156,104 +138,255 @@
                     </div>
                 </div>
 
-                {{-- Allowance Details Card --}}
-                @if(!$isEmployee)
-                <div class="card border-success mb-4 shadow-sm">
-                    <div class="card-header bg-success bg-opacity-10">
-                        <h6 class="mb-0 text-success fw-semibold">
-                            <i class="bi bi-wallet2 me-2"></i>Allowance Breakdown
+                {{-- Travel Route Legs Details --}}
+                <div class="card border-secondary mb-4 shadow-sm">
+                    <div class="card-header bg-secondary bg-opacity-10">
+                        <h6 class="mb-0 text-secondary fw-semibold">
+                            <i class="bi bi-pin-map-fill me-2"></i>Route Legs/Destinations Breakdown
                         </h6>
                     </div>
                     <div class="card-body">
-                        <div class="row g-4">
-                            {{-- TA Plan --}}
-                            <div class="col-md-6">
-                                <div class="card bg-light border-0 h-100">
-                                    <div class="card-body">
-                                        <h6 class="text-success mb-3">
-                                            <i class="bi bi-cash-coin me-2"></i>Travel Allowance (TA)
-                                        </h6>
-                                        <div class="mb-2">
-                                            <small class="text-muted">Plan Name:</small>
-                                            <div class="fw-semibold">{{ $movement->getTaPlan->name }}</div>
+                        @if($movement->details->isEmpty())
+                            {{-- Legacy movements support --}}
+                            <div class="border rounded p-3 bg-light">
+                                <div class="row g-2">
+                                    <div class="col-md-6">
+                                        <small class="text-muted d-block fw-bold text-uppercase">Source</small>
+                                        <span class="text-dark text-sm">{{ $movement->source_address }}</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <small class="text-muted d-block fw-bold text-uppercase">Destination</small>
+                                        <span class="text-dark text-sm">{{ $movement->destination_address }}</span>
+                                    </div>
+                                    <div class="col-md-8 mt-2">
+                                        <small class="text-muted d-block fw-bold text-uppercase">Reason</small>
+                                        <span class="text-dark text-sm">{{ $movement->reason }}</span>
+                                    </div>
+                                    <div class="col-md-4 mt-2 text-end">
+                                        <span class="badge bg-secondary">{{ number_format($movement->distance, 2) }} KM</span>
+                                    </div>
+                                </div>
+                            </div>
+                        @else
+                            <div class="timeline-route">
+                                @foreach($movement->details as $index => $detail)
+                                    <div class="border border-info rounded p-3 mb-3 shadow-sm bg-light-subtle">
+                                        <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
+                                            <span class="fw-bold text-dark"><i class="bi bi-tag-fill text-info me-1"></i>Leg #{{ $index + 1 }}</span>
+                                            <span class="badge bg-primary fs-7">{{ number_format($detail->distance, 2) }} KM</span>
                                         </div>
-                                        <div class="mb-2">
-                                            <small class="text-muted">Rate per KM:</small>
-                                            <div class="fw-semibold">৳{{ number_format($movement->getTaPlan->remuneration, 2) }}</div>
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <small class="text-muted d-block fw-semibold text-uppercase" style="font-size: 0.75rem;">Source</small>
+                                                <span class="text-dark text-sm">{{ $detail->source_address }}</span>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <small class="text-muted d-block fw-semibold text-uppercase" style="font-size: 0.75rem;">Destination</small>
+                                                <span class="text-dark text-sm">{{ $detail->destination_address }}</span>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <small class="text-muted d-block fw-semibold text-uppercase" style="font-size: 0.75rem;">Reason</small>
+                                                <span class="text-dark text-sm">{{ $detail->reason }}</span>
+                                            </div>
+                                            <div class="col-md-4 text-md-end d-flex align-items-end justify-content-md-end">
+                                                @if($detail->attachment_path)
+                                                    <a href="{{ \Illuminate\Support\Facades\Storage::url($detail->attachment_path) }}" target="_blank" class="btn btn-outline-secondary btn-sm py-1 px-2">
+                                                        <i class="bi bi-file-earmark-arrow-down-fill me-1"></i>View Attachment
+                                                    </a>
+                                                @else
+                                                    <span class="text-muted small">No attachment</span>
+                                                @endif
+                                            </div>
                                         </div>
-                                        <div class="mb-2">
-                                            <small class="text-muted">Distance:</small>
-                                            <div class="fw-semibold">
-                                                {{ number_format($movement->distance, 2) }} KM</div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
+                {{-- Allowances Section --}}
+                @if(!$isEmployee)
+                    @if($movement->status == 'pending')
+                        {{-- Pending Status Allowance message --}}
+                        <div class="card border-warning mb-4 shadow-sm bg-warning bg-opacity-10 text-warning-emphasis">
+                            <div class="card-body d-flex align-items-center">
+                                <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+                                <div>
+                                    <h6 class="mb-1 fw-bold">Allowances Configuration Locked</h6>
+                                    <p class="mb-0 small">Please accept/approve the travel movement workflow first. Allowances can be calculated and saved immediately after approval.</p>
+                                </div>
+                            </div>
+                        </div>
+                    @else
+                        {{-- Approved/Completed Status Allowance Form --}}
+                        <form action="{{ route('movement.save_allowances', $movement->id) }}" method="POST" id="allowanceForm{{ $movement->id }}">
+                            @csrf
+                            @method('PUT')
+                            <div class="card border-success mb-4 shadow-sm">
+                                <div class="card-header bg-success bg-opacity-10 d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0 text-success fw-semibold">
+                                        <i class="bi bi-wallet2 me-2"></i>Allowance Setup & Calculation
+                                    </h6>
+                                    <span class="badge bg-success text-white">Workflow Accepted</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row g-3">
+                                        <!-- TA Plan Section -->
+                                        <div class="col-md-6 border-end">
+                                            <h6 class="text-success mb-2 fw-bold text-sm"><i class="bi bi-cash-coin me-1"></i> Travel Allowance (TA)</h6>
+                                            <div class="mb-3">
+                                                <label class="form-label small fw-semibold text-muted mb-1">TA Plan</label>
+                                                <select name="ta_plan_id" class="form-select form-select-sm ta-plan-select" data-movement-id="{{ $movement->id }}">
+                                                    <option value="" data-rate="0">Select TA Plan</option>
+                                                    @foreach($taPlans as $plan)
+                                                        <option value="{{ $plan->id }}" data-rate="{{ $plan->remuneration }}"
+                                                            {{ old('ta_plan_id', $movement->ta_plan_id) == $plan->id ? 'selected' : '' }}>
+                                                            {{ $plan->name }} (৳{{ $plan->remuneration }}/KM)
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label small fw-semibold text-muted mb-1">Custom TA Amount (Overrides Plan)</label>
+                                                <input type="number" step="0.01" min="0" name="custom_ta" class="form-control form-control-sm custom-ta-input" data-movement-id="{{ $movement->id }}"
+                                                       value="{{ old('custom_ta', $movement->custom_ta) }}" placeholder="Enter custom TA amount">
+                                            </div>
+                                            <div class="bg-light p-2 rounded d-flex justify-content-between align-items-center">
+                                                <span class="text-muted small">Total TA Amount:</span>
+                                                <strong class="text-success" id="calc_ta_display{{ $movement->id }}">৳{{ number_format($movement->total_ta, 2) }}</strong>
+                                                <input type="hidden" name="total_ta" id="total_ta{{ $movement->id }}" value="{{ $movement->total_ta }}">
+                                            </div>
                                         </div>
-                                        <hr>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <strong class="text-muted">Total TA:</strong>
-                                            <h5 class="mb-0 text-success">
-                                                ৳{{ number_format($movement->total_ta, 2) }}</h5>
+
+                                        <!-- DA Plan Section -->
+                                        <div class="col-md-6">
+                                            <h6 class="text-warning mb-2 fw-bold text-sm"><i class="bi bi-wallet me-1"></i> Daily Allowance (DA)</h6>
+                                            <div class="mb-3">
+                                                <label class="form-label small fw-semibold text-muted mb-1">DA Plan</label>
+                                                <select name="da_plan_id" class="form-select form-select-sm da-plan-select" data-movement-id="{{ $movement->id }}">
+                                                    <option value="" data-rate="0">Select DA Plan</option>
+                                                    @foreach($daPlans as $plan)
+                                                        <option value="{{ $plan->id }}" data-rate="{{ $plan->remuneration }}"
+                                                            {{ old('da_plan_id', $movement->da_plan_id) == $plan->id ? 'selected' : '' }}>
+                                                            {{ $plan->name }} (৳{{ $plan->remuneration }}/Day)
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label small fw-semibold text-muted mb-1">Custom DA Amount (Overrides Plan)</label>
+                                                <input type="number" step="0.01" min="0" name="custom_da" class="form-control form-control-sm custom-da-input" data-movement-id="{{ $movement->id }}"
+                                                       value="{{ old('custom_da', $movement->custom_da) }}" placeholder="Enter custom DA amount">
+                                            </div>
+                                            <div class="bg-light p-2 rounded d-flex justify-content-between align-items-center">
+                                                <span class="text-muted small">Total DA Amount:</span>
+                                                <strong class="text-warning" id="calc_da_display{{ $movement->id }}">৳{{ number_format($movement->total_da, 2) }}</strong>
+                                                <input type="hidden" name="total_da" id="total_da{{ $movement->id }}" value="{{ $movement->total_da }}">
+                                            </div>
+                                        </div>
+
+                                        <!-- Grand Total -->
+                                        <div class="col-12 mt-3">
+                                            <div class="card bg-success text-white border-0 shadow-sm">
+                                                <div class="card-body d-flex justify-content-between align-items-center py-2">
+                                                    <span class="fw-bold"><i class="bi bi-calculator me-2"></i>Grand Total Allowance Value (TA + DA):</span>
+                                                    <h3 class="mb-0 fw-bold text-white" id="grand_total_display{{ $movement->id }}">৳{{ number_format($movement->total_allowance, 2) }}</h3>
+                                                    <input type="hidden" name="total_allowance" id="total_allowance{{ $movement->id }}" value="{{ $movement->total_allowance }}">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12 text-end mt-2">
+                                            <button type="submit" class="btn btn-success btn-sm px-4">
+                                                <i class="bi bi-check-circle me-1"></i> Save/Update Allowances
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-                            {{-- DA Plan --}}
-                            <div class="col-md-6">
-                                <div class="card bg-light border-0 h-100">
-                                    <div class="card-body">
-                                        <h6 class="text-warning mb-3">
-                                            <i class="bi bi-wallet me-2"></i>Daily Allowance (DA)
-                                        </h6>
-                                        <div class="mb-2">
-                                            <small class="text-muted">Plan Name:</small>
-                                            <div class="fw-semibold">{{ $movement->getDaPlan->name }}</div>
-                                        </div>
-                                        <div class="mb-2">
-                                            <small class="text-muted">Rate per Day:</small>
-                                            <div class="fw-semibold">৳{{ number_format($movement->getDaPlan->remuneration, 2) }}</div>
-                                        </div>
-                                        <div class="mb-2">
-                                            <small class="text-muted">Total Days:</small>
-                                            <div class="fw-semibold">{{ $movement->total_days }}
-                                                {{ $movement->total_days > 1 ? 'Days' : 'Day' }}</div>
-                                        </div>
-                                        <hr>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <strong class="text-muted">Total DA:</strong>
-                                            <h5 class="mb-0 text-warning">
-                                                ৳{{ number_format($movement->total_da, 2) }}</h5>
+                        </form>
+                    @endif
+                @else
+                    {{-- Employee Read-only Allowances Details --}}
+                    @if($movement->total_allowance > 0 || $movement->ta_plan_id || $movement->da_plan_id || $movement->custom_ta || $movement->custom_da)
+                        <div class="card border-success mb-4 shadow-sm">
+                            <div class="card-header bg-success bg-opacity-10">
+                                <h6 class="mb-0 text-success fw-semibold">
+                                    <i class="bi bi-wallet2 me-2"></i>Allowance Breakdown Details
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-4">
+                                    {{-- TA --}}
+                                    <div class="col-md-6">
+                                        <div class="card bg-light border-0 h-100 shadow-none">
+                                            <div class="card-body py-3">
+                                                <h6 class="text-success mb-2 fw-semibold"><i class="bi bi-cash-coin me-2"></i>Travel Allowance (TA)</h6>
+                                                @if($movement->custom_ta)
+                                                    <small class="text-muted d-block">Custom Amount (Overridden):</small>
+                                                    <div class="fw-bold text-dark">৳{{ number_format($movement->custom_ta, 2) }}</div>
+                                                @else
+                                                    <small class="text-muted d-block">Plan Name:</small>
+                                                    <div class="fw-semibold">{{ $movement->getTaPlan->name ?? 'N/A' }}</div>
+                                                    <small class="text-muted d-block mt-1">Rate per KM:</small>
+                                                    <div class="fw-semibold">৳{{ number_format($movement->getTaPlan->remuneration ?? 0, 2) }}</div>
+                                                    <small class="text-muted d-block mt-1">Calculated for {{ number_format($movement->distance, 2) }} KM:</small>
+                                                @endif
+                                                <hr class="my-2">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <strong class="text-muted">Total TA:</strong>
+                                                    <strong class="text-success">৳{{ number_format($movement->total_ta, 2) }}</strong>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
 
-                            {{-- Total Allowance --}}
-                            <div class="col-12">
-                                <div class="card bg-success text-white border-0 shadow-sm">
-                                    <div class="card-body d-flex justify-content-between align-items-center py-3">
-                                        <div class="d-flex align-items-center">
-                                            <i class="bi bi-calculator me-3 fs-3"></i>
-                                            <h5 class="mb-0 fw-bold text-white">Grand Total Allowance</h5>
+                                    {{-- DA --}}
+                                    <div class="col-md-6">
+                                        <div class="card bg-light border-0 h-100 shadow-none">
+                                            <div class="card-body py-3">
+                                                <h6 class="text-warning mb-2 fw-semibold"><i class="bi bi-wallet me-2"></i>Daily Allowance (DA)</h6>
+                                                @if($movement->custom_da)
+                                                    <small class="text-muted d-block">Custom Amount (Overridden):</small>
+                                                    <div class="fw-bold text-dark">৳{{ number_format($movement->custom_da, 2) }}</div>
+                                                @else
+                                                    <small class="text-muted d-block">Plan Name:</small>
+                                                    <div class="fw-semibold">{{ $movement->getDaPlan->name ?? 'N/A' }}</div>
+                                                    <small class="text-muted d-block mt-1">Rate per Day:</small>
+                                                    <div class="fw-semibold">৳{{ number_format($movement->getDaPlan->remuneration ?? 0, 2) }}</div>
+                                                    <small class="text-muted d-block mt-1">Calculated for {{ $movement->total_days }} days:</small>
+                                                @endif
+                                                <hr class="my-2">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <strong class="text-muted">Total DA:</strong>
+                                                    <strong class="text-warning">৳{{ number_format($movement->total_da, 2) }}</strong>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <h3 class="mb-0 fw-bold text-white">৳{{ number_format($movement->total_allowance, 2) }}</h3>
+                                    </div>
+
+                                    {{-- Grand Total --}}
+                                    <div class="col-12">
+                                        <div class="card bg-success text-white border-0 shadow-sm mb-0">
+                                            <div class="card-body d-flex justify-content-between align-items-center py-2 px-3">
+                                                <span class="fw-semibold"><i class="bi bi-calculator me-2"></i>Grand Total Allowance Approved:</span>
+                                                <h4 class="mb-0 fw-bold text-white">৳{{ number_format($movement->total_allowance, 2) }}</h4>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    @else
+                        <div class="alert alert-secondary d-flex align-items-center border-0 py-2 shadow-sm mb-4" role="alert">
+                            <i class="bi bi-info-circle me-2 fs-5 text-secondary"></i>
+                            <div class="small">
+                                <strong>Allowances Breakdown:</strong> Pending calculations by HR.
+                            </div>
+                        </div>
+                    @endif
                 @endif
-
-                {{-- Reason Card --}}
-                <div class="card border-secondary mb-4 shadow-sm">
-                    <div class="card-header bg-secondary bg-opacity-10">
-                        <h6 class="mb-0 text-secondary fw-semibold">
-                            <i class="bi bi-chat-left-text me-2"></i>Reason / Purpose
-                        </h6>
-                    </div>
-                    <div class="card-body">
-                        <p class="mb-0 text-dark">{{ $movement->reason }}</p>
-                    </div>
-                </div>
 
                 {{-- Submission Info --}}
                 @if(!$isEmployee)
@@ -271,7 +404,7 @@
 
             {{-- Modal Footer --}}
             <div class="modal-footer border-top bg-light p-3">
-                <button type="button" class="btn btn-outline-secondary px-4 rounded-3" data-bs-dismiss="modal">
+                <button type="button" class="btn btn-outline-secondary px-4 rounded-3 text-sm py-1.5" data-bs-dismiss="modal">
                     <i class="bi bi-x-circle me-2"></i>Close
                 </button>
                 
@@ -279,7 +412,7 @@
                     {{-- Edit Button --}}
                     @can('movement.edit')
                         @if($movement->status == 'pending' || !$isEmployee)
-                        <a href="{{ route('movement.edit', $movement->id) }}" class="btn btn-primary px-4 rounded-3 shadow-sm">
+                        <a href="{{ route('movement.edit', $movement->id) }}" class="btn btn-primary px-4 rounded-3 shadow-sm text-sm py-1.5">
                             <i class="bi bi-pencil-square me-2"></i>Edit
                         </a>
                         @endif
@@ -289,7 +422,7 @@
                         {{-- Change Status Dropdown --}}
                         @can('movement.hr-approve')
                         <div class="dropdown">
-                            <button class="btn btn-info dropdown-toggle px-4 rounded-3 shadow-sm text-white" type="button" data-bs-toggle="dropdown">
+                            <button class="btn btn-info dropdown-toggle px-4 rounded-3 shadow-sm text-white text-sm py-1.5" type="button" data-bs-toggle="dropdown">
                                 <i class="bi bi-arrow-left-right me-2"></i>Change Status
                             </button>
                             <ul class="dropdown-menu shadow border-0">
@@ -322,7 +455,7 @@
 
                         {{-- Change Payment Status Dropdown --}}
                         <div class="dropdown">
-                            <button class="btn btn-success dropdown-toggle px-4 rounded-3 shadow-sm" type="button" data-bs-toggle="dropdown">
+                            <button class="btn btn-success dropdown-toggle px-4 rounded-3 shadow-sm text-sm py-1.5" type="button" data-bs-toggle="dropdown">
                                 <i class="bi bi-cash-coin me-2"></i>Payment Status
                             </button>
                             <ul class="dropdown-menu shadow border-0">

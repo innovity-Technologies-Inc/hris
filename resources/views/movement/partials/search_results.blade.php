@@ -68,7 +68,7 @@
         </tr>
 
         {{-- Include View Modal for each movement --}}
-        @include('movement.partials.view_modal', ['movement' => $movement])
+        @include('movement.partials.view_modal', ['movement' => $movement, 'taPlans' => $taPlans, 'daPlans' => $daPlans])
     @endforeach
     </tbody>
 </table>
