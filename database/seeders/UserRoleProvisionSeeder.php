@@ -24,6 +24,7 @@ class UserRoleProvisionSeeder extends Seeder
         $superAdminRole = Role::where('name', 'Super Admin')->first();
         $hrManagerRole = Role::firstOrCreate(['name' => 'HR Manager', 'guard_name' => 'web']);
         $deptManagerRole = Role::firstOrCreate(['name' => 'Department Manager', 'guard_name' => 'web']);
+        $managerRole = Role::firstOrCreate(['name' => 'Manager', 'guard_name' => 'web']);
         $employeeRole = Role::firstOrCreate(['name' => 'Employee', 'guard_name' => 'web']);
 
         // 2. Create/Update the "Group" Super Admin User
@@ -46,6 +47,87 @@ class UserRoleProvisionSeeder extends Seeder
         }
  
         $this->command->info('Super Admin user created with user_type: Group');
+
+        // Mappings for employee IDs 194 to 200
+        $specificMappings = [
+            194 => [
+                'user_type' => UserType::Company,
+                'role' => 'HR Manager',
+                'office_info' => [
+                    'current_company_id' => 105,
+                    'current_business_unit_id' => 205,
+                    'current_division_id' => 305,
+                    'current_department_id' => 405,
+                    'current_section_id' => 545,
+                ]
+            ],
+            195 => [
+                'user_type' => UserType::Company,
+                'role' => 'Manager',
+                'office_info' => [
+                    'current_company_id' => 107,
+                    'current_business_unit_id' => 207,
+                    'current_division_id' => 307,
+                    'current_department_id' => 437,
+                    'current_section_id' => 537,
+                ]
+            ],
+            196 => [
+                'user_type' => UserType::BusinessUnit,
+                'role' => 'Manager',
+                'office_info' => [
+                    'current_company_id' => 105,
+                    'current_business_unit_id' => 205,
+                    'current_division_id' => 325,
+                    'current_department_id' => 425,
+                    'current_section_id' => 525,
+                ]
+            ],
+            197 => [
+                'user_type' => UserType::Division,
+                'role' => 'Manager',
+                'office_info' => [
+                    'current_company_id' => 101,
+                    'current_business_unit_id' => 201,
+                    'current_division_id' => 301,
+                    'current_department_id' => null,
+                    'current_section_id' => null,
+                ]
+            ],
+            198 => [
+                'user_type' => UserType::Department,
+                'role' => 'Manager',
+                'office_info' => [
+                    'current_company_id' => 101,
+                    'current_business_unit_id' => 201,
+                    'current_division_id' => 301,
+                    'current_department_id' => 401,
+                    'current_section_id' => null,
+                ]
+            ],
+            199 => [
+                'user_type' => UserType::Section,
+                'role' => 'Manager',
+                'office_info' => [
+                    'current_company_id' => 101,
+                    'current_business_unit_id' => 201,
+                    'current_division_id' => 301,
+                    'current_department_id' => 401,
+                    'current_section_id' => 501,
+                ]
+            ],
+            200 => [
+                'user_type' => UserType::Employee,
+                'role' => 'Employee',
+                'office_info' => [
+                    'current_company_id' => 101,
+                    'current_business_unit_id' => 201,
+                    'current_division_id' => 301,
+                    'current_department_id' => 401,
+                    'current_section_id' => 501,
+                ]
+            ],
+        ];
  
         // 3. Provision Login for All Employees
         $employees = Employee::with('officeInfo.getCurrentDepartment')->get();
@@ -59,17 +141,29 @@ class UserRoleProvisionSeeder extends Seeder
             }
             
             // Determine Role based on Department
-            $targetRole = $employeeRole;
+            $targetRoleName = $employeeRole->name;
             $userType = UserType::Employee;
- 
-            $deptName = $employee->officeInfo?->getCurrentDepartment?->department_name ?? '';
-            
-            if (stripos($deptName, 'Recruitment') !== false || stripos($deptName, 'Payroll') !== false) {
-                $targetRole = $hrManagerRole;
-                $userType = UserType::Department; // Example assignment
-            } elseif ($index < 5) {
-                 // Make the first 5 employees "Company" level users for variety
-                 $userType = UserType::Company;
+
+            if (array_key_exists($employee->id, $specificMappings)) {
+                $mapping = $specificMappings[$employee->id];
+                $userType = $mapping['user_type'];
+                $targetRoleName = $mapping['role'];
+
+                // Update Employee Office Info in the Database
+                EmployeeOfficeInfo::updateOrCreate(
+                    ['employee_id' => $employee->id],
+                    $mapping['office_info']
+                );
+            } else {
+                $deptName = $employee->officeInfo?->getCurrentDepartment?->department_name ?? '';
+                
+                if (stripos($deptName, 'Recruitment') !== false || stripos($deptName, 'Payroll') !== false) {
+                    $targetRoleName = $hrManagerRole->name;
+                    $userType = UserType::Department; // Example assignment
+                } elseif ($index < 5) {
+                    // Make the first 5 employees "Company" level users for variety
+                    $userType = UserType::Company;
+                }
             }
  
             $user = User::updateOrCreate(
@@ -83,7 +177,9 @@ class UserRoleProvisionSeeder extends Seeder
                 ]
             );
  
-            $user->syncRoles([$targetRole->name]);
+            if ($targetRoleName) {
+                $user->syncRoles([$targetRoleName]);
+            }
  
             // Link employee to user
             $employee->update(['user_id' => $user->id]);
