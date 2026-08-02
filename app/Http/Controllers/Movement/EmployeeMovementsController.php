@@ -31,7 +31,7 @@ class EmployeeMovementsController extends Controller
     {
         $title = 'Employee Travel Movement';
         $section = 'Travel Movement';
-        $query = EmployeeMovement::with(['getEmployee', 'details']);
+        $query = EmployeeMovement::with(['getEmployee', 'details'])->latest();
 
         $searchableColumns = ['getEmployee.full_name'];
         $keyword = $request->input('keyword');
@@ -259,7 +259,7 @@ class EmployeeMovementsController extends Controller
 
     public function exportExcel(Request $request, FlexSearch $flexsearch): \Symfony\Component\HttpFoundation\BinaryFileResponse
     {
-        $query = EmployeeMovement::with(['getEmployee', 'getTaPlan', 'getDaPlan', 'details']);
+        $query = EmployeeMovement::with(['getEmployee', 'getTaPlan', 'getDaPlan', 'details'])->latest();
         $searchableColumns = ['getEmployee.full_name'];
         $keyword = $request->input('keyword');
         $filters = [];
@@ -284,7 +284,7 @@ class EmployeeMovementsController extends Controller
 
     public function printIndex(Request $request, FlexSearch $flexsearch): \Illuminate\View\View
     {
-        $query = EmployeeMovement::with(['getEmployee', 'getTaPlan', 'getDaPlan', 'details']);
+        $query = EmployeeMovement::with(['getEmployee', 'getTaPlan', 'getDaPlan', 'details'])->latest();
         $searchableColumns = ['getEmployee.full_name'];
         $keyword = $request->input('keyword');
         $filters = [];
