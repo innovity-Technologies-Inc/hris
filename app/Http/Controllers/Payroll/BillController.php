@@ -7,6 +7,7 @@ use App\Http\Requests\Payroll\UpdateBillPaymentStatusRequest;
 use App\Services\Payroll\BillServices;
 use Illuminate\Http\Request;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
+use App\Http\Responses\ApiResponse;
 
 class BillController extends Controller
 {
@@ -54,11 +55,7 @@ class BillController extends Controller
             $validated['payment_status']
         );
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Resource updated successfully.',
-            'data' => $bill,
-        ]);
+        return ApiResponse::success('Resource updated successfully.', $bill);
     }
 
     /**
@@ -68,9 +65,6 @@ class BillController extends Controller
     {
         $this->billServices->deleteBill((int) $id);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Resource deleted successfully.',
-        ]);
+        return ApiResponse::deleted('Resource deleted successfully.');
     }
 }

@@ -17,6 +17,7 @@ use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Responses\ApiResponse;
 
 class EmployeeMovementsController extends Controller
 {
@@ -124,25 +125,15 @@ class EmployeeMovementsController extends Controller
     {
         $isEmployee = auth()->user()->user_type === UserType::Employee;
         if ($isEmployee && $request->input('employee_id') != auth()->user()->employee_id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Unauthorized access.'
-            ], 403);
+            return ApiResponse::error('Unauthorized access.', 403);
         }
 
         try {
             $movement = $this->movementServices->saveMovement($request->validated(), $request);
-            return response()->json([
-                'success' => true,
-                'message' => 'Resource created successfully.',
-                'data' => $movement
-            ], 201);
+            return ApiResponse::created('Resource created successfully.', $movement);
         } catch (\Exception $e) {
             Log::error('Error storing travel movement: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Something went wrong. Please try again.'
-            ], 500);
+            return ApiResponse::error('Something went wrong. Please try again.', 500);
         }
     }
 
@@ -150,25 +141,15 @@ class EmployeeMovementsController extends Controller
     {
         $isEmployee = auth()->user()->user_type === UserType::Employee;
         if ($isEmployee && $request->input('employee_id') != auth()->user()->employee_id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Unauthorized access.'
-            ], 403);
+            return ApiResponse::error('Unauthorized access.', 403);
         }
 
         try {
             $movement = $this->movementServices->saveMovement($request->validated(), $request, $id);
-            return response()->json([
-                'success' => true,
-                'message' => 'Resource updated successfully.',
-                'data' => $movement
-            ], 200);
+            return ApiResponse::success('Resource updated successfully.', $movement);
         } catch (\Exception $e) {
             Log::error('Error updating travel movement: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Something went wrong. Please try again.'
-            ], 500);
+            return ApiResponse::error('Something went wrong. Please try again.', 500);
         }
     }
 
@@ -176,16 +157,10 @@ class EmployeeMovementsController extends Controller
     {
         try {
             $this->movementServices->deleteMovement($id);
-            return response()->json([
-                'success' => true,
-                'message' => 'Resource deleted successfully.'
-            ], 200);
+            return ApiResponse::deleted('Resource deleted successfully.');
         } catch (\Exception $e) {
             Log::error('Error deleting travel movement: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Something went wrong. Please try again.'
-            ], 500);
+            return ApiResponse::error('Something went wrong. Please try again.', 500);
         }
     }
 
@@ -199,17 +174,10 @@ class EmployeeMovementsController extends Controller
             $movement->status = $status;
             $movement->save();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Status Changed Successfully',
-                'data' => $movement
-            ], 200);
+            return ApiResponse::success('Status Changed Successfully', $movement);
         }catch (\Exception $e){
             Log::error('Error changing movement status: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Something went wrong. Please try again later.'
-            ], 500);
+            return ApiResponse::error('Something went wrong. Please try again later.', 500);
         }
     }
 
@@ -223,17 +191,10 @@ class EmployeeMovementsController extends Controller
             $movement->payment_status = $status;
             $movement->save();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Payment Status Changed Successfully',
-                'data' => $movement
-            ], 200);
+            return ApiResponse::success('Payment Status Changed Successfully', $movement);
         }catch (\Exception $e){
             Log::error('Error changing movement payment status: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Something went wrong. Please try again later.'
-            ], 500);
+            return ApiResponse::error('Something went wrong. Please try again later.', 500);
         }
     }
 
@@ -241,10 +202,7 @@ class EmployeeMovementsController extends Controller
     {
         // Only HR/Admin can save/edit allowances
         if (auth()->user()->user_type === UserType::Employee) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Unauthorized access.'
-            ], 403);
+            return ApiResponse::error('Unauthorized access.', 403);
         }
 
         $validated = $request->validate([
@@ -257,17 +215,10 @@ class EmployeeMovementsController extends Controller
 
         try {
             $movement = $this->movementServices->saveAllowances($validated, $id);
-            return response()->json([
-                'success' => true,
-                'message' => 'Allowances updated successfully.',
-                'data' => $movement
-            ], 200);
+            return ApiResponse::success('Allowances updated successfully.', $movement);
         } catch (\Exception $e) {
             Log::error('Error saving allowances: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Something went wrong. Please try again.'
-            ], 500);
+            return ApiResponse::error('Something went wrong. Please try again.', 500);
         }
     }
 

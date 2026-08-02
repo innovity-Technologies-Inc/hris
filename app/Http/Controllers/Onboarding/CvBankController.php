@@ -9,6 +9,7 @@ use App\Services\Onboarding\CvBankServices;
 use App\Models\Onboarding\CvBank;
 use Illuminate\Http\Request;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
+use App\Http\Responses\ApiResponse;
 
 class CvBankController extends Controller
 {
@@ -57,10 +58,7 @@ class CvBankController extends Controller
     {
         $analytics = $this->cvBankServices->getAnalyticsData();
 
-        return response()->json([
-            'success' => true,
-            'data' => $analytics,
-        ]);
+        return ApiResponse::success('Analytics retrieved successfully.', $analytics);
     }
 
     /**
@@ -84,10 +82,7 @@ class CvBankController extends Controller
         
         $this->cvBankServices->storeCvs($validated['cvs']);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'CVs created successfully.',
-        ], 201);
+        return ApiResponse::created('CVs created successfully.');
     }
 
     /**
@@ -113,11 +108,7 @@ class CvBankController extends Controller
 
         $cv = $this->cvBankServices->updateCv((int) $id, $validated);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'CV updated successfully.',
-            'data' => $cv,
-        ], 200);
+        return ApiResponse::success('CV updated successfully.', $cv);
     }
 
     /**
@@ -127,9 +118,6 @@ class CvBankController extends Controller
     {
         $this->cvBankServices->deleteCv((int) $id);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'CV deleted successfully.',
-        ], 200);
+        return ApiResponse::deleted('CV deleted successfully.');
     }
 }
