@@ -1,7 +1,7 @@
 @extends('structure.master')
 
 @section('content')
-    {{-- Back button --}}
+    {{-- Back button and action buttons --}}
     <div class="row mb-3">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center">
@@ -16,112 +16,101 @@
         $isEmployee = auth()->user()->user_type === \App\Enums\UserType::Employee;
     @endphp
 
+    {{-- Employee Information Card --}}
     <div class="row">
-        {{-- Left Column: Details & Configuration --}}
-        <div class="col-md-8">
-            {{-- Employee Information Card --}}
-            <div class="card mb-4 shadow-sm border-0">
-                <div class="card-header bg-light">
-                    <h5 class="card-title mb-0 fw-semibold text-dark">
-                        <i class="bi bi-person-badge text-primary me-2"></i>Employee Information
+        <div class="col-12">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="mdi mdi-account-circle"></i> Employee Information
                     </h5>
                 </div>
                 <div class="card-body">
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <div class="border-start border-primary border-3 ps-3">
-                                <small class="text-muted d-block text-uppercase small fw-bold">Employee Name</small>
-                                <strong class="text-dark">{{ $movement->getEmployee->full_name }}</strong>
+                    <div class="row">
+                        <div class="col-md-12 mb-3 text-center">
+                            {!! \App\HelperClass::generateAvatar(
+                                $movement->getEmployee->photo_path ?? null,
+                                $movement->getEmployee->full_name ?? 'N/A',
+                                120,
+                                '#974063',
+                                'border border-3 border-primary',
+                                $movement->employee_id,
+                            ) !!}
+                        </div>
+
+                        <div class="col-md-4 mb-2">
+                            <strong>Employee Name:</strong>
+                            <a href="{{ route('employee.profile.general_informations', $movement->employee_id) }}"
+                                class="ms-2 text-decoration-none">
+                                {{ $movement->getEmployee->full_name ?? 'N/A' }}
+                            </a>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <strong>Employee ID:</strong>
+                            <span class="ms-2">{{ $movement->getEmployee->applicant_id ?? 'N/A' }}</span>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <strong>System ID:</strong>
+                            <span class="ms-2">{{ $movement->getEmployee->system_id ?? 'N/A' }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Travel Logistics & Duration Card --}}
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="mdi mdi-map-marker-path"></i> Travel Logistics & Timeline
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small d-block">From Date & Time</label>
+                            <div class="fw-semibold text-dark">
+                                <i class="bi bi-calendar-check text-success me-1"></i>
+                                {{ \Carbon\Carbon::parse($movement->from_date)->format('l, d F Y, h:i A') }}
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="border-start border-info border-3 ps-3">
-                                <small class="text-muted d-block text-uppercase small fw-bold">Emp ID</small>
-                                <strong class="text-dark">{{ $movement->getEmployee->applicant_id }}</strong>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small d-block">To Date & Time</label>
+                            <div class="fw-semibold text-dark">
+                                <i class="bi bi-calendar-x text-danger me-1"></i>
+                                {{ \Carbon\Carbon::parse($movement->to_date)->format('l, d F Y, h:i A') }}
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="border-start border-success border-3 ps-3">
-                                <small class="text-muted d-block text-uppercase small fw-bold">System ID</small>
-                                <strong class="text-dark">{{ $movement->getEmployee->system_id }}</strong>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small d-block">Total Duration</label>
+                            <div class="fw-semibold text-dark">
+                                <i class="bi bi-clock-history text-info me-1"></i>
+                                {{ $movement->total_days }} {{ $movement->total_days > 1 ? 'Days' : 'Day' }}
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small d-block">Overall Calculated Distance</label>
+                            <div class="fw-semibold text-dark">
+                                <i class="bi bi-speedometer2 text-warning me-1"></i>
+                                {{ number_format($movement->distance, 2) }} KM
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            {{-- Travel Movement Timeline & Details --}}
-            <div class="card mb-4 shadow-sm border-0">
-                <div class="card-header bg-light">
-                    <h5 class="card-title mb-0 fw-semibold text-dark">
-                        <i class="bi bi-calendar-event text-primary me-2"></i>Timeline & Duration
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="row g-4">
-                        {{-- Timeline --}}
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="bi bi-calendar-check text-success me-2 fs-5"></i>
-                                    <strong class="text-muted">From Date & Time</strong>
-                                </div>
-                                <div class="ps-4 border-start border-success border-2 ms-2">
-                                    <div class="fw-semibold text-dark">
-                                        {{ \Carbon\Carbon::parse($movement->from_date)->format('l, d F Y') }}
-                                    </div>
-                                    <div class="text-muted text-sm">
-                                        {{ \Carbon\Carbon::parse($movement->from_date)->format('h:i A') }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="bi bi-calendar-x text-danger me-2 fs-5"></i>
-                                    <strong class="text-muted">To Date & Time</strong>
-                                </div>
-                                <div class="ps-4 border-start border-danger border-2 ms-2">
-                                    <div class="fw-semibold text-dark">
-                                        {{ \Carbon\Carbon::parse($movement->to_date)->format('l, d F Y') }}
-                                    </div>
-                                    <div class="text-muted text-sm">
-                                        {{ \Carbon\Carbon::parse($movement->to_date)->format('h:i A') }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="alert alert-info d-flex align-items-center border-0 py-2 mb-0" role="alert">
-                                <i class="bi bi-clock-history me-2 fs-5"></i>
-                                <div>
-                                    <strong>Total Duration:</strong> {{ $movement->total_days }}
-                                    {{ $movement->total_days > 1 ? 'Days' : 'Day' }}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="alert alert-warning d-flex align-items-center border-0 py-2 mb-0" role="alert">
-                                <i class="bi bi-speedometer2 me-2 fs-5"></i>
-                                <div>
-                                    <strong>Overall Calculated Distance:</strong>
-                                    {{ number_format($movement->distance, 2) }} KM
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Travel Route Breakdown --}}
-            <div class="card mb-4 shadow-sm border-0">
-                <div class="card-header bg-light">
-                    <h5 class="card-title mb-0 fw-semibold text-dark">
-                        <i class="bi bi-pin-map-fill text-primary me-2"></i>Routes & Destinations Breakdown
+    {{-- Travel Routes Breakdown Card --}}
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="mdi mdi-routes"></i> Travel Routes Breakdown
                     </h5>
                 </div>
                 <div class="card-body">
@@ -160,10 +149,14 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            {{-- Allowances Section --}}
-            @if(!$isEmployee)
-                @if($movement->status == 'pending')
+    {{-- Allowances Section --}}
+    @if(!$isEmployee)
+        @if($movement->status == 'pending')
+            <div class="row">
+                <div class="col-12">
                     <div class="card border-warning mb-4 shadow-sm bg-warning bg-opacity-10 text-warning-emphasis">
                         <div class="card-body d-flex align-items-center">
                             <i class="bi bi-exclamation-triangle-fill fs-4 me-3 text-warning"></i>
@@ -173,8 +166,12 @@
                             </div>
                         </div>
                     </div>
-                @else
-                    {{-- Approved/Completed Status Allowance Form --}}
+                </div>
+            </div>
+        @else
+            {{-- Approved/Completed Status Allowance Form --}}
+            <div class="row">
+                <div class="col-12">
                     <form action="{{ route('movement.save_allowances', $movement->id) }}" method="POST" id="allowanceForm">
                         @csrf
                         @method('PUT')
@@ -251,10 +248,14 @@
                             </div>
                         </div>
                     </form>
-                @endif
-            @else
-                {{-- Employee Read-only Allowances Details --}}
-                @if($movement->total_allowance > 0 || $movement->ta_plan_id || $movement->da_plan_id)
+                </div>
+            </div>
+        @endif
+    @else
+        {{-- Employee Read-only Allowances Details --}}
+        @if($movement->total_allowance > 0 || $movement->ta_plan_id || $movement->da_plan_id)
+            <div class="row">
+                <div class="col-12">
                     <div class="card border-success mb-4 shadow-sm">
                         <div class="card-header bg-success bg-opacity-10">
                             <h5 class="card-title mb-0 fw-semibold text-success">
@@ -319,64 +320,71 @@
                             </div>
                         </div>
                     </div>
-                @else
+                </div>
+            </div>
+        @else
+            <div class="row">
+                <div class="col-12">
                     <div class="alert alert-secondary d-flex align-items-center border-0 py-2 shadow-sm mb-4" role="alert">
                         <i class="bi bi-info-circle me-2 fs-5 text-secondary"></i>
                         <div class="small">
                             <strong>Allowances Breakdown:</strong> Pending calculations by HR.
                         </div>
                     </div>
-                @endif
-            @endif
-        </div>
+                </div>
+            </div>
+        @endif
+    @endif
 
-        {{-- Right Column: Status & Approval Timeline --}}
-        <div class="col-md-4">
-            {{-- Status Card --}}
-            <div class="card mb-4 shadow-sm border-0">
-                <div class="card-header bg-light">
-                    <h5 class="card-title mb-0 fw-semibold text-dark">
-                        <i class="bi bi-info-circle text-primary me-2"></i>Status Summary
+    {{-- Status Card --}}
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="mdi mdi-information"></i> Status
                     </h5>
                 </div>
                 <div class="card-body">
-                    <div class="mb-3">
-                        <label class="text-muted small d-block mb-1">Approval Status</label>
-                        @if ($movement->status == 'pending')
-                            <span class="badge bg-warning text-dark fs-6 px-3 py-1.5">Pending Approval</span>
-                        @elseif($movement->status == 'approved')
-                            <span class="badge bg-success fs-6 px-3 py-1.5">Approved</span>
-                        @elseif($movement->status == 'rejected')
-                            <span class="badge bg-danger fs-6 px-3 py-1.5">Rejected</span>
-                        @else
-                            <span class="badge bg-info fs-6 px-3 py-1.5">{{ ucfirst($movement->status) }}</span>
-                        @endif
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="text-muted small d-block mb-1">Payment Status</label>
-                        @if ($movement->payment_status == 'paid')
-                            <span class="badge bg-success fs-6 px-3 py-1.5">Paid</span>
-                        @else
-                            <span class="badge bg-secondary fs-6 px-3 py-1.5">Unpaid</span>
-                        @endif
-                    </div>
-
-                    <div class="text-muted small border-top pt-2">
-                        <div>
-                            <strong>Submitted By:</strong> {{ $movement->creator->name ?? 'System' }}
+                    <div class="row align-items-center">
+                        <div class="col-md-4 mb-2">
+                            <label class="text-muted small">Approval Status</label>
+                            <div>
+                                @if ($movement->status == 'pending')
+                                    <span class="badge bg-warning text-dark fs-6 px-3 py-2">Pending Approval</span>
+                                @elseif($movement->status == 'approved')
+                                    <span class="badge bg-success fs-6 px-3 py-2">Approved</span>
+                                @elseif($movement->status == 'rejected')
+                                    <span class="badge bg-danger fs-6 px-3 py-2">Rejected</span>
+                                @else
+                                    <span class="badge bg-info fs-6 px-3 py-2">{{ ucfirst($movement->status) }}</span>
+                                @endif
+                            </div>
                         </div>
-                        <div class="mt-1">
-                            <strong>Date:</strong> {{ \Carbon\Carbon::parse($movement->created_at)->format('d M Y, h:i A') }}
+                        <div class="col-md-4 mb-2">
+                            <label class="text-muted small">Payment Status</label>
+                            <div>
+                                @if ($movement->payment_status == 'paid')
+                                    <span class="badge bg-success fs-6 px-3 py-2">Paid</span>
+                                @else
+                                    <span class="badge bg-secondary fs-6 px-3 py-2">Unpaid</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label class="text-muted small">Assigned Date</label>
+                            <div class="fw-semibold">
+                                {{ \Carbon\Carbon::parse($movement->created_at)->format('d M Y') }}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            {{-- Workflow History & Timeline --}}
-            @include('approval_engine.workflow_history', ['approvable' => $movement])
         </div>
     </div>
+
+    {{-- Workflow History & Approval Form --}}
+    @include('approval_engine.workflow_history', ['approvable' => $movement])
 @endsection
 
 @push('scripts')
@@ -443,6 +451,10 @@
                     Swal.fire({ icon: 'error', title: 'Error', text: errMsg });
                 });
             });
+
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
         });
     </script>
 @endpush
