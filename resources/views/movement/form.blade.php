@@ -110,7 +110,7 @@
                         <hr class="my-4">
 
                         <!-- Part 2: Routes Details -->
-                        <h6 class="fw-semibold text-primary mb-3"><i class="bi bi-pin-map-fill me-2"></i>Route Legs/Destinations</h6>
+                        <h6 class="fw-semibold text-primary mb-3"><i class="bi bi-pin-map-fill me-2"></i>Routes/Destinations</h6>
                         <div id="route-legs-container">
                             @php
                                 $details = isset($movement) && $movement->details->isNotEmpty() ? $movement->details : [];
@@ -128,7 +128,7 @@
                         <!-- Add Button -->
                         <div class="d-flex justify-content-start mb-3">
                             <button type="button" id="add-leg-btn" class="btn btn-outline-primary btn-sm">
-                                <i class="bi bi-plus-circle me-1"></i> Add Route Leg
+                                <i class="bi bi-plus-circle me-1"></i> Add Route
                             </button>
                         </div>
 

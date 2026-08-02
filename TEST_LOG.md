@@ -2,11 +2,12 @@
 
 ## 2026-08-02 (Travel Movement API-first & Dynamic Routes)
 
-**Goal**: Implement API-first and Axios-based travel movement submissions with FormRequests and service classes. Drop deprecated single-route columns (`source_address`, `destination_address`, etc.) and custom allowance columns (`custom_ta`, `custom_da`) from the database. Support auto-populating new leg source address with the previous leg's destination in JS. Enable directly editable total TA and DA fields without selecting plans.
+**Goal**: Implement API-first and Axios-based travel movement submissions with FormRequests and service classes. Drop deprecated single-route columns (`source_address`, `destination_address`, etc.) and custom allowance columns (`custom_ta`, `custom_da`) from the database. Support auto-populating new leg source address with the previous leg's destination in JS. Enable directly editable total TA and DA fields without selecting plans. Rename "Route Leg" to "Route" and change borders to use the project's primary color.
 
 **Exact Command**: `php artisan route:clear; php artisan config:clear; vendor/bin/pest tests/Feature/EmployeeMovementExportTest.php tests/Feature/EmployeeMovementFeatureTest.php`
 
 **Results**:
+- Modified Views (`route_leg_card.blade.php`, `form.blade.php`, `view_modal.blade.php`) to rename "Route Leg" to "Route" and apply project primary color (`var(--primary-color)`) to all route borders.
 - Created Migrations: 
   - `database/migrations/2026_08_02_103517_create_employee_movement_details_table.php` (created detail legs table).
   - `database/migrations/2026_08_02_105703_remove_single_route_columns_from_employee_movements_table.php` (dropped single-route columns).

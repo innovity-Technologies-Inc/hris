@@ -1,8 +1,8 @@
-<div class="card border border-info mb-3 route-card" data-index="{{ $index }}">
+<div class="card border mb-3 route-card" style="border-color: var(--primary-color) !important;" data-index="{{ $index }}">
     <div class="card-header d-flex justify-content-between align-items-center bg-light">
-        <h6 class="mb-0 text-dark fw-bold">Route Leg #<span class="leg-number">{{ is_numeric($index) ? $index + 1 : '1' }}</span></h6>
+        <h6 class="mb-0 text-dark fw-bold">Route #<span class="leg-number">{{ is_numeric($index) ? $index + 1 : '1' }}</span></h6>
         <button type="button" class="btn btn-outline-danger btn-sm remove-leg-btn {{ ($showRemove ?? false) ? '' : 'd-none' }}">
-            <i class="bi bi-trash"></i> Remove Leg
+            <i class="bi bi-trash"></i> Remove Route
         </button>
     </div>
     <div class="card-body">
@@ -40,7 +40,7 @@
 
             <!-- Distance -->
             <div class="col-md-3 mb-3">
-                <label class="form-label fw-semibold">Leg Distance (KM)</label>
+                <label class="form-label fw-semibold">Distance (KM)</label>
                 <input type="text" name="items[{{ $index }}][distance]"
                        value="{{ old("items.{$index}.distance", $detail->distance ?? '0.00') }}"
                        class="form-control bg-light leg-distance" readonly>
@@ -51,7 +51,7 @@
                 <label class="form-label fw-semibold">Reason <span class="text-danger">*</span></label>
                 <input type="text" name="items[{{ $index }}][reason]"
                        value="{{ old("items.{$index}.reason", $detail->reason ?? '') }}"
-                       class="form-control" placeholder="Reason for this leg..." required>
+                       class="form-control" placeholder="Reason for this route..." required>
             </div>
 
             <!-- Attachment -->

@@ -139,18 +139,18 @@
                 </div>
 
                 {{-- Travel Route Legs Details --}}
-                <div class="card border-secondary mb-4 shadow-sm">
-                    <div class="card-header bg-secondary bg-opacity-10">
-                        <h6 class="mb-0 text-secondary fw-semibold">
-                            <i class="bi bi-pin-map-fill me-2"></i>Route Legs/Destinations Breakdown
+                <div class="card mb-4 shadow-sm" style="border-color: var(--primary-color) !important;">
+                    <div class="card-header bg-opacity-10" style="background-color: var(--primary-color);">
+                        <h6 class="mb-0 fw-semibold text-white">
+                            <i class="bi bi-pin-map-fill me-2"></i>Routes/Destinations Breakdown
                         </h6>
                     </div>
                     <div class="card-body">
                         <div class="timeline-route">
                             @foreach($movement->details as $index => $detail)
-                                <div class="border border-info rounded p-3 mb-3 shadow-sm bg-light-subtle">
+                                <div class="border rounded p-3 mb-3 shadow-sm bg-light-subtle" style="border-color: var(--primary-color) !important;">
                                     <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
-                                        <span class="fw-bold text-dark"><i class="bi bi-tag-fill text-info me-1"></i>Leg #{{ $index + 1 }}</span>
+                                        <span class="fw-bold text-dark"><i class="bi bi-tag-fill text-info me-1"></i>Route #{{ $index + 1 }}</span>
                                         <span class="badge bg-primary fs-7">{{ number_format($detail->distance, 2) }} KM</span>
                                     </div>
                                     <div class="row g-3">
