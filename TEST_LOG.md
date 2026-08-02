@@ -1,5 +1,29 @@
 # Test Log
 
+## 2026-08-02 (CV Bank Module Integration)
+
+**Goal**: Implement the CV Bank onboarding module under a new parent menu `Onboarding`. Provide a list view supporting CV score range filters, career level filtering, and dynamic Chart.js analytics graphs fetched via Axios API. Implement a separate create page matching the style of the attendance form to add multiple CV records at a time. Implement thin controllers, FormRequests, and custom services with domain-specific success responses (avoiding generic "Resource" words).
+
+**Exact Command**: `php artisan route:clear; php artisan config:clear; vendor/bin/pest tests/Feature/EmployeeMovementExportTest.php tests/Feature/EmployeeMovementFeatureTest.php tests/Feature/BillPayFeatureTest.php tests/Feature/CvBankFeatureTest.php`
+
+**Results**:
+- Created Migration: `database/migrations/2026_08_02_165246_create_cv_banks_table.php` (created `cv_banks` table).
+- Created Model: `app/Models/Onboarding/CvBank.php` (with `Userstamps` trait).
+- Created Requests: `StoreCvBankRequest.php` (validates bulk entries) and `UpdateCvBankRequest.php` (validates single updates) under `app/Http/Requests/Onboarding`.
+- Created Service: `app/Services/Onboarding/CvBankServices.php` (handles filter logic, bulk creation, updates, deletions, and Chart.js dataset computations).
+- Created Controller: `app/Http/Controllers/Onboarding/CvBankController.php` (thin architecture with specific JSON responses like "CV created successfully").
+- Modified Seeder: `database/seeders/PermissionSeeder.php` to define `Onboarding` menu and `CV Bank` submenu, seeding all permissions to `Super Admin`.
+- Modified Routes: `routes/web.php` to add `cv-bank` routes under auth middleware.
+- Created Views:
+  - `onboarding/cv_bank/index.blade.php` (Analytics canvas, metric cards, search-filters, Axios pings).
+  - `onboarding/cv_bank/partials/search_results.blade.php` (styled results grid, progress-bar score displays, left-aligned pagination).
+  - `onboarding/cv_bank/create.blade.php` (attendance-style bulk entries table, dynamic indexing).
+  - `onboarding/cv_bank/edit.blade.php` (single record updates form, attachment replacement).
+- Created Feature Test: `tests/Feature/CvBankFeatureTest.php` to test filters, bulk additions, Chart.js datasets, single updates, and deletes.
+- Tests passed: 16/16 passed (56 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-08-02 (Bill Pay Integration & Expense/Movement Layers)
 
 **Goal**: Add a database table layer named `bills` linking to approved `expense_applications` and `employee_movements` (when allowances are saved). Recreate a sub-menu named `Bill Pay` under the `Payroll` menu to search, view, toggle payment status via Axios, and delete these bills. Enable the `movement.process` permission to control allowances editability. Implement thin controller architecture using validation requests and service classes.

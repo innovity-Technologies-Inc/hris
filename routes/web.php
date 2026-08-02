@@ -177,6 +177,24 @@ Route::prefix('company-setup')->middleware('auth')->group(function () {
         });
     });
 
+    Route::prefix('cv-bank')->name('cv_bank.')->controller(\App\Http\Controllers\Onboarding\CvBankController::class)->middleware('auth')->group(function () {
+        Route::middleware('permission:cv-bank.view')->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('analytics', 'analytics')->name('analytics');
+        });
+        Route::middleware('permission:cv-bank.create')->group(function () {
+            Route::get('create', 'create')->name('create');
+            Route::post('store', 'store')->name('store');
+        });
+        Route::middleware('permission:cv-bank.edit')->group(function () {
+            Route::get('{id}/edit', 'edit')->name('edit');
+            Route::post('{id}/update', 'update')->name('update');
+        });
+        Route::middleware('permission:cv-bank.delete')->group(function () {
+            Route::delete('{id}', 'destroy')->name('destroy');
+        });
+    });
+
     Route::controller(\App\Http\Controllers\Offboarding\OffboardingController::class)->group(function () {
         Route::get('offboarding/get-employees-by-hierarchy', 'getEmployeesByHierarchy')->name('offboarding.get_employees_by_hierarchy');
         Route::get('my-offboarding', 'myOffboarding')->name('offboarding.my_offboarding');

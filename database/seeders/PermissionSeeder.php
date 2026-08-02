@@ -81,6 +81,19 @@ class PermissionSeeder extends Seeder
             ],
 
             [
+                'name' => 'Onboarding',
+                'icon' => 'user-plus',
+                'submenus' => [
+                    [
+                        'name' => 'CV Bank',
+                        'slug' => 'cv-bank',
+                        'route' => 'cv_bank.index',
+                        'actions' => ['view', 'create', 'edit', 'delete']
+                    ]
+                ]
+            ],
+
+            [
                 'name' => 'Offboarding',
                 'icon' => 'user-x',
                 'slug' => 'offboardings',
