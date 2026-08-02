@@ -109,11 +109,11 @@ class UserRoleProvisionSeeder extends Seeder
                 'user_type' => UserType::Division,
                 'role' => 'Manager',
                 'office_info' => [
-                    'current_company_id' => 101,
-                    'current_business_unit_id' => 201,
-                    'current_division_id' => 301,
-                    'current_department_id' => null,
-                    'current_section_id' => null,
+                    'current_company_id' => 106,
+                    'current_business_unit_id' => 206,
+                    'current_division_id' => 306,
+                    'current_department_id' => 436,
+                    'current_section_id' => 536,
                 ]
             ],
             198 => [
@@ -122,31 +122,31 @@ class UserRoleProvisionSeeder extends Seeder
                 'office_info' => [
                     'current_company_id' => 101,
                     'current_business_unit_id' => 201,
-                    'current_division_id' => 301,
-                    'current_department_id' => 401,
-                    'current_section_id' => null,
+                    'current_division_id' => 321,
+                    'current_department_id' => 421,
+                    'current_section_id' => 521,
                 ]
             ],
             199 => [
                 'user_type' => UserType::Section,
                 'role' => 'Manager',
                 'office_info' => [
-                    'current_company_id' => 101,
-                    'current_business_unit_id' => 201,
-                    'current_division_id' => 301,
-                    'current_department_id' => 401,
-                    'current_section_id' => 501,
+                    'current_company_id' => 109,
+                    'current_business_unit_id' => 209,
+                    'current_division_id' => 329,
+                    'current_department_id' => 429,
+                    'current_section_id' => 529,
                 ]
             ],
             200 => [
                 'user_type' => UserType::Employee,
                 'role' => 'Employee',
                 'office_info' => [
-                    'current_company_id' => 101,
-                    'current_business_unit_id' => 201,
-                    'current_division_id' => 301,
-                    'current_department_id' => 401,
-                    'current_section_id' => 501,
+                    'current_company_id' => 103,
+                    'current_business_unit_id' => 203,
+                    'current_division_id' => 323,
+                    'current_department_id' => 423,
+                    'current_section_id' => 523,
                 ]
             ],
         ];
