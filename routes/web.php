@@ -1378,6 +1378,18 @@ Route::prefix('disbursement')->name('disbursement.')->controller(\App\Http\Contr
     });
 });
 
+Route::prefix('bills')->name('bills.')->controller(\App\Http\Controllers\Payroll\BillController::class)->middleware('auth')->group(function () {
+    Route::middleware('permission:bills.view')->group(function () {
+        Route::get('/', 'index')->name('index');
+    });
+    Route::middleware('permission:bills.edit')->group(function () {
+        Route::put('change-payment-status', 'changePaymentStatus')->name('change_payment_status');
+    });
+    Route::middleware('permission:bills.delete')->group(function () {
+        Route::delete('{id}', 'destroy')->name('destroy');
+    });
+});
+
 Route::prefix('arrear')->name('arrear.')->controller(\App\Http\Controllers\Payroll\ArrearController::class)->middleware('auth')->group(function () {
     Route::middleware('permission:arrear.view')->group(function () {
         Route::get('/', 'index')->name('index');

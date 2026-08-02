@@ -112,6 +112,20 @@ class EmployeeMovementServices
             'total_allowance' => $data['total_allowance'],
         ]);
 
+        // Add or update row in the bills table
+        \App\Models\Payroll\Bill::updateOrCreate(
+            [
+                'expense_id' => $movement->id,
+                'type' => 'travel-movement',
+            ],
+            [
+                'employee_id' => $movement->employee_id,
+                'amount' => $movement->total_allowance,
+                'expense_type' => 'Travel Movement',
+                'payment_status' => 'unpaid',
+            ]
+        );
+
         return $movement;
     }
 

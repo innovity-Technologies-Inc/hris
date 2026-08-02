@@ -16,6 +16,20 @@ class ClaimExpenseWorkflowListener
             $approvable->update([
                 'status' => 'approved',
             ]);
+
+            // Add or update row in the bills table
+            \App\Models\Payroll\Bill::updateOrCreate(
+                [
+                    'expense_id' => $approvable->id,
+                    'type' => 'claim-expense',
+                ],
+                [
+                    'employee_id' => $approvable->employee_id,
+                    'amount' => $approvable->amount,
+                    'expense_type' => $approvable->expenseType->name ?? 'Claim Expense',
+                    'payment_status' => 'unpaid',
+                ]
+            );
         }
     }
 

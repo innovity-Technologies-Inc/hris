@@ -120,6 +120,7 @@ class PermissionSeeder extends Seeder
                     ['name' => 'Arrear Management', 'slug' => 'arrear', 'route' => 'arrear.index', 'actions' => ['view', 'create', 'edit', 'delete']],
                     ['name' => 'Salary', 'route' => 'salary.index', 'actions' => ['view', 'create', 'edit', 'delete']],
                     ['name' => 'Disbursement', 'slug' => 'disbursement', 'route' => 'disbursement.index', 'actions' => ['view', 'process']],
+                    ['name' => 'Bill Pay', 'slug' => 'bills', 'route' => 'bills.index', 'actions' => ['view', 'edit', 'delete']],
                 ]
             ],
             [

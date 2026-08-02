@@ -1,5 +1,28 @@
 # Test Log
 
+## 2026-08-02 (Bill Pay Integration & Expense/Movement Layers)
+
+**Goal**: Add a database table layer named `bills` linking to approved `expense_applications` and `employee_movements` (when allowances are saved). Recreate a sub-menu named `Bill Pay` under the `Payroll` menu to search, view, toggle payment status via Axios, and delete these bills. Enable the `movement.process` permission to control allowances editability.
+
+**Exact Command**: `php artisan route:clear; php artisan config:clear; vendor/bin/pest tests/Feature/EmployeeMovementExportTest.php tests/Feature/EmployeeMovementFeatureTest.php tests/Feature/BillPayFeatureTest.php`
+
+**Results**:
+- Created Migration: `database/migrations/2026_08_02_162636_create_bills_table.php` (created `bills` table).
+- Created Model: `app/Models/Payroll/Bill.php` (with `OrganizationScoped` and `Userstamps` traits).
+- Created Controller: `app/Http/Controllers/Payroll/BillController.php` (supports flexsearch, Axios payment status toggle, and resource deletion).
+- Modified Seeder: `database/seeders/PermissionSeeder.php` to add `process` permission under Movement, add `Bill Pay` submenu under Payroll, and sync all permissions to `Super Admin`.
+- Modified Listeners & Services:
+  - `EmployeeMovementServices.php` to insert or update the `bills` record when saving movement allowances.
+  - `ClaimExpenseWorkflowListener.php` to insert or update the `bills` record when an expense application is approved.
+- Modified routes: `routes/web.php` to define `bills` resource index, put `change_payment_status`, and delete endpoints.
+- Created Views:
+  - `payroll/bills/index.blade.php` (Axios search filters, toggle payments, and delete triggers).
+  - `payroll/bills/partials/search_results.blade.php` (designed similar to claim expense index, with left-aligned pagination).
+- Created Feature Test: `tests/Feature/BillPayFeatureTest.php` to assert correct database creation, status updating, and route access control.
+- Tests passed: 11/11 passed (41 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-08-02 (Travel Movement Approval Workflow & Show Details Page)
 
 **Goal**: Implement the central approval workflow for travel movements (`Approvable` trait), removing the static status dropdown fields and status edit dropdown buttons from the listing and detail views. Convert the detailed view modal to a dedicated show page containing the central workflow history timeline and action forms. Remove the status dropdown input field from the travel movement creation/editing form (defaulting to pending status). Keep the read-only payment status badge in both the index table and the details page, but remove payment status modification controls from the UI.
