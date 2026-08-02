@@ -301,13 +301,19 @@
                 const container = document.getElementById('route-legs-container');
                 const template = document.getElementById('route-leg-template').innerHTML;
                 
-                // Fetch destination details of previous/last card for auto-population
+                // Fetch details of previous/last card for auto-population (return journey logic)
                 const cards = container.querySelectorAll('.route-card');
+                let prevSourceAddr = '';
+                let prevSourceLat = '';
+                let prevSourceLng = '';
                 let prevDestAddr = '';
                 let prevDestLat = '';
                 let prevDestLng = '';
                 if (cards.length > 0) {
                     const lastCard = cards[cards.length - 1];
+                    prevSourceAddr = lastCard.querySelector('.source-address').value;
+                    prevSourceLat = lastCard.querySelector('.source-lat').value;
+                    prevSourceLng = lastCard.querySelector('.source-lng').value;
                     prevDestAddr = lastCard.querySelector('.destination-address').value;
                     prevDestLat = lastCard.querySelector('.dest-lat').value;
                     prevDestLng = lastCard.querySelector('.dest-lng').value;
@@ -323,14 +329,24 @@
                 // Initialize autocomplete for the new card
                 const newCard = container.querySelector(`.route-card[data-index="${nextIndex}"]`);
                 
-                // Auto-populate new card's source with previous card's destination
+                // Auto-populate new card's source with previous destination, and destination with previous source
                 if (prevDestAddr) {
                     newCard.querySelector('.source-address').value = prevDestAddr;
                     newCard.querySelector('.source-lat').value = prevDestLat;
                     newCard.querySelector('.source-lng').value = prevDestLng;
                 }
+                if (prevSourceAddr) {
+                    newCard.querySelector('.destination-address').value = prevSourceAddr;
+                    newCard.querySelector('.dest-lat').value = prevSourceLat;
+                    newCard.querySelector('.dest-lng').value = prevSourceLng;
+                }
 
                 initLegAutocomplete(newCard);
+                
+                // Calculate distance automatically if both addresses were populated
+                if (prevDestAddr && prevSourceAddr) {
+                    calculateLegDistance(newCard);
+                }
                 
                 // Show remove buttons since we have more than one card
                 container.querySelectorAll('.remove-leg-btn').forEach(btn => btn.classList.remove('d-none'));
