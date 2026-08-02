@@ -299,13 +299,15 @@
             service.getDistanceMatrix({
                 origins: [origin],
                 destinations: [destination],
-                travelMode: 'DRIVING',
+                travelMode: google.maps.TravelMode.DRIVING,
                 unitSystem: google.maps.UnitSystem.METRIC
             }, (res, status) => {
                 let dist = 0;
-                if (status === 'OK' && res.rows[0].elements[0].status === 'OK') {
+                if (status === 'OK' && res && res.rows && res.rows[0] && res.rows[0].elements && res.rows[0].elements[0] && res.rows[0].elements[0].status === 'OK') {
                     dist = (res.rows[0].elements[0].distance.value / 1000);
                 } else {
+                    const elemStatus = res && res.rows && res.rows[0] && res.rows[0].elements && res.rows[0].elements[0] ? res.rows[0].elements[0].status : 'UNKNOWN';
+                    console.warn(`DistanceMatrixService failed (API status: ${status}, Element status: ${elemStatus}). Falling back to straight-line estimation.`);
                     dist = calculateStraightDistanceLogic(sLat, sLng, dLat, dLng);
                 }
                 
