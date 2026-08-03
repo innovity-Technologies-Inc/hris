@@ -321,14 +321,16 @@ class IDCardDesignController extends Controller
             abort(404, 'Design template file not found');
         }
 
-        // Sample employee data for preview
+        // Sample employee data for preview (containing all attributes used in themes)
         $employee = (object) [
-            'full_name' => 'John Doe',
+            'id' => null,
             'system_id' => 'EMP-12345',
-            'designation' => 'Senior Developer',
-            'department' => 'IT Department',
-            'photo_path' => null,
+            'full_name' => 'John Doe',
+            'personal_mobile' => '+880-1712-345678',
+            'work_email' => 'john.doe@company.com',
+            'personal_email' => 'john.doe@gmail.com',
             'blood_group' => 'O+',
+            'photo_path' => null,
             'joining_date' => '2023-01-15',
             'valid_until' => '2025-12-31'
         ];
@@ -338,15 +340,58 @@ class IDCardDesignController extends Controller
             'logo_light' => null
         ];
 
-        // Get file content and evaluate as Blade template
-        $fileContent = Storage::disk('public')->get($design->file_path);
+        $generalSettings = \App\Models\Setting\GeneralSetting::first();
 
-        // Create a temporary view from the file content
-        return view('shared.blade_renderer', [
-            'content' => $fileContent,
-            'employee' => $employee,
-            'company' => $company
-        ]);
+        // Prepare company info
+        $companyInfo = (object) [
+            'name' => $generalSettings?->company_name ?? 'Company Name',
+            'logo' => $generalSettings?->logo ?? null,
+            'website' => $generalSettings?->website ?? 'www.company.com',
+            'telephone' => $generalSettings?->contact_phone ?? '',
+            'fax' => '',
+            'email' => $generalSettings?->email ?? '',
+            'address' => $generalSettings?->address ?? '',
+            'city' => $generalSettings?->city ?? '',
+            'state' => $generalSettings?->state ?? '',
+            'zip_code' => $generalSettings?->zip_code ?? '',
+            'country' => $generalSettings?->country ?? '',
+        ];
+
+        // Create a temporary view file to compile dynamic Blade content properly
+        $tempViewName = 'id_card_preview_' . uniqid();
+        $tempFileName = $tempViewName . '.blade.php';
+        $tempPath = resource_path('views/temp/' . $tempFileName);
+
+        // Ensure temp directory exists
+        $tempDir = dirname($tempPath);
+        if (!file_exists($tempDir)) {
+            mkdir($tempDir, 0755, true);
+        }
+
+        // Copy template file from storage to temp views folder
+        $fullPath = Storage::disk('public')->path($design->file_path);
+        copy($fullPath, $tempPath);
+
+        try {
+            // Render the Blade template view to HTML string
+            $html = view('temp.' . $tempViewName, [
+                'employee' => $employee,
+                'company' => $company,
+                'officeInfo' => null,
+                'currentCompany' => null,
+                'currentDesignation' => null,
+                'currentDepartment' => null,
+                'companyInfo' => $companyInfo,
+                'generalSettings' => $generalSettings
+            ])->render();
+
+            return response($html);
+        } finally {
+            // Clean up temporary view file
+            if (file_exists($tempPath)) {
+                unlink($tempPath);
+            }
+        }
     }
 
     /**
