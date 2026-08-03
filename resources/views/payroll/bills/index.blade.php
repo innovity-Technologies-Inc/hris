@@ -66,7 +66,7 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label class="form-label small fw-semibold text-muted mb-1">Amount to Pay</label>
-                            <input type="text" class="form-control bg-light" id="payBillAmount" readonly>
+                            <input type="text" class="form-control" id="payBillAmount" readonly disabled>
                         </div>
                         <div class="mb-3">
                             <label class="form-label small fw-semibold text-muted mb-1">Payment Method *</label>
