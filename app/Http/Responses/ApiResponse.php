@@ -28,7 +28,7 @@ class ApiResponse
     /**
      * Standard Creation Response (201 Created).
      */
-    public static function created(string $message = 'Resource created successfully.', mixed $data = null): JsonResponse
+    public static function created(string $message = 'Record created successfully.', mixed $data = null): JsonResponse
     {
         $response = ['success' => true, 'message' => $message];
 
@@ -47,7 +47,7 @@ class ApiResponse
     /**
      * Standard Deletion / Deactivation Response (200 OK).
      */
-    public static function deleted(string $message = 'Resource deleted successfully.'): JsonResponse
+    public static function deleted(string $message = 'Record deleted successfully.'): JsonResponse
     {
         return response()->json([
             'success' => true,

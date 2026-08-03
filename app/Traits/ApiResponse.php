@@ -18,7 +18,7 @@ trait ApiResponse
     /**
      * Return a 201 Created JSON response.
      */
-    protected function createdResponse(string $message = 'Resource created successfully.', mixed $data = null): JsonResponse
+    protected function createdResponse(string $message = 'Record created successfully.', mixed $data = null): JsonResponse
     {
         return ResponseHelper::created($message, $data);
     }
@@ -26,7 +26,7 @@ trait ApiResponse
     /**
      * Return a 200 OK deletion JSON response.
      */
-    protected function deletedResponse(string $message = 'Resource deleted successfully.'): JsonResponse
+    protected function deletedResponse(string $message = 'Record deleted successfully.'): JsonResponse
     {
         return ResponseHelper::deleted($message);
     }
