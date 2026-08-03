@@ -614,32 +614,7 @@
                 // BOARD MEMBER - SIMPLE GROUP/COMPANY CASCADE
                 // ======================================================================
 
-                // Board Group Change → Load Companies
-                $('#boardGroupSelect').on('change', function() {
-                    const groupId = $(this).val();
-
-                    reset($('#boardCompanySelect'), '-- Select Company --');
-
-                    if (groupId) {
-                        loading($('#boardCompanySelect'));
-                        $.get(`/get-companies/${groupId}`, function(data) {
-                            reset($('#boardCompanySelect'), '-- Select Company --');
-                            if (!data.length) {
-                                $('#boardCompanySelect').html(
-                                    '<option value="">No company found</option>');
-                            } else {
-                                $.each(data, function(_, item) {
-                                    $('#boardCompanySelect').append(
-                                        `<option value="${item.id}">${item.name}</option>`
-                                    );
-                                });
-                            }
-                        }).fail(function(xhr, status, error) {
-                            console.error('Failed to load companies:', error);
-                            reset($('#boardCompanySelect'), '-- Select Company --');
-                        });
-                    }
-                });
+                // Group-based company filtering disabled to load all companies directly
 
                 // ======================================================================
                 // KEY MEMBER ORGANIZATIONAL FILTERS (Exact copy from search_employee.blade.php)
@@ -780,22 +755,7 @@
                 // AUTO-TRIGGER ON EDIT MODE
                 // ======================================================================
                 @if (isset($organizationStructure))
-                    // Board Member edit mode
-                    @if ($organizationStructure->member_type === 'Board Member')
-                        @if ($organizationStructure->group_id)
-                            setTimeout(function() {
-                                $('#boardGroupSelect').val(
-                                    '{{ $organizationStructure->group_id }}').trigger('change');
 
-                                @if ($organizationStructure->company_id)
-                                    setTimeout(function() {
-                                        $('#boardCompanySelect').val(
-                                            '{{ $organizationStructure->company_id }}');
-                                    }, 300);
-                                @endif
-                            }, 100);
-                        @endif
-                    @endif
 
                     // Key Member edit mode
                     @if ($organizationStructure->member_type === 'Key Member')
