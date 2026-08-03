@@ -186,5 +186,20 @@
         document.getElementById('fileUpload').value = '';
         document.getElementById('fileInfo').classList.add('d-none');
     });
+
+    // Intercept form submit to prevent 405 error if action is '#'
+    document.getElementById('bulkUploadForm').addEventListener('submit', function(e) {
+        const action = this.getAttribute('action');
+        if (action === '#' || action === '' || !action) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Import Feature Coming Soon',
+                text: 'The backend import functionality for this section is currently under development.',
+                icon: 'info',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'OK'
+            });
+        }
+    });
 </script>
 

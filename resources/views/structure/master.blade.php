@@ -515,7 +515,7 @@
 
     // Function to show loader
     const showLoader = () => {
-        if (loader) loader.style.display = 'flex';
+        // Disabled: do not display generic loader
     };
 
     // 1. Initial Load

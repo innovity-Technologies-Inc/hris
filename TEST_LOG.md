@@ -1,5 +1,20 @@
 # Test Log
 
+## 2026-08-04 (Company Bulk Upload Templates, Loader & 405 Method Error Fixes)
+
+**Goal**: Create sample Excel and CSV template files for company bulk upload, link them dynamically based on sections, remove the Gazette Locations bulk upload card, hide the generic loader from the master layout, and prevent MethodNotAllowedHttpException errors on form submits with empty actions.
+
+**Exact Command**: `php artisan config:clear; vendor/bin/pest tests/Feature/Company/CompanySetupTest.php`
+
+**Results**:
+- Created 14 Excel and 14 CSV template files inside `public/assets/excel/` for the company upload sections.
+- Removed the Gazette Locations card from `resources/views/company/bulk_uploads/form.blade.php` and updated section count to 13.
+- Modified javascript show function in `resources/views/structure/master.blade.php` to prevent displaying the generic overlay loader.
+- Added form submit listener in `resources/views/company/bulk_uploads/import.blade.php` to block submissions and show a friendly warning if action is `#` or empty, preventing 405 method errors.
+- Verified that all Pest tests pass cleanly (276 tests passing).
+
+**Status**: ✅ SUCCESS
+
 ## 2026-08-03 (Bill Pay Modal & Payment Details Integration)
 
 **Goal**: Implement a Pay Bill modal that prompts the user for the payment method (Cash, Bank Transfer, Mobile Banking), remarks (nullable), and a receipt file attachment (nullable). Simplify the pay button and mark as unpaid button to show only icons. Display the payment details (method, remarks, view receipt file link) dynamically in the listing table under the Paid badge.
