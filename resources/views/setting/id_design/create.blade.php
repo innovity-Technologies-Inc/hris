@@ -66,15 +66,56 @@
                         @enderror
                     </div>
 
-                    <!-- Design File Upload -->
+                    <!-- Template Source Selection -->
                     <div class="mb-4">
+                        <label class="form-label fw-semibold text-dark mb-2">
+                            <i class="bi bi-gear-fill text-primary me-2"></i>
+                            Template Source
+                        </label>
+                        <div class="d-flex gap-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="template_source" id="source_preloaded" value="preloaded" {{ old('template_source', 'preloaded') === 'preloaded' ? 'checked' : '' }}>
+                                <label class="form-check-label" for="source_preloaded">
+                                    Preloaded Demo Template
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="template_source" id="source_upload" value="upload" {{ old('template_source') === 'upload' ? 'checked' : '' }}>
+                                <label class="form-check-label" for="source_upload">
+                                    Upload Custom File
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Preloaded Template Dropdown -->
+                    <div class="mb-4" id="preloaded_template_container" style="display: none;">
+                        <label for="preloaded_template" class="form-label fw-semibold text-dark mb-2">
+                            <i class="bi bi-file-earmark-code-fill text-primary me-2"></i>
+                            Select Demo Template
+                            <span class="badge bg-danger">Required</span>
+                        </label>
+                        <select class="form-select @error('preloaded_template') is-invalid @enderror" id="preloaded_template" name="preloaded_template">
+                            <option value="" disabled selected>Choose a demo template...</option>
+                            <option value="design_1" {{ old('preloaded_template') === 'design_1' ? 'selected' : '' }}>Theme 1 (Modern Corporate)</option>
+                            <option value="design_2" {{ old('preloaded_template') === 'design_2' ? 'selected' : '' }}>Theme 2 (Modern Clean with Orange Badge)</option>
+                            <option value="design_3" {{ old('preloaded_template') === 'design_3' ? 'selected' : '' }}>Theme 3 (Professional Bordered)</option>
+                            <option value="design_4" {{ old('preloaded_template') === 'design_4' ? 'selected' : '' }}>Theme 4 (Minimalist Portrait)</option>
+                        </select>
+                        @error('preloaded_template')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <!-- Design File Upload -->
+                    <div class="mb-4" id="upload_file_container" style="display: none;">
                         <label for="design_file" class="form-label fw-semibold text-dark mb-2">
                             <i class="bi bi-file-code text-primary me-2"></i>
                             Design Template File
                             <span class="badge bg-danger">Required</span>
                         </label>
                         <input type="file" class="form-control @error('design_file') is-invalid @enderror"
-                            id="design_file" name="design_file" accept=".php,.blade.php" required>
+                            id="design_file" name="design_file" accept=".php,.blade.php">
                         @error('design_file')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -229,10 +270,37 @@
         setupImagePreview('preview_front_card', 'frontPreview', 'frontPreviewContainer');
         setupImagePreview('preview_back_card', 'backPreview', 'backPreviewContainer');
 
+        // Template source toggling
+        const sourcePreloaded = document.getElementById('source_preloaded');
+        const sourceUpload = document.getElementById('source_upload');
+        const preloadedContainer = document.getElementById('preloaded_template_container');
+        const uploadContainer = document.getElementById('upload_file_container');
+        const designFileInput = document.getElementById('design_file');
+        const preloadedTemplateSelect = document.getElementById('preloaded_template');
+
+        function toggleTemplateSource() {
+            if (sourcePreloaded.checked) {
+                preloadedContainer.style.display = 'block';
+                uploadContainer.style.display = 'none';
+                designFileInput.removeAttribute('required');
+                preloadedTemplateSelect.setAttribute('required', 'required');
+            } else {
+                preloadedContainer.style.display = 'none';
+                uploadContainer.style.display = 'block';
+                designFileInput.setAttribute('required', 'required');
+                preloadedTemplateSelect.removeAttribute('required');
+            }
+        }
+
+        sourcePreloaded.addEventListener('change', toggleTemplateSource);
+        sourceUpload.addEventListener('change', toggleTemplateSource);
+        
+        // Initial call
+        toggleTemplateSource();
+
         // Form validation
         document.getElementById('designForm').addEventListener('submit', function(e) {
             const themeNameInput = document.getElementById('theme_name');
-            const designFileInput = document.getElementById('design_file');
 
             if (!themeNameInput.value.trim()) {
                 e.preventDefault();
@@ -241,19 +309,28 @@
                 return false;
             }
 
-            if (!designFileInput.files.length) {
-                e.preventDefault();
-                alert('Please upload a design template file');
-                designFileInput.focus();
-                return false;
-            }
+            if (sourceUpload.checked) {
+                if (!designFileInput.files.length) {
+                    e.preventDefault();
+                    alert('Please upload a design template file');
+                    designFileInput.focus();
+                    return false;
+                }
 
-            // File size validation (2MB = 2097152 bytes)
-            const file = designFileInput.files[0];
-            if (file.size > 2097152) {
-                e.preventDefault();
-                alert('Design file size must be less than 2MB');
-                return false;
+                // File size validation (2MB = 2097152 bytes)
+                const file = designFileInput.files[0];
+                if (file.size > 2097152) {
+                    e.preventDefault();
+                    alert('Design file size must be less than 2MB');
+                    return false;
+                }
+            } else {
+                if (!preloadedTemplateSelect.value) {
+                    e.preventDefault();
+                    alert('Please select a demo template');
+                    preloadedTemplateSelect.focus();
+                    return false;
+                }
             }
 
             // Validate preview images if provided

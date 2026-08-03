@@ -67,14 +67,17 @@ class IDCardDesignController extends Controller
         $validator = Validator::make($request->all(), [
             'theme_name' => 'required|string|max:255|unique:id_card_designs,theme_name',
             'description' => 'nullable|string|max:1000',
-            'design_file' => 'required|file|max:2048',
+            'template_source' => 'required|in:preloaded,upload',
+            'design_file' => 'required_if:template_source,upload|file|max:2048',
+            'preloaded_template' => 'required_if:template_source,preloaded|string|in:design_1,design_2,design_3,design_4',
             'preview_front_card' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'preview_back_card' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ], [
             'theme_name.required' => 'Please enter a theme name',
             'theme_name.unique' => 'This theme name already exists',
-            'design_file.required' => 'Please upload a design file',
+            'design_file.required_if' => 'Please upload a design file',
             'design_file.max' => 'File size must be less than 2MB',
+            'preloaded_template.required_if' => 'Please select a demo template',
             'preview_front_card.image' => 'Front card preview must be an image file',
             'preview_front_card.mimes' => 'Front card preview must be jpeg, png, jpg, or gif',
             'preview_front_card.max' => 'Front card preview must be less than 2MB',
@@ -92,17 +95,19 @@ class IDCardDesignController extends Controller
 
         \Log::info('Validation passed');
 
-        // Validate file extension manually
-        $designFile = $request->file('design_file');
-        $extension = strtolower($designFile->getClientOriginalExtension());
-        \Log::info('File extension: ' . $extension);
-        \Log::info('Original filename: ' . $designFile->getClientOriginalName());
+        if ($request->template_source === 'upload') {
+            // Validate file extension manually
+            $designFile = $request->file('design_file');
+            $extension = strtolower($designFile->getClientOriginalExtension());
+            \Log::info('File extension: ' . $extension);
+            \Log::info('Original filename: ' . $designFile->getClientOriginalName());
 
-        if (!in_array($extension, ['php', 'blade'])) {
-            \Log::error('Invalid file extension: ' . $extension);
-            return redirect()->back()
-                           ->withErrors(['design_file' => 'Only .blade.php or .php files are allowed'])
-                           ->withInput();
+            if (!in_array($extension, ['php', 'blade'])) {
+                \Log::error('Invalid file extension: ' . $extension);
+                return redirect()->back()
+                               ->withErrors(['design_file' => 'Only .blade.php or .php files are allowed'])
+                               ->withInput();
+            }
         }
 
         \Log::info('Extension validation passed');
@@ -111,31 +116,49 @@ class IDCardDesignController extends Controller
             DB::beginTransaction();
             \Log::info('Transaction started');
 
-            // Validate and sanitize the uploaded file content
-            $uploadedFile = $request->file('design_file');
-            $fileContent = file_get_contents($uploadedFile->getRealPath());
-            \Log::info('File content length: ' . strlen($fileContent) . ' bytes');
-
-            // Security check: prevent dangerous PHP functions with function call patterns
-            $dangerousFunctions = [
-                'eval', 'exec', 'shell_exec', 'passthru',
-                'proc_open', 'popen', 'curl_exec', 'curl_multi_exec',
-                'parse_ini_file', 'show_source'
-            ];
-
-            foreach ($dangerousFunctions as $func) {
-                // Check for function call pattern: function_name followed by (
-                if (preg_match('/\b' . preg_quote($func, '/') . '\s*\(/i', $fileContent)) {
-                    \Log::error('Security violation detected: ' . $func);
-                    throw new \Exception("Security violation: Dangerous function '{$func}()' detected in template");
+            $designFilePath = null;
+            if ($request->template_source === 'preloaded') {
+                $templateName = $request->preloaded_template;
+                $sourcePath = resource_path('views/setting/id_design/designs/' . $templateName . '.blade.php');
+                if (!file_exists($sourcePath)) {
+                    throw new \Exception("Preloaded template '{$templateName}' does not exist.");
                 }
+                $fileContent = file_get_contents($sourcePath);
+
+                $disk = config('filesystems.default');
+                $filename = time() . Str::random(10) . '.php';
+                $designFilePath = 'upload/id_card_designs/designs/' . $filename;
+                Storage::disk($disk)->put($designFilePath, $fileContent, [
+                    'visibility' => 'public'
+                ]);
+                \Log::info('Preloaded design template copied to: ' . $designFilePath);
+            } else {
+                // Validate and sanitize the uploaded file content
+                $uploadedFile = $request->file('design_file');
+                $fileContent = file_get_contents($uploadedFile->getRealPath());
+                \Log::info('File content length: ' . strlen($fileContent) . ' bytes');
+
+                // Security check: prevent dangerous PHP functions with function call patterns
+                $dangerousFunctions = [
+                    'eval', 'exec', 'shell_exec', 'passthru',
+                    'proc_open', 'popen', 'curl_exec', 'curl_multi_exec',
+                    'parse_ini_file', 'show_source'
+                ];
+
+                foreach ($dangerousFunctions as $func) {
+                    // Check for function call pattern: function_name followed by (
+                    if (preg_match('/\b' . preg_quote($func, '/') . '\s*\(/i', $fileContent)) {
+                        \Log::error('Security violation detected: ' . $func);
+                        throw new \Exception("Security violation: Dangerous function '{$func}()' detected in template");
+                    }
+                }
+
+                \Log::info('Security check passed');
+
+                // Upload design file using HelperClass
+                $designFilePath = HelperClass::file_upload($uploadedFile, 'id_card_designs/designs');
+                \Log::info('Design file uploaded: ' . $designFilePath);
             }
-
-            \Log::info('Security check passed');
-
-            // Upload design file using HelperClass
-            $designFilePath = HelperClass::file_upload($uploadedFile, 'id_card_designs/designs');
-            \Log::info('Design file uploaded: ' . $designFilePath);
 
             // Handle front card preview upload
             $previewFrontCardPath = null;
