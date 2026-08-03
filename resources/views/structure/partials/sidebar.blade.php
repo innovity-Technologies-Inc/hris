@@ -857,16 +857,16 @@
                                    href='{{ route('salary.index') }}'>Salary</a>
                             </li>
                             @endif
-                            @if(auth()->user()->can('disbursement.view'))
-                            <li>
-                                <a class='tp-link @if (request()->is('disbursement*')) menuitem-active @endif'
-                                   href='{{ route('disbursement.index') }}'>Disbursement</a>
-                            </li>
-                            @endif
                             @if($canBills)
                             <li>
                                 <a class='tp-link @if (request()->is('bills*')) menuitem-active @endif'
                                    href='{{ route('bills.index') }}'>Bill Pay</a>
+                            </li>
+                            @endif
+                            @if(auth()->user()->can('disbursement.view'))
+                            <li>
+                                <a class='tp-link @if (request()->is('disbursement*')) menuitem-active @endif'
+                                   href='{{ route('disbursement.index') }}'>Disbursement</a>
                             </li>
                             @endif
                         </ul>
