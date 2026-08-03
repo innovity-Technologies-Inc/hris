@@ -97,7 +97,7 @@ test('it can create employee movement with multiple route legs and file attachme
     $response->assertStatus(201);
     $response->assertJson([
         'success' => true,
-        'message' => 'Resource created successfully.'
+        'message' => 'Travel movement created successfully.'
     ]);
 
     $this->assertDatabaseHas('employee_movements', [
@@ -210,7 +210,7 @@ test('it can update employee movement routes and edit details', function () {
     $response->assertStatus(200);
     $response->assertJson([
         'success' => true,
-        'message' => 'Resource updated successfully.'
+        'message' => 'Travel movement updated successfully.'
     ]);
 
     $this->assertDatabaseHas('employee_movements', [
@@ -347,7 +347,7 @@ test('it can delete employee movement and associated details', function () {
     $response->assertStatus(200);
     $response->assertJson([
         'success' => true,
-        'message' => 'Resource deleted successfully.'
+        'message' => 'Travel movement deleted successfully.'
     ]);
 
     $this->assertDatabaseMissing('employee_movements', [

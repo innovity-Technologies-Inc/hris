@@ -130,7 +130,7 @@ class EmployeeMovementsController extends Controller
 
         try {
             $movement = $this->movementServices->saveMovement($request->validated(), $request);
-            return ApiResponse::created('Resource created successfully.', $movement);
+            return ApiResponse::created('Travel movement created successfully.', $movement);
         } catch (\Exception $e) {
             Log::error('Error storing travel movement: ' . $e->getMessage());
             return ApiResponse::error('Something went wrong. Please try again.', 500);
@@ -146,7 +146,7 @@ class EmployeeMovementsController extends Controller
 
         try {
             $movement = $this->movementServices->saveMovement($request->validated(), $request, $id);
-            return ApiResponse::success('Resource updated successfully.', $movement);
+            return ApiResponse::success('Travel movement updated successfully.', $movement);
         } catch (\Exception $e) {
             Log::error('Error updating travel movement: ' . $e->getMessage());
             return ApiResponse::error('Something went wrong. Please try again.', 500);
@@ -157,7 +157,7 @@ class EmployeeMovementsController extends Controller
     {
         try {
             $this->movementServices->deleteMovement($id);
-            return ApiResponse::deleted('Resource deleted successfully.');
+            return ApiResponse::deleted('Travel movement deleted successfully.');
         } catch (\Exception $e) {
             Log::error('Error deleting travel movement: ' . $e->getMessage());
             return ApiResponse::error('Something went wrong. Please try again.', 500);

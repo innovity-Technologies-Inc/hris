@@ -126,7 +126,7 @@ test('user can toggle payment status and delete bills', function () {
     ]);
     $response->assertJson([
         'success' => true,
-        'message' => 'Resource updated successfully.'
+        'message' => 'Bill payment status updated successfully.'
     ]);
 
     $this->assertDatabaseHas('bills', [
@@ -140,7 +140,7 @@ test('user can toggle payment status and delete bills', function () {
     $response = $this->actingAs($user)->delete(route('bills.destroy', $bill->id));
     $response->assertJson([
         'success' => true,
-        'message' => 'Resource deleted successfully.'
+        'message' => 'Bill deleted successfully.'
     ]);
 
     $this->assertDatabaseMissing('bills', [
@@ -181,7 +181,7 @@ test('user can pay a bill with a file attachment', function () {
 
     $response->assertJson([
         'success' => true,
-        'message' => 'Resource updated successfully.'
+        'message' => 'Bill payment status updated successfully.'
     ]);
 
     $updatedBill = Bill::findOrFail($bill->id);

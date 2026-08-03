@@ -86,7 +86,7 @@ class BillController extends Controller
                 $request->file('attachment')
             );
 
-            return ApiResponse::success('Resource updated successfully.', $bill);
+            return ApiResponse::success('Bill payment status updated successfully.', $bill);
         } catch (\Exception $e) {
             Log::error('Error changing bill payment status: ' . $e->getMessage());
             return ApiResponse::error('Failed to change bill payment status: ' . $e->getMessage(), 500);
@@ -100,7 +100,7 @@ class BillController extends Controller
     {
         try {
             $this->billServices->deleteBill((int) $id);
-            return ApiResponse::deleted('Resource deleted successfully.');
+            return ApiResponse::deleted('Bill deleted successfully.');
         } catch (\Exception $e) {
             Log::error('Error deleting bill: ' . $e->getMessage());
             return ApiResponse::error('Failed to delete bill: ' . $e->getMessage(), 500);
