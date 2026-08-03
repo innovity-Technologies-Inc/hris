@@ -41,24 +41,18 @@ if ($employee && isset($employee->id)) {
         // Get company-specific data
         if ($currentCompany) {
             $companyName = $currentCompany->name;
-            if ($currentCompany->logo) {
-                $companyLogoPath = storage_path('app/public/' . $currentCompany->logo);
-            }
         }
     }
 }
 
-// Fallback to system settings
+// System settings
 $generalSettings = \App\Models\Setting\GeneralSetting::first();
-
-if (!$companyLogoPath && $generalSettings) {
-    // Get logo from system settings if not available from company
-}
+$companyLogoPath = $generalSettings?->logo_path;
 
 // Company information with fallbacks
 $companyInfo = (object) [
     'name' => $companyName ?? ($generalSettings?->company_name ?? 'Company Name'),
-    'logo' => $currentCompany?->logo ?? ($generalSettings?->logo_light ?? null),
+    'logo' => $generalSettings?->logo ?? null,
     'website' => $generalSettings?->website ?? 'www.company.com',
     'telephone' => $currentCompany?->telephone ?? ($generalSettings?->contact_phone ?? '+000-000-000'),
     'fax' => $currentCompany?->fax ?? '',
