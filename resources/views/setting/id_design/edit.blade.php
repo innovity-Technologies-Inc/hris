@@ -107,7 +107,6 @@
                             <option value="design_1" {{ old('preloaded_template') === 'design_1' ? 'selected' : '' }}>Theme 1 (Modern Corporate)</option>
                             <option value="design_2" {{ old('preloaded_template') === 'design_2' ? 'selected' : '' }}>Theme 2 (Modern Clean with Orange Badge)</option>
                             <option value="design_3" {{ old('preloaded_template') === 'design_3' ? 'selected' : '' }}>Theme 3 (Professional Bordered)</option>
-                            <option value="design_4" {{ old('preloaded_template') === 'design_4' ? 'selected' : '' }}>Theme 4 (Minimalist Portrait)</option>
                         </select>
                         @error('preloaded_template')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -284,10 +283,6 @@
             'design_3': {
                 name: 'Theme 3 (Professional Bordered)',
                 desc: 'Professional bordered vertical ID card design with light grayscale layout.'
-            },
-            'design_4': {
-                name: 'Theme 4 (Minimalist Portrait)',
-                desc: 'Sleek minimalist vertical ID card design focusing on content space and clean typography.'
             }
         };
 

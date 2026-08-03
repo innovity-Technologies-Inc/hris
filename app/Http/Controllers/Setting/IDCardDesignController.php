@@ -69,7 +69,7 @@ class IDCardDesignController extends Controller
             'description' => 'nullable|string|max:1000',
             'template_source' => 'required|in:preloaded,upload',
             'design_file' => 'required_if:template_source,upload|file|max:2048',
-            'preloaded_template' => 'required_if:template_source,preloaded|string|in:design_1,design_2,design_3,design_4',
+            'preloaded_template' => 'required_if:template_source,preloaded|string|in:design_1,design_2,design_3',
             'preview_front_card' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'preview_back_card' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ], [
@@ -496,7 +496,7 @@ class IDCardDesignController extends Controller
             'description' => 'nullable|string|max:1000',
             'template_source' => 'required|in:preloaded,upload,keep_existing',
             'design_file' => 'required_if:template_source,upload|file|max:2048',
-            'preloaded_template' => 'required_if:template_source,preloaded|string|in:design_1,design_2,design_3,design_4',
+            'preloaded_template' => 'required_if:template_source,preloaded|string|in:design_1,design_2,design_3',
             'preview_front_card' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'preview_back_card' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ], [
