@@ -19,6 +19,9 @@ class Bill extends Model
         'expense_type',
         'amount',
         'payment_status',
+        'payment_method',
+        'remarks',
+        'attachment_path',
     ];
 
     public function employee()

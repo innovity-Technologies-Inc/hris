@@ -24,6 +24,9 @@ class UpdateBillPaymentStatusRequest extends FormRequest
         return [
             'id' => 'required|exists:bills,id',
             'payment_status' => 'required|in:paid,unpaid',
+            'payment_method' => 'required_if:payment_status,paid|nullable|string|in:Cash,Bank Transfer,Mobile Banking',
+            'remarks' => 'nullable|string',
+            'attachment' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120',
         ];
     }
 }

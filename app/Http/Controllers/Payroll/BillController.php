@@ -69,16 +69,16 @@ class BillController extends Controller
         return view('payroll.bills.print_index', compact('records'));
     }
 
-    /**
-     * Change payment status of a bill.
-     */
     public function changePaymentStatus(UpdateBillPaymentStatusRequest $request)
     {
         $validated = $request->validated();
         
         $bill = $this->billServices->updatePaymentStatus(
             (int) $validated['id'],
-            $validated['payment_status']
+            $validated['payment_status'],
+            $validated['payment_method'] ?? null,
+            $validated['remarks'] ?? null,
+            $request->file('attachment')
         );
 
         return ApiResponse::success('Resource updated successfully.', $bill);

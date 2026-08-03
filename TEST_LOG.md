@@ -1,5 +1,25 @@
 # Test Log
 
+## 2026-08-03 (Bill Pay Modal & Payment Details Integration)
+
+**Goal**: Implement a Pay Bill modal that prompts the user for the payment method (Cash, Bank Transfer, Mobile Banking), remarks (nullable), and a receipt file attachment (nullable). Simplify the pay button and mark as unpaid button to show only icons. Display the payment details (method, remarks, view receipt file link) dynamically in the listing table under the Paid badge.
+
+**Exact Command**: `php artisan route:clear; php artisan config:clear; vendor/bin/pest tests/Feature/BillPayFeatureTest.php`
+
+**Results**:
+- Created Migration: `database/migrations/2026_08_03_134000_add_payment_details_to_bills_table.php` to add `payment_method`, `remarks`, and `attachment_path` columns to `bills`.
+- Modified Model: `app/Models/Payroll/Bill.php` to append new payment detail columns to the `$fillable` array.
+- Modified Request: `app/Http/Requests/Payroll/UpdateBillPaymentStatusRequest.php` to validate remarks, payment methods, and receipt files.
+- Modified Service: `app/Services/Payroll/BillServices.php` to store the payment details, manage file uploads, and handle storage cleanup on record deletions.
+- Modified Controller: `app/Http/Controllers/Payroll/BillController.php` to pass payment details and files from the validation request to the service layer.
+- Modified Views:
+  - `payroll/bills/index.blade.php` to render the Pay Bill form modal and process AJAX submissions with files using `FormData` and `_method` overrides.
+  - `payroll/bills/partials/search_results.blade.php` to display payment info under the status badge and use clean icon-only buttons for pay and unpay actions.
+- Modified Feature Test: `tests/Feature/BillPayFeatureTest.php` to test status changes with payment methods and assert successful payments with file uploads.
+- Tests passed: 5 passed (16 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-08-02 (CV Bank Enhancements & Bill Pay Interface Alignment)
 
 **Goal**: Standardize the Bill Pay index layout to match the Claim Expense index page. Add Print and Excel Export features to Bill Pay. Convert the CV Bank Company and Designation text inputs to database-driven select dropdowns fetching from the `companies` and `designations` tables. Add Company and Designation filter options to the CV Bank search index. Synchronize Employee IDs 194 to 200 current office info seeder mappings to match `employee_office_infos.json` exactly. Add the Onboarding parent menu and CV Bank submenu to the sidebar.

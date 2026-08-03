@@ -50,6 +50,50 @@
             </div><!-- end card -->
         </div>
     </div><!-- end row -->
+
+    <!-- Pay Bill Modal -->
+    <div class="modal fade" id="payBillModal" tabindex="-1" aria-labelledby="payBillModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="payBillModalLabel">Pay Bill</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="payBillForm" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="id" id="payBillId">
+                    <input type="hidden" name="payment_status" value="paid">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-muted mb-1">Amount to Pay</label>
+                            <input type="text" class="form-control bg-light" id="payBillAmount" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-muted mb-1">Payment Method *</label>
+                            <select name="payment_method" id="payBillMethod" class="form-select" required>
+                                <option value="">Select Method</option>
+                                <option value="Cash">Cash</option>
+                                <option value="Bank Transfer">Bank Transfer</option>
+                                <option value="Mobile Banking">Mobile Banking</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-muted mb-1">Remarks</label>
+                            <textarea name="remarks" id="payBillRemarks" class="form-control" rows="3" placeholder="Add remarks..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-muted mb-1">File Attachment (Receipt)</label>
+                            <input type="file" name="attachment" id="payBillAttachment" class="form-control" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success" id="paySubmitBtn">Confirm Payment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('scripts')
@@ -91,25 +135,51 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-    // Toggle Payment Status via Axios
-    $(document).on('click', '.toggle-payment-status', function(e) {
+    // Pay button opens Modal
+    $(document).on('click', '.pay-bill-btn', function(e) {
         e.preventDefault();
-        const btn = $(this);
-        const id = btn.data('id');
-        const nextStatus = btn.data('status');
+        const id = $(this).data('id');
+        const amount = $(this).data('amount');
 
-        btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span>');
+        document.getElementById('payBillId').value = id;
+        document.getElementById('payBillAmount').value = '৳' + parseFloat(amount).toFixed(2);
+        
+        // Reset form inputs
+        document.getElementById('payBillForm').reset();
+        
+        const modal = new bootstrap.Modal(document.getElementById('payBillModal'));
+        modal.show();
+    });
 
-        axios.put("{{ route('bills.change_payment_status') }}", {
-            id: id,
-            payment_status: nextStatus,
-            _token: "{{ csrf_token() }}"
-        })
+    // Form submit payment logic via Axios
+    document.getElementById('payBillForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const form = this;
+        const submitBtn = document.getElementById('paySubmitBtn');
+        const origText = submitBtn.innerHTML;
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Processing...';
+
+        const formData = new FormData(form);
+        formData.append('_method', 'PUT');
+
+        axios.post("{{ route('bills.change_payment_status') }}", formData)
         .then(response => {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = origText;
+            
             if (response.data.success) {
+                // Hide modal
+                const modalEl = document.getElementById('payBillModal');
+                const modal = bootstrap.Modal.getInstance(modalEl);
+                if (modal) {
+                    modal.hide();
+                }
+                
                 Swal.fire({
                     icon: 'success',
-                    title: 'Status Updated',
+                    title: 'Payment Successful',
                     text: response.data.message,
                     timer: 1500,
                     showConfirmButton: false
@@ -118,15 +188,68 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             } else {
                 Swal.fire({ icon: 'error', title: 'Error', text: response.data.message });
-                fetchLogs();
             }
         })
         .catch(error => {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = origText;
+
             const errMsg = error.response && error.response.data && error.response.data.message
                 ? error.response.data.message
-                : 'Failed to update payment status.';
+                : 'Failed to process payment.';
+            
             Swal.fire({ icon: 'error', title: 'Error', text: errMsg });
-            fetchLogs();
+        });
+    });
+
+    // Toggle Payment Status back to unpaid via Axios directly
+    $(document).on('click', '.toggle-payment-status', function(e) {
+        e.preventDefault();
+        const btn = $(this);
+        const id = btn.data('id');
+        const nextStatus = btn.data('status');
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Mark this bill back as unpaid? All payment records for this bill will be cleared.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, unpay it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span>');
+
+                axios.put("{{ route('bills.change_payment_status') }}", {
+                    id: id,
+                    payment_status: nextStatus,
+                    _token: "{{ csrf_token() }}"
+                })
+                .then(response => {
+                    if (response.data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Status Updated',
+                            text: response.data.message,
+                            timer: 1500,
+                            showConfirmButton: false
+                        }).then(() => {
+                            fetchLogs();
+                        });
+                    } else {
+                        Swal.fire({ icon: 'error', title: 'Error', text: response.data.message });
+                        fetchLogs();
+                    }
+                })
+                .catch(error => {
+                    const errMsg = error.response && error.response.data && error.response.data.message
+                        ? error.response.data.message
+                        : 'Failed to update payment status.';
+                    Swal.fire({ icon: 'error', title: 'Error', text: errMsg });
+                    fetchLogs();
+                });
+            }
         });
     });
 

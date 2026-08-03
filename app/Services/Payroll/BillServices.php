@@ -24,12 +24,36 @@ class BillServices
     /**
      * Update the payment status of a bill.
      */
-    public function updatePaymentStatus(int $id, string $status): Bill
+    public function updatePaymentStatus(int $id, string $status, ?string $method = null, ?string $remarks = null, $attachment = null): Bill
     {
         $bill = Bill::findOrFail($id);
-        $bill->update([
+        
+        $updateData = [
             'payment_status' => $status,
-        ]);
+        ];
+
+        if ($status === 'paid') {
+            $updateData['payment_method'] = $method;
+            $updateData['remarks'] = $remarks;
+
+            if ($attachment && $attachment->isValid()) {
+                // Delete old file if exists
+                if ($bill->attachment_path) {
+                    \App\HelperClass::delete_file($bill->attachment_path);
+                }
+                $updateData['attachment_path'] = \App\HelperClass::file_upload($attachment, 'bills');
+            }
+        } else {
+            // If marking as unpaid, clear payment details
+            if ($bill->attachment_path) {
+                \App\HelperClass::delete_file($bill->attachment_path);
+            }
+            $updateData['payment_method'] = null;
+            $updateData['remarks'] = null;
+            $updateData['attachment_path'] = null;
+        }
+
+        $bill->update($updateData);
 
         // Sync with EmployeeMovement if applicable
         if ($bill->type === 'travel-movement') {
@@ -48,6 +72,9 @@ class BillServices
     public function deleteBill(int $id): void
     {
         $bill = Bill::findOrFail($id);
+        if ($bill->attachment_path) {
+            \App\HelperClass::delete_file($bill->attachment_path);
+        }
         $bill->delete();
     }
 }

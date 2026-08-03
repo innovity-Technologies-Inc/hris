@@ -121,6 +121,8 @@ test('user can toggle payment status and delete bills', function () {
     $response = $this->actingAs($user)->put(route('bills.change_payment_status'), [
         'id' => $bill->id,
         'payment_status' => 'paid',
+        'payment_method' => 'Cash',
+        'remarks' => 'Paid via cash',
     ]);
     $response->assertJson([
         'success' => true,
@@ -130,6 +132,8 @@ test('user can toggle payment status and delete bills', function () {
     $this->assertDatabaseHas('bills', [
         'id' => $bill->id,
         'payment_status' => 'paid',
+        'payment_method' => 'Cash',
+        'remarks' => 'Paid via cash',
     ]);
 
     // Delete bill
@@ -142,6 +146,49 @@ test('user can toggle payment status and delete bills', function () {
     $this->assertDatabaseMissing('bills', [
         'id' => $bill->id,
     ]);
+});
+
+test('user can pay a bill with a file attachment', function () {
+    \Illuminate\Support\Facades\Storage::fake('public');
+    
+    $user = User::factory()->create([
+        'user_type' => UserType::Group,
+    ]);
+    
+    $role = Role::firstOrCreate(['name' => 'Admin', 'guard_name' => 'web']);
+    $role->syncPermissions(['bills.view', 'bills.edit']);
+    $user->assignRole($role);
+
+    $employee = Employee::factory()->create();
+    $bill = Bill::create([
+        'employee_id' => $employee->id,
+        'expense_id' => 999,
+        'type' => 'claim-expense',
+        'expense_type' => 'Office Supplies',
+        'amount' => 500.00,
+        'payment_status' => 'unpaid',
+    ]);
+
+    $file = \Illuminate\Http\UploadedFile::fake()->create('receipt.pdf', 100);
+
+    $response = $this->actingAs($user)->put(route('bills.change_payment_status'), [
+        'id' => $bill->id,
+        'payment_status' => 'paid',
+        'payment_method' => 'Bank Transfer',
+        'remarks' => 'Transferred online',
+        'attachment' => $file,
+    ]);
+
+    $response->assertJson([
+        'success' => true,
+        'message' => 'Resource updated successfully.'
+    ]);
+
+    $updatedBill = Bill::findOrFail($bill->id);
+    $this->assertEquals('paid', $updatedBill->payment_status);
+    $this->assertEquals('Bank Transfer', $updatedBill->payment_method);
+    $this->assertEquals('Transferred online', $updatedBill->remarks);
+    $this->assertNotNull($updatedBill->attachment_path);
 });
 
 test('user can export bills to excel and print', function () {

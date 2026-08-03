@@ -35,6 +35,23 @@
                         <span class="badge rounded-pill bg-success-subtle text-success px-3 py-1">
                             <i class="bi bi-check-circle-fill me-1"></i> Paid
                         </span>
+                        @if($bill->payment_method)
+                            <div class="small mt-1 text-muted">
+                                <strong>Method:</strong> {{ $bill->payment_method }}
+                            </div>
+                        @endif
+                        @if($bill->remarks)
+                            <div class="small text-muted text-wrap" style="max-width: 150px;">
+                                <strong>Remarks:</strong> {{ Str::limit($bill->remarks, 30) }}
+                            </div>
+                        @endif
+                        @if($bill->attachment_path)
+                            <div class="mt-1">
+                                <a href="{{ \App\HelperClass::get_file_url($bill->attachment_path) }}" target="_blank" class="btn btn-xs btn-outline-primary py-0 px-1" style="font-size: 7.5pt;">
+                                    <i class="bi bi-paperclip"></i> View Receipt
+                                </a>
+                            </div>
+                        @endif
                     @else
                         <span class="badge rounded-pill bg-danger-subtle text-danger px-3 py-1">
                             <i class="bi bi-x-circle-fill me-1"></i> Unpaid
@@ -46,14 +63,14 @@
                     <div class="d-flex justify-content-end gap-1">
                         @if($bill->payment_status === 'unpaid')
                             @can('bills.edit')
-                            <button type="button" class="btn btn-success btn-sm toggle-payment-status px-2" data-id="{{ $bill->id }}" data-status="paid" title="Mark as Paid">
-                                <i class="bi bi-check-circle me-1"></i> Pay
+                            <button type="button" class="btn btn-success btn-sm pay-bill-btn" data-id="{{ $bill->id }}" data-amount="{{ $bill->amount }}" title="Pay Bill">
+                                <i class="bi bi-check-circle"></i>
                             </button>
                             @endcan
                         @else
                             @can('bills.edit')
-                            <button type="button" class="btn btn-warning btn-sm toggle-payment-status px-2 text-white" data-id="{{ $bill->id }}" data-status="unpaid" title="Mark as Unpaid">
-                                <i class="bi bi-arrow-counterclockwise me-1"></i> Unpay
+                            <button type="button" class="btn btn-warning btn-sm toggle-payment-status text-white" data-id="{{ $bill->id }}" data-status="unpaid" title="Mark as Unpaid">
+                                <i class="bi bi-arrow-counterclockwise"></i>
                             </button>
                             @endcan
                         @endif
