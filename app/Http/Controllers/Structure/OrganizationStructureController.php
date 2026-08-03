@@ -128,11 +128,11 @@ class OrganizationStructureController extends Controller
 
             $typeRequirements = [
                 'group' => ['group_id'],
-                'company' => ['group_id', 'company_id'],
-                'location' => ['group_id', 'company_id', 'branch_unit_id'],
-                'division' => ['group_id', 'company_id', 'division_id'],
-                'department' => ['group_id', 'company_id', 'division_id', 'department_id'],
-                'section' => ['group_id', 'company_id', 'division_id', 'department_id', 'section_id'],
+                'company' => ['group_id'],
+                'location' => ['group_id', 'branch_unit_id'],
+                'division' => ['group_id', 'division_id'],
+                'department' => ['group_id', 'division_id', 'department_id'],
+                'section' => ['group_id', 'division_id', 'department_id', 'section_id'],
             ];
 
             if (isset($typeRequirements[$type])) {
@@ -307,11 +307,11 @@ class OrganizationStructureController extends Controller
 
             $typeRequirements = [
                 'group' => ['group_id'],
-                'company' => ['group_id', 'company_id'],
-                'location' => ['group_id', 'company_id', 'branch_unit_id'],
-                'division' => ['group_id', 'company_id', 'division_id'],
-                'department' => ['group_id', 'company_id', 'division_id', 'department_id'],
-                'section' => ['group_id', 'company_id', 'division_id', 'department_id', 'section_id'],
+                'company' => ['group_id'],
+                'location' => ['group_id', 'branch_unit_id'],
+                'division' => ['group_id', 'division_id'],
+                'department' => ['group_id', 'division_id', 'department_id'],
+                'section' => ['group_id', 'division_id', 'department_id', 'section_id'],
             ];
 
             if (isset($typeRequirements[$type])) {

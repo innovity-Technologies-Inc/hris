@@ -1,5 +1,19 @@
 # Test Log
 
+## 2026-08-04 (Nullable Company Field in Structure Members & Organization Setup)
+
+**Goal**: Make the Company field optional (nullable) during Board Member and Key Member setup under the Organization Structure module.
+
+**Exact Command**: `php artisan config:clear; vendor/bin/pest tests/Feature/Structure/OrganizationStructureTest.php`
+
+**Results**:
+- Modified `app/Http/Controllers/Structure/OrganizationStructureController.php` `store` and `update` methods to remove `company_id` from the required fields checking array.
+- Updated `resources/views/structure/form.blade.php` to remove HTML `required` attributes and red asterisks from Company select boxes.
+- Created `tests/Feature/Structure/OrganizationStructureTest.php` feature tests to assert Board/Key members can be saved and updated with null `company_id` parameters.
+- Verified that all 279 Pest tests pass successfully.
+
+**Status**: ✅ SUCCESS
+
 ## 2026-08-04 (Company Bulk Upload Templates, Loader & 405 Method Error Fixes)
 
 **Goal**: Create sample Excel and CSV template files for company bulk upload, link them dynamically based on sections, remove the Gazette Locations bulk upload card, hide the generic loader from the master layout, and prevent MethodNotAllowedHttpException errors on form submits with empty actions.

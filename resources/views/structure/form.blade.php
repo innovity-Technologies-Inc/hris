@@ -120,10 +120,10 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="boardCompanySelect" class="form-label fw-semibold">
                                                 <i class="fas fa-building text-success me-1"></i>
-                                                Company <span class="text-danger">*</span>
+                                                Company
                                             </label>
                                             <select name="company_id" id="boardCompanySelect"
-                                                class="form-select select2_list" required>
+                                                class="form-select select2_list">
                                                 <option value="">-- Select Company --</option>
                                                 @foreach ($companies as $company)
                                                     <option value="{{ $company->id }}"
@@ -360,7 +360,7 @@
                                         <div class="col-md-4 mb-3">
                                             <label for="key_company_id" class="form-label fw-semibold">
                                                 <i class="fas fa-building text-success me-1"></i>
-                                                Company <span class="text-danger">*</span>
+                                                Company
                                             </label>
                                             <select name="company_id" id="key_company_id"
                                                 class="form-select select2_list">
