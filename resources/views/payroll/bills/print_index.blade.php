@@ -149,7 +149,13 @@
                         <strong>{{ $record->employee?->full_name ?? 'N/A' }}</strong><br>
                         <span style="font-size:7pt; color:#666;">ID: {{ $record->employee?->applicant_id ?? '' }}</span>
                     </td>
-                    <td>{{ ucfirst(str_replace('_', ' ', $record->type)) }}</td>
+                    <td>
+                        @if($record->type === 'claim-expense')
+                            Claim Expense - {{ $record->expense_type }}
+                        @else
+                            {{ ucfirst(str_replace('-', ' ', $record->type)) }}
+                        @endif
+                    </td>
                     <td>{{ $record->expense_type ?? 'N/A' }}</td>
                     <td>৳{{ number_format($record->amount ?? 0, 2) }}</td>
                     <td>
