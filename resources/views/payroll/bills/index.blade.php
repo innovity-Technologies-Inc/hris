@@ -138,14 +138,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Pay button opens Modal
     $(document).on('click', '.pay-bill-btn', function(e) {
         e.preventDefault();
+        
+        // Reset form inputs first
+        document.getElementById('payBillForm').reset();
+
         const id = $(this).data('id');
         const amount = $(this).data('amount');
 
         document.getElementById('payBillId').value = id;
         document.getElementById('payBillAmount').value = '৳' + parseFloat(amount).toFixed(2);
-        
-        // Reset form inputs
-        document.getElementById('payBillForm').reset();
         
         const modal = new bootstrap.Modal(document.getElementById('payBillModal'));
         modal.show();
