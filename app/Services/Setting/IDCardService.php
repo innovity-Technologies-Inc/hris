@@ -368,6 +368,18 @@ class IDCardService
         try {
             DB::beginTransaction();
 
+            // Delete any existing inactive ID cards for this employee to avoid unique constraint violation
+            $oldInactiveCards = EmployeeId::where('employee_id', $employee->id)
+                ->where('status', 'inactive')
+                ->get();
+
+            foreach ($oldInactiveCards as $oldCard) {
+                if ($oldCard->pdf_path && Storage::disk('public')->exists($oldCard->pdf_path)) {
+                    Storage::disk('public')->delete($oldCard->pdf_path);
+                }
+                $oldCard->delete();
+            }
+
             // Deactivate any existing active ID cards for this employee
             EmployeeId::where('employee_id', $employee->id)
                 ->where('status', 'active')
@@ -487,9 +499,33 @@ class IDCardService
      */
     public function deactivateIdCard(Employee $employee): bool
     {
-        return EmployeeId::where('employee_id', $employee->id)
-            ->where('status', 'active')
-            ->update(['status' => 'inactive']) > 0;
+        try {
+            DB::beginTransaction();
+
+            // Delete any existing inactive ID cards for this employee to prevent unique constraint violation
+            $oldInactiveCards = EmployeeId::where('employee_id', $employee->id)
+                ->where('status', 'inactive')
+                ->get();
+
+            foreach ($oldInactiveCards as $oldCard) {
+                if ($oldCard->pdf_path && Storage::disk('public')->exists($oldCard->pdf_path)) {
+                    Storage::disk('public')->delete($oldCard->pdf_path);
+                }
+                $oldCard->delete();
+            }
+
+            // Deactivate the active card
+            $updated = EmployeeId::where('employee_id', $employee->id)
+                ->where('status', 'active')
+                ->update(['status' => 'inactive']) > 0;
+
+            DB::commit();
+            return $updated;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Failed to deactivate ID card', ['employee_id' => $employee->id, 'error' => $e->getMessage()]);
+            return false;
+        }
     }
 
     /**

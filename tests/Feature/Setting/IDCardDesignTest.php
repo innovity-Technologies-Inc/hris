@@ -169,3 +169,52 @@ it('can update an ID card design metadata and file', function () {
     Storage::disk('public')->assertExists($design->file_path);
     Storage::disk('public')->assertMissing($oldFilePath);
 });
+
+it('can regenerate and deactivate ID cards multiple times without unique constraint error', function () {
+    $this->actingAs($this->admin);
+    Storage::fake('public');
+
+    // Create active design first
+    $design = IDCardDesign::create([
+        'theme_name' => 'Active Test Theme',
+        'file_path' => 'upload/id_card_designs/designs/active_theme.php',
+        'status' => 'active'
+    ]);
+
+    // Create a mock template file in fake storage so generator doesn't fail on missing file
+    Storage::disk('public')->put($design->file_path, '<html>Mock Card</html>');
+
+    // Create employee
+    $employee = \App\Models\Employee\Employee::factory()->create();
+
+    // Generate first card
+    $service = app(\App\Services\Setting\IDCardService::class);
+    $card1 = $service->generateIdCard($employee);
+    expect($card1)->not->toBeNull();
+    expect($card1->status)->toBe('active');
+
+    // Generate second card (regenerate) -> should deactivate first card
+    $card2 = $service->generateIdCard($employee);
+    expect($card2)->not->toBeNull();
+    expect($card2->status)->toBe('active');
+    
+    // Check first card is now inactive
+    $card1->refresh();
+    expect($card1->status)->toBe('inactive');
+
+    // Generate third card (regenerate) -> should delete first card (inactive) and deactivate second card (active)
+    $card3 = $service->generateIdCard($employee);
+    expect($card3)->not->toBeNull();
+    expect($card3->status)->toBe('active');
+
+    // Check second card is now inactive, and first card is deleted
+    $card2->refresh();
+    expect($card2->status)->toBe('inactive');
+    expect(\App\Models\Employee\EmployeeId::find($card1->id))->toBeNull();
+
+    // Test deactivating active card
+    $deactivated = $service->deactivateIdCard($employee);
+    expect($deactivated)->toBeTrue();
+    $card3->refresh();
+    expect($card3->status)->toBe('inactive');
+});
