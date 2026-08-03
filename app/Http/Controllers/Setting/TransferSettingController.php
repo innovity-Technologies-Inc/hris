@@ -13,7 +13,10 @@ class TransferSettingController extends Controller
         $title = 'Career Movement Settings';
         $section = 'Settings';
         $sub_section = 'Career Movement Settings';
-        $setting = TransferSetting::first();
+        $setting = TransferSetting::firstOrCreate([], [
+            'employee_transfer_level' => 'company',
+            'supervisor_transfer_level' => 'company'
+        ]);
 
         return view('setting.transfer.index', compact('title', 'section', 'sub_section', 'setting'));
     }
@@ -25,7 +28,10 @@ class TransferSettingController extends Controller
             'supervisor_transfer_level' => 'required|string',
         ]);
 
-        $setting = TransferSetting::first();
+        $setting = TransferSetting::firstOrCreate([], [
+            'employee_transfer_level' => 'company',
+            'supervisor_transfer_level' => 'company'
+        ]);
         $setting->update($request->all());
 
         return response()->json([
