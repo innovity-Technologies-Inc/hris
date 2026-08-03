@@ -69,6 +69,16 @@
                             @endcan
                         @else
                             @can('bills.edit')
+                            <button type="button" class="btn btn-info btn-sm view-payment-btn text-white" 
+                                    data-id="{{ $bill->id }}" 
+                                    data-amount="{{ $bill->amount }}"
+                                    data-method="{{ $bill->payment_method ?? 'N/A' }}"
+                                    data-remarks="{{ $bill->remarks ?? 'N/A' }}"
+                                    data-attachment="{{ $bill->attachment_path ? \App\HelperClass::get_file_url($bill->attachment_path) : '' }}"
+                                    data-date="{{ $bill->updated_at->format('M d, Y h:i A') }}"
+                                    title="View Payment Info">
+                                <i class="bi bi-eye"></i>
+                            </button>
                             <button type="button" class="btn btn-warning btn-sm toggle-payment-status text-white" data-id="{{ $bill->id }}" data-status="unpaid" title="Mark as Unpaid">
                                 <i class="bi bi-arrow-counterclockwise"></i>
                             </button>

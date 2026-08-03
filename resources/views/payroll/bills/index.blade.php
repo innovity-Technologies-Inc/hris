@@ -94,6 +94,44 @@
             </div>
         </div>
     </div>
+    
+    <!-- View Payment Modal -->
+    <div class="modal fade" id="viewPaymentModal" tabindex="-1" aria-labelledby="viewPaymentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title" id="viewPaymentModalLabel">
+                        <i class="bi bi-info-circle me-2"></i>Payment Information
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="mb-3 d-flex justify-content-between border-bottom pb-2">
+                        <span class="fw-semibold text-muted">Amount Paid:</span>
+                        <span class="fw-bold text-dark fs-5" id="viewAmount">N/A</span>
+                    </div>
+                    <div class="mb-3 d-flex justify-content-between border-bottom pb-2">
+                        <span class="fw-semibold text-muted">Payment Method:</span>
+                        <span class="badge bg-success-subtle text-success px-2 py-1" id="viewMethod">N/A</span>
+                    </div>
+                    <div class="mb-3 d-flex justify-content-between border-bottom pb-2">
+                        <span class="fw-semibold text-muted">Payment Date:</span>
+                        <span class="text-dark" id="viewDate">N/A</span>
+                    </div>
+                    <div class="mb-3">
+                        <span class="fw-semibold text-muted d-block mb-1">Remarks:</span>
+                        <div class="p-3 bg-light rounded text-dark text-wrap small" id="viewRemarks" style="min-height: 50px;">N/A</div>
+                    </div>
+                    <div class="mb-0 text-center" id="viewAttachmentContainer">
+                        <!-- Attachment Link -->
+                    </div>
+                </div>
+                <div class="modal-footer bg-light border-0">
+                    <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('scripts')
@@ -149,6 +187,41 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('payBillAmount').value = '৳' + parseFloat(amount).toFixed(2);
         
         const modal = new bootstrap.Modal(document.getElementById('payBillModal'));
+        modal.show();
+    });
+
+    // View Payment Details Modal
+    $(document).on('click', '.view-payment-btn', function(e) {
+        e.preventDefault();
+        const btn = $(this);
+        const amount = btn.data('amount');
+        const method = btn.data('method');
+        const remarks = btn.data('remarks');
+        const attachment = btn.data('attachment');
+        const date = btn.data('date');
+
+        document.getElementById('viewAmount').innerText = '৳' + parseFloat(amount).toFixed(2);
+        document.getElementById('viewMethod').innerText = method;
+        document.getElementById('viewDate').innerText = date;
+        document.getElementById('viewRemarks').innerText = remarks || 'N/A';
+
+        const attachContainer = document.getElementById('viewAttachmentContainer');
+        attachContainer.innerHTML = '';
+        if (attachment) {
+            attachContainer.innerHTML = `
+                <a href="${attachment}" target="_blank" class="btn btn-outline-primary w-100 py-2">
+                    <i class="bi bi-file-earmark-pdf me-2"></i>View Receipt Attachment
+                </a>
+            `;
+        } else {
+            attachContainer.innerHTML = `
+                <div class="alert alert-secondary small mb-0 py-2">
+                    <i class="bi bi-exclamation-circle me-2"></i>No Receipt Attached
+                </div>
+            `;
+        }
+
+        const modal = new bootstrap.Modal(document.getElementById('viewPaymentModal'));
         modal.show();
     });
 
