@@ -243,7 +243,8 @@
             transform-style: preserve-3d;
         }
 
-        .flip-card.flipped .flip-card-inner {
+        .flip-card.flipped .flip-card-inner,
+        .flip-card:hover .flip-card-inner {
             transform: rotateY(180deg);
         }
 
@@ -253,6 +254,7 @@
             width: 100%;
             height: 100%;
             backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -275,6 +277,8 @@
             font-size: 11px;
             opacity: 0;
             transition: opacity 0.3s;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
         }
 
         .flip-card:hover .flip-hint {

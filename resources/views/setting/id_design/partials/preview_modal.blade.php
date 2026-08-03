@@ -92,6 +92,7 @@
         width: 100%;
         height: 100%;
         backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -118,6 +119,8 @@
         pointer-events: none;
         z-index: 10;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
     }
 
     .flip-card-preview:hover .flip-hint-modal,
