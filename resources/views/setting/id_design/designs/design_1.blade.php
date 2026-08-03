@@ -182,8 +182,9 @@ $expiryDate = date('d M Y', strtotime('+2 years'));
         }
 
         .logo {
-            width: 15mm;
-            height: 15mm;
+            height: 20mm;
+            width: auto;
+            max-width: 100%;
             object-fit: contain;
             background: white;
             flex-shrink: 0;
