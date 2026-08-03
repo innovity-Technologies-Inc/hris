@@ -9,6 +9,7 @@ use App\Models\Payroll\Bill;
 use Illuminate\Http\Request;
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
 use App\Http\Responses\ApiResponse;
+use Illuminate\Support\Facades\Log;
 
 class BillController extends Controller
 {
@@ -69,19 +70,27 @@ class BillController extends Controller
         return view('payroll.bills.print_index', compact('records'));
     }
 
+    /**
+     * Change payment status of a bill.
+     */
     public function changePaymentStatus(UpdateBillPaymentStatusRequest $request)
     {
         $validated = $request->validated();
         
-        $bill = $this->billServices->updatePaymentStatus(
-            (int) $validated['id'],
-            $validated['payment_status'],
-            $validated['payment_method'] ?? null,
-            $validated['remarks'] ?? null,
-            $request->file('attachment')
-        );
+        try {
+            $bill = $this->billServices->updatePaymentStatus(
+                (int) $validated['id'],
+                $validated['payment_status'],
+                $validated['payment_method'] ?? null,
+                $validated['remarks'] ?? null,
+                $request->file('attachment')
+            );
 
-        return ApiResponse::success('Resource updated successfully.', $bill);
+            return ApiResponse::success('Resource updated successfully.', $bill);
+        } catch (\Exception $e) {
+            Log::error('Error changing bill payment status: ' . $e->getMessage());
+            return ApiResponse::error('Failed to change bill payment status: ' . $e->getMessage(), 500);
+        }
     }
 
     /**
@@ -89,8 +98,12 @@ class BillController extends Controller
      */
     public function destroy($id)
     {
-        $this->billServices->deleteBill((int) $id);
-
-        return ApiResponse::deleted('Resource deleted successfully.');
+        try {
+            $this->billServices->deleteBill((int) $id);
+            return ApiResponse::deleted('Resource deleted successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error deleting bill: ' . $e->getMessage());
+            return ApiResponse::error('Failed to delete bill: ' . $e->getMessage(), 500);
+        }
     }
 }
