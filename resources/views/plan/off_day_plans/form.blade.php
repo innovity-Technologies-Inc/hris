@@ -68,6 +68,25 @@
                             @enderror
                         </div>
                     </div>
+                    <!-- Status -->
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="status" class="form-label fw-semibold">
+                                Status <span class="text-danger">*</span>
+                            </label>
+                            <select class="form-select" id="status" name="status" required>
+                                <option value="">Select Status</option>
+                                <option value="active" {{ isset($plan) && $plan->status == 'active' ? 'selected' : '' }}
+                                    {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
+                                <option value="inactive"
+                                    {{ isset($plan) && $plan->status == 'inactive' ? 'selected' : '' }}
+                                    {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                            </select>
+                            @error('status')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -242,25 +261,6 @@
                         </div>
                     </div>
 
-                    <!-- Status -->
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="status" class="form-label fw-semibold">
-                                Status <span class="text-danger">*</span>
-                            </label>
-                            <select class="form-select" id="status" name="status" required>
-                                <option value="">Select Status</option>
-                                <option value="active" {{ isset($plan) && $plan->status == 'active' ? 'selected' : '' }}
-                                    {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
-                                <option value="inactive"
-                                    {{ isset($plan) && $plan->status == 'inactive' ? 'selected' : '' }}
-                                    {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
-                            </select>
-                            @error('status')
-                                <small class="text-danger">{{ $message }}</small>
-                            @enderror
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -360,7 +360,7 @@
         // Handle form reset - ensure status checkbox returns to default checked state
         document.querySelector('form').addEventListener('reset', function() {
             setTimeout(function() {
-                document.getElementById('status').checked = true;
+                document.getElementById('status').value = 'active';
                 document.getElementById('type_paid').checked = true;
                 document.getElementById('offday_config_custom').checked = true;
                 document.getElementById('rate_type_multiplier').checked = true;
