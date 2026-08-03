@@ -51,7 +51,6 @@
                             </button>
                             @endcan
                         @else
-                            @can('bills.edit')
                             <button type="button" class="btn btn-info btn-sm view-payment-btn text-white" 
                                     data-id="{{ $bill->id }}" 
                                     data-amount="{{ $bill->amount }}"
@@ -62,6 +61,7 @@
                                     title="View Payment Info">
                                 <i class="bi bi-eye"></i>
                             </button>
+                            @can('bills.edit')
                             <button type="button" class="btn btn-warning btn-sm toggle-payment-status text-white" data-id="{{ $bill->id }}" data-status="unpaid" title="Mark as Unpaid">
                                 <i class="bi bi-arrow-counterclockwise"></i>
                             </button>
