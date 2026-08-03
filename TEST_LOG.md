@@ -1,5 +1,28 @@
 # Test Log
 
+## 2026-08-02 (CV Bank Enhancements & Bill Pay Interface Alignment)
+
+**Goal**: Standardize the Bill Pay index layout to match the Claim Expense index page. Add Print and Excel Export features to Bill Pay. Convert the CV Bank Company and Designation text inputs to database-driven select dropdowns fetching from the `companies` and `designations` tables. Add Company and Designation filter options to the CV Bank search index. Synchronize Employee IDs 194 to 200 current office info seeder mappings to match `employee_office_infos.json` exactly. Add the Onboarding parent menu and CV Bank submenu to the sidebar.
+
+**Exact Command**: `php artisan route:clear; php artisan config:clear; vendor/bin/pest tests/Feature/BillPayFeatureTest.php tests/Feature/CvBankFeatureTest.php`
+
+**Results**:
+- Modified `database/seeders/UserRoleProvisionSeeder.php` to synchronize employee office info parameters for IDs 197 to 200 to match `employee_office_infos.json` values.
+- Modified `resources/views/structure/partials/sidebar.blade.php` to add the Onboarding section category and CV Bank submenu item after Employee Management.
+- Modified `app/Http/Controllers/Onboarding/CvBankController.php` to fetch company and designation lists from database models and pass them to index, create, and edit views.
+- Modified `app/Services/Onboarding/CvBankServices.php` to filter search results by `company_name` and `designation`.
+- Modified `onboarding/cv_bank/index.blade.php` to include Company and Designation select dropdown filters and wire them to Axios request queries.
+- Modified `onboarding/cv_bank/create.blade.php` and `onboarding/cv_bank/edit.blade.php` to replace the free-text inputs with select dropdown elements.
+- Created Export: `app/Exports/Payroll/BillExport.php` to export bills to Excel.
+- Created View: `resources/views/payroll/bills/print_index.blade.php` to format printable bill sheets.
+- Modified Controller: `app/Http/Controllers/Payroll/BillController.php` to add `exportExcel`, `printIndex`, and `getBillsQuery` query builder helpers.
+- Modified Routes: `routes/web.php` to add `bills.export.excel` and `bills.print` endpoints.
+- Modified View: `payroll/bills/index.blade.php` to match the exact header, search layout, and print/export button placement of the Claim Expense index.
+- Modified Test: `tests/Feature/BillPayFeatureTest.php` to add a new verification test for export and printing of bills.
+- Tests passed: 9 passed (26 assertions) ✅
+
+**Status**: ✅ SUCCESS
+
 ## 2026-08-02 (CV Bank Module Integration)
 
 **Goal**: Implement the CV Bank onboarding module under a new parent menu `Onboarding`. Provide a list view supporting CV score range filters, career level filtering, and dynamic Chart.js analytics graphs fetched via Axios API. Implement a separate create page matching the style of the attendance form to add multiple CV records at a time. Implement thin controllers, FormRequests, and custom services with domain-specific success responses (avoiding generic "Resource" words).

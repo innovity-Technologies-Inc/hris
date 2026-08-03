@@ -1399,6 +1399,8 @@ Route::prefix('disbursement')->name('disbursement.')->controller(\App\Http\Contr
 Route::prefix('bills')->name('bills.')->controller(\App\Http\Controllers\Payroll\BillController::class)->middleware('auth')->group(function () {
     Route::middleware('permission:bills.view')->group(function () {
         Route::get('/', 'index')->name('index');
+        Route::get('export-excel', 'exportExcel')->name('export.excel');
+        Route::get('print', 'printIndex')->name('print');
     });
     Route::middleware('permission:bills.edit')->group(function () {
         Route::put('change-payment-status', 'changePaymentStatus')->name('change_payment_status');

@@ -143,3 +143,33 @@ test('user can toggle payment status and delete bills', function () {
         'id' => $bill->id,
     ]);
 });
+
+test('user can export bills to excel and print', function () {
+    $user = User::factory()->create([
+        'user_type' => UserType::Group,
+    ]);
+    
+    $role = Role::firstOrCreate(['name' => 'Admin', 'guard_name' => 'web']);
+    $role->syncPermissions(['bills.view']);
+    $user->assignRole($role);
+
+    $employee = Employee::factory()->create();
+    $bill = Bill::create([
+        'employee_id' => $employee->id,
+        'expense_id' => 999,
+        'type' => 'travel-movement',
+        'expense_type' => 'Travel Movement',
+        'amount' => 1200.00,
+        'payment_status' => 'unpaid',
+    ]);
+
+    // Test Export
+    $response = $this->actingAs($user)->get(route('bills.export.excel') . '?keyword=Travel');
+    $response->assertStatus(200);
+
+    // Test Print
+    $response = $this->actingAs($user)->get(route('bills.print'));
+    $response->assertStatus(200);
+    $response->assertViewIs('payroll.bills.print_index');
+    $response->assertSee('Bill Pay Management Sheet');
+});

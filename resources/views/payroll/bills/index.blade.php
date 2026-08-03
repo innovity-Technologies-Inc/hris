@@ -4,16 +4,26 @@
     <div class="row">
         <div class="col-xl-12">
             <div class="card">
-                <div class="card-header bg-light">
-                    <h5 class="card-title mb-0 fw-semibold text-dark">
-                        <i class="mdi mdi-receipt me-2 text-primary"></i>Bill Pay Management
-                    </h5>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title mb-0 fw-semibold text-dark">
+                            <i class="mdi mdi-receipt me-2 text-warning"></i>Bill Pay Management
+                        </h5>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="button" id="exportExcelBtn" class="btn btn-success btn-sm no-loader">
+                            <i class="bi bi-file-earmark-excel me-1"></i> Export
+                        </button>
+                        <button type="button" id="printBtn" class="btn btn-secondary btn-sm no-loader">
+                            <i class="bi bi-printer me-1"></i> Print
+                        </button>
+                    </div>
                 </div>
 
                 <div class="card-body">
                     <form id="filterForm">
-                        <div class="row mb-3">
-                            <div class="col-md-9 mb-2 mb-md-0">
+                        <div class="row mb-3 g-2">
+                            <div class="col-md-9 col-12">
                                 <div class="input-group input-group-md">
                                     <input type="text" class="form-control border-end-0" id="searchKeyword"
                                            name="keyword" placeholder="Search by employee, type, expense or payment status"
@@ -23,7 +33,7 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-3 col-12">
                                 <select name="payment_status" id="filterPaymentStatus" class="form-select">
                                     <option value="">All Payment Status</option>
                                     <option value="unpaid">Unpaid</option>
@@ -148,6 +158,31 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
+    // Excel export
+    const exportBtn = document.getElementById('exportExcelBtn');
+    if (exportBtn) {
+        exportBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.ignoreBeforeUnload = true;
+            setTimeout(() => { window.ignoreBeforeUnload = false; }, 2000);
+            
+            const keyword = searchInput.value;
+            const status = statusSelect.value;
+            window.location.href = "{{ route('bills.export.excel') }}?keyword=" + encodeURIComponent(keyword) + "&payment_status=" + encodeURIComponent(status);
+        });
+    }
+
+    // Print
+    const printBtn = document.getElementById('printBtn');
+    if (printBtn) {
+        printBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const keyword = searchInput.value;
+            const status = statusSelect.value;
+            window.open("{{ route('bills.print') }}?keyword=" + encodeURIComponent(keyword) + "&payment_status=" + encodeURIComponent(status), '_blank');
+        });
+    }
 
     // Pagination
     $(document).on('click', '.pagination a', function(e) {
