@@ -99,7 +99,7 @@
     <div class="modal fade" id="viewPaymentModal" tabindex="-1" aria-labelledby="viewPaymentModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header bg-info text-white">
+                <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="viewPaymentModalLabel">
                         <i class="bi bi-info-circle me-2"></i>Payment Information
                     </h5>
