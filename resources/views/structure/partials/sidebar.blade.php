@@ -998,7 +998,7 @@
                                     href='{{ route('job_creations.index') }}'>Job Creations</a>
                             </li>
                             @endif
-                            @if($canBulkUploadCompany)
+                            @if(false) {{-- Hidden for now --}}
                             <li>
                                 <a class='tp-link @if (Route::is('company.bulk_upload')) menuitem-active @endif'
                                     href='{{ route('company.bulk_upload') }}'>Bulk Upload</a>
