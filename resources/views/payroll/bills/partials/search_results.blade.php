@@ -23,7 +23,7 @@
                     @if($bill->type === 'travel-movement')
                         <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1">Travel Movement</span>
                     @elseif($bill->type === 'claim-expense')
-                        <span class="badge bg-info-subtle text-info border border-info-subtle px-2 py-1">Claim Expense - {{ $bill->expense_type }}</span>
+                        <span class="badge bg-info-subtle text-info border border-info-subtle px-2 py-1">Expense - {{ $bill->expense_type }}</span>
                     @else
                         <span class="badge bg-secondary px-2 py-1">{{ ucfirst(str_replace('-', ' ', $bill->type)) }}</span>
                     @endif

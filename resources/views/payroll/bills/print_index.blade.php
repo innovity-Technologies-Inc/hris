@@ -151,7 +151,7 @@
                     </td>
                     <td>
                         @if($record->type === 'claim-expense')
-                            Claim Expense - {{ $record->expense_type }}
+                            Expense - {{ $record->expense_type }}
                         @else
                             {{ ucfirst(str_replace('-', ' ', $record->type)) }}
                         @endif

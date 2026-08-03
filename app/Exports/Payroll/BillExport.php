@@ -45,7 +45,7 @@ class BillExport implements FromCollection, WithHeadings, WithMapping
             $row->employee?->full_name ?? 'N/A',
             $row->employee?->applicant_id ?? 'N/A',
             $row->type === 'claim-expense' 
-                ? 'Claim Expense - ' . ($row->expense_type ?? '') 
+                ? 'Expense - ' . ($row->expense_type ?? '') 
                 : ucfirst(str_replace('-', ' ', $row->type ?? 'N/A')),
             $row->expense_type ?? 'N/A',
             $row->amount ?? '0',
