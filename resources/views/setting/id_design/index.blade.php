@@ -152,6 +152,12 @@
                                         </form>
                                     @endif
 
+                                    <!-- Edit Button -->
+                                    <a href="{{ route('setting.id_design.edit', $design->id) }}"
+                                        class="btn btn-sm btn-outline-info" title="Edit Design">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </a>
+
                                     <!-- Download Button -->
                                     <a href="{{ route('setting.id_design.download', $design->id) }}"
                                         class="btn btn-sm btn-outline-secondary" title="Download Template">

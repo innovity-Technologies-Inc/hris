@@ -1065,6 +1065,8 @@ Route::prefix('settings')->middleware('auth')->group(function () {
        Route::middleware('permission:id-card-design.edit')->group(function () {
            Route::post('id-design/{id}/activate', 'activate')->name('setting.id_design.activate');
            Route::post('id-design/{id}/deactivate', 'deactivate')->name('setting.id_design.deactivate');
+           Route::get('id-design/{id}/edit', 'edit')->name('setting.id_design.edit');
+           Route::put('id-design/{id}/update', 'update')->name('setting.id_design.update');
        });
        Route::middleware('permission:id-card-design.delete')->group(function () {
            Route::delete('id-design/{id}/delete', 'destroy')->name('setting.id_design.destroy');

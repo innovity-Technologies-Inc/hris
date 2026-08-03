@@ -459,5 +459,178 @@ class IDCardDesignController extends Controller
             basename($design->file_path)
         );
     }
+
+    /**
+     * Show the form for editing an ID card design
+     */
+    public function edit($id)
+    {
+        $design = IDCardDesign::findOrFail($id);
+
+        $title = 'Edit ID Card Design';
+        $section = 'Settings';
+        $sub_section = 'ID Card Design';
+
+        return view('setting.id_design.edit', compact(
+            'title',
+            'section',
+            'sub_section',
+            'design'
+        ));
+    }
+
+    /**
+     * Update an ID card design
+     */
+    public function update(Request $request, $id)
+    {
+        $design = IDCardDesign::findOrFail($id);
+
+        \Log::info('=== ID Card Design Update Started ===');
+        \Log::info('Request Data:', $request->except(['design_file', 'preview_front_card', 'preview_back_card']));
+
+        $validator = Validator::make($request->all(), [
+            'theme_name' => 'required|string|max:255|unique:id_card_designs,theme_name,' . $id,
+            'description' => 'nullable|string|max:1000',
+            'template_source' => 'required|in:preloaded,upload,keep_existing',
+            'design_file' => 'required_if:template_source,upload|file|max:2048',
+            'preloaded_template' => 'required_if:template_source,preloaded|string|in:design_1,design_2,design_3,design_4',
+            'preview_front_card' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'preview_back_card' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ], [
+            'theme_name.required' => 'Please enter a theme name',
+            'theme_name.unique' => 'This theme name already exists',
+            'design_file.required_if' => 'Please upload a design file',
+            'design_file.max' => 'File size must be less than 2MB',
+            'preloaded_template.required_if' => 'Please select a demo template',
+            'preview_front_card.image' => 'Front card preview must be an image file',
+            'preview_front_card.mimes' => 'Front card preview must be jpeg, png, jpg, or gif',
+            'preview_front_card.max' => 'Front card preview must be less than 2MB',
+            'preview_back_card.image' => 'Back card preview must be an image file',
+            'preview_back_card.mimes' => 'Back card preview must be jpeg, png, jpg, or gif',
+            'preview_back_card.max' => 'Back card preview must be less than 2MB'
+        ]);
+
+        if ($validator->fails()) {
+            \Log::error('Validation Failed:', $validator->errors()->toArray());
+            return redirect()->back()
+                           ->withErrors($validator)
+                           ->withInput();
+        }
+
+        if ($request->template_source === 'upload') {
+            $designFile = $request->file('design_file');
+            $extension = strtolower($designFile->getClientOriginalExtension());
+            if (!in_array($extension, ['php', 'blade'])) {
+                return redirect()->back()
+                               ->withErrors(['design_file' => 'Only .blade.php or .php files are allowed'])
+                               ->withInput();
+            }
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $oldDesignFilePath = null;
+            $designFilePath = $design->file_path;
+
+            if ($request->template_source === 'preloaded') {
+                $templateName = $request->preloaded_template;
+                $sourcePath = resource_path('views/setting/id_design/designs/' . $templateName . '.blade.php');
+                if (!file_exists($sourcePath)) {
+                    throw new \Exception("Preloaded template '{$templateName}' does not exist.");
+                }
+                $fileContent = file_get_contents($sourcePath);
+
+                $disk = config('filesystems.default');
+                $filename = time() . Str::random(10) . '.php';
+                $newFilePath = 'upload/id_card_designs/designs/' . $filename;
+                Storage::disk($disk)->put($newFilePath, $fileContent, [
+                    'visibility' => 'public'
+                ]);
+
+                // Mark old file for deletion
+                $oldDesignFilePath = $design->file_path;
+                $designFilePath = $newFilePath;
+            } elseif ($request->template_source === 'upload') {
+                $uploadedFile = $request->file('design_file');
+                $fileContent = file_get_contents($uploadedFile->getRealPath());
+
+                $dangerousFunctions = [
+                    'eval', 'exec', 'shell_exec', 'passthru',
+                    'proc_open', 'popen', 'curl_exec', 'curl_multi_exec',
+                    'parse_ini_file', 'show_source'
+                ];
+
+                foreach ($dangerousFunctions as $func) {
+                    if (preg_match('/\b' . preg_quote($func, '/') . '\s*\(/i', $fileContent)) {
+                        throw new \Exception("Security violation: Dangerous function '{$func}()' detected in template");
+                    }
+                }
+
+                $newFilePath = HelperClass::file_upload($uploadedFile, 'id_card_designs/designs');
+                $oldDesignFilePath = $design->file_path;
+                $designFilePath = $newFilePath;
+            }
+
+            // Preview updates
+            $previewFrontCardPath = $design->preview_front_card;
+            $oldFrontPath = null;
+            if ($request->hasFile('preview_front_card')) {
+                $previewFrontCardPath = HelperClass::file_upload($request->file('preview_front_card'), 'id_card_designs/previews');
+                $oldFrontPath = $design->preview_front_card;
+            }
+
+            $previewBackCardPath = $design->preview_back_card;
+            $oldBackPath = null;
+            if ($request->hasFile('preview_back_card')) {
+                $previewBackCardPath = HelperClass::file_upload($request->file('preview_back_card'), 'id_card_designs/previews');
+                $oldBackPath = $design->preview_back_card;
+            }
+
+            $design->update([
+                'theme_name' => $request->theme_name,
+                'file_path' => $designFilePath,
+                'description' => $request->description,
+                'preview_front_card' => $previewFrontCardPath,
+                'preview_back_card' => $previewBackCardPath,
+            ]);
+
+            DB::commit();
+
+            // Delete old files from storage on success
+            if ($oldDesignFilePath && Storage::disk('public')->exists($oldDesignFilePath)) {
+                HelperClass::file_delete($oldDesignFilePath);
+            }
+            if ($oldFrontPath && Storage::disk('public')->exists($oldFrontPath)) {
+                HelperClass::file_delete($oldFrontPath);
+            }
+            if ($oldBackPath && Storage::disk('public')->exists($oldBackPath)) {
+                HelperClass::file_delete($oldBackPath);
+            }
+
+            return redirect()->route('setting.id_design.index')
+                           ->with('message', 'ID Card Design updated successfully')
+                           ->with('alert-type', 'success');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // Cleanup newly uploaded files on failure
+            if (isset($newFilePath) && $newFilePath !== $design->file_path) {
+                HelperClass::file_delete($newFilePath);
+            }
+            if (isset($previewFrontCardPath) && $previewFrontCardPath !== $design->preview_front_card) {
+                HelperClass::file_delete($previewFrontCardPath);
+            }
+            if (isset($previewBackCardPath) && $previewBackCardPath !== $design->preview_back_card) {
+                HelperClass::file_delete($previewBackCardPath);
+            }
+
+            return redirect()->back()
+                           ->with('message', 'Failed to update design: ' . $e->getMessage())
+                           ->with('alert-type', 'error')
+                           ->withInput();
+        }
+    }
 }
 

@@ -107,3 +107,65 @@ it('can preview a design template', function () {
     $previewResponse = $this->get(route('setting.id_design.preview', $design->id));
     $previewResponse->assertStatus(200);
 });
+
+it('can display the edit page', function () {
+    $this->actingAs($this->admin);
+    Storage::fake('public');
+
+    $response = $this->post(route('setting.id_design.store'), [
+        'theme_name' => 'Edit Test Theme',
+        'description' => 'Original description',
+        'template_source' => 'preloaded',
+        'preloaded_template' => 'design_1',
+    ]);
+
+    $design = IDCardDesign::where('theme_name', 'Edit Test Theme')->first();
+    expect($design)->not->toBeNull();
+
+    $editResponse = $this->get(route('setting.id_design.edit', $design->id));
+    $editResponse->assertStatus(200);
+    $editResponse->assertSee($design->theme_name);
+});
+
+it('can update an ID card design metadata and file', function () {
+    $this->actingAs($this->admin);
+    Storage::fake('public');
+
+    $response = $this->post(route('setting.id_design.store'), [
+        'theme_name' => 'Original Theme',
+        'description' => 'Original description',
+        'template_source' => 'preloaded',
+        'preloaded_template' => 'design_1',
+    ]);
+
+    $design = IDCardDesign::where('theme_name', 'Original Theme')->first();
+    expect($design)->not->toBeNull();
+    $oldFilePath = $design->file_path;
+
+    // Update theme name, description and keep existing file
+    $updateResponse = $this->put(route('setting.id_design.update', $design->id), [
+        'theme_name' => 'Updated Theme Name',
+        'description' => 'Updated description text',
+        'template_source' => 'keep_existing',
+    ]);
+
+    $updateResponse->assertRedirect(route('setting.id_design.index'));
+    $design->refresh();
+    expect($design->theme_name)->toBe('Updated Theme Name');
+    expect($design->description)->toBe('Updated description text');
+    expect($design->file_path)->toBe($oldFilePath);
+
+    // Update template source to another preloaded template
+    $updateFileResponse = $this->put(route('setting.id_design.update', $design->id), [
+        'theme_name' => 'Updated Theme Name',
+        'description' => 'Updated description text',
+        'template_source' => 'preloaded',
+        'preloaded_template' => 'design_2',
+    ]);
+
+    $updateFileResponse->assertRedirect(route('setting.id_design.index'));
+    $design->refresh();
+    expect($design->file_path)->not->toBe($oldFilePath);
+    Storage::disk('public')->assertExists($design->file_path);
+    Storage::disk('public')->assertMissing($oldFilePath);
+});
