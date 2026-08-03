@@ -326,6 +326,8 @@ class IDCardDesignController extends Controller
             'id' => null,
             'system_id' => 'EMP-12345',
             'full_name' => 'John Doe',
+            'designation' => 'Senior Developer',
+            'department' => 'IT Department',
             'personal_mobile' => '+880-1712-345678',
             'work_email' => 'john.doe@company.com',
             'personal_email' => 'john.doe@gmail.com',
