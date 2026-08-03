@@ -17,7 +17,7 @@ class Company extends Model
     use Userstamps, Auditable;
     use HasFactory, OrganizationScoped;
     protected $table = 'companies';
-    protected $fillable = ['name', 'short_name', 'type_id', 'group_id', 'address', 'fax', 'telephone', 'email', 'status', 'logo'];
+    protected $fillable = ['name', 'short_name', 'type_id', 'group_id', 'address', 'fax', 'telephone', 'email', 'website', 'status', 'logo'];
 
     public function getCompanyType(){
        return $this->belongsTo(CompanyType::class, 'type_id','id');

@@ -181,7 +181,7 @@ class IDCardService
             $companyInfo = (object) [
                 'name' => $currentCompany?->name ?? $generalSettings?->company_name ?? 'Company Name',
                 'logo' => $currentCompany?->logo ?? $generalSettings?->logo_light ?? null,
-                'website' => $generalSettings?->website ?? '',
+                'website' => $currentCompany?->website ?? ($generalSettings?->website ?? ''),
                 'telephone' => $currentCompany?->telephone ?? ($generalSettings?->contact_phone ?? ''),
                 'fax' => $currentCompany?->fax ?? '',
                 'email' => $currentCompany?->email ?? ($generalSettings?->email ?? ''),

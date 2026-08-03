@@ -152,6 +152,7 @@ class CompanySetupController extends Controller
             'telephone' => 'nullable|string|max:50',
             'fax' => 'nullable|string|max:50',
             'email' => 'nullable|string|email|max:255',
+            'website' => 'nullable|string|max:255',
             'logo' => 'nullable|image|mimes:webp,jpeg,png,jpg,gif,svg|max:2048',
             'status' => 'required',
         ], [
@@ -170,6 +171,8 @@ class CompanySetupController extends Controller
             'fax.max' => 'Fax Must Be Less Than 50 Characters',
             'email.email' => 'Please Enter Valid Email Address',
             'email.max' => 'Email Must Be Less Than 255 Characters',
+            'website.string' => 'Website Must Be Text',
+            'website.max' => 'Website Must Be Less Than 255 Characters',
             'logo.image' => 'Please Upload Image File',
             'logo.mimes' => 'Please Upload Image File (webp, jpeg, png, jpg, gif, svg)',
             'logo.max' => 'Logo Must Be Less Than 2 MB',
@@ -186,6 +189,7 @@ class CompanySetupController extends Controller
                 'telephone' => $request->telephone,
                 'fax' => $request->fax,
                 'email' => $request->email,
+                'website' => $request->website,
                 'status' => $request->status,
             ];
 
@@ -237,6 +241,7 @@ class CompanySetupController extends Controller
             'telephone' => 'nullable|string|max:50',
             'fax' => 'nullable|string|max:50',
             'email' => 'nullable|string|email|max:255',
+            'website' => 'nullable|string|max:255',
             'logo' => 'nullable|image|mimes:webp,jpeg,png,jpg,gif,svg|max:2048',
             'status' => 'required',
         ], [
@@ -255,6 +260,8 @@ class CompanySetupController extends Controller
             'fax.max' => 'Fax Must Be Less Than 50 Characters',
             'email.email' => 'Please Enter Valid Email Address',
             'email.max' => 'Email Must Be Less Than 255 Characters',
+            'website.string' => 'Website Must Be Text',
+            'website.max' => 'Website Must Be Less Than 255 Characters',
             'logo.image' => 'Please Upload Image File',
             'logo.mimes' => 'Please Upload Image File (webp, jpeg, png, jpg, gif, svg)',
             'logo.max' => 'Logo Must Be Less Than 2 MB',
@@ -272,6 +279,7 @@ class CompanySetupController extends Controller
                 'telephone' => $request->telephone,
                 'fax' => $request->fax,
                 'email' => $request->email,
+                'website' => $request->website,
                 'status' => $request->status,
             ];
 

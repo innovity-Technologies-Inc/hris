@@ -118,10 +118,19 @@
                                     </div>
 
                                     <div class="col-lg-6 mb-2">
+                                        <label for="websiteinput" class="form-label">Website</label>
+                                        <input type="text" id="websiteinput" class="form-control @error('website') is-invalid @enderror" name="website"
+                                               placeholder="Enter Company Website" value="{{ isset($company)? $company->website : old('website')}}">
+                                        @error('website')
+                                        <small class="text-danger">{{$message}}</small>
+                                        @enderror
+                                    </div>
+
+                                    <div class="col-lg-6 mb-2">
                                         <label for="example-select" class="form-label">Status</label>
                                         <select class="form-select" name="status">
-                                            <option value="active">Active</option>
-                                            <option value="inactive">Inactive</option>
+                                            <option value="active" {{ (isset($company) && $company->status === 'active') || old('status') === 'active' ? 'selected' : '' }}>Active</option>
+                                            <option value="inactive" {{ (isset($company) && $company->status === 'inactive') || old('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
                                         </select>
                                     </div>
 
