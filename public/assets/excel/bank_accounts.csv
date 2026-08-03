@@ -1,0 +1,2 @@
+bank_name_or_id,bank_branch_name_or_id,account_name,account_number,account_type,status
+"Sonali Bank","Dhaka Branch","Company Operations Account",123456789012,current,active

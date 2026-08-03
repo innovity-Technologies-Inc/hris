@@ -129,3 +129,14 @@ it('renders the company website on employee ID card rendering', function () {
     // Verify company website is rendered in HTML
     expect($html)->toContain('www.scl-global.com');
 });
+
+it('can view the company bulk upload page', function () {
+    $this->actingAs($this->admin);
+
+    // Ensure permission is assigned to user
+    \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'employee-management.import', 'guard_name' => 'web']);
+    $this->admin->givePermissionTo('employee-management.import');
+
+    $response = $this->get(route('company.bulk_upload'));
+    $response->assertStatus(200);
+});

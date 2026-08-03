@@ -149,8 +149,20 @@
         document.getElementById('bulkUploadForm').action = formAction;
 
         // Update download links with direct URLs
-        document.getElementById('downloadExcel').href = excelLink;
-        document.getElementById('downloadCsv').href = csvLink;
+        let finalExcelLink = excelLink;
+        let finalCsvLink = csvLink;
+
+        if ((excelLink === '#' || !excelLink) && section) {
+            const normalizedSection = section.replace(/-/g, '_');
+            finalExcelLink = `{{ asset('assets/excel') }}/${normalizedSection}.xlsx`;
+        }
+        if ((csvLink === '#' || !csvLink) && section) {
+            const normalizedSection = section.replace(/-/g, '_');
+            finalCsvLink = `{{ asset('assets/excel') }}/${normalizedSection}.csv`;
+        }
+
+        document.getElementById('downloadExcel').href = finalExcelLink;
+        document.getElementById('downloadCsv').href = finalCsvLink;
     });
 
     // Handle file selection
