@@ -298,6 +298,37 @@
         // Initial call
         toggleTemplateSource();
 
+        // Auto-complete other fields when preloaded template is selected
+        const themeNameInput = document.getElementById('theme_name');
+        const descriptionInput = document.getElementById('description');
+
+        const preloadedDetails = {
+            'design_1': {
+                name: 'Theme 1 (Modern Corporate)',
+                desc: 'Modern vertical corporate ID card design with abstract shapes and clean hierarchy.'
+            },
+            'design_2': {
+                name: 'Theme 2 (Modern Clean with Orange Badge)',
+                desc: 'Clean vertical design featuring a distinct primary header bar and orange accents divider.'
+            },
+            'design_3': {
+                name: 'Theme 3 (Professional Bordered)',
+                desc: 'Professional bordered vertical ID card design with light grayscale layout.'
+            },
+            'design_4': {
+                name: 'Theme 4 (Minimalist Portrait)',
+                desc: 'Sleek minimalist vertical ID card design focusing on content space and clean typography.'
+            }
+        };
+
+        preloadedTemplateSelect.addEventListener('change', function() {
+            const selectedVal = preloadedTemplateSelect.value;
+            if (preloadedDetails[selectedVal]) {
+                themeNameInput.value = preloadedDetails[selectedVal].name;
+                descriptionInput.value = preloadedDetails[selectedVal].desc;
+            }
+        });
+
         // Form validation
         document.getElementById('designForm').addEventListener('submit', function(e) {
             const themeNameInput = document.getElementById('theme_name');
