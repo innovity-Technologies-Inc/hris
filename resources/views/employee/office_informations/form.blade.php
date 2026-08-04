@@ -7,7 +7,7 @@
 
     <div class="mt-4">
         <form method="POST" enctype="multipart/form-data" 
-              action="{{ $isEdit ? route('employee.office_informations.update', $employee_office_info->id) : route('employee.office_informations.store') }}">
+              action="{{ $isEdit ? route('employee.office_informations.update', $employee->id) : route('employee.office_informations.store') }}">
             @if($isEdit)
                 @method('PUT')
             @endif
