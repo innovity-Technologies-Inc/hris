@@ -127,7 +127,10 @@
                             let selected = (selectedGrade == value.id) ? 'selected' : '';
                             $gradeSelect.append('<option value="'+ value.id +'" '+selected+'>'+ value.name +'</option>');
                         });
+                        $gradeSelect.trigger('change');
                     });
+                } else {
+                    $('#branch_id').html('<option value="">--Select Branch--</option>').trigger('change');
                 }
             }
 
@@ -136,15 +139,13 @@
                 loadGrades($(this).val());
             });
 
-            // --- Auto-load existing values from DB when editing ---
-            @if(isset($employeeData))
+            // --- Auto-load existing values ---
             let bankId = "{{ old('bank_id', $employeeData->bank_id ?? '') }}";
             let branchId  = "{{ old('branch_id', $employeeData->branch_id ?? '') }}";
 
             if (bankId) {
                 loadGrades(bankId, branchId);
             }
-            @endif
 
         });
     </script>
