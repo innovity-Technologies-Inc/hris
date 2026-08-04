@@ -67,7 +67,6 @@
                                         <input type="number" class="form-control" id="remuneration" name="remuneration"
                                             placeholder="Enter remuneration amount" step="0.01" min="0"
                                             value="{{ isset($plan) ? $plan->remuneration : old('remuneration') }}" required>
-                                        <small class="text-muted">Remuneration per meal</small>
                                         @error('remuneration')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
