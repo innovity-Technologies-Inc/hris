@@ -108,7 +108,7 @@ class OffboardingController extends Controller
             $offboarding = $this->offboardingService->storeOffboarding($request->validated(), auth()->user());
             $type = $offboarding->offboarding_type;
 
-            return $this->createdResponse(ucfirst($type) . ' record created successfully.', [
+            return $this->createdResponse('Offboarding record created successfully.', [
                 'redirect' => route("offboarding.{$type}.index"),
                 'offboarding' => $offboarding
             ]);
@@ -163,7 +163,7 @@ class OffboardingController extends Controller
             $offboarding = $this->offboardingService->updateOffboarding((int) $id, $request->validated(), auth()->user());
             $type = $offboarding->offboarding_type;
 
-            return $this->successResponse(ucfirst($type) . ' record updated successfully.', [
+            return $this->successResponse('Offboarding record updated successfully.', [
                 'redirect' => route("offboarding.{$type}.index"),
                 'offboarding' => $offboarding
             ]);
@@ -179,11 +179,9 @@ class OffboardingController extends Controller
     public function destroy($id): JsonResponse
     {
         try {
-            $offboarding = $this->offboardingService->getOffboardingById((int) $id);
-            $type = $offboarding->offboarding_type;
             $this->offboardingService->deleteOffboarding((int) $id, auth()->user());
 
-            return $this->deletedResponse(ucfirst($type) . ' record deleted successfully.');
+            return $this->deletedResponse('Offboarding record deleted successfully.');
         } catch (\Exception $e) {
             Log::error('Offboarding delete error: ' . $e->getMessage());
             return $this->errorResponse('Failed to delete offboarding record: ' . $e->getMessage(), 500);

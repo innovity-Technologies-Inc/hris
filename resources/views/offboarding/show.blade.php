@@ -14,7 +14,7 @@
                         <i class="mdi mdi-text-box-search text-info fs-4"></i>
                     </div>
                     <div>
-                        <h5 class="card-title mb-0 text-dark fw-bold">{{ $typeName }} Details - #{{ $offboarding->id }}</h5>
+                        <h5 class="card-title mb-0 text-dark fw-bold">Offboarding Details - {{ $typeName }} #{{ $offboarding->id }}</h5>
                         <small class="text-muted">Submitted on {{ \Carbon\Carbon::parse($offboarding->created_at)->format('M d, Y h:i A') }}</small>
                     </div>
                 </div>
@@ -68,7 +68,7 @@
                     <div class="col-md-6">
                         <div class="card border h-100 rounded-3">
                             <div class="card-header bg-light">
-                                <h6 class="mb-0 fw-semibold text-primary"><i class="mdi mdi-door-open me-2"></i>{{ $typeName }} Status & Dates</h6>
+                                <h6 class="mb-0 fw-semibold text-primary"><i class="mdi mdi-door-open me-2"></i>Offboarding Status & Dates</h6>
                             </div>
                             <div class="card-body">
                                 <table class="table table-borderless table-sm mb-0">
@@ -97,7 +97,7 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th class="text-muted">{{ $offboarding->offboarding_type === 'termination' ? 'Termination Date' : 'Resignation Date' }}:</th>
+                                        <th class="text-muted">Resignation/Notice Date:</th>
                                         <td>{{ \Carbon\Carbon::parse($offboarding->resignation_date)->format('M d, Y') }}</td>
                                     </tr>
                                     <tr>

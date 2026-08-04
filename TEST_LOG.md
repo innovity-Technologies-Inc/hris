@@ -2766,17 +2766,18 @@ Status: ✅ SUCCESS
 
 **Status**: ✅ SUCCESS
 
-## 2026-08-04 (Resignation & Termination Dynamic Labels and Success Responses)
+## 2026-08-04 (Resignation & Termination Unified Offboarding Labels)
 
-**Goal**: Make form, list, details labels and success responses dynamic to correctly display 'Termination' or 'Resignation' depending on the active module type.
+**Goal**: Unify form, list, details labels and success responses to consistently display 'Offboarding' and 'Offboarding Type' for both Resignation and Termination, keeping both under the unified Offboarding module.
 
-**Exact Command**: `php artisan config:clear && vendor/bin/pest tests/Feature/ResignationTest.php`
+**Exact Command**: `php artisan config:clear && vendor/bin/pest tests/Feature/OffboardingTest.php tests/Feature/ResignationTest.php`
 
 **Results**:
-- **Dynamic Form Labels**: Updated [form.blade.php](file:///P:/Project/Web/hrms/resources/views/offboarding/form.blade.php) to render dynamic section titles and type labels using the specific type name variable (`$typeName`).
-- **Dynamic Show Details**: Modified [show.blade.php](file:///P:/Project/Web/hrms/resources/views/offboarding/show.blade.php) to display dynamic details titles, status & dates section titles, and correct date header columns ("Termination Date" or "Resignation Date").
-- **Dynamic List Column Headers**: Modified [search_results.blade.php](file:///P:/Project/Web/hrms/resources/views/offboarding/search_results.blade.php) to output correct date headers based on list type.
-- **Dynamic API Success Messages**: Updated [OffboardingController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/Offboarding/OffboardingController.php) to return custom JSON messages detailing which record type was created, updated, or deleted.
-- **Verification**: Ran Pest features test `tests/Feature/ResignationTest.php`. All tests passed successfully ✅
+- **Form Labels**: Reverted custom labels in [form.blade.php](file:///P:/Project/Web/hrms/resources/views/offboarding/form.blade.php) to use "Offboarding Details" and "Offboarding Type" for both Resignation and Termination forms.
+- **Show View Labels**: Reverted custom labels in [show.blade.php](file:///P:/Project/Web/hrms/resources/views/offboarding/show.blade.php) to use "Offboarding Details" and "Offboarding Status & Dates" as well as "Resignation/Notice Date" as the notice date header.
+- **Table Headers**: Reverted table date headers in [search_results.blade.php](file:///P:/Project/Web/hrms/resources/views/offboarding/search_results.blade.php) to "Resignation/Notice Date".
+- **Delete Warning Text**: Updated [index.blade.php](file:///P:/Project/Web/hrms/resources/views/offboarding/index.blade.php) to use "This offboarding record will be deleted!" for both types.
+- **Controller Response Messages**: Restored static "Offboarding record created/updated/deleted successfully" response strings in [OffboardingController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/Offboarding/OffboardingController.php).
+- **Verification**: Ran Pest features tests for both modules. All 7 tests and 71 assertions passed successfully ✅
 
 **Status**: ✅ SUCCESS
