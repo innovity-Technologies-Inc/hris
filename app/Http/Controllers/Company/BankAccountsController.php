@@ -89,7 +89,7 @@ class BankAccountsController extends Controller
         $bank_account = BankAccount::find($id);
         $banks = Bank::all()->sortBy('name');
         $branches = Branch::all()->sortBy('name');
-        return view('company.branch.form', compact('title', 'section', 'sub_section', 'section_url', 'branches', 'banks', 'bank_account'));
+        return view('company.bank_accounts.form', compact('title', 'section', 'sub_section', 'section_url', 'branches', 'banks', 'bank_account'));
     }
     public function update(Request $request, $id){
         $request->validate([
