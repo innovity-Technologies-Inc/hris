@@ -33,7 +33,7 @@
                                         <option value="contractual" {{ old('emp_type', $employee_office_info->emp_type ?? '') == 'contractual' ? 'selected' : '' }}>Contractual</option>
                                     </select>
                                     @error('emp_type')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <small class="text-danger d-block mt-1">{{ $message }}</small>
                                     @enderror
                                 </div>
 
@@ -44,7 +44,7 @@
                                     <input type="text" class="form-control @error('hr_file_no') is-invalid @enderror"
                                         id="hr_file_no" name="hr_file_no" value="{{ old('hr_file_no', $employee_office_info->hr_file_no ?? '') }}">
                                     @error('hr_file_no')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <small class="text-danger d-block mt-1">{{ $message }}</small>
                                     @enderror
                                 </div>
 
@@ -53,7 +53,7 @@
                                     <input type="text" class="form-control @error('file_note') is-invalid @enderror"
                                            id="file_note" name="file_note" value="{{ old('file_note', $employee_office_info->file_note ?? '') }}">
                                     @error('file_note')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <small class="text-danger d-block mt-1">{{ $message }}</small>
                                     @enderror
                                 </div>
                             </div>
@@ -84,7 +84,7 @@
                                         @endforeach
                                     </select>
                                     @error('joining_company_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <small class="text-danger d-block mt-1">{{ $message }}</small>
                                     @enderror
                                 </div>
 
@@ -97,7 +97,7 @@
                                         <option value="">Select Branch</option>
                                     </select>
                                     @error('joining_business_unit_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <small class="text-danger d-block mt-1">{{ $message }}</small>
                                     @enderror
                                 </div>
                                 @endif
@@ -110,7 +110,7 @@
                                         <option value="">Select Division</option>
                                     </select>
                                     @error('joining_division_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <small class="text-danger d-block mt-1">{{ $message }}</small>
                                     @enderror
                                 </div>
                                 @endif
@@ -123,7 +123,7 @@
                                         <option value="">Select Department</option>
                                     </select>
                                     @error('joining_department_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <small class="text-danger d-block mt-1">{{ $message }}</small>
                                     @enderror
                                 </div>
                                 @endif
@@ -136,7 +136,7 @@
                                         <option value="">Select Section</option>
                                     </select>
                                     @error('joining_section_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <small class="text-danger d-block mt-1">{{ $message }}</small>
                                     @enderror
                                 </div>
                                 @endif
@@ -154,7 +154,7 @@
                                         @endforeach
                                     </select>
                                     @error('joining_designation_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <small class="text-danger d-block mt-1">{{ $message }}</small>
                                     @enderror
                                 </div>
 
@@ -163,7 +163,7 @@
                                     <input type="date" class="form-control @error('date_of_join') is-invalid @enderror"
                                         id="date_of_join" name="date_of_join" value="{{ old('date_of_join', $employee_office_info->date_of_join ?? '') }}">
                                     @error('date_of_join')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <small class="text-danger d-block mt-1">{{ $message }}</small>
                                     @enderror
                                 </div>
                             </div>
@@ -194,7 +194,7 @@
                                         @endforeach
                                     </select>
                                     @error('current_company_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <small class="text-danger d-block mt-1">{{ $message }}</small>
                                     @enderror
                                 </div>
 
@@ -206,7 +206,7 @@
                                         <option value="">Select Branch</option>
                                     </select>
                                     @error('current_business_unit_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <small class="text-danger d-block mt-1">{{ $message }}</small>
                                     @enderror
                                 </div>
                                 @endif
@@ -219,7 +219,7 @@
                                         <option value="">Select Division</option>
                                     </select>
                                     @error('current_division_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <small class="text-danger d-block mt-1">{{ $message }}</small>
                                     @enderror
                                 </div>
                                 @endif
@@ -232,7 +232,7 @@
                                         <option value="">Select Department</option>
                                     </select>
                                     @error('current_department_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <small class="text-danger d-block mt-1">{{ $message }}</small>
                                     @enderror
                                 </div>
                                 @endif
@@ -245,7 +245,7 @@
                                         <option value="">Select Section</option>
                                     </select>
                                     @error('current_section_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <small class="text-danger d-block mt-1">{{ $message }}</small>
                                     @enderror
                                 </div>
                                 @endif
@@ -263,7 +263,7 @@
                                         @endforeach
                                     </select>
                                     @error('current_designation_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <small class="text-danger d-block mt-1">{{ $message }}</small>
                                     @enderror
                                 </div>
                             </div>
@@ -290,7 +290,7 @@
                                         <option value="no" {{ old('orientation_required', $employee_office_info->orientation_required ?? '') == 'no' ? 'selected' : '' }}>No</option>
                                     </select>
                                     @error('orientation_required')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <small class="text-danger d-block mt-1">{{ $message }}</small>
                                     @enderror
                                 </div>
 
@@ -300,7 +300,7 @@
                                         id="orientation_from" name="orientation_from"
                                         value="{{ old('orientation_from', $employee_office_info->orientation_from ?? '') }}">
                                     @error('orientation_from')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <small class="text-danger d-block mt-1">{{ $message }}</small>
                                     @enderror
                                 </div>
 
@@ -310,7 +310,7 @@
                                         id="orientation_to" name="orientation_to" 
                                         value="{{ old('orientation_to', $employee_office_info->orientation_to ?? '') }}">
                                     @error('orientation_to')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <small class="text-danger d-block mt-1">{{ $message }}</small>
                                     @enderror
                                 </div>
 
@@ -320,7 +320,7 @@
                                         id="orientation_type" name="orientation_type"
                                         value="{{ old('orientation_type', $employee_office_info->orientation_type ?? '') }}">
                                     @error('orientation_type')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <small class="text-danger d-block mt-1">{{ $message }}</small>
                                     @enderror
                                 </div>
 
@@ -330,7 +330,7 @@
                                         id="orientation_days" name="orientation_days"
                                         value="{{ old('orientation_days', $employee_office_info->orientation_days ?? '') }}" min="0">
                                     @error('orientation_days')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <small class="text-danger d-block mt-1">{{ $message }}</small>
                                     @enderror
                                 </div>
                             </div>
@@ -354,7 +354,7 @@
                                         id="confirmation_date" name="confirmation_date"
                                         value="{{ old('confirmation_date', $employee_office_info->confirmation_date ?? '') }}">
                                     @error('confirmation_date')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <small class="text-danger d-block mt-1">{{ $message }}</small>
                                     @enderror
                                 </div>
 
@@ -364,7 +364,7 @@
                                         id="probation_duration" name="probation_duration"
                                         value="{{ old('probation_duration', $employee_office_info->probation_duration ?? '') }}">
                                     @error('probation_duration')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <small class="text-danger d-block mt-1">{{ $message }}</small>
                                     @enderror
                                 </div>
 
@@ -374,7 +374,7 @@
                                         id="next_promotion_date" name="next_promotion_date"
                                         value="{{ old('next_promotion_date', $employee_office_info->next_promotion_date ?? '') }}">
                                     @error('next_promotion_date')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <small class="text-danger d-block mt-1">{{ $message }}</small>
                                     @enderror
                                 </div>
 
@@ -384,7 +384,7 @@
                                         id="promotion_cycle" name="promotion_cycle" value="{{ old('promotion_cycle', $employee_office_info->promotion_cycle ?? '') }}"
                                         placeholder="e.g., Annual">
                                     @error('promotion_cycle')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <small class="text-danger d-block mt-1">{{ $message }}</small>
                                     @enderror
                                 </div>
 
@@ -394,7 +394,7 @@
                                         id="increment_cycle" name="increment_cycle" value="{{ old('increment_cycle', $employee_office_info->increment_cycle ?? '') }}"
                                         placeholder="e.g., Annual">
                                     @error('increment_cycle')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <small class="text-danger d-block mt-1">{{ $message }}</small>
                                     @enderror
                                 </div>
                             </div>
@@ -493,7 +493,7 @@
                                            id="pf_effective_date" name="pf_effective_date"
                                            value="{{ old('pf_effective_date', $employee_office_info->pf_effective_date ?? '') }}">
                                     @error('pf_effective_date')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <small class="text-danger d-block mt-1">{{ $message }}</small>
                                     @enderror
                                 </div>
                             </div>
