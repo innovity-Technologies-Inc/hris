@@ -134,6 +134,9 @@ class WorkflowStepRequestService
                     if ($normalizedRoute === 'travel_movement') {
                         $normalizedRoute = 'movement';
                     }
+                    if (in_array($normalizedRoute, ['resignation', 'termination'])) {
+                        $normalizedRoute = 'offboarding';
+                    }
                     $url = Route::has($normalizedRoute . '.show') 
                             ? route($normalizedRoute . '.show', $approvable->id, false) 
                             : '/' . $moduleName;

@@ -2804,7 +2804,8 @@ Status: ✅ SUCCESS
 **Exact Command**: `php artisan config:clear && vendor/bin/pest tests/Feature/OffboardingTest.php tests/Feature/ResignationTest.php`
 
 **Results**:
-- **Approval Notification Class**: Modified [ApprovalActionRequiredNotification.php](file:///P:/Project/Web/hrms/app/Notifications/Approval/ApprovalActionRequiredNotification.php) to catch `resignation` and `termination` modules and set their target route to `offboarding.show`.
+- **Approval Notification Class**: Modified [ApprovalActionRequiredNotification.php](file:///P:/Project/Web/hrms/app/Notifications/Approval/ApprovalActionRequiredNotification.php) to catch `resignation` and `termination` modules and set their target route to `offboarding.show` (for Mail channels).
+- **Workflow Step Service**: Modified `WorkflowStepRequestService.php` inside [WorkflowStepRequestService.php](file:///P:/Project/Web/hrms/app/Services/Setting/WorkflowStepRequestService.php#L134-L141) to catch `resignation` and `termination` modules and map their target relative URL to `offboarding.show` (for Database App Notification channel).
 - **Verification**: Ran Pest features tests for both modules. All 7 tests and 71 assertions passed successfully ✅
 
 **Status**: ✅ SUCCESS
