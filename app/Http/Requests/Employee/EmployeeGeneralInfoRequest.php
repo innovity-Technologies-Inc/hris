@@ -117,8 +117,14 @@ class EmployeeGeneralInfoRequest extends FormRequest
         ];
 
         $finalRules = app(EmployeeServices::class)->getProfileFieldConfigRules($rules, 'general');
-        $finalRules['applicant_id'] = 'nullable|string|unique:employees,applicant_id,' . $id;
-        $finalRules['system_id'] = 'nullable|string|unique:employees,system_id,' . $id;
+        if ($isEmployee) {
+            $finalRules['applicant_id'] = 'nullable|string';
+            $finalRules['system_id'] = 'nullable|string';
+            $finalRules['punch_card_no'] = 'nullable|string';
+        } else {
+            $finalRules['applicant_id'] = 'nullable|string|unique:employees,applicant_id,' . $id;
+            $finalRules['system_id'] = 'nullable|string|unique:employees,system_id,' . $id;
+        }
         return $finalRules;
     }
 
