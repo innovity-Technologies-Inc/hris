@@ -184,7 +184,7 @@ class DisbursementServices
 
             if (!empty($files)) {
                 foreach ($files as $file) {
-                    $path = $file->store('disbursements', 'public');
+                    $path = \App\HelperClass::file_upload($file, 'disbursements', 'public', false);
                     DisbursementAttachment::create([
                         'disbursement_id' => $disbursement->id,
                         'file_path' => $path,

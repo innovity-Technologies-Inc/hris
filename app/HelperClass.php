@@ -19,11 +19,12 @@ class HelperClass
         //
     }
 
-    public static function file_upload($file, $folder_name)
+    public static function file_upload($file, $folder_name, $disk = null, $prependUpload = true)
     {
-        $disk = config('filesystems.default');
+        $disk = $disk ?: config('filesystems.default');
         $file_name = time() . Str::random(10) . '.' . $file->getClientOriginalExtension();
-        $file_path = $file->storeAs('upload/' . $folder_name, $file_name, [
+        $target_folder = $prependUpload ? 'upload/' . $folder_name : $folder_name;
+        $file_path = $file->storeAs($target_folder, $file_name, [
             'disk' => $disk,
             'visibility' => 'public'
         ]);

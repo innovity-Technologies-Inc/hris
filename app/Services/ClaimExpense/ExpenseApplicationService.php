@@ -12,7 +12,7 @@ class ExpenseApplicationService
     {
         try {
             if ($receiptFile) {
-                $path = $receiptFile->store('receipts', 'public');
+                $path = \App\HelperClass::file_upload($receiptFile, 'receipts', 'public', false);
                 $data['receipt_path'] = '/storage/' . $path;
             }
 
