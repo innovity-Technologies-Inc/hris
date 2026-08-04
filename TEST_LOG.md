@@ -2796,3 +2796,15 @@ Status: ✅ SUCCESS
 - **Verification**: Ran feature test suites. All 12 tests passed successfully ✅
 
 **Status**: ✅ SUCCESS
+
+## 2026-08-04 (Resignation & Termination Notification Route Fix)
+
+**Goal**: Fix the wrong route in resignation and termination approval notifications by mapping them to the correct `offboarding.show` route.
+
+**Exact Command**: `php artisan config:clear && vendor/bin/pest tests/Feature/OffboardingTest.php tests/Feature/ResignationTest.php`
+
+**Results**:
+- **Approval Notification Class**: Modified [ApprovalActionRequiredNotification.php](file:///P:/Project/Web/hrms/app/Notifications/Approval/ApprovalActionRequiredNotification.php) to catch `resignation` and `termination` modules and set their target route to `offboarding.show`.
+- **Verification**: Ran Pest features tests for both modules. All 7 tests and 71 assertions passed successfully ✅
+
+**Status**: ✅ SUCCESS

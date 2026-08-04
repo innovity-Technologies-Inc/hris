@@ -48,6 +48,9 @@ class ApprovalActionRequiredNotification extends Notification
             if ($normalizedRoute === 'travel_movement') {
                 $normalizedRoute = 'movement';
             }
+            if (in_array($normalizedRoute, ['resignation', 'termination'])) {
+                $normalizedRoute = 'offboarding';
+            }
             $url = \Illuminate\Support\Facades\Route::has($normalizedRoute . '.show') && $approvable
                     ? route($normalizedRoute . '.show', $approvable->id) 
                     : url('/' . $moduleName);
@@ -81,6 +84,9 @@ class ApprovalActionRequiredNotification extends Notification
             }
             if ($normalizedRoute === 'travel_movement') {
                 $normalizedRoute = 'movement';
+            }
+            if (in_array($normalizedRoute, ['resignation', 'termination'])) {
+                $normalizedRoute = 'offboarding';
             }
             $url = \Illuminate\Support\Facades\Route::has($normalizedRoute . '.show') && $approvable
                     ? route($normalizedRoute . '.show', $approvable->id, false) 
