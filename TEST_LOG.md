@@ -2854,3 +2854,16 @@ Status: ✅ SUCCESS
 - **Verification**: Ran Pest feature tests. All 19 tests and 134 assertions passed successfully ✅
 
 **Status**: ✅ SUCCESS
+
+## 2026-08-04 (File Upload Path Uniformity Refactoring)
+
+**Goal**: Keep file upload paths fully uniform by always prepending the `upload/` prefix to target folders in the `file_upload` helper method.
+
+**Exact Command**: `php artisan config:clear && vendor/bin/pest tests/Feature/OffboardingTest.php tests/Feature/ResignationTest.php tests/Feature/EmployeeOfficeInfoTest.php tests/Feature/LeavePlanTest.php`
+
+**Results**:
+- **Helper Class**: Reverted [HelperClass.php](file:///P:/Project/Web/hrms/app/HelperClass.php#L22-L32) signature back to `file_upload($file, $folder_name)` and modified it to always store uploaded assets under `upload/` prefixed folders.
+- **Service Modules**: Cleaned up the 5 refactored service files ([AnnouncementServices.php](file:///P:/Project/Web/hrms/app/Services/Announcement/AnnouncementServices.php), [ExpenseApplicationService.php](file:///P:/Project/Web/hrms/app/Services/ClaimExpense/ExpenseApplicationService.php), [DisbursementServices.php](file:///P:/Project/Web/hrms/app/Services/Payroll/DisbursementServices.php), [PayrollServices.php](file:///P:/Project/Web/hrms/app/Services/Payroll/PayrollServices.php), and [TransferServices.php](file:///P:/Project/Web/hrms/app/Services/Transfer/TransferServices.php)) to call `file_upload` using the standard two-parameter format.
+- **Verification**: Ran Pest features tests. All 19 tests and 134 assertions passed successfully ✅
+
+**Status**: ✅ SUCCESS
