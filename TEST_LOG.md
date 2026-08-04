@@ -2850,7 +2850,7 @@ Status: ✅ SUCCESS
 **Exact Command**: `php artisan config:clear && vendor/bin/pest tests/Feature/OffboardingTest.php tests/Feature/ResignationTest.php tests/Feature/EmployeeOfficeInfoTest.php tests/Feature/LeavePlanTest.php`
 
 **Results**:
-- **Helper Class**: Modified [HelperClass.php](file:///P:/Project/Web/hrms/app/HelperClass.php#L309-L316) to remove the proxy route redirection for `minio` and `s3` disks, returning the direct Storage URL/path (`Storage::disk($disk)->url($file_path)`).
+- **Helper Class**: Modified [HelperClass.php](file:///P:/Project/Web/hrms/app/HelperClass.php#L309-L325) to preserve the proxy route logic inside a commented-out block for reference/documentation, returning the direct Storage URL/path (`Storage::disk($disk)->url($file_path)`).
 - **Verification**: Ran Pest feature tests. All 19 tests and 134 assertions passed successfully ✅
 
 **Status**: ✅ SUCCESS
