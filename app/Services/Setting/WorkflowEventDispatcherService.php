@@ -31,6 +31,8 @@ class WorkflowEventDispatcherService
         'advance-salary'           => \App\Listeners\Workflow\PayrollWorkflowListener::class,
         'arrear'                   => \App\Listeners\Workflow\PayrollWorkflowListener::class,
         'travel-movement'          => \App\Listeners\Workflow\TravelMovementWorkflowListener::class,
+        'resignation'              => \App\Listeners\Workflow\ResignationTerminationWorkflowListener::class,
+        'termination'              => \App\Listeners\Workflow\ResignationTerminationWorkflowListener::class,
     ];
 
     /**
