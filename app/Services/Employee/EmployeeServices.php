@@ -84,9 +84,8 @@ class EmployeeServices
         $isEmployee = auth()->user()->user_type === UserType::Employee;
 
         $rules = [
-            // System Identifiers
-            'applicant_id' => $isEmployee ? 'nullable|string' : 'required|string|unique:employees,applicant_id,' . $id,
-            'system_id' => $isEmployee ? 'nullable|string' : 'required|string|unique:employees,system_id,' . $id,
+            'applicant_id' => 'nullable|string|unique:employees,applicant_id,' . $id,
+            'system_id' => 'nullable|string|unique:employees,system_id,' . $id,
             'punch_card_no' => $isEmployee ? 'nullable|string' : 'required|string|unique:employees,punch_card_no,' . $id,
 
             // Personal Information
@@ -288,32 +287,33 @@ class EmployeeServices
             $experience_attachment = $request->file('experience_attachment_path');
             $validated = $this->employeeAttachmentValidation($validated, $request, $experience_attachment, 'experience_attachment_path');
         }
-        if (empty($id)) {
-            if (empty($validated['applicant_id'])) {
-                $latest = Employee::where('applicant_id', 'LIKE', 'APP%')
-                    ->select('applicant_id')
-                    ->orderByRaw('CAST(SUBSTRING(applicant_id, 4) AS UNSIGNED) DESC')
-                    ->first();
-                $num = $latest ? intval(substr($latest->applicant_id, 3)) + 1 : 1;
-                do {
-                    $applicantId = 'APP' . str_pad($num, 6, '0', STR_PAD_LEFT);
-                    $num++;
-                } while (Employee::where('applicant_id', $applicantId)->exists());
-                $validated['applicant_id'] = $applicantId;
-            }
+        if (empty($validated['applicant_id'])) {
+            $latest = Employee::where('applicant_id', 'LIKE', 'APP%')
+                ->select('applicant_id')
+                ->orderByRaw('CAST(SUBSTRING(applicant_id, 4) AS UNSIGNED) DESC')
+                ->first();
+            $num = $latest ? intval(substr($latest->applicant_id, 3)) + 1 : 1;
+            do {
+                $applicantId = 'APP' . str_pad($num, 6, '0', STR_PAD_LEFT);
+                $num++;
+            } while (Employee::where('applicant_id', $applicantId)->exists());
+            $validated['applicant_id'] = $applicantId;
+        }
 
-            if (empty($validated['system_id'])) {
-                $latest = Employee::where('system_id', 'LIKE', 'SYS%')
-                    ->select('system_id')
-                    ->orderByRaw('CAST(SUBSTRING(system_id, 4) AS UNSIGNED) DESC')
-                    ->first();
-                $num = $latest ? intval(substr($latest->system_id, 3)) + 1 : 1;
-                do {
-                    $systemId = 'SYS' . str_pad($num, 6, '0', STR_PAD_LEFT);
-                    $num++;
-                } while (Employee::where('system_id', $systemId)->exists());
-                $validated['system_id'] = $systemId;
-            }
+        if (empty($validated['system_id'])) {
+            $latest = Employee::where('system_id', 'LIKE', 'SYS%')
+                ->select('system_id')
+                ->orderByRaw('CAST(SUBSTRING(system_id, 4) AS UNSIGNED) DESC')
+                ->first();
+            $num = $latest ? intval(substr($latest->system_id, 3)) + 1 : 1;
+            do {
+                $systemId = 'SYS' . str_pad($num, 6, '0', STR_PAD_LEFT);
+                $num++;
+            } while (Employee::where('system_id', $systemId)->exists());
+            $validated['system_id'] = $systemId;
+        }
+
+        if (empty($id)) {
 
             $employee_data = Employee::create($validated);
             $employee_data->general_info_status = (auth()->user()->user_type === UserType::Employee) ? 'pending' : 'active';

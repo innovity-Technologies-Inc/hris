@@ -116,7 +116,10 @@ class EmployeeGeneralInfoRequest extends FormRequest
             'experience_attachment_path' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
         ];
 
-        return app(EmployeeServices::class)->getProfileFieldConfigRules($rules, 'general');
+        $finalRules = app(EmployeeServices::class)->getProfileFieldConfigRules($rules, 'general');
+        $finalRules['applicant_id'] = 'nullable|string|unique:employees,applicant_id,' . $id;
+        $finalRules['system_id'] = 'nullable|string|unique:employees,system_id,' . $id;
+        return $finalRules;
     }
 
     /**
