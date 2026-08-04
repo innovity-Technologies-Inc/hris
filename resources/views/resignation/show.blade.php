@@ -127,7 +127,7 @@
                             <div class="card-body">
                                 @foreach($resignation->approvalRequests as $approvalRequest)
                                     <div class="mb-3">
-                                        <div class="fw-bold text-dark mb-2">Workflow Request #{{ $approvalRequest->id }} - Status: <span class="badge bg-secondary">{{ ucfirst($approvalRequest->status) }}</span></div>
+                                        <div class="fw-bold text-dark mb-2">Workflow Request #{{ $approvalRequest->id }} - Status: <span class="badge bg-secondary">{{ ucfirst($approvalRequest->status instanceof \BackedEnum ? $approvalRequest->status->value : $approvalRequest->status) }}</span></div>
                                         <div class="table-responsive">
                                             <table class="table table-bordered table-sm align-middle">
                                                 <thead class="table-light">
