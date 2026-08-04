@@ -136,16 +136,13 @@ class IDCardService
             'design_file_path' => $design->file_path
         ]);
 
-        if (!Storage::disk('public')->exists($design->file_path)) {
+        $disk = config('filesystems.default');
+        if (!Storage::disk($disk)->exists($design->file_path)) {
             Log::error('[PDF] Design template file not found', [
-                'file_path' => $design->file_path,
-                'full_path' => Storage::disk('public')->path($design->file_path)
+                'file_path' => $design->file_path
             ]);
             throw new Exception('Design template file not found');
         }
-
-        $fullPath = Storage::disk('public')->path($design->file_path);
-        Log::info('[PDF] Design template file found', ['fullPath' => $fullPath]);
 
         // Create a temporary view file
         $tempViewName = 'id_card_' . uniqid();
@@ -158,8 +155,9 @@ class IDCardService
             mkdir($tempDir, 0755, true);
         }
 
-        // Copy the uploaded design file to temp views folder
-        copy($fullPath, $tempPath);
+        // Retrieve template content from configured disk and save to temp view path
+        $templateContent = Storage::disk($disk)->get($design->file_path);
+        file_put_contents($tempPath, $templateContent);
 
         try {
             // Prepare data for the template
@@ -342,9 +340,10 @@ class IDCardService
         );
 
         $filePath = 'employee_id_cards/' . $fileName;
+        $disk = config('filesystems.default');
 
         // Ensure directory exists and save file
-        Storage::disk('public')->put($filePath, $pdfContent);
+        Storage::disk($disk)->put($filePath, $pdfContent);
 
         return $filePath;
     }
@@ -373,9 +372,10 @@ class IDCardService
                 ->where('status', 'inactive')
                 ->get();
 
+            $disk = config('filesystems.default');
             foreach ($oldInactiveCards as $oldCard) {
-                if ($oldCard->pdf_path && Storage::disk('public')->exists($oldCard->pdf_path)) {
-                    Storage::disk('public')->delete($oldCard->pdf_path);
+                if ($oldCard->pdf_path && Storage::disk($disk)->exists($oldCard->pdf_path)) {
+                    Storage::disk($disk)->delete($oldCard->pdf_path);
                 }
                 $oldCard->delete();
             }
@@ -416,8 +416,9 @@ class IDCardService
             DB::rollBack();
 
             // Clean up PDF file if it was created
-            if (isset($pdfPath) && Storage::disk('public')->exists($pdfPath)) {
-                Storage::disk('public')->delete($pdfPath);
+            $disk = config('filesystems.default');
+            if (isset($pdfPath) && Storage::disk($disk)->exists($pdfPath)) {
+                Storage::disk($disk)->delete($pdfPath);
             }
 
             Log::error('ID Card generation failed', [
@@ -457,10 +458,11 @@ class IDCardService
     {
         // Delete old PDF files for this employee
         $oldCards = EmployeeId::where('employee_id', $employee->id)->get();
+        $disk = config('filesystems.default');
 
         foreach ($oldCards as $oldCard) {
-            if ($oldCard->pdf_path && Storage::disk('public')->exists($oldCard->pdf_path)) {
-                Storage::disk('public')->delete($oldCard->pdf_path);
+            if ($oldCard->pdf_path && Storage::disk($disk)->exists($oldCard->pdf_path)) {
+                Storage::disk($disk)->delete($oldCard->pdf_path);
             }
         }
 
@@ -507,9 +509,10 @@ class IDCardService
                 ->where('status', 'inactive')
                 ->get();
 
+            $disk = config('filesystems.default');
             foreach ($oldInactiveCards as $oldCard) {
-                if ($oldCard->pdf_path && Storage::disk('public')->exists($oldCard->pdf_path)) {
-                    Storage::disk('public')->delete($oldCard->pdf_path);
+                if ($oldCard->pdf_path && Storage::disk($disk)->exists($oldCard->pdf_path)) {
+                    Storage::disk($disk)->delete($oldCard->pdf_path);
                 }
                 $oldCard->delete();
             }
@@ -554,7 +557,8 @@ class IDCardService
             return null;
         }
 
-        return Storage::disk('public')->response(
+        $disk = config('filesystems.default');
+        return Storage::disk($disk)->response(
             $employeeId->pdf_path,
             basename($employeeId->pdf_path),
             ['Content-Type' => 'application/pdf']
@@ -573,7 +577,8 @@ class IDCardService
             return null;
         }
 
-        return Storage::disk('public')->download(
+        $disk = config('filesystems.default');
+        return Storage::disk($disk)->download(
             $employeeId->pdf_path,
             'ID_Card_' . ($employeeId->card_number ?? $employeeId->id) . '.pdf'
         );

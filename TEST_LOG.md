@@ -2828,3 +2828,17 @@ Status: ✅ SUCCESS
 - **Verification**: Ran Pest features tests for multiple modules. All 19 tests and 134 assertions passed successfully ✅
 
 **Status**: ✅ SUCCESS
+
+## 2026-08-04 (ID Card Storage Driver Independence Refactoring)
+
+**Goal**: Refactor the ID Card generation, template rendering, and file downloading to use the dynamic default config disk (`config('filesystems.default')`) and decouple local absolute path dependencies (`path()`, `copy()`) to make it fully compatible with Minio/S3 storage.
+
+**Exact Command**: `php artisan config:clear && vendor/bin/pest tests/Feature/OffboardingTest.php tests/Feature/ResignationTest.php tests/Feature/EmployeeOfficeInfoTest.php tests/Feature/LeavePlanTest.php`
+
+**Results**:
+- **EmployeeId Model**: Updated [EmployeeId.php](file:///P:/Project/Web/hrms/app/Models/Employee/EmployeeId.php#L68-L82) to perform existence checks and path resolutions against the default config disk.
+- **ID Card Service**: Updated [IDCardService.php](file:///P:/Project/Web/hrms/app/Services/Setting/IDCardService.php#L136-L160) to fetch ID Card design template HTML file content dynamically using the standard `Storage::get` method rather than using local filesystem paths. Refactored card PDF generation (`generateAndSavePdf`, `regenerateIdCard`, `deactivateIdCard`, `streamPdf`, `downloadPdf`) to read and write to the dynamic default filesystem disk.
+- **ID Card Design Controller**: Modified [IDCardDesignController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/Setting/IDCardDesignController.php#L370-L375) to render card previews via the `Storage::get` API. Updated download method to return file downloads dynamically via `Storage::download`. Updated delete logic to check and delete from the config default disk.
+- **Verification**: Ran Pest features tests. All 19 tests and 134 assertions passed successfully ✅
+
+**Status**: ✅ SUCCESS

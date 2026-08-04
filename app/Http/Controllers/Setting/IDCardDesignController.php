@@ -257,7 +257,8 @@ class IDCardDesignController extends Controller
             }
 
             // Check if file exists before activating
-            if (!Storage::disk('public')->exists($design->file_path)) {
+            $disk = config('filesystems.default');
+            if (!Storage::disk($disk)->exists($design->file_path)) {
                 return redirect()->back()
                                ->with('message', 'Cannot activate: Design file not found')
                                ->with('alert-type', 'error');
@@ -317,7 +318,8 @@ class IDCardDesignController extends Controller
         $design = IDCardDesign::findOrFail($id);
 
         // Check if file exists in storage
-        if (!Storage::disk('public')->exists($design->file_path)) {
+        $disk = config('filesystems.default');
+        if (!Storage::disk($disk)->exists($design->file_path)) {
             abort(404, 'Design template file not found');
         }
 
@@ -370,9 +372,10 @@ class IDCardDesignController extends Controller
             mkdir($tempDir, 0755, true);
         }
 
-        // Copy template file from storage to temp views folder
-        $fullPath = Storage::disk('public')->path($design->file_path);
-        copy($fullPath, $tempPath);
+        // Retrieve template content from storage and write to temp view path
+        $disk = config('filesystems.default');
+        $templateContent = Storage::disk($disk)->get($design->file_path);
+        file_put_contents($tempPath, $templateContent);
 
         try {
             // Render the Blade template view to HTML string
@@ -412,7 +415,8 @@ class IDCardDesignController extends Controller
             }
 
             // Delete design file using HelperClass
-            if (Storage::disk('public')->exists($design->file_path)) {
+            $disk = config('filesystems.default');
+            if (Storage::disk($disk)->exists($design->file_path)) {
                 HelperClass::file_delete($design->file_path);
             }
 
@@ -452,12 +456,13 @@ class IDCardDesignController extends Controller
     {
         $design = IDCardDesign::findOrFail($id);
 
-        if (!Storage::disk('public')->exists($design->file_path)) {
+        $disk = config('filesystems.default');
+        if (!Storage::disk($disk)->exists($design->file_path)) {
             abort(404, 'Design file not found');
         }
 
-        return response()->download(
-            Storage::disk('public')->path($design->file_path),
+        return Storage::disk($disk)->download(
+            $design->file_path,
             basename($design->file_path)
         );
     }

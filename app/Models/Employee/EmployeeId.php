@@ -68,7 +68,8 @@ class EmployeeId extends Model
      */
     public function pdfExists(): bool
     {
-        return $this->pdf_path && Storage::disk('public')->exists($this->pdf_path);
+        $disk = config('filesystems.default');
+        return $this->pdf_path && Storage::disk($disk)->exists($this->pdf_path);
     }
 
     /**
@@ -76,8 +77,9 @@ class EmployeeId extends Model
      */
     public function getFullPdfPath(): ?string
     {
+        $disk = config('filesystems.default');
         if ($this->pdfExists()) {
-            return Storage::disk('public')->path($this->pdf_path);
+            return Storage::disk($disk)->path($this->pdf_path);
         }
         return null;
     }
