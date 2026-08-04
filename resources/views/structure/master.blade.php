@@ -629,6 +629,9 @@
 
             const field = config.field_name;
             const isRequired = config.is_required;
+
+            // applicant_id and system_id are always auto-generated — never enforce required on frontend
+            if (field === 'applicant_id' || field === 'system_id') return;
             
             const querySelector = `[name="${field}"], [name="${field}[]"], [name^="${field}["]`;
             const inputs = document.querySelectorAll(querySelector);
