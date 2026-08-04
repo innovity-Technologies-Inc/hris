@@ -2819,7 +2819,9 @@ Status: ✅ SUCCESS
 **Results**:
 - **Helper Class Extension**: Updated [HelperClass.php](file:///P:/Project/Web/hrms/app/HelperClass.php#L22-L32) to accept a boolean `$prependUpload` parameter to bypass the default `'upload/'` prefix when needed, resolving the disk directly from the system config (`config('filesystems.default')`).
 - **Announcement Uploads**: Modified [AnnouncementServices.php](file:///P:/Project/Web/hrms/app/Services/Announcement/AnnouncementServices.php#L39) to store files using `HelperClass::file_upload` in the `announcements` folder.
+- **Announcement Deletions**: Refactored file deletions in [AnnouncementServices.php](file:///P:/Project/Web/hrms/app/Services/Announcement/AnnouncementServices.php#L59) to use `HelperClass::file_delete`.
 - **Expense Receipts**: Modified [ExpenseApplicationService.php](file:///P:/Project/Web/hrms/app/Services/ClaimExpense/ExpenseApplicationService.php#L15) to store files in the `receipts` folder.
+- **Expense Deletions**: Refactored file deletions in [ExpenseApplicationService.php](file:///P:/Project/Web/hrms/app/Services/ClaimExpense/ExpenseApplicationService.php#L46) to use `HelperClass::file_delete`.
 - **Payroll Disbursements**: Modified [DisbursementServices.php](file:///P:/Project/Web/hrms/app/Services/Payroll/DisbursementServices.php#L187) to store files in the `disbursements` folder.
 - **Payroll Attachments**: Modified [PayrollServices.php](file:///P:/Project/Web/hrms/app/Services/Payroll/PayrollServices.php#L304) to store files in dynamic folders.
 - **Transfer Attachments**: Modified [TransferServices.php](file:///P:/Project/Web/hrms/app/Services/Transfer/TransferServices.php#L164) to store files in the `transfers` folder.

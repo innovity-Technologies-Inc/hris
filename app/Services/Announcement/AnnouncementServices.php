@@ -56,7 +56,7 @@ class AnnouncementServices
             if ($file) {
                 // Delete old file if exists
                 if ($announcement->attachment_path) {
-                    Storage::disk('public')->delete($announcement->attachment_path);
+                    \App\HelperClass::file_delete($announcement->attachment_path);
                 }
                 $path = \App\HelperClass::file_upload($file, 'announcements', false);
                 $data['attachment_path'] = $path;
@@ -77,7 +77,7 @@ class AnnouncementServices
     {
         try {
             if ($announcement->attachment_path) {
-                Storage::disk('public')->delete($announcement->attachment_path);
+                \App\HelperClass::file_delete($announcement->attachment_path);
             }
             return $announcement->delete();
         } catch (Exception $e) {

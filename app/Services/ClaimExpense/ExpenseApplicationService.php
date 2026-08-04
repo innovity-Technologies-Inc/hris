@@ -43,7 +43,7 @@ class ExpenseApplicationService
 
         if ($application->receipt_path) {
             $relativePath = str_replace('/storage/', '', $application->receipt_path);
-            Storage::disk('public')->delete($relativePath);
+            \App\HelperClass::file_delete($relativePath);
         }
 
         $application->delete();
