@@ -2778,6 +2778,7 @@ Status: ✅ SUCCESS
 - **Table Headers**: Reverted table date headers in [search_results.blade.php](file:///P:/Project/Web/hrms/resources/views/offboarding/search_results.blade.php) to "Resignation/Notice Date".
 - **Delete Warning Text**: Updated [index.blade.php](file:///P:/Project/Web/hrms/resources/views/offboarding/index.blade.php) to use "This offboarding record will be deleted!" for both types.
 - **Controller Response Messages**: Restored static "Offboarding record created/updated/deleted successfully" response strings in [OffboardingController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/Offboarding/OffboardingController.php).
+- **CRUD Permission Authorization**: Implemented controller-level checks inside `store`, `show`, `edit`, `update`, and `destroy` methods of [OffboardingController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/Offboarding/OffboardingController.php) to enforce separate permissions (`resignations.create/view/edit/delete` and `terminations.create/view/edit/delete`) based on the record type.
 - **Verification**: Ran Pest features tests for both modules. All 7 tests and 71 assertions passed successfully ✅
 
 **Status**: ✅ SUCCESS

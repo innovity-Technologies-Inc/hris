@@ -105,8 +105,13 @@ class OffboardingController extends Controller
     public function store(StoreOffboardingRequest $request): JsonResponse
     {
         try {
+            $type = $request->input('offboarding_type');
+            $permission = $type === 'termination' ? 'terminations.create' : 'resignations.create';
+            if (!auth()->user()->can($permission)) {
+                return $this->errorResponse('Unauthorized action.', 403);
+            }
+
             $offboarding = $this->offboardingService->storeOffboarding($request->validated(), auth()->user());
-            $type = $offboarding->offboarding_type;
 
             return $this->createdResponse('Offboarding record created successfully.', [
                 'redirect' => route("offboarding.{$type}.index"),
@@ -125,6 +130,11 @@ class OffboardingController extends Controller
     {
         $offboarding = $this->offboardingService->getOffboardingById((int) $id);
         $type = $offboarding->offboarding_type;
+        $permission = $type === 'termination' ? 'terminations.view' : 'resignations.view';
+        if (!auth()->user()->can($permission)) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $typeName = ucfirst($type);
 
         $title = "Offboarding Details - {$typeName}";
@@ -142,6 +152,11 @@ class OffboardingController extends Controller
     {
         $offboarding = $this->offboardingService->getOffboardingById((int) $id);
         $type = $offboarding->offboarding_type;
+        $permission = $type === 'termination' ? 'terminations.edit' : 'resignations.edit';
+        if (!auth()->user()->can($permission)) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $typeName = ucfirst($type);
 
         $title = "Edit Offboarding - {$typeName}";
@@ -160,8 +175,14 @@ class OffboardingController extends Controller
     public function update(UpdateOffboardingRequest $request, $id): JsonResponse
     {
         try {
-            $offboarding = $this->offboardingService->updateOffboarding((int) $id, $request->validated(), auth()->user());
+            $offboarding = $this->offboardingService->getOffboardingById((int) $id);
             $type = $offboarding->offboarding_type;
+            $permission = $type === 'termination' ? 'terminations.edit' : 'resignations.edit';
+            if (!auth()->user()->can($permission)) {
+                return $this->errorResponse('Unauthorized action.', 403);
+            }
+
+            $offboarding = $this->offboardingService->updateOffboarding((int) $id, $request->validated(), auth()->user());
 
             return $this->successResponse('Offboarding record updated successfully.', [
                 'redirect' => route("offboarding.{$type}.index"),
@@ -179,6 +200,13 @@ class OffboardingController extends Controller
     public function destroy($id): JsonResponse
     {
         try {
+            $offboarding = $this->offboardingService->getOffboardingById((int) $id);
+            $type = $offboarding->offboarding_type;
+            $permission = $type === 'termination' ? 'terminations.delete' : 'resignations.delete';
+            if (!auth()->user()->can($permission)) {
+                return $this->errorResponse('Unauthorized action.', 403);
+            }
+
             $this->offboardingService->deleteOffboarding((int) $id, auth()->user());
 
             return $this->deletedResponse('Offboarding record deleted successfully.');
