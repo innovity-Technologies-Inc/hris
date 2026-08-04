@@ -47,9 +47,9 @@
                                     </div>
 
                                     <div class="col-lg-4 mb-2">
-                                        <label for="simpleinput" class="form-label">Select Bank<span
+                                        <label for="bank_id" class="form-label">Select Bank<span
                                                 class="text-danger">*</span></label>
-                                        <select class="form-select select2_list" name="bank_id">
+                                        <select id="bank_id" class="form-select select2_list" name="bank_id">
                                             <option value="">Choose Bank</option>
                                             @foreach($banks as $item)
                                                 <option value="{{$item->id}}"
@@ -64,16 +64,10 @@
                                     </div>
 
                                     <div class="col-lg-4 mb-2">
-                                        <label for="simpleinput" class="form-label">Select Branch<span
+                                        <label for="branch_id" class="form-label">Select Branch<span
                                                 class="text-danger">*</span></label>
-                                        <select class="form-select select2_list" name="branch_id">
+                                        <select id="branch_id" class="form-select select2_list" name="branch_id">
                                             <option value="">Choose Branch</option>
-                                            @foreach($branches as $item)
-                                                <option value="{{$item->id}}"
-                                                        @if(isset($bank_account) && $bank_account->bank_id == $item->id) selected @endif>
-                                                    {{$item->name}} - {{$item->routing_no}}
-                                                </option>
-                                            @endforeach
                                         </select>
                                         @error('branch_id')
                                         <small class="text-danger">{{$message}}</small>
@@ -147,4 +141,41 @@
     </div>
 
 @endsection
+
+@push('scripts')
+    <script src="{{asset('assets/libs/jquery/jquery.min.js')}}"></script>
+    <script>
+        $(function() {
+            function loadBranches(bankId, selectedBranch = null) {
+                if (bankId) {
+                    $.get('/get-branches/' + bankId, function(data) {
+                        let $branchSelect = $('#branch_id');
+                        $branchSelect.html('<option value="">Choose Branch</option>');
+                        $.each(data, function(key, value) {
+                            let selected = (selectedBranch == value.id) ? 'selected' : '';
+                            let label = value.name + (value.routing_no ? ' - ' + value.routing_no : '');
+                            $branchSelect.append('<option value="'+ value.id +'" '+selected+'>'+ label +'</option>');
+                        });
+                        $branchSelect.trigger('change');
+                    });
+                } else {
+                    $('#branch_id').html('<option value="">Choose Branch</option>').trigger('change');
+                }
+            }
+
+            // --- Change Event ---
+            $('#bank_id').on('change', function() {
+                loadBranches($(this).val());
+            });
+
+            // --- Auto-load existing values ---
+            let bankId = "{{ old('bank_id', $bank_account->bank_id ?? '') }}";
+            let branchId  = "{{ old('branch_id', $bank_account->branch_id ?? '') }}";
+
+            if (bankId) {
+                loadBranches(bankId, branchId);
+            }
+        });
+    </script>
+@endpush
 
