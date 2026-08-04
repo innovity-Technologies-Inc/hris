@@ -118,54 +118,7 @@
                     </div>
 
                     {{-- Approval Workflow History --}}
-                    @if($resignation->approvalRequests && $resignation->approvalRequests->isNotEmpty())
-                    <div class="col-md-12">
-                        <div class="card border rounded-3">
-                            <div class="card-header bg-light">
-                                <h6 class="mb-0 fw-semibold text-primary"><i class="mdi mdi-timeline-text-outline me-2"></i>Approval Workflow History</h6>
-                            </div>
-                            <div class="card-body">
-                                @foreach($resignation->approvalRequests as $approvalRequest)
-                                    <div class="mb-3">
-                                        <div class="fw-bold text-dark mb-2">Workflow Request #{{ $approvalRequest->id }} - Status: <span class="badge bg-secondary">{{ ucfirst($approvalRequest->status instanceof \BackedEnum ? $approvalRequest->status->value : $approvalRequest->status) }}</span></div>
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered table-sm align-middle">
-                                                <thead class="table-light">
-                                                    <tr>
-                                                        <th>Step</th>
-                                                        <th>Approver</th>
-                                                        <th>Status</th>
-                                                        <th>Action Date</th>
-                                                        <th>Comments</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach($approvalRequest->stepRequests as $step)
-                                                        <tr>
-                                                            <td>Step {{ $step->step_order ?? '-' }}</td>
-                                                            <td>{{ $step->approver?->name ?? 'Pending Assigned Approver' }}</td>
-                                                            <td>
-                                                                @if($step->status == 'approved')
-                                                                    <span class="badge bg-success">Approved</span>
-                                                                @elseif($step->status == 'rejected')
-                                                                    <span class="badge bg-danger">Rejected</span>
-                                                                @else
-                                                                    <span class="badge bg-warning text-dark">Pending</span>
-                                                                @endif
-                                                            </td>
-                                                            <td>{{ $step->action_at ? \Carbon\Carbon::parse($step->action_at)->format('M d, Y h:i A') : '-' }}</td>
-                                                            <td>{{ $step->comments ?? '-' }}</td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                    @endif
+                    @include('approval_engine.workflow_history', ['approvable' => $resignation])
                 </div>
             </div>
         </div>
