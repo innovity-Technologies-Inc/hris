@@ -85,15 +85,42 @@
         }
     </style>
 </head>
+@php
+    $logoPath = null;
+    if (isset($generalSettings->logo)) {
+        $path = $generalSettings->logo;
+        if (str_starts_with($path, 'assets/') || str_starts_with($path, 'images/')) {
+            $logoPath = public_path($path);
+        } else {
+            $logoPath = storage_path('app/public/' . $path);
+        }
+        if (!file_exists($logoPath)) {
+            $logoPath = null;
+        }
+    }
+
+    $faviconPath = null;
+    if (!$logoPath && isset($generalSettings->favicon)) {
+        $path = $generalSettings->favicon;
+        if (str_starts_with($path, 'assets/') || str_starts_with($path, 'images/')) {
+            $faviconPath = public_path($path);
+        } else {
+            $faviconPath = storage_path('app/public/' . $path);
+        }
+        if (!file_exists($faviconPath)) {
+            $faviconPath = null;
+        }
+    }
+@endphp
 <body>
     <div class="wrapper">
         <table class="main" align="center">
             <tr>
                 <td class="header">
-                    @if(isset($generalSettings->logo))
-                        <img src="{{ \App\HelperClass::get_file_url($generalSettings->logo) }}" alt="{{ $appName }}" class="logo">
-                    @elseif(isset($generalSettings->favicon))
-                        <img src="{{ \App\HelperClass::get_file_url($generalSettings->favicon) }}" alt="{{ $appName }}" class="logo" style="max-width: 60px;">
+                    @if($logoPath)
+                        <img src="{{ $message->embed($logoPath) }}" alt="{{ $appName }}" class="logo">
+                    @elseif($faviconPath)
+                        <img src="{{ $message->embed($faviconPath) }}" alt="{{ $appName }}" class="logo" style="max-width: 60px;">
                     @else
                         <div class="brand-name">{{ $appName }}</div>
                     @endif
