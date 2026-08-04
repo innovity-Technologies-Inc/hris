@@ -102,5 +102,35 @@ class EmployeeOfficeInfo extends Model
     public function getGrade(){
         return $this->belongsTo(SalaryGrade::class, 'grade_id', 'id');
     }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'current_company_id', 'id');
+    }
+
+    public function designation()
+    {
+        return $this->belongsTo(Designation::class, 'current_designation_id', 'id');
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(CompanyLocation::class, 'current_business_unit_id', 'id');
+    }
+
+    public function division()
+    {
+        return $this->belongsTo(Division::class, 'current_division_id', 'id');
+    }
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class, 'current_department_id', 'id');
+    }
+
+    public function section()
+    {
+        return $this->belongsTo(Section::class, 'current_section_id', 'id');
+    }
 }
 
