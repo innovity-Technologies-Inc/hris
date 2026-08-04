@@ -307,21 +307,10 @@ class EmployeeProfileController extends Controller
             ]);
         }
 
-        $employeeEligiblePlan = EmployeeEligiblePlan::where('employee_id', $employee->employee_id)->first();
-
-        if(empty($employeeEligiblePlan)){
-            return redirect()->route('employee.eligible_plans.create', $employee->employee_id)->with([
-                'message' => 'Office Info Added Successfully',
-                'alert-type' => 'success'
-            ]);
-        }
-        else{
-            return redirect()->route('employee.profile.office_informations', $employee->employee_id)->with([
-                    'message' => 'Office Info Added Successfully',
-                    'alert-type' => 'success'
-                ]
-            );
-        }
+        return redirect()->route('employee.profile.office_informations', $employee->employee_id)->with([
+            'message' => 'Office Info Added Successfully',
+            'alert-type' => 'success'
+        ]);
 
     }
 

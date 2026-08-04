@@ -74,19 +74,10 @@ class EmployeeSalaryBreakdownController extends Controller
             ]);
         }
 
-        $employeeBankDetails = EmployeeBankAccount::where('employee_id', $employee->employee_id)->first();
-        if(empty($employeeBankDetails)){
-            return redirect()->route('employee.bank_accounts.create', $employee->employee_id)->with([
-                'message' => 'Employee Salary Breakdown added successfully.',
-                'alert-type' => 'success'
-            ]);
-        }
-        else{
-            return redirect()->route('employee.profile.salary_breakdown', $employee->employee_id)->with([
-                'message' => 'Employee Salary Breakdown added successfully.',
-                'alert-type' => 'success'
-            ]);
-        }
+        return redirect()->route('employee.profile.salary_breakdown', $employee->employee_id)->with([
+            'message' => 'Employee Salary Breakdown added successfully.',
+            'alert-type' => 'success'
+        ]);
     }
 
     /**

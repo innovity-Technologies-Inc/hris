@@ -2782,3 +2782,17 @@ Status: ✅ SUCCESS
 - **Verification**: Ran Pest features tests for both modules. All 7 tests and 71 assertions passed successfully ✅
 
 **Status**: ✅ SUCCESS
+
+## 2026-08-04 (Employee Profile View Same Tab Redirect Fix)
+
+**Goal**: Remove step-forward redirects that automatically move to the next profile section when a section is saved, ensuring the page redirects back to the same tab.
+
+**Exact Command**: `php artisan config:clear && vendor/bin/pest tests/Feature/EmployeeOfficeInfoTest.php tests/Feature/LeavePlanTest.php`
+
+**Results**:
+- **Office Info Controller**: Modified `officeInfoStore` inside [EmployeeProfileController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/Employee/EmployeeProfileController.php) to always redirect back to `employee.profile.office_informations`.
+- **Salary Breakdown Controller**: Modified `store` inside [EmployeeSalaryBreakdownController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/Employee/EmployeeSalaryBreakdownController.php) to always redirect back to `employee.profile.salary_breakdown`.
+- **Eligible Plans Controller**: Modified `store` inside [EmployeeEligibleController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/Employee/EmployeeEligibleController.php) to always redirect back to `employee.profile.eligible_plans`.
+- **Verification**: Ran feature test suites. All 12 tests passed successfully ✅
+
+**Status**: ✅ SUCCESS

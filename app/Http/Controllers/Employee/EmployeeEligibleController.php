@@ -77,19 +77,10 @@ class EmployeeEligibleController extends Controller
                     ]);
         }
 
-        $employeeNominee = EmployeeNominee::where('employee_id', $employee->employee_id)->first();
-        if(empty($employeeNominee)){
-            return redirect()->route('employee.nominee_information.create', $employee->employee_id)->with([
-                'message' => 'Employee eligible plans added successfully.',
-                'alert-type' => 'success'
-            ]);
-        }
-        else{
-            return redirect()->route('employee.profile.eligible_plans', $employee->employee_id)->with([
-                'message' => 'Employee eligible plans added successfully.',
-                'alert-type' => 'success'
-            ]);
-        }
+        return redirect()->route('employee.profile.eligible_plans', $employee->employee_id)->with([
+            'message' => 'Employee eligible plans added successfully.',
+            'alert-type' => 'success'
+        ]);
     }
 
     /**
