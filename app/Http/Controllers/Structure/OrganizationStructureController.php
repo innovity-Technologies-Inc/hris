@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Structure;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Structure\StoreKeyPersonRequest;
+use App\Http\Requests\Structure\UpdateKeyPersonRequest;
+use App\Services\Structure\KeyPeopleServices;
 use App\Models\Structure\OrganizationStructure;
 use App\Models\Company\Group;
 use App\Models\Company\Company;
@@ -13,42 +16,40 @@ use App\Models\Company\Section;
 use App\Models\Employee\Employee;
 use App\HelperClass;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
+use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 class OrganizationStructureController extends Controller
 {
+    protected $keyPeopleServices;
+
+    public function __construct(KeyPeopleServices $keyPeopleServices)
+    {
+        $this->keyPeopleServices = $keyPeopleServices;
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request, FlexSearch $flexsearch)
     {
-        $boardMembers = OrganizationStructure::with([
-            'getGroup',
-            'getCompany',
-            'getBranchUnit',
-            'getDivision',
-            'getDepartment',
-            'getSection',
-            'getEmployee'
-        ])->where('member_type', 'Board Member')->latest()->paginate(10, ['*'], 'board_page');
+        $keyword = $request->get('keyword');
+        $keyPeople = $this->keyPeopleServices->search($flexsearch, $keyword, 20);
 
-        $keyMembers = OrganizationStructure::with([
-            'getGroup',
-            'getCompany',
-            'getBranchUnit',
-            'getDivision',
-            'getDepartment',
-            'getSection',
-            'getEmployee'
-        ])->where('member_type', 'Key Member')->latest()->paginate(10, ['*'], 'key_page');
+        if ($request->ajax()) {
+            return view('structure.search_results', compact('keyPeople'))->render();
+        }
 
-        return view('structure.index', compact('boardMembers', 'keyMembers'));
+        return view('structure.index', compact('keyPeople'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View
     {
         $groups = Group::where('status', 'active')->get();
         $companies = Company::where('status', 'active')->get();
@@ -72,160 +73,45 @@ class OrganizationStructureController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreKeyPersonRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'member_type' => 'required|in:Board Member,Key Member',
-            'type' => 'required|in:group,company,location,division,department,section',
-            'name' => 'nullable|string|max:255',
-            'position' => 'required|string|max:255',
-            'email' => 'nullable|email|max:255|unique:organization_structure,email',
-            'contact_no' => 'nullable|string|max:20',
-            'address' => 'nullable|string',
-            'status' => 'nullable|in:active,inactive',
-            'photo_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'group_id' => 'nullable|exists:groups,id',
-            'company_id' => 'nullable|exists:companies,id',
-            'branch_unit_id' => 'nullable|exists:company_locations,id',
-            'division_id' => 'nullable|exists:divisions,id',
-            'department_id' => 'nullable|exists:departments,id',
-            'section_id' => 'nullable|exists:sections,id',
-            'employee_id' => 'nullable|exists:employees,id',
-        ]);
-
-        // Custom validation based on type and member_type
-        $validator->after(function ($validator) use ($request) {
-            $type = $request->input('type');
-            $memberType = $request->input('member_type');
-
-            // Board Member: only group and company types
-            if ($memberType === 'Board Member' && !in_array($type, ['group', 'company'])) {
-                $validator->errors()->add('type', 'Board Members can only be assigned to Group or Company.');
-            }
-
-            // Key Member: only location, division, department, section types
-            if ($memberType === 'Key Member' && in_array($type, ['group', 'company'])) {
-                $validator->errors()->add('type', 'Key Members cannot be assigned to Group or Company.');
-            }
-
-            // Key Member must have employee_id
-            if ($memberType === 'Key Member' && !$request->filled('employee_id')) {
-                $validator->errors()->add('employee_id', 'Employee selection is required for Key Members.');
-            }
-
-            // Board Member must have name, email, contact_no
-            if ($memberType === 'Board Member') {
-                if (!$request->filled('name')) {
-                    $validator->errors()->add('name', 'Name is required for Board Members.');
-                }
-                if (!$request->filled('email')) {
-                    $validator->errors()->add('email', 'Email is required for Board Members.');
-                }
-                if (!$request->filled('contact_no')) {
-                    $validator->errors()->add('contact_no', 'Contact number is required for Board Members.');
-                }
-            }
-
-            $typeRequirements = [
-                'group' => ['group_id'],
-                'company' => ['group_id'],
-                'location' => ['group_id', 'branch_unit_id'],
-                'division' => ['group_id', 'division_id'],
-                'department' => ['group_id', 'division_id', 'department_id'],
-                'section' => ['group_id', 'division_id', 'department_id', 'section_id'],
-            ];
-
-            if (isset($typeRequirements[$type])) {
-                foreach ($typeRequirements[$type] as $field) {
-                    if (!$request->filled($field)) {
-                        $fieldName = str_replace('_id', '', $field);
-                        $validator->errors()->add($field, "The {$fieldName} field is required for {$type} type.");
-                    }
-                }
-            }
-        });
-
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-
-        $data = $request->only([
-            'member_type',
-            'type',
-            'name',
-            'position',
-            'email',
-            'contact_no',
-            'address',
-            'group_id',
-            'company_id',
-            'branch_unit_id',
-            'division_id',
-            'department_id',
-            'section_id',
-            'employee_id',
-        ]);
-
-        // If Key Member, get name from employee
-        if ($request->input('member_type') === 'Key Member' && $request->filled('employee_id')) {
-            $employee = \App\Models\Employee\Employee::find($request->input('employee_id'));
-            if ($employee) {
-                $data['name'] = $employee->full_name;
-            }
-        }
-
-        // Transform type and status to match database enum values
-        $typeMap = [
-            'group' => 'Group',
-            'company' => 'Company',
-            'location' => 'Branch Unit',
-            'division' => 'Division',
-            'department' => 'Department',
-            'section' => 'Section'
-        ];
-
-        $data['type'] = $typeMap[$request->input('type')] ?? $request->input('type');
-        $data['status'] = ucfirst($request->input('status', 'active'));
-
-        // Handle profile image upload using HelperClass
-        if ($request->hasFile('photo_path')) {
+        try {
             $photo = $request->file('photo_path');
-            $file_path = HelperClass::file_upload($photo, 'organization_structure');
-            $data['photo_path'] = $file_path;
+            $person = $this->keyPeopleServices->store($request->validated(), $photo);
+
+            if ($request->expectsJson() || $request->ajax() || $request->wantsJson()) {
+                return $this->createdResponse('Key Person created successfully.', [
+                    'redirect' => route('organization-structure.index'),
+                    'data' => $person
+                ]);
+            }
+
+            return redirect()->route('organization-structure.index')
+                ->with('success', 'Key Person created successfully.');
+        } catch (Exception $e) {
+            Log::error('Error saving Key Person: ' . $e->getMessage());
+            if ($request->expectsJson() || $request->ajax() || $request->wantsJson()) {
+                return $this->errorResponse('Something went wrong. Please try again later.', 500);
+            }
+            return redirect()->back()->with('error', 'Something went wrong. Please try again later.')->withInput();
         }
-
-        OrganizationStructure::create($data);
-
-        return redirect()->route('organization-structure.index')
-            ->with('success', 'Key member added successfully.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show($id): View
     {
-        $member = OrganizationStructure::with([
-            'getGroup',
-            'getCompany',
-            'getBranchUnit',
-            'getDivision',
-            'getDepartment',
-            'getSection',
-            'getEmployee'
-        ])->findOrFail($id);
-
+        $member = $this->keyPeopleServices->getById($id);
         return view('structure.show', compact('member'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit($id): View
     {
-        $organizationStructure = OrganizationStructure::findOrFail($id);
+        $organizationStructure = $this->keyPeopleServices->getById($id);
         $groups = Group::where('status', 'active')->get();
         $companies = Company::where('status', 'active')->get();
         $locations = CompanyLocation::where('status', 'active')->get();
@@ -249,141 +135,28 @@ class OrganizationStructureController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(UpdateKeyPersonRequest $request, $id)
     {
-        $organizationStructure = OrganizationStructure::findOrFail($id);
-
-        $validator = Validator::make($request->all(), [
-            'member_type' => 'required|in:Board Member,Key Member',
-            'type' => 'required|in:group,company,location,division,department,section',
-            'name' => 'nullable|string|max:255',
-            'position' => 'required|string|max:255',
-            'email' => 'nullable|email|max:255|unique:organization_structure,email,' . $id,
-            'contact_no' => 'nullable|string|max:20',
-            'address' => 'nullable|string',
-            'status' => 'nullable|in:active,inactive',
-            'photo_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'group_id' => 'nullable|exists:groups,id',
-            'company_id' => 'nullable|exists:companies,id',
-            'branch_unit_id' => 'nullable|exists:company_locations,id',
-            'division_id' => 'nullable|exists:divisions,id',
-            'department_id' => 'nullable|exists:departments,id',
-            'section_id' => 'nullable|exists:sections,id',
-            'employee_id' => 'nullable|exists:employees,id',
-        ]);
-
-        // Custom validation based on type and member_type
-        $validator->after(function ($validator) use ($request) {
-            $type = $request->input('type');
-            $memberType = $request->input('member_type');
-
-            // Board Member: only group and company types
-            if ($memberType === 'Board Member' && !in_array($type, ['group', 'company'])) {
-                $validator->errors()->add('type', 'Board Members can only be assigned to Group or Company.');
-            }
-
-            // Key Member: only location, division, department, section types
-            if ($memberType === 'Key Member' && in_array($type, ['group', 'company'])) {
-                $validator->errors()->add('type', 'Key Members cannot be assigned to Group or Company.');
-            }
-
-            // Key Member must have employee_id
-            if ($memberType === 'Key Member' && !$request->filled('employee_id')) {
-                $validator->errors()->add('employee_id', 'Employee selection is required for Key Members.');
-            }
-
-            // Board Member must have name, email, contact_no
-            if ($memberType === 'Board Member') {
-                if (!$request->filled('name')) {
-                    $validator->errors()->add('name', 'Name is required for Board Members.');
-                }
-                if (!$request->filled('email')) {
-                    $validator->errors()->add('email', 'Email is required for Board Members.');
-                }
-                if (!$request->filled('contact_no')) {
-                    $validator->errors()->add('contact_no', 'Contact number is required for Board Members.');
-                }
-            }
-
-            $typeRequirements = [
-                'group' => ['group_id'],
-                'company' => ['group_id'],
-                'location' => ['group_id', 'branch_unit_id'],
-                'division' => ['group_id', 'division_id'],
-                'department' => ['group_id', 'division_id', 'department_id'],
-                'section' => ['group_id', 'division_id', 'department_id', 'section_id'],
-            ];
-
-            if (isset($typeRequirements[$type])) {
-                foreach ($typeRequirements[$type] as $field) {
-                    if (!$request->filled($field)) {
-                        $fieldName = str_replace('_id', '', $field);
-                        $validator->errors()->add($field, "The {$fieldName} field is required for {$type} type.");
-                    }
-                }
-            }
-        });
-
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-
-        $data = $request->only([
-            'member_type',
-            'type',
-            'name',
-            'position',
-            'email',
-            'contact_no',
-            'address',
-            'group_id',
-            'company_id',
-            'branch_unit_id',
-            'division_id',
-            'department_id',
-            'section_id',
-            'employee_id',
-        ]);
-
-        // If Key Member, get name from employee
-        if ($request->input('member_type') === 'Key Member' && $request->filled('employee_id')) {
-            $employee = \App\Models\Employee\Employee::find($request->input('employee_id'));
-            if ($employee) {
-                $data['name'] = $employee->full_name;
-            }
-        }
-
-        // Transform type and status to match database enum values
-        $typeMap = [
-            'group' => 'Group',
-            'company' => 'Company',
-            'location' => 'Branch Unit',
-            'division' => 'Division',
-            'department' => 'Department',
-            'section' => 'Section'
-        ];
-
-        $data['type'] = $typeMap[$request->input('type')] ?? $request->input('type');
-        $data['status'] = ucfirst($request->input('status', 'active'));
-
-        // Handle profile image upload using HelperClass
-        if ($request->hasFile('photo_path')) {
-            // Delete old image if exists
-            if ($organizationStructure->photo_path) {
-                HelperClass::file_delete($organizationStructure->photo_path);
-            }
-
+        try {
             $photo = $request->file('photo_path');
-            $file_path = HelperClass::file_upload($photo, 'organization_structure');
-            $data['photo_path'] = $file_path;
+            $person = $this->keyPeopleServices->update($id, $request->validated(), $photo);
+
+            if ($request->expectsJson() || $request->ajax() || $request->wantsJson()) {
+                return $this->successResponse('Key Person updated successfully.', [
+                    'redirect' => route('organization-structure.index'),
+                    'data' => $person
+                ]);
+            }
+
+            return redirect()->route('organization-structure.index')
+                ->with('success', 'Key Person updated successfully.');
+        } catch (Exception $e) {
+            Log::error('Error updating Key Person: ' . $e->getMessage());
+            if ($request->expectsJson() || $request->ajax() || $request->wantsJson()) {
+                return $this->errorResponse('Something went wrong. Please try again later.', 500);
+            }
+            return redirect()->back()->with('error', 'Something went wrong. Please try again later.')->withInput();
         }
-
-        $organizationStructure->update($data);
-
-        return redirect()->route('organization-structure.index')
-            ->with('success', 'Key member updated successfully.');
     }
 
     /**
@@ -391,17 +164,22 @@ class OrganizationStructureController extends Controller
      */
     public function destroy($id)
     {
-        $organizationStructure = OrganizationStructure::findOrFail($id);
+        try {
+            $this->keyPeopleServices->delete($id);
 
-        // Delete profile image if exists
-        if ($organizationStructure->photo_path) {
-            HelperClass::file_delete($organizationStructure->photo_path);
+            if (request()->expectsJson() || request()->ajax() || request()->wantsJson()) {
+                return $this->deletedResponse('Key Person deleted successfully.');
+            }
+
+            return redirect()->route('organization-structure.index')
+                ->with('success', 'Key Person deleted successfully.');
+        } catch (Exception $e) {
+            Log::error('Error deleting Key Person: ' . $e->getMessage());
+            if (request()->expectsJson() || request()->ajax() || request()->wantsJson()) {
+                return $this->errorResponse('Something went wrong. Please try again later.', 500);
+            }
+            return redirect()->back()->with('error', 'Something went wrong. Please try again later.');
         }
-
-        $organizationStructure->delete();
-
-        return redirect()->route('organization-structure.index')
-            ->with('success', 'Key member deleted successfully.');
     }
 
     /**
@@ -477,7 +255,7 @@ class OrganizationStructureController extends Controller
         $page = $request->input('page', 1);
         $perPage = 20;
 
-        $query = \App\Models\Employee\Employee::query();
+        $query = Employee::query();
 
         if ($search) {
             $query->where(function ($q) use ($search) {
@@ -501,7 +279,7 @@ class OrganizationStructureController extends Controller
      */
     public function getEmployeeById($id)
     {
-        $employee = \App\Models\Employee\Employee::select('id', 'full_name', 'system_id')
+        $employee = Employee::select('id', 'full_name', 'system_id')
             ->findOrFail($id);
         return response()->json($employee);
     }
@@ -511,12 +289,10 @@ class OrganizationStructureController extends Controller
      */
     public function structuralView()
     {
-        // Get all groups with nested relationships
         $groups = Group::where('status', 'active')
             ->withCount(['organizationStructures as key_members_count' => function ($q) {
                 $q->where('status', 'Active')
-                  ->where('member_type', 'Board Member') // Only Board Members
-                  ->whereIn('type', ['Group', 'Company']); // Board Members at group/company level
+                  ->whereIn('type', ['Group', 'Company']);
             }])
             ->with([
                 'companies' => function ($query) {
@@ -527,7 +303,6 @@ class OrganizationStructureController extends Controller
                             },
                             'organizationStructures as key_members_count' => function ($q) {
                                 $q->where('status', 'Active')
-                                  ->where('member_type', 'Board Member') // Only Board Members
                                   ->where('type', 'Company');
                             }
                         ])
@@ -601,9 +376,8 @@ class OrganizationStructureController extends Controller
     {
         $query = OrganizationStructure::where('status', 'Active');
 
-        // Map level to database field and type
         $levelMapping = [
-            'group' => ['field' => 'group_id', 'types' => ['Group', 'Company']], // Board Members at group/company level
+            'group' => ['field' => 'group_id', 'types' => ['Group', 'Company']],
             'company' => ['field' => 'company_id', 'types' => ['Company']],
             'location' => ['field' => 'branch_unit_id', 'types' => ['Branch Unit']],
             'division' => ['field' => 'division_id', 'types' => ['Division']],
@@ -616,29 +390,18 @@ class OrganizationStructureController extends Controller
         }
 
         $mapping = $levelMapping[$level];
-
         $query->where($mapping['field'], $id);
 
-        // Filter by type(s)
         if (isset($mapping['types'])) {
             $query->whereIn('type', $mapping['types']);
-        }
-
-        // For group and company levels, show only Board Members
-        if (in_array($level, ['group', 'company'])) {
-            $query->where('member_type', 'Board Member');
         }
 
         $keyPeople = $query->with('getEmployee')
             ->get()
             ->map(function ($member) {
-                // Determine photo path based on member type
-                $photoPath = null;
-                if ($member->member_type === 'Board Member') {
-                    // Board members have photos in organization_structure table
-                    $photoPath = $member->photo_path;
-                } elseif ($member->member_type === 'Key Member' && $member->getEmployee) {
-                    // Key members (employees) have photos in employees table
+                // Determine photo path: custom photo if present, otherwise employee photo
+                $photoPath = $member->photo_path;
+                if (!$photoPath && $member->getEmployee) {
                     $photoPath = $member->getEmployee->photo_path;
                 }
 
@@ -655,4 +418,3 @@ class OrganizationStructureController extends Controller
         return response()->json($keyPeople);
     }
 }
-

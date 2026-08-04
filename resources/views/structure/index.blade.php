@@ -1,266 +1,144 @@
 @extends('structure.master')
 
 @section('content')
-    <a href="{{ route('organization-structure.create') }}" class="btn btn-warning btn-sm mb-3">
-        <i style="height: 12px; width: 12px" data-feather="plus"></i> Create
-    </a>
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-3">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-users-cog fa-lg me-2"></i>
+                        <h4 class="mb-0 text-white font-weight-bold">Key People</h4>
+                    </div>
+                    <a href="{{ route('organization-structure.create') }}" class="btn btn-warning btn-sm shadow-sm d-flex align-items-center fw-semibold">
+                        <i class="fas fa-plus me-1"></i> Add Key Person
+                    </a>
+                </div><!-- end card header -->
 
-    <ul class="nav nav-tabs mb-3" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link {{ request()->has('key_page') ? '' : 'active' }}" id="tab-board-tab" data-bs-toggle="tab"
-                data-bs-target="#tab-board" type="button" role="tab" aria-controls="tab-board"
-                aria-selected="{{ request()->has('key_page') ? 'false' : 'true' }}">
-                <i class="fas fa-users-cog me-2"></i>Board Members
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link {{ request()->has('key_page') ? 'active' : '' }}" id="tab-key-tab" data-bs-toggle="tab"
-                data-bs-target="#tab-key" type="button" role="tab" aria-controls="tab-key"
-                aria-selected="{{ request()->has('key_page') ? 'true' : 'false' }}">
-                <i class="fas fa-user-tie me-2"></i>Key Peoples
-            </button>
-        </li>
-    </ul>
-
-    <div class="tab-content">
-        <div class="tab-pane fade {{ request()->has('key_page') ? '' : 'show active' }}" id="tab-board" role="tabpanel"
-            aria-labelledby="tab-board-tab">
-            {{-- Board Members Section --}}
-            <div class="row mb-4">
-                <div class="col-xl-12">
-                    <div class="card">
-                        <div class="card-header bg-primary text-white">
-                            <h5 class="mb-0"><i class="fas fa-users-cog me-2"></i>Board Members</h5>
-                        </div><!-- end card header -->
-
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Profile</th>
-                                            <th scope="col">Type</th>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Position</th>
-                                            <th scope="col">Status</th>
-                                            <th scope="col">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php($i = ($boardMembers->currentPage() - 1) * $boardMembers->perPage() + 1)
-                                        @foreach ($boardMembers as $member)
-                                            <tr>
-                                                <th scope="row">{{ $i++ }}</th>
-                                                <td>
-                                                    {!! \App\HelperClass::generateAvatar($member->photo_path ?? null, $member->name, 32, '#974063', '') !!}
-                                                </td>
-                                                <td>
-                                                    <span
-                                                        class="badge
-                                                @if ($member->type_form == 'group') bg-primary
-                                                @elseif($member->type_form == 'company') bg-success
-                                                @else bg-secondary @endif">
-                                                        {{ $member->type }}
-                                                    </span>
-                                                </td>
-                                                <td>{{ $member->name }}</td>
-                                                <td>{{ $member->position }}</td>
-                                                <td>
-                                                    @if ($member->status_form == 'active')
-                                                        <span class="badge bg-success">Active</span>
-                                                    @else
-                                                        <span class="badge bg-danger">Inactive</span>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    <a href="{{ route('organization-structure.show', $member->id) }}"
-                                                        class="btn btn-info btn-sm" title="View">
-                                                        <i style="height: 12px; width: 12px" data-feather="eye"></i>
-                                                    </a>
-
-                                                    <a href="{{ route('organization-structure.edit', $member->id) }}"
-                                                        class="btn btn-primary btn-sm" title="Edit">
-                                                        <i style="height: 12px; width: 12px" data-feather="edit"></i>
-                                                    </a>
-
-                                                    <form
-                                                        action="{{ route('organization-structure.destroy', $member->id) }}"
-                                                        method="POST" style="display: inline-block">
-                                                        @csrf
-                                                        @method('DELETE')
-
-                                                        <button class="btn btn-sm btn-danger confirmDelete" title="Delete">
-                                                            <i style="height: 12px; width: 12px" data-feather="trash"></i>
-                                                        </button>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                        @if ($boardMembers->isEmpty())
-                                            <tr>
-                                                <td colspan="7" class="text-center text-muted">No Board Members found
-                                                </td>
-                                            </tr>
-                                        @endif
-                                    </tbody>
-                                </table>
+                <!-- Search Filter Form -->
+                <div class="px-4 pt-3 pb-2 border-bottom bg-light-subtle">
+                    <form id="filterForm" onsubmit="return false;">
+                        <div class="row align-items-center">
+                            <div class="col-md-8 col-12 mb-2 mb-md-0">
+                                <div class="input-group">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="fas fa-search text-muted"></i>
+                                    </span>
+                                    <input type="text" class="form-control border-start-0" id="keywordSearch" name="keyword"
+                                        placeholder="Search by name, position, email, phone, or hierarchy level..." aria-label="Keyword Search">
+                                </div>
                             </div>
-
-                            <!-- Pagination -->
-                            <div class="d-flex justify-content-end mt-3">
-                                {{ $boardMembers->links() }}
+                            <div class="col-md-4 col-12 text-md-end">
+                                <button type="button" class="btn btn-outline-secondary w-100 w-md-auto" id="resetFilters">
+                                    <i class="fas fa-undo me-1"></i> Reset Search
+                                </button>
                             </div>
                         </div>
-                    </div><!-- end card -->
+                    </form>
                 </div>
-            </div><!-- end row -->
 
-        </div> <!-- end tab-board -->
-
-        <div class="tab-pane fade {{ request()->has('key_page') ? 'show active' : '' }}" id="tab-key" role="tabpanel"
-            aria-labelledby="tab-key-tab">
-            {{-- Key Members Section --}}
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="card">
-                        <div class="card-header bg-info text-white">
-                            <h5 class="mb-0"><i class="fas fa-user-tie me-2"></i>Key Members</h5>
-                        </div><!-- end card header -->
-
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Profile</th>
-                                            <th scope="col">Type</th>
-                                            <th scope="col">Employee</th>
-                                            <th scope="col">Position</th>
-                                            <th scope="col">Status</th>
-                                            <th scope="col">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php($i = ($keyMembers->currentPage() - 1) * $keyMembers->perPage() + 1)
-                                        @foreach ($keyMembers as $member)
-                                            <tr>
-                                                <th scope="row">{{ $i++ }}</th>
-                                                <td>
-                                                    @php($displayName = $member->getEmployee ? $member->getEmployee->full_name : $member->name)
-                                                    @php($photoPath = $member->getEmployee ? $member->getEmployee->photo_path : $member->photo_path)
-                                                    @php($employeeId = $member->getEmployee ? $member->getEmployee->id : null)
-                                                    {!! \App\HelperClass::generateAvatar($photoPath ?? null, $displayName, 32, '#974063', '', $employeeId) !!}
-                                                </td>
-                                                <td>
-                                                    <span
-                                                        class="badge
-                                                @if ($member->type_form == 'location') bg-danger
-                                                @elseif($member->type_form == 'division') bg-warning text-dark
-                                                @elseif($member->type_form == 'department') bg-info
-                                                @else bg-secondary @endif">
-                                                        {{ $member->type }}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    @if ($member->getEmployee)
-                                                        <a href="{{ route('employee.profile.general_informations', $member->getEmployee->id) }}"
-                                                            class="text-decoration-none text-dark">
-                                                            {{ $member->name }}
-                                                        </a>
-                                                        <br><small class="text-muted">ID:
-                                                            {{ $member->getEmployee->system_id }}</small>
-                                                    @else
-                                                        {{ $member->name }}
-                                                    @endif
-                                                </td>
-                                                <td>{{ $member->position }}</td>
-                                                <td>
-                                                    @if ($member->status_form == 'active')
-                                                        <span class="badge bg-success">Active</span>
-                                                    @else
-                                                        <span class="badge bg-danger">Inactive</span>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    <a href="{{ route('organization-structure.show', $member->id) }}"
-                                                        class="btn btn-info btn-sm" title="View">
-                                                        <i style="height: 12px; width: 12px" data-feather="eye"></i>
-                                                    </a>
-
-                                                    <a href="{{ route('organization-structure.edit', $member->id) }}"
-                                                        class="btn btn-primary btn-sm" title="Edit">
-                                                        <i style="height: 12px; width: 12px" data-feather="edit"></i>
-                                                    </a>
-
-                                                    <form
-                                                        action="{{ route('organization-structure.destroy', $member->id) }}"
-                                                        method="POST" style="display: inline-block">
-                                                        @csrf
-                                                        @method('DELETE')
-
-                                                        <button class="btn btn-sm btn-danger confirmDelete"
-                                                            title="Delete">
-                                                            <i style="height: 12px; width: 12px" data-feather="trash"></i>
-                                                        </button>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                        @if ($keyMembers->isEmpty())
-                                            <tr>
-                                                <td colspan="7" class="text-center text-muted">No Key Members found
-                                                </td>
-                                            </tr>
-                                        @endif
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <!-- Pagination -->
-                            <div class="d-flex justify-content-end mt-3">
-                                {{ $keyMembers->links() }}
-                            </div>
-                        </div>
-                    </div><!-- end card -->
+                <div class="card-body p-4" id="search-result">
+                    @include('structure.search_results')
                 </div>
-            </div><!-- end row -->
-        </div> <!-- end tab-key -->
-    </div> <!-- end tab-content -->
+            </div>
+        </div>
+    </div>
 @endsection
+
 @push('scripts')
     <script>
         $(document).ready(function() {
-            // Add data attribute to pagination links to track which tab they belong to
-            // Board Members pagination links
-            $('#tab-board').find('.pagination a').each(function() {
-                var href = $(this).attr('href');
-                if (href && href.includes('board_page')) {
-                    $(this).attr('data-tab', 'board');
-                }
+            // Function to perform AJAX search
+            function fetchData(url = "{{ route('organization-structure.index') }}") {
+                const queryString = $('#filterForm').serialize();
+
+                $.ajax({
+                    url: url,
+                    method: "GET",
+                    data: queryString,
+                    beforeSend: function() {
+                        $('#search-result').html(
+                            '<div class="text-center py-5 text-muted">' +
+                            '<div class="spinner-border text-primary mb-2" role="status"></div>' +
+                            '<div>Searching records, please wait...</div>' +
+                            '</div>'
+                        );
+                    },
+                    success: function(response) {
+                        $('#search-result').html(response);
+                        // Reinitialize Feather icons if used in results
+                        if (typeof feather !== 'undefined') {
+                            feather.replace();
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error('AJAX Error:', xhr.responseText);
+                        toastr.error('Failed to load search results.');
+                    }
+                });
+            }
+
+            // Trigger search on input or change
+            let searchTimeout;
+            $('#keywordSearch').on('input', function(e) {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(function() {
+                    fetchData();
+                }, 300); // debounce search to avoid overwhelming backend
             });
 
-            // Key Members pagination links
-            $('#tab-key').find('.pagination a').each(function() {
-                var href = $(this).attr('href');
-                if (href && href.includes('key_page')) {
-                    $(this).attr('data-tab', 'key');
-                }
+            // Reset filters
+            $('#resetFilters').on('click', function() {
+                $('#keywordSearch').val('');
+                fetchData();
             });
 
-            // Handle pagination link clicks to maintain tab state
-            $(document).on('click', '.pagination a', function(e) {
-                var $tab = $(this).closest('.tab-pane');
-                var tabId = $tab.attr('id');
+            // Handle pagination via AJAX
+            $(document).on('click', '#search-result .pagination a', function(e) {
+                e.preventDefault();
+                const url = $(this).attr('href');
+                fetchData(url);
+            });
 
-                // If clicking key members pagination, add key_page to the URL
-                if (tabId === 'tab-key') {
-                    var href = $(this).attr('href');
-                    // URL already has key_page parameter, just let it navigate
-                }
+            // Handle Delete with SweetAlert2 & Axios
+            $(document).on('click', '.delete-person', function(e) {
+                e.preventDefault();
+                const button = $(this);
+                const url = button.data('url');
+
+                Swal.fire({
+                    title: 'Delete Key Person?',
+                    text: "Are you sure you want to remove this key person? This action cannot be undone.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        axios.delete(url)
+                            .then(response => {
+                                if (response.data.success) {
+                                    Swal.fire({
+                                        title: 'Deleted!',
+                                        text: response.data.message,
+                                        icon: 'success',
+                                        timer: 1500,
+                                        showConfirmButton: false
+                                    }).then(() => {
+                                        fetchData(); // Reload the results table
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                Swal.fire(
+                                    'Error!',
+                                    error.response?.data?.message || 'Something went wrong. Please try again later.',
+                                    'error'
+                                );
+                            });
+                    }
+                });
             });
         });
     </script>
 @endpush
-

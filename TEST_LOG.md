@@ -1,5 +1,22 @@
 # Test Log
 
+## 2026-08-05 (Key People Module Re-development & API Integration)
+
+**Goal**: Re-develop the Structure Member module to unify Board Members and Key Members into a single "Key People" concept. Implement FormRequest validation, thin controller delegation, custom Service layer, dynamic Axios forms submission, and SweetAlert2 deletes.
+
+**Exact Commands**: 
+- `php artisan config:clear; vendor/bin/pest tests/Feature/Structure/OrganizationStructureTest.php`
+- `php artisan config:clear; vendor/bin/pest tests/Feature/RouteVerificationTest.php`
+
+**Results**:
+- Created Service Class: `app/Services/Structure/KeyPeopleServices.php` to handle filtering, upload, creation, and updating.
+- Created validation classes: `app/Http/Requests/Structure/StoreKeyPersonRequest.php` and `app/Http/Requests/Structure/UpdateKeyPersonRequest.php`.
+- Refactored `OrganizationStructureController.php` to use the requests, services, and dynamic JSON/Redirect response payloads.
+- Re-developed views (`index.blade.php`, `search_results.blade.php`, `form.blade.php`, `show.blade.php`) to unify Key People listing and editing, support both custom profiles and employee-attached records, and integrate Axios and SweetAlert2.
+- Verified 3/3 tests passed in `OrganizationStructureTest` and 18/18 tests passed in `RouteVerificationTest`.
+
+**Status**: ✅ SUCCESS
+
 ## 2026-08-04 (Nullable Company Field in Structure Members & Organization Setup)
 
 **Goal**: Make the Company field optional (nullable) during Board Member and Key Member setup under the Organization Structure module.
