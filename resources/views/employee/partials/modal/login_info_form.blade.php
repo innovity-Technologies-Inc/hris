@@ -26,6 +26,23 @@
 
 
 
+        <div class="col-md-6 mb-3">
+            <label for="{{ $mode }}_applicant_id" class="form-label fw-bold" style="color: #974063;">Applicant ID</label>
+            <div class="input-group">
+                <span class="input-group-text bg-light border-end-0"><i class="fas fa-id-badge" style="color: #974063;"></i></span>
+                <input type="text" class="form-control border-start-0" id="{{ $mode }}_applicant_id" name="applicant_id"
+                       value="{{ old('applicant_id') }}" placeholder="Auto-generated if left blank">
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="{{ $mode }}_system_id" class="form-label fw-bold" style="color: #974063;">System ID</label>
+            <div class="input-group">
+                <span class="input-group-text bg-light border-end-0"><i class="fas fa-laptop-code" style="color: #974063;"></i></span>
+                <input type="text" class="form-control border-start-0" id="{{ $mode }}_system_id" name="system_id"
+                       value="{{ old('system_id') }}" placeholder="Auto-generated if left blank">
+            </div>
+        </div>
 
         <div class="col-md-6 mb-3">
             <label for="{{ $mode }}_punch_card_no" class="form-label fw-bold" style="color: #974063;">Punch Card No <span class="text-danger">*</span></label>
