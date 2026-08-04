@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-12 col-lg-10 mx-auto">
+        <div class="col-12">
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-3">
                     <div class="d-flex align-items-center">
@@ -29,239 +29,254 @@
                             @method('PUT')
                         @endif
 
-                        <!-- Section: Mode Selector -->
-                        <div class="mb-4">
-                            <label class="form-label fw-bold"><i class="fas fa-users text-primary me-1"></i> Person Source <span class="text-danger">*</span></label>
-                            <div class="btn-group w-100" role="group" aria-label="Creation Mode Toggle">
-                                <input type="radio" class="btn-check" name="creation_mode" id="mode_employee" value="employee" 
-                                    {{ isset($organizationStructure) && $organizationStructure->employee_id ? 'checked' : (!isset($organizationStructure) ? 'checked' : '') }}>
-                                <label class="btn btn-outline-primary py-2 fw-semibold" for="mode_employee">
-                                    <i class="fas fa-id-card me-2"></i>Attach Existing Employee
-                                </label>
-                                <input type="radio" class="btn-check" name="creation_mode" id="mode_custom" value="custom"
-                                    {{ isset($organizationStructure) && !$organizationStructure->employee_id ? 'checked' : '' }}>
-                                <label class="btn btn-outline-primary py-2 fw-semibold" for="mode_custom">
-                                    <i class="fas fa-user-plus me-2"></i>Create Custom/External Person
-                                </label>
+                        <!-- Section: Person Source -->
+                        <div class="card border mb-4">
+                            <div class="card-header bg-light py-2">
+                                <h5 class="mb-0 fw-semibold text-dark">
+                                    <i class="fas fa-user-circle text-primary me-2"></i>Person Source
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-4">
+                                    <label class="form-label fw-semibold">Choose Mode <span class="text-danger">*</span></label>
+                                    <div class="btn-group w-100" role="group" aria-label="Creation Mode Toggle">
+                                        <input type="radio" class="btn-check" name="creation_mode" id="mode_employee" value="employee" 
+                                            {{ isset($organizationStructure) && $organizationStructure->employee_id ? 'checked' : (!isset($organizationStructure) ? 'checked' : '') }}>
+                                        <label class="btn btn-outline-primary py-2 fw-semibold" for="mode_employee">
+                                            <i class="fas fa-id-card me-2"></i>Attach Existing Employee
+                                        </label>
+                                        <input type="radio" class="btn-check" name="creation_mode" id="mode_custom" value="custom"
+                                            {{ isset($organizationStructure) && !$organizationStructure->employee_id ? 'checked' : '' }}>
+                                        <label class="btn btn-outline-primary py-2 fw-semibold" for="mode_custom">
+                                            <i class="fas fa-user-plus me-2"></i>Create Custom/External Person
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Mode: Attach Employee -->
+                                <div id="employee_section">
+                                    <div class="row">
+                                        <div class="col-12 mb-3">
+                                            <label for="employee_id" class="form-label fw-semibold">Select Employee <span class="text-danger">*</span></label>
+                                            <select name="employee_id" id="employee_id" class="form-select select2_list">
+                                                <option value="">-- Select Employee --</option>
+                                                @foreach ($employees as $employee)
+                                                    <option value="{{ $employee->id }}"
+                                                        {{ isset($organizationStructure) && $organizationStructure->employee_id == $employee->id ? 'selected' : '' }}>
+                                                        {{ $employee->full_name }} ({{ $employee->system_id }})
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Mode: Custom Person -->
+                                <div id="custom_person_section" class="d-none">
+                                    <div class="row">
+                                        @if (isset($organizationStructure) && $organizationStructure->photo_path)
+                                            <div class="col-12 mb-3 text-center">
+                                                <div class="mb-2">
+                                                    <img src="{{ \App\HelperClass::get_file_url($organizationStructure->photo_path) }}"
+                                                        class="rounded-circle border border-primary border-2 shadow"
+                                                        style="width: 90px; height: 90px; object-fit: cover;"
+                                                        alt="Profile Image">
+                                                </div>
+                                                <small class="text-muted">Current Profile Photo</small>
+                                            </div>
+                                        @endif
+
+                                        <!-- Name -->
+                                        <div class="col-md-6 mb-3">
+                                            <label for="name" class="form-label fw-semibold">Full Name <span class="text-danger">*</span></label>
+                                            <input type="text" name="name" id="name" class="form-control" placeholder="Enter full name"
+                                                value="{{ old('name', isset($organizationStructure) ? $organizationStructure->name : '') }}">
+                                        </div>
+
+                                        <!-- Photo -->
+                                        <div class="col-md-6 mb-3">
+                                            <label for="photo_path" class="form-label fw-semibold">Profile Photo</label>
+                                            <input type="file" name="photo_path" id="photo_path" class="form-control" accept="image/*">
+                                            <small class="text-muted d-block mt-1">Format: JPG, PNG, GIF. Max: 2MB.</small>
+                                        </div>
+
+                                        <!-- Email -->
+                                        <div class="col-md-6 mb-3">
+                                            <label for="email" class="form-label fw-semibold">Email Address</label>
+                                            <input type="email" name="email" id="email" class="form-control" placeholder="name@company.com"
+                                                value="{{ old('email', isset($organizationStructure) ? $organizationStructure->email : '') }}">
+                                        </div>
+
+                                        <!-- Contact No -->
+                                        <div class="col-md-6 mb-3">
+                                            <label for="contact_no" class="form-label fw-semibold">Contact Number</label>
+                                            <input type="tel" name="contact_no" id="contact_no" class="form-control" placeholder="+880 1XXX-XXXXXX"
+                                                value="{{ old('contact_no', isset($organizationStructure) ? $organizationStructure->contact_no : '') }}">
+                                        </div>
+
+                                        <!-- Address -->
+                                        <div class="col-md-12 mb-3">
+                                            <label for="address" class="form-label fw-semibold">Address</label>
+                                            <textarea name="address" id="address" class="form-control" rows="2" placeholder="Full contact address...">{{ old('address', isset($organizationStructure) ? $organizationStructure->address : '') }}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <!-- Section: Target Level -->
-                        <div class="mb-4">
-                            <h5 class="text-primary border-bottom pb-2 mb-3">
-                                <i class="fas fa-sitemap me-2"></i>Target Hierarchy Level
-                            </h5>
-                            <div class="row">
-                                <!-- Type / Level Select -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="type" class="form-label fw-semibold">
-                                        Type / Level <span class="text-danger">*</span>
-                                    </label>
-                                    <select name="type" id="type" class="form-select select2_list" required>
-                                        <option value="">-- Select Level --</option>
-                                        <option value="group"
-                                            {{ isset($organizationStructure) && $organizationStructure->type_form == 'group' ? 'selected' : '' }}>
-                                            Group</option>
-                                        <option value="company"
-                                            {{ isset($organizationStructure) && $organizationStructure->type_form == 'company' ? 'selected' : '' }}>
-                                            Company</option>
-                                        <option value="location"
-                                            {{ isset($organizationStructure) && $organizationStructure->type_form == 'location' ? 'selected' : '' }}>
-                                            Branch</option>
-                                        <option value="division"
-                                            {{ isset($organizationStructure) && $organizationStructure->type_form == 'division' ? 'selected' : '' }}>
-                                            Division</option>
-                                        <option value="department"
-                                            {{ isset($organizationStructure) && $organizationStructure->type_form == 'department' ? 'selected' : '' }}>
-                                            Department</option>
-                                        <option value="section"
-                                            {{ isset($organizationStructure) && $organizationStructure->type_form == 'section' ? 'selected' : '' }}>
-                                            Section</option>
-                                    </select>
-                                </div>
+                        <div class="card border mb-4">
+                            <div class="card-header bg-light py-2">
+                                <h5 class="mb-0 fw-semibold text-dark">
+                                    <i class="fas fa-sitemap text-success me-2"></i>Target Hierarchy Level
+                                </h5>
                             </div>
-
-                            <div class="row">
-                                <!-- Group -->
-                                <div class="col-md-4 mb-3 d-none" id="div_group_id">
-                                    <label for="group_id" class="form-label fw-semibold">Group <span class="text-danger">*</span></label>
-                                    <select name="group_id" id="group_id" class="form-select select2_list">
-                                        <option value="">Select Group</option>
-                                        @foreach ($groups as $group)
-                                            <option value="{{ $group->id }}"
-                                                {{ (isset($organizationStructure) && $organizationStructure->group_id == $group->id) || request('group_id') == $group->id ? 'selected' : '' }}>
-                                                {{ $group->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <!-- Company -->
-                                <div class="col-md-4 mb-3 d-none" id="div_company_id">
-                                    <label for="company_id" class="form-label fw-semibold">Company <span class="text-danger">*</span></label>
-                                    <select name="company_id" id="company_id" class="form-select select2_list">
-                                        <option value="">Select Company</option>
-                                        @foreach ($companies as $company)
-                                            <option value="{{ $company->id }}"
-                                                {{ (isset($organizationStructure) && $organizationStructure->company_id == $company->id) || request('company_id') == $company->id ? 'selected' : '' }}>
-                                                {{ $company->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <!-- Branch -->
-                                <div class="col-md-4 mb-3 d-none" id="div_branch_unit_id">
-                                    <label for="branch_unit_id" class="form-label fw-semibold">Branch <span class="text-danger">*</span></label>
-                                    <select name="branch_unit_id" id="branch_unit_id" class="form-select select2_list">
-                                        <option value="">Select Branch</option>
-                                        @foreach ($locations as $loc)
-                                            <option value="{{ $loc->id }}"
-                                                {{ (isset($organizationStructure) && $organizationStructure->branch_unit_id == $loc->id) || request('branch_unit_id') == $loc->id ? 'selected' : '' }}>
-                                                {{ $loc->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <!-- Division -->
-                                <div class="col-md-4 mb-3 d-none" id="div_division_id">
-                                    <label for="division_id" class="form-label fw-semibold">Division <span class="text-danger">*</span></label>
-                                    <select name="division_id" id="division_id" class="form-select select2_list">
-                                        <option value="">Select Division</option>
-                                        @foreach ($divisions as $div)
-                                            <option value="{{ $div->id }}"
-                                                {{ (isset($organizationStructure) && $organizationStructure->division_id == $div->id) || request('division_id') == $div->id ? 'selected' : '' }}>
-                                                {{ $div->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <!-- Department -->
-                                <div class="col-md-4 mb-3 d-none" id="div_department_id">
-                                    <label for="department_id" class="form-label fw-semibold">Department <span class="text-danger">*</span></label>
-                                    <select name="department_id" id="department_id" class="form-select select2_list">
-                                        <option value="">Select Department</option>
-                                        @foreach ($departments as $dept)
-                                            <option value="{{ $dept->id }}"
-                                                {{ (isset($organizationStructure) && $organizationStructure->department_id == $dept->id) || request('department_id') == $dept->id ? 'selected' : '' }}>
-                                                {{ $dept->department_name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <!-- Section -->
-                                <div class="col-md-4 mb-3 d-none" id="div_section_id">
-                                    <label for="section_id" class="form-label fw-semibold">Section <span class="text-danger">*</span></label>
-                                    <select name="section_id" id="section_id" class="form-select select2_list">
-                                        <option value="">Select Section</option>
-                                        @foreach ($sections as $sec)
-                                            <option value="{{ $sec->id }}"
-                                                {{ (isset($organizationStructure) && $organizationStructure->section_id == $sec->id) || request('section_id') == $sec->id ? 'selected' : '' }}>
-                                                {{ $sec->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Section: Person Information -->
-                        <div class="mb-4">
-                            <h5 class="text-primary border-bottom pb-2 mb-3">
-                                <i class="fas fa-user-circle me-2"></i>Person Details
-                            </h5>
-
-                            <!-- Mode: Attach Employee -->
-                            <div id="employee_section">
+                            <div class="card-body">
                                 <div class="row">
-                                    <div class="col-12 mb-3">
-                                        <label for="employee_id" class="form-label fw-semibold">Select Employee <span class="text-danger">*</span></label>
-                                        <select name="employee_id" id="employee_id" class="form-select select2_list">
-                                            <option value="">-- Select Employee --</option>
-                                            @foreach ($employees as $employee)
-                                                <option value="{{ $employee->id }}"
-                                                    {{ isset($organizationStructure) && $organizationStructure->employee_id == $employee->id ? 'selected' : '' }}>
-                                                    {{ $employee->full_name }} ({{ $employee->system_id }})
+                                    <!-- Type / Level Select -->
+                                    <div class="col-md-6 mb-3">
+                                        <label for="type" class="form-label fw-semibold">
+                                            Type / Level <span class="text-danger">*</span>
+                                        </label>
+                                        <select name="type" id="type" class="form-select select2_list" required>
+                                            <option value="">-- Select Level --</option>
+                                            <option value="group"
+                                                {{ isset($organizationStructure) && $organizationStructure->type_form == 'group' ? 'selected' : '' }}>
+                                                Group</option>
+                                            <option value="company"
+                                                {{ isset($organizationStructure) && $organizationStructure->type_form == 'company' ? 'selected' : '' }}>
+                                                Company</option>
+                                            <option value="location"
+                                                {{ isset($organizationStructure) && $organizationStructure->type_form == 'location' ? 'selected' : '' }}>
+                                                Branch</option>
+                                            <option value="division"
+                                                {{ isset($organizationStructure) && $organizationStructure->type_form == 'division' ? 'selected' : '' }}>
+                                                Division</option>
+                                            <option value="department"
+                                                {{ isset($organizationStructure) && $organizationStructure->type_form == 'department' ? 'selected' : '' }}>
+                                                Department</option>
+                                            <option value="section"
+                                                {{ isset($organizationStructure) && $organizationStructure->type_form == 'section' ? 'selected' : '' }}>
+                                                Section</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <!-- Group -->
+                                    <div class="col-md-4 mb-3 d-none" id="div_group_id">
+                                        <label for="group_id" class="form-label fw-semibold">Group <span class="text-danger">*</span></label>
+                                        <select name="group_id" id="group_id" class="form-select select2_list">
+                                            <option value="">Select Group</option>
+                                            @foreach ($groups as $group)
+                                                <option value="{{ $group->id }}"
+                                                    {{ (isset($organizationStructure) && $organizationStructure->group_id == $group->id) || request('group_id') == $group->id ? 'selected' : '' }}>
+                                                    {{ $group->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <!-- Company -->
+                                    <div class="col-md-4 mb-3 d-none" id="div_company_id">
+                                        <label for="company_id" class="form-label fw-semibold">Company <span class="text-danger">*</span></label>
+                                        <select name="company_id" id="company_id" class="form-select select2_list">
+                                            <option value="">Select Company</option>
+                                            @foreach ($companies as $company)
+                                                <option value="{{ $company->id }}"
+                                                    {{ (isset($organizationStructure) && $organizationStructure->company_id == $company->id) || request('company_id') == $company->id ? 'selected' : '' }}>
+                                                    {{ $company->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <!-- Branch -->
+                                    <div class="col-md-4 mb-3 d-none" id="div_branch_unit_id">
+                                        <label for="branch_unit_id" class="form-label fw-semibold">Branch <span class="text-danger">*</span></label>
+                                        <select name="branch_unit_id" id="branch_unit_id" class="form-select select2_list">
+                                            <option value="">Select Branch</option>
+                                            @foreach ($locations as $loc)
+                                                <option value="{{ $loc->id }}"
+                                                    {{ (isset($organizationStructure) && $organizationStructure->branch_unit_id == $loc->id) || request('branch_unit_id') == $loc->id ? 'selected' : '' }}>
+                                                    {{ $loc->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <!-- Division -->
+                                    <div class="col-md-4 mb-3 d-none" id="div_division_id">
+                                        <label for="division_id" class="form-label fw-semibold">Division <span class="text-danger">*</span></label>
+                                        <select name="division_id" id="division_id" class="form-select select2_list">
+                                            <option value="">Select Division</option>
+                                            @foreach ($divisions as $div)
+                                                <option value="{{ $div->id }}"
+                                                    {{ (isset($organizationStructure) && $organizationStructure->division_id == $div->id) || request('division_id') == $div->id ? 'selected' : '' }}>
+                                                    {{ $div->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <!-- Department -->
+                                    <div class="col-md-4 mb-3 d-none" id="div_department_id">
+                                        <label for="department_id" class="form-label fw-semibold">Department <span class="text-danger">*</span></label>
+                                        <select name="department_id" id="department_id" class="form-select select2_list">
+                                            <option value="">Select Department</option>
+                                            @foreach ($departments as $dept)
+                                                <option value="{{ $dept->id }}"
+                                                    {{ (isset($organizationStructure) && $organizationStructure->department_id == $dept->id) || request('department_id') == $dept->id ? 'selected' : '' }}>
+                                                    {{ $dept->department_name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <!-- Section -->
+                                    <div class="col-md-4 mb-3 d-none" id="div_section_id">
+                                        <label for="section_id" class="form-label fw-semibold">Section <span class="text-danger">*</span></label>
+                                        <select name="section_id" id="section_id" class="form-select select2_list">
+                                            <option value="">Select Section</option>
+                                            @foreach ($sections as $sec)
+                                                <option value="{{ $sec->id }}"
+                                                    {{ (isset($organizationStructure) && $organizationStructure->section_id == $sec->id) || request('section_id') == $sec->id ? 'selected' : '' }}>
+                                                    {{ $sec->name }}
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- Mode: Custom Person -->
-                            <div id="custom_person_section" class="d-none">
-                                <div class="row">
-                                    @if (isset($organizationStructure) && $organizationStructure->photo_path)
-                                        <div class="col-12 mb-3 text-center">
-                                            <div class="mb-2">
-                                                <img src="{{ \App\HelperClass::get_file_url($organizationStructure->photo_path) }}"
-                                                    class="rounded-circle border border-primary border-2 shadow"
-                                                    style="width: 90px; height: 90px; object-fit: cover;"
-                                                    alt="Profile Image">
-                                            </div>
-                                            <small class="text-muted">Current Profile Photo</small>
-                                        </div>
-                                    @endif
-
-                                    <!-- Name -->
-                                    <div class="col-md-6 mb-3">
-                                        <label for="name" class="form-label fw-semibold">Full Name <span class="text-danger">*</span></label>
-                                        <input type="text" name="name" id="name" class="form-control" placeholder="Enter full name"
-                                            value="{{ old('name', isset($organizationStructure) ? $organizationStructure->name : '') }}">
-                                    </div>
-
-                                    <!-- Photo -->
-                                    <div class="col-md-6 mb-3">
-                                        <label for="photo_path" class="form-label fw-semibold">Profile Photo</label>
-                                        <input type="file" name="photo_path" id="photo_path" class="form-control" accept="image/*">
-                                        <small class="text-muted d-block mt-1">Format: JPG, PNG, GIF. Max: 2MB.</small>
-                                    </div>
-
-                                    <!-- Email -->
-                                    <div class="col-md-6 mb-3">
-                                        <label for="email" class="form-label fw-semibold">Email Address</label>
-                                        <input type="email" name="email" id="email" class="form-control" placeholder="name@company.com"
-                                            value="{{ old('email', isset($organizationStructure) ? $organizationStructure->email : '') }}">
-                                    </div>
-
-                                    <!-- Contact No -->
-                                    <div class="col-md-6 mb-3">
-                                        <label for="contact_no" class="form-label fw-semibold">Contact Number</label>
-                                        <input type="tel" name="contact_no" id="contact_no" class="form-control" placeholder="+880 1XXX-XXXXXX"
-                                            value="{{ old('contact_no', isset($organizationStructure) ? $organizationStructure->contact_no : '') }}">
-                                    </div>
-
-                                    <!-- Address -->
-                                    <div class="col-md-12 mb-3">
-                                        <label for="address" class="form-label fw-semibold">Address</label>
-                                        <textarea name="address" id="address" class="form-control" rows="2" placeholder="Full contact address...">{{ old('address', isset($organizationStructure) ? $organizationStructure->address : '') }}</textarea>
-                                    </div>
-                                </div>
+                        <!-- Section: Role & Status Details -->
+                        <div class="card border mb-4">
+                            <div class="card-header bg-light py-2">
+                                <h5 class="mb-0 fw-semibold text-dark">
+                                    <i class="fas fa-briefcase text-info me-2"></i>Role & Status Details
+                                </h5>
                             </div>
-
-                            <!-- Shared Fields (Position & Status) -->
-                            <div class="row">
-                                <!-- Position -->
-                                <div class="col-md-6 mb-3 position-relative">
-                                    <label for="position" class="form-label fw-semibold">Position / Role <span class="text-danger">*</span></label>
-                                    <input type="text" name="position" id="position" class="form-control" placeholder="e.g. Site Manager, Director" autocomplete="off"
-                                        value="{{ old('position', isset($organizationStructure) ? $organizationStructure->position : '') }}" required>
-                                    <div class="suggestions-list list-group position-absolute w-100" id="suggestionsList"
-                                        style="z-index: 1000; display: none; max-height: 200px; overflow-y: auto;">
+                            <div class="card-body">
+                                <div class="row">
+                                    <!-- Position -->
+                                    <div class="col-md-6 mb-3 position-relative">
+                                        <label for="position" class="form-label fw-semibold">Position / Role <span class="text-danger">*</span></label>
+                                        <input type="text" name="position" id="position" class="form-control" placeholder="e.g. Site Manager, Director" autocomplete="off"
+                                            value="{{ old('position', isset($organizationStructure) ? $organizationStructure->position : '') }}" required>
+                                        <div class="suggestions-list list-group position-absolute w-100" id="suggestionsList"
+                                            style="z-index: 1000; display: none; max-height: 200px; overflow-y: auto;">
+                                        </div>
                                     </div>
-                                </div>
 
-                                <!-- Status -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="status" class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
-                                    <select class="form-select" name="status" id="status" required>
-                                        <option value="active" {{ isset($organizationStructure) && $organizationStructure->status_form == 'active' ? 'selected' : '' }}>Active</option>
-                                        <option value="inactive" {{ isset($organizationStructure) && $organizationStructure->status_form == 'inactive' ? 'selected' : '' }}>Inactive</option>
-                                    </select>
+                                    <!-- Status -->
+                                    <div class="col-md-6 mb-3">
+                                        <label for="status" class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
+                                        <select class="form-select" name="status" id="status" required>
+                                            <option value="active" {{ isset($organizationStructure) && $organizationStructure->status_form == 'active' ? 'selected' : '' }}>Active</option>
+                                            <option value="inactive" {{ isset($organizationStructure) && $organizationStructure->status_form == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
