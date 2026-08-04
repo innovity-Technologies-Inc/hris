@@ -4,7 +4,7 @@
             <th scope="col">#</th>
             <th scope="col">Employee Name</th>
             <th scope="col">Type</th>
-            <th scope="col">Resignation/Notice Date</th>
+            <th scope="col">{{ $type === 'termination' ? 'Termination Date' : 'Resignation Date' }}</th>
             <th scope="col">Notice Period</th>
             <th scope="col">Last Working Day</th>
             <th scope="col">Reason</th>

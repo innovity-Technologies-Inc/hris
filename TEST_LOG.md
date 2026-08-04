@@ -2766,6 +2766,17 @@ Status: ✅ SUCCESS
 
 **Status**: ✅ SUCCESS
 
+## 2026-08-04 (Resignation & Termination Dynamic Labels and Success Responses)
 
+**Goal**: Make form, list, details labels and success responses dynamic to correctly display 'Termination' or 'Resignation' depending on the active module type.
 
+**Exact Command**: `php artisan config:clear && vendor/bin/pest tests/Feature/ResignationTest.php`
 
+**Results**:
+- **Dynamic Form Labels**: Updated [form.blade.php](file:///P:/Project/Web/hrms/resources/views/offboarding/form.blade.php) to render dynamic section titles and type labels using the specific type name variable (`$typeName`).
+- **Dynamic Show Details**: Modified [show.blade.php](file:///P:/Project/Web/hrms/resources/views/offboarding/show.blade.php) to display dynamic details titles, status & dates section titles, and correct date header columns ("Termination Date" or "Resignation Date").
+- **Dynamic List Column Headers**: Modified [search_results.blade.php](file:///P:/Project/Web/hrms/resources/views/offboarding/search_results.blade.php) to output correct date headers based on list type.
+- **Dynamic API Success Messages**: Updated [OffboardingController.php](file:///P:/Project/Web/hrms/app/Http/Controllers/Offboarding/OffboardingController.php) to return custom JSON messages detailing which record type was created, updated, or deleted.
+- **Verification**: Ran Pest features test `tests/Feature/ResignationTest.php`. All tests passed successfully ✅
+
+**Status**: ✅ SUCCESS

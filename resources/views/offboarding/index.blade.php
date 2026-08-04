@@ -367,7 +367,7 @@
 
                 Swal.fire({
                     title: 'Are you sure?',
-                    text: "This offboarding record will be deleted!",
+                    text: "This {{ $type }} record will be deleted!",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',

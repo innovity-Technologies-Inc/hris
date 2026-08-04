@@ -126,14 +126,14 @@
                         @if(!$isEdit)
                         <div class="col-12">
                             <h6 class="fw-semibold text-primary mb-0">
-                                <i class="mdi mdi-account-card-details me-2"></i>2. Offboarding Details
+                                <i class="mdi mdi-account-card-details me-2"></i>2. {{ $typeName }} Details
                             </h6>
                         </div>
                         @endif
 
                         {{-- Offboarding Type (Locked / Disabled) --}}
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold">Offboarding Type <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold">{{ $typeName }} Type <span class="text-danger">*</span></label>
                             <select class="form-select bg-light" disabled>
                                 <option value="resignation" {{ $currentType === 'resignation' ? 'selected' : '' }}>Resignation</option>
                                 <option value="termination" {{ $currentType === 'termination' ? 'selected' : '' }}>Termination</option>
