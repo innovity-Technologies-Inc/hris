@@ -161,7 +161,7 @@ class TransferServices
 
                 if (request()->hasFile('attachments')) {
                     foreach (request()->file('attachments') as $file) {
-                        $path = \App\HelperClass::file_upload($file, 'transfers', 'public', false);
+                        $path = \App\HelperClass::file_upload($file, 'transfers', false);
                         $transfer->attachments()->create([
                             'file_path' => $path,
                             'file_name' => $file->getClientOriginalName(),

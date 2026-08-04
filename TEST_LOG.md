@@ -2817,12 +2817,12 @@ Status: ✅ SUCCESS
 **Exact Command**: `php artisan config:clear && vendor/bin/pest tests/Feature/OffboardingTest.php tests/Feature/ResignationTest.php tests/Feature/EmployeeOfficeInfoTest.php tests/Feature/LeavePlanTest.php`
 
 **Results**:
-- **Helper Class Extension**: Updated [HelperClass.php](file:///P:/Project/Web/hrms/app/HelperClass.php#L22-L32) to accept custom `$disk` and boolean `$prependUpload` parameters to bypass the default `'upload/'` prefix when needed.
-- **Announcement Uploads**: Modified [AnnouncementServices.php](file:///P:/Project/Web/hrms/app/Services/Announcement/AnnouncementServices.php#L39) to store files using `HelperClass::file_upload` in the `announcements` folder on the `public` disk.
-- **Expense Receipts**: Modified [ExpenseApplicationService.php](file:///P:/Project/Web/hrms/app/Services/ClaimExpense/ExpenseApplicationService.php#L15) to store files in the `receipts` folder on the `public` disk.
-- **Payroll Disbursements**: Modified [DisbursementServices.php](file:///P:/Project/Web/hrms/app/Services/Payroll/DisbursementServices.php#L187) to store files in the `disbursements` folder on the `public` disk.
-- **Payroll Attachments**: Modified [PayrollServices.php](file:///P:/Project/Web/hrms/app/Services/Payroll/PayrollServices.php#L304) to store files in dynamic folders on the `public` disk.
-- **Transfer Attachments**: Modified [TransferServices.php](file:///P:/Project/Web/hrms/app/Services/Transfer/TransferServices.php#L164) to store files in the `transfers` folder on the `public` disk.
+- **Helper Class Extension**: Updated [HelperClass.php](file:///P:/Project/Web/hrms/app/HelperClass.php#L22-L32) to accept a boolean `$prependUpload` parameter to bypass the default `'upload/'` prefix when needed, resolving the disk directly from the system config (`config('filesystems.default')`).
+- **Announcement Uploads**: Modified [AnnouncementServices.php](file:///P:/Project/Web/hrms/app/Services/Announcement/AnnouncementServices.php#L39) to store files using `HelperClass::file_upload` in the `announcements` folder.
+- **Expense Receipts**: Modified [ExpenseApplicationService.php](file:///P:/Project/Web/hrms/app/Services/ClaimExpense/ExpenseApplicationService.php#L15) to store files in the `receipts` folder.
+- **Payroll Disbursements**: Modified [DisbursementServices.php](file:///P:/Project/Web/hrms/app/Services/Payroll/DisbursementServices.php#L187) to store files in the `disbursements` folder.
+- **Payroll Attachments**: Modified [PayrollServices.php](file:///P:/Project/Web/hrms/app/Services/Payroll/PayrollServices.php#L304) to store files in dynamic folders.
+- **Transfer Attachments**: Modified [TransferServices.php](file:///P:/Project/Web/hrms/app/Services/Transfer/TransferServices.php#L164) to store files in the `transfers` folder.
 - **Verification**: Ran Pest features tests for multiple modules. All 19 tests and 134 assertions passed successfully ✅
 
 **Status**: ✅ SUCCESS

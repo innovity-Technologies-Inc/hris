@@ -301,7 +301,7 @@ class PayrollServices
     {
         if (request()->hasFile('attachments')) {
             foreach (request()->file('attachments') as $file) {
-                $path = \App\HelperClass::file_upload($file, $folder, 'public', false);
+                $path = \App\HelperClass::file_upload($file, $folder, false);
                 $model->attachments()->create([
                     'file_path' => $path,
                     'file_name' => $file->getClientOriginalName(),

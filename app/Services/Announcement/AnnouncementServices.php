@@ -36,7 +36,7 @@ class AnnouncementServices
     {
         try {
             if ($file) {
-                $path = \App\HelperClass::file_upload($file, 'announcements', 'public', false);
+                $path = \App\HelperClass::file_upload($file, 'announcements', false);
                 $data['attachment_path'] = $path;
             }
 
@@ -58,7 +58,7 @@ class AnnouncementServices
                 if ($announcement->attachment_path) {
                     Storage::disk('public')->delete($announcement->attachment_path);
                 }
-                $path = \App\HelperClass::file_upload($file, 'announcements', 'public', false);
+                $path = \App\HelperClass::file_upload($file, 'announcements', false);
                 $data['attachment_path'] = $path;
             }
 
