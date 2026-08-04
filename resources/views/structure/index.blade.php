@@ -1,10 +1,24 @@
 @extends('structure.master')
 
+@push('styles')
+    <style>
+        .bg-primary-theme {
+            background-color: var(--primary-color, #974063) !important;
+        }
+        .text-primary-theme {
+            color: var(--primary-color, #974063) !important;
+        }
+        .spinner-border.text-primary {
+            color: var(--primary-color, #974063) !important;
+        }
+    </style>
+@endpush
+
 @section('content')
     <div class="row">
         <div class="col-12">
             <div class="card shadow-sm border-0">
-                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-3">
+                <div class="card-header bg-primary-theme text-white d-flex justify-content-between align-items-center py-3">
                     <div class="d-flex align-items-center">
                         <i class="fas fa-users-cog fa-lg me-2"></i>
                         <h4 class="mb-0 text-white font-weight-bold">Key People</h4>

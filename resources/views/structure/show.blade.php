@@ -1,10 +1,30 @@
 @extends('structure.master')
 
+@push('styles')
+    <style>
+        .btn-primary-theme {
+            background-color: var(--primary-color, #974063) !important;
+            border-color: var(--primary-color, #974063) !important;
+            color: #fff !important;
+        }
+        .btn-primary-theme:hover, .btn-primary-theme:focus {
+            background-color: #7b3150 !important;
+            border-color: #7b3150 !important;
+        }
+        .bg-primary-theme {
+            background-color: var(--primary-color, #974063) !important;
+        }
+        .text-primary-theme {
+            color: var(--primary-color, #974063) !important;
+        }
+    </style>
+@endpush
+
 @section('content')
     <div class="row">
         <div class="col-12 col-lg-10 mx-auto">
             <div class="card shadow-sm border-0">
-                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-3">
+                <div class="card-header bg-primary-theme text-white d-flex justify-content-between align-items-center py-3">
                     <div class="d-flex align-items-center">
                         <i class="fas fa-id-card fa-lg me-2"></i>
                         <h4 class="mb-0 text-white font-weight-bold">Key Person Profile</h4>
@@ -150,7 +170,7 @@
                         <a href="{{ route('organization-structure.index') }}" class="btn btn-secondary px-4">
                             <i class="fas fa-times me-1"></i> Cancel
                         </a>
-                        <a href="{{ route('organization-structure.edit', $member->id) }}" class="btn btn-primary px-5">
+                        <a href="{{ route('organization-structure.edit', $member->id) }}" class="btn btn-primary-theme px-5">
                             <i class="fas fa-edit me-1"></i> Edit Profile
                         </a>
                     </div>
