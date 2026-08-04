@@ -37,7 +37,7 @@
                                     <label for="applicant_id" class="form-label">Applicant ID</label>
                                     <input type="text" class="form-control @error('applicant_id') is-invalid @enderror"
                                         id="applicant_id" name="applicant_id"
-                                        value="{{ isset($employee) ? $employee->applicant_id : old('applicant_id') }}"
+                                        value="{{ old('applicant_id', $employee->applicant_id ?? '') }}"
                                         placeholder="Auto-generated if left blank">
                                     @error('applicant_id')
                                         <small class="text-danger">{{ $message }}</small>
@@ -48,7 +48,7 @@
                                     <label for="system_id" class="form-label">System ID</label>
                                     <input type="text" class="form-control @error('system_id') is-invalid @enderror"
                                         id="system_id" name="system_id"
-                                        value="{{ isset($employee) ? $employee->system_id : old('system_id') }}"
+                                        value="{{ old('system_id', $employee->system_id ?? '') }}"
                                         placeholder="Auto-generated if left blank">
                                     @error('system_id')
                                         <small class="text-danger">{{ $message }}</small>
@@ -60,7 +60,7 @@
                                             class="text-danger">*</span></label>
                                     <input type="text" class="form-control @error('punch_card_no') is-invalid @enderror"
                                         id="punch_card_no" name="punch_card_no"
-                                        value="{{ isset($employee) ? $employee->punch_card_no : old('punch_card_no') }}" required>
+                                        value="{{ old('punch_card_no', $employee->punch_card_no ?? '') }}" required>
                                     @error('punch_card_no')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -86,7 +86,7 @@
                                             class="text-danger">*</span></label>
                                     <input type="text" class="form-control @error('first_name') is-invalid @enderror"
                                         id="first_name" name="first_name"
-                                        value="{{ isset($employee) ? ($employee->first_name ?: $employee->full_name) : old('first_name') }}" required>
+                                        value="{{ old('first_name', $employee->first_name ?? $employee->full_name ?? '') }}" required>
                                     @error('first_name')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -96,7 +96,7 @@
                                     <label for="middle_name" class="form-label">Middle Name</label>
                                     <input type="text" class="form-control @error('middle_name') is-invalid @enderror"
                                         id="middle_name" name="middle_name"
-                                        value="{{ isset($employee) ? $employee->middle_name : old('middle_name') }}">
+                                        value="{{ old('middle_name', $employee->middle_name ?? '') }}">
                                     @error('middle_name')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -106,7 +106,7 @@
                                     <label for="last_name" class="form-label">Last Name</label>
                                     <input type="text" class="form-control @error('last_name') is-invalid @enderror"
                                         id="last_name" name="last_name"
-                                        value="{{ isset($employee) ? $employee->last_name : old('last_name') }}">
+                                        value="{{ old('last_name', $employee->last_name ?? '') }}">
                                     @error('last_name')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -119,7 +119,7 @@
                                             class="text-danger">*</span></label>
                                     <input type="text" class="form-control @error('father_name') is-invalid @enderror"
                                         id="father_name" name="father_name"
-                                        value="{{ isset($employee) ? $employee->father_name : old('father_name') }}" required>
+                                        value="{{ old('father_name', $employee->father_name ?? '') }}" required>
                                     @error('father_name')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -130,7 +130,7 @@
                                             class="text-danger">*</span></label>
                                     <input type="text" class="form-control @error('mother_name') is-invalid @enderror"
                                         id="mother_name" name="mother_name"
-                                        value="{{ isset($employee) ? $employee->mother_name : old('mother_name') }}" required>
+                                        value="{{ old('mother_name', $employee->mother_name ?? '') }}" required>
                                     @error('mother_name')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -140,7 +140,7 @@
                                     <label for="spouse_name" class="form-label">Spouse's Name</label>
                                     <input type="text" class="form-control @error('spouse_name') is-invalid @enderror"
                                         id="spouse_name" name="spouse_name"
-                                        value="{{ isset($employee) ? $employee->spouse_name : old('spouse_name') }}">
+                                        value="{{ old('spouse_name', $employee->spouse_name ?? '') }}">
                                     @error('spouse_name')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -197,7 +197,7 @@
                                             class="text-danger">*</span></label>
                                     <input type="text" class="form-control @error('religion') is-invalid @enderror"
                                         id="religion" name="religion"
-                                        value="{{ isset($employee) ? $employee->religion : old('religion') }}" required>
+                                        value="{{ old('religion', $employee->religion ?? '') }}" required>
                                     @error('religion')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -208,7 +208,7 @@
                                             class="text-danger">*</span></label>
                                     <input type="text" class="form-control @error('nationality') is-invalid @enderror"
                                         id="nationality" name="nationality"
-                                        value="{{ isset($employee) ? $employee->nationality : old('nationality') }}" required>
+                                        value="{{ old('nationality', $employee->nationality ?? '') }}" required>
                                     @error('nationality')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -258,13 +258,13 @@
                                             class="form-control @error('height_feet') is-invalid @enderror"
                                             id="height_feet" name="height_feet" placeholder="Feet" min="0"
                                             max="8"
-                                            value="{{ isset($employee) ? $employee->height_feet : old('height_feet') }}">
+                                            value="{{ old('height_feet', $employee->height_feet ?? '') }}">
                                         <span class="input-group-text">ft</span>
                                         <input type="number"
                                             class="form-control @error('height_inches') is-invalid @enderror"
                                             id="height_inches" name="height_inches" placeholder="Inches" min="0"
                                             max="11"
-                                            value="{{ isset($employee) ? $employee->height_inches : old('height_inches') }}">
+                                            value="{{ old('height_inches', $employee->height_inches ?? '') }}">
                                         <span class="input-group-text">in</span>
                                     </div>
                                     @error('height_feet')
@@ -280,7 +280,7 @@
                                     <input type="number"
                                         class="form-control @error('children_count') is-invalid @enderror"
                                         id="children_count" name="children_count"
-                                        value="{{ isset($employee) ? $employee->children_count : old('children_count', 0) }}"
+                                        value="{{ old('children_count', $employee->children_count ?? 0) }}"
                                         min="0">
                                     @error('children_count')
                                         <small class="text-danger">{{ $message }}</small>
@@ -307,7 +307,7 @@
                                     <input type="date"
                                         class="form-control @error('date_of_birth') is-invalid @enderror"
                                         id="date_of_birth" name="date_of_birth"
-                                        value="{{ isset($employee) ? $employee->date_of_birth : old('date_of_birth') }}" required>
+                                        value="{{ old('date_of_birth', $employee->date_of_birth ?? '') }}" required>
                                     @error('date_of_birth')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -318,7 +318,7 @@
                                     <input type="text"
                                         class="form-control @error('birth_country') is-invalid @enderror"
                                         id="birth_country" name="birth_country"
-                                        value="{{ isset($employee) ? $employee->birth_country : old('birth_country') }}">
+                                        value="{{ old('birth_country', $employee->birth_country ?? '') }}">
                                     @error('birth_country')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -329,7 +329,7 @@
                                     <input type="text"
                                         class="form-control @error('birth_reg_no') is-invalid @enderror"
                                         id="birth_reg_no" name="birth_reg_no"
-                                        value="{{ isset($employee) ? $employee->birth_reg_no : old('birth_reg_no') }}">
+                                        value="{{ old('birth_reg_no', $employee->birth_reg_no ?? '') }}">
                                     @error('birth_reg_no')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -353,7 +353,7 @@
                                     <label for="tin" class="form-label">TIN Number</label>
                                     <input type="text" class="form-control @error('tin') is-invalid @enderror"
                                         id="tin" name="tin"
-                                        value="{{ isset($employee) ? $employee->tin : old('tin') }}">
+                                        value="{{ old('tin', $employee->tin ?? '') }}">
                                     @error('tin')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -363,7 +363,7 @@
                                     <label for="passport_no" class="form-label">Passport Number</label>
                                     <input type="text" class="form-control @error('passport_no') is-invalid @enderror"
                                         id="passport_no" name="passport_no"
-                                        value="{{ isset($employee) ? $employee->passport_no : old('passport_no') }}">
+                                        value="{{ old('passport_no', $employee->passport_no ?? '') }}">
                                     @error('passport_no')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -374,7 +374,7 @@
                                     <input type="date"
                                         class="form-control @error('passport_expiry') is-invalid @enderror"
                                         id="passport_expiry" name="passport_expiry"
-                                        value="{{ isset($employee) ? $employee->passport_expiry : old('passport_expiry') }}">
+                                        value="{{ old('passport_expiry', $employee->passport_expiry ?? '') }}">
                                     @error('passport_expiry')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -387,7 +387,7 @@
                                     <input type="text"
                                         class="form-control @error('nid') is-invalid @enderror"
                                         id="nid" name="nid"
-                                        value="{{ isset($employee) ? $employee->nid : old('nid') }}">
+                                        value="{{ old('nid', $employee->nid ?? '') }}">
                                     @error('nid')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -397,7 +397,7 @@
                                     <label for="license_no" class="form-label">License Number</label>
                                     <input type="text" class="form-control @error('license_no') is-invalid @enderror"
                                         id="license_no" name="license_no"
-                                        value="{{ isset($employee) ? $employee->license_no : old('license_no') }}">
+                                        value="{{ old('license_no', $employee->license_no ?? '') }}">
                                     @error('license_no')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -408,7 +408,7 @@
                                     <input type="date"
                                         class="form-control @error('license_expiry') is-invalid @enderror"
                                         id="license_expiry" name="license_expiry"
-                                        value="{{ isset($employee) ? $employee->license_expiry : old('license_expiry') }}">
+                                        value="{{ old('license_expiry', $employee->license_expiry ?? '') }}">
                                     @error('license_expiry')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -420,7 +420,7 @@
                                     <label for="visa_expiry" class="form-label">Visa Expiry Date</label>
                                     <input type="date" class="form-control @error('visa_expiry') is-invalid @enderror"
                                         id="visa_expiry" name="visa_expiry"
-                                        value="{{ isset($employee) ? $employee->visa_expiry : old('visa_expiry') }}">
+                                        value="{{ old('visa_expiry', $employee->visa_expiry ?? '') }}">
                                     @error('visa_expiry')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -430,7 +430,7 @@
                                     <label for="work_expiry" class="form-label">Work Permit Expiry Date</label>
                                     <input type="date" class="form-control @error('work_expiry') is-invalid @enderror"
                                         id="work_expiry" name="work_expiry"
-                                        value="{{ isset($employee) ? $employee->work_expiry : old('work_expiry') }}">
+                                        value="{{ old('work_expiry', $employee->work_expiry ?? '') }}">
                                     @error('work_expiry')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -441,7 +441,7 @@
                                     <input type="text"
                                         class="form-control @error('residency_id_number') is-invalid @enderror"
                                         id="residency_id_number" name="residency_id_number"
-                                        value="{{ isset($employee) ? $employee->residency_id_number : old('residency_id_number') }}">
+                                        value="{{ old('residency_id_number', $employee->residency_id_number ?? '') }}">
                                     @error('residency_id_number')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -467,7 +467,7 @@
                                     <input type="tel"
                                         class="form-control @error('personal_mobile') is-invalid @enderror"
                                         id="personal_mobile" name="personal_mobile"
-                                        value="{{ isset($employee) ? $employee->personal_mobile : old('personal_mobile') }}" required>
+                                        value="{{ old('personal_mobile', $employee->personal_mobile ?? '') }}" required>
                                     @error('personal_mobile')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -477,7 +477,7 @@
                                     <label for="home_phone" class="form-label">Home Phone</label>
                                     <input type="tel" class="form-control @error('home_phone') is-invalid @enderror"
                                         id="home_phone" name="home_phone"
-                                        value="{{ isset($employee) ? $employee->home_phone : old('home_phone') }}">
+                                        value="{{ old('home_phone', $employee->home_phone ?? '') }}">
                                     @error('home_phone')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -489,7 +489,7 @@
                                     <label for="work_mobile" class="form-label">Work Mobile</label>
                                     <input type="tel" class="form-control @error('work_mobile') is-invalid @enderror"
                                         id="work_mobile" name="work_mobile"
-                                        value="{{ isset($employee) ? $employee->work_mobile : old('work_mobile') }}">
+                                        value="{{ old('work_mobile', $employee->work_mobile ?? '') }}">
                                     @error('work_mobile')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -499,7 +499,7 @@
                                     <label for="work_phone" class="form-label">Work Phone</label>
                                     <input type="tel" class="form-control @error('work_phone') is-invalid @enderror"
                                         id="work_phone" name="work_phone"
-                                        value="{{ isset($employee) ? $employee->work_phone : old('work_phone') }}">
+                                        value="{{ old('work_phone', $employee->work_phone ?? '') }}">
                                     @error('work_phone')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -512,7 +512,7 @@
                                     <input type="email"
                                         class="form-control @error('personal_email') is-invalid @enderror"
                                         id="personal_email" name="personal_email"
-                                        value="{{ isset($employee) ? $employee->personal_email : old('personal_email') }}">
+                                        value="{{ old('personal_email', $employee->personal_email ?? '') }}">
                                     @error('personal_email')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -522,7 +522,7 @@
                                     <label for="work_email" class="form-label">Work Email</label>
                                      <input type="email" class="form-control @error('work_email') is-invalid @enderror"
                                         id="work_email" name="work_email"
-                                        value="{{ isset($employee) ? ($employee->work_email ?: $employee->user?->email) : old('work_email') }}">
+                                        value="{{ old('work_email', $employee->work_email ?? $employee->user?->email ?? '') }}">
                                     @error('work_email')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -548,7 +548,7 @@
                                     <input type="text"
                                         class="form-control @error('present_address.line_1') is-invalid @enderror"
                                         id="present_address_line_1" name="present_address[line_1]"
-                                        value="{{ isset($employee->present_address['line_1']) ? $employee->present_address['line_1'] : old('present_address.line_1') }}" required>
+                                        value="{{ old('present_address.line_1', $employee->present_address['line_1'] ?? '') }}" required>
                                     @error('present_address.line_1')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -559,7 +559,7 @@
                                     <input type="text"
                                         class="form-control @error('present_address.village') is-invalid @enderror"
                                         id="present_village" name="present_address[village]"
-                                        value="{{ isset($employee->present_address['village']) ? $employee->present_address['village'] : old('present_address.village') }}">
+                                        value="{{ old('present_address.village', $employee->present_address['village'] ?? '') }}">
                                     @error('present_address.village')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -573,7 +573,7 @@
                                     <input type="text"
                                         class="form-control @error('present_address.post_office') is-invalid @enderror"
                                         id="present_post_office" name="present_address[post_office]"
-                                        value="{{ isset($employee->present_address['post_office']) ? $employee->present_address['post_office'] : old('present_address.post_office') }}" required>
+                                        value="{{ old('present_address.post_office', $employee->present_address['post_office'] ?? '') }}" required>
                                     @error('present_address.post_office')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -585,7 +585,7 @@
                                     <input type="text"
                                         class="form-control @error('present_address.district') is-invalid @enderror"
                                         id="present_district" name="present_address[district]"
-                                        value="{{ isset($employee->present_address['district']) ? $employee->present_address['district'] : old('present_address.district') }}" required>
+                                        value="{{ old('present_address.district', $employee->present_address['district'] ?? '') }}" required>
                                     @error('present_address.district')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -597,7 +597,7 @@
                                     <input type="text"
                                         class="form-control @error('present_address.division') is-invalid @enderror"
                                         id="present_division" name="present_address[division]"
-                                        value="{{ isset($employee->present_address['division']) ? $employee->present_address['division'] : old('present_address.division') }}" required>
+                                        value="{{ old('present_address.division', $employee->present_address['division'] ?? '') }}" required>
                                     @error('present_address.division')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -611,7 +611,7 @@
                                     <input type="text"
                                         class="form-control @error('present_address.zip_code') is-invalid @enderror"
                                         id="present_zip_code" name="present_address[zip_code]"
-                                        value="{{ isset($employee->present_address['zip_code']) ? $employee->present_address['zip_code'] : old('present_address.zip_code') }}" required>
+                                        value="{{ old('present_address.zip_code', $employee->present_address['zip_code'] ?? '') }}" required>
                                     @error('present_address.zip_code')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -623,7 +623,7 @@
                                     <input type="text"
                                         class="form-control @error('present_address.state') is-invalid @enderror"
                                         id="present_state" name="present_address[state]"
-                                        value="{{ isset($employee->present_address['state']) ? $employee->present_address['state'] : old('present_address.state') }}" required>
+                                        value="{{ old('present_address.state', $employee->present_address['state'] ?? '') }}" required>
                                     @error('present_address.state')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -635,7 +635,7 @@
                                     <input type="text"
                                         class="form-control @error('present_address.country') is-invalid @enderror"
                                         id="present_country" name="present_address[country]"
-                                        value="{{ isset($employee->present_address['country']) ? $employee->present_address['country'] : old('present_address.country') }}" required>
+                                        value="{{ old('present_address.country', $employee->present_address['country'] ?? '') }}" required>
                                     @error('present_address.country')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -672,7 +672,7 @@
                                     <input type="text"
                                         class="form-control @error('permanent_address.line_1') is-invalid @enderror"
                                         id="permanent_address_line_1" name="permanent_address[line_1]"
-                                        value="{{ isset($employee->permanent_address['line_1']) ? $employee->permanent_address['line_1'] : old('permanent_address.line_1') }}">
+                                        value="{{ old('permanent_address.line_1', $employee->permanent_address['line_1'] ?? '') }}">
                                     @error('permanent_address.line_1')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -683,7 +683,7 @@
                                     <input type="text"
                                         class="form-control @error('permanent_address.village') is-invalid @enderror"
                                         id="permanent_village" name="permanent_address[village]"
-                                        value="{{ isset($employee->permanent_address['village']) ? $employee->permanent_address['village'] : old('permanent_address.village') }}">
+                                        value="{{ old('permanent_address.village', $employee->permanent_address['village'] ?? '') }}">
                                     @error('permanent_address.village')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -696,7 +696,7 @@
                                     <input type="text"
                                         class="form-control @error('permanent_address.post_office') is-invalid @enderror"
                                         id="permanent_post_office" name="permanent_address[post_office]"
-                                        value="{{ isset($employee->permanent_address['post_office']) ? $employee->permanent_address['post_office'] : old('permanent_address.post_office') }}">
+                                        value="{{ old('permanent_address.post_office', $employee->permanent_address['post_office'] ?? '') }}">
                                     @error('permanent_address.post_office')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -707,7 +707,7 @@
                                     <input type="text"
                                         class="form-control @error('permanent_address.district') is-invalid @enderror"
                                         id="permanent_district" name="permanent_address[district]"
-                                        value="{{ isset($employee->permanent_address['district']) ? $employee->permanent_address['district'] : old('permanent_address.district') }}">
+                                        value="{{ old('permanent_address.district', $employee->permanent_address['district'] ?? '') }}">
                                     @error('permanent_address.district')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -718,7 +718,7 @@
                                     <input type="text"
                                         class="form-control @error('permanent_address.division') is-invalid @enderror"
                                         id="permanent_division" name="permanent_address[division]"
-                                        value="{{ isset($employee->permanent_address['division']) ? $employee->permanent_address['division'] : old('permanent_address.division') }}">
+                                        value="{{ old('permanent_address.division', $employee->permanent_address['division'] ?? '') }}">
                                     @error('permanent_address.division')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -731,7 +731,7 @@
                                     <input type="text"
                                         class="form-control @error('permanent_address.zip_code') is-invalid @enderror"
                                         id="permanent_zip_code" name="permanent_address[zip_code]"
-                                        value="{{ isset($employee->permanent_address['zip_code']) ? $employee->permanent_address['zip_code'] : old('permanent_address.zip_code') }}">
+                                        value="{{ old('permanent_address.zip_code', $employee->permanent_address['zip_code'] ?? '') }}">
                                     @error('permanent_address.zip_code')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -742,7 +742,7 @@
                                     <input type="text"
                                         class="form-control @error('permanent_address.state') is-invalid @enderror"
                                         id="permanent_state" name="permanent_address[state]"
-                                        value="{{ isset($employee->permanent_address['state']) ? $employee->permanent_address['state'] : old('permanent_address.state') }}">
+                                        value="{{ old('permanent_address.state', $employee->permanent_address['state'] ?? '') }}">
                                     @error('permanent_address.state')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -753,7 +753,7 @@
                                     <input type="text"
                                         class="form-control @error('permanent_address.country') is-invalid @enderror"
                                         id="permanent_country" name="permanent_address[country]"
-                                        value="{{ isset($employee->permanent_address['country']) ? $employee->permanent_address['country'] : old('permanent_address.country') }}">
+                                        value="{{ old('permanent_address.country', $employee->permanent_address['country'] ?? '') }}">
                                     @error('permanent_address.country')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
