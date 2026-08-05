@@ -305,22 +305,30 @@ class HelperClass
 
         $disk = config('filesystems.default', 'public');
 
-        /*
-        |--------------------------------------------------------------------------
-        | Cloud Proxy Route (Commented Out)
-        |--------------------------------------------------------------------------
-        | Used for cloud/private disks (minio, s3) to proxy file delivery.
-        | PHP signs the URL, and Nginx X-Accel-Redirect fetches the file from MinIO
-        | directly, or falls back to route('file.serve') for PHP streaming if Nginx
-        | is not available. This prevents public visibility issues for private buckets.
-        | Currently disabled to return the direct path/URL instead.
-        |
         if (in_array($disk, ['minio', 's3'])) {
-            // Encode the path so slashes and special chars survive the URL safely
-            $encodedPath = base64_encode($file_path);
-            return route('file.accel', ['encodedPath' => $encodedPath]);
+            try {
+                $url = Storage::disk($disk)->temporaryUrl($file_path, now()->addMinutes(120));
+                
+                $internalEndpoint = config('filesystems.disks.' . $disk . '.endpoint');
+                $externalUrl = config('filesystems.disks.' . $disk . '.url');
+                
+                if ($internalEndpoint && $externalUrl) {
+                    $internalEndpoint = rtrim($internalEndpoint, '/');
+                    $externalUrl = rtrim($externalUrl, '/');
+                    
+                    $externalBase = parse_url($externalUrl, PHP_URL_SCHEME) . '://' . parse_url($externalUrl, PHP_URL_HOST);
+                    if ($port = parse_url($externalUrl, PHP_URL_PORT)) {
+                        $externalBase .= ':' . $port;
+                    }
+                    
+                    $url = str_replace($internalEndpoint, $externalBase, $url);
+                }
+                
+                return $url;
+            } catch (\Exception $e) {
+                \Log::warning('Failed to generate S3/MinIO temporary URL: ' . $e->getMessage());
+            }
         }
-        */
 
         // For local disk, serve via the public symlink disk
         if ($disk === 'local') {
