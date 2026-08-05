@@ -17,41 +17,56 @@
 @section('content')
     <div class="row">
         <div class="col-12">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-primary-theme text-white d-flex justify-content-between align-items-center py-3">
-                    <div class="d-flex align-items-center">
-                        <i class="fas fa-users-cog fa-lg me-2"></i>
-                        <h4 class="mb-0 text-white font-weight-bold">Key People</h4>
-                    </div>
-                    <a href="{{ route('organization-structure.create') }}" class="btn btn-warning btn-sm shadow-sm d-flex align-items-center fw-semibold">
-                        <i class="fas fa-plus me-1"></i> Add Key Person
-                    </a>
-                </div><!-- end card header -->
-
-                <!-- Search Filter Form -->
-                <div class="px-4 pt-3 pb-2 border-bottom bg-light-subtle">
-                    <form id="filterForm" onsubmit="return false;">
-                        <div class="row align-items-center">
-                            <div class="col-md-8 col-12 mb-2 mb-md-0">
-                                <div class="input-group">
-                                    <span class="input-group-text border-end-0 bg-white">
-                                        <i class="fas fa-search text-muted"></i>
-                                    </span>
-                                    <input type="text" class="form-control border-start-0" id="keywordSearch" name="keyword"
-                                        placeholder="Search by name, position, email, phone, or hierarchy level..." aria-label="Keyword Search">
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-12 text-md-end">
-                                <button type="button" class="btn btn-outline-secondary w-100 w-md-auto" id="resetFilters">
-                                    <i class="fas fa-undo me-1"></i> Reset Search
-                                </button>
+            <div class="card border-0 shadow-sm rounded">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Search Key People</h5>
+                </div>
+                <div class="card-header border-bottom p-4">
+                    <div class="row align-items-start">
+                        <div class="col-md-12">
+                            <div class="border rounded shadow-sm p-3 filter-section-bg bg-light-subtle">
+                                <form id="filterForm" onsubmit="return false;">
+                                    <div class="row mb-2">
+                                        <div class="col-md-8 col-12 mb-2 mb-md-0">
+                                            <label for="keywordSearch" class="form-label text-muted small fw-semibold mb-1">Keyword Search</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control border-end-0" id="keywordSearch" name="keyword"
+                                                    placeholder="Search by name, position, email, phone, or hierarchy level..." aria-label="Keyword Search">
+                                                <span class="input-group-text border-start-0 bg-white">
+                                                    <i class="fas fa-search text-muted"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-12 text-md-end align-self-end">
+                                            <button type="button" class="btn btn-outline-secondary btn-md w-100 w-md-auto" id="resetFilters">
+                                                <i class="fas fa-undo me-1"></i> Reset
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
+            </div>
 
-                <div class="card-body p-4" id="search-result">
-                    @include('structure.search_results')
+            <div class="card border-0 shadow-sm rounded mt-3">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Key People Records</h5>
+                </div>
+                <div class="card-body">
+                    {{-- Action Buttons --}}
+                    <div class="d-flex justify-content-between mb-3">
+                        <a class="btn btn-warning btn-sm shadow-sm d-flex align-items-center fw-semibold" href="{{ route('organization-structure.create') }}">
+                            <i class="fas fa-plus me-1"></i> Create
+                        </a>
+                    </div>
+
+                    <div id="search-result">
+                        <div class="table-responsive">
+                            @include('structure.search_results')
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

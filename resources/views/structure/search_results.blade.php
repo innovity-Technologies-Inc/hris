@@ -83,22 +83,20 @@
                     <td class="align-middle">
                         <div class="d-flex gap-2">
                             <a href="{{ route('organization-structure.show', $member->id) }}"
-                                class="btn btn-soft-info btn-sm rounded-circle d-flex align-items-center justify-content-center" 
-                                style="width: 32px; height: 32px;" title="View">
-                                <i class="fas fa-eye text-info"></i>
+                                class="btn btn-info btn-sm text-white" title="View Details">
+                                <i class="fas fa-eye" style="font-size: 11px;"></i>
                             </a>
 
                             <a href="{{ route('organization-structure.edit', $member->id) }}"
-                                class="btn btn-soft-primary btn-sm rounded-circle d-flex align-items-center justify-content-center" 
-                                style="width: 32px; height: 32px;" title="Edit">
-                                <i class="fas fa-edit text-primary"></i>
+                                class="btn btn-warning btn-sm text-white" title="Edit">
+                                <i class="fas fa-edit" style="font-size: 11px;"></i>
                             </a>
 
-                            <button class="btn btn-soft-danger btn-sm rounded-circle d-flex align-items-center justify-content-center delete-person"
+                            <button type="button" class="btn btn-danger btn-sm text-white delete-person"
                                 data-id="{{ $member->id }}"
                                 data-url="{{ route('organization-structure.destroy', $member->id) }}"
-                                style="width: 32px; height: 32px;" title="Delete">
-                                <i class="fas fa-trash text-danger"></i>
+                                title="Delete">
+                                <i class="fas fa-trash-alt" style="font-size: 11px;"></i>
                             </button>
                         </div>
                     </td>
