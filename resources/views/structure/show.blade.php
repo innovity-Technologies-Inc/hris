@@ -22,7 +22,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-12 col-lg-10 mx-auto">
+        <div class="col-12">
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-primary-theme text-white d-flex justify-content-between align-items-center py-3">
                     <div class="d-flex align-items-center">
@@ -132,9 +132,10 @@
                                 <div class="col-md-6">
                                     <span class="text-muted d-block small fw-semibold">Email Address</span>
                                     <span class="text-dark">
-                                        @if (!empty($member->email))
-                                            <a href="mailto:{{ $member->email }}" class="text-decoration-none">
-                                                <i class="fas fa-envelope text-primary me-1"></i>{{ $member->email }}
+                                        @php($email = $member->getEmployee ? ($member->getEmployee->work_email ?? $member->getEmployee->personal_email) : $member->email)
+                                        @if (!empty($email))
+                                            <a href="mailto:{{ $email }}" class="text-decoration-none">
+                                                <i class="fas fa-envelope text-primary-theme me-1"></i>{{ $email }}
                                             </a>
                                         @else
                                             <span class="text-muted-light">No Email Provided</span>
@@ -145,9 +146,10 @@
                                 <div class="col-md-6">
                                     <span class="text-muted d-block small fw-semibold">Phone Number</span>
                                     <span class="text-dark">
-                                        @if (!empty($member->contact_no))
-                                            <a href="tel:{{ $member->contact_no }}" class="text-decoration-none">
-                                                <i class="fas fa-phone text-success me-1"></i>{{ $member->contact_no }}
+                                        @php($phone = $member->getEmployee ? ($member->getEmployee->work_mobile ?? $member->getEmployee->personal_mobile) : $member->contact_no)
+                                        @if (!empty($phone))
+                                            <a href="tel:{{ $phone }}" class="text-decoration-none">
+                                                <i class="fas fa-phone text-success me-1"></i>{{ $phone }}
                                             </a>
                                         @else
                                             <span class="text-muted-light">No Phone Number Provided</span>

@@ -64,8 +64,14 @@
                     </td>
                     <td class="align-middle fw-medium">{{ $member->position }}</td>
                     <td class="align-middle">
-                        <span class="d-block mb-1"><i class="fas fa-envelope text-muted me-1"></i>{{ $member->email ?? 'N/A' }}</span>
-                        <span class="d-block"><i class="fas fa-phone text-muted me-1"></i>{{ $member->contact_no ?? 'N/A' }}</span>
+                        @php($email = $member->getEmployee ? ($member->getEmployee->work_email ?? $member->getEmployee->personal_email) : $member->email)
+                        @php($phone = $member->getEmployee ? ($member->getEmployee->work_mobile ?? $member->getEmployee->personal_mobile) : $member->contact_no)
+                        <span class="d-block mb-1">
+                            <i class="fas fa-envelope text-muted me-1"></i>{{ $email ?? 'N/A' }}
+                        </span>
+                        <span class="d-block">
+                            <i class="fas fa-phone text-muted me-1"></i>{{ $phone ?? 'N/A' }}
+                        </span>
                     </td>
                     <td class="align-middle">
                         @if ($member->status_form == 'active')
