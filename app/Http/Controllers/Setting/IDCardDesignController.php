@@ -606,13 +606,13 @@ class IDCardDesignController extends Controller
             DB::commit();
 
             // Delete old files from storage on success
-            if ($oldDesignFilePath && Storage::disk('public')->exists($oldDesignFilePath)) {
+            if ($oldDesignFilePath && \App\HelperClass::file_exists($oldDesignFilePath)) {
                 HelperClass::file_delete($oldDesignFilePath);
             }
-            if ($oldFrontPath && Storage::disk('public')->exists($oldFrontPath)) {
+            if ($oldFrontPath && \App\HelperClass::file_exists($oldFrontPath)) {
                 HelperClass::file_delete($oldFrontPath);
             }
-            if ($oldBackPath && Storage::disk('public')->exists($oldBackPath)) {
+            if ($oldBackPath && \App\HelperClass::file_exists($oldBackPath)) {
                 HelperClass::file_delete($oldBackPath);
             }
 
