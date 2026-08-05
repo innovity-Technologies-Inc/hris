@@ -120,13 +120,13 @@
                                 <label for="breakfast_start_time" class="form-label fw-semibold">Start Time</label>
                                 <input type="time" class="form-control" id="breakfast_start_time"
                                     name="breakfast_start_time"
-                                    value="{{ isset($plan) ? Carbon\Carbon::parse($plan->breakfast_start_time)->format('H:i') : old('breakfast_start_time') }}">
+                                    value="{{ isset($plan) && $plan->breakfast_start_time ? Carbon\Carbon::parse($plan->breakfast_start_time)->format('H:i') : old('breakfast_start_time') }}">
                             </div>
                             <div class="mb-0">
                                 <label for="breakfast_end_time" class="form-label fw-semibold">End Time</label>
                                 <input type="time" class="form-control" id="breakfast_end_time"
                                     name="breakfast_end_time"
-                                    value="{{ isset($plan) ? Carbon\Carbon::parse($plan->breakfast_end_time)->format('H:i') : old('breakfast_end_time') }}">
+                                    value="{{ isset($plan) && $plan->breakfast_end_time ? Carbon\Carbon::parse($plan->breakfast_end_time)->format('H:i') : old('breakfast_end_time') }}">
                             </div>
                         </div>
                     </div>
@@ -152,12 +152,12 @@
                             <div class="mb-3">
                                 <label for="lunch_start_time" class="form-label fw-semibold">Start Time</label>
                                 <input type="time" class="form-control" id="lunch_start_time" name="lunch_start_time"
-                                    value="{{ isset($plan) ? Carbon\Carbon::parse($plan->lunch_start_time)->format('H:i') : old('lunch_start_time') }}">
+                                    value="{{ isset($plan) && $plan->lunch_start_time ? Carbon\Carbon::parse($plan->lunch_start_time)->format('H:i') : old('lunch_start_time') }}">
                             </div>
                             <div class="mb-0">
                                 <label for="lunch_end_time" class="form-label fw-semibold">End Time</label>
                                 <input type="time" class="form-control" id="lunch_end_time" name="lunch_end_time"
-                                    value="{{ isset($plan) ? Carbon\Carbon::parse($plan->lunch_end_time)->format('H:i') : old('lunch_end_time') }}">
+                                    value="{{ isset($plan) && $plan->lunch_end_time ? Carbon\Carbon::parse($plan->lunch_end_time)->format('H:i') : old('lunch_end_time') }}">
                             </div>
                         </div>
                     </div>
@@ -184,12 +184,12 @@
                                 <label for="snacks_start_time" class="form-label fw-semibold">Start Time</label>
                                 <input type="time" class="form-control" id="snacks_start_time"
                                     name="snacks_start_time"
-                                    value="{{ isset($plan) ? Carbon\Carbon::parse($plan->snacks_start_time)->format('H:i') : old('snacks_start_time') }}">
+                                    value="{{ isset($plan) && $plan->snacks_start_time ? Carbon\Carbon::parse($plan->snacks_start_time)->format('H:i') : old('snacks_start_time') }}">
                             </div>
                             <div class="mb-0">
                                 <label for="snacks_end_time" class="form-label fw-semibold">End Time</label>
                                 <input type="time" class="form-control" id="snacks_end_time" name="snacks_end_time"
-                                    value="{{ isset($plan) ? Carbon\Carbon::parse($plan->snacks_end_time)->format('H:i') : old('snacks_end_time') }}">
+                                    value="{{ isset($plan) && $plan->snacks_end_time ? Carbon\Carbon::parse($plan->snacks_end_time)->format('H:i') : old('snacks_end_time') }}">
 
                             </div>
                         </div>
@@ -217,13 +217,12 @@
                                 <label for="dinner_start_time" class="form-label fw-semibold">Start Time</label>
                                 <input type="time" class="form-control" id="dinner_start_time"
                                     name="dinner_start_time"
-                                    value="{{ isset($plan) ? Carbon\Carbon::parse($plan->dinner_start_time)->format('H:i') : old('dinner_start_time') }}">
+                                    value="{{ isset($plan) && $plan->dinner_start_time ? Carbon\Carbon::parse($plan->dinner_start_time)->format('H:i') : old('dinner_start_time') }}">
                             </div>
                             <div class="mb-0">
                                 <label for="dinner_end_time" class="form-label fw-semibold">End Time</label>
                                 <input type="time" class="form-control" id="dinner_end_time" name="dinner_end_time"
-                                    value="{{ isset($plan) ? Carbon\Carbon::parse($plan->dinner_end_time)->format('H:i') : old('dinner_end_time') }}">>
-                            </div>
+                                    value="{{ isset($plan) && $plan->dinner_end_time ? Carbon\Carbon::parse($plan->dinner_end_time)->format('H:i') : old('dinner_end_time') }}">
                         </div>
                     </div>
                 </div>
@@ -262,6 +261,10 @@
     </div>
 
     <script>
+        function updateTimeCalculations() {
+            // Calculated on backend, no frontend display updates required.
+        }
+
         // Add event listeners to time inputs
         document.addEventListener('DOMContentLoaded', function() {
             const clockInInput = document.getElementById('clock_in_time');
@@ -327,10 +330,6 @@
                         .disabled = false;
                 });
                 document.getElementById('active_ind').checked = true;
-
-                // Reset calculated fields
-                document.getElementById('treat_as_full_day_minutes').value = '';
-                document.getElementById('treat_as_half_day_minutes').value = '';
             }, 0);
         });
     </script>
