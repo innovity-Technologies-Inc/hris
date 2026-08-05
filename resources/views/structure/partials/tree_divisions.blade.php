@@ -2,7 +2,7 @@
     @if ($showDivision)
         <!-- DIVISION LEVEL -->
         <div class="tree-item tree-item-nested" data-aos="fade-left" data-aos-duration="400" data-aos-once="true">
-            @php
+            <?php
                 $hasDivisionChildren = false;
                 if ($showDepartment && $division->departments->count() > 0) {
                     $hasDivisionChildren = true;
@@ -11,7 +11,7 @@
                         if ($dept->sections->count() > 0) { $hasDivisionChildren = true; break; }
                     }
                 }
-            @endphp
+            ?>
             <div class="tree-header" data-target="#division{{ $division->id }}">
                 @if ($hasDivisionChildren)
                     <i class="bi bi-chevron-right expand-icon"></i>

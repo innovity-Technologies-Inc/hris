@@ -574,7 +574,7 @@
                                                         @if ($showBranch)
                                                             <!-- LOCATION LEVEL -->
                                                             <div class="tree-item tree-item-nested" data-aos="fade-left" data-aos-duration="400" data-aos-once="true">
-                                                                @php
+                                                                <?php
                                                                     $hasLocationChildren = false;
                                                                     if ($showDivision && $location->divisions->count() > 0) {
                                                                         $hasLocationChildren = true;
@@ -589,7 +589,7 @@
                                                                             }
                                                                         }
                                                                     }
-                                                                @endphp
+                                                                ?>
                                                                 <div class="tree-header" data-target="#location{{ $location->id }}">
                                                                     @if ($hasLocationChildren)
                                                                         <i class="bi bi-chevron-right expand-icon"></i>

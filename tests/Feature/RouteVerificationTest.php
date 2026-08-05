@@ -56,6 +56,7 @@ test('plan routes return 200 ok', function (string $routeName) {
     'plan.allowance_plans.create',
     'organization-structure.index',
     'organization-structure.create',
+    'organization-structure.view',
     'setting.id_design.index',
     'setting.id_design.create',
 ]);
@@ -78,6 +79,7 @@ function getPermissionForRoute(string $routeName): ?string {
         'plan.allowance_plans.create' => 'allowance-plans.create',
         'organization-structure.index' => 'members.view',
         'organization-structure.create' => 'members.create',
+        'organization-structure.view' => 'structural-view.view',
         'setting.id_design.index' => 'id-card-design.view',
         'setting.id_design.create' => 'id-card-design.create',
     ];

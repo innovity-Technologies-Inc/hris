@@ -2,9 +2,9 @@
     @if ($showDepartment)
         <!-- DEPARTMENT LEVEL -->
         <div class="tree-item tree-item-nested" data-aos="fade-left" data-aos-duration="400" data-aos-once="true">
-            @php
+            <?php
                 $hasDepartmentChildren = ($showSection && $department->sections->count() > 0);
-            @endphp
+            ?>
             <div class="tree-header" data-target="#department{{ $department->id }}">
                 @if ($hasDepartmentChildren)
                     <i class="bi bi-chevron-right expand-icon"></i>
