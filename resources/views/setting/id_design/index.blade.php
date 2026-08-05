@@ -60,15 +60,15 @@
                                 @if (
                                     $design->preview_front_card &&
                                         $design->preview_back_card &&
-                                        Storage::disk('public')->exists($design->preview_front_card) &&
-                                        Storage::disk('public')->exists($design->preview_back_card))
+                                        \App\HelperClass::file_exists($design->preview_front_card) &&
+                                        \App\HelperClass::file_exists($design->preview_back_card))
                                     <!-- Flip Card with Front/Back - Click to open modal -->
                                     <div class="flip-card"
-                                        onclick="openPreviewModal('{{ $design->theme_name }}', '{{ Storage::url($design->preview_front_card) }}', '{{ Storage::url($design->preview_back_card) }}')"
+                                        onclick="openPreviewModal('{{ $design->theme_name }}', '{{ \App\HelperClass::get_file_url($design->preview_front_card) }}', '{{ \App\HelperClass::get_file_url($design->preview_back_card) }}')"
                                         style="cursor: pointer;">
                                         <div class="flip-card-inner">
                                             <div class="flip-card-front">
-                                                <img src="{{ Storage::url($design->preview_front_card) }}"
+                                                <img src="{{ \App\HelperClass::get_file_url($design->preview_front_card) }}"
                                                     alt="{{ $design->theme_name }} - Front" class="img-fluid"
                                                     style="max-height: 100%; max-width: 100%; object-fit: contain;">
                                                 <div class="flip-hint">
@@ -76,7 +76,7 @@
                                                 </div>
                                             </div>
                                             <div class="flip-card-back">
-                                                <img src="{{ Storage::url($design->preview_back_card) }}"
+                                                <img src="{{ \App\HelperClass::get_file_url($design->preview_back_card) }}"
                                                     alt="{{ $design->theme_name }} - Back" class="img-fluid"
                                                     style="max-height: 100%; max-width: 100%; object-fit: contain;">
                                                 <div class="flip-hint">
@@ -85,8 +85,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                @elseif ($design->preview_front_card && Storage::disk('public')->exists($design->preview_front_card))
-                                    <img src="{{ Storage::url($design->preview_front_card) }}"
+                                @elseif ($design->preview_front_card && \App\HelperClass::file_exists($design->preview_front_card))
+                                    <img src="{{ \App\HelperClass::get_file_url($design->preview_front_card) }}"
                                         alt="{{ $design->theme_name }}" class="img-fluid"
                                         style="max-height: 100%; max-width: 100%; object-fit: contain;">
                                 @else
@@ -115,10 +115,10 @@
                                     @if (
                                         $design->preview_front_card &&
                                             $design->preview_back_card &&
-                                            Storage::disk('public')->exists($design->preview_front_card) &&
-                                            Storage::disk('public')->exists($design->preview_back_card))
+                                            \App\HelperClass::file_exists($design->preview_front_card) &&
+                                            \App\HelperClass::file_exists($design->preview_back_card))
                                         <button type="button" class="btn btn-sm btn-outline-primary"
-                                            onclick="openPreviewModal('{{ $design->theme_name }}', '{{ Storage::url($design->preview_front_card) }}', '{{ Storage::url($design->preview_back_card) }}')"
+                                            onclick="openPreviewModal('{{ $design->theme_name }}', '{{ \App\HelperClass::get_file_url($design->preview_front_card) }}', '{{ \App\HelperClass::get_file_url($design->preview_back_card) }}')"
                                             title="Preview Design">
                                             <i class="bi bi-eye"></i> Preview
                                         </button>

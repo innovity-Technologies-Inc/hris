@@ -330,6 +330,27 @@ class HelperClass
         return Storage::disk($disk)->url($file_path);
     }
 
+    /**
+     * Check if a file exists dynamically from the configured storage disk.
+     */
+    public static function file_exists($file_path): bool
+    {
+        if (empty($file_path)) {
+            return false;
+        }
 
+        $disk = config('filesystems.default', 'public');
+
+        if ($disk === 'local') {
+            $disk = 'public';
+        }
+
+        try {
+            return Storage::disk($disk)->exists($file_path);
+        } catch (\Exception $e) {
+            \Log::error('Error checking file existence on storage: ' . $e->getMessage());
+            return false;
+        }
+    }
 }
 

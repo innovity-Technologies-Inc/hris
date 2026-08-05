@@ -158,10 +158,10 @@
                         </div>
 
                         <!-- Front Image Preview Container -->
-                        <div class="mt-3" id="frontPreviewContainer" style="display: {{ $design->preview_front_card && Storage::disk('public')->exists($design->preview_front_card) ? 'block' : 'none' }};">
+                        <div class="mt-3" id="frontPreviewContainer" style="display: {{ $design->preview_front_card && \App\HelperClass::file_exists($design->preview_front_card) ? 'block' : 'none' }};">
                             <p class="small text-muted mb-2">Front Card Preview Image:</p>
                             <img id="frontPreview" 
-                                 src="{{ $design->preview_front_card && Storage::disk('public')->exists($design->preview_front_card) ? Storage::url($design->preview_front_card) : '#' }}" 
+                                 src="{{ $design->preview_front_card && \App\HelperClass::file_exists($design->preview_front_card) ? \App\HelperClass::get_file_url($design->preview_front_card) : '#' }}" 
                                  alt="Front Preview" 
                                  class="img-thumbnail" 
                                  style="max-height: 200px; max-width: 100%; object-fit: contain;">
@@ -186,10 +186,10 @@
                         </div>
 
                         <!-- Back Image Preview Container -->
-                        <div class="mt-3" id="backPreviewContainer" style="display: {{ $design->preview_back_card && Storage::disk('public')->exists($design->preview_back_card) ? 'block' : 'none' }};">
+                        <div class="mt-3" id="backPreviewContainer" style="display: {{ $design->preview_back_card && \App\HelperClass::file_exists($design->preview_back_card) ? 'block' : 'none' }};">
                             <p class="small text-muted mb-2">Back Card Preview Image:</p>
                             <img id="backPreview" 
-                                 src="{{ $design->preview_back_card && Storage::disk('public')->exists($design->preview_back_card) ? Storage::url($design->preview_back_card) : '#' }}" 
+                                 src="{{ $design->preview_back_card && \App\HelperClass::file_exists($design->preview_back_card) ? \App\HelperClass::get_file_url($design->preview_back_card) : '#' }}" 
                                  alt="Back Preview" 
                                  class="img-thumbnail" 
                                  style="max-height: 200px; max-width: 100%; object-fit: contain;">
