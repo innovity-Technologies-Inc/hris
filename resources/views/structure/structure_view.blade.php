@@ -530,181 +530,100 @@
                     <!-- Tree Structure -->
                     <div class="tree-container">
                         <div class="container-fluid px-3">
+                            @php($generalSetting = \App\HelperClass::getGeneralSetting())
+                            @php($showBranch = isset($generalSetting->branch_status) && $generalSetting->branch_status == 1)
+                            @php($showDivision = isset($generalSetting->division_status) && $generalSetting->division_status == 1)
+                            @php($showDepartment = isset($generalSetting->department_status) && $generalSetting->department_status == 1)
+                            @php($showSection = isset($generalSetting->section_status) && $generalSetting->section_status == 1)
+
                             @foreach ($groups as $group)
                                 <!-- GROUP LEVEL -->
                                 <div class="tree-item" data-aos="fade-up" data-aos-duration="400" data-aos-once="true">
-                                    <div class="tree-header" data-target="#group{{ $group->id }}"><i
-                                            class="bi bi-chevron-right expand-icon"></i><i
-                                            class="bi bi-building level-icon icon-group"></i><span
-                                            class="level-badge badge-group">Group</span><span
-                                            class="tree-label level-group">{{ $group->name }}</span><span
-                                            class="count-badge"
-                                            title="Total Employees">{{ $group->companies->sum(fn($c) => $c->employees_count ?? 0) }}</span><span
-                                            class="count-badge key-members-group" title="Key Members"><i
-                                                class="bi bi-people-fill me-1"></i>{{ $group->key_members_count ?? 0 }}
-                                        </span><button class="key-people-btn" type="button" data-level="group"
-                                            data-id="{{ $group->id }}" data-name="{{ $group->name }}"><i
-                                                class="bi bi-people-fill"></i><span>Key People</span></button></div>
+                                    <div class="tree-header" data-target="#group{{ $group->id }}">
+                                        <i class="bi bi-chevron-right expand-icon"></i>
+                                        <i class="bi bi-building level-icon icon-group"></i>
+                                        <span class="level-badge badge-group">Group</span>
+                                        <span class="tree-label level-group">{{ $group->name }}</span>
+                                        <span class="count-badge" title="Total Employees">{{ $group->companies->sum(fn($c) => $c->employees_count ?? 0) }}</span>
+                                        <span class="count-badge key-members-group" title="Key Members">
+                                            <i class="bi bi-people-fill me-1"></i>{{ $group->key_members_count ?? 0 }}
+                                        </span>
+                                        <button class="key-people-btn" type="button" data-level="group" data-id="{{ $group->id }}" data-name="{{ $group->name }}">
+                                            <i class="bi bi-people-fill"></i><span>Key People</span>
+                                        </button>
+                                    </div>
                                     <div class="tree-content" id="group{{ $group->id }}">
                                         @foreach ($group->companies as $company)
                                             <!-- COMPANY LEVEL -->
-                                            <div class="tree-item tree-item-nested" data-aos="fade-left"
-                                                data-aos-duration="400" data-aos-once="true">
-                                                <div class="tree-header" data-target="#company{{ $company->id }}"><i
-                                                        class="bi bi-chevron-right expand-icon"></i><i
-                                                        class="bi bi-building-fill level-icon icon-company"></i><span
-                                                        class="level-badge badge-company">Company</span><span
-                                                        class="tree-label">{{ $company->name }}</span><span
-                                                        class="count-badge"
-                                                        title="Total Employees">{{ $company->employees_count ?? 0 }}</span><span
-                                                        class="count-badge key-members-company" title="Key Members"><i
-                                                            class="bi bi-people-fill me-1"></i>{{ $company->key_members_count ?? 0 }}
-                                                    </span><button class="key-people-btn" type="button"
-                                                        data-level="company" data-id="{{ $company->id }}"
-                                                        data-name="{{ $company->name }}"><i
-                                                            class="bi bi-people-fill"></i><span>Key People</span></button>
+                                            <div class="tree-item tree-item-nested" data-aos="fade-left" data-aos-duration="400" data-aos-once="true">
+                                                <div class="tree-header" data-target="#company{{ $company->id }}">
+                                                    <i class="bi bi-chevron-right expand-icon"></i>
+                                                    <i class="bi bi-building-fill level-icon icon-company"></i>
+                                                    <span class="level-badge badge-company">Company</span>
+                                                    <span class="tree-label">{{ $company->name }}</span>
+                                                    <span class="count-badge" title="Total Employees">{{ $company->employees_count ?? 0 }}</span>
+                                                    <span class="count-badge key-members-company" title="Key Members">
+                                                        <i class="bi bi-people-fill me-1"></i>{{ $company->key_members_count ?? 0 }}
+                                                    </span>
+                                                    <button class="key-people-btn" type="button" data-level="company" data-id="{{ $company->id }}" data-name="{{ $company->name }}">
+                                                        <i class="bi bi-people-fill"></i><span>Key People</span>
+                                                    </button>
                                                 </div>
                                                 <div class="tree-content" id="company{{ $company->id }}">
                                                     @foreach ($company->locations as $location)
-                                                        <!-- LOCATION LEVEL -->
-                                                        <div class="tree-item tree-item-nested" data-aos="fade-left"
-                                                            data-aos-duration="400" data-aos-once="true">
-                                                            <div class="tree-header"
-                                                                data-target="#location{{ $location->id }}">
-                                                                @if ($location->divisions->count() > 0)
-                                                                    <i class="bi bi-chevron-right expand-icon"></i>
-                                                                @else
-                                                                    <i class="bi bi-chevron-right expand-icon"
-                                                                        style="visibility: hidden;"></i>
-                                                                @endif
-                                                                <i class="bi bi-geo-alt-fill level-icon icon-location">
-                                                                </i><span
-                                                                    class="level-badge badge-location">Branch</span><span
-                                                                    class="tree-label">{{ $location->name }}</span><span
-                                                                    class="count-badge"
-                                                                    title="Total Employees">{{ $location->employees_count ?? 0 }}</span><span
-                                                                    class="count-badge key-members-location"
-                                                                    title="Key Members"><i
-                                                                        class="bi bi-people-fill me-1"></i>{{ $location->key_members_count ?? 0 }}
-                                                                </span><button class="key-people-btn" type="button"
-                                                                    data-level="location" data-id="{{ $location->id }}"
-                                                                    data-name="{{ $location->name }}"><i
-                                                                        class="bi bi-people-fill"></i><span>Key
-                                                                        People</span></button>
-                                                            </div>
-                                                            @if ($location->divisions->count() > 0)
-                                                                <div class="tree-content" id="location{{ $location->id }}">
-                                                                    @foreach ($location->divisions as $division)
-                                                                        <!-- DIVISION LEVEL -->
-                                                                        <div class="tree-item tree-item-nested"
-                                                                            data-aos="fade-left" data-aos-duration="400"
-                                                                            data-aos-once="true">
-                                                                            <div class="tree-header"
-                                                                                data-target="#division{{ $division->id }}">
-                                                                                @if ($division->departments->count() > 0)
-                                                                                    <i
-                                                                                        class="bi bi-chevron-right expand-icon"></i>
-                                                                                @else
-                                                                                    <i class="bi bi-chevron-right expand-icon"
-                                                                                        style="visibility: hidden;"></i>
-                                                                                @endif
-                                                                                <i
-                                                                                    class="bi bi-diagram-3-fill level-icon icon-division">
-                                                                                </i><span
-                                                                                    class="level-badge badge-division">Division</span><span
-                                                                                    class="tree-label">{{ $division->name }}</span><span
-                                                                                    class="count-badge"
-                                                                                    title="Total Employees">{{ $division->employees_count ?? 0 }}</span><span
-                                                                                    class="count-badge key-members-division"
-                                                                                    title="Key Members"><i
-                                                                                        class="bi bi-people-fill me-1"></i>{{ $division->key_members_count ?? 0 }}
-                                                                                </span><button class="key-people-btn"
-                                                                                    type="button" data-level="division"
-                                                                                    data-id="{{ $division->id }}"
-                                                                                    data-name="{{ $division->name }}"><i
-                                                                                        class="bi bi-people-fill"></i><span>Key
-                                                                                        People</span></button>
-                                                                            </div>
-                                                                            @if ($division->departments->count() > 0)
-                                                                                <div class="tree-content"
-                                                                                    id="division{{ $division->id }}">
-                                                                                    @foreach ($division->departments as $department)
-                                                                                        <!-- DEPARTMENT LEVEL -->
-                                                                                        <div class="tree-item tree-item-nested"
-                                                                                            data-aos="fade-left"
-                                                                                            data-aos-duration="400"
-                                                                                            data-aos-once="true">
-                                                                                            <div class="tree-header"
-                                                                                                data-target="#department{{ $department->id }}">
-                                                                                                @if ($department->sections->count() > 0)
-                                                                                                    <i
-                                                                                                        class="bi bi-chevron-right expand-icon"></i>
-                                                                                                @else
-                                                                                                    <i class="bi bi-chevron-right expand-icon"
-                                                                                                        style="visibility: hidden;"></i>
-                                                                                                @endif
-                                                                                                <i
-                                                                                                    class="bi bi-briefcase-fill level-icon icon-department">
-                                                                                                </i><span
-                                                                                                    class="level-badge badge-department">Department</span><span
-                                                                                                    class="tree-label">{{ $department->department_name }}</span><span
-                                                                                                    class="count-badge"
-                                                                                                    title="Total Employees">{{ $department->employees_count ?? 0 }}</span><span
-                                                                                                    class="count-badge key-members-department"
-                                                                                                    title="Key Members"><i
-                                                                                                        class="bi bi-people-fill me-1"></i>{{ $department->key_members_count ?? 0 }}
-                                                                                                </span><button
-                                                                                                    class="key-people-btn"
-                                                                                                    type="button"
-                                                                                                    data-level="department"
-                                                                                                    data-id="{{ $department->id }}"
-                                                                                                    data-name="{{ $department->department_name }}"><i
-                                                                                                        class="bi bi-people-fill"></i><span>Key
-                                                                                                        People</span></button>
-                                                                                            </div>
-                                                                                            @if ($department->sections->count() > 0)
-                                                                                                <div class="tree-content"
-                                                                                                    id="department{{ $department->id }}">
-                                                                                                    @foreach ($department->sections as $section)
-                                                                                                        <!-- SECTION LEVEL -->
-                                                                                                        <div class="tree-item tree-item-nested"
-                                                                                                            data-aos="fade-left"
-                                                                                                            data-aos-duration="400"
-                                                                                                            data-aos-once="true">
-                                                                                                            <div
-                                                                                                                class="tree-header">
-                                                                                                                <i class="bi bi-chevron-right expand-icon"
-                                                                                                                    style="visibility: hidden;"></i><i
-                                                                                                                    class="bi bi-file-earmark-text-fill level-icon icon-section"></i><span
-                                                                                                                    class="level-badge badge-section">Section</span><span
-                                                                                                                    class="tree-label">{{ $section->name }}</span><span
-                                                                                                                    class="count-badge"
-                                                                                                                    title="Total Employees">{{ $section->employees_count ?? 0 }}</span><span
-                                                                                                                    class="count-badge key-members-section"
-                                                                                                                    title="Key Members"><i
-                                                                                                                        class="bi bi-people-fill me-1"></i>{{ $section->key_members_count ?? 0 }}
-                                                                                                                </span><button
-                                                                                                                    class="key-people-btn"
-                                                                                                                    type="button"
-                                                                                                                    data-level="section"
-                                                                                                                    data-id="{{ $section->id }}"
-                                                                                                                    data-name="{{ $section->name }}"><i
-                                                                                                                        class="bi bi-people-fill"></i><span>Key
-                                                                                                                        People</span></button>
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                    @endforeach
-                                                                                                </div>
-                                                                                            @endif
-                                                                                        </div>
-                                                                                    @endforeach
-                                                                                </div>
-                                                                            @endif
-                                                                        </div>
-                                                                    @endforeach
+                                                        @if ($showBranch)
+                                                            <!-- LOCATION LEVEL -->
+                                                            <div class="tree-item tree-item-nested" data-aos="fade-left" data-aos-duration="400" data-aos-once="true">
+                                                                @php
+                                                                    $hasLocationChildren = false;
+                                                                    if ($showDivision && $location->divisions->count() > 0) {
+                                                                        $hasLocationChildren = true;
+                                                                    } elseif (!$showDivision && $showDepartment) {
+                                                                        foreach ($location->divisions as $div) {
+                                                                            if ($div->departments->count() > 0) { $hasLocationChildren = true; break; }
+                                                                        }
+                                                                    } elseif (!$showDivision && !$showDepartment && $showSection) {
+                                                                        foreach ($location->divisions as $div) {
+                                                                            foreach ($div->departments as $dept) {
+                                                                                if ($dept->sections->count() > 0) { $hasLocationChildren = true; break 2; }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                @endphp
+                                                                <div class="tree-header" data-target="#location{{ $location->id }}">
+                                                                    @if ($hasLocationChildren)
+                                                                        <i class="bi bi-chevron-right expand-icon"></i>
+                                                                    @else
+                                                                        <i class="bi bi-chevron-right expand-icon" style="visibility: hidden;"></i>
+                                                                    @endif
+                                                                    <i class="bi bi-geo-alt-fill level-icon icon-location"></i>
+                                                                    <span class="level-badge badge-location">Branch</span>
+                                                                    <span class="tree-label">{{ $location->name }}</span>
+                                                                    <span class="count-badge" title="Total Employees">{{ $location->employees_count ?? 0 }}</span>
+                                                                    <span class="count-badge key-members-location" title="Key Members">
+                                                                        <i class="bi bi-people-fill me-1"></i>{{ $location->key_members_count ?? 0 }}
+                                                                    </span>
+                                                                    <button class="key-people-btn" type="button" data-level="location" data-id="{{ $location->id }}" data-name="{{ $location->name }}">
+                                                                        <i class="bi bi-people-fill"></i><span>Key People</span>
+                                                                    </button>
                                                                 </div>
-                                                            @endif
-                                                        </div>
+                                                                <div class="tree-content" id="location{{ $location->id }}">
+                                                                    @include('structure.partials.tree_divisions', [
+                                                                        'divisions' => $location->divisions,
+                                                                        'showDivision' => $showDivision,
+                                                                        'showDepartment' => $showDepartment,
+                                                                        'showSection' => $showSection
+                                                                    ])
+                                                                </div>
+                                                            </div>
+                                                        @else
+                                                            @include('structure.partials.tree_divisions', [
+                                                                'divisions' => $location->divisions,
+                                                                'showDivision' => $showDivision,
+                                                                'showDepartment' => $showDepartment,
+                                                                'showSection' => $showSection
+                                                            ])
+                                                        @endif
                                                     @endforeach
                                                 </div>
                                             </div>
