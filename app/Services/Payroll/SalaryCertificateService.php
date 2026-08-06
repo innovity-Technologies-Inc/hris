@@ -84,21 +84,12 @@ class SalaryCertificateService
         $html = View::make('payroll.salary.salary_certificate_pdf', compact('employee', 'officeInfo', 'data'))->render();
 
         try {
-            return Browsershot::html($html)
-                ->setNodeBinary(config('browsershot.node_binary', 'node'))
-                ->setNpmBinary(config('browsershot.npm_binary', 'npm'))
-                ->setNodeModulePath(config('browsershot.node_modules_path', base_path('node_modules')))
-                ->addChromiumArguments(config('browsershot.chrome_arguments', [
-                    '--disable-gpu',
-                    '--no-sandbox',
-                    '--disable-dev-shm-usage',
-                ]))
+            return \App\HelperClass::configureBrowsershot(Browsershot::html($html))
                 ->setOption('landscape', false)
                 ->format('A4')
                 ->margins(10, 15, 10, 15)
                 ->showBackground()
                 ->waitUntilNetworkIdle()
-                ->timeout(config('browsershot.timeout', 60))
                 ->pdf();
         } catch (Exception $e) {
             Log::error('[SalaryCertificate] PDF generation failed', [

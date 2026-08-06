@@ -95,10 +95,10 @@ return [
     |
     */
     'chrome_arguments' => [
-        '--disable-gpu',
-        '--no-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-setuid-sandbox',
+        'disable-gpu',
+        'no-sandbox',
+        'disable-dev-shm-usage',
+        'disable-setuid-sandbox',
     ],
 ];
 

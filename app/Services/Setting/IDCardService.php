@@ -275,27 +275,14 @@ class IDCardService
                 'timeout' => config('browsershot.timeout', 60)
             ]);
 
-            $browsershot = Browsershot::html($html)
-                ->setNodeBinary(config('browsershot.node_binary', 'node'))
-                ->setNpmBinary(config('browsershot.npm_binary', 'npm'))
-                ->setNodeModulePath(config('browsershot.node_modules_path', base_path('node_modules')));
-
-            if ($chromePath = config('browsershot.chrome_path')) {
-                $browsershot->setChromePath($chromePath);
-            }
+            $browsershot = \App\HelperClass::configureBrowsershot(Browsershot::html($html));
 
             $pdfContent = $browsershot
-                ->addChromiumArguments(config('browsershot.chrome_arguments', [
-                    '--disable-gpu',
-                    '--no-sandbox',
-                    '--disable-dev-shm-usage',
-                ]))
                 ->setOption('landscape', false)
                 ->paperSize(210, 297) // A4 in millimeters
                 ->margins(0, 0, 0, 0)
                 ->showBackground()
                 ->waitUntilNetworkIdle()
-                ->timeout(config('browsershot.timeout', 60))
                 ->pdf();
 
             Log::info('[PDF] PDF generated successfully', [

@@ -310,21 +310,14 @@ class OffboardingServices
 
         $html = \Illuminate\Support\Facades\View::make('offboarding.pdf', compact('offboardings', 'type', 'headerName'))->render();
 
-        return \Spatie\Browsershot\Browsershot::html($html)
-            ->setNodeBinary(config('browsershot.node_binary', 'node'))
-            ->setNpmBinary(config('browsershot.npm_binary', 'npm'))
-            ->setNodeModulePath(config('browsershot.node_modules_path', base_path('node_modules')))
-            ->addChromiumArguments(config('browsershot.chrome_arguments', [
-                '--disable-gpu',
-                '--no-sandbox',
-                '--disable-dev-shm-usage',
-            ]))
+        $browsershot = \App\HelperClass::configureBrowsershot(\Spatie\Browsershot\Browsershot::html($html));
+
+        return $browsershot
             ->setOption('landscape', false)
             ->format('A4')
             ->margins(10, 10, 10, 10)
             ->showBackground()
             ->waitUntilNetworkIdle()
-            ->timeout(config('browsershot.timeout', 60))
             ->pdf();
     }
 }

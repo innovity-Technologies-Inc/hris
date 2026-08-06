@@ -352,5 +352,43 @@ class HelperClass
             return false;
         }
     }
+
+    /**
+     * Configure a Browsershot instance with standard parameters.
+     */
+    public static function configureBrowsershot(\Spatie\Browsershot\Browsershot $browsershot): \Spatie\Browsershot\Browsershot
+    {
+        $nodeBinary = config('browsershot.node_binary', 'node');
+        $npmBinary = config('browsershot.npm_binary', 'npm');
+        $nodeModulesPath = config('browsershot.node_modules_path', base_path('node_modules'));
+        $chromePath = config('browsershot.chrome_path');
+        
+        $chromeArgs = config('browsershot.chrome_arguments', [
+            'disable-gpu',
+            'no-sandbox',
+            'disable-dev-shm-usage',
+        ]);
+        
+        $cleanedArgs = [];
+        foreach ($chromeArgs as $arg) {
+            $cleanedArgs[] = ltrim($arg, '-');
+        }
+
+        $browsershot
+            ->setNodeBinary($nodeBinary)
+            ->setNodeModulePath($nodeModulesPath)
+            ->addChromiumArguments($cleanedArgs)
+            ->timeout(config('browsershot.timeout', 60));
+
+        if ($npmBinary && $npmBinary !== 'npm') {
+            $browsershot->setNpmBinary($npmBinary);
+        }
+
+        if ($chromePath) {
+            $browsershot->setChromePath($chromePath);
+        }
+
+        return $browsershot;
+    }
 }
 

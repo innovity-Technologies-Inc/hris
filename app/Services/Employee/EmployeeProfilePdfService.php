@@ -65,25 +65,15 @@ class EmployeeProfilePdfService
         $html = View::make('employee.profile_pdf', compact('employee', 'officeInfo', 'companyInfo'))->render();
 
         try {
-            return Browsershot::html($html)
-                ->setNodeBinary(config('browsershot.node_binary', 'node'))
-                ->setNpmBinary(config('browsershot.npm_binary', 'npm'))
-                ->setNodeModulePath(config('browsershot.node_modules_path', base_path('node_modules')))
-                ->addChromiumArguments(config('browsershot.chrome_arguments', [
-                    '--disable-gpu',
-                    '--no-sandbox',
-                    '--disable-dev-shm-usage',
-                ]))
+            return \App\HelperClass::configureBrowsershot(Browsershot::html($html))
                 ->setOption('landscape', false)
                 ->paperSize(210, 297) // A4
                 ->margins(10, 10, 10, 10)
                 ->showBackground()
                 ->waitUntilNetworkIdle()
-                ->timeout(config('browsershot.timeout', 60))
                 ->pdf();
         } catch (Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Error in EmployeeProfilePdfService@generateDetailedProfilePdf: ' . $e->getMessage(), ['exception' => $e]);
-
+            Log::error('Error in EmployeeProfilePdfService@generateDetailedProfilePdf: ' . $e->getMessage(), ['exception' => $e]);
             throw new Exception('PDF generation failed: ' . $e->getMessage());
         }
     }
