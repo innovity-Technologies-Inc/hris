@@ -606,7 +606,7 @@ $expiryDate = date('d M Y', strtotime('+2 years'));
             <div class="card-body">
                 <div class="employee-photo-container">
                     @if ($employee->photo_path && \App\HelperClass::file_exists($employee->photo_path))
-                        <img src="{{ \App\HelperClass::get_id_card_image($employee->photo_path) }}" alt="Employee Photo"
+                        <img src="{{ \App\HelperClass::get_id_card_image($employee->photo_path, 'photo') }}" alt="Employee Photo"
                             class="employee-photo" id="employeePhoto">
                     @else
                         <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 120'%3E%3Crect fill='%23e3f2fd' width='100' height='120'/%3E%3Cpath d='M50 45c8 0 14-6 14-14s-6-14-14-14-14 6-14 14 6 14 14 14zm0 5c-10 0-30 5-30 15v8h60v-8c0-10-20-15-30-15z' fill='%231e88e5' transform='translate(0 10)'/%3E%3C/svg%3E"

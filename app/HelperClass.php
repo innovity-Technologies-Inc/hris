@@ -418,14 +418,11 @@ class HelperClass
         }
     }
 
-    /**
-     * Get image for ID Card rendering (base64 if in storage/MinIO to bypass network).
-     */
-    public static function get_id_card_image($path): string
+    public static function get_id_card_image($path, $fallbackType = 'logo'): string
     {
         \Log::info('[IMAGE_HELPER] Resolving path: ' . $path);
         if (empty($path)) {
-            return asset('assets/images/default-user.png'); // Fallback placeholder
+            return self::get_id_card_fallback_svg($fallbackType);
         }
 
         // If it is already a URL or base64, return it
@@ -440,9 +437,21 @@ class HelperClass
             return $base64;
         }
 
-        $fallback = asset('storage/' . $path);
-        \Log::info('[IMAGE_HELPER] Base64 conversion failed. Fallback URL: ' . $fallback);
-        return $fallback;
+        \Log::info('[IMAGE_HELPER] Base64 conversion failed. Returning fallback SVG.');
+        return self::get_id_card_fallback_svg($fallbackType);
+    }
+
+    /**
+     * Get fallback SVG string for logo or photo.
+     */
+    private static function get_id_card_fallback_svg($type): string
+    {
+        if ($type === 'photo') {
+            return "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 120'%3E%3Crect fill='%23e3f2fd' width='100' height='120'/%3E%3Cpath d='M50 45c8 0 14-6 14-14s-6-14-14-14-14 6-14 14 6 14 14 14zm0 5c-10 0-30 5-30 15v8h60v-8c0-10-20-15-30-15z' fill='%231e88e5' transform='translate(0 10)'/%3E%3C/svg%3E";
+        }
+
+        // Default logo fallback
+        return "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%231e88e5' width='100' height='100' rx='10'/%3E%3Ctext x='50' y='60' font-size='35' fill='white' text-anchor='middle' font-family='Arial' font-weight='bold'%3EGT%3C/text%3E%3C/svg%3E";
     }
 }
 
