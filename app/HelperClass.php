@@ -423,22 +423,26 @@ class HelperClass
      */
     public static function get_id_card_image($path): string
     {
+        \Log::info('[IMAGE_HELPER] Resolving path: ' . $path);
         if (empty($path)) {
             return asset('assets/images/default-user.png'); // Fallback placeholder
         }
 
         // If it is already a URL or base64, return it
         if (strpos($path, 'data:image') === 0 || strpos($path, 'http://') === 0 || strpos($path, 'https://') === 0) {
+            \Log::info('[IMAGE_HELPER] Path is already URL or Base64');
             return $path;
         }
 
         $base64 = self::image_to_base64($path);
         if ($base64) {
+            \Log::info('[IMAGE_HELPER] Base64 conversion successful. Length: ' . strlen($base64));
             return $base64;
         }
 
-        // Fallback to local asset
-        return asset('storage/' . $path);
+        $fallback = asset('storage/' . $path);
+        \Log::info('[IMAGE_HELPER] Base64 conversion failed. Fallback URL: ' . $fallback);
+        return $fallback;
     }
 }
 

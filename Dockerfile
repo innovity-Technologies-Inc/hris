@@ -18,6 +18,12 @@ RUN apt-get update && apt-get install -y \
     chromium \
     && rm -rf /var/lib/apt/lists/*
 
+# Set default environment variables for Spatie Browsershot/Chromium execution
+ENV BROWSERSHOT_CHROME_PATH=/usr/bin/chromium
+ENV HOME=/tmp
+ENV XDG_CONFIG_HOME=/tmp/.chromium
+ENV XDG_CACHE_HOME=/tmp/.chromium
+
 # Trust GitHub's SSH host during private repository clones
 RUN mkdir -p /root/.ssh && \
     chmod 700 /root/.ssh && \
