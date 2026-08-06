@@ -102,14 +102,17 @@ Spatie Browsershot runs a headless Chromium browser instance under Node.js. For 
        && rm -rf /var/lib/apt/lists/*
    ```
 
-2. **Chrome Path Config (Environment Variable)**:
-   Specify the path to the container's Chromium binary. The application is configured to read the path from the `BROWSERSHOT_CHROME_PATH` environment variable.
+2. **Chrome Path & Permission Config (Environment Variables)**:
+   Specify the path to the container's Chromium binary and configure permission storage variables to prevent crashpad errors when executed by the `www-data` user:
    - **Local Docker Compose**: Already pre-configured under `environment` in `docker-compose.yml` for `app`, `queue-worker`, and `scheduler` services:
      ```yaml
      environment:
        - BROWSERSHOT_CHROME_PATH=/usr/bin/chromium
+       - HOME=/tmp
+       - XDG_CONFIG_HOME=/tmp/.chromium
+       - XDG_CACHE_HOME=/tmp/.chromium
      ```
-   - **Kubernetes Deployments**: Inject the environment variable directly into the pods in your `deployment.yaml` manifest:
+   - **Kubernetes Deployments**: Inject the environment variables directly into the pods in your `deployment.yaml` manifest:
      ```yaml
      containers:
        - name: app
@@ -117,6 +120,12 @@ Spatie Browsershot runs a headless Chromium browser instance under Node.js. For 
          env:
            - name: BROWSERSHOT_CHROME_PATH
              value: "/usr/bin/chromium"
+           - name: HOME
+             value: "/tmp"
+           - name: XDG_CONFIG_HOME
+             value: "/tmp/.chromium"
+           - name: XDG_CACHE_HOME
+             value: "/tmp/.chromium"
      ```
 
 3. **Kubernetes Health Probes**:
