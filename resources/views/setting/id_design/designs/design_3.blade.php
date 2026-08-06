@@ -52,7 +52,7 @@ $companyLogoPath = $generalSettings?->logo_path;
 // Company information with fallbacks
 $companyInfo = (object) [
     'name' => $companyName ?? ($generalSettings?->company_name ?? 'Company Name'),
-    'logo' => $generalSettings?->logo ?? null,
+    'logo' => $currentCompany?->logo ?? ($generalSettings?->logo_light ?? ($generalSettings?->logo ?? null)),
     'website' => $currentCompany?->website ?? ($generalSettings?->website ?? 'www.company.com'),
     'telephone' => $currentCompany?->telephone ?? ($generalSettings?->contact_phone ?? '+000-000-000'),
     'fax' => $currentCompany?->fax ?? '',
