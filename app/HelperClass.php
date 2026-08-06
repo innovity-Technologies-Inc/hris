@@ -390,5 +390,55 @@ class HelperClass
 
         return $browsershot;
     }
+
+    /**
+     * Get the base64 data URI of a storage file.
+     */
+    public static function image_to_base64($file_path): ?string
+    {
+        if (empty($file_path)) {
+            return null;
+        }
+
+        $disk = config('filesystems.default', 'public');
+        if ($disk === 'local') {
+            $disk = 'public';
+        }
+
+        try {
+            if (!Storage::disk($disk)->exists($file_path)) {
+                return null;
+            }
+            $content = Storage::disk($disk)->get($file_path);
+            $mimeType = Storage::disk($disk)->mimeType($file_path) ?? 'image/png';
+            return 'data:' . $mimeType . ';base64,' . base64_encode($content);
+        } catch (\Exception $e) {
+            \Log::error('Error generating base64 for file: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Get image for ID Card rendering (base64 if in storage/MinIO to bypass network).
+     */
+    public static function get_id_card_image($path): string
+    {
+        if (empty($path)) {
+            return asset('assets/images/default-user.png'); // Fallback placeholder
+        }
+
+        // If it is already a URL or base64, return it
+        if (strpos($path, 'data:image') === 0 || strpos($path, 'http://') === 0 || strpos($path, 'https://') === 0) {
+            return $path;
+        }
+
+        $base64 = self::image_to_base64($path);
+        if ($base64) {
+            return $base64;
+        }
+
+        // Fallback to local asset
+        return asset('storage/' . $path);
+    }
 }
 

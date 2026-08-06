@@ -157,6 +157,24 @@ class IDCardService
 
         // Retrieve template content from configured disk and save to temp view path
         $templateContent = Storage::disk($disk)->get($design->file_path);
+
+        // Dynamically replace storage/url check helpers with helper class base64 calls to bypass Docker networking restrictions
+        $templateContent = preg_replace(
+            '/url\([\'"]storage\/[\'"]\s*\.\s*\$companyInfo->logo\)/',
+            '\App\HelperClass::get_id_card_image($companyInfo->logo)',
+            $templateContent
+        );
+        $templateContent = preg_replace(
+            '/url\([\'"]storage\/[\'"]\s*\.\s*\$employee->photo_path\)/',
+            '\App\HelperClass::get_id_card_image($employee->photo_path)',
+            $templateContent
+        );
+        $templateContent = preg_replace(
+            '/file_exists\(public_path\([\'"]storage\/[\'"]\s*\.\s*\$employee->photo_path\)\)/',
+            '\App\HelperClass::file_exists($employee->photo_path)',
+            $templateContent
+        );
+
         file_put_contents($tempPath, $templateContent);
 
         try {

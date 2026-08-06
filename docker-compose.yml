@@ -30,6 +30,9 @@ services:
       - AWS_ENDPOINT=http://minio:9000
       - AWS_USE_PATH_STYLE_ENDPOINT=true
       - BROWSERSHOT_CHROME_PATH=/usr/bin/chromium
+      - HOME=/tmp
+      - XDG_CONFIG_HOME=/tmp/.chromium
+      - XDG_CACHE_HOME=/tmp/.chromium
     volumes:
       - .:/var/www/html
     depends_on:
@@ -124,6 +127,9 @@ services:
       - AWS_ENDPOINT=http://minio:9000
       - AWS_USE_PATH_STYLE_ENDPOINT=true
       - BROWSERSHOT_CHROME_PATH=/usr/bin/chromium
+      - HOME=/tmp
+      - XDG_CONFIG_HOME=/tmp/.chromium
+      - XDG_CACHE_HOME=/tmp/.chromium
     volumes:
       - .:/var/www/html
     depends_on:
@@ -166,6 +172,9 @@ services:
       - AWS_ENDPOINT=http://minio:9000
       - AWS_USE_PATH_STYLE_ENDPOINT=true
       - BROWSERSHOT_CHROME_PATH=/usr/bin/chromium
+      - HOME=/tmp
+      - XDG_CONFIG_HOME=/tmp/.chromium
+      - XDG_CACHE_HOME=/tmp/.chromium
     volumes:
       - .:/var/www/html
     depends_on:
