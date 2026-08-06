@@ -108,6 +108,11 @@ echo "Setting permissions for storage and bootstrap/cache..."
 chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
+# Ensure Chromium temp directories are writable by www-data
+mkdir -p /tmp/.chromium
+chown -R www-data:www-data /tmp/.chromium
+chmod -R 775 /tmp/.chromium
+
 # 7. Execution
 echo "Starting application..."
 exec "$@"
