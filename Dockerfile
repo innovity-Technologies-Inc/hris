@@ -13,6 +13,9 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     openssh-client \
+    nodejs \
+    npm \
+    chromium \
     && rm -rf /var/lib/apt/lists/*
 
 # Trust GitHub's SSH host during private repository clones

@@ -275,10 +275,16 @@ class IDCardService
                 'timeout' => config('browsershot.timeout', 60)
             ]);
 
-            $pdfContent = Browsershot::html($html)
+            $browsershot = Browsershot::html($html)
                 ->setNodeBinary(config('browsershot.node_binary', 'node'))
                 ->setNpmBinary(config('browsershot.npm_binary', 'npm'))
-                ->setNodeModulePath(config('browsershot.node_modules_path', base_path('node_modules')))
+                ->setNodeModulePath(config('browsershot.node_modules_path', base_path('node_modules')));
+
+            if ($chromePath = config('browsershot.chrome_path')) {
+                $browsershot->setChromePath($chromePath);
+            }
+
+            $pdfContent = $browsershot
                 ->addChromiumArguments(config('browsershot.chrome_arguments', [
                     '--disable-gpu',
                     '--no-sandbox',
