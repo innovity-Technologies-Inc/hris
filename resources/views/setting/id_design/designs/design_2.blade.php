@@ -499,7 +499,7 @@ $expiryDate = date('d M Y', strtotime('+2 years'));
         <!-- FRONT CARD (PORTRAIT/VERTICAL) -->
         <div class="card-face card-front">
             <div class="card-header">
-                <img src="{{ url('storage/' . $companyInfo->logo) }}" alt="Company Logo" class="logo"
+                <img src="{{ \App\HelperClass::get_id_card_image($companyInfo->logo) }}" alt="Company Logo" class="logo"
                     onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%220052cc%22 width=%22100%22 height=%22100%22 rx=%2210%22/%3E%3Ctext x=%2250%22 y=%2260%22 font-size=%2235%22 fill=%22white%22 text-anchor=%22middle%22 font-family=%22Arial%22 font-weight=%22bold%22%3EGT%3C/text%3E%3C/svg%3E'">
                 <div class="header-text">
                     <div class="card-title">Employee ID Card</div>
@@ -509,8 +509,8 @@ $expiryDate = date('d M Y', strtotime('+2 years'));
 
             <div class="card-body">
                 <div class="employee-photo-container">
-                    @if ($employee->photo_path && file_exists(public_path('storage/' . $employee->photo_path)))
-                        <img src="{{ url('storage/' . $employee->photo_path) }}" alt="Employee Photo"
+                    @if ($employee->photo_path && \App\HelperClass::file_exists($employee->photo_path))
+                        <img src="{{ \App\HelperClass::get_id_card_image($employee->photo_path) }}" alt="Employee Photo"
                             class="employee-photo" id="employeePhoto">
                     @else
                         <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 120'%3E%3Crect fill='%23e2e8f0' width='100' height='120'/%3E%3Cpath d='M50 45c8 0 14-6 14-14s-6-14-14-14-14 6-14 14 6 14 14 14zm0 5c-10 0-30 5-30 15v8h60v-8c0-10-20-15-30-15z' fill='%23a0aec0' transform='translate(0 10)'/%3E%3C/svg%3E"
