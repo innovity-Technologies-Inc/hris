@@ -89,6 +89,39 @@ BROWSERSHOT_NPM_BINARY="C:\Program Files\nodejs\npm.cmd"
 # BROWSERSHOT_CHROME_PATH="C:\Program Files\Google\Chrome\Application\chrome.exe"
 ```
 
+#### D. Docker & Kubernetes (Production / DevOps Setup)
+Spatie Browsershot runs a headless Chromium browser instance under Node.js. For containerized environments:
+
+1. **System Dependencies (Dockerfile)**:
+   The base Docker image must install Node.js, NPM, and Chromium. This has been pre-configured in our [Dockerfile](file:///P:/Project/Web/hrms/Dockerfile) via the `apt-get` utility:
+   ```dockerfile
+   RUN apt-get update && apt-get install -y \
+       nodejs \
+       npm \
+       chromium \
+       && rm -rf /var/lib/apt/lists/*
+   ```
+
+2. **Chrome Path Config (Environment Variable)**:
+   Specify the path to the container's Chromium binary. The application is configured to read the path from the `BROWSERSHOT_CHROME_PATH` environment variable.
+   - **Local Docker Compose**: Already pre-configured under `environment` in `docker-compose.yml` for `app`, `queue-worker`, and `scheduler` services:
+     ```yaml
+     environment:
+       - BROWSERSHOT_CHROME_PATH=/usr/bin/chromium
+     ```
+   - **Kubernetes Deployments**: Inject the environment variable directly into the pods in your `deployment.yaml` manifest:
+     ```yaml
+     containers:
+       - name: app
+         image: hrms-app:latest
+         env:
+           - name: BROWSERSHOT_CHROME_PATH
+             value: "/usr/bin/chromium"
+     ```
+
+3. **Kubernetes Health Probes**:
+   If utilizing socket/exec healthchecks in Kubernetes to test if the PHP container is ready (e.g. running TCP connection checks on port 9000), make sure to configure `initialDelaySeconds: 120` to allow the container's startup migrations, cache clearing, and volume permission checks to finish before the probes begin.
+
 ### 6. Application Optimization
 
 Clear the configuration cache and optimize the application:
