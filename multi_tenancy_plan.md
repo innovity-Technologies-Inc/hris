@@ -113,38 +113,34 @@ Every table that uses `OrganizationScoped` or holds tenant data gets `organizati
 
 The existing `OrganizationScoped` trait is updated to add a **first filter layer** for `organization_id` before applying the existing company/branch/division filters.
 
+> [!IMPORTANT]
+> **Super Admin is a Spatie `role`, NOT a `user_type` enum value.** We do NOT add a `SuperAdmin` case to `UserType`. The `UserType::Group` bypass is also removed — Group-type users belong to an organization and must be scoped to it. The only correct way to detect a cross-org Super Admin is by checking `organization_id = NULL` on the user.
+
 ```php
 // NEW — first layer: filter by organization
-if ($user->user_type !== UserType::SuperAdmin) {
-    $orgId = $user->organization_id;
-    
-    if ($hasColumn('organization_id')) {
-        $builder->where('organization_id', $orgId);
-    } elseif ($hasColumn('company_id')) {
-        // Scope via company that belongs to this org
-        $builder->whereHas('company', fn($q) => $q->where('organization_id', $orgId));
-        // OR use a subquery on companies table:
-        $builder->whereIn('company_id', 
-            Company::where('organization_id', $orgId)->pluck('id')
-        );
-    }
+// Super Admin users have organization_id = NULL → bypass all org scoping
+if (is_null($user->organization_id)) {
+    return;
+}
+
+// ALL other users (including Group user_type) are scoped to their organization
+$orgId = $user->organization_id;
+
+if ($hasColumn('organization_id')) {
+    $builder->where('organization_id', $orgId);
+} elseif ($hasColumn('company_id')) {
+    // Scope via company that belongs to this org
+    $builder->whereIn('company_id',
+        Company::withoutGlobalScopes()->where('organization_id', $orgId)->pluck('id')
+    );
 }
 
 // THEN — apply existing user_type-based scoping (company/branch/division/etc.)
+// The existing UserType::Group bypass below remains BUT only applies within their org
 // (existing code stays as-is below)
 ```
 
-**New `UserType` enum value:**
-```php
-case SuperAdmin = 'super_admin';
-```
-
-The check `$user->user_type === UserType::Group` that bypasses all scopes is updated to:
-```php
-if ($user->user_type === UserType::SuperAdmin || $user->user_type === UserType::Group) {
-    return; // bypass all scopes — Super Admin sees everything
-}
-```
+**No change to `UserType` enum** — no `SuperAdmin` case is added. Super Admin identity is determined solely by `users.organization_id = NULL`.
 
 ---
 
