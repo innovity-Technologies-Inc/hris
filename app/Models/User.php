@@ -31,11 +31,17 @@ class User extends Authenticatable
         'user_type',
         'employee_id',
         'status',
+        'organization_id',
     ];
 
     public function employee()
     {
         return $this->belongsTo(Employee::class, 'employee_id', 'id');
+    }
+
+    public function organization()
+    {
+        return $this->belongsTo(\App\Models\Organization\Organization::class, 'organization_id');
     }
 
     /**

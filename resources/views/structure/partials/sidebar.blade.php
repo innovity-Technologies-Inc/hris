@@ -209,6 +209,15 @@
                 </li>
                 @endif
 
+                @if(is_null(auth()->user()->organization_id))
+                <li>
+                    <a href="{{ route('organizations.index') }}" class="@if (Route::is('organizations.*')) menuitem-active @endif">
+                        <i data-feather="grid"></i>
+                        <span> Organizations </span>
+                    </a>
+                </li>
+                @endif
+
                 @if(auth()->user()->can('announcements.view'))
                 <li>
                     <a href="{{ route('announcements.index') }}" class="@if (Route::is('announcements.*')) menuitem-active @endif">

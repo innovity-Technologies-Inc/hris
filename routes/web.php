@@ -86,6 +86,11 @@ Route::prefix('notifications')->middleware('auth')->group(function () {
 
 Route::get('/', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard.index');
 
+// Organizations CRUD (Super Admin only, enforced in controller)
+Route::middleware(['auth'])->group(function () {
+    Route::resource('organizations', \App\Http\Controllers\Organization\OrganizationController::class)->except(['create', 'show']);
+});
+
 // Solution 1: PHP streaming — proxies MinIO/S3 files through PHP (fallback)
 Route::get('file/serve/{encodedPath}', [\App\Http\Controllers\FileStreamController::class, 'serve'])
     ->middleware('auth')

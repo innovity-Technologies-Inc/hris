@@ -19,10 +19,28 @@ trait OrganizationScoped
                 $user = Auth::user();
                 $userId = Auth::id();
                 
-                // Super Admin or Group type sees everything
-                // Modified: Only Group type sees everything by default. 
-                // If a user (even Super Admin) has a specific organizational type (Company, Division, etc.), 
-                // they should be filtered by that scope.
+                // Super Admin bypass: users with no organization_id assigned can see all organizations.
+                if (is_null($user->organization_id)) {
+                    return;
+                }
+
+                $table = $builder->getModel()->getTable();
+                
+                // Static cache for table columns to avoid multiple schema calls in a single request
+                if (!isset(static::$tableColumnsCache[$table])) {
+                    static::$tableColumnsCache[$table] = Schema::getColumnListing($table);
+                }
+
+                $hasColumn = function($col) use ($table) {
+                    return in_array($col, static::$tableColumnsCache[$table]);
+                };
+
+                // Apply Organization level filter first if column exists
+                if ($hasColumn('organization_id')) {
+                    $builder->where($table . '.organization_id', $user->organization_id);
+                }
+
+                // Group type sees all companies, divisions, branches etc. within their organization
                 if ($user->user_type === UserType::Group) {
                     return;
                 }
@@ -40,16 +58,6 @@ trait OrganizationScoped
                 }
 
                 $employee = static::$authEmployeeCache[$userId];
-                $table = $builder->getModel()->getTable();
-                
-                // Static cache for table columns to avoid multiple schema calls in a single request
-                if (!isset(static::$tableColumnsCache[$table])) {
-                    static::$tableColumnsCache[$table] = Schema::getColumnListing($table);
-                }
-
-                $hasColumn = function($col) use ($table) {
-                    return in_array($col, static::$tableColumnsCache[$table]);
-                };
 
                 if (!$employee || !$employee->officeInfo) {
                     // For users with no office info link, default to own data if they are an Employee

@@ -64,16 +64,10 @@ class EmployeeMovementSeeder extends Seeder
         // 3. Create at least 50 travel movements
         for ($i = 1; $i <= 55; $i++) {
             $employee = $employees[$i % $employees->count()];
-            EmployeeMovement::create([
+            $movement = EmployeeMovement::create([
                 'employee_id' => $employee->id,
                 'from_date' => Carbon::now()->addDays($i)->setHour(9)->setMinute(0)->format('Y-m-d H:i:s'),
                 'to_date' => Carbon::now()->addDays($i)->setHour(18)->setMinute(0)->format('Y-m-d H:i:s'),
-                'source_address' => "Office Hub " . (($i % 3) + 1),
-                'source_lat' => 23.8103 + ($i * 0.001),
-                'source_lng' => 90.4125 + ($i * 0.001),
-                'destination_address' => "On-site Client Location " . $i,
-                'dest_lat' => 23.8203 + ($i * 0.001),
-                'dest_lng' => 90.4225 + ($i * 0.001),
                 'distance' => 5 + ($i * 1.5),
                 'ta_plan_id' => $taPlan->id,
                 'da_plan_id' => $daPlan->id,
@@ -81,9 +75,20 @@ class EmployeeMovementSeeder extends Seeder
                 'total_ta' => 50 + ($i * 10),
                 'total_da' => 150,
                 'total_allowance' => 200 + ($i * 10),
-                'reason' => "Client support visit #{$i} and system audit",
                 'status' => $i % 3 === 0 ? 'approved' : ($i % 3 === 1 ? 'pending' : 'rejected'),
                 'payment_status' => $i % 2 === 0 ? 'paid' : 'unpaid'
+            ]);
+
+            // Create movement details
+            $movement->details()->create([
+                'source_address' => "Office Hub " . (($i % 3) + 1),
+                'source_lat' => 23.8103 + ($i * 0.001),
+                'source_lng' => 90.4125 + ($i * 0.001),
+                'destination_address' => "On-site Client Location " . $i,
+                'dest_lat' => 23.8203 + ($i * 0.001),
+                'dest_lng' => 90.4225 + ($i * 0.001),
+                'distance' => 5 + ($i * 1.5),
+                'reason' => "Client support visit #{$i} and system audit",
             ]);
         }
     }
