@@ -113,6 +113,40 @@ class OrganizationController extends Controller
     }
 
     /**
+     * Suspend the organization (sets status inactive, blocks all users).
+     */
+    public function suspend($id)
+    {
+        if (!is_null(auth()->user()->organization_id)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized action.'
+            ], 403);
+        }
+
+        try {
+            $organization = Organization::findOrFail($id);
+            $this->organizationService->suspendOrganization($organization);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Organization suspended successfully.'
+            ], 200);
+
+        } catch (\Exception $e) {
+            Log::error('Organization suspension failed: ' . $e->getMessage(), [
+                'id' => $id,
+                'exception' => $e
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to suspend organization: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy($id)

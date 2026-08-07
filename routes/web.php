@@ -89,6 +89,7 @@ Route::get('/', [DashboardController::class, 'index'])->middleware('auth')->name
 // Organizations CRUD (Super Admin only, enforced in controller)
 Route::middleware(['auth'])->group(function () {
     Route::resource('organizations', \App\Http\Controllers\Organization\OrganizationController::class)->except(['create', 'show']);
+    Route::post('organizations/{id}/suspend', [\App\Http\Controllers\Organization\OrganizationController::class, 'suspend'])->name('organizations.suspend');
 });
 
 // Solution 1: PHP streaming — proxies MinIO/S3 files through PHP (fallback)

@@ -14,8 +14,25 @@ class GeneralSetting extends Model
     
     protected $fillable = [
         'name', 'currency', 'logo_light', 'logo_dark', 'favicon', 'branch_status', 'division_status',
-        'department_status', 'section_status'
+        'department_status', 'section_status', 'organization_id',
     ];
+
+    /**
+     * Get the GeneralSetting record for the currently authenticated user's organization.
+     * Super Admin (organization_id = null) gets the first/global record.
+     */
+    public static function forCurrentOrg(): ?self
+    {
+        $orgId = auth()->check() ? auth()->user()->organization_id : null;
+
+        if (is_null($orgId)) {
+            // Super Admin — return first global record
+            return static::whereNull('organization_id')->first()
+                ?? static::first();
+        }
+
+        return static::where('organization_id', $orgId)->first();
+    }
 
     /**
      * Get the full path to the light logo

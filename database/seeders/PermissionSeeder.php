@@ -267,12 +267,29 @@ class PermissionSeeder extends Seeder
             }
         }
 
-        // Create Super Admin role and assign all permissions
-        $superAdminRole = Role::firstOrCreate(['name' => 'Super Admin', 'guard_name' => 'web']);
+        // Create Super Admin role — global cross-org role (organization_id = NULL)
+        $superAdminRole = Role::firstOrCreate(
+            ['name' => 'Super Admin', 'guard_name' => 'web'],
+            ['organization_id' => null]
+        );
+        // Ensure it stays null even if it already existed
+        $superAdminRole->forceFill(['organization_id' => null])->saveQuietly();
         $superAdminRole->syncPermissions(Permission::all());
 
-        // Create HR Manager role and assign HR-specific permissions exactly as in DB
-        $hrManagerRole = Role::firstOrCreate(['name' => 'HR Manager', 'guard_name' => 'web']);
+        // Create Admin role — scoped to org 1 (full org-level access, all permissions)
+        $adminRole = Role::firstOrCreate(
+            ['name' => 'Admin', 'guard_name' => 'web'],
+            ['organization_id' => 1]
+        );
+        $adminRole->forceFill(['organization_id' => 1])->saveQuietly();
+        $adminRole->syncPermissions(Permission::all());
+
+        // Create HR Manager role — scoped to org 1
+        $hrManagerRole = Role::firstOrCreate(
+            ['name' => 'HR Manager', 'guard_name' => 'web'],
+            ['organization_id' => 1]
+        );
+        $hrManagerRole->forceFill(['organization_id' => 1])->saveQuietly();
         $hrPermissions = Permission::whereNotIn('name', [
             'dashboard.view',
             'structural-view.view',
@@ -293,8 +310,12 @@ class PermissionSeeder extends Seeder
         ])->get();
         $hrManagerRole->syncPermissions($hrPermissions);
 
-        // Create Employee role and assign specific permissions exactly as in DB
-        $employeeRole = Role::firstOrCreate(['name' => 'Employee', 'guard_name' => 'web']);
+        // Create Employee role — scoped to org 1
+        $employeeRole = Role::firstOrCreate(
+            ['name' => 'Employee', 'guard_name' => 'web'],
+            ['organization_id' => 1]
+        );
+        $employeeRole->forceFill(['organization_id' => 1])->saveQuietly();
         $employeeRole->syncPermissions([
             'employee-management.view',
             'employee-management.create',
@@ -313,8 +334,12 @@ class PermissionSeeder extends Seeder
             'claim-expenses.create',
         ]);
 
-        // Create Manager role and assign specific permissions exactly as in DB
-        $managerRole = Role::firstOrCreate(['name' => 'Manager', 'guard_name' => 'web']);
+        // Create Manager role — scoped to org 1
+        $managerRole = Role::firstOrCreate(
+            ['name' => 'Manager', 'guard_name' => 'web'],
+            ['organization_id' => 1]
+        );
+        $managerRole->forceFill(['organization_id' => 1])->saveQuietly();
         $managerRole->syncPermissions([
             'employee-management.view',
             'employee-management.create',

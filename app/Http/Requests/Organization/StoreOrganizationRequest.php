@@ -21,13 +21,17 @@ class StoreOrganizationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:organizations,slug',
-            'logo' => 'nullable|image|mimes:webp,jpeg,png,jpg,gif,svg|max:2048',
-            'email' => 'nullable|email|max:255',
-            'phone' => 'nullable|string|max:50',
-            'address' => 'nullable|string|max:500',
-            'status' => 'required|in:active,inactive',
+            'name'           => 'required|string|max:255',
+            'slug'           => 'required|string|max:255|unique:organizations,slug',
+            'logo'           => 'nullable|image|mimes:webp,jpeg,png,jpg,gif,svg|max:2048',
+            'email'          => 'nullable|email|max:255',
+            'phone'          => 'nullable|string|max:50',
+            'address'        => 'nullable|string|max:500',
+            'status'         => 'required|in:active,inactive',
+            // Optional admin provisioning fields
+            'admin_name'     => 'nullable|string|max:255',
+            'admin_email'    => 'nullable|email|max:255|unique:users,email',
+            'admin_password' => 'nullable|string|min:8',
         ];
     }
 }
